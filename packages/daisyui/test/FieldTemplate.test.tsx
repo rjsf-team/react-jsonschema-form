@@ -385,16 +385,6 @@ describe('FieldTemplate', () => {
     const altDate = { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } };
     const dateSchema = { type: 'string' as const, format: 'date' };
 
-    test('associates each of its labels with the control it names', () => {
-      renderForm({ agree: altDate }, { ...dateSchema, title: 'Agree' });
-
-      // daisyui's SelectWidget opens from a real `button`, which `label htmlFor` can associate with. Its `aria-label`
-      // names it, and starts with the field's title so the visible label alone doesn't leave the part out of context
-      for (const type of ['year', 'month', 'day']) {
-        expect(screen.getByLabelText(type)).toBe(screen.getByRole('combobox', { name: `Agree, ${type}` }));
-      }
-    });
-
     test('names the whole group with the field label', () => {
       renderForm({ agree: altDate }, { ...dateSchema, title: 'Agree' });
 

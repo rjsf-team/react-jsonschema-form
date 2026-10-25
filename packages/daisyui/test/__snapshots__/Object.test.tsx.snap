@@ -71,22 +71,14 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                 </span>
                               </span>
                             </label>
-                            <div
-                              class="form-control"
-                            >
-                              <div
-                                style="position: relative;"
-                              >
-                                <input
-                                  class="input input-bordered w-full"
-                                  id="root_person_name"
-                                  name="root[person][name]"
-                                  placeholder=""
-                                  type="text"
-                                  value=""
-                                />
-                              </div>
-                            </div>
+                            <input
+                              class="input input-bordered w-full"
+                              id="root_person_name"
+                              name="root[person][name]"
+                              placeholder=""
+                              type="text"
+                              value=""
+                            />
                           </div>
                         </div>
                       </div>
@@ -144,22 +136,14 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           </span>
                                         </span>
                                       </label>
-                                      <div
-                                        class="form-control"
-                                      >
-                                        <div
-                                          style="position: relative;"
-                                        >
-                                          <input
-                                            class="input input-bordered w-full"
-                                            id="root_person_address_street"
-                                            name="root[person][address][street]"
-                                            placeholder=""
-                                            type="text"
-                                            value=""
-                                          />
-                                        </div>
-                                      </div>
+                                      <input
+                                        class="input input-bordered w-full"
+                                        id="root_person_address_street"
+                                        name="root[person][address][street]"
+                                        placeholder=""
+                                        type="text"
+                                        value=""
+                                      />
                                     </div>
                                   </div>
                                 </div>
@@ -186,22 +170,14 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           </span>
                                         </span>
                                       </label>
-                                      <div
-                                        class="form-control"
-                                      >
-                                        <div
-                                          style="position: relative;"
-                                        >
-                                          <input
-                                            class="input input-bordered w-full"
-                                            id="root_person_address_city"
-                                            name="root[person][address][city]"
-                                            placeholder=""
-                                            type="text"
-                                            value=""
-                                          />
-                                        </div>
-                                      </div>
+                                      <input
+                                        class="input input-bordered w-full"
+                                        id="root_person_address_city"
+                                        name="root[person][address][city]"
+                                        placeholder=""
+                                        type="text"
+                                        value=""
+                                      />
                                     </div>
                                   </div>
                                 </div>
@@ -228,22 +204,14 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           </span>
                                         </span>
                                       </label>
-                                      <div
-                                        class="form-control"
-                                      >
-                                        <div
-                                          style="position: relative;"
-                                        >
-                                          <input
-                                            class="input input-bordered w-full"
-                                            id="root_person_address_country"
-                                            name="root[person][address][country]"
-                                            placeholder=""
-                                            type="text"
-                                            value=""
-                                          />
-                                        </div>
-                                      </div>
+                                      <input
+                                        class="input input-bordered w-full"
+                                        id="root_person_address_country"
+                                        name="root[person][address][country]"
+                                        placeholder=""
+                                        type="text"
+                                        value=""
+                                      />
                                     </div>
                                   </div>
                                 </div>
@@ -263,7 +231,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -313,22 +281,14 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_name"
-                        name="root[name]"
-                        placeholder=""
-                        type="text"
-                        value="John"
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_name"
+                    name="root[name]"
+                    placeholder=""
+                    type="text"
+                    value="John"
+                  />
                 </div>
               </div>
             </div>
@@ -377,45 +337,39 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_customField"
-                          name="root[customField]"
-                          placeholder=""
-                          type="text"
-                          value="customValue"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_customField"
+                      name="root[customField]"
+                      placeholder=""
+                      type="text"
+                      value="customValue"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_customField__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -426,35 +380,29 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -462,7 +410,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -512,22 +460,14 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_name"
-                        name="root[name]"
-                        placeholder=""
-                        type="text"
-                        value="Alice"
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_name"
+                    name="root[name]"
+                    placeholder=""
+                    type="text"
+                    value="Alice"
+                  />
                 </div>
               </div>
             </div>
@@ -554,25 +494,17 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_age"
-                        inputmode="decimal"
-                        name="root[age]"
-                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                        placeholder=""
-                        title="Enter a number"
-                        type="text"
-                        value="30"
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_age"
+                    inputmode="decimal"
+                    name="root[age]"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                    placeholder=""
+                    title="Enter a number"
+                    type="text"
+                    value="30"
+                  />
                 </div>
               </div>
             </div>
@@ -639,8 +571,8 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       <div
                         class="rjsf-array-item-list"
                       >
-                        <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
+                        <div
+                          class="rjsf-array-item fieldset flex items-end gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -667,34 +599,25 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                   </span>
                                 </span>
                               </label>
-                              <div
-                                class="form-control"
-                              >
-                                <div
-                                  style="position: relative;"
-                                >
-                                  <input
-                                    class="input input-bordered w-full"
-                                    id="root_tags_0"
-                                    name="root[tags][0]"
-                                    placeholder=""
-                                    required=""
-                                    type="text"
-                                    value="developer"
-                                  />
-                                </div>
-                              </div>
+                              <input
+                                class="input input-bordered w-full"
+                                id="root_tags_0"
+                                name="root[tags][0]"
+                                placeholder=""
+                                required=""
+                                type="text"
+                                value="developer"
+                              />
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-5"
+                            class="rjsf-array-item-toolbox flex justify-end"
                           >
                             <div
                               class="join"
                             >
                               <button
-                                aria-label="Move up"
-                                class="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                                class="rjsf-button rjsf-button-default btn btn-sm rjsf-array-item-move-up join-item px-2"
                                 disabled=""
                                 id="root_tags_0__moveUp"
                                 title="Move up"
@@ -702,65 +625,72 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-arrow-up h-5 w-5"
-                                  data-icon="arrow-up"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 384 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M214.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 480c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
-                                    fill="currentColor"
+                                    d="M8 13V3m-4 4 4-4 4 4"
                                   />
                                 </svg>
                               </button>
                               <button
-                                aria-label="Move down"
-                                class="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                                class="rjsf-button rjsf-button-default btn btn-sm rjsf-array-item-move-down join-item px-2"
                                 id="root_tags_0__moveDown"
                                 title="Move down"
                                 type="button"
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-arrow-down h-5 w-5"
-                                  data-icon="arrow-down"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 384 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
-                                    fill="currentColor"
+                                    d="M8 3v10m-4-4 4 4 4-4"
                                   />
                                 </svg>
                               </button>
                               <button
-                                aria-label="Remove"
-                                class="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                                class="rjsf-button rjsf-button-danger btn btn-sm rjsf-array-item-remove join-item px-2 btn-error"
                                 id="root_tags_0__remove"
                                 title="Remove"
                                 type="button"
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-trash h-5 w-5"
-                                  data-icon="trash"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 448 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                                    fill="currentColor"
+                                    d="M4 4l8 8M12 4l-8 8"
                                   />
                                 </svg>
                               </button>
                             </div>
                           </div>
-                        </fieldset>
-                        <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
+                        </div>
+                        <div
+                          class="rjsf-array-item fieldset flex items-end gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -787,55 +717,48 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                   </span>
                                 </span>
                               </label>
-                              <div
-                                class="form-control"
-                              >
-                                <div
-                                  style="position: relative;"
-                                >
-                                  <input
-                                    class="input input-bordered w-full"
-                                    id="root_tags_1"
-                                    name="root[tags][1]"
-                                    placeholder=""
-                                    required=""
-                                    type="text"
-                                    value="designer"
-                                  />
-                                </div>
-                              </div>
+                              <input
+                                class="input input-bordered w-full"
+                                id="root_tags_1"
+                                name="root[tags][1]"
+                                placeholder=""
+                                required=""
+                                type="text"
+                                value="designer"
+                              />
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-5"
+                            class="rjsf-array-item-toolbox flex justify-end"
                           >
                             <div
                               class="join"
                             >
                               <button
-                                aria-label="Move up"
-                                class="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                                class="rjsf-button rjsf-button-default btn btn-sm rjsf-array-item-move-up join-item px-2"
                                 id="root_tags_1__moveUp"
                                 title="Move up"
                                 type="button"
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-arrow-up h-5 w-5"
-                                  data-icon="arrow-up"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 384 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M214.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 480c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
-                                    fill="currentColor"
+                                    d="M8 13V3m-4 4 4-4 4 4"
                                   />
                                 </svg>
                               </button>
                               <button
-                                aria-label="Move down"
-                                class="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                                class="rjsf-button rjsf-button-default btn btn-sm rjsf-array-item-move-down join-item px-2"
                                 disabled=""
                                 id="root_tags_1__moveDown"
                                 title="Move down"
@@ -843,75 +766,74 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-arrow-down h-5 w-5"
-                                  data-icon="arrow-down"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 384 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
-                                    fill="currentColor"
+                                    d="M8 3v10m-4-4 4 4 4-4"
                                   />
                                 </svg>
                               </button>
                               <button
-                                aria-label="Remove"
-                                class="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                                class="rjsf-button rjsf-button-danger btn btn-sm rjsf-array-item-remove join-item px-2 btn-error"
                                 id="root_tags_1__remove"
                                 title="Remove"
                                 type="button"
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-trash h-5 w-5"
-                                  data-icon="trash"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 448 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                                    fill="currentColor"
+                                    d="M4 4l8 8M12 4l-8 8"
                                   />
                                 </svg>
                               </button>
                             </div>
                           </div>
-                        </fieldset>
+                        </div>
                       </div>
                       <div
                         class="flex justify-end"
                       >
-                        <div
-                          class="row"
+                        <button
+                          class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
+                          id="root_tags__add"
+                          title="Add"
+                          type="button"
                         >
-                          <p
-                            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+                          <svg
+                            aria-hidden="true"
+                            class="rjsf-button-icon h-5 w-5"
+                            fill="none"
+                            height="1em"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            viewBox="0 0 16 16"
+                            width="1em"
                           >
-                            <button
-                              aria-label="Add"
-                              class="btn-add col-xs-12 btn-primary btn-primary-content"
-                              id="root_tags__add"
-                              title="Add"
-                              type="button"
-                            >
-                              <svg
-                                aria-hidden="true"
-                                class="svg-inline--fa fa-plus h-5 w-5"
-                                data-icon="plus"
-                                data-prefix="fas"
-                                role="img"
-                                viewBox="0 0 448 512"
-                              >
-                                <path
-                                  d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                                  fill="currentColor"
-                                />
-                              </svg>
-                            </button>
-                          </p>
-                        </div>
+                            <path
+                              d="M8 3v10M3 8h10"
+                            />
+                          </svg>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -924,7 +846,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -974,22 +896,14 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_firstName"
-                        name="root[firstName]"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_firstName"
+                    name="root[firstName]"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -1016,22 +930,14 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_lastName"
-                        name="root[lastName]"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_lastName"
+                    name="root[lastName]"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -1058,25 +964,17 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_age"
-                        inputmode="decimal"
-                        name="root[age]"
-                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                        placeholder=""
-                        title="Enter a number"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_age"
+                    inputmode="decimal"
+                    name="root[age]"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                    placeholder=""
+                    title="Enter a number"
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -1086,7 +984,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -1167,22 +1065,14 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                 </span>
                               </span>
                             </label>
-                            <div
-                              class="form-control"
-                            >
-                              <div
-                                style="position: relative;"
-                              >
-                                <input
-                                  class="input input-bordered w-full"
-                                  id="root_person_name"
-                                  name="root.person.name"
-                                  placeholder=""
-                                  type="text"
-                                  value=""
-                                />
-                              </div>
-                            </div>
+                            <input
+                              class="input input-bordered w-full"
+                              id="root_person_name"
+                              name="root.person.name"
+                              placeholder=""
+                              type="text"
+                              value=""
+                            />
                           </div>
                         </div>
                       </div>
@@ -1240,22 +1130,14 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           </span>
                                         </span>
                                       </label>
-                                      <div
-                                        class="form-control"
-                                      >
-                                        <div
-                                          style="position: relative;"
-                                        >
-                                          <input
-                                            class="input input-bordered w-full"
-                                            id="root_person_address_street"
-                                            name="root.person.address.street"
-                                            placeholder=""
-                                            type="text"
-                                            value=""
-                                          />
-                                        </div>
-                                      </div>
+                                      <input
+                                        class="input input-bordered w-full"
+                                        id="root_person_address_street"
+                                        name="root.person.address.street"
+                                        placeholder=""
+                                        type="text"
+                                        value=""
+                                      />
                                     </div>
                                   </div>
                                 </div>
@@ -1282,22 +1164,14 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           </span>
                                         </span>
                                       </label>
-                                      <div
-                                        class="form-control"
-                                      >
-                                        <div
-                                          style="position: relative;"
-                                        >
-                                          <input
-                                            class="input input-bordered w-full"
-                                            id="root_person_address_city"
-                                            name="root.person.address.city"
-                                            placeholder=""
-                                            type="text"
-                                            value=""
-                                          />
-                                        </div>
-                                      </div>
+                                      <input
+                                        class="input input-bordered w-full"
+                                        id="root_person_address_city"
+                                        name="root.person.address.city"
+                                        placeholder=""
+                                        type="text"
+                                        value=""
+                                      />
                                     </div>
                                   </div>
                                 </div>
@@ -1317,7 +1191,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -1367,22 +1241,14 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_name"
-                        name="root.name"
-                        placeholder=""
-                        type="text"
-                        value="Test"
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_name"
+                    name="root.name"
+                    placeholder=""
+                    type="text"
+                    value="Test"
+                  />
                 </div>
               </div>
             </div>
@@ -1409,25 +1275,17 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_count"
-                        inputmode="decimal"
-                        name="root.count"
-                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                        placeholder=""
-                        title="Enter a number"
-                        type="text"
-                        value="5"
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_count"
+                    inputmode="decimal"
+                    name="root.count"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                    placeholder=""
+                    title="Enter a number"
+                    type="text"
+                    value="5"
+                  />
                 </div>
               </div>
             </div>
@@ -1458,8 +1316,8 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       <div
                         class="rjsf-array-item-list"
                       >
-                        <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
+                        <div
+                          class="rjsf-array-item fieldset flex items-end gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -1486,34 +1344,25 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                   </span>
                                 </span>
                               </label>
-                              <div
-                                class="form-control"
-                              >
-                                <div
-                                  style="position: relative;"
-                                >
-                                  <input
-                                    class="input input-bordered w-full"
-                                    id="root_items_0"
-                                    name="root.items.0"
-                                    placeholder=""
-                                    required=""
-                                    type="text"
-                                    value="a"
-                                  />
-                                </div>
-                              </div>
+                              <input
+                                class="input input-bordered w-full"
+                                id="root_items_0"
+                                name="root.items.0"
+                                placeholder=""
+                                required=""
+                                type="text"
+                                value="a"
+                              />
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-5"
+                            class="rjsf-array-item-toolbox flex justify-end"
                           >
                             <div
                               class="join"
                             >
                               <button
-                                aria-label="Move up"
-                                class="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                                class="rjsf-button rjsf-button-default btn btn-sm rjsf-array-item-move-up join-item px-2"
                                 disabled=""
                                 id="root_items_0__moveUp"
                                 title="Move up"
@@ -1521,65 +1370,72 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-arrow-up h-5 w-5"
-                                  data-icon="arrow-up"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 384 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M214.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 480c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
-                                    fill="currentColor"
+                                    d="M8 13V3m-4 4 4-4 4 4"
                                   />
                                 </svg>
                               </button>
                               <button
-                                aria-label="Move down"
-                                class="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                                class="rjsf-button rjsf-button-default btn btn-sm rjsf-array-item-move-down join-item px-2"
                                 id="root_items_0__moveDown"
                                 title="Move down"
                                 type="button"
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-arrow-down h-5 w-5"
-                                  data-icon="arrow-down"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 384 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
-                                    fill="currentColor"
+                                    d="M8 3v10m-4-4 4 4 4-4"
                                   />
                                 </svg>
                               </button>
                               <button
-                                aria-label="Remove"
-                                class="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                                class="rjsf-button rjsf-button-danger btn btn-sm rjsf-array-item-remove join-item px-2 btn-error"
                                 id="root_items_0__remove"
                                 title="Remove"
                                 type="button"
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-trash h-5 w-5"
-                                  data-icon="trash"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 448 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                                    fill="currentColor"
+                                    d="M4 4l8 8M12 4l-8 8"
                                   />
                                 </svg>
                               </button>
                             </div>
                           </div>
-                        </fieldset>
-                        <fieldset
-                          class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
+                        </div>
+                        <div
+                          class="rjsf-array-item fieldset flex items-end gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -1606,55 +1462,48 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                   </span>
                                 </span>
                               </label>
-                              <div
-                                class="form-control"
-                              >
-                                <div
-                                  style="position: relative;"
-                                >
-                                  <input
-                                    class="input input-bordered w-full"
-                                    id="root_items_1"
-                                    name="root.items.1"
-                                    placeholder=""
-                                    required=""
-                                    type="text"
-                                    value="b"
-                                  />
-                                </div>
-                              </div>
+                              <input
+                                class="input input-bordered w-full"
+                                id="root_items_1"
+                                name="root.items.1"
+                                placeholder=""
+                                required=""
+                                type="text"
+                                value="b"
+                              />
                             </div>
                           </div>
                           <div
-                            class="flex justify-end mt-5"
+                            class="rjsf-array-item-toolbox flex justify-end"
                           >
                             <div
                               class="join"
                             >
                               <button
-                                aria-label="Move up"
-                                class="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                                class="rjsf-button rjsf-button-default btn btn-sm rjsf-array-item-move-up join-item px-2"
                                 id="root_items_1__moveUp"
                                 title="Move up"
                                 type="button"
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-arrow-up h-5 w-5"
-                                  data-icon="arrow-up"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 384 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M214.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 480c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
-                                    fill="currentColor"
+                                    d="M8 13V3m-4 4 4-4 4 4"
                                   />
                                 </svg>
                               </button>
                               <button
-                                aria-label="Move down"
-                                class="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                                class="rjsf-button rjsf-button-default btn btn-sm rjsf-array-item-move-down join-item px-2"
                                 disabled=""
                                 id="root_items_1__moveDown"
                                 title="Move down"
@@ -1662,75 +1511,74 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-arrow-down h-5 w-5"
-                                  data-icon="arrow-down"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 384 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
-                                    fill="currentColor"
+                                    d="M8 3v10m-4-4 4 4 4-4"
                                   />
                                 </svg>
                               </button>
                               <button
-                                aria-label="Remove"
-                                class="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                                class="rjsf-button rjsf-button-danger btn btn-sm rjsf-array-item-remove join-item px-2 btn-error"
                                 id="root_items_1__remove"
                                 title="Remove"
                                 type="button"
                               >
                                 <svg
                                   aria-hidden="true"
-                                  class="svg-inline--fa fa-trash h-5 w-5"
-                                  data-icon="trash"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 448 512"
+                                  class="rjsf-button-icon h-5 w-5"
+                                  fill="none"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  viewBox="0 0 16 16"
+                                  width="1em"
                                 >
                                   <path
-                                    d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                                    fill="currentColor"
+                                    d="M4 4l8 8M12 4l-8 8"
                                   />
                                 </svg>
                               </button>
                             </div>
                           </div>
-                        </fieldset>
+                        </div>
                       </div>
                       <div
                         class="flex justify-end"
                       >
-                        <div
-                          class="row"
+                        <button
+                          class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
+                          id="root_items__add"
+                          title="Add"
+                          type="button"
                         >
-                          <p
-                            class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+                          <svg
+                            aria-hidden="true"
+                            class="rjsf-button-icon h-5 w-5"
+                            fill="none"
+                            height="1em"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            viewBox="0 0 16 16"
+                            width="1em"
                           >
-                            <button
-                              aria-label="Add"
-                              class="btn-add col-xs-12 btn-primary btn-primary-content"
-                              id="root_items__add"
-                              title="Add"
-                              type="button"
-                            >
-                              <svg
-                                aria-hidden="true"
-                                class="svg-inline--fa fa-plus h-5 w-5"
-                                data-icon="plus"
-                                data-prefix="fas"
-                                role="img"
-                                viewBox="0 0 448 512"
-                              >
-                                <path
-                                  d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                                  fill="currentColor"
-                                />
-                              </svg>
-                            </button>
-                          </p>
-                        </div>
+                            <path
+                              d="M8 3v10M3 8h10"
+                            />
+                          </svg>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -1743,7 +1591,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -1793,22 +1641,14 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_firstName"
-                        name="root.firstName"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_firstName"
+                    name="root.firstName"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -1835,22 +1675,14 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_lastName"
-                        name="root.lastName"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_lastName"
+                    name="root.lastName"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -1877,25 +1709,17 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_age"
-                        inputmode="decimal"
-                        name="root.age"
-                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                        placeholder=""
-                        title="Enter a number"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_age"
+                    inputmode="decimal"
+                    name="root.age"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                    placeholder=""
+                    title="Enter a number"
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -1905,7 +1729,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -1977,45 +1801,39 @@ exports[`object fields > additionalProperties 1`] = `
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_foo"
-                          name="root_foo"
-                          placeholder=""
-                          type="text"
-                          value="foo"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -2026,35 +1844,29 @@ exports[`object fields > additionalProperties 1`] = `
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -2062,7 +1874,7 @@ exports[`object fields > additionalProperties 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -2117,7 +1929,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         class="dropdown w-full"
                       >
                         <button
-                          aria-controls="_r_s_"
+                          aria-controls="_r_2_"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -2140,7 +1952,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                          id="_r_s_"
+                          id="_r_2_"
                           role="listbox"
                         >
                           <li
@@ -2209,32 +2021,20 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         </span>
                       </span>
                     </label>
+                    <input
+                      aria-describedby="root_foo__description"
+                      class="input input-bordered w-full"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
                     <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          aria-describedby="root_foo__description"
-                          class="input input-bordered w-full"
-                          id="root_foo"
-                          name="root_foo"
-                          placeholder=""
-                          type="text"
-                          value="foo"
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="description-field my-4"
+                      class="rjsf-field-description text-sm text-base-content/80 my-4"
                       id="root_foo__description"
                     >
-                      <div
-                        class="text-sm text-base-content/80"
-                      >
-                        A description
-                      </div>
+                      A description
                     </div>
                   </div>
                   <div
@@ -2242,23 +2042,25 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -2269,35 +2071,29 @@ exports[`object fields > additionalProperties with a description, propertyNames 
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -2305,7 +2101,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -2390,35 +2186,29 @@ exports[`object fields > additionalProperties, array type 1`] = `
                         <div
                           class="flex justify-end"
                         >
-                          <div
-                            class="row"
+                          <button
+                            class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
+                            id="root_foo__add"
+                            title="Add"
+                            type="button"
                           >
-                            <p
-                              class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+                            <svg
+                              aria-hidden="true"
+                              class="rjsf-button-icon h-5 w-5"
+                              fill="none"
+                              height="1em"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 16 16"
+                              width="1em"
                             >
-                              <button
-                                aria-label="Add"
-                                class="btn-add col-xs-12 btn-primary btn-primary-content"
-                                id="root_foo__add"
-                                title="Add"
-                                type="button"
-                              >
-                                <svg
-                                  aria-hidden="true"
-                                  class="svg-inline--fa fa-plus h-5 w-5"
-                                  data-icon="plus"
-                                  data-prefix="fas"
-                                  role="img"
-                                  viewBox="0 0 448 512"
-                                >
-                                  <path
-                                    d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
-                              </button>
-                            </p>
-                          </div>
+                              <path
+                                d="M8 3v10M3 8h10"
+                              />
+                            </svg>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -2428,23 +2218,25 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -2455,35 +2247,29 @@ exports[`object fields > additionalProperties, array type 1`] = `
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -2491,7 +2277,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -2563,32 +2349,20 @@ exports[`object fields > additionalProperties, description 1`] = `
                         </span>
                       </span>
                     </label>
+                    <input
+                      aria-describedby="root_foo__description"
+                      class="input input-bordered w-full"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
                     <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          aria-describedby="root_foo__description"
-                          class="input input-bordered w-full"
-                          id="root_foo"
-                          name="root_foo"
-                          placeholder=""
-                          type="text"
-                          value="foo"
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="description-field my-4"
+                      class="rjsf-field-description text-sm text-base-content/80 my-4"
                       id="root_foo__description"
                     >
-                      <div
-                        class="text-sm text-base-content/80"
-                      >
-                        item description
-                      </div>
+                      item description
                     </div>
                   </div>
                   <div
@@ -2596,23 +2370,25 @@ exports[`object fields > additionalProperties, description 1`] = `
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -2623,35 +2399,29 @@ exports[`object fields > additionalProperties, description 1`] = `
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -2659,7 +2429,7 @@ exports[`object fields > additionalProperties, description 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -2731,45 +2501,39 @@ exports[`object fields > additionalProperties, label off 1`] = `
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_foo"
-                          name="root_foo"
-                          placeholder=""
-                          type="text"
-                          value="foo"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -2780,35 +2544,29 @@ exports[`object fields > additionalProperties, label off 1`] = `
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -2816,7 +2574,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -2919,22 +2677,14 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                   </span>
                                 </span>
                               </label>
-                              <div
-                                class="form-control"
-                              >
-                                <div
-                                  style="position: relative;"
-                                >
-                                  <input
-                                    class="input input-bordered w-full"
-                                    id="root_foo_foo"
-                                    name="root_foo_foo"
-                                    placeholder=""
-                                    type="text"
-                                    value=""
-                                  />
-                                </div>
-                              </div>
+                              <input
+                                class="input input-bordered w-full"
+                                id="root_foo_foo"
+                                name="root_foo_foo"
+                                placeholder=""
+                                type="text"
+                                value=""
+                              />
                             </div>
                           </div>
                         </div>
@@ -2946,23 +2696,25 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -2973,35 +2725,29 @@ exports[`object fields > additionalProperties, object type 1`] = `
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -3009,7 +2755,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -3064,7 +2810,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         class="dropdown w-full"
                       >
                         <button
-                          aria-controls="_r_n_"
+                          aria-controls="_r_1_"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -3087,7 +2833,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                          id="_r_n_"
+                          id="_r_1_"
                           role="listbox"
                         >
                           <li
@@ -3156,45 +2902,39 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_foo"
-                          name="root_foo"
-                          placeholder=""
-                          type="text"
-                          value="foo"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -3205,35 +2945,29 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -3241,7 +2975,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -3296,7 +3030,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         class="dropdown w-full"
                       >
                         <button
-                          aria-controls="_r_17_"
+                          aria-controls="_r_3_"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -3319,7 +3053,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                          id="_r_17_"
+                          id="_r_3_"
                           role="listbox"
                         >
                           <li
@@ -3388,45 +3122,39 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_foo"
-                          name="root_foo"
-                          placeholder=""
-                          type="text"
-                          value="foo"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -3437,35 +3165,29 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -3473,7 +3195,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -3523,22 +3245,14 @@ exports[`object fields > object 1`] = `
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_a"
-                        name="root_a"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_a"
+                    name="root_a"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -3565,25 +3279,17 @@ exports[`object fields > object 1`] = `
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_b"
-                        inputmode="decimal"
-                        name="root_b"
-                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                        placeholder=""
-                        title="Enter a number"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_b"
+                    inputmode="decimal"
+                    name="root_b"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                    placeholder=""
+                    title="Enter a number"
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -3593,7 +3299,7 @@ exports[`object fields > object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -3665,45 +3371,39 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_abc"
-                          name="root_abc"
-                          placeholder=""
-                          type="text"
-                          value="hello"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_abc"
+                      name="root_abc"
+                      placeholder=""
+                      type="text"
+                      value="hello"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_abc__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -3766,14 +3466,14 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                         />
                       </div>
                     </fieldset>
-                    <div
-                      class="rjsf-field-error-template text-red-600"
-                      id="root_a__error"
-                    >
+                    <div>
                       <ul
-                        class="list-disc list-inside"
+                        class="rjsf-error-detail list-disc list-inside text-red-600"
+                        id="root_a__error"
                       >
-                        <li>
+                        <li
+                          class="rjsf-error"
+                        >
                           The key "a" is not allowed here
                         </li>
                       </ul>
@@ -3784,23 +3484,25 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_a__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -3811,35 +3513,29 @@ exports[`object fields > patternProperties, a key additionalProperties false for
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -3847,7 +3543,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -3882,10 +3578,10 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
           </span>
         </label>
         <div
-          class="p-4 border rounded-sm shadow-sm"
+          class="rjsf-multi-schema p-4 border rounded-sm shadow-sm"
         >
           <div
-            class="mb-4"
+            class="rjsf-multi-schema-selector mb-4"
           >
             <div
               class="form-control w-full"
@@ -3894,7 +3590,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                 class="dropdown w-full"
               >
                 <button
-                  aria-controls="_r_1g_"
+                  aria-controls="_r_4_"
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-labelledby="root__label"
@@ -3918,7 +3614,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                 </button>
                 <ul
                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                  id="_r_1g_"
+                  id="_r_4_"
                   role="listbox"
                 >
                   <li
@@ -4006,22 +3702,14 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                             </span>
                           </span>
                         </label>
-                        <div
-                          class="form-control"
-                        >
-                          <div
-                            style="position: relative;"
-                          >
-                            <input
-                              class="input input-bordered w-full"
-                              id="root_bark"
-                              name="root_bark"
-                              placeholder=""
-                              type="text"
-                              value=""
-                            />
-                          </div>
-                        </div>
+                        <input
+                          class="input input-bordered w-full"
+                          id="root_bark"
+                          name="root_bark"
+                          placeholder=""
+                          type="text"
+                          value=""
+                        />
                       </div>
                     </div>
                   </div>
@@ -4034,7 +3722,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -4106,45 +3794,39 @@ exports[`object fields > show add button and fields if additionalProperties is t
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_additionalProperty"
-                          name="root_additionalProperty"
-                          placeholder=""
-                          type="text"
-                          value="should appear"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      placeholder=""
+                      type="text"
+                      value="should appear"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_additionalProperty__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -4155,35 +3837,29 @@ exports[`object fields > show add button and fields if additionalProperties is t
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -4191,7 +3867,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -4232,14 +3908,10 @@ exports[`object fields > with title and description > additionalProperties 1`] =
             />
           </div>
           <div
-            class="description-field my-4"
+            class="rjsf-field-description text-sm text-base-content/80 my-4"
             id="root__description"
           >
-            <div
-              class="text-sm text-base-content/80"
-            >
-              a test description
-            </div>
+            a test description
           </div>
           <div
             class="grid grid-cols-1 gap-3 "
@@ -4289,45 +3961,39 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_foo"
-                          name="root_foo"
-                          placeholder=""
-                          type="text"
-                          value="foo"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -4338,35 +4004,29 @@ exports[`object fields > with title and description > additionalProperties 1`] =
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -4374,7 +4034,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -4415,14 +4075,10 @@ exports[`object fields > with title and description > object 1`] = `
             />
           </div>
           <div
-            class="description-field my-4"
+            class="rjsf-field-description text-sm text-base-content/80 my-4"
             id="root__description"
           >
-            <div
-              class="text-sm text-base-content/80"
-            >
-              a test description
-            </div>
+            a test description
           </div>
           <div
             class="grid grid-cols-1 gap-3 "
@@ -4450,32 +4106,20 @@ exports[`object fields > with title and description > object 1`] = `
                       </span>
                     </span>
                   </label>
+                  <input
+                    aria-describedby="root_a__description"
+                    class="input input-bordered w-full"
+                    id="root_a"
+                    name="root_a"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                   <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        aria-describedby="root_a__description"
-                        class="input input-bordered w-full"
-                        id="root_a"
-                        name="root_a"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="description-field my-4"
+                    class="rjsf-field-description text-sm text-base-content/80 my-4"
                     id="root_a__description"
                   >
-                    <div
-                      class="text-sm text-base-content/80"
-                    >
-                      A description
-                    </div>
+                    A description
                   </div>
                 </div>
               </div>
@@ -4503,35 +4147,23 @@ exports[`object fields > with title and description > object 1`] = `
                       </span>
                     </span>
                   </label>
+                  <input
+                    aria-describedby="root_b__description"
+                    class="input input-bordered w-full"
+                    id="root_b"
+                    inputmode="decimal"
+                    name="root_b"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                    placeholder=""
+                    title="Enter a number"
+                    type="text"
+                    value=""
+                  />
                   <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        aria-describedby="root_b__description"
-                        class="input input-bordered w-full"
-                        id="root_b"
-                        inputmode="decimal"
-                        name="root_b"
-                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                        placeholder=""
-                        title="Enter a number"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="description-field my-4"
+                    class="rjsf-field-description text-sm text-base-content/80 my-4"
                     id="root_b__description"
                   >
-                    <div
-                      class="text-sm text-base-content/80"
-                    >
-                      B description
-                    </div>
+                    B description
                   </div>
                 </div>
               </div>
@@ -4542,7 +4174,7 @@ exports[`object fields > with title and description > object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -4583,14 +4215,10 @@ exports[`object fields > with title and description > show add button and fields
             />
           </div>
           <div
-            class="description-field my-4"
+            class="rjsf-field-description text-sm text-base-content/80 my-4"
             id="root__description"
           >
-            <div
-              class="text-sm text-base-content/80"
-            >
-              a test description
-            </div>
+            a test description
           </div>
           <div
             class="grid grid-cols-1 gap-3 "
@@ -4640,45 +4268,39 @@ exports[`object fields > with title and description > show add button and fields
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_additionalProperty"
-                          name="root_additionalProperty"
-                          placeholder=""
-                          type="text"
-                          value="should appear"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      placeholder=""
+                      type="text"
+                      value="should appear"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_additionalProperty__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -4689,35 +4311,29 @@ exports[`object fields > with title and description > show add button and fields
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -4725,7 +4341,7 @@ exports[`object fields > with title and description > show add button and fields
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -4766,14 +4382,10 @@ exports[`object fields > with title and description from both > additionalProper
             />
           </div>
           <div
-            class="description-field my-4"
+            class="rjsf-field-description text-sm text-base-content/80 my-4"
             id="root__description"
           >
-            <div
-              class="text-sm text-base-content/80"
-            >
-              a fancier description
-            </div>
+            a fancier description
           </div>
           <div
             class="grid grid-cols-1 gap-3 "
@@ -4823,45 +4435,39 @@ exports[`object fields > with title and description from both > additionalProper
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_foo"
-                          name="root_foo"
-                          placeholder=""
-                          type="text"
-                          value="foo"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -4872,35 +4478,29 @@ exports[`object fields > with title and description from both > additionalProper
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -4908,7 +4508,7 @@ exports[`object fields > with title and description from both > additionalProper
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -4949,14 +4549,10 @@ exports[`object fields > with title and description from both > object 1`] = `
             />
           </div>
           <div
-            class="description-field my-4"
+            class="rjsf-field-description text-sm text-base-content/80 my-4"
             id="root__description"
           >
-            <div
-              class="text-sm text-base-content/80"
-            >
-              a fancier description
-            </div>
+            a fancier description
           </div>
           <div
             class="grid grid-cols-1 gap-3 "
@@ -4984,32 +4580,20 @@ exports[`object fields > with title and description from both > object 1`] = `
                       </span>
                     </span>
                   </label>
+                  <input
+                    aria-describedby="root_a__description"
+                    class="input input-bordered w-full"
+                    id="root_a"
+                    name="root_a"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                   <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        aria-describedby="root_a__description"
-                        class="input input-bordered w-full"
-                        id="root_a"
-                        name="root_a"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="description-field my-4"
+                    class="rjsf-field-description text-sm text-base-content/80 my-4"
                     id="root_a__description"
                   >
-                    <div
-                      class="text-sm text-base-content/80"
-                    >
-                      a fancier item A description
-                    </div>
+                    a fancier item A description
                   </div>
                 </div>
               </div>
@@ -5037,35 +4621,23 @@ exports[`object fields > with title and description from both > object 1`] = `
                       </span>
                     </span>
                   </label>
+                  <input
+                    aria-describedby="root_b__description"
+                    class="input input-bordered w-full"
+                    id="root_b"
+                    inputmode="decimal"
+                    name="root_b"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                    placeholder=""
+                    title="Enter a number"
+                    type="text"
+                    value=""
+                  />
                   <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        aria-describedby="root_b__description"
-                        class="input input-bordered w-full"
-                        id="root_b"
-                        inputmode="decimal"
-                        name="root_b"
-                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                        placeholder=""
-                        title="Enter a number"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="description-field my-4"
+                    class="rjsf-field-description text-sm text-base-content/80 my-4"
                     id="root_b__description"
                   >
-                    <div
-                      class="text-sm text-base-content/80"
-                    >
-                      a fancier item B description
-                    </div>
+                    a fancier item B description
                   </div>
                 </div>
               </div>
@@ -5076,7 +4648,7 @@ exports[`object fields > with title and description from both > object 1`] = `
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -5117,14 +4689,10 @@ exports[`object fields > with title and description from uiSchema > additionalPr
             />
           </div>
           <div
-            class="description-field my-4"
+            class="rjsf-field-description text-sm text-base-content/80 my-4"
             id="root__description"
           >
-            <div
-              class="text-sm text-base-content/80"
-            >
-              a fancier description
-            </div>
+            a fancier description
           </div>
           <div
             class="grid grid-cols-1 gap-3 "
@@ -5174,45 +4742,39 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_foo"
-                          name="root_foo"
-                          placeholder=""
-                          type="text"
-                          value="foo"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -5223,35 +4785,29 @@ exports[`object fields > with title and description from uiSchema > additionalPr
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -5259,7 +4815,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -5300,14 +4856,10 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
             />
           </div>
           <div
-            class="description-field my-4"
+            class="rjsf-field-description text-sm text-base-content/80 my-4"
             id="root__description"
           >
-            <div
-              class="text-sm text-base-content/80"
-            >
-              a fancier description
-            </div>
+            a fancier description
           </div>
           <div
             class="grid grid-cols-1 gap-3 "
@@ -5335,32 +4887,20 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                       </span>
                     </span>
                   </label>
+                  <input
+                    aria-describedby="root_a__description"
+                    class="input input-bordered w-full"
+                    id="root_a"
+                    name="root_a"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                   <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        aria-describedby="root_a__description"
-                        class="input input-bordered w-full"
-                        id="root_a"
-                        name="root_a"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="description-field my-4"
+                    class="rjsf-field-description text-sm text-base-content/80 my-4"
                     id="root_a__description"
                   >
-                    <div
-                      class="text-sm text-base-content/80"
-                    >
-                      a fancier item A description
-                    </div>
+                    a fancier item A description
                   </div>
                 </div>
               </div>
@@ -5388,35 +4928,23 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                       </span>
                     </span>
                   </label>
+                  <input
+                    aria-describedby="root_b__description"
+                    class="input input-bordered w-full"
+                    id="root_b"
+                    inputmode="decimal"
+                    name="root_b"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                    placeholder=""
+                    title="Enter a number"
+                    type="text"
+                    value=""
+                  />
                   <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        aria-describedby="root_b__description"
-                        class="input input-bordered w-full"
-                        id="root_b"
-                        inputmode="decimal"
-                        name="root_b"
-                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                        placeholder=""
-                        title="Enter a number"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="description-field my-4"
+                    class="rjsf-field-description text-sm text-base-content/80 my-4"
                     id="root_b__description"
                   >
-                    <div
-                      class="text-sm text-base-content/80"
-                    >
-                      a fancier item B description
-                    </div>
+                    a fancier item B description
                   </div>
                 </div>
               </div>
@@ -5427,7 +4955,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -5468,14 +4996,10 @@ exports[`object fields > with title and description from uiSchema > show add but
             />
           </div>
           <div
-            class="description-field my-4"
+            class="rjsf-field-description text-sm text-base-content/80 my-4"
             id="root__description"
           >
-            <div
-              class="text-sm text-base-content/80"
-            >
-              a fancier description
-            </div>
+            a fancier description
           </div>
           <div
             class="grid grid-cols-1 gap-3 "
@@ -5525,45 +5049,39 @@ exports[`object fields > with title and description from uiSchema > show add but
                         </span>
                       </span>
                     </label>
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          class="input input-bordered w-full"
-                          id="root_additionalProperty"
-                          name="root_additionalProperty"
-                          placeholder=""
-                          type="text"
-                          value="should appear"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      class="input input-bordered w-full"
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      placeholder=""
+                      type="text"
+                      value="should appear"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 32px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_additionalProperty__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -5574,35 +5092,29 @@ exports[`object fields > with title and description from uiSchema > show add but
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -5610,7 +5122,7 @@ exports[`object fields > with title and description from uiSchema > show add but
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -5659,46 +5171,40 @@ exports[`object fields > with title and description with global label off > addi
                   <div
                     class="field-template mb-3"
                   >
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          aria-label="foo"
-                          class="input input-bordered w-full"
-                          id="root_foo"
-                          name="root_foo"
-                          placeholder=""
-                          type="text"
-                          value="foo"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      aria-label="foo"
+                      class="input input-bordered w-full"
+                      id="root_foo"
+                      name="root_foo"
+                      placeholder=""
+                      type="text"
+                      value="foo"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 10px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_foo__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -5709,35 +5215,29 @@ exports[`object fields > with title and description with global label off > addi
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -5745,7 +5245,7 @@ exports[`object fields > with title and description with global label off > addi
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -5781,23 +5281,15 @@ exports[`object fields > with title and description with global label off > obje
                 <div
                   class="field-template mb-3"
                 >
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        aria-label="A"
-                        class="input input-bordered w-full"
-                        id="root_a"
-                        name="root_a"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    aria-label="A"
+                    class="input input-bordered w-full"
+                    id="root_a"
+                    name="root_a"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -5810,26 +5302,18 @@ exports[`object fields > with title and description with global label off > obje
                 <div
                   class="field-template mb-3"
                 >
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        aria-label="B"
-                        class="input input-bordered w-full"
-                        id="root_b"
-                        inputmode="decimal"
-                        name="root_b"
-                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                        placeholder=""
-                        title="Enter a number"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    aria-label="B"
+                    class="input input-bordered w-full"
+                    id="root_b"
+                    inputmode="decimal"
+                    name="root_b"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                    placeholder=""
+                    title="Enter a number"
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -5839,7 +5323,7 @@ exports[`object fields > with title and description with global label off > obje
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -5888,46 +5372,40 @@ exports[`object fields > with title and description with global label off > show
                   <div
                     class="field-template mb-3"
                   >
-                    <div
-                      class="form-control"
-                    >
-                      <div
-                        style="position: relative;"
-                      >
-                        <input
-                          aria-label="additionalProperty"
-                          class="input input-bordered w-full"
-                          id="root_additionalProperty"
-                          name="root_additionalProperty"
-                          placeholder=""
-                          type="text"
-                          value="should appear"
-                        />
-                      </div>
-                    </div>
+                    <input
+                      aria-label="additionalProperty"
+                      class="input input-bordered w-full"
+                      id="root_additionalProperty"
+                      name="root_additionalProperty"
+                      placeholder=""
+                      type="text"
+                      value="should appear"
+                    />
                   </div>
                   <div
                     class="flex self-start"
                     style="margin-top: 10px;"
                   >
                     <button
-                      aria-label="Remove"
-                      class="rjsf-object-property-remove"
+                      class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
                       id="root_additionalProperty__remove"
                       title="Remove"
                       type="button"
                     >
                       <svg
                         aria-hidden="true"
-                        class="svg-inline--fa fa-trash h-5 w-5"
-                        data-icon="trash"
-                        data-prefix="fas"
-                        role="img"
-                        viewBox="0 0 448 512"
+                        class="rjsf-button-icon h-5 w-5"
+                        fill="none"
+                        height="1em"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 16 16"
+                        width="1em"
                       >
                         <path
-                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
-                          fill="currentColor"
+                          d="M4 4l8 8M12 4l-8 8"
                         />
                       </svg>
                     </button>
@@ -5938,35 +5416,29 @@ exports[`object fields > with title and description with global label off > show
             <div
               class="flex justify-end"
             >
-              <div
-                class="row"
+              <button
+                class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-object-property-expand btn-primary"
+                id="root__add"
+                title="Add"
+                type="button"
               >
-                <p
-                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                <svg
+                  aria-hidden="true"
+                  class="rjsf-button-icon h-5 w-5"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 16 16"
+                  width="1em"
                 >
-                  <button
-                    aria-label="Add"
-                    class="btn-add col-xs-12 btn-primary btn-primary-content"
-                    id="root__add"
-                    title="Add"
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="svg-inline--fa fa-plus h-5 w-5"
-                      data-icon="plus"
-                      data-prefix="fas"
-                      role="img"
-                      viewBox="0 0 448 512"
-                    >
-                      <path
-                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </p>
-              </div>
+                  <path
+                    d="M8 3v10M3 8h10"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -5974,7 +5446,7 @@ exports[`object fields > with title and description with global label off > show
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
