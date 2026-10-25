@@ -174,6 +174,13 @@ describe('a native submit', () => {
     ['off a decimal step', { type: 'number', minimum: 0, maximum: 1, multipleOf: 0.1 }, 0.33, '0.3'],
     ['at a decimal maximum', { type: 'number', minimum: 0, maximum: 0.3, multipleOf: 0.1 }, 0.3, '0.3'],
     ['at another decimal maximum', { type: 'number', minimum: 0, maximum: 0.7, multipleOf: 0.1 }, 0.7, '0.7'],
+    ['halfway between two decimal steps', { type: 'number', minimum: 0, maximum: 1, multipleOf: 0.1 }, 0.35, '0.4'],
+    [
+      'halfway between two decimal steps above 1',
+      { type: 'number', minimum: 0, maximum: 2, multipleOf: 0.1 },
+      1.15,
+      '1.2',
+    ],
   ])(
     'gets the value a native range input holds for a value %s, where the slider is drawn',
     (_, range, value, posted) => {

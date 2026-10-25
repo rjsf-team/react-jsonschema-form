@@ -24,6 +24,22 @@ const SELECT_STYLE = {
   width: '100%',
 };
 
+/** The entries a native `<select>` posts: one per selected option, but none for a selected option that is disabled */
+function postedDomValues(
+  selected: string | string[],
+  showPlaceholderOption: boolean,
+  fallbackDomValue: string | undefined,
+  disabledDomValues: ReadonlySet<string>,
+): string[] {
+  if (Array.isArray(selected)) {
+    return [...new Set(selected)].filter((domValue) => !disabledDomValues.has(domValue));
+  }
+  if (selected === '' && !showPlaceholderOption) {
+    return fallbackDomValue === undefined ? [] : [fallbackDomValue];
+  }
+  return disabledDomValues.has(selected) ? [] : [selected];
+}
+
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
  *
@@ -108,16 +124,7 @@ export default function SelectWidget<
   const selectValue =
     fallbackDomValue ?? enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
 
-  // A native `<select>` posts one entry per selected option, but none for a selected option that is disabled
-  const postedValues = useMemo(() => {
-    if (Array.isArray(selected)) {
-      return [...new Set(selected)].filter((domValue) => !disabledDomValues.has(domValue));
-    }
-    if (selected === '' && !showPlaceholderOption) {
-      return fallbackDomValue === undefined ? [] : [fallbackDomValue];
-    }
-    return disabledDomValues.has(selected) ? [] : [selected];
-  }, [selected, showPlaceholderOption, fallbackDomValue, disabledDomValues]);
+  const postedValues = postedDomValues(selected, showPlaceholderOption, fallbackDomValue, disabledDomValues);
 
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {

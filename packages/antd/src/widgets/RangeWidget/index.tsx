@@ -16,9 +16,11 @@ const decimalsOf = (n: number) => {
  */
 function nativeRangeValue(value: number, min = 0, max = 100, step = 1) {
   const top = Math.max(min, max);
-  const steps = Math.round((Math.min(Math.max(value, min), top) - min) / step);
-  // A decimal step leaves float noise such as 0.30000000000000004, which a browser's decimal arithmetic doesn't, so it
-  // is rounded away before the snapped value is compared with `max`. `toFixed()` takes at most 100 digits
+  // A decimal step leaves float noise, such as 3.4999999999999996 steps for 0.35 over 0.1 or a snapped value of
+  // 0.30000000000000004, which a browser's decimal arithmetic doesn't. It is rounded away before the tie is broken and
+  // before the snapped value is compared with `max`. `toFixed()` takes at most 100 digits
+  const quotient = (Math.min(Math.max(value, min), top) - min) / step;
+  const steps = Math.round(Number(quotient.toPrecision(15)));
   const precision = Math.min(100, Math.max(decimalsOf(min), decimalsOf(step)));
   const round = (n: number) => Number(n.toFixed(precision));
   const snapped = round(min + steps * step);
