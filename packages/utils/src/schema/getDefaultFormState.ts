@@ -28,7 +28,6 @@ import getUiOptions from '../getUiOptions.ts';
 import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
-import guessType from '../guessType.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isConstantSelect from '../isConstantSelect.ts';
@@ -63,6 +62,7 @@ import type {
 } from '../types.ts';
 import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
+import { typeAllows } from './getFirstMatchingOption.ts';
 import buildPlan, {
   asTarget,
   cachedPolicy,
@@ -1115,12 +1115,11 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
     // An `allOf` merged for the defaults of a field that is not an object is gone from its schema, as it was from the
     // schema `computeDefaults()` recursed into
-    const unmergedAllOf = ALL_OF_KEY in schema;
     const mergedAllOf =
-      unmergedAllOf ||
-      (!view.field.retrieves &&
-        view.keywords.has(ALL_OF_KEY) &&
-        !(defaultFormStateBehavior?.allOf === 'populateDefaults' && getSchemaType<S>(schema) !== 'object'));
+      !(ALL_OF_KEY in schema) &&
+      !view.field.retrieves &&
+      view.keywords.has(ALL_OF_KEY) &&
+      !(defaultFormStateBehavior?.allOf === 'populateDefaults' && getSchemaType<S>(schema) !== 'object');
     if (isObject(rawFormData) && foldedType !== undefined && foldedType !== 'object') {
       // Object data of a field whose defaults are a whole value or one of another type is the field's value as a whole,
       // so it is kept as it is where the field takes it and its defaults stand otherwise, rather than blended with them
@@ -1131,14 +1130,12 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       } else if (wholeValue) {
         defaultsWithFormData = defaults;
       }
-    } else if (!isObject(rawFormData) || mergedAllOf || foldedType === undefined) {
-      // If the formData is not an object which means it's a primitive field, then we need to merge the defaults into the formData.
-      // Or if the schema has allOf, we need to merge the defaults into the formData because we don't compute the defaults for allOf.
-      // Where the `allOf` was merged, the properties of object data were computed from it with their data already, so
-      // what they were computed as wins over the data here, as an `if`/`then` `const` does. An `allOf` left unmerged
-      // computed none of the properties it declares, so the data wins over its defaults. Object data of a field whose
-      // type takes no object contents of its own to fill in, as an untyped field's or a `type` list's other type, is
-      // the user's, so it wins over the field's defaults too
+    } else if (!isObject(rawFormData) || foldedType === undefined) {
+      // A value that is no object, and object data of an untyped field, are merged with the field's defaults here. Object
+      // data of an object field is not: each of its properties was computed with its data already, its `allOf` merged
+      // or not, so the data is matched once, by the field of each property, rather than again by every object it is
+      // nested in. The data of an untyped field wins over its defaults, except where its `allOf` was merged: what its
+      // properties were computed as from that wins, as an `if`/`then` `const` does
       defaultsWithFormData = mergeDefaultsWithFormData(
         defaultsWithFormData,
         viewFormDataMatching<unknown, S, F>(context, view, rawFormData),
@@ -1147,7 +1144,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         // unless `mergeDefaultsIntoFormData` says a default replaces it
         !isObject(rawFormData) ||
           defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined',
-        isObject(rawFormData) && mergedAllOf && !unmergedAllOf,
+        isObject(rawFormData) && mergedAllOf,
       );
     }
   }
@@ -1671,13 +1668,14 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       // A property the data holds is the user's, so it is kept with its defaults merged in, as its field computed it,
       // whatever the form's settings say about adding defaults. Where its field takes none of the data, an `allOf` the
       // property is read through decides it holds nothing, object data its schema can't take is left out, and any other
-      // value is kept as the user left it, as a select keeps a value its options no longer offer
+      // value is kept as the user left it, as a select keeps a value its options no longer offer. An extra key stubbed
+      // among the properties is kept as the user left it, as the extra keys of an object one level down are
       const retrievesProperty =
         shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior) ||
         (isObject(readProperty) && ALL_OF_KEY in readProperty);
       if (property.value !== undefined || retrievesProperty) {
         setOwn(computed, key, property.value);
-      } else if (!isObjectData(formData[key])) {
+      } else if (addedByAdditionalProperty || !isObjectData(formData[key])) {
         setOwn(computed, key, formData[key]);
       }
     } else {
@@ -1788,12 +1786,16 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       });
   }
   // The data is the user's: a key it holds as `undefined` or `null` stays so unless `mergeDefaultsIntoFormData` says a
-  // default replaces that, and one no property names and no additional property was computed for is kept as it is
+  // default replaces that and one does, and one no property names and no additional property was computed for is kept
+  // as it is
   if (shouldMergeDefaultsIntoFormData) {
     for (const key of Object.keys(formData)) {
       if (formData[key] == null && !defaultReplacesUndefined) {
         setOwn(computed, key, formData[key]);
-      } else if (!Object.hasOwn(computed, key) && !(schema.properties && Object.hasOwn(schema.properties, key))) {
+      } else if (
+        !Object.hasOwn(computed, key) &&
+        (formData[key] === undefined || !(schema.properties && Object.hasOwn(schema.properties, key)))
+      ) {
         setOwn(computed, key, formData[key]);
       }
     }
@@ -2336,33 +2338,19 @@ interface MatchedSchema<S extends StrictRJSFSchema> {
   readonly chains: () => readonly Keywords<S>[];
 }
 
-/** Whether `value` is an object as JSON Schema reads data: a plain object with no primitive value of its own. One whose
- * `valueOf()` gives a primitive, as a moment, dayjs or Luxon object's gives an epoch, is that value to the date widgets
- * `utcToLocal()` converts it for
+/** Whether `value` is an object as JSON Schema reads data: a plain object, `null`-prototype ones included, with no
+ * primitive value of its own. One with a `valueOf()` method of its own, as an object standing for a moment, dayjs or
+ * Luxon value has to give its epoch, is that value to the date widgets `utcToLocal()` converts it for
  */
 function isObjectData(value: unknown): value is Record<string, unknown> {
-  return isPlainObject(value) && Reflect.get(value, 'valueOf') === Object.prototype.valueOf;
-}
-
-/** Whether `schema` takes an object as its value: it names `object` among the types it says its value has, or says
- * nothing about them, as a schema with no `type` of its own whose `anyOf` options or `default` would say
- */
-function takesObject<S extends StrictRJSFSchema>(schema: S): boolean {
-  const types = getSchemaOwnTypes<S>(schema);
-  return types === undefined || types.includes('object');
-}
-
-/** Whether `schema` takes a value of the type `value` has: it names that type among the types it says its value has,
- * or `integer` for a whole number, or says nothing about them
- */
-function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
-  const types = getSchemaOwnTypes<S>(schema);
-  const type = guessType(value);
   return (
-    types === undefined ||
-    types.includes(type) ||
-    (type === 'number' && types.includes('integer') && Number.isInteger(value))
+    isPlainObject(value) && !(Object.hasOwn(value, 'valueOf') && typeof Reflect.get(value, 'valueOf') === 'function')
   );
+}
+
+/** Whether `schema` takes a value of the type `value` has, as its own types say them, see `typeAllows()` */
+function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
+  return typeAllows(getSchemaOwnTypes<S>(schema), value);
 }
 
 /** Returns `formData` matched to `matched.schema` as `ensureFormDataMatchingSchema()` matches it */
@@ -2410,7 +2398,7 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
         ? formData
         : undefined;
     }
-  } else if (isObjectData(formData) && !takesObject<S>(schemaToMatch)) {
+  } else if (isObjectData(formData) && !takesValueOf<S>(schemaToMatch, formData)) {
     // Object data can never validate against a schema whose types leave out `object`, so it is no value of the field
     validFormData = undefined;
   }
@@ -2524,8 +2512,10 @@ export default function getDefaultFormState<
     uiSchemaDefinitions,
     fieldState,
   });
-  // Every field merged its own data into its defaults as it computed them, so they are the form's state as they stand
+  // Every field merged its own data into its defaults as it computed them, so they are the form's state as they stand.
+  // A field keeps data it takes as it is, so the state is copied off the caller's data, which the caller may go on to
+  // change, as the caller may change the state it is handed
   return asDeclared<T | T[] | null | undefined>(
-    isObject(formData) || Array.isArray(formData) ? withNullFills(defaults, formData, nullFills) : defaults,
+    isObject(formData) || Array.isArray(formData) ? ownValue(withNullFills(defaults, formData, nullFills)) : defaults,
   );
 }

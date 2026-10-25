@@ -1304,7 +1304,7 @@ describe('ObjectField', () => {
       await user.click(elementOf(node, '.rjsf-object-property-expand button'));
 
       expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({ formData: { newKey: expect.anything() } }),
+        expect.objectContaining({ formData: { newKey: 'New Value' } }),
         expect.anything(),
       );
     });
