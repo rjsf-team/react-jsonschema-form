@@ -409,6 +409,18 @@ describe('DateTimeWidget', () => {
       expect(popup()).toHaveStyle({ top: '8px' });
     });
 
+    test('no taller than the viewport less a horizontal scrollbar along its bottom', async () => {
+      // A 15px scrollbar under the 768px viewport, which `100vh` takes in
+      vi.spyOn(document.documentElement, 'clientHeight', 'get').mockReturnValue(753);
+      const trigger = renderAt({ top: 380, left: 10 });
+      sizeElements(320, 753);
+
+      await user.click(trigger);
+
+      // Scrolling within the 753px above the scrollbar, from the top, so Done ends where the scrollbar starts
+      expect(popup()).toHaveStyle({ top: '0px', maxHeight: '753px' });
+    });
+
     test('again when its own height changes', async () => {
       const trigger = renderAt({ top: 680, left: 10 });
       const height = sizeElements(320, 500);
@@ -443,6 +455,21 @@ describe('DateTimeWidget', () => {
 
       // Still 5px below the trigger in the viewport
       expect(popup()).toHaveStyle({ top: '-45px', left: '-30px' });
+    });
+
+    test('in the top layer, which no modal dialog, clipping or transformed ancestor reaches, where there is one', async () => {
+      // jsdom has no popovers
+      const showPopover = vi.fn();
+      Object.defineProperty(HTMLElement.prototype, 'showPopover', { value: showPopover, configurable: true });
+      onTestFinished(() => {
+        Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
+      });
+      const trigger = renderAt({ top: 30, left: 10 });
+
+      await user.click(trigger);
+
+      expect(popup()).toHaveAttribute('popover', 'manual');
+      expect(showPopover.mock.contexts).toEqual([popup()]);
     });
 
     test('hidden while a scrolling panel around the field hides all of its trigger', async () => {

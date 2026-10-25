@@ -380,23 +380,32 @@ export function useDatePicker<V>({
 
   // Place the popup just below its trigger, or above it where it would run off the bottom of the viewport and fits
   // there, or else as low as it fits whole, and moved left where it would run off the right of the viewport. It is
-  // fixed, so a scrolling panel or dialog around the field doesn't clip it, which leaves it to follow the trigger
-  // itself, and a scroll of the page can't bring into view a part of it that runs off the bottom. A layout Effect, so
-  // the popup each opening mounts is in place before the browser first paints it; it then follows the trigger on
-  // resize and scroll, once a frame however many events the frame brings, since measuring the trigger forces a
-  // layout, and is placed again when its own size changes, as a month with another number of weeks changes it. A
-  // scroll of an element around the field doesn't bubble, so it reaches the window only in the capture phase
+  // in the top layer, or fixed where the browser has no popovers, so a scrolling panel or dialog around the field
+  // doesn't clip it, which leaves it to follow the trigger itself, and a scroll of the page can't bring into view a
+  // part of it that runs off the bottom. A layout Effect, so the popup each opening mounts is shown and in place
+  // before the browser first paints it; it then follows the trigger on resize and scroll, once a frame however many
+  // events the frame brings, since measuring the trigger forces a layout, and is placed again when its own size
+  // changes, as a month with another number of weeks changes it. A scroll of an element around the field doesn't
+  // bubble, so it reaches the window only in the capture phase
   useLayoutEffect(() => {
     const popup = containerRef.current;
     const trigger = triggerRef.current;
     if (!isOpen || !popup || !trigger) {
       return () => {};
     }
+    // A popover only where the browser can show one: jsdom, as a consumer's tests run in, hides one it can't show, and
+    // an older browser has none. A Strict Mode remount runs this again on a popup still showing
+    if ('showPopover' in popup && !popup.matches(':popover-open')) {
+      popup.setAttribute('popover', 'manual');
+      popup.showPopover();
+    }
     // The trigger is measured against the viewport of the window the form is in, so that is the one to keep inside
     // of. The root element's client box is that viewport less its scrollbars
     const viewport = documentOf(trigger).documentElement;
     const win = windowOf(trigger);
     const place = () => {
+      // Not `100vh`, which takes in a horizontal scrollbar along the bottom of the viewport
+      popup.style.maxHeight = `${viewport.clientHeight}px`;
       const { top, bottom, left } = trigger.getBoundingClientRect();
       const { offsetWidth: width, offsetHeight: height } = popup;
       const below = bottom + 5;
@@ -407,8 +416,10 @@ export function useDatePicker<V>({
         y = above >= 0 ? above : Math.max(0, viewport.clientHeight - height);
       }
       const x = left > rightmost ? Math.max(20, rightmost) : left;
-      // A transformed, filtered or contained ancestor, as daisyUI's modal box is, places a fixed element against
-      // itself rather than against the viewport, so the popup is offset by wherever its origin lands
+      // Outside the top layer, a transformed, filtered or contained ancestor, as daisyUI's modal box is, places a fixed
+      // element against itself rather than against the viewport, so the popup is offset by wherever its origin lands.
+      // shortcut: that undoes the ancestor's translation, not a scale; measure the popup's rendered size against its
+      // offset size if a browser without popovers inside a scaled ancestor matters
       popup.style.top = '0px';
       popup.style.left = '0px';
       const origin = popup.getBoundingClientRect();
