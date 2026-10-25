@@ -1103,7 +1103,7 @@ export type FieldTemplateProps<
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
   /** Whether the field shows its own errors, as `ui:hideError` leaves them: the state its wrapper's `rjsf-field-error`
-   * class, its label, its help and its description take. Beneath an `anyOf`/`oneOf` field it can differ from the
+   * class, its label and its help take. Beneath an `anyOf`/`oneOf` field it can differ from the
    * plan's errors, which are the field above's where it shows them. Required, so a custom field that renders a
    * `FieldTemplate` itself says whether the field is in error rather than silently leaving the template out of it
    */
