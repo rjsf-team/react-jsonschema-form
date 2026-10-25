@@ -1078,8 +1078,8 @@ export type FieldTemplateProps<
   /** An array of strings listing the generated error messages this field is displaying, `undefined` while
    * `ui:hideError` is in effect, so that a template styling itself from it alone stays out of the error state.
    * To render the withheld errors yourself, read them from `errorSchema`
-   * @deprecated Kept through v7 for a template rendered without a plan: read `presentation.errors.messages`, or
-   *   `hasTemplateErrors()`, which falls back to this
+   * @deprecated Kept through v7 for a template rendered without a plan: read `presentation.errors.messages` for the
+   *   messages, or `hasErrors` for the field's error state
    */
   rawErrors?: string[];
   /** The tree of errors for this field and its children, carrying every error whatever `hideError` says, for a
@@ -1102,6 +1102,11 @@ export type FieldTemplateProps<
   readonly: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
+  /** Whether the field shows its own errors, as `ui:hideError` leaves them: the state its wrapper's `rjsf-field-error`
+   * class, its label, its help and its description take. Beneath an `anyOf`/`oneOf` field it can differ from the
+   * plan's errors, which are the ones the field above shows
+   */
+  hasErrors?: boolean;
   /** A boolean value stating if the field is disabled */
   disabled: boolean;
   /** A boolean value stating if the template renders the label: true only where the field's `presentation` says the
@@ -1195,6 +1200,8 @@ export type DescriptionFieldProps<
   id: string;
   /** The description of the field being rendered */
   description: string | ReactElement;
+  /** Whether the field it describes shows errors */
+  hasErrors?: boolean;
 };
 
 /** The properties that are passed to a `ArrayFieldTitleTemplate` implementation */
@@ -1342,8 +1349,8 @@ export type ContainerFieldTemplateProps<
    * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does
    * @deprecated Kept through v7 for a template rendered without a plan: read `getErrorsToDraw()` for the messages the
    *   template draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
-   *   `presentation.errors.by` is `'self'`, since the `FieldTemplate` draws them under `'template'`, and
-   *   `hasTemplateErrors()` for an error state, each falling back to this without a plan
+   *   `presentation.errors.by` is `'self'`, since the `FieldTemplate` draws them under `'template'`, and whether
+   *   `presentation.errors.messages` has any for an error state. `getErrorsToDraw()` falls back to this without a plan
    */
   rawErrors?: string[];
   /** A string value containing the title for the array */
@@ -1450,6 +1457,7 @@ export type WrapIfAdditionalTemplateProps<
     | 'id'
     | 'classNames'
     | 'hideError'
+    | 'hasErrors'
     | 'rawDescription'
     | 'rawErrors'
     | 'style'

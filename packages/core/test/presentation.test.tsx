@@ -10,15 +10,7 @@ import type {
   Widget,
   WidgetProps,
 } from '@rjsf/utils';
-import {
-  errorId,
-  fieldLabelId,
-  hasTemplateErrors,
-  helpId,
-  optionHelpId,
-  selectedOptionDescriptionId,
-  titleId,
-} from '@rjsf/utils';
+import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionId, titleId } from '@rjsf/utils';
 import { screen, within } from '@testing-library/react';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
@@ -401,8 +393,7 @@ describe('the plan SchemaField builds', () => {
   });
 
   // The class and the help's error state follow the option's own errors and `ui:hideError`, as the deprecated
-  // `rawErrors` its template is handed do, while its plan, which `hasTemplateErrors()` reads, takes the errors as the
-  // field above shows them
+  // `rawErrors` its template is handed do, while its plan takes the errors as the field above shows them
   it.each([
     ['shows', true, false],
     ['hides', false, true],
@@ -435,7 +426,7 @@ describe('the plan SchemaField builds', () => {
       expect(optionHelps.at(-1)?.hasErrors).toBe(!optionHides);
       // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop the class agrees with
       expect(option.rawErrors).toEqual(optionHides ? undefined : ['is wrong']);
-      expect(hasTemplateErrors(option)).toBe(!aboveHides);
+      expect(option.presentation?.errors.messages).toEqual(aboveHides ? [] : ['is wrong']);
     },
   );
 

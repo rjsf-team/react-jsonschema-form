@@ -4,7 +4,6 @@ import {
   AdditionalPropertyKeySelect,
   buttonId,
   hasAdditionalKeyLabel,
-  hasTemplateErrors,
   TranslatableString,
 } from '@rjsf/utils';
 
@@ -25,6 +24,7 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     disabled,
+    hasErrors,
     label,
     keyName,
     onKeyRename,
@@ -49,7 +49,7 @@ export default function WrapIfAdditionalTemplate<
   const hasDescription = !!rawDescription;
 
   const classNamesList = ['form-group', classNames];
-  if (hasTemplateErrors<T, S, F>(props)) {
+  if (hasErrors) {
     classNamesList.push('has-error has-danger');
   }
   const uiClassNames = classNamesList.join(' ').trim();

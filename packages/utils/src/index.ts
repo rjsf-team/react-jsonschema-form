@@ -106,7 +106,6 @@ import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hasAdditionalKeyLabel from './hasAdditionalKeyLabel.ts';
 import hashForSchema, { hashObject, hashString, schemaKey, sortedJSONStringify } from './hashForSchema.ts';
-import hasTemplateErrors from './hasTemplateErrors.ts';
 import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
 import hasWidgetErrors from './hasWidgetErrors.ts';
@@ -346,7 +345,6 @@ export {
   guessType,
   hasAdditionalKeyLabel,
   hasByPath,
-  hasTemplateErrors,
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   hasVisibleErrors,
   hasWidget,

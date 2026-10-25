@@ -5,7 +5,6 @@ import {
   getControlAriaLabel,
   getControlFallbackName,
   getErrorsToDraw,
-  hasTemplateErrors,
   hasWidgetErrors,
   isNamedByTemplateLabel,
   resolveFieldPresentation,
@@ -66,21 +65,6 @@ describe('templateMarksRequired()', () => {
   it('follows required without a plan', () => {
     expect(templateMarksRequired({ required: true })).toBe(true);
     expect(templateMarksRequired({})).toBe(false);
-  });
-});
-
-describe('hasTemplateErrors()', () => {
-  it("follows the plan's messages, which have ui:hideError applied", () => {
-    expect(hasTemplateErrors({ presentation: plan({ errors: ['bad'] }) })).toBe(true);
-    expect(hasTemplateErrors({ presentation: plan({ errors: ['bad'], hideError: true }), rawErrors: ['bad'] })).toBe(
-      false,
-    );
-  });
-
-  it('follows rawErrors and hideError without a plan', () => {
-    expect(hasTemplateErrors({ rawErrors: ['bad'] })).toBe(true);
-    expect(hasTemplateErrors({ rawErrors: ['bad'], hideError: true })).toBe(false);
-    expect(hasTemplateErrors({})).toBe(false);
   });
 });
 
