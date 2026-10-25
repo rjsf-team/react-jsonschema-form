@@ -360,6 +360,35 @@ describe('DateTimeWidget', () => {
     });
   });
 
+  test('places its calendar above its trigger where it would run off the bottom of the viewport', async () => {
+    const { container } = render(
+      <DateTimeWidget
+        {...makeWidgetMockProps({ value: '2016-04-05T14:01:30', schema: { type: 'string', format: 'date-time' } })}
+      />,
+    );
+    const trigger = container.querySelector('button[aria-haspopup]')!;
+    // jsdom lays nothing out, so the trigger is put by hand near the bottom of its 768px-high viewport, and the popup
+    // given a height
+    vi.spyOn(trigger, 'getBoundingClientRect').mockReturnValue({
+      x: 10,
+      y: 680,
+      width: 90,
+      height: 20,
+      top: 680,
+      right: 100,
+      bottom: 700,
+      left: 10,
+      toJSON() {},
+    });
+    const height = vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(500);
+    onTestFinished(() => height.mockRestore());
+
+    await user.click(trigger);
+
+    // Its 500px end 5px above the trigger's top, where below it they would end 437px past the viewport's bottom
+    expect(screen.getByText('Done').closest('.date-picker-popup')).toHaveStyle({ top: '175px', left: '10px' });
+  });
+
   test("translates the Done button and the time input's label", async () => {
     const { container } = render(
       <Form

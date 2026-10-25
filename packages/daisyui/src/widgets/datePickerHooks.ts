@@ -380,9 +380,10 @@ export function useDatePicker<V>({
     };
   }, [isOpen, latestCancel, latestClose]);
 
-  // Place the popup just below its trigger, moved left where the calendar would run off the right of the viewport. It
-  // is fixed, so a scrolling panel or dialog around the field doesn't clip it, which leaves it to follow the trigger
-  // itself. A layout Effect, so the popup each opening mounts is in place before the browser first paints it; it then
+  // Place the popup just below its trigger, or above it where it would run off the bottom of the viewport and fits
+  // there, and moved left where the calendar would run off the right of it. It is fixed, so a scrolling panel or dialog
+  // around the field doesn't clip it, which leaves it to follow the trigger itself, and a scroll of the page can't
+  // bring into view a part of it that runs off the bottom. A layout Effect, so the popup each opening mounts is in place before the browser first paints it; it then
   // follows the trigger on resize and scroll, once a frame however many events the frame brings, since measuring the
   // trigger forces a layout. A scroll of an element around the field doesn't bubble, so it reaches the window only in
   // the capture phase
@@ -395,9 +396,11 @@ export function useDatePicker<V>({
     // The trigger is measured against the viewport of the window the form is in, so that is the one to keep inside of
     const win = windowOf(trigger);
     const place = () => {
-      const { bottom, left } = trigger.getBoundingClientRect();
+      const { top, bottom, left } = trigger.getBoundingClientRect();
+      const height = popup.offsetHeight;
+      const above = top - 5 - height;
       const rightmost = win.innerWidth - 20 - CALENDAR_MIN_WIDTH;
-      popup.style.top = `${bottom + 5}px`;
+      popup.style.top = `${bottom + 5 + height > win.innerHeight && above >= 0 ? above : bottom + 5}px`;
       popup.style.left = `${left > rightmost ? Math.max(20, rightmost) : left}px`;
     };
     place();
