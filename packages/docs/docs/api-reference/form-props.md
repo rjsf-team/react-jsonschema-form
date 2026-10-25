@@ -843,6 +843,25 @@ A pure function that decides what an edit leaves the form with. The form calls i
 
 It runs for every keystroke, so a rewrite has to hold for a value the user is still typing, and for a field they cleared, which is `undefined`. Upper-casing does; trimming would remove a space as soon as it is typed, so `hello world` would come out as `helloworld`. Trim on submit instead. Leave out a key `next` doesn't hold, as the example does for an empty `code`: `{ ...next, code: undefined }` adds one, so every edit while `code` is empty would come back rewritten.
 
+A field computed from other fields belongs here too. Here `rate` exists only `if` `mode` is `auto`, and `mode` follows `country`:
+
+```tsx
+const modeFor = (country) => (country === 'SE' ? 'auto' : 'manual');
+const withMode = (data) => {
+  const mode = modeFor(data?.country);
+  return data?.mode === mode ? data : { ...data, mode };
+};
+
+<Form
+  schema={schema}
+  validator={validator}
+  initialFormData={withMode(initialData)}
+  transformChange={(next) => withMode(next)}
+/>;
+```
+
+A change to `country` and the `mode` it computes are one edit: the form shows `rate` in the same render, and stores, validates and reports one result. `withMode` returns `next` itself when `mode` already matches, so an edit elsewhere doesn't come back rewritten. The form starts with `initialFormData` without calling `transformChange`, so the field is computed into it too. Setting the field from a widget's Effect, or calling `setFieldValue()` from `onChange`, makes it a second edit instead: `onChange` reports the first with `mode` out of date before it reports the second, and a widget's Effect also reports a change on mount that the user never made.
+
 Return a value on every path: `undefined` leaves the form with no data, which a function body that forgets a `return` does, so the form warns about it in development. What you return is filled in with the schema's defaults like any data the form holds, so a property with a `default` that you leave out, or set to `undefined` under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'`, gets its default back. It is sanitized as the edit would be, too: when it switches an `if`/`then`/`else`, `dependencies` or other conditional, the values of the branch it leaves are dropped, as they are when the user makes that switch in the field. Return `next`'s unchanged subtrees as they are, so their fields do not render again. A copy of `previous` refuses the edit as `previous` itself does, except for an edit that leaves the data as it was, such as an option switch whose data fits both options or a reorder of two equal items: `next` is a copy of `previous` then, so a copy of either takes the edit, and only `previous` itself refuses it. At a root that holds a string, number or boolean, there is no copy to tell apart: such an edit's `next` is `previous` itself, so it can't be refused. The function must be pure: the form may call it again for the same edit. Don't mutate `next` or `previous`, since both share their unchanged parts with the data the form holds; return a new object instead. In development both are frozen, so a mutation throws. It is not called for what the form derives on its own: the defaults for a new schema, the live omit a blur runs, or a `reset()`.
 
 ## translateString
