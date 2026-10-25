@@ -299,7 +299,7 @@ export interface FormState<
    * is dirty exactly when `formData` is not this
    */
   baseline?: T;
-  /** How many submits have been attempted since the form mounted or was last reset */
+  /** How many submits have reached the form since it mounted or was last reset */
   submitCount: number;
   /** Whether there is data to live-validate when a prop changes: the props seeded the form with data, rather than
    * leaving it to the schema's defaults, or it has been edited since it mounted or was last reset

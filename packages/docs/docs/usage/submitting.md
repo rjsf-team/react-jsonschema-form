@@ -118,14 +118,14 @@ The action's state is a good place for errors the server reports. Return them as
 
 The form compares its data with a baseline: the data it was last seeded with, on mount or by `reset()`, with the schema's defaults filled in. A form that only holds its seed and its defaults is clean. Every [`onChange`](../api-reference/form-props.md#onchange) and `onSubmit` event, and [`getStatus()`](../advanced-customization/internals.md#read-the-form-status) on the form's ref, report:
 
-- `dirty`: whether the data differs from the baseline. Typing a field's original value back makes the form clean again.
+- `dirty`: whether the data differs from the baseline. Typing a field's original value back makes the form clean again, as long as that value isn't blank.
 
-  Clearing a field stores `undefined`, so clearing a field that was seeded with `''` leaves the form dirty. Set [`ui:emptyValue`](../api-reference/uiSchema.md#emptyvalue) to `''` on that field to have clearing store `''`, which makes the form clean again.
+  Clearing a field stores `undefined`, which is not the same as the field being absent or holding `''`. So a field the seed left out, or seeded with `''`, stays dirty once it is typed into and cleared, as it does in react-hook-form. For a field seeded with `''`, set [`ui:emptyValue`](../api-reference/uiSchema.md#emptyvalue) to `''` on that field to have clearing store `''`, which makes the form clean again. A field the seed left out has no such fix: seed it with `''` and set `ui:emptyValue` if it matters.
 
 - `dirtyFields`: where it differs, nested like the data, with `true` at each field that changed, for example `{ address: { city: true } }`. For an array it holds an entry for each item, `undefined` where the item is unchanged.
-- `submitCount`: how many submits have been attempted since the form mounted or was last reset, valid or not.
+- `submitCount`: how many submits have reached the form since it mounted or was last reset, valid or not. The browser's own constraint validation, such as for a `required` input left empty, blocks a submit before it reaches the form, so such a submit isn't counted unless you set [`noHtml5Validate`](../api-reference/form-props.md#nohtml5validate).
 
-Changes the user didn't make leave the form clean. When a new `schema` prop fills in a default, or `omitExtraData` with `liveOmit` drops data the schema doesn't describe, the baseline changes with the data. A change that follows from the user's own edit does count: when changing one field makes a conditional schema drop another field's value, both fields are dirty.
+Changes the user didn't make leave the form clean. When a new `schema` prop fills in a default, or `omitExtraData` with `liveOmit` drops data the schema doesn't describe, the baseline changes with the data. A prop change calls no `onChange`, so the status it leaves, which can turn a dirty form clean, is read with `getStatus()` after passing the new props. A change that follows from the user's own edit does count: when changing one field makes a conditional schema drop another field's value, both fields are dirty.
 
 ### Making the saved data the baseline
 
@@ -173,7 +173,7 @@ function EditPersonDialog({ person, onClose }: { person: Person; onClose: () => 
 
 ### Disabling submit when nothing changed
 
-To render from `dirty`, keep it in state from `onChange`. `onChange` fires whenever `dirty` can change, the `reset(saved)` after a save included, so the state stays current. Disable the default submit button through [`ui:submitButtonOptions`](../api-reference/uiSchema.md#submitbuttonoptions), which keeps it disabled while a save is pending as well:
+To render from `dirty`, keep it in state from `onChange`. `onChange` fires for every edit and for the `reset(saved)` after a save, so the state follows the user's changes. A prop change, such as a new `schema` filling in a default, updates the status without calling `onChange`; if your form's props change while it is shown, read `getStatus().dirty` after passing them as well. A field typed into and cleared counts as changed, see `dirty` above, so the button stays enabled after that. Disable the default submit button through [`ui:submitButtonOptions`](../api-reference/uiSchema.md#submitbuttonoptions), which keeps it disabled while a save is pending as well:
 
 ```tsx
 function PersonForm({ person }: { person: Person }) {

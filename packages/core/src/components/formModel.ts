@@ -24,7 +24,7 @@ import isDevelopment from '../isDevelopment.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { AnnouncedMove, FieldChange, KeyMove, MoveOutcome } from './formState.ts';
+import type { AnnouncedMove, ExtraDataOmission, FieldChange, KeyMove, MoveOutcome } from './formState.ts';
 import {
   applyBlur,
   applyChangeToData,
@@ -38,6 +38,7 @@ import {
   freezeFormData,
   isBlurValidated,
   isLiveValidated,
+  omitExtraDataOf,
   seedOf,
   shareState,
   toEventFormData,
@@ -587,11 +588,25 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     commit({ ...attempted, submitCount: attempted.submitCount + 1 });
     // oxlint-disable-next-line typescript/no-deprecated
     const { noValidate } = props;
-    if (!noValidate && !runValidation(props, () => withExtraDataOmitted(props))) {
+    // One omission serves the validation and the commit; it is taken again only for data a nested operation changed
+    let omission: { from: FormState<T, S, F>; omitted: ExtraDataOmission<T> } | undefined;
+    const omitOnce = (base: FormState<T, S, F>) => {
+      if (
+        !omission ||
+        omission.from.formData !== base.formData ||
+        omission.from.baseline !== base.baseline ||
+        omission.from.schemaUtils !== base.schemaUtils
+      ) {
+        omission = { from: base, omitted: omitExtraDataOf(base) };
+      }
+      return omission.omitted;
+    };
+    const isOmitted = props.omitExtraData === true;
+    if (!noValidate && !runValidation(props, () => (isOmitted ? omitOnce(current()).formData : current().formData))) {
       return undefined;
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
-    const committed = commit(settled((base) => applySubmit(base, props)));
+    const committed = commit(settled((base) => applySubmit(base, props, isOmitted ? omitOnce(base) : undefined)));
     return props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
   };
 

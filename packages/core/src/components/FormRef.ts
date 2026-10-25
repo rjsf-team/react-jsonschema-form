@@ -27,8 +27,9 @@ export interface FormRef<T = unknown> {
    */
   submit(): void;
   /** Reads the form's status: whether its latest stored value differs from the baseline, where, and how many submits
-   * have been attempted. It matches the status the last `IChangeEvent` carried, or the form's initial status before
-   * any event.
+   * have reached the form. A prop change that re-derives the data, such as a new `schema` filling in a default, moves
+   * the baseline with it and calls no `onChange`, so after one this can differ from the status the last `IChangeEvent`
+   * carried.
    */
   getStatus(): FormStatus<T>;
   /** Clears the validation errors and the submit count, and resets the data to `seed` with the schema's defaults filled

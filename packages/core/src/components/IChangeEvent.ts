@@ -18,10 +18,10 @@ export type EventFormData<T> = T extends object ? T : T | undefined;
 
 /** A value nested like the form's data, holding `true` at each field that differs. An object holds an entry only for
  * its members that differ, and an array an entry for each item, `undefined` where the item does not differ. A field
- * that was added, removed or replaced whole holds `true` at each of its leaves, or `true` itself when it is not an
- * object or array.
+ * that was added, removed or replaced whole holds `true` at each of its leaves, or `true` itself when it is not a plain
+ * object or array: a `Date`, a `File` or another `Blob` is marked as one field.
  */
-export type NestedBooleans<T> = T extends Date
+export type NestedBooleans<T> = T extends Date | Blob
   ? boolean
   : T extends readonly (infer Item)[]
     ? (NestedBooleans<Item> | undefined)[]
@@ -47,9 +47,13 @@ export interface FormStatus<T = unknown> {
    * `FormRef.reset()`, with the schema's defaults filled in
    */
   readonly dirty: boolean;
-  /** Where the data differs from the baseline */
+  /** Where the data differs from the baseline. A field the seed left blank, typed into and cleared, holds `undefined`
+   * where the baseline holds nothing, so it stays marked
+   */
   readonly dirtyFields: NestedBooleans<T>;
-  /** How many submits have been attempted, valid or not, since the form mounted or was last reset */
+  /** How many submits have reached the form, valid or not, since the form mounted or was last reset. A submit the
+   * browser's constraint validation blocks never reaches it, so it is not counted unless `noHtml5Validate` is set
+   */
   readonly submitCount: number;
 }
 

@@ -706,7 +706,7 @@ Sometimes you may want to trigger events or modify external state when a field h
 ## onChange
 
 Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes, such as the schema's defaults: read those with `getFormData()`. The edit has been applied by the time it is called, so not storing it does not undo it; refuse or rewrite edits in [`transformChange`](#transformchange).
-The event also carries the form's status: `dirty`, `dirtyFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes). A change to the status alone fires no `onChange`.
+The event also carries the form's status: `dirty`, `dirtyFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes). A change to the status alone fires no `onChange`, and neither does a prop change that moves the baseline with the data, so read `getStatus()` after one. `submitCount` counts the submits that reach the form: one the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set.
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.

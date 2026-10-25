@@ -121,7 +121,7 @@ Inside `onChange`, use `event.formData` to read the edit being reported. Treat d
 
 ## Read the form status
 
-Call `getStatus()` to read whether the form's data differs from its baseline (`dirty`), where (`dirtyFields`), and how many submits have been attempted (`submitCount`). It returns what the last `onChange` or `onSubmit` event carried, or the initial status before any event. Call `reset(saved)` with the data a save stored to make it the new baseline. See [Unsaved changes](../usage/submitting.md#unsaved-changes).
+Call `getStatus()` to read whether the form's data differs from its baseline (`dirty`), where (`dirtyFields`), and how many submits have reached the form (`submitCount`; a submit the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set). It returns the status after every edit, `reset()` and submit, which the events carry too, and after a prop change, such as a new `schema` filling in a default, which moves the baseline with the data and calls no `onChange`. Call `reset(saved)` with the data a save stored to make it the new baseline. See [Unsaved changes](../usage/submitting.md#unsaved-changes).
 
 ## Submit form programmatically
 
