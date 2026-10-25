@@ -98,12 +98,12 @@ const Form = withTheme(AntDTheme);
 ### Custom fields
 
 A custom field that renders the theme's `FieldTemplate` itself, rather than through `SchemaField`, passes `hasErrors` along with the `errors` it hands over.
-The template gives the form item its error status only from `hasErrors`; a field passing the deprecated `rawErrors` alone still has its messages shown through v7, but without that status.
+The template gives the form item its error status only from `hasErrors`; a field passing `hasErrors={false}` with the deprecated `rawErrors` still has its messages shown through v7, as `ui:hideError` leaves them, without that status.
 
 ```tsx
 const { FieldTemplate } = registry.templates;
 
-<FieldTemplate {...fieldTemplateProps} errors={errorsElement} hasErrors={errors.length > 0}>
+<FieldTemplate {...fieldTemplateProps} errors={errorsElement} hasErrors={!hideError && errors.length > 0}>
   {children}
 </FieldTemplate>;
 ```

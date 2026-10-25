@@ -993,8 +993,8 @@ function SchemaFieldRender<
   const description = templateDescription?.text ?? '';
 
   // From its own errors and `ui:hideError`, as the deprecated `rawErrors` its template is handed are, rather than from
-  // its plan, which beneath an `anyOf`/`oneOf` field takes the errors as the field above shows them. Where the option's
-  // `ui:hideError` differs from the field above's, the option's own wins here
+  // its plan, which beneath an `anyOf`/`oneOf` field takes the errors as the field above shows them where it does. Where
+  // the option's `ui:hideError` differs from the field above's, the option's own wins here
   const hasErrors = !hideError && (__errors?.length ?? 0) > 0;
 
   const helpComponent = (
@@ -1024,7 +1024,6 @@ function SchemaFieldRender<
       <DescriptionFieldTemplate
         id={templateDescription.id}
         description={templateDescription.text}
-        hasErrors={hasErrors}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}

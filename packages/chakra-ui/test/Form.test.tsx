@@ -8,6 +8,7 @@ import {
   formTests,
   optionErrorStateTests,
   themeTests,
+  wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { ArrayFieldItemTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
@@ -1322,3 +1323,5 @@ fallbackDescriptionTests(WrappedForm, true);
 optionErrorStateTests(WrappedForm, (container) =>
   container.querySelector('label[for="root"]')?.closest('fieldset')?.hasAttribute('data-invalid'),
 );
+
+wrapIfAdditionalErrorStateTests(WrappedForm);

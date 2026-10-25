@@ -131,6 +131,7 @@ describe('FieldTemplate', () => {
           registry={registry}
           readonly={false}
           disabled={false}
+          hasErrors={false}
           required={false}
           onChange={vi.fn()}
           onKeyRename={vi.fn()}

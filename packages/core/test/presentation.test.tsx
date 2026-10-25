@@ -393,7 +393,8 @@ describe('the plan SchemaField builds', () => {
   });
 
   // The class and the help's error state follow the option's own errors and `ui:hideError`, as the deprecated
-  // `rawErrors` its template is handed do, while its plan takes the errors as the field above shows them
+  // `rawErrors` its template is handed do, while its plan takes the errors as the field above shows them, or its own
+  // where the field above hides them, so an option marked in error has the message its control is described by
   it.each([
     ['shows', true, false],
     ['hides', false, true],
@@ -426,7 +427,10 @@ describe('the plan SchemaField builds', () => {
       expect(optionHelps.at(-1)?.hasErrors).toBe(!optionHides);
       // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop the class agrees with
       expect(option.rawErrors).toEqual(optionHides ? undefined : ['is wrong']);
-      expect(option.presentation?.errors.messages).toEqual(aboveHides ? [] : ['is wrong']);
+      expect(option.presentation?.errors).toMatchObject({
+        messages: ['is wrong'],
+        by: aboveHides ? 'template' : 'above',
+      });
     },
   );
 

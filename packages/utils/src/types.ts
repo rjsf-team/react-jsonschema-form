@@ -1104,9 +1104,10 @@ export type FieldTemplateProps<
   hideError?: boolean;
   /** Whether the field shows its own errors, as `ui:hideError` leaves them: the state its wrapper's `rjsf-field-error`
    * class, its label, its help and its description take. Beneath an `anyOf`/`oneOf` field it can differ from the
-   * plan's errors, which are the ones the field above shows
+   * plan's errors, which are the field above's where it shows them. Required, so a custom field that renders a
+   * `FieldTemplate` itself says whether the field is in error rather than silently leaving the template out of it
    */
-  hasErrors?: boolean;
+  hasErrors: boolean;
   /** A boolean value stating if the field is disabled */
   disabled: boolean;
   /** A boolean value stating if the template renders the label: true only where the field's `presentation` says the
@@ -1200,8 +1201,6 @@ export type DescriptionFieldProps<
   id: string;
   /** The description of the field being rendered */
   description: string | ReactElement;
-  /** Whether the field it describes shows errors */
-  hasErrors?: boolean;
 };
 
 /** The properties that are passed to a `ArrayFieldTitleTemplate` implementation */

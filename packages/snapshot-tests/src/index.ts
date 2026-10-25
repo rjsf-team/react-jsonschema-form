@@ -20,4 +20,6 @@ export { selectedOptionDescriptionTests } from './selectedOptionDescriptionTests
 
 export { type GridRenderCustomOptions, gridTests } from './gridTests.tsx';
 
+export { wrapIfAdditionalErrorStateTests } from './wrapIfAdditionalErrorStateTests.tsx';
+
 export { type ThemeGenerators, themeTests } from './themeTests.ts';

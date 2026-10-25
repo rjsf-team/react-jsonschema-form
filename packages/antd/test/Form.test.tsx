@@ -5,6 +5,7 @@ import {
   formTests,
   optionErrorStateTests,
   themeTests,
+  wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { ErrorSchema, FieldProps, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId, toFieldPath } from '@rjsf/utils';
@@ -1195,7 +1196,7 @@ optionErrorStateTests(Form, (container) =>
 // `rawErrors` without `hasErrors`: the messages still show, while only `hasErrors` gives the field its error status
 describe("antd's FieldTemplate rendered by hand", () => {
   const FieldTemplate = generateTemplates().FieldTemplate!;
-  function renderByHand(errorProps: { hasErrors?: boolean; rawErrors?: string[] }) {
+  function renderByHand(errorProps: { hasErrors?: boolean; rawErrors?: string[]; hideError?: boolean }) {
     return render(
       <FieldTemplate
         id='root_name'
@@ -1207,6 +1208,7 @@ describe("antd's FieldTemplate rendered by hand", () => {
         errors={<div>bad name</div>}
         readonly={false}
         disabled={false}
+        hasErrors={false}
         required={false}
         onChange={vi.fn()}
         onKeyRename={vi.fn()}
@@ -1238,4 +1240,12 @@ describe("antd's FieldTemplate rendered by hand", () => {
 
     expect(screen.queryByText('bad name')).toBeNull();
   });
+
+  test('hides the messages of rawErrors under hideError, as hasVisibleErrors() did', () => {
+    renderByHand({ rawErrors: ['bad name'], hideError: true });
+
+    expect(screen.queryByText('bad name')).toBeNull();
+  });
 });
+
+wrapIfAdditionalErrorStateTests(Form);

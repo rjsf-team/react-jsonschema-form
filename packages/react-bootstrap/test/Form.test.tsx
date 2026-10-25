@@ -4,6 +4,7 @@ import {
   formTests,
   optionErrorStateTests,
   themeTests,
+  wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
@@ -614,3 +615,5 @@ fallbackDescriptionTests(Form, false);
 optionErrorStateTests(Form, (container) =>
   container.querySelector('label[for="root"]')?.classList.contains('text-danger'),
 );
+
+wrapIfAdditionalErrorStateTests(Form);

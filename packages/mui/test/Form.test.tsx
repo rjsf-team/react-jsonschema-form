@@ -7,6 +7,7 @@ import {
   formTests,
   optionErrorStateTests,
   themeTests,
+  wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
@@ -962,3 +963,5 @@ fallbackDescriptionTests(Form, false);
 optionErrorStateTests(Form, () =>
   screen.getByText('Help').closest('.MuiFormHelperText-root')?.classList.contains('Mui-error'),
 );
+
+wrapIfAdditionalErrorStateTests(Form);

@@ -48,6 +48,7 @@ function UiField(props: FieldProps) {
     // oxlint-disable-next-line typescript/no-deprecated -- this custom field renders its `FieldTemplate` without a plan
     displayLabel: true,
     disabled: false,
+    hasErrors: false,
     readonly: false,
     onChange,
     onKeyRename: () => noop,

@@ -1,6 +1,12 @@
 import { Switch } from '@fluentui/react-components';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
+import {
+  checkboxLabelTests,
+  fallbackDescriptionTests,
+  formTests,
+  themeTests,
+  wrapIfAdditionalErrorStateTests,
+} from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -750,11 +756,9 @@ describe('fluentui-rc CheckboxWidget required attribute', () => {
 checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'self' });
 fallbackDescriptionTests(Form, false);
 
-// An option showing its own errors puts its `Field` in the error state, whatever the field above does with its
-// `ui:hideError`. Fluent's `Field` sets `aria-invalid` on a control that sets none itself, so the control is announced
-// invalid even where the plan, which marks the control in every other theme, leaves it valid while the field above hides
-// the messages. An option hiding its errors can't be told apart here, since the plan marks its control invalid whenever
-// the field above shows errors
+// An option showing the errors the field above hides puts its `Field` in the error state, and the plan marks its control
+// invalid for the messages it draws itself. An option hiding its errors can't be told apart here, since the plan marks
+// its control invalid whenever the field above shows errors
 describe("fluentui-rc's anyOf option error state", () => {
   test('puts the option in the error state while it shows the errors the field above hides', () => {
     render(
@@ -769,3 +773,5 @@ describe("fluentui-rc's anyOf option error state", () => {
     expect(screen.getByRole('textbox', { name: 'Text' })).toHaveAttribute('aria-invalid', 'true');
   });
 });
+
+wrapIfAdditionalErrorStateTests(Form);

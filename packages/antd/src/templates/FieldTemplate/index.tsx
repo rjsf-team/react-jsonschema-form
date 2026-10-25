@@ -4,6 +4,7 @@ import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema,
 import {
   getTemplates,
   getUiOptions,
+  hasVisibleErrors,
   isWholeValueSelect,
   templateDrawsLabel,
   templateLabelFor,
@@ -41,8 +42,6 @@ export default function FieldTemplate<
     schema,
     uiSchema,
     hasErrors: hasError,
-    // oxlint-disable-next-line typescript/no-deprecated -- keeps the messages of a template rendered by hand without `hasErrors`
-    rawErrors,
   } = props;
   const displayLabel = templateDrawsLabel<T, S, F>(props);
   const { formContext } = registry;
@@ -93,7 +92,8 @@ export default function FieldTemplate<
   // Help and errors share antd's only below-field slot, and antd draws an empty explain block for a node that renders
   // nothing, so each one is gated on whether it has anything to say
   const helpNode = rawHelp ? help : undefined;
-  const errorNode = hasError || rawErrors?.length ? errors : undefined;
+  // oxlint-disable-next-line typescript/no-deprecated -- keeps the messages of a template rendered by hand without `hasErrors`
+  const errorNode = hasError || hasVisibleErrors(props) ? errors : undefined;
   const explainNode =
     errorNode || helpNode ? (
       <>
