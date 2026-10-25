@@ -7577,51 +7577,113 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
     describe('with dependencies', () => {
-      const objectConstantSelect = (dependencies: NonNullable<RJSFSchema['dependencies']>): RJSFSchema => ({
+      type Dependencies = NonNullable<RJSFSchema['dependencies']>;
+      const objectConstantSelect = (
+        dependencies: Dependencies,
+        defaultOn: 'parent' | 'field' | 'none' = 'parent',
+      ): RJSFSchema => ({
         type: 'object',
-        default: { x: { a: 1 } },
-        properties: { x: { type: 'object', enum: [{ a: 1 }, { a: 2 }], dependencies } },
-      });
-      const pinningA2 = objectConstantSelect({ a: { const: { a: 2 } } });
-      it.each<[string, NonNullable<RJSFSchema['dependencies']>]>([
-        ['a property list', { a: ['b'] }],
-        ['a schema it satisfies', { a: { properties: { c: { type: 'number' } } } }],
-        ['a schema keyed by a property it lacks', { b: { const: { a: 2 } } }],
-        ['a oneOf whose one option pins another constant', { a: { oneOf: [{ const: { a: 2 } }] } }],
-      ])(
-        'keeps the default a select over object constants inherits, under dependencies naming %s (#5407)',
-        (_, dependencies) => {
-          expect(
-            getDefaultFormState({ validator: testValidator }, { schema: objectConstantSelect(dependencies) }),
-          ).toEqual({ x: { a: 1 } });
+        ...(defaultOn === 'parent' && { default: { x: { a: 1 } } }),
+        properties: {
+          x: {
+            type: 'object',
+            enum: [{ a: 1 }, { a: 2 }],
+            ...(defaultOn === 'field' && { default: { a: 1 } }),
+            dependencies,
+          },
         },
-      );
-      it.each<[string, NonNullable<RJSFSchema['dependencies']>, GenericObjectType]>([
-        ['another of its options', { a: { const: { a: 2 } } }, { a: 2 }],
-        ['a constant none of its options holds', { a: { const: { a: 3 } } }, { a: 3 }],
+      });
+      const pinningA2: Dependencies = { a: { const: { a: 2 } } };
+      // A dependency's `oneOf` is the restricted branch selector the dependencies docs describe: an option counts only
+      // if it declares `properties.a`, so this one is ignored rather than read as a constraint on the value
+      const branchWithoutKey: Dependencies = { a: { oneOf: [{ const: { a: 2 } }] } };
+      it.each<
+        [string, Dependencies, 'parent' | 'field' | 'none', DefaultFormStateBehavior, GenericObjectType, unknown]
+      >([
+        ["gives a dependency's const over the inherited default", pinningA2, 'parent', {}, {}, { a: 2 }],
+        ["gives a dependency's const over the select's own default", pinningA2, 'field', {}, {}, { a: 2 }],
+        [
+          'keeps the inherited default when a dependency oneOf has no option declaring the key',
+          branchWithoutKey,
+          'parent',
+          {},
+          {},
+          { a: 1 },
+        ],
+        [
+          'keeps the inherited default when a dependency oneOf has no option declaring the key, under skipOneOf',
+          branchWithoutKey,
+          'parent',
+          { constAsDefaults: 'skipOneOf' },
+          {},
+          { a: 1 },
+        ],
+        [
+          "keeps the inherited default over a dependency's const when constAsDefaults is never",
+          pinningA2,
+          'parent',
+          { constAsDefaults: 'never' },
+          {},
+          { a: 1 },
+        ],
+        [
+          'keeps the inherited default under dependencies naming a schema it satisfies',
+          { a: { properties: { c: { type: 'number' } } } },
+          'parent',
+          {},
+          {},
+          { a: 1 },
+        ],
+        [
+          'keeps the inherited default under dependencies keyed by a property it lacks',
+          { b: { const: { a: 2 } } },
+          'parent',
+          {},
+          {},
+          { a: 1 },
+        ],
+        // Current behaviour, not a decision: the kept default lacks `b`, so the form starts invalid
+        [
+          'keeps the inherited default under a property list it fails (current behaviour)',
+          { a: ['b'] },
+          'parent',
+          {},
+          {},
+          { a: 1 },
+        ],
+        // Current behaviour, not a decision: the const matches no option, so the select starts with nothing chosen
+        [
+          "gives a dependency's const that none of the select's options holds (current behaviour)",
+          { a: { const: { a: 3 } } },
+          'parent',
+          {},
+          {},
+          { a: 3 },
+        ],
       ])(
-        'replaces the default a select over object constants inherits with the const of a dependency on it, pinning %s (#5407)',
-        (_, dependencies, expected) => {
+        '%s, for a select over object constants (#5407)',
+        (_, dependencies, defaultOn, behavior, formData, expected) => {
           expect(
-            getDefaultFormState({ validator: testValidator }, { schema: objectConstantSelect(dependencies) }),
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: behavior },
+              { schema: objectConstantSelect(dependencies, defaultOn), formData },
+            ),
           ).toEqual({ x: expected });
         },
       );
-      it("keeps the inherited default over a dependency's const when constAsDefaults is never (#5407)", () => {
+      // Pins form data's precedence over a dependency's const, which holds with or without #5407's fix
+      it("keeps form data over a dependency's const for a select over object constants", () => {
         expect(
           getDefaultFormState(
-            { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'never' } },
-            { schema: pinningA2 },
+            { validator: testValidator },
+            { schema: objectConstantSelect(pinningA2), formData: { x: { a: 1 } } },
           ),
         ).toEqual({ x: { a: 1 } });
       });
-      it.each<[string, GenericObjectType, GenericObjectType]>([
-        ['empty form data', {}, { a: 2 }],
-        ['form data holding the inherited constant', { x: { a: 1 } }, { a: 1 }],
-      ])("gives a dependency's const over object constants with %s (#5407)", (_, formData, expected) => {
-        expect(getDefaultFormState({ validator: testValidator }, { schema: pinningA2, formData })).toEqual({
-          x: expected,
-        });
+      it("fills in no default for a select over object constants that only a dependency's const names", () => {
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema: objectConstantSelect(pinningA2, 'none') }),
+        ).toEqual({});
       });
       it.each([
         'inline',
