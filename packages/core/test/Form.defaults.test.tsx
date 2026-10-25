@@ -27,6 +27,20 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expect(node.querySelectorAll('input[type=text]')).toHaveLength(1);
     });
 
+    it('should merge the properties beside a $ref into the referenced ones, defaults included (#3335)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        $defs: { selector: { type: 'object', properties: { title_path: { type: 'string' } } } },
+        properties: {
+          playlist: { $ref: '#/$defs/selector', properties: { title_path: { default: 'head title' } } },
+        },
+      };
+
+      const { node } = createFormComponent({ schema });
+
+      expect(elementOf(node, 'input#root_playlist_title_path')).toHaveValue('head title');
+    });
+
     it('should handle multiple schema definition references', () => {
       const schema: RJSFSchema = {
         definitions: {

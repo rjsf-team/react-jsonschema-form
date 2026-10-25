@@ -15,6 +15,7 @@ import {
   createFormComponent,
   createFormRef,
   elementOf,
+  expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   handleOf,
   submitForm,
@@ -2425,6 +2426,16 @@ describe('anyOf', () => {
       // AnyOf selector
       expect(node.querySelector('select')).toBeInTheDocument();
     });
+  });
+
+  it('renders and submits a field whose anyOf key is present but undefined (#5365)', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { val: { type: 'string', anyOf: undefined } } };
+    const { node, onSubmit } = createFormComponent({ schema });
+
+    await user.type(elementOf(node, 'input#root_val'), 'abc');
+    await submitForm(node, user);
+
+    expectToHaveBeenCalledWithFormData(onSubmit, { val: 'abc' }, true);
   });
 });
 
