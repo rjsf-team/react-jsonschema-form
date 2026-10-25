@@ -869,6 +869,10 @@ export interface FieldProps<
    *   errors, which its template draws, so the field shows as invalid along with the selector
    */
   rawErrors?: string[];
+  /** Whether the parent schema forbids the key of this `additionalProperties` property, which `SchemaField` hands its
+   * `FieldTemplate` and `WrapIfAdditionalTemplate`, and the field it renders
+   */
+  keyNotAllowed?: boolean;
   /** The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids,
    * and the attributes its control carries. Set on the field `SchemaField` renders, not on the `SchemaField` itself,
    * which builds it. Its `'self'` is this field's, so hand it to a widget only when the field leaves its parts to that

@@ -1298,6 +1298,18 @@ describe('ObjectField', () => {
       expect(fieldErrorsById(node)).toEqual({ root_xyz: ['The key "xyz" is not allowed here'] });
     });
 
+    // ajv8 reports a false pattern on the key itself, so its row shows that message beside its own, after it
+    it("should show the validator's message about a key a false pattern matches ahead of saying it is forbidden", async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', patternProperties: { '^x': false } },
+        initialFormData: { xyz: 1 },
+      });
+      await submitForm(node, user);
+      expect(fieldErrorsById(node)).toEqual({
+        root_xyz: ['boolean schema is false', 'The key "xyz" is not allowed here'],
+      });
+    });
+
     it('should say on its row that a key the selected oneOf option forbids is forbidden, though the object allows it', () => {
       const { node } = createFormComponent({
         schema: {

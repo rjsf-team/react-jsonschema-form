@@ -78,5 +78,9 @@ export default function getNestedControlPresentation(inputs: NestedControlInputs
     ...(describedBy && { 'aria-describedby': describedBy }),
     ...(invalid && { 'aria-invalid': invalid }),
   };
-  return { ...plan, ...(field && { describedBy: field.describedBy }), control: { id, attributes: controlAttributes } };
+  return {
+    ...plan,
+    describedBy: field?.describedBy ?? (describedBy ? describedBy.split(' ') : plan.describedBy),
+    control: { id, attributes: controlAttributes },
+  };
 }
