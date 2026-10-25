@@ -84,8 +84,6 @@ export default function SelectWidget<
 
   const getPopupContainer = SelectWidget.getPopupContainerCallback();
 
-  const selectValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
-
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
@@ -94,19 +92,32 @@ export default function SelectWidget<
     [enumOptions, optgroups, enumDisabled],
   );
 
+  const { disabledDomValues, firstEnabledDomValue } = useMemo(() => {
+    const drawnOptions = flattenGroupedOptions<S>(groupedOptions);
+    const firstEnabled = drawnOptions.find((option) => !option.disabled);
+    return {
+      disabledDomValues: new Set(drawnOptions.filter((option) => option.disabled).map(({ index }) => domValues[index])),
+      firstEnabledDomValue: firstEnabled && domValues[firstEnabled.index],
+    };
+  }, [groupedOptions, domValues]);
+
+  const selected = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : '');
+  // With no empty placeholder to fall back on, a native `<select>` that holds no option selects its first enabled one in
+  // the order they are drawn, or none at all, so the `Select` draws that one too
+  const fallbackDomValue = selected === '' && !showPlaceholderOption ? firstEnabledDomValue : undefined;
+  const selectValue =
+    fallbackDomValue ?? enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
+
+  // A native `<select>` posts one entry per selected option, but none for a selected option that is disabled
   const postedValues = useMemo(() => {
-    const selected = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : '');
     if (Array.isArray(selected)) {
-      return [...new Set(selected)];
+      return [...new Set(selected)].filter((domValue) => !disabledDomValues.has(domValue));
     }
-    if (selected !== '' || showPlaceholderOption) {
-      return [selected];
+    if (selected === '' && !showPlaceholderOption) {
+      return fallbackDomValue === undefined ? [] : [fallbackDomValue];
     }
-    // With no empty placeholder to fall back on, a native `<select>` that holds no option selects its first enabled
-    // one in the order they are drawn, or none at all
-    const firstEnabled = flattenGroupedOptions<S>(groupedOptions).find((option) => !option.disabled);
-    return firstEnabled ? [domValues[firstEnabled.index]] : [];
-  }, [value, enumOptions, multiple, optionValueFormat, showPlaceholderOption, groupedOptions, domValues]);
+    return disabledDomValues.has(selected) ? [] : [selected];
+  }, [selected, showPlaceholderOption, fallbackDomValue, disabledDomValues]);
 
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {

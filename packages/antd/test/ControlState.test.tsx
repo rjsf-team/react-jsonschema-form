@@ -138,6 +138,31 @@ describe('a native submit', () => {
       expect(entriesOf(core.querySelector('form'), 'root_sel')).toEqual(expected);
       expect(entriesOf(antd.querySelector('form'), 'root_sel')).toEqual(expected);
     });
+
+    it.each<[string, UiSchema, string]>([
+      ['its first option', {}, 'a'],
+      ['its first enabled option', { 'ui:enumDisabled': ['a'] }, 'b'],
+    ])('draws %s selected, the option it posts', (_, selUiSchema, drawn) => {
+      const selectSchema: RJSFSchema = { type: 'object', properties: { sel } };
+      const { container } = render(
+        <Form schema={selectSchema} uiSchema={{ sel: selUiSchema }} validator={validator} />,
+      );
+
+      expect(container.querySelector('.ant-select-content-has-value')).toHaveAttribute('title', drawn);
+    });
+
+    it('gets nothing for form data an option ui:enumDisabled disables holds', () => {
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { sel } }}
+          uiSchema={{ sel: { 'ui:enumDisabled': ['b'] } }}
+          initialFormData={{ sel: 'b' }}
+          validator={validator}
+        />,
+      );
+
+      expect(entriesOf(container.querySelector('form'), 'root_sel')).toEqual([]);
+    });
   });
 
   it.each<[string, RJSFSchema, number, string]>([
@@ -147,6 +172,8 @@ describe('a native submit', () => {
     ['halfway between two steps', { type: 'number', minimum: 0, maximum: 10, multipleOf: 5 }, 7.5, '10'],
     ['nearest a maximum off its step', { type: 'number', minimum: 0, maximum: 10, multipleOf: 3 }, 10, '9'],
     ['off a decimal step', { type: 'number', minimum: 0, maximum: 1, multipleOf: 0.1 }, 0.33, '0.3'],
+    ['at a decimal maximum', { type: 'number', minimum: 0, maximum: 0.3, multipleOf: 0.1 }, 0.3, '0.3'],
+    ['at another decimal maximum', { type: 'number', minimum: 0, maximum: 0.7, multipleOf: 0.1 }, 0.7, '0.7'],
   ])(
     'gets the value a native range input holds for a value %s, where the slider is drawn',
     (_, range, value, posted) => {
@@ -166,11 +193,51 @@ describe('a native submit', () => {
     },
   );
 
+  it.each<[string, RJSFSchema, number, string]>([
+    ['off a step written with an exponent', { type: 'number', minimum: 0, maximum: 1, multipleOf: 1e-7 }, 0.5, '0.5'],
+    [
+      'above a minimum written with an exponent',
+      { type: 'number', minimum: 1e-7, maximum: 1, multipleOf: 0.1 },
+      0.33,
+      '0.3000001',
+    ],
+  ])('gets the value a native range input holds for a value %s', (_, range, value, posted) => {
+    // Only the posted value is checked: rc-slider rounds the value it draws by the decimals `String()` writes, so it
+    // draws these at the wrong step whatever value it is handed
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { range } }}
+        uiSchema={uiSchema}
+        initialFormData={{ range: value }}
+        validator={validator}
+      />,
+    );
+
+    expect(entriesOf(container.querySelector('form'), 'root_range')).toEqual([posted]);
+  });
+
   it('gets the value the slider is drawn at for an empty range', () => {
     const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
 
     expect(container.querySelector('.ant-slider-handle')).toHaveAttribute('aria-valuenow', '0');
     expect(entriesOf(container.querySelector('form'), 'root_range')).toEqual(['0']);
+  });
+
+  it('leaves out a selected option ui:enumDisabled disables, as a native select does', () => {
+    // The HTML spec leaves a selected option that is disabled out of the entry list
+    // (https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#constructing-the-form-data-set). jsdom
+    // only checks whether the select itself is disabled, so core's select can't be the reference here
+    const disabledUiSchema: UiSchema = {
+      sel: { 'ui:enumDisabled': ['b'] },
+      multi: { 'ui:widget': 'select', 'ui:enumDisabled': ['c'] },
+    };
+    const { container } = render(
+      <Form schema={schema} uiSchema={disabledUiSchema} initialFormData={formData} validator={validator} />,
+    );
+
+    const form = container.querySelector('form');
+    expect(entriesOf(form, 'root_sel')).toEqual([]);
+    expect(entriesOf(form, 'root_multi')).toEqual(['0']);
   });
 
   it('gets a value the form data holds twice once, as a native multi-select posts it', () => {

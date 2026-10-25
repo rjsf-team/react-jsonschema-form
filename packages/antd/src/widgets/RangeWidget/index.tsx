@@ -4,7 +4,11 @@ import { Slider } from 'antd';
 
 import useControlState from '../../controlState.ts';
 
-const decimalsOf = (n: number) => (String(n).split('.')[1] ?? '').length;
+// `String()` writes a number below 1e-6 with an exponent, such as `1e-7`, whose decimals the exponent counts
+const decimalsOf = (n: number) => {
+  const [mantissa, exponent = '0'] = String(n).split('e');
+  return Math.max(0, (mantissa.split('.')[1] ?? '').length - Number(exponent));
+};
 
 /** The value a native range input holds for `value`: clamped to its `min` and `max`, then snapped to the nearest
  * `step` from `min`, the higher one on a tie and the one below when that passes `max`, as the HTML spec sanitizes it
@@ -13,10 +17,12 @@ const decimalsOf = (n: number) => (String(n).split('.')[1] ?? '').length;
 function nativeRangeValue(value: number, min = 0, max = 100, step = 1) {
   const top = Math.max(min, max);
   const steps = Math.round((Math.min(Math.max(value, min), top) - min) / step);
-  const snapped = min + steps * step;
-  const inRange = snapped > top ? snapped - step : snapped;
-  // A decimal step leaves float noise such as 0.30000000000000004, which a browser's decimal arithmetic doesn't
-  return Number(inRange.toFixed(Math.max(decimalsOf(min), decimalsOf(step))));
+  // A decimal step leaves float noise such as 0.30000000000000004, which a browser's decimal arithmetic doesn't, so it
+  // is rounded away before the snapped value is compared with `max`. `toFixed()` takes at most 100 digits
+  const precision = Math.min(100, Math.max(decimalsOf(min), decimalsOf(step)));
+  const round = (n: number) => Number(n.toFixed(precision));
+  const snapped = round(min + steps * step);
+  return snapped > top ? round(snapped - step) : snapped;
 }
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
