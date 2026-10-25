@@ -46,7 +46,7 @@ import {
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
-import type { EventFormData, FormStatus, IChangeEvent, NestedBooleans, TouchedFields } from './IChangeEvent.ts';
+import type { EventFormData, FormStatus, IChangeEvent, NestedBooleans } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
 import { createUiState, fieldStateOf, isPathPrefix, movedPath } from './uiState.ts';
@@ -140,7 +140,7 @@ function markWhole(value: unknown): unknown {
   return true;
 }
 
-/** The marks `markChanged()` builds, as the `NestedBooleans` of the form's data. The overload is the one trust point
+/** The marks `markChanged()` and `markPath()` build, as the `NestedBooleans` of the form's data. The overload is the one trust point
  * that marks built by walking the form's data are shaped like it
  */
 function asNestedBooleans<T>(marks: unknown): NestedBooleans<T>;
@@ -156,17 +156,38 @@ function noMarks(formData: unknown): unknown {
   return isPlainObject(formData) ? {} : false;
 }
 
-/** `marks` with the field at `path` of `data` marked touched: `true` at the path, whatever the data holds there, since
- * a widget that reports a blur for an array or object handles it as one field. An object the data does not hold yet, as
- * one whose fields were blurred but never filled in, is marked as if it were there; an array item that is not there, as
- * one removed without an announced move, or a path through a value that holds no fields, marks nothing. A field marked
- * already as a whole stays so. Writes into the containers of `marks`, which the caller built
+/** `true` at every leaf of `value`, as `markWhole()` marks it, or undefined for a value that holds no leaf, as an empty
+ * array or object does
+ */
+function markLeaves(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    const items = value.map(markLeaves);
+    return items.some((item) => item !== undefined) ? items : undefined;
+  }
+  if (isPlainObject(value)) {
+    const marks: GenericObjectType = {};
+    for (const [key, member] of Object.entries(value)) {
+      const mark = markLeaves(member);
+      if (mark !== undefined) {
+        setOwn(marks, key, mark);
+      }
+    }
+    return Object.keys(marks).length > 0 ? marks : undefined;
+  }
+  return true;
+}
+
+/** `marks` with the field at `path` of `data` marked touched: `true` at each leaf of what the data holds there, since a
+ * widget that reports a blur for an array or object handles every item or member in it. An object the data does not
+ * hold yet, as one whose fields were blurred but never filled in, is marked as if it were there; an array item that is
+ * not there, as one removed without an announced move, a path through a value that holds no fields, or an empty array or
+ * object marks nothing. Writes into the containers of `marks`, which the caller built
  *
  * @returns - The marks with the field marked, or undefined when the path marks nothing
  */
 function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
-  if (path.length === 0 || marks === true) {
-    return true;
+  if (path.length === 0) {
+    return markLeaves(data);
   }
   const [key, ...rest] = path;
   if (Array.isArray(data)) {
@@ -195,14 +216,6 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
   }
   setOwn(members, name, marked);
   return members;
-}
-
-/** The touched marks `markPath()` builds, as the `TouchedFields` of the form's data. The overload is the one trust
- * point that marks built by walking the form's data are shaped like it
- */
-function asTouchedFields<T>(marks: unknown): TouchedFields<T>;
-function asTouchedFields(marks: unknown): unknown {
-  return marks;
 }
 
 /** The form's status. The data shares with the baseline every subtree equal to it, see `shareState()`, so the walk
@@ -235,7 +248,7 @@ export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContex
     dirty: isDirty,
     dirtyFields: asNestedBooleans<T>(dirtyMarks),
     touched: isTouched,
-    touchedFields: asTouchedFields<T>(touchedMarks),
+    touchedFields: asNestedBooleans<T>(touchedMarks),
     submitCount,
   };
 }

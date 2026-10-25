@@ -73,6 +73,13 @@ const list: RJSFSchema = {
 
 const listData = { items: [{ name: 'a' }, { name: 'b' }, { name: 'c' }] };
 
+const checkboxGroup: RJSFSchema = {
+  type: 'object',
+  properties: {
+    tags: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
+  },
+};
+
 describe('touched', () => {
   it('starts untouched', () => {
     const { handle } = mountWithHandle({ schema: person });
@@ -153,15 +160,24 @@ describe('touched', () => {
     expect(handle.getStatus().touchedFields).toEqual({ items: [undefined, { name: true }, undefined] });
   });
 
-  it('marks a widget that handles a whole array as one field', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        tags: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
-      },
-    };
+  it('marks each item a widget that handles a whole array holds', async () => {
     const { container, handle } = mountWithHandle({
-      schema,
+      schema: checkboxGroup,
+      uiSchema: { tags: { 'ui:widget': 'checkboxes' } },
+      initialFormData: { tags: [] },
+    });
+    const [first] = container.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
+
+    await user.click(first);
+    await user.click(document.body);
+
+    expect(handle.getFormData()).toEqual({ tags: ['a'] });
+    expect(handle.getStatus()).toMatchObject({ touched: true, touchedFields: { tags: [true] } });
+  });
+
+  it('marks nothing for a widget that handles a whole array holding no items', async () => {
+    const { container, handle } = mountWithHandle({
+      schema: checkboxGroup,
       uiSchema: { tags: { 'ui:widget': 'checkboxes' } },
       initialFormData: { tags: [] },
     });
@@ -172,7 +188,7 @@ describe('touched', () => {
     await user.click(document.body);
 
     expect(handle.getFormData()).toEqual({ tags: [] });
-    expect(handle.getStatus()).toMatchObject({ touched: true, touchedFields: { tags: true } });
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
   });
 
   it('is untouched again once setFieldValue() removes the touched item', async () => {
@@ -388,6 +404,29 @@ describe('liveErrors', () => {
       await blur(container, 'root_b');
 
       expect(Object.keys(fieldErrorsById(node)).sort()).toEqual(['root_a', 'root_b']);
+    });
+
+    it('reveals the errors of an empty checkbox group once it is blurred, though that touches nothing', async () => {
+      const { node, handle } = mountWithHandle({
+        schema: {
+          type: 'object',
+          properties: {
+            tags: { type: 'array', minItems: 1, uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
+            other: { type: 'string', minLength: 3 },
+          },
+        },
+        uiSchema: { tags: { 'ui:widget': 'checkboxes' } },
+        initialFormData: { tags: [], other: 'x' },
+        liveValidate: 'onBlur',
+        liveErrors: 'field',
+      });
+
+      await user.tab();
+      await user.tab();
+      await user.click(document.body);
+
+      expect(Object.keys(fieldErrorsById(node))).toEqual(['root_tags']);
+      expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
     });
   });
 
