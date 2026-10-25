@@ -121,6 +121,7 @@ The form compares its data with a baseline: the data it was last seeded with, on
 - `dirty`: whether the data differs from the baseline. Typing a field's original value back makes the form clean again.
 
   Clearing a field stores `undefined`, so clearing a field that was seeded with `''` leaves the form dirty. Set [`ui:emptyValue`](../api-reference/uiSchema.md#emptyvalue) to `''` on that field to have clearing store `''`, which makes the form clean again.
+
 - `dirtyFields`: where it differs, nested like the data, with `true` at each field that changed, for example `{ address: { city: true } }`. For an array it holds an entry for each item, `undefined` where the item is unchanged.
 - `submitCount`: how many submits have been attempted since the form mounted or was last reset, valid or not.
 
