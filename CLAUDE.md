@@ -30,9 +30,10 @@ Check what `@rjsf/utils` already shares before writing theme logic, e.g. `enumOp
 - When a comment is warranted, explain the WHY (rationale, constraints, non-obvious tradeoffs), not the WHAT — well-named code already says what it does.
 - Don't leave "before/after" or diff-style commentary in code comments or in this file. That belongs in commit messages and PR descriptions, not in code that has to keep reading true after the change ships.
 
-## Changelog
+## Changelog and upgrade guide
 
-- When adding an entry to `CHANGELOG.md`, append it as the last bullet under the relevant package's heading (e.g. `## @rjsf/daisyui`) — after the existing bullets, not inserted above or among them.
+- Follow `## Changelog` and `## Upgrade guide` in `packages/docs/docs/contributing.md`. An entry says what users notice, starting with Add/Change/Deprecate/Fix/Remove; the reasoning, mechanism and edge cases go in the PR description, however much of it there is. A fix to an unreleased change edits that change's entry instead of adding one.
+- Append an entry as the last bullet under each relevant package's heading (e.g. `## @rjsf/daisyui`). The changelogs merge with `merge=union` (`.gitattributes`), so a rebase keeps both of two appended entries; check the result for a doubled or half-edited bullet. `pnpm run changelog-check [base]` runs CI's check on the branch (base defaults to `origin/v7`).
 
 ## Testing
 

@@ -1,0 +1,24 @@
+# Its own workflow so that adding or removing the `no-changelog` label reruns
+# only this check rather than the whole CI. The pull_request checkout is the
+# merge of the PR into its base, so HEAD^1 is the base and HEAD^1..HEAD is
+# exactly what the PR changes.
+name: Changelog
+on:
+  pull_request:
+    branches: [main, v7]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+permissions:
+  contents: read
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+      - run: node .github/changelog/check.mjs HEAD^1 HEAD
+        env:
+          CHANGELOG_SKIP: ${{ contains(github.event.pull_request.labels.*.name, 'no-changelog') }}

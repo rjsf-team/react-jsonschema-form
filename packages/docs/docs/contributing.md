@@ -57,6 +57,36 @@ Staged files are automatically formatted upon commit using precommit hooks, assu
 
 CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the repository root for any commit the hooks did not see — one made with `--no-verify`, from a fresh worktree, or through the GitHub web editor.
 
+## Changelog
+
+A PR that changes anything a user of a published package can notice adds an entry to the changelog: `CHANGELOG-v7.md` on the `v7` branch, `CHANGELOG.md` on `main`.
+Append it as the last bullet under the heading of each package whose users notice the change, in the upcoming release at the top of the file.
+Tests, CI, refactors and docs fixes need no entry, and neither does a fix to a change that isn't released yet: edit that change's entry instead. A maintainer gives such a PR the `no-changelog` label.
+
+Write the entry for someone deciding whether to upgrade, who won't open the PR:
+
+- Start with `Add`, `Change`, `Deprecate`, `Fix` or `Remove`, and name the component, prop or export a user meets, in backticks.
+- Say what users notice, not how the code does it. A fix names what went wrong for them: "Fix `ArrayField` dropping the last item's errors when an item is removed".
+- Leave the reasoning, the alternatives and the edge cases to the PR description, and end the entry with a link to the PR and to the issue it fixes.
+- Start a breaking change with `**BREAKING CHANGE:**`, say what now happens, and link the [upgrade guide](#upgrade-guide) section that says what to change. A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower type.
+- Aim for a sentence or two, about 200 characters. If it can't be both short and clear, keep it clear.
+
+For example, instead of an entry that explains the implementation:
+
+> Fixed `ObjectFieldTemplate` rendering a property with no column span when the `colSpan` map in `formContext` has no usable entry for its widget or field name. The lookup now falls through to the schema type and then to the default span, skipping entries that are not a whole number of columns from 0 to 24 and a `ui:field` that names no registered component. …
+
+write what users see:
+
+> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450))
+
+`pnpm run changelog-check` checks the entries your branch adds, as CI does for every PR: the verb, the links, the breaking marker, and that a change to a published package's `src` adds an entry. It compares with `origin/v7` unless you pass another base, such as `pnpm run changelog-check origin/main`.
+
+## Upgrade guide
+
+A breaking change also gets a section in the next major version's upgrade guide, such as `packages/docs/docs/migration-guides/v7.x upgrade guide.md`, in the same PR.
+The guide answers one question: "my code broke, what do I change?". Each section has a heading that names the change as users meet it, who it affects, what happened before and what happens now, and what to do instead, with a before/after `diff` when code has to change. Link the reference docs for anything more.
+New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide.
+
 ## Documentation
 
 We use [Docusaurus](https://docusaurus.io/) to build our documentation. To run documentation locally, run:
@@ -155,6 +185,8 @@ If you make changes to those libraries, you will have to maintain that coverage,
 
 ## Releasing
 
+First, turn the upcoming release's section of the changelog into release notes, so that the commit you tag carries them: date its heading, start it with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
+
 To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
 For instance if you are about to create the new `6.100.10` branch, then you would run the following commands:
 
@@ -175,8 +207,7 @@ Then, make a PR to main. Merge the PR into main -- make sure you use "merge comm
 the original commit where the tag was based on is still present in the main branch.
 
 Then, create a release in the GitHub "Releases" tab, select the new tag that you have added,
-and add a description of the changes in the new release. You can copy
-the latest changelog entry in `CHANGELOG.md` to make the release notes, and update as necessary.
+and copy that section of the changelog into the release's description.
 
 This will trigger a GitHub Actions pipeline that will build and publish all packages to npm.
 

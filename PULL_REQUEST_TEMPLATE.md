@@ -13,6 +13,7 @@ If your PR is non-trivial and you'd like to schedule a synchronous review, pleas
 - [ ] **I'm adding or updating code**
   - [ ] I've added and/or updated tests. I've run `pnpm exec nx run-many --target=build --exclude=@rjsf/docs && pnpm run test:update` to update snapshots, if needed.
   - [ ] I've updated [docs](https://rjsf-team.github.io/react-jsonschema-form/docs) if needed
-  - [ ] I've updated the [changelog](https://github.com/rjsf-team/react-jsonschema-form/blob/main/CHANGELOG.md) with a description of the PR
+  - [ ] I've added a changelog entry that follows the [changelog rules](https://rjsf-team.github.io/react-jsonschema-form/docs/contributing#changelog) (`CHANGELOG-v7.md` for `v7`, `CHANGELOG.md` for `main`), or users can't notice the change
+  - [ ] For a breaking change, I've added a section to the upgrade guide that says what to change, following the [upgrade guide rules](https://rjsf-team.github.io/react-jsonschema-form/docs/contributing#upgrade-guide)
 - [ ] **I'm adding a new feature**
   - [ ] I've updated the playground with an example use of the feature

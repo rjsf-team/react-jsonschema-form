@@ -1,0 +1,3 @@
+# Every PR appends its entry at the end of a shared heading, so keep both sides of
+# adjacent additions instead of stopping a rebase on them
+CHANGELOG*.md merge=union

@@ -13,6 +13,7 @@
     "knip": "knip",
     "cs-check": "oxfmt --check",
     "cs-format": "oxfmt",
+    "changelog-check": "node .github/changelog/check.mjs",
     "clean-build": "rimraf packages/*/lib && pnpm run build",
     "build": "nx run-many --target=build",
     "build-serial": "nx run-many --target=build --parallel=1",
