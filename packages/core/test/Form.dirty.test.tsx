@@ -54,6 +54,25 @@ describe('dirty', () => {
     expect(handle.getStatus()).toEqual(lastStatus(onChange));
   });
 
+  it("leaves a cleared field seeded with '' dirty, unless ui:emptyValue stores '' for it", async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+    const plain = mountWithHandle({ schema, initialFormData: { name: '' } });
+    await user.type(input(plain.container, 'root_name'), 'x');
+    await user.clear(input(plain.container, 'root_name'));
+    expect(plain.handle.getStatus()).toEqual({ dirty: true, dirtyFields: { name: true }, submitCount: 0 });
+    plain.unmount();
+
+    const withEmptyValue = mountWithHandle({
+      schema,
+      uiSchema: { name: { 'ui:emptyValue': '' } },
+      initialFormData: { name: '' },
+    });
+    await user.type(input(withEmptyValue.container, 'root_name'), 'x');
+    await user.clear(input(withEmptyValue.container, 'root_name'));
+
+    expect(withEmptyValue.handle.getStatus()).toEqual({ dirty: false, dirtyFields: {}, submitCount: 0 });
+  });
+
   it('marks the edited item of an array in dirtyFields', async () => {
     const schema: RJSFSchema = {
       type: 'object',
