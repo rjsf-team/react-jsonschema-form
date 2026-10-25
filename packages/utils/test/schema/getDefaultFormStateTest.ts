@@ -7593,44 +7593,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         },
       });
+      const defaultOfSelect = (
+        dependencies: Dependencies,
+        options: {
+          defaultOn?: 'parent' | 'field' | 'none';
+          behavior?: DefaultFormStateBehavior;
+          formData?: unknown;
+        } = {},
+      ) =>
+        getDefaultFormState(
+          { validator: testValidator, defaultFormStateBehavior: options.behavior },
+          { schema: objectConstantSelect(dependencies, options.defaultOn), formData: options.formData },
+        );
       const pinningA2: Dependencies = { a: { const: { a: 2 } } };
       // No option declares `properties.a`, so this is an ordinary `oneOf` rather than a dynamic dependency branch
       const unkeyedOneOf: Dependencies = { a: { oneOf: [{ const: { a: 2 } }] } };
-      it.each<
-        [string, Dependencies, 'parent' | 'field' | 'none', DefaultFormStateBehavior, GenericObjectType, unknown]
-      >([
-        ["gives a dependency's const over the inherited default", pinningA2, 'parent', {}, {}, { a: 2 }],
-        ["gives a dependency's const over the select's own default", pinningA2, 'field', {}, {}, { a: 2 }],
-        [
-          "gives a dependency oneOf option's const over the inherited default",
-          unkeyedOneOf,
-          'parent',
-          {},
-          {},
-          { a: 2 },
-        ],
-        // The option the data matches is merged in, as it is for a `oneOf` beside `dependencies`, so its `const` is the
-        // field's own rather than an option's
-        [
-          "gives a dependency oneOf option's const over the inherited default under skipOneOf",
-          unkeyedOneOf,
-          'parent',
-          { constAsDefaults: 'skipOneOf' },
-          {},
-          { a: 2 },
-        ],
-        [
-          "keeps the inherited default over a dependency oneOf option's const when constAsDefaults is never",
-          unkeyedOneOf,
-          'parent',
-          { constAsDefaults: 'never' },
-          {},
-          { a: 1 },
-        ],
+      it.each<[string, Dependencies, DefaultFormStateBehavior, GenericObjectType | undefined, unknown]>([
+        ["gives a dependency's const over the inherited default", pinningA2, {}, undefined, { a: 2 }],
+        ["gives a dependency's const over the inherited default for empty form data", pinningA2, {}, {}, { a: 2 }],
         [
           "keeps the inherited default over a dependency's const when constAsDefaults is never",
           pinningA2,
-          'parent',
           { constAsDefaults: 'never' },
           {},
           { a: 1 },
@@ -7638,7 +7621,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         [
           'keeps the inherited default under dependencies naming a schema it satisfies',
           { a: { properties: { c: { type: 'number' } } } },
-          'parent',
           {},
           {},
           { a: 1 },
@@ -7646,40 +7628,53 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         [
           'keeps the inherited default under dependencies keyed by a property it lacks',
           { b: { const: { a: 2 } } },
-          'parent',
           {},
           {},
           { a: 1 },
         ],
-        // Current behaviour, not a decision: the kept default lacks `b`, so the form starts invalid
+        // The option the data matches is merged in, as it is for a `oneOf` beside `dependencies`, so its `const` is the
+        // field's own rather than an option's
         [
-          'keeps the inherited default under a property list it fails (current behaviour)',
-          { a: ['b'] },
-          'parent',
+          "gives a dependency oneOf option's const over the inherited default under skipOneOf",
+          unkeyedOneOf,
+          { constAsDefaults: 'skipOneOf' },
           {},
+          { a: 2 },
+        ],
+        [
+          "keeps the inherited default over a dependency oneOf option's const when constAsDefaults is never",
+          unkeyedOneOf,
+          { constAsDefaults: 'never' },
           {},
           { a: 1 },
         ],
-        // Current behaviour, not a decision: the const matches no option, so the select starts with nothing chosen
-        [
-          "gives a dependency's const that none of the select's options holds (current behaviour)",
-          { a: { const: { a: 3 } } },
-          'parent',
-          {},
-          {},
-          { a: 3 },
-        ],
+      ])('%s, for a select over object constants (#5407)', (_, dependencies, behavior, formData, expected) => {
+        expect(defaultOfSelect(dependencies, { behavior, formData })).toEqual({ x: expected });
+      });
+      // Neither result was decided: the kept default lacks `b`, so the form starts invalid, and the const matches no
+      // option, so the select starts with nothing chosen
+      it.each<[string, Dependencies, unknown]>([
+        ['keeps the inherited default under a property list it fails', { a: ['b'] }, { a: 1 }],
+        ["gives a dependency's const that none of the select's options holds", { a: { const: { a: 3 } } }, { a: 3 }],
+      ])('%s, for a select over object constants (#5407, current behaviour)', (_, dependencies, expected) => {
+        expect(defaultOfSelect(dependencies)).toEqual({ x: expected });
+      });
+      it.each<[string, GenericObjectType | undefined]>([
+        ['no form data', undefined],
+        ['empty form data', {}],
       ])(
-        '%s, for a select over object constants (#5407)',
-        (_, dependencies, defaultOn, behavior, formData, expected) => {
-          expect(
-            getDefaultFormState(
-              { validator: testValidator, defaultFormStateBehavior: behavior },
-              { schema: objectConstantSelect(dependencies, defaultOn), formData },
-            ),
-          ).toEqual({ x: expected });
+        "gives a dependency oneOf option's const over the inherited default for %s, for a select over object constants (#5407)",
+        (_, formData) => {
+          expect(defaultOfSelect(unkeyedOneOf, { formData })).toEqual({ x: { a: 2 } });
         },
       );
+      it('applies a dependency oneOf none of whose options declares the key rather than ignoring it', () => {
+        consoleWarnSpy.mockClear();
+        expect(defaultOfSelect(unkeyedOneOf)).toEqual({ x: { a: 2 } });
+        expect(consoleWarnSpy).not.toHaveBeenCalledWith(
+          `ignoring oneOf in dependencies of "a" because there isn't exactly one subschema that is valid`,
+        );
+      });
       it.each<DefaultFormStateBehavior['constAsDefaults']>(['always', 'skipOneOf', 'never'])(
         'gives a dependency oneOf none of whose options declares the key the default a oneOf beside dependencies gets, under constAsDefaults %s',
         (constAsDefaults) => {
@@ -7701,19 +7696,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           );
         },
       );
-      // Form data wins over a dependency's const
+      it("gives a dependency's const over the select's own default", () => {
+        expect(defaultOfSelect(pinningA2, { defaultOn: 'field' })).toEqual({ x: { a: 2 } });
+      });
+      // getDefaultFormState fills in only what form data leaves out, so a dependency's const can't replace a value
+      // that is there
       it("keeps form data over a dependency's const for a select over object constants", () => {
-        expect(
-          getDefaultFormState(
-            { validator: testValidator },
-            { schema: objectConstantSelect(pinningA2), formData: { x: { a: 1 } } },
-          ),
-        ).toEqual({ x: { a: 1 } });
+        expect(defaultOfSelect(pinningA2, { formData: { x: { a: 1 } } })).toEqual({ x: { a: 1 } });
       });
       it("fills in no default for a select over object constants that only a dependency's const names", () => {
-        expect(
-          getDefaultFormState({ validator: testValidator }, { schema: objectConstantSelect(pinningA2, 'none') }),
-        ).toEqual({});
+        expect(defaultOfSelect(pinningA2, { defaultOn: 'none' })).toStrictEqual({});
       });
       it.each([
         'inline',
