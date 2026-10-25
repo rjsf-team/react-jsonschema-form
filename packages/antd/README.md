@@ -103,7 +103,9 @@ The template gives the form item its error status only from `hasErrors`; a field
 ```tsx
 const { FieldTemplate } = registry.templates;
 
-<FieldTemplate {...fieldTemplateProps} errors={errorsElement} hasErrors={!hideError && errors.length > 0}>
+// `messages` is the field's own error messages, `hideError` its `ui:hideError`, and `errorsElement` the element that
+// draws them
+<FieldTemplate {...fieldTemplateProps} errors={errorsElement} hasErrors={!hideError && messages.length > 0}>
   {children}
 </FieldTemplate>;
 ```

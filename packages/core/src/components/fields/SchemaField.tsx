@@ -700,6 +700,10 @@ export function useSchemaFieldPlan<
     !schemaUtils.canExpand(fieldSchema, fieldUiSchema, formData);
   const plannedAsOptions = fieldToRender?.isWithheld === true || isPureUnion;
   const renderedComponent = fieldToRender?.FieldComponent;
+  // The `SchemaField` that named the field hands it the field's own errors as `rawErrors`, taken out of its
+  // `errorSchema`, and that is how a named field passes them on to the field it renders
+  // oxlint-disable-next-line typescript/no-deprecated -- the one prop a named field hands the field's own errors on in
+  const ownErrors = framedAbove ? props.rawErrors : errorSchema?.__errors;
   const { presentation, labelPlacement } = useSchemaFieldPresentation<T, S, F>({
     id: fieldId,
     // The parts the field draws itself render under its own id, unless it is planned as the field rendering the options
@@ -714,7 +718,7 @@ export function useSchemaFieldPlan<
     showLabel,
     description: fieldDescription,
     help: ownUiOptions.help,
-    errors: errorSchema?.__errors,
+    errors: ownErrors,
     hideError,
     hidden: hidden || isOptedOut,
     required: effectiveRequired,
@@ -745,6 +749,7 @@ export function useSchemaFieldPlan<
     renderedComponent,
     presentation,
     labelPlacement,
+    ownErrors,
     xxxOfOptions,
     uiState,
     ownsUiState,
@@ -808,6 +813,7 @@ function SchemaFieldRender<
     plannedAsOptions,
     renderedComponent,
     presentation,
+    ownErrors,
     xxxOfOptions,
     uiState,
     ownsUiState,
@@ -954,11 +960,7 @@ function SchemaFieldRender<
     XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
   }
 
-  const { __errors: ownErrorSchemaErrors, ...fieldErrorSchema } = errorSchema ?? {};
-  // The `SchemaField` that named the field hands it the field's own errors as `rawErrors`, taken out of its
-  // `errorSchema`, and that is how a named field passes them on to the field it renders
-  // oxlint-disable-next-line typescript/no-deprecated -- the one prop a named field hands the field's own errors on in
-  const __errors = framedAbove ? props.rawErrors : ownErrorSchemaErrors;
+  const { __errors: _errorSchemaErrors, ...fieldErrorSchema } = errorSchema ?? {};
 
   const fieldComponent = (
     <FieldComponent
@@ -974,7 +976,7 @@ function SchemaFieldRender<
       autofocus={autofocus}
       errorSchema={fieldErrorSchema as ErrorSchema}
       // The `XxxOfField` hands the field's own errors to the selected option and its selector
-      {...getFieldErrorProps<T, S, F>(XxxOfField ? undefined : __errors)}
+      {...getFieldErrorProps<T, S, F>(XxxOfField ? undefined : ownErrors)}
       presentation={presentation}
     />
   );
@@ -995,7 +997,7 @@ function SchemaFieldRender<
   // From its own errors and `ui:hideError`, as the deprecated `rawErrors` its template is handed are, rather than from
   // its plan, which beneath an `anyOf`/`oneOf` field takes the errors as the field above shows them where it does. Where
   // the option's `ui:hideError` differs from the field above's, the option's own wins here
-  const hasErrors = !hideError && (__errors?.length ?? 0) > 0;
+  const hasErrors = !hideError && (ownErrors?.length ?? 0) > 0;
 
   const helpComponent = (
     <FieldHelpTemplate
@@ -1033,7 +1035,7 @@ function SchemaFieldRender<
     help: helpComponent,
     rawHelp: help,
     errors: errorsComponent,
-    ...getDeprecatedTemplateProps<T, S, F>(presentation, __errors, hideError),
+    ...getDeprecatedTemplateProps<T, S, F>(presentation, ownErrors, hideError),
     errorSchema,
     fieldPath,
     id: fieldId,

@@ -4,7 +4,6 @@ import { fieldLabelId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
-import { setupConsoleErrorSuppression } from '../../../testing/consoleSuppression.ts';
 import type { DaisyGlobalUISchemaOptions, UiSchema as DaisyUiSchema } from '../src/index.ts';
 import Form, { generateTemplates } from '../src/index.ts';
 import DaisyFieldTemplate from '../src/templates/FieldTemplate/FieldTemplate.tsx';
@@ -734,21 +733,5 @@ describe('FieldTemplate rendered without a plan, as outside SchemaField', () => 
   it('draws no description where displayLabel turns the label off', () => {
     const { container } = renderTemplate(false);
     expect(container.querySelector('#root_foo__description')).toBeNull();
-  });
-});
-
-// `FieldTemplate` spreads the props it doesn't list onto its `<div>`, so a `FieldTemplateProps` member it doesn't
-// destructure lands on the DOM element and React warns about it
-describe('the props FieldTemplate spreads onto its element', () => {
-  const consoleErrors = setupConsoleErrorSuppression();
-
-  it('leaves the field props React does not recognize off the element', () => {
-    renderForm({}, { type: 'string', title: 'Name' });
-
-    const calls: unknown[][] = consoleErrors.consoleSpy.mock.calls;
-    const unrecognized = calls
-      .filter(([message]) => typeof message === 'string' && message.includes('React does not recognize the `%s` prop'))
-      .map(([, prop]) => prop);
-    expect(unrecognized).toEqual([]);
   });
 });

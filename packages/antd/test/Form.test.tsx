@@ -15,6 +15,7 @@ import { userEvent } from '@testing-library/user-event';
 import { ConfigProvider, theme } from 'antd';
 
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import FieldTemplate from '../src/templates/FieldTemplate/index.tsx';
 import CheckboxWidget from '../src/widgets/CheckboxWidget/index.tsx';
 
 const user = userEvent.setup();
@@ -1195,7 +1196,6 @@ optionErrorStateTests(Form, (container) =>
 // A custom field that renders the theme's `FieldTemplate` itself, as v6 custom fields did, may hand it the deprecated
 // `rawErrors` without `hasErrors`: the messages still show, while only `hasErrors` gives the field its error status
 describe("antd's FieldTemplate rendered by hand", () => {
-  const FieldTemplate = generateTemplates().FieldTemplate!;
   function renderByHand(errorProps: { hasErrors?: boolean; rawErrors?: string[]; hideError?: boolean }) {
     return render(
       <FieldTemplate

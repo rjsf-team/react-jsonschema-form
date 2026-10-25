@@ -244,6 +244,35 @@ describe('the plan SchemaField builds', () => {
     },
   );
 
+  // A field a named field frames for its own data is handed its errors as `rawErrors`, which its `hasErrors` reads, so
+  // its plan takes them from there too: where the named field hides them and it shows them, it draws them itself
+  it("plans a framed field's own errors where the field naming it hides them, so it is invalid with a message", () => {
+    const framedTemplates: FieldTemplateProps[] = [];
+    function FieldTemplate(templateProps: FieldTemplateProps) {
+      if (templateProps.presentation?.inherited) {
+        framedTemplates.push(templateProps);
+      }
+      return <CoreFieldTemplate {...templateProps} />;
+    }
+    function FramingField(props: FieldProps) {
+      const { SchemaField } = props.registry.fields;
+      return <SchemaField {...props} uiSchema={{ ...props.uiSchema, 'ui:hideError': false }} />;
+    }
+    createFormComponent({
+      schema: { type: 'object', properties: { foo: { type: 'string' } } },
+      uiSchema: { foo: { 'ui:field': FramingField, 'ui:hideError': true } },
+      extraErrors: { foo: { __errors: ['is wrong'] } },
+      showErrorList: false,
+      templates: { FieldTemplate },
+    });
+
+    const framed = framedTemplates.at(-1)!;
+    expect(framed.hasErrors).toBe(true);
+    expect(framed.presentation?.errors).toMatchObject({ messages: ['is wrong'], by: 'template' });
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getAllByText('is wrong')).toHaveLength(1);
+  });
+
   describe("an anyOf field's option selector", () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -431,6 +460,36 @@ describe('the plan SchemaField builds', () => {
         messages: ['is wrong'],
         by: aboveHides ? 'template' : 'above',
       });
+    },
+  );
+
+  // Core's `WrapIfAdditionalTemplate` takes its `has-error` from `hasErrors` alone, in both its branches: an option
+  // following its own `ui:hideError` rather than the field above's, and an extra key's row
+  it.each([
+    ['shows', true, false],
+    ['hides', false, true],
+  ])(
+    "marks an anyOf option's and an extra key's wrapper has-error by whether each %s the errors",
+    (_, aboveHides, optionHides) => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { foo: { anyOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] } },
+          additionalProperties: { type: 'string' },
+        },
+        uiSchema: {
+          foo: { 'ui:hideError': aboveHides, anyOf: [{ 'ui:hideError': optionHides }, {}] },
+          additionalProperties: { 'ui:hideError': optionHides },
+        },
+        initialFormData: { extra: 'value' },
+        extraErrors: { foo: { __errors: ['is wrong'] }, extra: { __errors: ['is wrong'] } },
+        showErrorList: false,
+      });
+
+      const optionWrapper = node.querySelector('#root_foo')?.closest('.rjsf-field');
+      expect(optionWrapper?.classList.contains('has-error')).toBe(!optionHides);
+      const extraWrapper = node.querySelector('#root_extra')?.closest('.rjsf-field');
+      expect(extraWrapper?.classList.contains('has-error')).toBe(!optionHides);
     },
   );
 

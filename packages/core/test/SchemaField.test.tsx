@@ -2019,9 +2019,9 @@ describe('SchemaField', () => {
 
         await submitForm(node, user);
 
+        // The framed root shows its own error as its `ui:hideError` leaves it, drawing it after its child's
         const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
-        expect(matches).toHaveLength(1);
-        expect(matches[0]).toHaveTextContent('test');
+        expect([...matches].map(({ textContent }) => textContent)).toEqual(['test', 'container']);
       });
 
       it('reads a child ui:hideError of null as false rather than inheriting the parent flag', async () => {
@@ -2040,9 +2040,9 @@ describe('SchemaField', () => {
 
         await submitForm(node, user);
 
+        // The framed root shows its own error as its `ui:hideError` leaves it, drawing it after its child's
         const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
-        expect(matches).toHaveLength(1);
-        expect(matches[0]).toHaveTextContent('test');
+        expect([...matches].map(({ textContent }) => textContent)).toEqual(['test', 'container']);
       });
     });
 
