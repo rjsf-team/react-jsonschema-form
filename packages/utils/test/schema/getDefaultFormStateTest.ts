@@ -7578,38 +7578,37 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
     describe('with dependencies', () => {
       type Dependencies = NonNullable<RJSFSchema['dependencies']>;
-      const objectConstantSelect = (
-        dependencies: Dependencies,
-        defaultOn: 'parent' | 'field' | 'none' = 'parent',
-      ): RJSFSchema => ({
-        type: 'object',
-        ...(defaultOn === 'parent' && { default: { x: { a: 1 } } }),
-        properties: {
-          x: {
-            type: 'object',
-            enum: [{ a: 1 }, { a: 2 }],
-            ...(defaultOn === 'field' && { default: { a: 1 } }),
-            dependencies,
-          },
-        },
-      });
       const defaultOfSelect = (
         dependencies: Dependencies,
-        options: {
-          defaultOn?: 'parent' | 'field' | 'none';
-          behavior?: DefaultFormStateBehavior;
-          formData?: unknown;
-        } = {},
+        {
+          defaultOn = 'parent',
+          behavior,
+          formData,
+        }: { defaultOn?: 'parent' | 'field' | 'none'; behavior?: DefaultFormStateBehavior; formData?: unknown } = {},
       ) =>
         getDefaultFormState(
-          { validator: testValidator, defaultFormStateBehavior: options.behavior },
-          { schema: objectConstantSelect(dependencies, options.defaultOn), formData: options.formData },
+          { validator: testValidator, defaultFormStateBehavior: behavior },
+          {
+            schema: {
+              type: 'object',
+              ...(defaultOn === 'parent' && { default: { x: { a: 1 } } }),
+              properties: {
+                x: {
+                  type: 'object',
+                  enum: [{ a: 1 }, { a: 2 }],
+                  ...(defaultOn === 'field' && { default: { a: 1 } }),
+                  dependencies,
+                },
+              },
+            },
+            formData,
+          },
         );
       const pinningA2: Dependencies = { a: { const: { a: 2 } } };
       // A dependency's `oneOf` is the restricted branch selector the dependencies docs describe: an option counts only
       // if it declares `properties.a`, so this one is ignored rather than read as a constraint on the value
       const branchWithoutKey: Dependencies = { a: { oneOf: [{ const: { a: 2 } }] } };
-      it.each<[string, Dependencies, DefaultFormStateBehavior, GenericObjectType | undefined, unknown]>([
+      it.each<[string, Dependencies, DefaultFormStateBehavior, unknown, unknown]>([
         ["gives a dependency's const over the inherited default", pinningA2, {}, undefined, { a: 2 }],
         ["gives a dependency's const over the inherited default for empty form data", pinningA2, {}, {}, { a: 2 }],
         [
@@ -7645,7 +7644,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(defaultOfSelect(dependencies)).toEqual({ x: expected });
       });
       // Fails until a dependency `oneOf` none of whose options declares the key is read as the constraint it is
-      it.fails.each<[string, GenericObjectType | undefined]>([
+      it.fails.each<[string, unknown]>([
         ['no form data', undefined],
         ['empty form data', {}],
       ])(
