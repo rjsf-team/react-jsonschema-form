@@ -121,7 +121,7 @@ Inside `onChange`, use `event.formData` to read the edit being reported. Treat d
 
 ## Read the form status
 
-Call `getStatus()` to read whether the form's data differs from its baseline (`dirty`), where (`dirtyFields`), whether the user has touched any field (`touched`), which (`touchedFields`), and how many submits have been attempted (`submitCount`). It returns what the last `onChange` or `onSubmit` event carried, or the initial status before any event, with any field touched since included: a blur that only touches a field fires no `onChange`. Call `reset(saved)` with the data a save stored to make it the new baseline; `reset()` also clears the touched fields. See [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields).
+Call `getStatus()` to read whether the form's data differs from its baseline (`dirty`), where (`dirtyFields`), whether the user has touched any field (`touched`), which (`touchedFields`), and how many submits have reached the form (`submitCount`; a submit the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set). It returns the status after every edit, `reset()` and submit, which the events carry too, after a prop change, such as a new `schema` filling in a default, which moves the baseline with the data and calls no `onChange`, and after a blur that only touches a field, which calls no `onChange` either. Call `reset(saved)` with the data a save stored to make it the new baseline; `reset()` also clears the touched fields. See [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields).
 
 ## Submit form programmatically
 

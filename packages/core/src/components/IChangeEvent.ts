@@ -20,9 +20,10 @@ export type EventFormData<T> = T extends object ? T : T | undefined;
  * `dirtyFields`, or that was touched, in `touchedFields`. An object holds an entry only for its members that hold a
  * mark, and an array an entry for each item, `undefined` where the item holds none. A field marked whole, one that was
  * added, removed or replaced whole, or an array or object whose own widget was touched, holds `true` at each of its
- * leaves, or `true` itself when it is not an object or array.
+ * leaves, or `true` itself when it is not a plain object or array: a `Date`, a `File` or another `Blob` is marked as
+ * one field.
  */
-export type NestedBooleans<T> = T extends Date
+export type NestedBooleans<T> = T extends Date | Blob
   ? boolean
   : T extends readonly (infer Item)[]
     ? (NestedBooleans<Item> | undefined)[]
@@ -48,7 +49,9 @@ export interface FormStatus<T = unknown> {
    * `FormRef.reset()`, with the schema's defaults filled in
    */
   readonly dirty: boolean;
-  /** Where the data differs from the baseline */
+  /** Where the data differs from the baseline. A field the seed left blank, typed into and cleared, holds `undefined`
+   * where the baseline holds nothing, so it stays marked
+   */
   readonly dirtyFields: NestedBooleans<T>;
   /** Whether any field has been touched: its widget reported a blur since the form mounted or was last reset. A submit
    * touches nothing
@@ -58,7 +61,9 @@ export interface FormStatus<T = unknown> {
    * whole array or object touches each of its leaves, so one holding nothing touches nothing
    */
   readonly touchedFields: NestedBooleans<T>;
-  /** How many submits have been attempted, valid or not, since the form mounted or was last reset */
+  /** How many submits have reached the form, valid or not, since the form mounted or was last reset. A submit the
+   * browser's constraint validation blocks never reaches it, so it is not counted unless `noHtml5Validate` is set
+   */
   readonly submitCount: number;
 }
 

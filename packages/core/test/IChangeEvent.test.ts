@@ -48,6 +48,7 @@ describe('IChangeEvent', () => {
     >().toEqualTypeOf<{ name?: boolean; tags?: (boolean | undefined)[]; address?: { city?: boolean } }>();
     expectTypeOf<NestedBooleans<string>>().toEqualTypeOf<boolean>();
     expectTypeOf<NestedBooleans<{ when: Date }>>().toEqualTypeOf<{ when?: boolean }>();
+    expectTypeOf<NestedBooleans<{ photo: File; scan?: Blob }>>().toEqualTypeOf<{ photo?: boolean; scan?: boolean }>();
   });
 
   it('cannot be written into', () => {

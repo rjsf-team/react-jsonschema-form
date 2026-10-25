@@ -219,8 +219,8 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
 }
 
 /** The form's status. The data shares with the baseline every subtree equal to it, see `shareState()`, so the walk
- * descends only where the two differ by reference, and costs what differs rather than the size of the form; the
- * touched fields cost what was touched
+ * descends only into the objects and arrays whose reference differs, comparing each of their members by reference
+ * once; no deep comparison runs. The touched fields cost what was touched
  *
  * @param state - The state of the form
  * @returns - The status of the form
@@ -427,7 +427,7 @@ function omitWithBaseline<T>(
   baseline: T | undefined,
   formData: T | undefined,
   omit: (data: T | undefined) => T | undefined,
-): { formData: T | undefined; baseline: T | undefined } {
+): ExtraDataOmission<T> {
   const omitted = replaceEqualDeep(formData, omit(formData));
   if (Object.is(omitted, formData)) {
     return { formData, baseline };
@@ -1799,8 +1799,16 @@ export function applyValidation<T, S extends StrictRJSFSchema, F extends FormCon
   return { hasError, next };
 }
 
+/** The data and the baseline after extra data is omitted, see `omitWithBaseline()` */
+export interface ExtraDataOmission<T> {
+  formData: T | undefined;
+  baseline: T | undefined;
+}
+
 /** The data and the baseline of `current` without the fields the schema does not describe, see `omitWithBaseline()` */
-function omitExtraDataOf<T, S extends StrictRJSFSchema, F extends FormContextType>(current: FormState<T, S, F>) {
+export function omitExtraDataOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+): ExtraDataOmission<T> {
   const { schema, schemaUtils, uiState } = current;
   const fieldState = fieldStateOf(uiState, schemaUtils);
   return omitWithBaseline(current.baseline, current.formData, (data) =>
@@ -1808,20 +1816,22 @@ function omitExtraDataOf<T, S extends StrictRJSFSchema, F extends FormContextTyp
   );
 }
 
-/** The state after a valid submission: the submitted data, without extra data when `omitExtraData` asks for it, with
- * `extraErrors` as the only errors on display
+/** The state after a valid submission: the submitted data, with `extraErrors` as the only errors on display
  *
  * @param current - The state at the submission
  * @param props - The current props
+ * @param [omitted] - The data and the baseline without extra data, `omitExtraDataOf(current)`, when `omitExtraData`
+ *        asks for it
  * @returns - The next state, sharing every unchanged subtree with `current`
  */
 export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
+  omitted?: ExtraDataOmission<T>,
 ): FormState<T, S, F> {
   return {
     ...current,
-    ...(props.omitExtraData === true && omitExtraDataOf(current)),
+    ...omitted,
     ...extraErrorsAlone(props.extraErrors),
   };
 }

@@ -73,6 +73,36 @@ describe('dirty', () => {
     expect(withEmptyValue.handle.getStatus()).toMatchObject({ dirty: false, dirtyFields: {}, submitCount: 0 });
   });
 
+  it('leaves a field the seed left blank dirty once it is typed into and cleared, nested fields too', async () => {
+    const { container, handle } = mountWithHandle({ schema: person, initialFormData: {} });
+
+    await user.type(input(container, 'root_address_city'), 'x');
+    await user.clear(input(container, 'root_address_city'));
+
+    expect(handle.getFormData()).toEqual({ name: 'Ada', address: { city: undefined } });
+    expect(handle.getStatus()).toMatchObject({ dirty: true, dirtyFields: { address: { city: true } }, submitCount: 0 });
+  });
+
+  it('updates the status for a prop change without calling onChange', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string' }, nickname: { type: 'string' } },
+    };
+    const { container, handle, onChange, rerender } = mountWithHandle({ schema, initialFormData: { name: 'Ada' } });
+    await user.type(input(container, 'root_nickname'), 'x');
+    expect(lastStatus(onChange).dirty).toBe(true);
+    onChange.mockClear();
+
+    rerender({
+      schema: { type: 'object', properties: { name: { type: 'string' }, nickname: { type: 'string', default: 'x' } } },
+      initialFormData: { name: 'Ada' },
+    });
+
+    expect(handle.getFormData()).toEqual({ name: 'Ada', nickname: 'x' });
+    expect(handle.getStatus()).toMatchObject({ dirty: false, dirtyFields: {}, submitCount: 0 });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it('marks the edited item of an array in dirtyFields', async () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -234,6 +264,17 @@ describe('submitCount', () => {
     act(() => handle.submit());
     expect(onSubmit).toHaveBeenCalledTimes(2);
     expect(handle.getStatus().submitCount).toBe(3);
+  });
+
+  it("does not count a submit the browser's constraint validation blocks", async () => {
+    const { handle, onSubmit, onError } = mountWithHandle({ schema: required });
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    act(() => handle.submit());
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).not.toHaveBeenCalled();
+    expect(handle.getStatus().submitCount).toBe(0);
   });
 
   it('rides along on the next onChange', async () => {
