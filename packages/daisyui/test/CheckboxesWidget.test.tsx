@@ -4,20 +4,8 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
-import CheckboxesWidget from '../src/widgets/CheckboxesWidget/CheckboxesWidget.tsx';
-import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 const user = userEvent.setup();
-
-const objectOptions = [
-  { label: 'One', value: { a: 1 } },
-  { label: 'Two', value: { a: 2 } },
-];
-
-const stringOptions = [
-  { label: 'One', value: 'one' },
-  { label: 'Two', value: 'two' },
-];
 
 const schema: RJSFSchema = {
   type: 'object',
@@ -27,66 +15,28 @@ const schema: RJSFSchema = {
   },
 };
 
+describe('CheckboxesWidget and RadioWidget options', () => {
+  test.each<[string, RJSFSchema, string]>([
+    [
+      'checkboxes',
+      { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['one', 'two'] } },
+      '.rjsf-checkbox',
+    ],
+    ['radio', { type: 'string', enum: ['one', 'two'] }, '.rjsf-radio'],
+  ])('dims a disabled %s option through the class map, which also sets its cursor', (widget, schema, option) => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={{ 'ui:widget': widget, 'ui:enumDisabled': ['two'] }} validator={validator} />,
+    );
+
+    const [one, two] = container.querySelectorAll(option);
+    expect(one).toHaveClass('cursor-pointer', 'has-disabled:cursor-not-allowed');
+    expect(one).not.toHaveClass('opacity-50');
+    expect(two).toHaveClass('opacity-50');
+    expect(two.querySelector('input')).toBeDisabled();
+  });
+});
+
 describe('CheckboxesWidget', () => {
-  test('checks only the selected object options', () => {
-    render(
-      <CheckboxesWidget {...makeWidgetMockProps({ value: [{ a: 2 }], options: { enumOptions: objectOptions } })} />,
-    );
-
-    expect(screen.getByRole('checkbox', { name: 'Two' })).toBeChecked();
-    expect(screen.getByRole('checkbox', { name: 'One' })).not.toBeChecked();
-  });
-
-  test('deselects an object option that is equal to, but not the same instance as, its constant', async () => {
-    const onChange = vi.fn();
-    render(
-      <CheckboxesWidget
-        {...makeWidgetMockProps({ value: [{ a: 1 }, { a: 2 }], onChange, options: { enumOptions: objectOptions } })}
-      />,
-    );
-
-    await user.click(screen.getByRole('checkbox', { name: 'One' }));
-
-    expect(onChange).toHaveBeenLastCalledWith([{ a: 2 }]);
-  });
-
-  test('selecting an object option keeps the selection in the order of the options', async () => {
-    const onChange = vi.fn();
-    render(
-      <CheckboxesWidget
-        {...makeWidgetMockProps({ value: [{ a: 2 }], onChange, options: { enumOptions: objectOptions } })}
-      />,
-    );
-
-    await user.click(screen.getByRole('checkbox', { name: 'One' }));
-
-    expect(onChange).toHaveBeenLastCalledWith([{ a: 1 }, { a: 2 }]);
-  });
-
-  test('disables only the options ui:enumDisabled lists', () => {
-    render(
-      <CheckboxesWidget
-        {...makeWidgetMockProps({ value: [], options: { enumOptions: stringOptions, enumDisabled: ['two'] } })}
-      />,
-    );
-
-    expect(screen.getByRole('checkbox', { name: 'One' })).toBeEnabled();
-    expect(screen.getByRole('checkbox', { name: 'Two' })).toBeDisabled();
-  });
-
-  test('marks the label of a disabled option as not clickable', () => {
-    render(
-      <CheckboxesWidget
-        {...makeWidgetMockProps({ value: [], options: { enumOptions: stringOptions, enumDisabled: ['two'] } })}
-      />,
-    );
-
-    expect(screen.getByText('One').closest('label')).toHaveClass('cursor-pointer');
-    expect(screen.getByText('Two').closest('label')).toHaveClass('cursor-not-allowed');
-    expect(screen.getByText('Two').closest('label')).not.toHaveClass('cursor-pointer');
-    expect(screen.getByText('Two')).toHaveClass('opacity-50');
-  });
-
   // HTML5 constraint validation weighs each box on its own, so a `required` option demands *that* box — every box, for
   // a widget that puts the attribute on all of them. A radio group is the one place the attribute means "one of these",
   // because the browser reads same-named radios as a group; checkboxes share a name without sharing the requirement

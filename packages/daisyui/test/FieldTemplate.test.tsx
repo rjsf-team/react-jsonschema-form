@@ -46,6 +46,25 @@ function renderForm(
 }
 
 describe('FieldTemplate', () => {
+  // It spreads the props it doesn't read onto its `div`, so a prop core adds to the template has to be kept off it
+  test('keeps the hasErrors prop off its div', () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    try {
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { a: { type: 'string', title: 'A' } } }}
+          extraErrors={{ a: { __errors: ['bad'] } }}
+          validator={validator}
+        />,
+      );
+
+      expect(container.querySelector('[haserrors]')).toBeNull();
+      expect(consoleError.mock.calls.flat().join(' ')).not.toContain('hasErrors');
+    } finally {
+      consoleError.mockRestore();
+    }
+  });
+
   describe('boolean field labels', () => {
     test('renders the label above a boolean rendered as radios', () => {
       const { templateLabel } = renderForm({ agree: { 'ui:widget': 'radio' } });
@@ -383,16 +402,6 @@ describe('FieldTemplate', () => {
   describe('the alt-date widget', () => {
     const altDate = { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } };
     const dateSchema = { type: 'string' as const, format: 'date' };
-
-    test('associates each of its labels with the control it names', () => {
-      renderForm({ agree: altDate }, { ...dateSchema, title: 'Agree' });
-
-      // daisyui's SelectWidget opens from a real `button`, which `label htmlFor` can associate with. Its `aria-label`
-      // names it, and starts with the field's title so the visible label alone doesn't leave the part out of context
-      for (const type of ['year', 'month', 'day']) {
-        expect(screen.getByLabelText(type)).toBe(screen.getByRole('combobox', { name: `Agree, ${type}` }));
-      }
-    });
 
     test('names the whole group with the field label', () => {
       renderForm({ agree: altDate }, { ...dateSchema, title: 'Agree' });

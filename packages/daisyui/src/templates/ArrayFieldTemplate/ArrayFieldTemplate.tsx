@@ -99,7 +99,7 @@ export default function ArrayFieldTemplate<
           <div className='flex justify-end'>
             <AddButton
               id={buttonId(id, 'add')}
-              className='rjsf-array-item-add btn btn-primary btn-sm'
+              className='rjsf-array-item-add btn-primary'
               onClick={handleAddClick}
               disabled={disabled || readonly}
               uiSchema={uiSchema}

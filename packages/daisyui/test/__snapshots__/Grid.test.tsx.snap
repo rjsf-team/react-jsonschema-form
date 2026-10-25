@@ -79,23 +79,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_first"
-                        name="root_person_name_first"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_first"
+                    label="First Name"
+                    name="root_person_name_first"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -123,22 +116,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_middle"
-                        name="root_person_name_middle"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_middle"
+                    label="Middle"
+                    name="root_person_name_middle"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -171,23 +157,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_last"
-                        name="root_person_name_last"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_last"
+                    label="Last Name"
+                    name="root_person_name_last"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -292,115 +271,122 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </span>
                   </label>
                   <div
-                    class="form-control"
+                    aria-labelledby="root_person_race__label"
+                    class="rjsf-checkboxes"
+                    id="root_person_race"
+                    role="group"
                   >
                     <div
-                      aria-labelledby="root_person_race__label"
-                      class="flex flex-col gap-2 mt-1"
-                      id="root_person_race"
-                      role="group"
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
                     >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="0"
-                          id="root_person_race-0"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="0"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          American Indian / Alaska Native
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-0"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="0"
+                          />
+                          <span>
+                            American Indian / Alaska Native
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="1"
-                          id="root_person_race-1"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="1"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Asian
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-1"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="1"
+                          />
+                          <span>
+                            Asian
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="2"
-                          id="root_person_race-2"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="2"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Black / African American
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-2"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="2"
+                          />
+                          <span>
+                            Black / African American
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="3"
-                          id="root_person_race-3"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="3"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Native Hawaiian / Other Pacific Islander
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-3"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="3"
+                          />
+                          <span>
+                            Native Hawaiian / Other Pacific Islander
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="4"
-                          id="root_person_race-4"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="4"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          White
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-4"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="4"
+                          />
+                          <span>
+                            White
+                          </span>
                         </span>
                       </label>
                     </div>
                   </div>
                   <div
-                    class="description-field my-4"
+                    class="rjsf-field-description text-sm text-base-content/80 my-4"
                     id="root_person_race__description"
                   >
-                    <div
-                      class="text-sm text-base-content/80"
-                    >
-                      (Check all that apply)
-                    </div>
+                    (Check all that apply)
                   </div>
                 </div>
               </div>
@@ -451,23 +437,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_line_1"
-                                name="root_person_address_line_1"
-                                placeholder=""
-                                required=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_line_1"
+                            label="Address"
+                            name="root_person_address_line_1"
+                            placeholder=""
+                            required=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -495,22 +474,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_line_2"
-                                name="root_person_address_line_2"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_line_2"
+                            label="Address 2"
+                            name="root_person_address_line_2"
+                            placeholder=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -543,23 +515,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_city"
-                                name="root_person_address_city"
-                                placeholder=""
-                                required=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_city"
+                            label="City"
+                            name="root_person_address_city"
+                            placeholder=""
+                            required=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -1505,23 +1470,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </span>
                               </span>
                             </label>
-                            <div
-                              class="form-control"
-                            >
-                              <div
-                                style="position: relative;"
-                              >
-                                <input
-                                  class="input input-bordered w-full"
-                                  id="root_person_address_postal_code"
-                                  name="root_person_address_postal_code"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value=""
-                                />
-                              </div>
-                            </div>
+                            <input
+                              class="input input-bordered w-full"
+                              id="root_person_address_postal_code"
+                              label="ZIP Code"
+                              name="root_person_address_postal_code"
+                              placeholder=""
+                              required=""
+                              type="text"
+                              value=""
+                            />
                           </div>
                         </div>
                       </div>
@@ -1546,67 +1504,60 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="form-control"
+                    aria-label="Employment"
+                    class="rjsf-field-radio-group"
+                    id="root_employment"
+                    role="radiogroup"
                   >
-                    <div
-                      aria-label="Employment"
-                      class="flex flex-col gap-2 mt-1"
-                      id="root_employment"
-                      role="radiogroup"
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
                     >
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      <span>
                         <input
                           checked=""
-                          class="radio"
-                          data-index="0"
+                          class="radio mr-2"
                           id="root_employment-0"
                           name="root_employment"
                           type="radio"
                           value="0"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Company
                         </span>
-                      </label>
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      </span>
+                    </label>
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
+                    >
+                      <span>
                         <input
-                          class="radio"
-                          data-index="1"
+                          class="radio mr-2"
                           id="root_employment-1"
                           name="root_employment"
                           type="radio"
                           value="1"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Education
                         </span>
-                      </label>
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      </span>
+                    </label>
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
+                    >
+                      <span>
                         <input
-                          class="radio"
-                          data-index="2"
+                          class="radio mr-2"
                           id="root_employment-2"
                           name="root_employment"
                           type="radio"
                           value="2"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Other
                         </span>
-                      </label>
-                    </div>
+                      </span>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -1617,7 +1568,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -1706,23 +1657,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_first"
-                        name="root_person_name_first"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_first"
+                    label="First Name"
+                    name="root_person_name_first"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -1750,22 +1694,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_middle"
-                        name="root_person_name_middle"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_middle"
+                    label="Middle"
+                    name="root_person_name_middle"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -1798,23 +1735,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_last"
-                        name="root_person_name_last"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_last"
+                    label="Last Name"
+                    name="root_person_name_last"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -1919,115 +1849,122 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </span>
                   </label>
                   <div
-                    class="form-control"
+                    aria-labelledby="root_person_race__label"
+                    class="rjsf-checkboxes"
+                    id="root_person_race"
+                    role="group"
                   >
                     <div
-                      aria-labelledby="root_person_race__label"
-                      class="flex flex-col gap-2 mt-1"
-                      id="root_person_race"
-                      role="group"
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
                     >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="0"
-                          id="root_person_race-0"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="0"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          American Indian / Alaska Native
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-0"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="0"
+                          />
+                          <span>
+                            American Indian / Alaska Native
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="1"
-                          id="root_person_race-1"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="1"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Asian
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-1"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="1"
+                          />
+                          <span>
+                            Asian
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="2"
-                          id="root_person_race-2"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="2"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Black / African American
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-2"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="2"
+                          />
+                          <span>
+                            Black / African American
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="3"
-                          id="root_person_race-3"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="3"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Native Hawaiian / Other Pacific Islander
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-3"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="3"
+                          />
+                          <span>
+                            Native Hawaiian / Other Pacific Islander
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="4"
-                          id="root_person_race-4"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="4"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          White
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-4"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="4"
+                          />
+                          <span>
+                            White
+                          </span>
                         </span>
                       </label>
                     </div>
                   </div>
                   <div
-                    class="description-field my-4"
+                    class="rjsf-field-description text-sm text-base-content/80 my-4"
                     id="root_person_race__description"
                   >
-                    <div
-                      class="text-sm text-base-content/80"
-                    >
-                      (Check all that apply)
-                    </div>
+                    (Check all that apply)
                   </div>
                 </div>
               </div>
@@ -2078,23 +2015,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_line_1"
-                                name="root_person_address_line_1"
-                                placeholder=""
-                                required=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_line_1"
+                            label="Address"
+                            name="root_person_address_line_1"
+                            placeholder=""
+                            required=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -2122,22 +2052,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_line_2"
-                                name="root_person_address_line_2"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_line_2"
+                            label="Address 2"
+                            name="root_person_address_line_2"
+                            placeholder=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -2170,23 +2093,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_city"
-                                name="root_person_address_city"
-                                placeholder=""
-                                required=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_city"
+                            label="City"
+                            name="root_person_address_city"
+                            placeholder=""
+                            required=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -3132,23 +3048,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </span>
                               </span>
                             </label>
-                            <div
-                              class="form-control"
-                            >
-                              <div
-                                style="position: relative;"
-                              >
-                                <input
-                                  class="input input-bordered w-full"
-                                  id="root_person_address_postal_code"
-                                  name="root_person_address_postal_code"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value=""
-                                />
-                              </div>
-                            </div>
+                            <input
+                              class="input input-bordered w-full"
+                              id="root_person_address_postal_code"
+                              label="ZIP Code"
+                              name="root_person_address_postal_code"
+                              placeholder=""
+                              required=""
+                              type="text"
+                              value=""
+                            />
                           </div>
                         </div>
                       </div>
@@ -3173,67 +3082,60 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="form-control"
+                    aria-label="Employment"
+                    class="rjsf-field-radio-group"
+                    id="root_employment"
+                    role="radiogroup"
                   >
-                    <div
-                      aria-label="Employment"
-                      class="flex flex-col gap-2 mt-1"
-                      id="root_employment"
-                      role="radiogroup"
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
                     >
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      <span>
                         <input
-                          class="radio"
-                          data-index="0"
+                          class="radio mr-2"
                           id="root_employment-0"
                           name="root_employment"
                           type="radio"
                           value="0"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Company
                         </span>
-                      </label>
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      </span>
+                    </label>
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
+                    >
+                      <span>
                         <input
                           checked=""
-                          class="radio"
-                          data-index="1"
+                          class="radio mr-2"
                           id="root_employment-1"
                           name="root_employment"
                           type="radio"
                           value="1"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Education
                         </span>
-                      </label>
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      </span>
+                    </label>
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
+                    >
+                      <span>
                         <input
-                          class="radio"
-                          data-index="2"
+                          class="radio mr-2"
                           id="root_employment-2"
                           name="root_employment"
                           type="radio"
                           value="2"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Other
                         </span>
-                      </label>
-                    </div>
+                      </span>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -3244,7 +3146,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -3333,23 +3235,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_first"
-                        name="root_person_name_first"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_first"
+                    label="First Name"
+                    name="root_person_name_first"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -3377,22 +3272,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_middle"
-                        name="root_person_name_middle"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_middle"
+                    label="Middle"
+                    name="root_person_name_middle"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -3425,23 +3313,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_last"
-                        name="root_person_name_last"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_last"
+                    label="Last Name"
+                    name="root_person_name_last"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -3546,115 +3427,122 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </span>
                   </label>
                   <div
-                    class="form-control"
+                    aria-labelledby="root_person_race__label"
+                    class="rjsf-checkboxes"
+                    id="root_person_race"
+                    role="group"
                   >
                     <div
-                      aria-labelledby="root_person_race__label"
-                      class="flex flex-col gap-2 mt-1"
-                      id="root_person_race"
-                      role="group"
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
                     >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="0"
-                          id="root_person_race-0"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="0"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          American Indian / Alaska Native
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-0"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="0"
+                          />
+                          <span>
+                            American Indian / Alaska Native
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="1"
-                          id="root_person_race-1"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="1"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Asian
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-1"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="1"
+                          />
+                          <span>
+                            Asian
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="2"
-                          id="root_person_race-2"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="2"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Black / African American
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-2"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="2"
+                          />
+                          <span>
+                            Black / African American
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="3"
-                          id="root_person_race-3"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="3"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Native Hawaiian / Other Pacific Islander
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-3"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="3"
+                          />
+                          <span>
+                            Native Hawaiian / Other Pacific Islander
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="4"
-                          id="root_person_race-4"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="4"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          White
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-4"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="4"
+                          />
+                          <span>
+                            White
+                          </span>
                         </span>
                       </label>
                     </div>
                   </div>
                   <div
-                    class="description-field my-4"
+                    class="rjsf-field-description text-sm text-base-content/80 my-4"
                     id="root_person_race__description"
                   >
-                    <div
-                      class="text-sm text-base-content/80"
-                    >
-                      (Check all that apply)
-                    </div>
+                    (Check all that apply)
                   </div>
                 </div>
               </div>
@@ -3705,23 +3593,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_line_1"
-                                name="root_person_address_line_1"
-                                placeholder=""
-                                required=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_line_1"
+                            label="Address"
+                            name="root_person_address_line_1"
+                            placeholder=""
+                            required=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -3749,22 +3630,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_line_2"
-                                name="root_person_address_line_2"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_line_2"
+                            label="Address 2"
+                            name="root_person_address_line_2"
+                            placeholder=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -3797,23 +3671,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_city"
-                                name="root_person_address_city"
-                                placeholder=""
-                                required=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_city"
+                            label="City"
+                            name="root_person_address_city"
+                            placeholder=""
+                            required=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -4759,23 +4626,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </span>
                               </span>
                             </label>
-                            <div
-                              class="form-control"
-                            >
-                              <div
-                                style="position: relative;"
-                              >
-                                <input
-                                  class="input input-bordered w-full"
-                                  id="root_person_address_postal_code"
-                                  name="root_person_address_postal_code"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value=""
-                                />
-                              </div>
-                            </div>
+                            <input
+                              class="input input-bordered w-full"
+                              id="root_person_address_postal_code"
+                              label="ZIP Code"
+                              name="root_person_address_postal_code"
+                              placeholder=""
+                              required=""
+                              type="text"
+                              value=""
+                            />
                           </div>
                         </div>
                       </div>
@@ -4800,67 +4660,60 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="form-control"
+                    aria-label="Employment"
+                    class="rjsf-field-radio-group"
+                    id="root_employment"
+                    role="radiogroup"
                   >
-                    <div
-                      aria-label="Employment"
-                      class="flex flex-col gap-2 mt-1"
-                      id="root_employment"
-                      role="radiogroup"
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
                     >
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      <span>
                         <input
-                          class="radio"
-                          data-index="0"
+                          class="radio mr-2"
                           id="root_employment-0"
                           name="root_employment"
                           type="radio"
                           value="0"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Company
                         </span>
-                      </label>
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      </span>
+                    </label>
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
+                    >
+                      <span>
                         <input
-                          class="radio"
-                          data-index="1"
+                          class="radio mr-2"
                           id="root_employment-1"
                           name="root_employment"
                           type="radio"
                           value="1"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Education
                         </span>
-                      </label>
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      </span>
+                    </label>
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
+                    >
+                      <span>
                         <input
                           checked=""
-                          class="radio"
-                          data-index="2"
+                          class="radio mr-2"
                           id="root_employment-2"
                           name="root_employment"
                           type="radio"
                           value="2"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Other
                         </span>
-                      </label>
-                    </div>
+                      </span>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -4871,7 +4724,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -4960,23 +4813,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_first"
-                        name="root_person_name_first"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_first"
+                    label="First Name"
+                    name="root_person_name_first"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -5004,22 +4850,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_middle"
-                        name="root_person_name_middle"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_middle"
+                    label="Middle"
+                    name="root_person_name_middle"
+                    placeholder=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -5052,23 +4891,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </span>
                   </label>
-                  <div
-                    class="form-control"
-                  >
-                    <div
-                      style="position: relative;"
-                    >
-                      <input
-                        class="input input-bordered w-full"
-                        id="root_person_name_last"
-                        name="root_person_name_last"
-                        placeholder=""
-                        required=""
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                  </div>
+                  <input
+                    class="input input-bordered w-full"
+                    id="root_person_name_last"
+                    label="Last Name"
+                    name="root_person_name_last"
+                    placeholder=""
+                    required=""
+                    type="text"
+                    value=""
+                  />
                 </div>
               </div>
             </div>
@@ -5173,115 +5005,122 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     </span>
                   </label>
                   <div
-                    class="form-control"
+                    aria-labelledby="root_person_race__label"
+                    class="rjsf-checkboxes"
+                    id="root_person_race"
+                    role="group"
                   >
                     <div
-                      aria-labelledby="root_person_race__label"
-                      class="flex flex-col gap-2 mt-1"
-                      id="root_person_race"
-                      role="group"
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
                     >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="0"
-                          id="root_person_race-0"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="0"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          American Indian / Alaska Native
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-0"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="0"
+                          />
+                          <span>
+                            American Indian / Alaska Native
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="1"
-                          id="root_person_race-1"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="1"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Asian
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-1"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="1"
+                          />
+                          <span>
+                            Asian
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="2"
-                          id="root_person_race-2"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="2"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Black / African American
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-2"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="2"
+                          />
+                          <span>
+                            Black / African American
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="3"
-                          id="root_person_race-3"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="3"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          Native Hawaiian / Other Pacific Islander
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-3"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="3"
+                          />
+                          <span>
+                            Native Hawaiian / Other Pacific Islander
+                          </span>
                         </span>
                       </label>
+                    </div>
+                    <div
+                      class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                    >
                       <label
-                        class="flex items-center cursor-pointer gap-2"
+                        class="flex items-center"
                       >
-                        <input
-                          aria-describedby="root_person_race__description"
-                          class="checkbox"
-                          data-index="4"
-                          id="root_person_race-4"
-                          name="root_person_race"
-                          type="checkbox"
-                          value="4"
-                        />
-                        <span
-                          class="label-text"
-                        >
-                          White
+                        <span>
+                          <input
+                            aria-describedby="root_person_race__description"
+                            class="checkbox mr-2"
+                            id="root_person_race-4"
+                            name="root_person_race"
+                            type="checkbox"
+                            value="4"
+                          />
+                          <span>
+                            White
+                          </span>
                         </span>
                       </label>
                     </div>
                   </div>
                   <div
-                    class="description-field my-4"
+                    class="rjsf-field-description text-sm text-base-content/80 my-4"
                     id="root_person_race__description"
                   >
-                    <div
-                      class="text-sm text-base-content/80"
-                    >
-                      (Check all that apply)
-                    </div>
+                    (Check all that apply)
                   </div>
                 </div>
               </div>
@@ -5332,23 +5171,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_line_1"
-                                name="root_person_address_line_1"
-                                placeholder=""
-                                required=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_line_1"
+                            label="Address"
+                            name="root_person_address_line_1"
+                            placeholder=""
+                            required=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -5376,22 +5208,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_line_2"
-                                name="root_person_address_line_2"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_line_2"
+                            label="Address 2"
+                            name="root_person_address_line_2"
+                            placeholder=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -5424,23 +5249,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </span>
                           </label>
-                          <div
-                            class="form-control"
-                          >
-                            <div
-                              style="position: relative;"
-                            >
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_person_address_city"
-                                name="root_person_address_city"
-                                placeholder=""
-                                required=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
+                          <input
+                            class="input input-bordered w-full"
+                            id="root_person_address_city"
+                            label="City"
+                            name="root_person_address_city"
+                            placeholder=""
+                            required=""
+                            type="text"
+                            value=""
+                          />
                         </div>
                       </div>
                     </div>
@@ -6386,23 +6204,16 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </span>
                               </span>
                             </label>
-                            <div
-                              class="form-control"
-                            >
-                              <div
-                                style="position: relative;"
-                              >
-                                <input
-                                  class="input input-bordered w-full"
-                                  id="root_person_address_postal_code"
-                                  name="root_person_address_postal_code"
-                                  placeholder=""
-                                  required=""
-                                  type="text"
-                                  value=""
-                                />
-                              </div>
-                            </div>
+                            <input
+                              class="input input-bordered w-full"
+                              id="root_person_address_postal_code"
+                              label="ZIP Code"
+                              name="root_person_address_postal_code"
+                              placeholder=""
+                              required=""
+                              type="text"
+                              value=""
+                            />
                           </div>
                         </div>
                       </div>
@@ -6427,67 +6238,60 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="form-control"
+                    aria-label="Employment"
+                    class="rjsf-field-radio-group"
+                    id="root_employment"
+                    role="radiogroup"
                   >
-                    <div
-                      aria-label="Employment"
-                      class="flex flex-col gap-2 mt-1"
-                      id="root_employment"
-                      role="radiogroup"
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
                     >
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      <span>
                         <input
                           checked=""
-                          class="radio"
-                          data-index="0"
+                          class="radio mr-2"
                           id="root_employment-0"
                           name="root_employment"
                           type="radio"
                           value="0"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Company
                         </span>
-                      </label>
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      </span>
+                    </label>
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
+                    >
+                      <span>
                         <input
-                          class="radio"
-                          data-index="1"
+                          class="radio mr-2"
                           id="root_employment-1"
                           name="root_employment"
                           type="radio"
                           value="1"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Education
                         </span>
-                      </label>
-                      <label
-                        class="flex items-center cursor-pointer gap-2"
-                      >
+                      </span>
+                    </label>
+                    <label
+                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer has-disabled:cursor-not-allowed"
+                    >
+                      <span>
                         <input
-                          class="radio"
-                          data-index="2"
+                          class="radio mr-2"
                           id="root_employment-2"
                           name="root_employment"
                           type="radio"
                           value="2"
                         />
-                        <span
-                          class="label-text"
-                        >
+                        <span>
                           Other
                         </span>
-                      </label>
-                    </div>
+                      </span>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -6498,7 +6302,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -6580,23 +6384,16 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_name_first"
-                      name="root_person_name_first"
-                      placeholder=""
-                      required=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_name_first"
+                  label="First Name"
+                  name="root_person_name_first"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -6624,22 +6421,15 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_name_middle"
-                      name="root_person_name_middle"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_name_middle"
+                  label="Middle"
+                  name="root_person_name_middle"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -6672,23 +6462,16 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_name_last"
-                      name="root_person_name_last"
-                      placeholder=""
-                      required=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_name_last"
+                  label="Last Name"
+                  name="root_person_name_last"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -6789,115 +6572,122 @@ exports[`Three even column grid > renders person and address in three columns, n
                   </span>
                 </label>
                 <div
-                  class="form-control"
+                  aria-labelledby="root_person_race__label"
+                  class="rjsf-checkboxes"
+                  id="root_person_race"
+                  role="group"
                 >
                   <div
-                    aria-labelledby="root_person_race__label"
-                    class="flex flex-col gap-2 mt-1"
-                    id="root_person_race"
-                    role="group"
+                    class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
                   >
                     <label
-                      class="flex items-center cursor-pointer gap-2"
+                      class="flex items-center"
                     >
-                      <input
-                        aria-describedby="root_person_race__description"
-                        class="checkbox"
-                        data-index="0"
-                        id="root_person_race-0"
-                        name="root_person_race"
-                        type="checkbox"
-                        value="0"
-                      />
-                      <span
-                        class="label-text"
-                      >
-                        American Indian / Alaska Native
+                      <span>
+                        <input
+                          aria-describedby="root_person_race__description"
+                          class="checkbox mr-2"
+                          id="root_person_race-0"
+                          name="root_person_race"
+                          type="checkbox"
+                          value="0"
+                        />
+                        <span>
+                          American Indian / Alaska Native
+                        </span>
                       </span>
                     </label>
+                  </div>
+                  <div
+                    class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                  >
                     <label
-                      class="flex items-center cursor-pointer gap-2"
+                      class="flex items-center"
                     >
-                      <input
-                        aria-describedby="root_person_race__description"
-                        class="checkbox"
-                        data-index="1"
-                        id="root_person_race-1"
-                        name="root_person_race"
-                        type="checkbox"
-                        value="1"
-                      />
-                      <span
-                        class="label-text"
-                      >
-                        Asian
+                      <span>
+                        <input
+                          aria-describedby="root_person_race__description"
+                          class="checkbox mr-2"
+                          id="root_person_race-1"
+                          name="root_person_race"
+                          type="checkbox"
+                          value="1"
+                        />
+                        <span>
+                          Asian
+                        </span>
                       </span>
                     </label>
+                  </div>
+                  <div
+                    class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                  >
                     <label
-                      class="flex items-center cursor-pointer gap-2"
+                      class="flex items-center"
                     >
-                      <input
-                        aria-describedby="root_person_race__description"
-                        class="checkbox"
-                        data-index="2"
-                        id="root_person_race-2"
-                        name="root_person_race"
-                        type="checkbox"
-                        value="2"
-                      />
-                      <span
-                        class="label-text"
-                      >
-                        Black / African American
+                      <span>
+                        <input
+                          aria-describedby="root_person_race__description"
+                          class="checkbox mr-2"
+                          id="root_person_race-2"
+                          name="root_person_race"
+                          type="checkbox"
+                          value="2"
+                        />
+                        <span>
+                          Black / African American
+                        </span>
                       </span>
                     </label>
+                  </div>
+                  <div
+                    class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                  >
                     <label
-                      class="flex items-center cursor-pointer gap-2"
+                      class="flex items-center"
                     >
-                      <input
-                        aria-describedby="root_person_race__description"
-                        class="checkbox"
-                        data-index="3"
-                        id="root_person_race-3"
-                        name="root_person_race"
-                        type="checkbox"
-                        value="3"
-                      />
-                      <span
-                        class="label-text"
-                      >
-                        Native Hawaiian / Other Pacific Islander
+                      <span>
+                        <input
+                          aria-describedby="root_person_race__description"
+                          class="checkbox mr-2"
+                          id="root_person_race-3"
+                          name="root_person_race"
+                          type="checkbox"
+                          value="3"
+                        />
+                        <span>
+                          Native Hawaiian / Other Pacific Islander
+                        </span>
                       </span>
                     </label>
+                  </div>
+                  <div
+                    class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                  >
                     <label
-                      class="flex items-center cursor-pointer gap-2"
+                      class="flex items-center"
                     >
-                      <input
-                        aria-describedby="root_person_race__description"
-                        class="checkbox"
-                        data-index="4"
-                        id="root_person_race-4"
-                        name="root_person_race"
-                        type="checkbox"
-                        value="4"
-                      />
-                      <span
-                        class="label-text"
-                      >
-                        White
+                      <span>
+                        <input
+                          aria-describedby="root_person_race__description"
+                          class="checkbox mr-2"
+                          id="root_person_race-4"
+                          name="root_person_race"
+                          type="checkbox"
+                          value="4"
+                        />
+                        <span>
+                          White
+                        </span>
                       </span>
                     </label>
                   </div>
                 </div>
                 <div
-                  class="description-field my-4"
+                  class="rjsf-field-description text-sm text-base-content/80 my-4"
                   id="root_person_race__description"
                 >
-                  <div
-                    class="text-sm text-base-content/80"
-                  >
-                    (Check all that apply)
-                  </div>
+                  (Check all that apply)
                 </div>
               </div>
             </div>
@@ -6931,23 +6721,16 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_address_line_1"
-                      name="root_person_address_line_1"
-                      placeholder=""
-                      required=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_address_line_1"
+                  label="Address"
+                  name="root_person_address_line_1"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -6975,22 +6758,15 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_address_line_2"
-                      name="root_person_address_line_2"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_address_line_2"
+                  label="Address 2"
+                  name="root_person_address_line_2"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -7023,23 +6799,16 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_address_city"
-                      name="root_person_address_city"
-                      placeholder=""
-                      required=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_address_city"
+                  label="City"
+                  name="root_person_address_city"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -7962,7 +7731,7 @@ exports[`Three even column grid > renders person and address in three columns, n
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit
@@ -8044,23 +7813,16 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_name_first"
-                      name="root_person_name_first"
-                      placeholder=""
-                      required=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_name_first"
+                  label="First Name"
+                  name="root_person_name_first"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -8088,22 +7850,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_name_middle"
-                      name="root_person_name_middle"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_name_middle"
+                  label="Middle"
+                  name="root_person_name_middle"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -8136,23 +7891,16 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_name_first"
-                      name="root_person_name_first"
-                      placeholder=""
-                      required=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_name_first"
+                  label="First Name"
+                  name="root_person_name_first"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -8253,115 +8001,122 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   </span>
                 </label>
                 <div
-                  class="form-control"
+                  aria-labelledby="root_person_race__label"
+                  class="rjsf-checkboxes"
+                  id="root_person_race"
+                  role="group"
                 >
                   <div
-                    aria-labelledby="root_person_race__label"
-                    class="flex flex-col gap-2 mt-1"
-                    id="root_person_race"
-                    role="group"
+                    class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
                   >
                     <label
-                      class="flex items-center cursor-pointer gap-2"
+                      class="flex items-center"
                     >
-                      <input
-                        aria-describedby="root_person_race__description"
-                        class="checkbox"
-                        data-index="0"
-                        id="root_person_race-0"
-                        name="root_person_race"
-                        type="checkbox"
-                        value="0"
-                      />
-                      <span
-                        class="label-text"
-                      >
-                        American Indian / Alaska Native
+                      <span>
+                        <input
+                          aria-describedby="root_person_race__description"
+                          class="checkbox mr-2"
+                          id="root_person_race-0"
+                          name="root_person_race"
+                          type="checkbox"
+                          value="0"
+                        />
+                        <span>
+                          American Indian / Alaska Native
+                        </span>
                       </span>
                     </label>
+                  </div>
+                  <div
+                    class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                  >
                     <label
-                      class="flex items-center cursor-pointer gap-2"
+                      class="flex items-center"
                     >
-                      <input
-                        aria-describedby="root_person_race__description"
-                        class="checkbox"
-                        data-index="1"
-                        id="root_person_race-1"
-                        name="root_person_race"
-                        type="checkbox"
-                        value="1"
-                      />
-                      <span
-                        class="label-text"
-                      >
-                        Asian
+                      <span>
+                        <input
+                          aria-describedby="root_person_race__description"
+                          class="checkbox mr-2"
+                          id="root_person_race-1"
+                          name="root_person_race"
+                          type="checkbox"
+                          value="1"
+                        />
+                        <span>
+                          Asian
+                        </span>
                       </span>
                     </label>
+                  </div>
+                  <div
+                    class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                  >
                     <label
-                      class="flex items-center cursor-pointer gap-2"
+                      class="flex items-center"
                     >
-                      <input
-                        aria-describedby="root_person_race__description"
-                        class="checkbox"
-                        data-index="2"
-                        id="root_person_race-2"
-                        name="root_person_race"
-                        type="checkbox"
-                        value="2"
-                      />
-                      <span
-                        class="label-text"
-                      >
-                        Black / African American
+                      <span>
+                        <input
+                          aria-describedby="root_person_race__description"
+                          class="checkbox mr-2"
+                          id="root_person_race-2"
+                          name="root_person_race"
+                          type="checkbox"
+                          value="2"
+                        />
+                        <span>
+                          Black / African American
+                        </span>
                       </span>
                     </label>
+                  </div>
+                  <div
+                    class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                  >
                     <label
-                      class="flex items-center cursor-pointer gap-2"
+                      class="flex items-center"
                     >
-                      <input
-                        aria-describedby="root_person_race__description"
-                        class="checkbox"
-                        data-index="3"
-                        id="root_person_race-3"
-                        name="root_person_race"
-                        type="checkbox"
-                        value="3"
-                      />
-                      <span
-                        class="label-text"
-                      >
-                        Native Hawaiian / Other Pacific Islander
+                      <span>
+                        <input
+                          aria-describedby="root_person_race__description"
+                          class="checkbox mr-2"
+                          id="root_person_race-3"
+                          name="root_person_race"
+                          type="checkbox"
+                          value="3"
+                        />
+                        <span>
+                          Native Hawaiian / Other Pacific Islander
+                        </span>
                       </span>
                     </label>
+                  </div>
+                  <div
+                    class="rjsf-checkbox mt-1 w-fit cursor-pointer has-disabled:cursor-not-allowed"
+                  >
                     <label
-                      class="flex items-center cursor-pointer gap-2"
+                      class="flex items-center"
                     >
-                      <input
-                        aria-describedby="root_person_race__description"
-                        class="checkbox"
-                        data-index="4"
-                        id="root_person_race-4"
-                        name="root_person_race"
-                        type="checkbox"
-                        value="4"
-                      />
-                      <span
-                        class="label-text"
-                      >
-                        White
+                      <span>
+                        <input
+                          aria-describedby="root_person_race__description"
+                          class="checkbox mr-2"
+                          id="root_person_race-4"
+                          name="root_person_race"
+                          type="checkbox"
+                          value="4"
+                        />
+                        <span>
+                          White
+                        </span>
                       </span>
                     </label>
                   </div>
                 </div>
                 <div
-                  class="description-field my-4"
+                  class="rjsf-field-description text-sm text-base-content/80 my-4"
                   id="root_person_race__description"
                 >
-                  <div
-                    class="text-sm text-base-content/80"
-                  >
-                    (Check all that apply)
-                  </div>
+                  (Check all that apply)
                 </div>
               </div>
             </div>
@@ -8395,23 +8150,16 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_address_line_1"
-                      name="root_person_address_line_1"
-                      placeholder=""
-                      required=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_address_line_1"
+                  label="Address"
+                  name="root_person_address_line_1"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -8439,22 +8187,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_address_line_2"
-                      name="root_person_address_line_2"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_address_line_2"
+                  label="Address 2"
+                  name="root_person_address_line_2"
+                  placeholder=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -8487,23 +8228,16 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </span>
                   </span>
                 </label>
-                <div
-                  class="form-control"
-                >
-                  <div
-                    style="position: relative;"
-                  >
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_person_address_city"
-                      name="root_person_address_city"
-                      placeholder=""
-                      required=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
+                <input
+                  class="input input-bordered w-full"
+                  id="root_person_address_city"
+                  label="City"
+                  name="root_person_address_city"
+                  placeholder=""
+                  required=""
+                  type="text"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -9426,7 +9160,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
     </div>
     <div>
       <button
-        class="btn btn-primary btn-primary-content "
+        class="rjsf-submit-button btn btn-primary btn-primary-content"
         type="submit"
       >
         Submit

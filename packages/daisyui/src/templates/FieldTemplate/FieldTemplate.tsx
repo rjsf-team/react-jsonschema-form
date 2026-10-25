@@ -95,6 +95,7 @@ export default function FieldTemplate<
     formData,
     help,
     hideError,
+    hasErrors,
     // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     displayLabel,
     onKeyRename,

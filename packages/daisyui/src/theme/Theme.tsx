@@ -3,6 +3,7 @@ import { use, useMemo, useSyncExternalStore } from 'react';
 import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
+import { DAISYUI_CLASS_MAP } from '../classMap.ts';
 import { createTemplates } from '../templates/Templates.tsx';
 import { DAISY_GLOBAL_UI_OPTIONS_KEYS } from '../utils.ts';
 import { createWidgets } from '../widgets/Widgets.tsx';
@@ -26,11 +27,12 @@ function createTheme() {
     templates: createTemplates(),
     widgets: { ...widgets, boolean: widgets.toggle },
     presentation: createPresentation(),
+    classMap: { ...DAISYUI_CLASS_MAP },
     globalUiOptionsKeys: [...DAISY_GLOBAL_UI_OPTIONS_KEYS],
   };
 }
 
-/** Generates the DaisyUI theme: its templates and widgets, as overrides on the core defaults
+/** Generates the DaisyUI theme: its templates, widgets and class map, as overrides on the core defaults
  *
  * @returns A ThemeProps object containing all necessary components for the theme
  */

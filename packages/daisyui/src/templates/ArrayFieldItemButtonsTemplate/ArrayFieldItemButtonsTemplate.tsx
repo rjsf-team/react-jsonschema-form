@@ -28,8 +28,7 @@ export default function ArrayFieldItemButtonsTemplate<
   const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
 
   const renderMany = [hasMoveUp || hasMoveDown, hasCopy, hasRemove].filter(Boolean).length > 1;
-  const btnClass = renderMany ? 'join-item btn btn-sm px-2' : 'btn btn-sm px-2 rounded-sm';
-  const removeBtnClass = renderMany ? 'join-item btn btn-sm btn-error px-2' : 'btn btn-sm btn-error px-2 rounded-sm';
+  const btnClass = `${renderMany ? 'join-item' : 'rounded-sm'} px-2`;
 
   const buttons = (
     <>
@@ -70,7 +69,7 @@ export default function ArrayFieldItemButtonsTemplate<
         <RemoveButton
           {...itemButtonProps?.remove}
           id={buttonId(id, 'remove')}
-          className={`rjsf-array-item-remove ${removeBtnClass}`}
+          className={`rjsf-array-item-remove ${btnClass} btn-error`}
           disabled={disabled || readonly}
           onClick={onRemoveItem}
           uiSchema={uiSchema}
