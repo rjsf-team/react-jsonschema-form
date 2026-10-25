@@ -153,6 +153,37 @@ describe('touched', () => {
     expect(handle.getStatus().touchedFields).toEqual({ items: [undefined, { name: true }, undefined] });
   });
 
+  it('marks a widget that handles a whole array as one field', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        tags: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
+      },
+    };
+    const { container, handle } = mountWithHandle({
+      schema,
+      uiSchema: { tags: { 'ui:widget': 'checkboxes' } },
+      initialFormData: { tags: [] },
+    });
+    const [first] = container.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
+
+    await user.click(first);
+    await user.click(first);
+    await user.click(document.body);
+
+    expect(handle.getFormData()).toEqual({ tags: [] });
+    expect(handle.getStatus()).toMatchObject({ touched: true, touchedFields: { tags: true } });
+  });
+
+  it('is untouched again once setFieldValue() removes the touched item', async () => {
+    const { container, handle } = mountWithHandle({ schema: list, initialFormData: listData });
+    await blur(container, 'root_items_2_name');
+
+    act(() => handle.setFieldValue('items', [{ name: 'a' }]));
+
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+  });
+
   it('is cleared by reset()', async () => {
     const { container, handle, onChange } = mountWithHandle({ schema: person });
     await blur(container, 'root_name');
@@ -248,7 +279,7 @@ describe('liveErrors', () => {
       expect(fieldErrorsById(node)).toEqual({ root_a: ['custom a'] });
     });
 
-    it('leaves onError and validateForm() every error', async () => {
+    it('reveals every error through validateForm(), until reset(), without counting a submit', async () => {
       const { container, node, handle, onError } = mountWithHandle({
         schema: pair,
         liveValidate: 'onChange',
@@ -263,6 +294,14 @@ describe('liveErrors', () => {
 
       expect(isValid).toBe(false);
       expect(propertiesOfOnError(onError)).toEqual(['.a', 'b']);
+      expect(Object.keys(fieldErrorsById(node)).sort()).toEqual(['root_a', 'root_b']);
+      expect(handle.getStatus().submitCount).toBe(0);
+      await user.type(input(container, 'root_a'), 'x');
+      expect(Object.keys(fieldErrorsById(node)).sort()).toEqual(['root_a', 'root_b']);
+
+      act(() => handle.reset());
+      await user.type(input(container, 'root_a'), 'x');
+
       expect(Object.keys(fieldErrorsById(node))).toEqual(['root_a']);
     });
 

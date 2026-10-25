@@ -8,6 +8,7 @@ import type {
   NestedBooleanObject,
   NestedBooleans,
   NestedBooleanValue,
+  TouchedFields,
 } from './components/IChangeEvent.ts';
 import type { RichDescriptionProps } from './components/RichDescription.tsx';
 import RichDescription from './components/RichDescription.tsx';
@@ -31,6 +32,7 @@ export type {
   NestedBooleans,
   NestedBooleanValue,
   ThemedForm,
+  TouchedFields,
   ThemeProps,
   RichDescriptionProps,
   RichHelpProps,

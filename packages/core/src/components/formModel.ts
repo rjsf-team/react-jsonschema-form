@@ -326,11 +326,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * @returns - True if the form is valid, false otherwise.
    */
   const runValidation = (props: FormProps<T, S, F>, readFormData: () => T | undefined): boolean => {
-    const { hasError, allErrors: errors, next } = settled((base) => applyValidation(base, props, readFormData()));
+    const { hasError, next } = settled((base) => applyValidation(base, props, readFormData()));
     if (isDetached) {
       return !hasError;
     }
-    commit(next);
+    const { errors } = commit(next);
     if (!hasError) {
       return true;
     }

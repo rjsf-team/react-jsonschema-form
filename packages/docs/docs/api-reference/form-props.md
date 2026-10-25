@@ -662,13 +662,13 @@ You can also create a custom generator by implementing the `NameGeneratorFunctio
 Use this prop with [`liveValidate`](#livevalidate) to choose which errors live validation shows. Without `liveValidate` it changes nothing: errors only appear after a submit.
 
 - Omit this prop, or use `liveErrors="all"`, to show every error, as live validation always has.
-- Use `liveErrors="field"` to show a field's errors only once the user has reached it: once it changed, under `liveValidate="onChange"`, or once it lost focus, under `liveValidate="onBlur"`. A submit attempt shows every error from then on, until [`reset()`](../advanced-customization/internals.md#read-the-form-status).
+- Use `liveErrors="field"` to show a field's errors only once the user has reached it: once it changed, under `liveValidate="onChange"`, or once it lost focus, under `liveValidate="onBlur"`. A submit attempt, or a call to [`validateForm()`](../usage/validation.md#validate-form-programmatically) on the form's ref, shows every error from then on, until [`reset()`](../advanced-customization/internals.md#read-the-form-status). `validateForm()` doesn't count as a submit, so it leaves `submitCount` as it is.
 
 With `liveErrors="field"`:
 
 - An array's or object's own errors, such as a `minItems` or `minProperties` error, show once the user reached it or any field inside it. Adding, removing or moving an array's items counts as reaching the array.
 - [`extraErrors`](#extraerrors) always show, and so do the errors a custom field or widget raises itself. [`customValidate`](#customvalidate)'s errors show the way the schema's do.
-- The error list, each field's errors and the `errors` and `errorSchema` of the [`onChange`](#onchange) event hold only the errors shown. [`onError`](#onerror) and [`validateForm()`](../usage/validation.md#validate-form-programmatically) still see every error, so an error that isn't shown still blocks the submit.
+- The error list, each field's errors and the `errors` and `errorSchema` of the [`onChange`](#onchange) event hold only the errors shown. [`onError`](#onerror) still sees every error, so an error that isn't shown still blocks the submit.
 
 ```tsx
 <Form schema={schema} validator={validator} liveValidate='onChange' liveErrors='field' />

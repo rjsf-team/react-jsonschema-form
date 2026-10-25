@@ -39,10 +39,9 @@ describe('IChangeEvent', () => {
     expectTypeOf<Pick<IChangeEvent, keyof FormStatus>>().toEqualTypeOf<FormStatus>();
     expectTypeOf<IChangeEvent['dirty']>().toEqualTypeOf<boolean>();
     expectTypeOf<IChangeEvent['touched']>().toEqualTypeOf<boolean>();
-    expectTypeOf<IChangeEvent<{ name: string; tags: string[] }>['touchedFields']>().toEqualTypeOf<{
-      name?: boolean;
-      tags?: (boolean | undefined)[];
-    }>();
+    expectTypeOf<IChangeEvent<{ name: string; tags: string[] }>['touchedFields']>().toEqualTypeOf<
+      { name?: boolean; tags?: (boolean | undefined)[] | true } | true
+    >();
     expectTypeOf<IChangeEvent['submitCount']>().toEqualTypeOf<number>();
     expectTypeOf<
       IChangeEvent<{ name: string; tags: string[]; address: { city?: string } }>['dirtyFields']

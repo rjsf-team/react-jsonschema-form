@@ -16,11 +16,10 @@ import type {
  */
 export type EventFormData<T> = T extends object ? T : T | undefined;
 
-/** A value nested like the form's data, holding `true` at each field it marks: each field that differs, in
- * `dirtyFields`, or that was touched, in `touchedFields`. An object holds an entry only for its members that hold a
- * mark, and an array an entry for each item, `undefined` where the item holds none. A field marked whole, one that was
- * added, removed or replaced whole, or an array or object whose own widget was touched, holds `true` at each of its
- * leaves, or `true` itself when it is not an object or array.
+/** A value nested like the form's data, holding `true` at each field that differs. An object holds an entry only for
+ * its members that differ, and an array an entry for each item, `undefined` where the item does not differ. A field
+ * that was added, removed or replaced whole holds `true` at each of its leaves, or `true` itself when it is not an
+ * object or array.
  */
 export type NestedBooleans<T> = T extends Date
   ? boolean
@@ -34,7 +33,22 @@ export type NestedBooleans<T> = T extends Date
         ? NestedBooleanValue
         : boolean;
 
-/** A `NestedBooleans` of data whose type is not known */
+/** A value nested like the form's data, holding `true` at each field that was touched, as a `NestedBooleans` does at
+ * each field that differs. An array or object whose own widget handles it whole, such as checkboxes for an array of
+ * enum values, is one field, so it holds `true` itself, empty or not
+ */
+export type TouchedFields<T> = T extends Date
+  ? boolean
+  : T extends readonly (infer Item)[]
+    ? (TouchedFields<Item> | undefined)[] | true
+    : T extends object
+      ? { [K in keyof T]?: TouchedFields<T[K]> } | true
+      : // Tested last, as in `NestedBooleans`
+        unknown extends T
+        ? NestedBooleanValue
+        : boolean;
+
+/** A `NestedBooleans` or `TouchedFields` of data whose type is not known */
 export type NestedBooleanValue = boolean | NestedBooleanObject | (NestedBooleanValue | undefined)[];
 
 /** An object of `NestedBooleanValue`s */
@@ -55,7 +69,7 @@ export interface FormStatus<T = unknown> {
    */
   readonly touched: boolean;
   /** Which fields have been touched, following the array items and object keys the form moved */
-  readonly touchedFields: NestedBooleans<T>;
+  readonly touchedFields: TouchedFields<T>;
   /** How many submits have been attempted, valid or not, since the form mounted or was last reset */
   readonly submitCount: number;
 }

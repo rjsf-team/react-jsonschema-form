@@ -210,10 +210,10 @@ export interface FormProps<
   liveValidate?: 'onChange' | 'onBlur';
   /** Which errors live validation shows. `'all'`, the default, shows every error. `'field'` shows a field's errors only
    * once `liveValidate`'s trigger fired for it, the user changing it under `'onChange'` or blurring it under
-   * `'onBlur'`, or once a submit was attempted. An array's or object's own errors show once it or a field inside it
+   * `'onBlur'`, and every error once a submit was attempted or `FormRef.validateForm()` ran, until `reset()`. An array's or object's own errors show once it or a field inside it
    * fired, and adding, removing or moving an array's items fires the array. `extraErrors`, and the errors fields raise
    * themselves, always show; `customValidate`'s show as the schema's do. `onChange` carries the errors shown, while
-   * `onError` and `FormRef.validateForm()` still see every error. Without `liveValidate` it changes nothing.
+   * `onError` sees every error. Without `liveValidate` it changes nothing.
    */
   liveErrors?: 'all' | 'field';
   /** Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to

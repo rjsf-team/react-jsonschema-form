@@ -202,7 +202,7 @@ function PersonForm({ person }: { person: Person }) {
 A field is touched once its widget reports a blur, the same blur [`liveValidate="onBlur"`](../api-reference/form-props.md#livevalidate) validates on. Every `onChange` and `onSubmit` event, and `getStatus()`, report:
 
 - `touched`: whether any field has been touched since the form mounted or was last reset.
-- `touchedFields`: which, nested like the data, with `true` at each touched field, for example `{ address: { street: true } }`. For an array it holds an entry for each item, `undefined` where the item holds no touched field. A touched field stays with its array item when the item is moved, and goes when the item is removed.
+- `touchedFields`: which, nested like the data, with `true` at each touched field, for example `{ address: { street: true } }`. For an array it holds an entry for each item, `undefined` where the item holds no touched field. A widget that handles a whole array or object, such as checkboxes for an array of enum values, makes it one field, so `touchedFields` holds `true` at its path, empty or not. A touched field stays with its array item when the item is moved, and goes when the item is removed. `touched` is `true` exactly when `touchedFields` holds a `true`.
 
 A submit doesn't touch any field; read `submitCount` to tell whether one was attempted. A blur that only touches a field fires no `onChange`, so `onChange` isn't called more often than before: the next event carries it, and `getStatus()` reads it right away. `reset()` clears the touched fields.
 
