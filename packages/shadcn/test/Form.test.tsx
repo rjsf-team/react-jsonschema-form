@@ -1,3 +1,4 @@
+import { generateTemplates as coreTemplates } from '@rjsf/core';
 import {
   checkboxLabelTests,
   fallbackDescriptionTests,
@@ -754,12 +755,22 @@ describe('shadcn names a control whose label ui:label false hides', () => {
     );
 
     expect(screen.queryByText('Pet')).toBeNull();
-    expect(screen.getByRole(role)).toHaveAccessibleName('Pet');
+    // By name, since the root object's fieldset is a group too
+    expect(screen.getByRole(role, { name: 'Pet' })).toBeInTheDocument();
     expectReferencesResolve(container);
   });
 });
 
 describe('shadcn labels', () => {
+  test.each<[string, RJSFSchema]>([
+    ['object', { type: 'object', title: 'Person', properties: { name: { type: 'string' } } }],
+    ['array', { type: 'array', title: 'Person', items: { type: 'string' } }],
+  ])("names an %s's group by its title", (_, person) => {
+    render(<Form schema={{ type: 'object', properties: { person } }} validator={validator} />);
+
+    expect(screen.getByRole('group', { name: 'Person' })).toBeInTheDocument();
+  });
+
   test.each(['alt-date', 'alt-datetime'])("names the %s parts' group by the template's label", (widget) => {
     render(
       <Form
@@ -770,6 +781,36 @@ describe('shadcn labels', () => {
     );
 
     expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+  });
+
+  test("turns destructive the label, description and help of a field with errors, but not a nested field's", () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            person: { type: 'object', title: 'Person', properties: { name: { type: 'string', title: 'Name' } } },
+            nick: { type: 'string', title: 'Nick', description: 'What friends call you' },
+          },
+        }}
+        uiSchema={{ nick: { 'ui:help': 'Pick one' } }}
+        extraErrors={{ person: { __errors: ['incomplete'] }, nick: { __errors: ['taken'] } }}
+        validator={validator}
+      />,
+    );
+
+    const parts = [
+      screen.getByText('Nick').closest('label'),
+      screen.getByText('What friends call you').closest('.rjsf-field-description'),
+      screen.getByText('Pick one').closest('.rjsf-field-help'),
+    ];
+    for (const part of parts) {
+      expect(part).toHaveClass('data-invalid:text-destructive');
+      expect(part).toHaveAttribute('data-invalid', 'true');
+    }
+    const name = screen.getByText('Name').closest('label');
+    expect(name).toHaveClass('data-invalid:text-destructive');
+    expect(name).not.toHaveAttribute('data-invalid');
   });
 });
 
@@ -924,12 +965,11 @@ describe("shadcn marks a deprecated field's label, as core does", () => {
   });
 });
 
-checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'self' });
-fallbackDescriptionTests(Form, false);
+// The field template this theme renders is core's, which draws the description above the field's widget
+checkboxLabelTests(Form, { generateTemplates: coreTemplates, generateWidgets, descriptionBy: 'self' });
+fallbackDescriptionTests(Form, true);
 
-optionErrorStateTests(Form, (container) =>
-  container.querySelector('label[for="root"]')?.classList.contains('text-destructive'),
-);
+optionErrorStateTests(Form, (container) => container.querySelector('label[for="root"]')?.hasAttribute('data-invalid'));
 
 wrapIfAdditionalErrorStateTests(Form);
 

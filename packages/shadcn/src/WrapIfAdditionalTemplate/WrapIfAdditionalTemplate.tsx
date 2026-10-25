@@ -11,6 +11,7 @@ import {
 
 import { Input } from '../components/ui/input.tsx';
 import { Separator } from '../components/ui/separator.tsx';
+import { cn } from '../lib/utils.ts';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -34,7 +35,6 @@ export default function WrapIfAdditionalTemplate<
     onKeyRename,
     onKeyRenameBlur,
     propertyNamesEnum,
-    rawDescription,
     readonly,
     required,
     schema,
@@ -52,19 +52,22 @@ export default function WrapIfAdditionalTemplate<
 
   if (!additional) {
     return (
-      <div className={classNames} style={style}>
+      <div className={cn('flex flex-col gap-2', classNames)} style={style}>
         {children}
       </div>
     );
   }
 
-  const marginDesc = rawDescription ? -28 : 0;
-  const margin = hasKeyLabel ? 22 + marginDesc : 0;
   const keyId = additionalKeyId(id);
 
   return (
     <>
-      <div className={`grid grid-cols-12 col-span-12 items-center gap-2 ${classNames ?? ''}`.trim()} style={style}>
+      {/* Top-aligned, with the value spanning both rows, so the first is as tall as the key's label and input and the
+          remove button sits at its foot, beside the key input, whatever errors or help follow the value's input */}
+      <div
+        className={cn('grid grid-cols-12 grid-rows-[auto_1fr] col-span-12 items-start gap-x-2', classNames)}
+        style={style}
+      >
         <div className='grid gap-2 col-span-5'>
           <div className='flex flex-col gap-2'>
             {hasKeyLabel && (
@@ -104,15 +107,10 @@ export default function WrapIfAdditionalTemplate<
                 />
               )}
             </div>
-            {!!rawDescription && (
-              <span className='text-xs font-medium text-muted-foreground'>
-                <div className='text-sm text-muted-foreground'>&nbsp;</div>
-              </span>
-            )}
           </div>
         </div>
-        <div className='grid gap-2 col-span-6 pr-0.5'>{children}</div>
-        <div className='grid gap-2 col-span-1' style={{ marginTop: `${margin}px` }}>
+        <div className='grid gap-2 col-span-6 row-span-2 pr-0.5'>{children}</div>
+        <div className='grid gap-2 col-span-1 self-end'>
           <RemoveButton
             id={buttonId(id, 'remove')}
             iconType='block'
