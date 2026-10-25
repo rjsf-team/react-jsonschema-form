@@ -293,6 +293,14 @@ export interface FormState<
    * changes made since
    */
   formData?: T;
+  /** The data the form was last seeded with, on mount or by `reset()`, derived as `formData` was then and kept in step
+   * with every change to `formData` the user did not make: a prop change re-deriving it and extra data omitted from
+   * it. Every subtree of `formData` equal to its counterpart here is that counterpart, see `shareState()`, so the form
+   * is dirty exactly when `formData` is not this
+   */
+  baseline?: T;
+  /** How many submits have been attempted since the form mounted or was last reset */
+  submitCount: number;
   /** Whether there is data to live-validate when a prop changes: the props seeded the form with data, rather than
    * leaving it to the schema's defaults, or it has been edited since it mounted or was last reset
    */

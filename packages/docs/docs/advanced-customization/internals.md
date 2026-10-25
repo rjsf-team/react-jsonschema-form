@@ -83,7 +83,7 @@ Use a ref when an action needs to read, update or submit the form programmatical
 const formRef = useRef<FormRef<MyData>>(null);
 ```
 
-The handle exposes `getFormData()`, `submit()`, `reset()`, `setFieldValue()`, `validateForm()`, `validateFormWithFormData()`, `validate()` and `focusOnError()`. Form is a function component, so its ref does not expose class state or lifecycle methods.
+The handle exposes `getFormData()`, `getStatus()`, `submit()`, `reset()`, `setFieldValue()`, `validateForm()`, `validateFormWithFormData()`, `validate()` and `focusOnError()`. Form is a function component, so its ref does not expose class state or lifecycle methods.
 
 ## Read form data programmatically
 
@@ -118,6 +118,10 @@ function DraftEditor() {
 `getFormData()` returns the form's current value: the seed your props handed it on mount or at the last `reset()`, filled in with the schema's defaults, and every edit made since, including one React has yet to show in the inputs.
 
 Inside `onChange`, use `event.formData` to read the edit being reported. Treat data from both the event and the handle as read-only.
+
+## Read the form status
+
+Call `getStatus()` to read whether the form's data differs from its baseline (`dirty`), where (`dirtyFields`), and how many submits have been attempted (`submitCount`). It returns what the last `onChange` or `onSubmit` event carried, or the initial status before any event. Call `reset(saved)` with the data a save stored to make it the new baseline. See [Unsaved changes](../usage/submitting.md#unsaved-changes).
 
 ## Submit form programmatically
 

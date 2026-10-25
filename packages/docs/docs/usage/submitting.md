@@ -1,7 +1,7 @@
 # Submitting
 
 When the form is submitted and its data are valid, `Form` calls your [`onSubmit`](../api-reference/form-props.md#onsubmit) with the validated data.
-This page covers what happens while that submission is in flight, and how `Form` fits React's form APIs, `useActionState` and `useFormStatus`.
+This page covers what happens while that submission is in flight, how `Form` fits React's form APIs, `useActionState` and `useFormStatus`, and how to tell whether the form holds changes that haven't been saved.
 
 ## A pending submission
 
@@ -35,8 +35,8 @@ React's `useActionState` gives you an action whose result and pending state the 
 Dispatch it from `onSubmit`, inside a transition, with the validated data:
 
 ```tsx
-import { startTransition, useActionState } from 'react';
-import Form from '@rjsf/core';
+import { startTransition, useActionState, useRef } from 'react';
+import Form, { type FormRef } from '@rjsf/core';
 import { ErrorSchema, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -45,15 +45,19 @@ const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string
 type Person = { name?: string };
 type SaveState = { errors?: ErrorSchema<Person> };
 
-async function savePerson(previous: SaveState, person: Person): Promise<SaveState> {
-  const response = await fetch('/api/people', { method: 'POST', body: JSON.stringify(person) });
-  return response.ok ? {} : { errors: await response.json() };
-}
-
 function PersonForm() {
-  const [state, dispatch, isPending] = useActionState(savePerson, {});
+  const formRef = useRef<FormRef<Person>>(null);
+  const [state, dispatch, isPending] = useActionState(async (previous: SaveState, person: Person) => {
+    const response = await fetch('/api/people', { method: 'POST', body: JSON.stringify(person) });
+    if (!response.ok) {
+      return { errors: await response.json() };
+    }
+    formRef.current?.reset(person);
+    return {};
+  }, {});
   return (
     <Form
+      ref={formRef}
       schema={schema}
       validator={validator}
       extraErrors={state.errors}
@@ -66,6 +70,7 @@ function PersonForm() {
 - **The action gets the validated, typed data**, not the DOM's `FormData`. `FormData` would turn numbers and booleans into strings, hold some widgets' encoded option values instead of the values themselves, and miss the values of widgets that don't render native form controls.
 - **The form is pending while the action runs**, so the submit button disables itself and `useFormStatus().pending` is `true` inside the form. `isPending` tells the component that owns the action the same.
 - **The form keeps showing its data.** React resets a `<form>` after an action passed to its `action` prop succeeds, but `Form` handles its own submit, so nothing is reset.
+- **The saved data becomes the form's baseline.** The action calls `reset(person)` once the save succeeds, so the form is clean again. See [Unsaved changes](#unsaved-changes).
 - **Don't pass the action to `Form`'s `action` prop.** That prop is the HTML attribute: `Form` prevents the browser's own submit, so React never calls a function passed there.
 
 ### Errors from the server
@@ -108,3 +113,83 @@ The action's state is a good place for errors the server reports. Return them as
 
 - **A button outside the `<form>`**, such as one in a dialog's footer that submits the form through its `form` attribute, can't read `useFormStatus()`, which only reads the `<form>` a component is rendered inside. Get the pending state from the component that owns the submission instead: `isPending` from `useActionState`, or state you keep around your own promise.
 - **Don't read `useFormStatus().data`.** It is the `FormData` the browser would post, which holds the encoded option values of the form's selects (such as an enum's index) and misses widgets that don't render native form controls. The data your submission works with is the argument `onSubmit` gets.
+
+## Unsaved changes
+
+The form compares its data with a baseline: the data it was last seeded with, on mount or by `reset()`, with the schema's defaults filled in. A form that only holds its seed and its defaults is clean. Every [`onChange`](../api-reference/form-props.md#onchange) and `onSubmit` event, and [`getStatus()`](../advanced-customization/internals.md#read-the-form-status) on the form's ref, report:
+
+- `dirty`: whether the data differs from the baseline. Typing a field's original value back makes the form clean again.
+- `dirtyFields`: where it differs, nested like the data, with `true` at each field that changed, for example `{ address: { city: true } }`. For an array it holds an entry for each item, `undefined` where the item is unchanged.
+- `submitCount`: how many submits have been attempted since the form mounted or was last reset, valid or not.
+
+Changes the user didn't make leave the form clean. When a new `schema` prop fills in a default, or `omitExtraData` with `liveOmit` drops data the schema doesn't describe, the baseline changes with the data. A change that follows from the user's own edit does count: when changing one field makes a conditional schema drop another field's value, both fields are dirty.
+
+### Making the saved data the baseline
+
+After a save, call `reset(saved)` on the form's ref with the data you saved. That data becomes the baseline and the form's data, and the form clears its errors and its submit count, without remounting. `reset()` with no argument goes back to the data the last `reset(saved)` passed, or to the props' seed if there was none.
+
+Call it in the handler or action that saves, once the save succeeds, as the [`useActionState` example](#with-useactionstate) does, rather than in an Effect that watches for the save to finish. The save is what causes the reset, so it belongs where the save happens; see [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect).
+
+### Warning before closing
+
+Check `getStatus().dirty` when the user asks to leave, for example in a dialog's close handler:
+
+```tsx
+import { useRef } from 'react';
+import Form, { type FormRef } from '@rjsf/core';
+
+function EditPersonDialog({ person, onClose }: { person: Person; onClose: () => void }) {
+  const formRef = useRef<FormRef<Person>>(null);
+
+  function close() {
+    if (formRef.current?.getStatus().dirty && !window.confirm('Discard your unsaved changes?')) {
+      return;
+    }
+    onClose();
+  }
+
+  return (
+    <dialog open onCancel={close}>
+      <Form
+        ref={formRef}
+        schema={schema}
+        validator={validator}
+        initialFormData={person}
+        onSubmit={async ({ formData }) => {
+          await save(formData);
+          formRef.current?.reset(formData);
+        }}
+      />
+      <button type='button' onClick={close}>
+        Close
+      </button>
+    </dialog>
+  );
+}
+```
+
+### Disabling submit when nothing changed
+
+To render from `dirty`, keep it in state from `onChange`. `onChange` fires whenever `dirty` can change, the `reset(saved)` after a save included, so the state stays current. Disable the default submit button through [`ui:submitButtonOptions`](../api-reference/uiSchema.md#submitbuttonoptions), which keeps it disabled while a save is pending as well:
+
+```tsx
+function PersonForm({ person }: { person: Person }) {
+  const formRef = useRef<FormRef<Person>>(null);
+  const [isDirty, setIsDirty] = useState(false);
+
+  return (
+    <Form
+      ref={formRef}
+      schema={schema}
+      validator={validator}
+      initialFormData={person}
+      uiSchema={{ 'ui:submitButtonOptions': { props: { disabled: !isDirty } } }}
+      onChange={({ dirty }) => setIsDirty(dirty)}
+      onSubmit={async ({ formData }) => {
+        await save(formData);
+        formRef.current?.reset(formData);
+      }}
+    />
+  );
+}
+```

@@ -612,7 +612,7 @@ id="root_first">` when rendering `first`.
 
 ## initialFormData
 
-The seed of the form's data, the way `defaultValue` works on an `<input>`. It is read, and filled in with the schema's defaults, when the form mounts and when `reset()` is called, and ignored otherwise, so a value written inline does not replace the data the form holds on a re-render. Every edit is reported through [`onChange`](#onchange); read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). When both props are passed, [`formData`](#formdata), a deprecated name for this prop, is the seed and `initialFormData` is ignored. To show other data after mount, remount the form under a `key`, or call `setFieldValue('', data)` on its ref.
+The seed of the form's data, the way `defaultValue` works on an `<input>`. It is read, and filled in with the schema's defaults, when the form mounts and when `reset()` is called, unless an earlier `reset(saved)` passed data of its own, and ignored otherwise, so a value written inline does not replace the data the form holds on a re-render. Every edit is reported through [`onChange`](#onchange); read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). When both props are passed, [`formData`](#formdata), a deprecated name for this prop, is the seed and `initialFormData` is ignored. To show other data after mount, remount the form under a `key`, or call `setFieldValue('', data)` on its ref.
 
 The form's data shares its unchanged parts with the object you pass, so don't mutate that object afterwards; change a copy. In development the form freezes it from its first edit, validation, submit or reset on, so a mutation throws.
 
@@ -706,6 +706,7 @@ Sometimes you may want to trigger events or modify external state when a field h
 ## onChange
 
 Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes, such as the schema's defaults: read those with `getFormData()`. The edit has been applied by the time it is called, so not storing it does not undo it; refuse or rewrite edits in [`transformChange`](#transformchange).
+The event also carries the form's status: `dirty`, `dirtyFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes). A change to the status alone fires no `onChange`.
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.

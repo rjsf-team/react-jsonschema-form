@@ -1,7 +1,14 @@
 import type { FormProps } from './components/Form.tsx';
 import Form from './components/Form.tsx';
 import type { FormRef } from './components/FormRef.ts';
-import type { EventFormData, IChangeEvent } from './components/IChangeEvent.ts';
+import type {
+  EventFormData,
+  FormStatus,
+  IChangeEvent,
+  NestedBooleanObject,
+  NestedBooleans,
+  NestedBooleanValue,
+} from './components/IChangeEvent.ts';
 import type { RichDescriptionProps } from './components/RichDescription.tsx';
 import RichDescription from './components/RichDescription.tsx';
 import type { RichHelpProps } from './components/RichHelp.tsx';
@@ -18,7 +25,11 @@ export type {
   EventFormData,
   FormRef,
   FormProps,
+  FormStatus,
   IChangeEvent,
+  NestedBooleanObject,
+  NestedBooleans,
+  NestedBooleanValue,
   ThemedForm,
   ThemeProps,
   RichDescriptionProps,

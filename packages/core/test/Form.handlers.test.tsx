@@ -1049,7 +1049,17 @@ it('onChange and onSubmit events carry only the public IChangeEvent members', as
   await user.type(screen.getByRole('textbox'), 'x');
   await submitForm(node, user);
 
-  const members = ['errorSchema', 'errors', 'formData', 'schema', 'schemaUtils', 'uiSchema'];
+  const members = [
+    'dirty',
+    'dirtyFields',
+    'errorSchema',
+    'errors',
+    'formData',
+    'schema',
+    'schemaUtils',
+    'submitCount',
+    'uiSchema',
+  ];
   expect(Object.keys(onChange.mock.lastCall?.[0] ?? {}).sort()).toEqual(members);
   expect(Object.keys(onSubmit.mock.lastCall?.[0] ?? {}).sort()).toEqual([...members, 'status'].sort());
 });
