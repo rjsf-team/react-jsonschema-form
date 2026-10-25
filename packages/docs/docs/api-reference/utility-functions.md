@@ -2719,7 +2719,7 @@ Generates the `id` of an element that is part of a field, such as its descriptio
 #### Example
 
 ```typescript
-partId('root_when', 'picker'); // 'root_when__picker'
+partId('root_when', 'time'); // 'root_when__time'
 ```
 
 ### pickGlobalUiOptions() {#pickglobaluioptions}

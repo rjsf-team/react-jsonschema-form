@@ -1,5 +1,6 @@
 import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
+import type { FormHelperTextProps } from '@mui/material/FormHelperText';
 import type { InputProps as MuiInputProps } from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
 import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
@@ -25,7 +26,7 @@ import {
 } from '@rjsf/utils';
 
 import type { MuiSlotProps } from '../util.ts';
-import { describeByHelperText, getMuiProps, helperTextId, resolveSlotProps, withSlotProps } from '../util.ts';
+import { describeByHelperText, getMuiProps, helperTextId, resolveSlotProps } from '../util.ts';
 
 type HtmlInputAttributes = React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
 
@@ -42,6 +43,8 @@ export interface BaseInputTemplateMuiProps extends GenericObjectType {
     input?: MuiInputProps;
     /** Props applied to the MUI `InputLabel` element. */
     inputLabel?: MuiInputLabelProps;
+    /** Props applied to the helper text, as an object or as MUI's `(ownerState) => props`. */
+    formHelperText?: MuiSlotProps<FormHelperTextProps, TextFieldOwnerState>;
   };
 }
 
@@ -180,7 +183,11 @@ export default function BaseInputTemplate<
           input: inputProps,
           htmlInput: htmlInputProps,
           inputLabel: DisplayInputLabelProps,
-          formHelperText: withSlotProps({ id: helperTextId(textFieldOverrides.id ?? id) }, slotProps?.formHelperText),
+          formHelperText: (ownerState: TextFieldOwnerState) => ({
+            id: helperTextId(textFieldOverrides.id ?? id),
+            ...resolveSlotProps<FormHelperTextProps, TextFieldOwnerState>(slotProps?.formHelperText, ownerState),
+            ...resolveSlotProps(muiSlotProps?.formHelperText, ownerState),
+          }),
         }}
         {...rest}
         value={value || value === 0 ? value : ''}

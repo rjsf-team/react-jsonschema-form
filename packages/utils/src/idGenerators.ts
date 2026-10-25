@@ -220,13 +220,16 @@ export function optionSelectorId(id: string, xxxOfKey: 'anyOf' | 'oneOf', depth 
 }
 
 /** Return a consistent `id` for the component a field renders beside its `anyOf`/`oneOf` options, such as an object's
- * own properties, whose selected option renders the field's own `id`
+ * own properties, whose selected option renders the field's own `id`, numbered from the second on, so the component an
+ * option that is itself an `anyOf`/`oneOf` renders beside its own options has an id of its own
  *
  * @param id - The id of the field
- * @returns - The consistent id for the component rendered beside the options from the given `id`
+ * @param [depth=1] - How many option selectors of either keyword render `id`, this field's included: 2 beside the
+ *        options of an `anyOf` option beneath its field's own `anyOf`, which takes `XxxOf2`
+ * @returns - The consistent id for the component rendered beside the options from the given `id` and `depth`
  */
-export function besideOptionsId(id: string) {
-  return partId(id, 'XxxOf');
+export function besideOptionsId(id: string, depth = 1) {
+  return optionIdGenerator(id, 'XxxOf', depth);
 }
 
 /** Return a consistent `id` for the type selector the fallback UI renders for a field of an unsupported type, as a part
@@ -236,5 +239,5 @@ export function besideOptionsId(id: string) {
  * @returns - The consistent id for the type selector from the given `id`
  */
 export function fallbackTypeSelectorId(id: string) {
-  return partId(id, '_internal_type_selector');
+  return partId(id, 'internalTypeSelector');
 }

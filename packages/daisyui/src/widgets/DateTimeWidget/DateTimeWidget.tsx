@@ -186,7 +186,7 @@ export default function DateTimeWidget<
           >
             <DatePickerDialog id={popupId} name={pickerName}>
               <MemoizedDateTimePickerPopup
-                id={partId(id, 'picker')}
+                id={partId(id, 'time')}
                 selectedDate={displayedDate}
                 month={month}
                 timeLabel={registry.translateString(TranslatableString.TimeLabel)}

@@ -105,6 +105,33 @@ describe('field ids', () => {
     expect(duplicateIds(node)).toEqual([]);
   });
 
+  it('gives the properties an object option renders beside options of its own an id of their own', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        pet: {
+          type: 'object',
+          title: 'Pet',
+          properties: { name: { type: 'string' } },
+          anyOf: [
+            {
+              title: 'A',
+              type: 'object',
+              properties: { kind: { type: 'string' } },
+              anyOf: [{ properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+            },
+            { title: 'B', properties: { z: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema });
+
+    expect(node.querySelectorAll('#root_pet__XxxOf')).toHaveLength(1);
+    expect(node.querySelectorAll('#root_pet__XxxOf2')).toHaveLength(1);
+    expect(duplicateIds(node)).toEqual([]);
+  });
+
   it('numbers a nested selector by the selectors above for the same keyword, at the same data path', () => {
     const schema: RJSFSchema = {
       type: 'object',

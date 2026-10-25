@@ -160,7 +160,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     componentId = id,
   } = inputs;
   /** The id a part's ids derive from: the component's own for a part it draws itself, the field's otherwise */
-  const partId = (owner: PartPlacement) => (owner === 'self' ? componentId : id);
+  const ownerId = (owner: PartPlacement) => (owner === 'self' ? componentId : id);
 
   const plansAbove: FieldPresentation[] = [];
   for (let plan = inherited; plan; plan = plan.inherited) {
@@ -176,7 +176,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   // A level with a control is named by a label; one with none, such as a container, draws its label as the heading every
   // title template renders under `titleId()`, whatever the plan says. A label a field above draws, such as the one an
   // `anyOf` field's selector draws itself, may already take a control's id
-  const ownLabelId = (hasControl ? fieldLabelId : titleId)(partId(declaration.label));
+  const ownLabelId = (hasControl ? fieldLabelId : titleId)(ownerId(declaration.label));
   const {
     text: shownLabel,
     id: labelId,
@@ -186,7 +186,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     id: hasControl
       ? ownPartId(
           ownLabelId,
-          (depth) => optionLabelId(partId(declaration.label), depth),
+          (depth) => optionLabelId(ownerId(declaration.label), depth),
           plansAbove.map((plan) => plan.label),
         )
       : ownLabelId,
@@ -202,21 +202,21 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   const descriptionPlacement = placeText(
     description,
     showLabel ? declaration.description : 'none',
-    descriptionId(partId(declaration.description)),
-    (depth) => optionDescriptionId(partId(declaration.description), depth),
+    descriptionId(ownerId(declaration.description)),
+    (depth) => optionDescriptionId(ownerId(declaration.description), depth),
     plansAbove.map((plan) => plan.description),
   );
   const helpPlacement = placeText(
     help,
     declaration.help,
-    helpId(partId(declaration.help)),
-    (depth) => optionHelpId(partId(declaration.help), depth),
+    helpId(ownerId(declaration.help)),
+    (depth) => optionHelpId(ownerId(declaration.help), depth),
     plansAbove.map((plan) => plan.help),
   );
 
   const { messages, id: errorsId } = inherited?.errors ?? {
     messages: hideError ? NONE : errors,
-    id: errorId(partId(declaration.errors)),
+    id: errorId(ownerId(declaration.errors)),
   };
   const errorsBy = inherited ? 'above' : declaration.errors;
   const errorsPlan: FieldPresentation['errors'] = {

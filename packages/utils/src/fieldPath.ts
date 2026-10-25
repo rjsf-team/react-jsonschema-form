@@ -101,16 +101,13 @@ export function fieldPathFromList(fieldPathList: FieldPathList): FieldPath {
   return fieldPathList.reduce<FieldPath>((acc, segment) => toFieldPath(segment, acc), ROOT_FIELD_PATH);
 }
 
-/** The ASCII characters a property name carries into an id as they are, which a CSS identifier holds unescaped */
-const ID_SAFE = /^[A-Za-z0-9_-]$/;
-
 /** The token that starts an escape, followed by the two uppercase hex digits of an ASCII character */
 const ID_ESCAPE = '-_';
 
 /** The escape an empty name is written as: no ASCII character has the code `FF`, so no character is written so */
 const EMPTY_NAME = `${ID_ESCAPE}FF`;
 
-/** Whether the character at `i` of `name` is written as an escape. Every ASCII character a CSS identifier can't hold
+/** Matches each character of a name that is written as an escape. Every ASCII character a CSS identifier can't hold
  * unescaped is, and of those it can hold:
  * - a `_` that begins or ends the name, or stands next to another `_`, since the `_` separator beside it would write
  *   the `__` that joins a field's id to the name of one of its parts;
@@ -119,20 +116,7 @@ const EMPTY_NAME = `${ID_ESCAPE}FF`;
  * A character past ASCII is written as it is: a CSS identifier holds every one, and an id list such as
  * `aria-describedby` is split on ASCII whitespace only
  */
-function isEscaped(name: string, i: number) {
-  const char = name[i];
-  if (char.charCodeAt(0) > 0x7f) {
-    return false;
-  }
-  if (!ID_SAFE.test(char)) {
-    return true;
-  }
-  const last = name.length - 1;
-  if (char === '_') {
-    return i === 0 || i === last || name[i - 1] === '_' || name[i + 1] === '_' || name[i - 1] === '-';
-  }
-  return char === '-' && i === last;
-}
+const ID_ESCAPED = /[^A-Za-z0-9_\-\u0080-\uFFFF]|^_|_$|(?<=[_-])_|_(?=_)|-$/g;
 
 /** Writes an ASCII character as an escape: `-_` and the two uppercase hex digits of its code, such as `-_20` for a
  * space
@@ -144,13 +128,8 @@ function escapeIdChar(char: string) {
   return `${ID_ESCAPE}${char.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`;
 }
 
-/** Matches a name holding any character, or pair of characters, that `isEscaped()` might pick out, so that a name
- * with none, as nearly every one is, is written as it is without being walked character by character
- */
-const MAY_ESCAPE = /[^A-Za-z0-9_\-\u0080-\uFFFF]|__|-_|^_|[_-]$/;
-
 /** Writes a property name as it appears in an id: a CSS identifier as it stands, so `#${id}` finds the element with no
- * escaping, that holds no `__`, and that no other name writes. A character `isEscaped()` picks out is written as
+ * escaping, that holds no `__`, and that no other name writes. A character `ID_ESCAPED` matches is written as
  * `escapeIdChar()` writes it, and an empty name as `-_FF`. The encoder writes `-_` nowhere else, so every `-_` starts
  * a three-character escape, and the name can be read back from the id
  *
@@ -158,18 +137,7 @@ const MAY_ESCAPE = /[^A-Za-z0-9_\-\u0080-\uFFFF]|__|-_|^_|[_-]$/;
  * @returns - The name as it appears in an id
  */
 export function idSegment(name: string) {
-  if (name === '') {
-    return EMPTY_NAME;
-  }
-  if (!MAY_ESCAPE.test(name)) {
-    return name;
-  }
-  let segment = '';
-  for (let i = 0; i < name.length; i += 1) {
-    const char = name[i];
-    segment += isEscaped(name, i) ? escapeIdChar(char) : char;
-  }
-  return segment;
+  return name === '' ? EMPTY_NAME : name.replace(ID_ESCAPED, escapeIdChar);
 }
 
 /** Derives the HTML `id` for `fieldPath` from the `idPrefix` and `idSeparator` in `globalFormOptions`, writing each

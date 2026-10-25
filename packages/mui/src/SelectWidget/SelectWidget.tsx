@@ -43,6 +43,8 @@ export interface SelectWidgetMuiProps extends GenericObjectType {
     select?: MuiSelectProps;
     /** Props applied to the element with the `combobox` role, as an object or as MUI's `(ownerState) => props`. */
     htmlInput?: NonNullable<TextFieldProps['slotProps']>['htmlInput'];
+    /** Props applied to the helper text, as an object or as MUI's `(ownerState) => props`. */
+    formHelperText?: NonNullable<TextFieldProps['slotProps']>['formHelperText'];
   };
 }
 
@@ -159,7 +161,10 @@ export default function SelectWidget<
             multiple,
           },
           htmlInput: withSlotProps({ ...ariaProps, 'aria-label': ariaLabel }, muiSlotProps?.htmlInput),
-          formHelperText: { id: helperTextId(textFieldOverrides.id ?? id) },
+          formHelperText: withSlotProps(
+            { id: helperTextId(textFieldOverrides.id ?? id) },
+            muiSlotProps?.formHelperText,
+          ),
         }}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}

@@ -1257,7 +1257,7 @@ describe('SchemaField', () => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      expect(node.querySelectorAll('[id$="___internal_type_selector"]')).toHaveLength(1);
+      expect(node.querySelectorAll('[id$="__internalTypeSelector"]')).toHaveLength(1);
     });
 
     it('applies a field named for a data path below the one already named', () => {

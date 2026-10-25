@@ -38,9 +38,10 @@ describe('idGenerators', () => {
   });
   it('beside-options id is generated for simple id', () => {
     expect(besideOptionsId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__XxxOf`);
+    expect(besideOptionsId(SIMPLE_ID, 2)).toEqual(`${SIMPLE_ID}__XxxOf2`);
   });
   it('fallback type selector id is generated for simple id', () => {
-    expect(fallbackTypeSelectorId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}___internal_type_selector`);
+    expect(fallbackTypeSelectorId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__internalTypeSelector`);
   });
   it('description id is generated for simple id', () => {
     expect(descriptionId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__description`);

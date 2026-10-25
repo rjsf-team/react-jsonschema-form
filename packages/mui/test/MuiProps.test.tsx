@@ -284,6 +284,22 @@ describe('MUI Theme-Specific Props', () => {
     expect(screen.getAllByRole(role)[0]).toHaveAccessibleDescription('A hint');
   });
 
+  // A select takes its slots from `rjsfSlotProps`, a text input from `slotProps`
+  it.each<[string, RJSFSchema, string, string]>([
+    ['text input', { type: 'string' }, 'textbox', 'slotProps'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox', 'rjsfSlotProps'],
+  ])("should keep the formHelperText slot props a form author gives a %s's helper text", (_, foo, role, slots) => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo } };
+    const uiSchema: UiSchema = {
+      foo: { 'ui:options': { mui: { helperText: 'A hint', [slots]: { formHelperText: { className: 'hint' } } } } },
+    };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByText('A hint')).toHaveClass('hint');
+    expect(screen.getByRole(role)).toHaveAccessibleDescription('A hint');
+  });
+
   // The helper text's id is built from the `TextField`'s id, which an `id` in `ui:options.mui` replaces
   it.each<[string, RJSFSchema, string]>([
     ['text input', { type: 'string' }, 'textbox'],
