@@ -785,7 +785,6 @@ function SchemaFieldRender<
   } = props;
   const { fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
-  const handleBlur = useSendBlur(fieldPath, props.onBlur);
   const {
     namedFieldAbove,
     namedAbove,
@@ -820,6 +819,11 @@ function SchemaFieldRender<
     fieldSchema,
   } = useSchemaFieldPlan<T, S, F>(props);
   const hasOptions = xxxOfOptions !== undefined;
+  // Read off the schema rather than the value, so an array or object holding nothing yet is still one
+  const fieldType = fieldSchema && getSchemaType<S>(fieldSchema);
+  const holdsContainer = [fieldType].flat().some((type) => type === 'array' || type === 'object');
+  const handleBlur = useSendBlur(fieldPath, props.onBlur, holdsContainer ? 'leaves' : 'field');
+  const handleSelectorBlur = useSendBlur(fieldPath, props.onBlur, 'nothing');
   const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
 
   const rendersNamedField = fieldToRender?.rendersNamedField === true;
@@ -1082,7 +1086,7 @@ function SchemaFieldRender<
                   formData={formData}
                   fieldPath={fieldPath}
                   id={fieldId}
-                  onBlur={handleBlur}
+                  onBlur={handleSelectorBlur}
                   onChange={handleOptionFieldChange}
                   onFocus={props.onFocus}
                   options={xxxOfOptions}

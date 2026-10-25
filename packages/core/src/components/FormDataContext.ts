@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import type { FieldPath } from '@rjsf/utils';
 
-import type { AnnouncedMove, MoveOutcome } from './formState.ts';
+import type { AnnouncedMove, BlurTouch, MoveOutcome } from './formState.ts';
 
 /** Private event access for container fields, which read the form's current data at their path, edits made since the
  * form last rendered included, instead of the data they rendered
@@ -18,12 +18,13 @@ interface FormDataAccess {
    * reached the form at that path.
    */
   sendMove(move: AnnouncedMove, send: () => void): MoveOutcome | undefined;
-  /** Calls `send`, which sends the blur a widget reported, with `fieldPath` as the path of the field it touches. The
-   * innermost field names it: a blur passes up through every `SchemaField` above the widget, and only the first to
-   * send it knows the path the widget renders. A widget's `onBlur` names an id, which a custom `idPrefix` or
-   * `idSeparator` can make ambiguous, so the path travels this way instead
+  /** Calls `send`, which sends the blur a widget reported, with `fieldPath` as the path of the field it is for and
+   * `touches` as what it touches. The innermost field names them: a blur passes up through every `SchemaField` above
+   * the widget, and only the first to send it knows the path the widget renders and whether the widget is the field's
+   * own or its option selector. A widget's `onBlur` names an id, which a custom `idPrefix` or `idSeparator` can make
+   * ambiguous, so the path travels this way instead
    */
-  sendBlur(fieldPath: FieldPath, send: () => void): void;
+  sendBlur(fieldPath: FieldPath, touches: BlurTouch, send: () => void): void;
   /** The form's current data at `path` */
   readField<D>(path: FieldPath): D;
   /** The form's data at `path` as its last commit rendered it, which a field rendered in that commit was handed */

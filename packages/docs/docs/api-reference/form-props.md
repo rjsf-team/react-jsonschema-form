@@ -666,7 +666,7 @@ Use this prop with [`liveValidate`](#livevalidate) to choose which errors live v
 
 With `liveErrors="field"`:
 
-- An array's or object's own errors, such as a `minItems` or `minProperties` error, show once the user reached it or any field inside it. Adding, removing or moving an array's items counts as reaching the array.
+- An array's or object's own errors, such as a `minItems` or `minProperties` error, show once the user reached it or any field inside it. Adding, removing or moving an array's items counts as reaching the array, and so does blurring an `anyOf` or `oneOf` field's selector, which reveals that field's own errors but none of those inside it.
 - [`extraErrors`](#extraerrors) always show, and so do the errors a custom field or widget raises itself. [`customValidate`](#customvalidate)'s errors show the way the schema's do.
 - The error list, each field's errors and the `errors` and `errorSchema` of the [`onChange`](#onchange) event hold only the errors shown. [`onError`](#onerror) still sees every error, so an error that isn't shown still blocks the submit.
 

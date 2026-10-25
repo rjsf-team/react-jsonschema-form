@@ -448,3 +448,130 @@ describe('liveErrors', () => {
     expect(Object.keys(fieldErrorsById(node)).sort()).toEqual(['root_a', 'root_b']);
   });
 });
+
+const petSchema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+    pet: {
+      type: 'object',
+      oneOf: [
+        {
+          title: 'cat',
+          required: ['meow'],
+          properties: { meow: { type: 'string', minLength: 3 }, lives: { type: 'string' } },
+        },
+        { title: 'dog', properties: { bark: { type: 'string' } } },
+      ],
+    },
+  },
+};
+
+describe('a blur that is not a field', () => {
+  it("touches nothing and reveals none of the fields' errors for an option selector", async () => {
+    const { container, node, handle } = mountWithHandle({
+      schema: petSchema,
+      initialFormData: { name: 'x', pet: { meow: 'a', lives: 'b' } },
+      liveValidate: 'onBlur',
+      liveErrors: 'field',
+    });
+
+    await user.click(elementOf(container, '#root_pet__oneof_select'));
+    await user.click(document.body);
+
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+    expect(fieldErrorsById(node)).toEqual({});
+  });
+
+  it("touches nothing and reveals none of the fields' errors for a root option selector", async () => {
+    const { container, node, handle } = mountWithHandle({
+      schema: {
+        oneOf: [
+          {
+            title: 'cat',
+            type: 'object',
+            required: ['meow'],
+            properties: { meow: { type: 'string', minLength: 3 }, lives: { type: 'string' } },
+          },
+          { title: 'dog', type: 'object', properties: { bark: { type: 'string' } } },
+        ],
+      },
+      initialFormData: { meow: 'a', lives: 'b' },
+      liveValidate: 'onBlur',
+      liveErrors: 'field',
+    });
+
+    await user.click(elementOf(container, '#root__oneof_select'));
+    await user.click(document.body);
+
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+    expect(fieldErrorsById(node)).toEqual({});
+  });
+});
+
+describe('a key setFieldValue() drops', () => {
+  it('is no longer touched or revealed, and is not again once the key comes back', async () => {
+    const { container, node, handle } = mountWithHandle({
+      schema: { type: 'object', additionalProperties: { type: 'string', minLength: 3 } },
+      initialFormData: { foo: 'a', bar: 'b' },
+      liveValidate: 'onBlur',
+      liveErrors: 'field',
+    });
+    await blur(container, 'root_foo');
+    expect(handle.getStatus().touchedFields).toEqual({ foo: true });
+
+    act(() => handle.setFieldValue([], { bar: 'b' }));
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+    act(() => handle.setFieldValue([], { bar: 'b', foo: 'z' }));
+    await blur(container, 'root_bar');
+
+    expect(handle.getStatus().touchedFields).toEqual({ bar: true });
+    expect(Object.keys(fieldErrorsById(node))).toEqual(['root_bar']);
+  });
+});
+
+describe('a field with no value', () => {
+  it('marks nothing for a whole-array widget', async () => {
+    const { handle } = mountWithHandle({
+      schema: checkboxGroup,
+      uiSchema: { tags: { 'ui:widget': 'checkboxes' } },
+    });
+    expect(handle.getFormData()).toEqual({});
+
+    await user.tab();
+    await user.click(document.body);
+
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+  });
+
+  it('marks a text field', async () => {
+    const { container, handle } = mountWithHandle({
+      schema: { type: 'object', properties: { text: { type: 'string' } } },
+    });
+
+    await blur(container, 'root_text');
+
+    expect(handle.getStatus()).toMatchObject({ touched: true, touchedFields: { text: true } });
+  });
+
+  it("reveals a whole-array widget's errors, though minItems has nothing to check", async () => {
+    const { node, handle } = mountWithHandle({
+      schema: {
+        type: 'object',
+        properties: {
+          tags: { type: 'array', minItems: 1, uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
+        },
+      },
+      uiSchema: { tags: { 'ui:widget': 'checkboxes' } },
+      liveValidate: 'onBlur',
+      liveErrors: 'field',
+    });
+
+    await user.tab();
+    await user.click(document.body);
+
+    expect(handle.getFormData()).toEqual({});
+    expect(fieldErrorsById(node)).toEqual({});
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+  });
+});

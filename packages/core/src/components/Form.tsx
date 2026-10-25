@@ -29,7 +29,6 @@ import type {
   ValidatorType,
   DefaultFormStateBehavior,
   CustomMergeAllOf,
-  FieldPath,
   NameGeneratorFunction,
 } from '@rjsf/utils';
 import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI_OPTIONS_KEY } from '@rjsf/utils';
@@ -40,7 +39,7 @@ import NamedFieldContext from './fields/NamedFieldContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
-import type { RevealedPaths } from './formState.ts';
+import type { RevealedPaths, TouchedPaths } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState } from './uiState.ts';
@@ -210,10 +209,11 @@ export interface FormProps<
   liveValidate?: 'onChange' | 'onBlur';
   /** Which errors live validation shows. `'all'`, the default, shows every error. `'field'` shows a field's errors only
    * once `liveValidate`'s trigger fired for it, the user changing it under `'onChange'` or blurring it under
-   * `'onBlur'`, and every error once a submit was attempted or `FormRef.validateForm()` ran, until `reset()`. An array's or object's own errors show once it or a field inside it
-   * fired, and adding, removing or moving an array's items fires the array. `extraErrors`, and the errors fields raise
-   * themselves, always show; `customValidate`'s show as the schema's do. `onChange` carries the errors shown, while
-   * `onError` sees every error. Without `liveValidate` it changes nothing.
+   * `'onBlur'`, and every error once a submit was attempted or `FormRef.validateForm()` ran, until `reset()`. An
+   * array's or object's own errors show once it or a field inside it fired, and adding, removing or moving an array's
+   * items, or blurring its option selector, fires the array. `extraErrors`, and the errors fields raise themselves,
+   * always show; `customValidate`'s show as the schema's do. `onChange` carries the errors shown, while `onError` sees
+   * every error. Without `liveValidate` it changes nothing.
    */
   liveErrors?: 'all' | 'field';
   /** Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
@@ -314,7 +314,7 @@ export interface FormState<
   /** The paths of the fields whose widgets reported a blur since the form mounted or was last reset, moved with the
    * keys the form moved
    */
-  touchedPaths: ReadonlySet<FieldPath>;
+  touchedPaths: TouchedPaths;
   /** Where `liveValidate`'s trigger fired, which decides the errors `liveErrors: 'field'` shows */
   revealed: RevealedPaths;
   /** Whether there is data to live-validate when a prop changes: the props seeded the form with data, rather than

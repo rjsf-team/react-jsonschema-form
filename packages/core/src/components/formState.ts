@@ -140,8 +140,8 @@ function markWhole(value: unknown): unknown {
   return true;
 }
 
-/** The marks `markChanged()` and `markPath()` build, as the `NestedBooleans` of the form's data. The overload is the one trust point
- * that marks built by walking the form's data are shaped like it
+/** The marks `markChanged()` and `markPath()` build, as the `NestedBooleans` of the form's data. The overload is the
+ * one trust point that marks built by walking the form's data are shaped like it
  */
 function asNestedBooleans<T>(marks: unknown): NestedBooleans<T>;
 function asNestedBooleans(marks: unknown): unknown {
@@ -177,17 +177,22 @@ function markLeaves(value: unknown): unknown {
   return true;
 }
 
-/** `marks` with the field at `path` of `data` marked touched: `true` at each leaf of what the data holds there, since a
- * widget that reports a blur for an array or object handles every item or member in it. An object the data does not
- * hold yet, as one whose fields were blurred but never filled in, is marked as if it were there; an array item that is
- * not there, as one removed without an announced move, a path through a value that holds no fields, or an empty array or
- * object marks nothing. Writes into the containers of `marks`, which the caller built
+/** `marks` with the field at `path` of `data` marked touched. A field whose schema holds a value of its own is marked
+ * `true`, a blurred field holding no value included. A widget that handles a whole array or object, `isWhole`, marks
+ * each leaf of what the data holds there, so one holding nothing, empty or `undefined`, marks nothing. An object the
+ * data does not hold yet, as one whose fields were blurred but never filled in, is marked as if it were there; a key a
+ * change dropped without an announced move is no longer touched, see `withoutDroppedPaths()`. An array item that is not
+ * there, or a path through a value that holds no fields, marks nothing. Writes into the containers of `marks`, which
+ * the caller built
  *
  * @returns - The marks with the field marked, or undefined when the path marks nothing
  */
-function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
+function markPath(marks: unknown, data: unknown, path: FieldPathList, isWhole: boolean): unknown {
   if (path.length === 0) {
-    return markLeaves(data);
+    if (!isWhole) {
+      return true;
+    }
+    return data === undefined ? undefined : markLeaves(data);
   }
   const [key, ...rest] = path;
   if (Array.isArray(data)) {
@@ -196,7 +201,7 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
       return undefined;
     }
     const items: unknown[] = Array.isArray(marks) ? marks : Array.from({ length: data.length });
-    const item = markPath(items[index], data[index], rest);
+    const item = markPath(items[index], data[index], rest, isWhole);
     if (item === undefined) {
       return undefined;
     }
@@ -210,7 +215,7 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
   const members: GenericObjectType = isPlainObject(marks) ? marks : {};
   const name = String(key);
   const member = container && Object.hasOwn(container, name) ? container[name] : undefined;
-  const marked = markPath(Object.hasOwn(members, name) ? members[name] : undefined, member, rest);
+  const marked = markPath(Object.hasOwn(members, name) ? members[name] : undefined, member, rest, isWhole);
   if (marked === undefined) {
     return undefined;
   }
@@ -233,17 +238,19 @@ export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContex
 }: FormState<T, S, F>): FormStatus<T> {
   const isDirty = !Object.is(formData, baseline);
   const dirtyMarks = isDirty ? markChanged(formData, baseline) : noMarks(formData);
-  // `touched` is read off the marks rather than the paths, so a path the data no longer holds, left by a removal no
-  // move announced, cannot report a touch `touchedFields` does not show
+  // `touched` is read off the marks rather than the paths, so a touched path that marks nothing, such as a whole-array
+  // widget holding no items, cannot report a touch `touchedFields` does not show
   let touchedMarks = noMarks(formData);
   let isTouched = false;
-  for (const fieldPath of touchedPaths) {
-    const marked = markPath(touchedMarks, formData, fieldPathToList(fieldPath));
+  const mark = (fieldPath: FieldPath, isWhole: boolean) => {
+    const marked = markPath(touchedMarks, formData, fieldPathToList(fieldPath), isWhole);
     if (marked !== undefined) {
       touchedMarks = marked;
       isTouched = true;
     }
-  }
+  };
+  touchedPaths.fields.forEach((fieldPath) => mark(fieldPath, false));
+  touchedPaths.containers.forEach((fieldPath) => mark(fieldPath, true));
   return {
     dirty: isDirty,
     dirtyFields: asNestedBooleans<T>(dirtyMarks),
@@ -253,20 +260,98 @@ export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContex
   };
 }
 
-/** Where `liveValidate`'s trigger fired, for `liveErrors: 'field'`: the fields that fired, whose errors show along with
- * those of every array and object holding them, and the arrays and objects whose keys a move announced moved, whose own
- * errors show, along with those of the containers holding them, but not the errors of the fields inside them. `all` is
- * set once a validation the form was asked for, `validateForm()` or a submit, showed every error
+/** Paths of fields the form keeps a mark for, split between fields marked themselves and arrays or objects marked as
+ * containers, as `TouchedPaths` and `RevealedPaths` say
  */
-export interface RevealedPaths {
+interface FieldPaths {
   readonly fields: ReadonlySet<FieldPath>;
   readonly containers: ReadonlySet<FieldPath>;
+}
+
+/** The fields whose widgets reported a blur: `fields`, each holding a value of its own, and `containers`, arrays and
+ * objects a widget handles whole, which touches each leaf they hold
+ */
+export type TouchedPaths = FieldPaths;
+
+/** Where `liveValidate`'s trigger fired, for `liveErrors: 'field'`: the fields that fired, whose errors show along with
+ * those of every array and object holding them, and the arrays and objects whose keys a move announced moved, or whose
+ * option selector was blurred, whose own errors show, along with those of the containers holding them, but not the
+ * errors of the fields inside them. `all` is set once a validation the form was asked for, `validateForm()` or a
+ * submit, showed every error
+ */
+export interface RevealedPaths extends FieldPaths {
   readonly all: boolean;
+}
+
+/** What a blur reported for the field at a path touches: `'field'`, the field itself; `'leaves'`, each leaf of an array
+ * or object a widget handles whole; `'nothing'`, for a blur of what is no field of the data, such as an option selector
+ * or a layout's own component, which only reveals the container's own errors as an option switch does
+ */
+export type BlurTouch = 'field' | 'leaves' | 'nothing';
+
+/** A blur on its way to the form, from the innermost `SchemaField` above the widget that reported it */
+export interface FieldBlur {
+  fieldPath: FieldPath;
+  touches: BlurTouch;
 }
 
 const NO_PATHS: ReadonlySet<FieldPath> = new Set();
 
-const NOTHING_REVEALED: RevealedPaths = { fields: NO_PATHS, containers: NO_PATHS, all: false };
+const NOTHING_TOUCHED: TouchedPaths = { fields: NO_PATHS, containers: NO_PATHS };
+
+const NOTHING_REVEALED: RevealedPaths = { ...NOTHING_TOUCHED, all: false };
+
+/** `paths` with each of its sets put through `update`, `paths` itself when that changed none of them */
+function updatePaths<P extends FieldPaths>(
+  paths: P,
+  update: (set: ReadonlySet<FieldPath>) => ReadonlySet<FieldPath>,
+): P {
+  const fields = update(paths.fields);
+  const containers = update(paths.containers);
+  return fields === paths.fields && containers === paths.containers ? paths : { ...paths, fields, containers };
+}
+
+/** Whether `container`, an array or object of the form's data, holds `key` */
+function holdsKey(container: unknown, key: string | number): boolean {
+  if (Array.isArray(container)) {
+    const index = Number(key);
+    return Number.isInteger(index) && index >= 0 && index < container.length;
+  }
+  return isPlainObject(container) && Object.hasOwn(container, String(key));
+}
+
+/** `paths` without those under a key `previous` held that `next` does not: a change that dropped a key without
+ * announcing a move, as `setFieldValue()` writing over a whole object does, leaves no field there to keep a mark for,
+ * so a key added again later starts untouched. A field the data never held a value for, as one blurred while empty, is
+ * kept. Costs what the paths hold, and is skipped while the data is unchanged
+ *
+ * @param paths - The paths to prune
+ * @param previous - The data before the change
+ * @param next - The data after it, with any keys it announced moving moved already
+ * @returns - The paths still held, `paths` itself when none was dropped
+ */
+function withoutDroppedPaths(paths: ReadonlySet<FieldPath>, previous: unknown, next: unknown): ReadonlySet<FieldPath> {
+  if (paths.size === 0 || Object.is(previous, next)) {
+    return paths;
+  }
+  const isDropped = (fieldPath: FieldPath) => {
+    let before = previous;
+    let after = next;
+    for (const key of fieldPathToList(fieldPath)) {
+      if (!holdsKey(before, key)) {
+        return false;
+      }
+      if (!holdsKey(after, key)) {
+        return true;
+      }
+      before = Reflect.get(Object(before), key);
+      after = Reflect.get(Object(after), key);
+    }
+    return false;
+  };
+  const kept = new Set([...paths].filter((fieldPath) => !isDropped(fieldPath)));
+  return kept.size === paths.size ? paths : kept;
+}
 
 /** `paths` with `path` in it, `paths` itself when it holds it already */
 function withPath(paths: ReadonlySet<FieldPath>, path: FieldPath): ReadonlySet<FieldPath> {
@@ -318,23 +403,22 @@ function isRevealedByField<T, S extends StrictRJSFSchema, F extends FormContextT
   return props.liveErrors === 'field' && (isLiveValidated(props) || isBlurValidated(props));
 }
 
-/** The touched fields and the revealed ones after `change`: both follow the keys it moved. Under `liveErrors: 'field'`,
+/** The touched fields and the revealed ones after `change`, which left `formData`: both follow the keys it moved, and
+ * lose those it dropped without a move, see `withoutDroppedPaths()`. Under `liveErrors: 'field'`,
  * a change that moved keys reveals the container's own errors, and a field's edit under `liveValidate: 'onChange'`
  * reveals the field's
  */
 function marksAfterChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   change: FieldChange<T>,
+  formData: T | undefined,
   props: FormProps<T, S, F>,
 ): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
   const move = keyMoveOf(change);
-  const touchedPaths = withPathsMoved(current.touchedPaths, move);
-  const fields = withPathsMoved(current.revealed.fields, move);
-  const containers = withPathsMoved(current.revealed.containers, move);
-  let revealed: RevealedPaths =
-    fields === current.revealed.fields && containers === current.revealed.containers
-      ? current.revealed
-      : { ...current.revealed, fields, containers };
+  const followData = (paths: ReadonlySet<FieldPath>) =>
+    withoutDroppedPaths(withPathsMoved(paths, move), current.formData, formData);
+  const touchedPaths = updatePaths(current.touchedPaths, followData);
+  let revealed = updatePaths(current.revealed, followData);
   if (isRevealedByField(props)) {
     if (move) {
       revealed = { ...revealed, containers: withPath(revealed.containers, move.container) };
@@ -1390,8 +1474,12 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     formData,
     baseline,
     submitCount: current?.submitCount ?? 0,
-    touchedPaths: current?.touchedPaths ?? NO_PATHS,
-    revealed: current?.revealed ?? NOTHING_REVEALED,
+    touchedPaths: current
+      ? updatePaths(current.touchedPaths, (paths) => withoutDroppedPaths(paths, current.formData, formData))
+      : NOTHING_TOUCHED,
+    revealed: current
+      ? updatePaths(current.revealed, (paths) => withoutDroppedPaths(paths, current.formData, formData))
+      : NOTHING_REVEALED,
     isDataPassed,
     ...errors,
     initialDefaultsGenerated: true,
@@ -1609,7 +1697,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     ...current,
     ...context,
     ...omitted,
-    ...marksAfterChange(current, change, props),
+    ...marksAfterChange(current, change, omitted.formData, props),
     // An edit is data the user made, whose errors they have earned, so a prop change live-validates it from now on
     isDataPassed: true,
   };
@@ -1697,7 +1785,7 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     formData,
     baseline: formData,
     submitCount: 0,
-    touchedPaths: NO_PATHS,
+    touchedPaths: NOTHING_TOUCHED,
     revealed: NOTHING_REVEALED,
     isDataPassed: seed !== undefined,
     ...extraErrorsAlone(props.extraErrors),
@@ -1708,33 +1796,49 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
   };
 }
 
+/** `current` with the blur `blurred` touching what it touches, see `BlurTouch`, and revealing it when `liveErrors` is
+ * `'field'` and `liveValidate` is `'onBlur'`: a field's errors, or for a blur that touches nothing, the container's
+ * own errors
+ */
+function markBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  props: FormProps<T, S, F>,
+  { fieldPath, touches }: FieldBlur,
+): FormState<T, S, F> {
+  const { touchedPaths, revealed } = current;
+  const isRevealed = isRevealedByField(props) && isBlurValidated(props);
+  if (touches === 'nothing') {
+    return isRevealed
+      ? { ...current, revealed: { ...revealed, containers: withPath(revealed.containers, fieldPath) } }
+      : current;
+  }
+  return {
+    ...current,
+    touchedPaths:
+      touches === 'leaves'
+        ? { ...touchedPaths, containers: withPath(touchedPaths.containers, fieldPath) }
+        : { ...touchedPaths, fields: withPath(touchedPaths.fields, fieldPath) },
+    revealed: isRevealed ? { ...revealed, fields: withPath(revealed.fields, fieldPath) } : revealed,
+  };
+}
+
 /** The state after a field is blurred: the field touched, and revealed when `liveErrors` is `'field'` and
- * `liveValidate` is `'onBlur'`, the data with extra data omitted when `liveOmit` is `'onBlur'`, validated when
- * `liveValidate` is.
+ * `liveValidate` is `'onBlur'`, see `markBlur()`, the data with extra data omitted when `liveOmit` is `'onBlur'`,
+ * validated when `liveValidate` is.
  *
  * @param current - The state at the blur
  * @param props - The current props
- * @param [fieldPath] - The path of the field blurred, when a `SchemaField` reported it
+ * @param [blurred] - The field blurred and what its blur touches, when a `SchemaField` reported it
  * @returns - The next state, sharing every unchanged subtree with `current`
  */
 export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
-  fieldPath?: FieldPath,
+  blurred?: FieldBlur,
 ): FormState<T, S, F> {
   const { omitExtraData, liveOmit } = props;
   const { customErrors, retrievedSchema } = current;
-  const marked: FormState<T, S, F> =
-    fieldPath === undefined
-      ? current
-      : {
-          ...current,
-          touchedPaths: withPath(current.touchedPaths, fieldPath),
-          revealed:
-            isRevealedByField(props) && isBlurValidated(props)
-              ? { ...current.revealed, fields: withPath(current.revealed.fields, fieldPath) }
-              : current.revealed,
-        };
+  const marked = blurred ? markBlur(current, props, blurred) : current;
   const omitted =
     omitExtraData === true && liveOmit === 'onBlur'
       ? omitExtraDataOf(current)

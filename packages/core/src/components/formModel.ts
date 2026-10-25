@@ -23,7 +23,7 @@ import {
 import isDevelopment from '../isDevelopment.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { AnnouncedMove, ExtraDataOmission, FieldChange, MoveOutcome } from './formState.ts';
+import type { AnnouncedMove, BlurTouch, ExtraDataOmission, FieldBlur, FieldChange, MoveOutcome } from './formState.ts';
 import {
   applyBlur,
   applyChangeToData,
@@ -149,8 +149,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // that carried one
   let announced: AnnouncedMove | undefined;
   let moved: { move: AnnouncedMove; outcome: MoveOutcome } | undefined;
-  // The path of the field whose blur is on its way to the form, see `FormDataAccess.sendBlur()`
-  let blurredPath: FieldPath | undefined;
+  // The field whose blur is on its way to the form and what the blur touches, see `FormDataAccess.sendBlur()`
+  let blurring: FieldBlur | undefined;
   // The form's option selections and cycle expansions, which live as long as the form, see `createUiState()`
   const { uiState } = initial;
   // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
@@ -534,20 +534,19 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * form.
    *
    * @param id - The unique `id` of the field that was blurred
-   * @param [fieldPath] - The path of the field that was blurred, when a `SchemaField` reported it
+   * @param [blurred] - The field that was blurred and what its blur touches, when a `SchemaField` reported it
    */
-  const blur = (id: string, fieldPath: FieldPath | undefined) => {
+  const blur = (id: string, blurred: FieldBlur | undefined) => {
     const props = committedProps;
     const { omitExtraData, liveOmit } = props;
     if (isDetached) {
       return;
     }
     const start = current();
-    const isTouch = fieldPath !== undefined && !start.touchedPaths.has(fieldPath);
-    if (!(isTouch || (omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
+    if (!(blurred || (omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
       return;
     }
-    const committed = commit(settled((base) => applyBlur(base, props, fieldPath)));
+    const committed = commit(settled((base) => applyBlur(base, props, blurred)));
     // Only the `IChangeEvent` members count; the validator's own results and the status are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
       props.onChange?.(toIChangeEvent(committed), id);
@@ -718,19 +717,19 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     setFormElement: (element: HTMLElement | null) => {
       formElement = element;
     },
-    /** Calls `send` with `fieldPath` as the path of the blur it sends, unless a field below has named its own already,
-     * see `FormDataAccess.sendBlur()`
+    /** Calls `send` with `fieldPath` as the path of the blur it sends and `touches` as what it touches, unless a field
+     * below has named its own already, see `FormDataAccess.sendBlur()`
      */
-    sendBlur: (fieldPath: FieldPath, send: () => void) => {
-      if (blurredPath !== undefined) {
+    sendBlur: (fieldPath: FieldPath, touches: BlurTouch, send: () => void) => {
+      if (blurring !== undefined) {
         send();
         return;
       }
-      blurredPath = fieldPath;
+      blurring = { fieldPath, touches };
       try {
         send();
       } finally {
-        blurredPath = undefined;
+        blurring = undefined;
       }
     },
     sendMove: (move: AnnouncedMove, send: () => void) => {
@@ -833,10 +832,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       const props = committedProps;
-      const fieldPath = blurredPath;
+      const blurred = blurring;
       // Before the blur reads the state, so it validates an edit `onBlur` makes instead of reverting it
       callWithDeferredThrow(() => props.onBlur?.(id, data));
-      callWithDeferredThrow(() => blur(id, fieldPath));
+      callWithDeferredThrow(() => blur(id, blurred));
     },
     handleFocus: (id: string, data: unknown) => {
       if (isDetached) {

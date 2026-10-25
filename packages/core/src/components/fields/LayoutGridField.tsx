@@ -41,6 +41,7 @@ import {
 
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import useSendBlur from '../../hooks/useSendBlur.ts';
 import { isAdditionalPropertySchema, storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';
 
@@ -714,6 +715,9 @@ function LayoutGridFieldComponent<
   const { onChange } = otherProps;
   const { fields } = registry;
   const { SchemaField } = fields;
+  // A cell's own component is no field of the data, so its blur touches nothing: handed the cell's `onBlur`, it would
+  // be sent for the parent's path and touch every field the parent holds
+  const handleComponentBlur = useSendBlur(parentFieldPath, onBlur, 'nothing');
 
   const uiComponentProps = useMemo(
     () => computeUIComponentPropsFromGridSchema<T, S, F>(registry, gridSchema),
@@ -868,7 +872,7 @@ function LayoutGridFieldComponent<
         schema={initialSchema}
         fieldPath={parentFieldPath}
         id={id}
-        onBlur={onBlur}
+        onBlur={handleComponentBlur}
         onFocus={onFocus}
         registry={registry}
         {...uiProps}
