@@ -2536,6 +2536,8 @@ If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it doe
 - The `const` values from the schema if present, except for an option that declares the property a selector names. When the options aren't all constants and there is no selector, there is no list and `undefined` is returned
 - If the schema has a discriminator (or the uiSchema a `ui:optionsSchemaSelector`), the value of that property, read from every option when they aren't all constants, and otherwise from each constant option that declares it
 
+Options that are all constants are reordered by `ui:enumOrder` as `enum` values are, unless any of them is read through a discriminator or `ui:optionsSchemaSelector`.
+
 An option is labelled with the first of its names. One with no name is labelled by `fallbackLabel`, or with its value (as JSON for an object or array) when there is no `fallbackLabel` or it returns `undefined`:
 
 - An `enum` value's name is its non-empty `ui:enumNames` entry in the `uiSchema`
