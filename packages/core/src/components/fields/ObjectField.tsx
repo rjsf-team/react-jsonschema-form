@@ -28,6 +28,7 @@ import {
   getFieldTypeForWidget,
   getOptionUiSchema,
   getRenderedOptionSchema,
+  getRenderedOptionUiSchema,
   getTemplates,
   getPropertySchema,
   getUiOptions,
@@ -647,7 +648,12 @@ export default function ObjectField<
         if (followedRef === undefined || !seen.has(followedRef)) {
           return seed(
             getRenderedOptionSchema<S>(optionsResolvedKeySchema, openedOption),
-            getOptionUiSchema<T, S, F>(resolvedKeyUiSchema, xxxOf.key, 0),
+            getRenderedOptionUiSchema<T, S, F>(
+              optionsResolvedKeySchema,
+              openedOption,
+              resolvedKeyUiSchema,
+              getOptionUiSchema<T, S, F>(resolvedKeyUiSchema, xxxOf.key, 0),
+            ),
             followedRef === undefined ? seen : new Set([...seen, followedRef]),
           );
         }

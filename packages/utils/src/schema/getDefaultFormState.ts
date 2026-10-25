@@ -857,7 +857,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   field: DefaultsField<S>,
   props: FoldProps<T, S, F>,
-): { value: unknown; view: DefaultsView<S> } {
+): unknown {
   const data = props.rawFormData;
   let view = settle(context, field, data, data);
   // The options the field selected are planned with it, so the dependencies they bring are qualified too
@@ -884,7 +884,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (holdsNull) {
         props.onNullFill?.();
       }
-      return { value, view };
+      return value;
     }
     seen.add(qualified);
     view = settle(context, field, data, depData);
@@ -960,7 +960,7 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const onNullFill = () => {
     holdsNull = true;
   };
-  const { value } = foldField<T, S, F>(context, child, { ...props, memo: undefined, onNullFill });
+  const value = foldField<T, S, F>(context, child, { ...props, memo: undefined, onNullFill });
   if (holdsNull) {
     props.onNullFill?.();
   }
@@ -1578,6 +1578,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const parentConst = schema[CONST_KEY];
   const defaultReplacesUndefined =
     defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
+  const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
   const childProps = (key: string, uiSchemaKey: string) => ({
     includeUndefinedValues: includeUndefinedValues === true,
@@ -1680,9 +1681,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       // value is kept as the user left it, as a select keeps a value its options no longer offer. An extra key stubbed
       // among the properties keeps object data its schema can't take, its default too, as the extra keys of an object
       // one level down do
-      const retrievesProperty =
-        shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior) ||
-        (isObject(readProperty) && ALL_OF_KEY in readProperty);
+      const retrievesProperty = populatesAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty);
       const extraKeyDropsObject =
         addedByAdditionalProperty && isObjectData(formData[key]) && !isObjectData(property.value);
       if ((property.value !== undefined || retrievesProperty) && !extraKeyDropsObject) {
@@ -1811,13 +1810,13 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       : undefined;
   if (shouldMergeDefaultsIntoFormData) {
     for (const key of Object.keys(formData).filter((dataKey) => !pinnedKeys || Object.hasOwn(pinnedKeys, dataKey))) {
-      if (formData[key] === undefined && !defaultReplacesUndefined) {
-        setOwn(computed, key, formData[key]);
-      } else if (
+      const value = formData[key];
+      const keptUndefined = value === undefined && !defaultReplacesUndefined;
+      const uncomputed =
         !Object.hasOwn(computed, key) &&
-        (formData[key] === undefined || !(schema.properties && Object.hasOwn(schema.properties, key)))
-      ) {
-        setOwn(computed, key, formData[key]);
+        (value === undefined || !(schema.properties && Object.hasOwn(schema.properties, key)));
+      if (keptUndefined || uncomputed) {
+        setOwn(computed, key, value);
       }
     }
   }
@@ -2142,13 +2141,13 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
   defaults: unknown,
   type: FoldedType,
 ): unknown {
-  // A value already picked is kept as it is, since the form data is merged over the defaults key by key, which would
-  // blend it with the default constant
-  if (type === 'whole') {
-    // A `null` value is one the user picked, so only a missing one falls back to the default
-    return props.rawFormData === undefined ? defaults : props.rawFormData;
-  }
   switch (type) {
+    // A value already picked is kept as it is, since the form data is merged over the defaults key by key, which would
+    // blend it with the default constant. A `null` value is one the user picked, so only a missing one falls back to
+    // the default
+    case 'whole': {
+      return props.rawFormData === undefined ? defaults : props.rawFormData;
+    }
     // We need to recurse for object schema inner default values.
     case 'object': {
       return objectDefaults<T, S, F>(context, view, props, defaults);
@@ -2217,7 +2216,7 @@ export function computeDefaults<
   inputProps: ComputeDefaultsProps<T, S, F> = {},
 ): T | T[] | null | undefined {
   const field = callRoot<S>(inputProps.rootSchema, rawSchema);
-  return asDeclared<T | T[] | null | undefined>(foldField<T, S, F>(context, field, inputProps).value);
+  return asDeclared<T | T[] | null | undefined>(foldField<T, S, F>(context, field, inputProps));
 }
 
 /** Computes the default value for objects, reading the properties `rawSchema` declares as it stands, unless it holds
@@ -2446,9 +2445,10 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
       }
       return declared.length > 0 ? rootProvenance<S>(field().graph, declared) : fieldOf<S>(rootGraph, propertySchema);
     };
-    for (const key of Object.keys(schemaToMatch.properties)) {
+    for (const key of Object.keys(schemaToMatch.properties).filter((dataKey) => Object.hasOwn(matched, dataKey))) {
       const propertySchema = getPropertySchema<S>(schemaToMatch, key);
-      const propertyField = () => fieldOfProperty(key, propertySchema);
+      let propertyProvenance: Provenance<S> | undefined;
+      const propertyField = () => (propertyProvenance ??= fieldOfProperty(key, propertySchema));
       // A property written as a `$ref` is matched as the definition it names, whose `allOf` it is
       let readProperty = propertySchema;
       if (isSchemaObject<S>(propertySchema) && typeof propertySchema[REF_KEY] === 'string') {
@@ -2459,7 +2459,7 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
       // Object data is matched at every depth, so a value nested in it that its schema can't take is found too. A
       // boolean schema has nothing to match the data against
       const matchesNested = isSchemaObject<S>(readProperty) && isObjectData(matched[key]);
-      if (Object.hasOwn(matched, key) && (retrievesProperty || matchesNested)) {
+      if (retrievesProperty || matchesNested) {
         const chainsOfProperty = () => {
           const { graph, seeds } = propertyField();
           return buildPlan<S, F>({ context, graph, seeds, policy: { allOf: false, conditions: false } }).chains;
@@ -2528,7 +2528,7 @@ export default function getDefaultFormState<
     globalUiOptions: getByPath<GlobalUISchemaOptions | undefined>(uiSchema, UI_GLOBAL_OPTIONS_KEY),
     overUndefined: new Map(),
   };
-  const { value: defaults } = foldField<T, S, F>(context, field, {
+  const defaults = foldField<T, S, F>(context, field, {
     nullFills,
     includeUndefinedValues,
     rawFormData: formData,
