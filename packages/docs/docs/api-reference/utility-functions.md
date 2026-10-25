@@ -2237,13 +2237,13 @@ It checks both that `options` is an array and that no numeric `index` is present
 
 ### isFieldHidden&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Tells whether a field renders hidden: through `ui:widget: 'hidden'`, or as a `deprecated` schema under `deprecatedHandling: 'hide'` (see [getDeprecatedHandling()](#getdeprecatedhandling)).
-`SchemaField` hides the field by it and `ObjectField` marks the property `hidden` in the `ObjectFieldTemplate` props by it, so a custom field that renders its own `FieldTemplate` or lays out properties should call it too.
+Tells whether a field renders hidden: through its own `ui:widget: 'hidden'`, or under a resolved `deprecatedHandling` of `'hide'` (see [getDeprecatedHandling()](#getdeprecatedhandling)).
+`SchemaField` hides the field by it, so a custom field that renders its own `FieldTemplate` should call it too. A container laying out a field it has not rendered yet calls [isSchemaFieldHidden()](#isschemafieldhidden) instead.
 
 #### Parameters
 
-- schema: S - The retrieved schema of the field
-- uiOptions: UIOptionsType&lt;T, S, F> - The resolved UI options of the field, including the global ones
+- ownUiOptions: UIOptionsType&lt;T, S, F> - The field's own UI options, without the global ones, so that no global `widget` hides every field
+- deprecatedHandling: 'hide' | 'disable' | 'label' | undefined - The field's handling of a `deprecated` schema, as `getDeprecatedHandling()` resolves it
 
 #### Returns
 
@@ -2328,6 +2328,24 @@ Unlike [isObject()](#isobject), class instances such as `Error` are not plain ob
 #### Returns
 
 - boolean: True if it is a plain object, otherwise false. When true, `thing` is narrowed to `Record<string, unknown>`
+
+### isSchemaFieldHidden&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Tells whether the `SchemaField` rendered with `schema`, `uiSchema` and `formData` hides its field, resolving them as `SchemaField` does: the `ui:definitions` entry of a `$ref`, the global UI options, and the retrieved schema where `deprecatedHandling` is `'hide'`, before deciding by [isFieldHidden()](#isfieldhidden).
+`ObjectField` marks each property `hidden` in the `ObjectFieldTemplate` props by it, so the flag agrees with the property's `FieldTemplate`.
+A `$ref` cycle renders an Expand button, which hides nothing, until it is expanded, and then the field one level further.
+
+#### Parameters
+
+- schema: S - The field's schema, as the container hands it to `SchemaField`
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The field's uiSchema, as the container hands it to `SchemaField`
+- formData: T | undefined - The field's data
+- registry: Registry&lt;T, S, F> - The registry
+- [expanded=false]: boolean - Whether the field is a `$ref` cycle the user has expanded
+
+#### Returns
+
+- boolean: True when the field renders hidden
 
 ### isSchemaObject&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

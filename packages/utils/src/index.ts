@@ -149,6 +149,7 @@ import isLabelledByTemplate from './isLabelledByTemplate.ts';
 import isNamedByTemplateLabel from './isNamedByTemplateLabel.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
+import isSchemaFieldHidden from './isSchemaFieldHidden.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
 import joinClassNames from './joinClassNames.ts';
 import labelValue from './labelValue.ts';
@@ -384,6 +385,7 @@ export {
   isNamedByTemplateLabel,
   isObject,
   isPlainObject,
+  isSchemaFieldHidden,
   isSchemaObject,
   isWholeValueSelect,
   joinClassNames,

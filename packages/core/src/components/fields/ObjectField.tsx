@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import type {
   EnumOptionsType,
   ErrorSchema,
@@ -8,7 +8,6 @@ import type {
   FormContextType,
   GenericObjectType,
   Registry,
-  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -24,7 +23,6 @@ import {
   ELSE_KEY,
   ERRORS_KEY,
   REF_KEY,
-  RJSF_REF_CYCLE_KEY,
   THEN_KEY,
   deepEquals,
   getAdditionalPropertySchema,
@@ -41,8 +39,8 @@ import {
   getXxxOfKey,
   getXxxOfOptions,
   isConstantSelect,
-  isFieldHidden,
   isFormDataAvailable,
+  isSchemaFieldHidden,
   isSchemaObject,
   optionsList,
   orderProperties,
@@ -58,6 +56,7 @@ import {
 
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
 import useSendMove from '../../hooks/useSendMove.ts';
+import useUiState from '../../hooks/useUiState.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
@@ -471,6 +470,31 @@ export default function ObjectField<
     const additionalPropertySet = new Set(schemaAdditionalProperties);
     return Object.keys(schemaProperties).filter((property) => !additionalPropertySet.has(property));
   }, [schemaProperties, schemaAdditionalProperties]);
+  // `CyclicSchemaField` keeps a cycle's expansion to the form's ui state, so it is read here as well: an expanded cycle
+  // renders the field one level further, which can be hidden
+  const { uiState } = useUiState();
+  const readExpandedCycles = () =>
+    JSON.stringify(
+      Object.keys(schemaProperties).filter((property) => uiState.isExpanded(toFieldPath(property, fieldPath))),
+    );
+  const expandedCycles = useSyncExternalStore(uiState.subscribe, readExpandedCycles, readExpandedCycles);
+  const hiddenProperties = useMemo(() => {
+    const expanded = new Set(JSON.parse(expandedCycles) as string[]);
+    return new Set(
+      Object.keys(schemaProperties).filter((property) =>
+        isSchemaFieldHidden<T, S, F>(
+          getPropertySchema<S>(schema, property),
+          getByPath<UiSchema<T, S, F> | undefined>(
+            uiSchema,
+            declaresProperty<S>(schemaProperties, property) ? property : ADDITIONAL_PROPERTIES_KEY,
+          ),
+          getByPath<T>(formData, property),
+          registry,
+          expanded.has(property),
+        ),
+      ),
+    );
+  }, [schema, schemaProperties, uiSchema, formData, registry, expandedCycles]);
   // Depended on directly rather than through `schema`, which is a fresh object for every `formData` change, so the
   // resolution below runs once per schema rather than once per keystroke anywhere in the object
   const { propertyNames } = schema;
@@ -939,33 +963,19 @@ export default function ObjectField<
         uiSchema,
         addedByAdditionalProperties ? ADDITIONAL_PROPERTIES_KEY : propertyName,
       );
-      const propertySchema = getPropertySchema<S>(schema, propertyName);
-      const propertyFormData = getByPath<T>(formData, propertyName);
-      const fieldUiOptions = getUiOptions<T, S, F>(
-        resolveUiSchema<T, S, F>(propertySchema, fieldUiSchema, registry),
-        globalUiOptions,
-      );
-      // Only `deprecatedHandling: 'hide'` reads the retrieved schema, and a `$ref` cycle is left unretrieved, as
-      // `SchemaField` leaves it
-      const retrievesSchema =
-        fieldUiOptions.deprecatedHandling === 'hide' && !(propertySchema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY];
-      const hidden = isFieldHidden<T, S, F>(
-        retrievesSchema ? schemaUtils.retrieveSchema(propertySchema, propertyFormData) : propertySchema,
-        fieldUiOptions,
-      );
       const content = (
         <ObjectFieldProperty<T, S, F>
           key={getStableKey(propertyName)}
           propertyName={propertyName}
           required={isRequired<S>(schema, propertyName)}
-          schema={propertySchema}
+          schema={getPropertySchema<S>(schema, propertyName)}
           uiSchema={fieldUiSchema}
           errorSchema={getByPath(errorSchema, propertyName)}
           // Derived from the schema rather than raised on rename, so the error can't follow the property to a name that
           // is allowed, and shows without waiting for validation, which ajv8 and ata report on the object, not the key
           keyNotAllowed={addedByAdditionalProperties && getAdditionalPropertySchema<S>(schema, propertyName) === false}
           fieldPath={fieldPath}
-          formData={propertyFormData}
+          formData={getByPath(formData, propertyName)}
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}
@@ -985,7 +995,7 @@ export default function ObjectField<
         readonly,
         disabled,
         required,
-        hidden,
+        hidden: hiddenProperties.has(propertyName),
       };
     }),
     readonly,

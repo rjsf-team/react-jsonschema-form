@@ -584,7 +584,7 @@ export function useSchemaFieldPlan<
   // `ui:hideError` is resolved as the field's own, then the one the field above resolved to, so a parent's reaches its
   // children (#5490)
   const hideError = uiBooleanOption(ownUiOptions.hideError) ?? props.hideError;
-  const hidden = isFieldHidden<T, S, F>(schema, uiOptions);
+  const hidden = isFieldHidden<T, S, F>(ownUiOptions, deprecatedHandling);
   const inheritedPresentation = useInheritedPresentation(fieldId);
   // The property name and the title a parent hands down label the field above, which a selected option or the fallback
   // UI's value renders the value of, so a field below with no title of its own isn't labelled by them a second time

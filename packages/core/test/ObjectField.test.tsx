@@ -216,6 +216,43 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_child__expand')).toHaveTextContent('Expand Cycle');
     });
 
+    it('should agree with FieldTemplate on hidden once a $ref cycle property is expanded', async () => {
+      const recursive: RJSFSchema = {
+        type: 'object',
+        deprecated: true,
+        properties: { child: { $ref: '#/definitions/node' } },
+      };
+      const { node } = createFormComponent({
+        schema: { definitions: { node: recursive }, $ref: '#/definitions/node' },
+        uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' }, 'ui:deprecatedHandling': 'label' },
+        templates: hiddenFlagTemplates,
+      });
+      await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
+      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('[data-field="root_child"]')).toHaveAttribute('data-hidden', 'true');
+    });
+
+    it.each([
+      [
+        'a deprecated sibling of its $ref under a global hide',
+        { child: { $ref: '#/definitions/node', deprecated: true } },
+        { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
+      ],
+      [
+        'a ui:definitions entry hiding its $ref target',
+        { child: { $ref: '#/definitions/node' } },
+        { 'ui:widget': undefined, 'ui:definitions': { '#/definitions/node': { 'ui:widget': 'hidden' } } },
+      ],
+    ] as const)('should not mark a $ref cycle property hidden by %s', (_, properties, uiSchema) => {
+      const { node } = createFormComponent({
+        schema: { definitions: { node: { type: 'object', properties } }, $ref: '#/definitions/node' },
+        uiSchema,
+        templates: hiddenFlagTemplates,
+      });
+      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'false');
+      expect(screen.getByRole('button', { name: 'Expand Cycle' })).toBeVisible();
+    });
+
     it('should render a customized title', () => {
       const CustomTitleField = ({ title }: TitleFieldProps) => <div id='custom'>{title}</div>;
 

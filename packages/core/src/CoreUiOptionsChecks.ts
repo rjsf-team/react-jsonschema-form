@@ -153,7 +153,7 @@ export type CoreUiOptionsChecks =
   | UiOptionsCheck<
       NonBuiltInObject,
       {
-        // `ObjectField`/`SchemaField` decide to hide an object field via `uiOptions.widget === 'hidden'`, a strict
+        // `isFieldHidden()` decides to hide an object field via `ownUiOptions.widget === 'hidden'`, a strict
         // comparison to that exact alias - an object field never resolves `ui:widget` through `getWidget`, so
         // `'HiddenWidget'` (the PascalCase component name) does nothing for it and is deliberately not offered here.
         // An `enum` or `oneOf`/`anyOf` of object constants is rendered as a select instead, which does resolve its `ui:widget`
