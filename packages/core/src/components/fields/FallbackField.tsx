@@ -493,13 +493,7 @@ export default function FallbackField<
   }
 
   const reason = props.reason ?? translateString(TranslatableString.UnknownFieldType, [String(schema.type)]);
-  // Merged with the global options so the fallback in `getTemplate()` sees the same picture `SchemaField` does:
-  // without them an invalid own `ui:UnsupportedFieldTemplate` would fall back to `globalUiOptions`, changing which
-  // template renders compared with leaving the value out
-  const { UnsupportedFieldTemplate } = getTemplates<T, S, F>(
-    registry,
-    getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions),
-  );
+  const { UnsupportedFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema));
 
   return (
     <>

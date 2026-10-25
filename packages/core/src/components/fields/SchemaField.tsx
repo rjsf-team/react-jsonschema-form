@@ -895,11 +895,17 @@ function SchemaFieldRender<
     [presentationBelow, optionsPresentation, isContainer, presentation],
   );
 
+  // Names the uiSchema entry rather than the field in a template-override warning, so an `items` mistake warns once,
+  // not once per row; the label is built only when an override is actually invalid. Built before the cycle check so
+  // the cyclic field can warn about its `CyclicSchemaExpandTemplate` override, the one template it resolves
+  const templateWarnSource = {
+    entryLabel: () => entryLabelForLog(fieldPath, registry.globalFormOptions),
+  };
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
   if (!uiField || !fieldToRender) {
-    return withUiState(<CyclicSchemaField {...props} />);
+    return withUiState(<CyclicSchemaField {...props} warnSource={templateWarnSource} />);
   }
   const { optionsGiveWayToField } = fieldToRender;
   // A pure union's object has nothing of its own beside its options, so like a withheld field it renders nothing, rather
@@ -909,12 +915,7 @@ function SchemaFieldRender<
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
-    {
-      // The label names the uiSchema entry rather than the field, so an `items` mistake warns once, not once per row;
-      // it is built only when an override is actually invalid
-      entryLabel: () => entryLabelForLog(fieldPath, registry.globalFormOptions),
-      ownUiOptions,
-    },
+    templateWarnSource,
   );
 
   // A field the options give way to renders the choice between them, so with no options it has nothing to choose, which

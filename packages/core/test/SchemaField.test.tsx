@@ -1,6 +1,7 @@
 import { Suspense, forwardRef, lazy, memo } from 'react';
 import type {
   ArrayFieldItemTemplateProps,
+  CyclicSchemaExpandProps,
   ErrorSchema,
   Field,
   FieldProps,
@@ -2322,6 +2323,42 @@ describe('SchemaField', () => {
       // One level per click, as for a recursion through a `then` or an `allOf`
       expect(node.querySelector('#root_child_child-button')).toBeNull();
       expect(node.querySelector('#root_child_child_child-button')).toHaveTextContent('Expand Cycle');
+    });
+
+    describe('a ui:CyclicSchemaExpandTemplate override', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      it('renders a custom one for the cyclic field, without warning', () => {
+        function CustomExpand(props: CyclicSchemaExpandProps) {
+          return (
+            <button type='button' id={`${props.id}-button`} onClick={() => props.onExpand(props.id)}>
+              Grow
+            </button>
+          );
+        }
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { child: { child: { 'ui:CyclicSchemaExpandTemplate': CustomExpand } } },
+        });
+
+        expect(node.querySelector('#root_child_child-button')).toHaveTextContent('Grow');
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
+
+      it('warns once for an invalid one, naming the cyclic field, and renders the default', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            child: { child: { 'ui:CyclicSchemaExpandTemplate': <div /> } },
+          },
+        });
+
+        expect(node.querySelector('#root_child_child-button')).toHaveTextContent('Expand Cycle');
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'ui:CyclicSchemaExpandTemplate for "root_child_child" (child.child) is a React element rather than a ' +
+            'component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
     });
 
     describe('recursive definitions', () => {

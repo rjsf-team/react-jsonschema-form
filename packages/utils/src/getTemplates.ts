@@ -22,7 +22,7 @@ export default function getTemplates<
 >(
   registry: Registry<T, S, F>,
   uiOptions: UIOptionsType<T, S, F> = {},
-  warnSource?: TemplateWarnSource<T, S, F>,
+  warnSource?: TemplateWarnSource,
 ): Readonly<TemplatesType<T, S, F>> {
   // Every field and widget calls this on each render, so the registry's own map is returned as-is, without allocating,
   // unless an override actually applies
