@@ -41,7 +41,6 @@ import {
   getXxxOfOptions,
   isConstantSelect,
   isFormDataAvailable,
-  isSchemaFieldHidden,
   isSchemaObject,
   optionsList,
   orderProperties,
@@ -71,6 +70,7 @@ import {
   storedValue,
   withGlobalUiOptions,
 } from './fieldWidgetUtils.ts';
+import { isSchemaFieldHidden } from './SchemaField.tsx';
 import { useShownOptionBeside } from './ShownOptionContext.ts';
 
 /** The subscription of an object with no `$ref` cycle among its properties, whose expansions it has nothing to read */
@@ -559,12 +559,23 @@ export default function ObjectField<
             declaresProperty<S>(schemaProperties, property) ? property : ADDITIONAL_PROPERTIES_KEY,
           ),
           getByPath<T>(formData, property),
+          toFieldPath(property, fieldPath),
           registry,
           expanded.has(property),
         ),
       ),
     );
-  }, [rendersProperties, schema, schemaProperties, uiSchema, formData, registry, cycleProperties, expandedCycles]);
+  }, [
+    rendersProperties,
+    schema,
+    schemaProperties,
+    uiSchema,
+    formData,
+    fieldPath,
+    registry,
+    cycleProperties,
+    expandedCycles,
+  ]);
   let orderedProperties: string[] = [];
 
   /** Computes the next available key name from the `preferredKey`, indexing through the already existing keys until one

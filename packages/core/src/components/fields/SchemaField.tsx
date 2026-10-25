@@ -20,6 +20,7 @@ import type {
 import {
   ANY_OF_KEY,
   besideOptionsId,
+  expandRefCycle,
   fieldPathToList,
   getDeprecatedHandling,
   getDescribedControlAttributes,
@@ -42,7 +43,6 @@ import {
   isConstantSelect,
   isFormDataAvailable,
   isLabelledByTemplate,
-  isSchemaFieldHidden,
   logOnce,
   omitConsumedStyling,
   rendersOwnFieldBesideOption,
@@ -172,6 +172,121 @@ function inferSelectWidget<
         options.some((option) => toConstant<S>(option) === null) ||
         (Array.isArray(schema.type) && getSelectFieldType(schema.type) !== 'boolean')));
   return needsSelect ? 'select' : undefined;
+}
+
+/** Returns the `uiSchema` a field is rendered with: its resolved `uiSchema` with the widget inferred for its select, if
+ * any, written back. An inferred widget is only a default, so a widget the caller named through either spelling is
+ * written back unchanged. `ui:widget` is the key that carries it because that is where the inferred default has to
+ * land, and spreading leaves an existing key where the caller put it, so the order `getUiOptions()` reduces in — and
+ * with it `ui:widget` against `ui:options.widget` — is untouched either way.
+ *
+ * @param resolvedUiSchema - The field's `uiSchema`, as the field it names, if any, reads it
+ * @param inferredWidget - The widget `inferSelectWidget()` inferred, if any
+ * @param fields - The registered fields
+ * @returns - The `uiSchema` the field is rendered with
+ */
+function withInferredWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  resolvedUiSchema: UiSchema<T, S, F>,
+  inferredWidget: string | undefined,
+  fields: Registry<T, S, F>['fields'],
+): UiSchema<T, S, F> {
+  if (!inferredWidget) {
+    return resolvedUiSchema;
+  }
+  const rawUiField = lookUpUiField<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
+  // `BooleanField` is the only field the widget is ever inferred for, and the only one that reads it, so another field
+  // named through `ui:field` is handed the caller's `uiSchema` without a widget it never chose — which a field following
+  // `BooleanField`'s lead would otherwise render in place of its own default. A field named through `ui:options.field`
+  // still gets the widget, so one that wraps `BooleanField` keeps its select, as does whichever field renders in place of
+  // a `ui:field` that names nothing, as though none were given
+  if (isComponentType(rawUiField) && rawUiField !== fields.BooleanField) {
+    return resolvedUiSchema;
+  }
+  const callerWidget = resolvedUiSchema[UI_WIDGET_KEY] ?? resolvedUiSchema[UI_OPTIONS_KEY]?.widget;
+  return { ...resolvedUiSchema, [UI_WIDGET_KEY]: callerWidget ?? inferredWidget };
+}
+
+/** The last answer of `isSchemaFieldHidden()` per registry and schema object, with the uiSchema and data it was for */
+const lastHiddenAnswers = new WeakMap<
+  object,
+  WeakMap<object, { uiSchema: unknown; formData: unknown; hidden: boolean }>
+>();
+
+/** Tells whether the `SchemaField` rendered with `schema`, `uiSchema` and `formData` hides its field, for a container
+ * laying out a field it has not rendered yet, as `ObjectField` does for its `ObjectFieldTemplate`. It runs the steps
+ * `useSchemaFieldPlan()` resolves the field's widget and `deprecatedHandling` by, for a field nothing above it names,
+ * so the container agrees with the field's `FieldTemplate`. A `$ref` cycle renders an Expand button, which hides
+ * nothing, until it is expanded, and then the field one level further. The answer is kept per schema object for the
+ * uiSchema, data and registry it was given, so a field whose own inputs are unchanged is not resolved again
+ *
+ * @param schema - The field's schema, as handed to its `SchemaField`
+ * @param uiSchema - The field's uiSchema, as handed to its `SchemaField`
+ * @param formData - The field's data
+ * @param fieldPath - The field's path
+ * @param registry - The registry
+ * @param [expanded=false] - Whether the field is a `$ref` cycle the user has expanded
+ * @returns - True when the field renders hidden
+ */
+export function isSchemaFieldHidden<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  schema: S,
+  uiSchema: UiSchema<T, S, F> | undefined,
+  formData: T | undefined,
+  fieldPath: FieldPath,
+  registry: Registry<T, S, F>,
+  expanded = false,
+): boolean {
+  const isRefCycle = Boolean((schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+  if (isRefCycle && !expanded) {
+    return false;
+  }
+  // A boolean schema a cast got here is no key a `WeakMap` takes, so it is resolved uncached
+  const cacheable = typeof schema === 'object' && schema !== null;
+  let answers = cacheable ? lastHiddenAnswers.get(registry) : undefined;
+  const last = answers?.get(schema);
+  if (last && last.uiSchema === uiSchema && last.formData === formData) {
+    return last.hidden;
+  }
+  const { schemaUtils, globalUiOptions, globalFormOptions, fields } = registry;
+  const fieldSchema = isRefCycle ? expandRefCycle<S>(schema, schemaUtils.getRootSchema()) : schema;
+  const ownUiSchema = resolveUiSchema<T, S, F>(fieldSchema, uiSchema, registry);
+  let hidden = false;
+  // The field's widget is one its uiSchema names or a select's inferred default, never `'hidden'`, and only a `'hide'`
+  // handling reads `deprecated`, so a field neither can hide is answered without retrieving its schema
+  if (
+    ownUiSchema[UI_WIDGET_KEY] === 'hidden' ||
+    ownUiSchema[UI_OPTIONS_KEY]?.widget === 'hidden' ||
+    getUiOptions<T, S, F>(ownUiSchema, globalUiOptions).deprecatedHandling === 'hide'
+  ) {
+    const selectSchemaInfo = getSelectSchemaInfo<S>(schemaUtils.retrieveSchema(fieldSchema, formData));
+    const { uiSchema: resolvedUiSchema } = resolveNamedField<T, S, F>(
+      ownUiSchema,
+      selectSchemaInfo.schema.$id,
+      fields,
+      fieldPath,
+      globalFormOptions,
+    );
+    const inferredWidget = inferSelectWidget<T, S, F>(selectSchemaInfo, resolvedUiSchema);
+    const ownUiOptions = getUiOptions<T, S, F>(withInferredWidget<T, S, F>(resolvedUiSchema, inferredWidget, fields));
+    const uiOptions = { ...globalUiOptions, ...ownUiOptions };
+    hidden =
+      ownUiOptions.widget === 'hidden' || getDeprecatedHandling<T, S, F>(selectSchemaInfo.schema, uiOptions) === 'hide';
+  }
+  if (cacheable) {
+    if (!answers) {
+      answers = new WeakMap();
+      lastHiddenAnswers.set(registry, answers);
+    }
+    answers.set(schema, { uiSchema, formData, hidden });
+  }
+  return hidden;
 }
 
 const RenderNothing = () => null;
@@ -520,27 +635,11 @@ export function useSchemaFieldPlan<
     () => inferSelectWidget<T, S, F>(selectSchemaInfo, resolvedUiSchema),
     [selectSchemaInfo, resolvedUiSchema],
   );
-  // An inferred widget is only a default, so a widget the caller named through either spelling is written back
-  // unchanged. `ui:widget` is the key that carries it because that is where the inferred default has to land, and
-  // spreading leaves an existing key where the caller put it, so the order `getUiOptions()` reduces in — and with it
-  // `ui:widget` against `ui:options.widget` — is untouched either way.
   // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes
-  const uiSchema = useMemo(() => {
-    if (!inferredWidget) {
-      return resolvedUiSchema;
-    }
-    const rawUiField = lookUpUiField<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
-    // `BooleanField` is the only field the widget is ever inferred for, and the only one that reads it, so another
-    // field named through `ui:field` is handed the caller's `uiSchema` without a widget it never chose — which a field
-    // following `BooleanField`'s lead would otherwise render in place of its own default. A field named through
-    // `ui:options.field` still gets the widget, so one that wraps `BooleanField` keeps its select, as does whichever
-    // field renders in place of a `ui:field` that names nothing, as though none were given
-    if (isComponentType(rawUiField) && rawUiField !== fields.BooleanField) {
-      return resolvedUiSchema;
-    }
-    const callerWidget = resolvedUiSchema[UI_WIDGET_KEY] ?? resolvedUiSchema[UI_OPTIONS_KEY]?.widget;
-    return { ...resolvedUiSchema, [UI_WIDGET_KEY]: callerWidget ?? inferredWidget };
-  }, [inferredWidget, resolvedUiSchema, fields]);
+  const uiSchema = useMemo(
+    () => withInferredWidget<T, S, F>(resolvedUiSchema, inferredWidget, fields),
+    [inferredWidget, resolvedUiSchema, fields],
+  );
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
   const ownUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema), [uiSchema]);
@@ -584,8 +683,8 @@ export function useSchemaFieldPlan<
   // `ui:hideError` is resolved as the field's own, then the one the field above resolved to, so a parent's reaches its
   // children (#5490)
   const hideError = uiBooleanOption(ownUiOptions.hideError) ?? props.hideError;
-  // Resolved from the props as given, as the container laying the field out resolves it, so the two agree
-  const hidden = isSchemaFieldHidden<T, S, F>(_schema, _uiSchema, formData, registry);
+  // `isSchemaFieldHidden()` runs these same steps for a container laying the field out, so keep the two in step
+  const hidden = ownUiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
   const inheritedPresentation = useInheritedPresentation(fieldId);
   // The property name and the title a parent hands down label the field above, which a selected option or the fallback
   // UI's value renders the value of, so a field below with no title of its own isn't labelled by them a second time

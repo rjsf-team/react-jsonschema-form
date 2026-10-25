@@ -288,6 +288,18 @@ describe('ObjectField', () => {
       expect(screen.getByRole('button', { name: 'Expand Cycle' })).toBeVisible();
     });
 
+    it('should agree with FieldTemplate on hidden for a hidden widget a constant boolean select is written back', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { a: { oneOf: [{ const: true }, { const: false }] } } },
+        // `ui:widget` comes last, so only the caller's widget `SchemaField` writes back for the inferred select hides `a`
+        uiSchema: { a: { 'ui:options': { widget: 'hidden' }, 'ui:widget': undefined } },
+        templates: hiddenFlagTemplates,
+      });
+      expect(node.querySelector('[data-property="a"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('[data-field="root_a"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('input#root_a')).toHaveAttribute('type', 'hidden');
+    });
+
     it('should render a customized title', () => {
       const CustomTitleField = ({ title }: TitleFieldProps) => <div id='custom'>{title}</div>;
 

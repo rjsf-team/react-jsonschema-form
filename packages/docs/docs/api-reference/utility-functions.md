@@ -2315,25 +2315,6 @@ Unlike [isObject()](#isobject), class instances such as `Error` are not plain ob
 
 - boolean: True if it is a plain object, otherwise false. When true, `thing` is narrowed to `Record<string, unknown>`
 
-### isSchemaFieldHidden&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Tells whether the `SchemaField` rendered with `schema`, `uiSchema` and `formData` hides its field: through its own `ui:widget: 'hidden'`, as its `ui:definitions` entry resolves it, or a `deprecatedHandling` of `'hide'` (see [getDeprecatedHandling()](#getdeprecatedhandling)), read with the global UI options over the retrieved schema's `deprecated`.
-`SchemaField` hides its field by it, and `ObjectField` marks each property `hidden` in the `ObjectFieldTemplate` props by it, with the props it hands the property's `SchemaField`, so the two agree.
-A `$ref` cycle renders an Expand button, which hides nothing, until it is expanded, and then the field one level further.
-The answer is kept per schema object for the uiSchema, data and registry it was given, so a field whose own inputs are unchanged is not resolved again.
-
-#### Parameters
-
-- schema: S - The field's schema, as handed to `SchemaField`
-- uiSchema: UiSchema&lt;T, S, F> | undefined - The field's uiSchema, as handed to `SchemaField`
-- formData: T | undefined - The field's data
-- registry: Registry&lt;T, S, F> - The registry
-- [expanded=false]: boolean - Whether the field is a `$ref` cycle the user has expanded
-
-#### Returns
-
-- boolean: True when the field renders hidden
-
 ### isSchemaObject&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Narrows a schema definition, which the JSON Schema types also allow to be a boolean, and which can be absent, to the schema type the callers walk.
