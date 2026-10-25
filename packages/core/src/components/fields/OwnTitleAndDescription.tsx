@@ -15,15 +15,12 @@ export default function OwnTitleAndDescription<
   F extends FormContextType = FormContextType,
 >(props: Pick<FieldProps<T, S, F>, 'schema' | 'uiSchema' | 'registry' | 'presentation'> & { children?: ReactNode }) {
   const { schema, uiSchema, registry, presentation, children } = props;
-  if (!presentation) {
+  const drawsLabel = presentation?.label.by === 'self' && Boolean(presentation.label.text);
+  const drawsDescription = presentation?.description.by === 'self';
+  if (!presentation || (!drawsLabel && !drawsDescription)) {
     return <>{children}</>;
   }
   const { label, description } = presentation;
-  const drawsLabel = label.by === 'self' && Boolean(label.text);
-  const drawsDescription = description.by === 'self';
-  if (!drawsLabel && !drawsDescription) {
-    return <>{children}</>;
-  }
   const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions(uiSchema));
   const content = (
     <>
