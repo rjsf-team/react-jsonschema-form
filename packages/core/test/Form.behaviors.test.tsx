@@ -3381,3 +3381,35 @@ describe('dependencies/oneOf constraint violation produces validation errors on 
     expect(onError).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('a dependency oneOf none of whose options declares the dependency key (#5407)', () => {
+  it("starts a select over object constants on the option's const", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      default: { x: { a: 1 } },
+      properties: {
+        x: {
+          type: 'object',
+          title: 'X',
+          enum: [{ a: 1 }, { a: 2 }],
+          dependencies: { a: { oneOf: [{ const: { a: 2 } }] } },
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema });
+
+    expect(elementOf(node, '#root_x')).toHaveDisplayValue('{"a":2}');
+  });
+
+  it('renders the list as an ordinary oneOf, with its selector and the option it selects', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', title: 'A' } },
+      dependencies: { a: { oneOf: [{ properties: { b: { type: 'string', title: 'B' } } }] } },
+    };
+    const { node } = createFormComponent({ schema, initialFormData: { a: 'x' } });
+
+    expect(elementOf(node, '#root__oneof_select')).toHaveDisplayValue('Option 1');
+    expect(node.querySelector('#root_b')).toBeInTheDocument();
+  });
+});
