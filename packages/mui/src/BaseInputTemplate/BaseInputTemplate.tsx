@@ -26,7 +26,7 @@ import {
 } from '@rjsf/utils';
 
 import type { MuiSlotProps } from '../util.ts';
-import { describeByHelperText, getMuiProps, helperTextId, resolveSlotProps } from '../util.ts';
+import { describeByHelperText, getMuiProps, helperTextSlot, resolveSlotProps } from '../util.ts';
 
 type HtmlInputAttributes = React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
 
@@ -183,11 +183,11 @@ export default function BaseInputTemplate<
           input: inputProps,
           htmlInput: htmlInputProps,
           inputLabel: DisplayInputLabelProps,
-          formHelperText: (ownerState: TextFieldOwnerState) => ({
-            id: helperTextId(textFieldOverrides.id ?? id),
-            ...resolveSlotProps<FormHelperTextProps, TextFieldOwnerState>(slotProps?.formHelperText, ownerState),
-            ...resolveSlotProps(muiSlotProps?.formHelperText, ownerState),
-          }),
+          formHelperText: helperTextSlot<FormHelperTextProps, TextFieldOwnerState>(
+            textFieldOverrides.id ?? id,
+            slotProps?.formHelperText,
+            muiSlotProps?.formHelperText,
+          ),
         }}
         {...rest}
         value={value || value === 0 ? value : ''}

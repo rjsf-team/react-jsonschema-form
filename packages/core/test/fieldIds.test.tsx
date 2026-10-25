@@ -105,32 +105,41 @@ describe('field ids', () => {
     expect(duplicateIds(node)).toEqual([]);
   });
 
-  it('gives the properties an object option renders beside options of its own an id of their own', () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        pet: {
-          type: 'object',
-          title: 'Pet',
-          properties: { name: { type: 'string' } },
-          anyOf: [
-            {
-              title: 'A',
-              type: 'object',
-              properties: { kind: { type: 'string' } },
-              anyOf: [{ properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
-            },
-            { title: 'B', properties: { z: { type: 'string' } } },
-          ],
+  // The component beside the options is numbered by the selectors of either keyword above it, so an option offering
+  // options under the other keyword doesn't take the id of the one beside its field's
+  it.each<[string, 'anyOf' | 'oneOf', 'anyOf' | 'oneOf']>([
+    ['anyOf', 'anyOf', 'anyOf'],
+    ['oneOf', 'anyOf', 'oneOf'],
+    ['anyOf', 'oneOf', 'anyOf'],
+  ])(
+    'gives the properties an object option renders beside %s options of its own an id of their own, beneath %s',
+    (_, outer, inner) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          pet: {
+            type: 'object',
+            title: 'Pet',
+            properties: { name: { type: 'string' } },
+            [outer]: [
+              {
+                title: 'A',
+                type: 'object',
+                properties: { kind: { type: 'string' } },
+                [inner]: [{ properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+              },
+              { title: 'B', properties: { z: { type: 'string' } } },
+            ],
+          },
         },
-      },
-    };
-    const { node } = createFormComponent({ schema });
+      };
+      const { node } = createFormComponent({ schema });
 
-    expect(node.querySelectorAll('#root_pet__XxxOf')).toHaveLength(1);
-    expect(node.querySelectorAll('#root_pet__XxxOf2')).toHaveLength(1);
-    expect(duplicateIds(node)).toEqual([]);
-  });
+      expect(node.querySelectorAll('#root_pet__XxxOf')).toHaveLength(1);
+      expect(node.querySelectorAll('#root_pet__XxxOf2')).toHaveLength(1);
+      expect(duplicateIds(node)).toEqual([]);
+    },
+  );
 
   it('numbers a nested selector by the selectors above for the same keyword, at the same data path', () => {
     const schema: RJSFSchema = {

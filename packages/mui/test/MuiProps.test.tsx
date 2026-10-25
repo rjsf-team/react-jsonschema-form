@@ -1,4 +1,4 @@
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
@@ -298,6 +298,39 @@ describe('MUI Theme-Specific Props', () => {
 
     expect(screen.getByText('A hint')).toHaveClass('hint');
     expect(screen.getByRole(role)).toHaveAccessibleDescription('A hint');
+  });
+
+  // The control's `aria-describedby` names the helper text by the id the widget gives it, so an author's `id` can't
+  // replace it
+  it.each<[string, RJSFSchema, string, string]>([
+    ['text input', { type: 'string' }, 'textbox', 'slotProps'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox', 'rjsfSlotProps'],
+  ])(
+    'should describe a %s by its helper text when a form author gives the helper text an id',
+    (_, foo, role, slots) => {
+      const schema: RJSFSchema = { type: 'object', properties: { foo } };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:options': { mui: { helperText: 'A hint', [slots]: { formHelperText: { id: 'my-hint' } } } } },
+      };
+
+      render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+      expect(screen.getByRole(role)).toHaveAccessibleDescription('A hint');
+    },
+  );
+
+  it("should keep the formHelperText slot props a custom widget gives BaseInputTemplate as MUI's (ownerState) => props", () => {
+    function HintedWidget(props: WidgetProps) {
+      const { BaseInputTemplate } = props.registry.templates;
+      return <BaseInputTemplate {...props} slotProps={{ formHelperText: () => ({ className: 'hint' }) }} />;
+    }
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const uiSchema: UiSchema = { foo: { 'ui:widget': HintedWidget, 'ui:options': { mui: { helperText: 'A hint' } } } };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByText('A hint')).toHaveClass('hint');
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('A hint');
   });
 
   // The helper text's id is built from the `TextField`'s id, which an `id` in `ui:options.mui` replaces

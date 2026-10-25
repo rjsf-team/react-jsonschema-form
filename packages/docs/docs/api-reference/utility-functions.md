@@ -195,15 +195,16 @@ Otherwise, the string is wrapped by `Number()` and if that result is not `NaN`, 
 
 ### besideOptionsId()
 
-Return a consistent `id` for the component a field renders beside its `anyOf`/`oneOf` options, such as an object's own properties, whose selected option renders the field's own `id`
+Return a consistent `id` for the component a field renders beside its `anyOf`/`oneOf` options, such as an object's own properties, whose selected option renders the field's own `id`, numbered from the second on, so the component an option that is itself an `anyOf`/`oneOf` renders beside its own options has an id of its own
 
 #### Parameters
 
 - id: string - The id of the field
+- [depth=1]: number - How many option selectors of either keyword render `id`, this field's included: 2 beside the options of an `anyOf` or `oneOf` option beneath its field's own `anyOf` or `oneOf`, which takes `XxxOf2`
 
 #### Returns
 
-- string: The consistent id for the component rendered beside the options from the given `id`
+- string: The consistent id for the component rendered beside the options from the given `id` and `depth`
 
 ### bracketNameGenerator()
 

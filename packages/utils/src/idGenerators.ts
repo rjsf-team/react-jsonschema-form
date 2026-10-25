@@ -225,7 +225,7 @@ export function optionSelectorId(id: string, xxxOfKey: 'anyOf' | 'oneOf', depth 
  *
  * @param id - The id of the field
  * @param [depth=1] - How many option selectors of either keyword render `id`, this field's included: 2 beside the
- *        options of an `anyOf` option beneath its field's own `anyOf`, which takes `XxxOf2`
+ *        options of an `anyOf` or `oneOf` option beneath its field's own `anyOf` or `oneOf`, which takes `XxxOf2`
  * @returns - The consistent id for the component rendered beside the options from the given `id` and `depth`
  */
 export function besideOptionsId(id: string, depth = 1) {

@@ -107,16 +107,26 @@ const ID_ESCAPE = '-_';
 /** The escape an empty name is written as: no ASCII character has the code `FF`, so no character is written so */
 const EMPTY_NAME = `${ID_ESCAPE}FF`;
 
-/** Matches each character of a name that is written as an escape. Every ASCII character a CSS identifier can't hold
- * unescaped is, and of those it can hold:
- * - a `_` that begins or ends the name, or stands next to another `_`, since the `_` separator beside it would write
- *   the `__` that joins a field's id to the name of one of its parts;
- * - a `_` after a `-`, and a `-` that ends the name, since either would write the `-_` that starts an escape, the
- *   second with the `_` separator after it.
- * A character past ASCII is written as it is: a CSS identifier holds every one, and an id list such as
+/** Matches each ASCII character a CSS identifier can't hold unescaped, each `_`, which `writesUnderscore()` decides
+ * on, and a `-` that ends the name, since it would write the `-_` that starts an escape with the `_` separator after
+ * it. A character past ASCII is written as it is: a CSS identifier holds every one, and an id list such as
  * `aria-describedby` is split on ASCII whitespace only
  */
-const ID_ESCAPED = /[^A-Za-z0-9_\-\u0080-\uFFFF]|^_|_$|(?<=[_-])_|_(?=_)|-$/g;
+const ID_ESCAPED = /[^A-Za-z0-9\-\u0080-\uFFFF]|-$/g;
+
+/** Whether the `_` at `index` of `name` is written as it is. It is escaped where it begins or ends the name or stands
+ * next to another `_`, since the `_` separator beside it would write the `__` that joins a field's id to the name of
+ * one of its parts, and after a `-`, since it would write the `-_` that starts an escape. Decided here rather than by
+ * a lookbehind in `ID_ESCAPED`, which an engine without lookbehind, such as Safari before 16.4, fails to parse
+ *
+ * @param name - The property name
+ * @param index - The index of a `_` in `name`
+ * @returns - True when the `_` is written as it is
+ */
+function writesUnderscore(name: string, index: number) {
+  const before = name[index - 1];
+  return index > 0 && index < name.length - 1 && before !== '_' && before !== '-' && name[index + 1] !== '_';
+}
 
 /** Writes an ASCII character as an escape: `-_` and the two uppercase hex digits of its code, such as `-_20` for a
  * space
@@ -129,15 +139,19 @@ function escapeIdChar(char: string) {
 }
 
 /** Writes a property name as it appears in an id: a CSS identifier as it stands, so `#${id}` finds the element with no
- * escaping, that holds no `__`, and that no other name writes. A character `ID_ESCAPED` matches is written as
- * `escapeIdChar()` writes it, and an empty name as `-_FF`. The encoder writes `-_` nowhere else, so every `-_` starts
- * a three-character escape, and the name can be read back from the id
+ * escaping, that holds no `__`, and that no other name writes. A character `ID_ESCAPED` matches, other than a `_`
+ * `writesUnderscore()` keeps, is written as `escapeIdChar()` writes it, and an empty name as `-_FF`. The encoder
+ * writes `-_` nowhere else, so every `-_` starts a three-character escape, and the name can be read back from the id
  *
  * @param name - The property name
  * @returns - The name as it appears in an id
  */
 export function idSegment(name: string) {
-  return name === '' ? EMPTY_NAME : name.replace(ID_ESCAPED, escapeIdChar);
+  return name === ''
+    ? EMPTY_NAME
+    : name.replace(ID_ESCAPED, (char: string, index: number) =>
+        char === '_' && writesUnderscore(name, index) ? char : escapeIdChar(char),
+      );
 }
 
 /** Derives the HTML `id` for `fieldPath` from the `idPrefix` and `idSeparator` in `globalFormOptions`, writing each
