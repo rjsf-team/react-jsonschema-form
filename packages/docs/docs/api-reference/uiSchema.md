@@ -662,7 +662,7 @@ const uiSchema: UiSchema = {
 ```
 
 It orders the options of an `anyOf` or `oneOf` made entirely of constants the same way, naming each option by its constant.
-Options read through a discriminator or `ui:optionsSchemaSelector` keep their schema order.
+Options keep their schema order when any of them is read through a discriminator or `ui:optionsSchemaSelector`.
 A `ui:title` in `uiSchema.anyOf`/`uiSchema.oneOf` still names the option at its position in the schema, wherever the order shows it.
 
 ```tsx

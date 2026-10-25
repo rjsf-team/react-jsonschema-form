@@ -866,6 +866,23 @@ describe('optionsList()', () => {
         'Dog',
       ]);
     });
+    it('should reorder constants under a selector when none of them is read through it', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        discriminator: { propertyName: 'kind' },
+        oneOf: [
+          { const: { kind: 'cat' }, title: 'Cat' },
+          { const: { kind: 'dog' }, title: 'Dog' },
+        ],
+      };
+      const uiSchema = { 'ui:enumOrder': [{ kind: 'dog' }, '*'] } as unknown as UiSchema;
+      expect(optionsList(schema, uiSchema)?.map(({ label }) => label)).toEqual(['Dog', 'Cat']);
+    });
+    it('should find a null option by a typed null entry', () => {
+      const schema: RJSFSchema = { anyOf: [{ const: 'a' }, { const: 'b' }, { const: null, title: 'None' }] };
+      const uiSchema: UiSchema = { 'ui:enumOrder': [null, '*'] };
+      expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([null, 'a', 'b']);
+    });
   });
   describe('fallbackLabel', () => {
     const fallbackLabel = (value: unknown) => (value === true ? 'Yes' : undefined);

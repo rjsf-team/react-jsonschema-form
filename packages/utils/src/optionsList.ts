@@ -17,7 +17,7 @@ import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormCont
  */
 function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
   options: EnumOptionsType<S>[],
-  order: EnumValue[],
+  order: (EnumValue | null)[],
 ): EnumOptionsType<S>[] {
   // Built from the last option back, so the first of any options sharing a key is the one found
   const primitiveOptions = options.filter((opt) => !isContainerValue(opt.value)).reverse();
@@ -65,7 +65,7 @@ function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
  * from every option when they aren't all constants, and otherwise from each constant option that declares it
  *
  * Options that are all constants are reordered by the `ui:enumOrder` of the `uiSchema` as `enum` values are, unless
- * there is a selector
+ * any of them is read through a selector
  *
  * An option is labelled with the first of its names. One with no name is labelled by `fallbackLabel`, or with its value
  * (as JSON for an object or array) when there is no `fallbackLabel` or it returns `undefined`:
@@ -117,17 +117,16 @@ export default function optionsList<
   if (!isConstantList && !selectorField && altSchemas) {
     return undefined;
   }
+  // A selector names a property of object options, so a constant that doesn't declare it is read by its constant. An
+  // object constant that does keeps its property's value, which is what `LayoutMultiSchemaField` matches a pick by
+  const readsSelector = (aSchema: S) =>
+    !!selectorField && (!isConstantList || getByPath(aSchema[PROPERTIES_KEY], selectorField) !== undefined);
   const options = altSchemas?.map((aSchemaDef, index) => {
     const { title } = getUiOptions<T, S, F>(altUiSchemas?.[index]);
     const aSchema = aSchemaDef as S;
     let value: EnumOptionsType<S>['value'];
     let label = title;
-    // A selector names a property of object options, so a constant that doesn't declare it is read by its constant. An
-    // object constant that does keeps its property's value, which is what `LayoutMultiSchemaField` matches a pick by
-    const field =
-      selectorField && (!isConstantList || getByPath(aSchema[PROPERTIES_KEY], selectorField) !== undefined)
-        ? selectorField
-        : undefined;
+    const field = readsSelector(aSchema) ? selectorField : undefined;
     if (field) {
       const innerSchema = getPropertySchema<S>(aSchema, field);
       value = getByPath(innerSchema, DEFAULT_KEY, getByPath(innerSchema, CONST_KEY));
@@ -145,8 +144,11 @@ export default function optionsList<
   });
   // Constant options are each one value, as `enum` values are, so the order names them the same way. It is applied
   // after the labels are read, since `uiSchema.anyOf`/`uiSchema.oneOf` match options by their position in the schema.
-  // Without a selector, the options got this far only because they are all constants.
-  // shortcut: not applied under a selector, since `LayoutMultiSchemaField` reads an option's uiSchema at its position
-  // in this list; drop `!selectorField` once it looks the option up by its position in the schema instead
-  return options && !selectorField && enumOrder ? applyEnumOrder(options, enumOrder) : options;
+  // Options none of which is read through a selector got this far only because they are all constants.
+  // shortcut: not applied once an option is read through a selector, since `LayoutMultiSchemaField` reads an option's
+  // uiSchema at its position in this list; drop the `readsSelector` check once it looks the option up by its position
+  // in the schema instead
+  return options && enumOrder && !altSchemas?.some((option) => readsSelector(option as S))
+    ? applyEnumOrder(options, enumOrder)
+    : options;
 }
