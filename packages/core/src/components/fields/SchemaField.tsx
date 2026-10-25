@@ -700,10 +700,9 @@ export function useSchemaFieldPlan<
     !schemaUtils.canExpand(fieldSchema, fieldUiSchema, formData);
   const plannedAsOptions = fieldToRender?.isWithheld === true || isPureUnion;
   const renderedComponent = fieldToRender?.FieldComponent;
-  // The `SchemaField` that named the field hands it the field's own errors as `rawErrors`, taken out of its
-  // `errorSchema`, and that is how a named field passes them on to the field it renders
-  // oxlint-disable-next-line typescript/no-deprecated -- the one prop a named field hands the field's own errors on in
-  const ownErrors = framedAbove ? props.rawErrors : errorSchema?.__errors;
+  // The `SchemaField` that named the field takes its own errors out of the `errorSchema` it hands on, and passes them
+  // to the field framed inside its template through the context, whatever the named field does with its `rawErrors`
+  const ownErrors = framedAbove ? namedHere?.errors : errorSchema?.__errors;
   const { presentation, labelPlacement } = useSchemaFieldPresentation<T, S, F>({
     id: fieldId,
     // The parts the field draws itself render under its own id, unless it is planned as the field rendering the options
@@ -835,8 +834,12 @@ function SchemaFieldRender<
     [namedAbove, rendersNamedField, fieldPath, namedFieldAbove],
   );
   const namedFieldPath = useMemo<NamedFieldPath | undefined>(
-    () => (rendersNamedField ? { fieldPath, framedAbove: true, optionsRendered: hasOptions } : ownNamedFieldPath),
-    [rendersNamedField, fieldPath, hasOptions, ownNamedFieldPath],
+    () =>
+      rendersNamedField
+        ? // The options beside the named field hand its errors to the selected option, as its `rawErrors` leave them out
+          { fieldPath, framedAbove: true, optionsRendered: hasOptions, errors: hasOptions ? undefined : ownErrors }
+        : ownNamedFieldPath,
+    [rendersNamedField, fieldPath, hasOptions, ownErrors, ownNamedFieldPath],
   );
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the

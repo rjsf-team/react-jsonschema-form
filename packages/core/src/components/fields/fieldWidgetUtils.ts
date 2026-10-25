@@ -272,20 +272,25 @@ export function getFieldErrorProps<
   return { rawErrors };
 }
 
-/** Gets the deprecated `rawErrors` an array or object hands its container template, for one that doesn't read
- * `presentation`: the container's own error messages, whatever `ui:hideError` says, as a widget is handed them. The one
- * place a container template is handed them
+/** Gets the error props an array or object hands its container template: `hasErrors`, its own errors as `ui:hideError`
+ * leaves them, as `SchemaField` works out its `FieldTemplate`'s, and the deprecated `rawErrors`, for one that doesn't
+ * read `presentation`, the container's own error messages, whatever `ui:hideError` says, as a widget is handed them.
+ * The one place a container template is handed them
  *
  * @param rawErrors - The container's own error messages
- * @returns - The `rawErrors` for the container template
+ * @param hideError - Whether the container hides its errors
+ * @returns - The `hasErrors` and `rawErrors` for the container template
  */
 export function getContainerErrorProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(rawErrors: string[] | undefined): Pick<ContainerFieldTemplateProps<T, S, F>, 'rawErrors'> {
+>(
+  rawErrors: string[] | undefined,
+  hideError: boolean | undefined,
+): Pick<ContainerFieldTemplateProps<T, S, F>, 'hasErrors' | 'rawErrors'> {
   // oxlint-disable-next-line typescript/no-deprecated -- set for a container template that doesn't read `presentation`
-  return { rawErrors };
+  return { hasErrors: !hideError && (rawErrors?.length ?? 0) > 0, rawErrors };
 }
 
 /** Gets the parts of a field's plan its template draws, from which the deprecated props a template that doesn't read

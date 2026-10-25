@@ -963,7 +963,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     title: getContainerHeading<T[], S, F>(presentation, schema, uiOptions, uiOptions.title || fieldTitle),
     formData,
     errorSchema,
-    ...getContainerErrorProps<T[], S, F>(rawErrors),
+    ...getContainerErrorProps<T[], S, F>(rawErrors, hideError),
     registry,
     optionalDataControl,
   };
@@ -1098,7 +1098,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     uiSchema,
     title: getContainerHeading<T[], S, F>(presentation, schema, uiOptions, uiOptions.title || fieldTitle),
     errorSchema,
-    ...getContainerErrorProps<T[], S, F>(rawErrors),
+    ...getContainerErrorProps<T[], S, F>(rawErrors, hideError),
     optionalDataControl,
   };
 

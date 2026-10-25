@@ -1344,12 +1344,18 @@ export type ContainerFieldTemplateProps<
   required?: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
+  /** Whether the field shows its own errors, as `ui:hideError` leaves them. Beneath an `anyOf`/`oneOf` field it can
+   * differ from the plan's errors, which are the field above's where it shows them. A container rendered beside
+   * `anyOf`/`oneOf` options of its own leaves its errors to the selected option, so it is false there, while its
+   * `FieldTemplate`'s `hasErrors` isn't
+   */
+  hasErrors?: boolean;
   /** An array of strings listing the field's own errors, which its `errorSchema` doesn't hold. Unlike
    * `FieldTemplateProps.rawErrors`, it carries them whatever `hideError` says, as a widget's does
    * @deprecated Kept through v7 for a template rendered without a plan: read `getErrorsToDraw()` for the messages the
    *   template draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
-   *   `presentation.errors.by` is `'self'`, since the `FieldTemplate` draws them under `'template'`, and whether
-   *   `presentation.errors.messages` has any for an error state. `getErrorsToDraw()` falls back to this without a plan
+   *   `presentation.errors.by` is `'self'`, since the `FieldTemplate` draws them under `'template'`, and `hasErrors` for
+   *   an error state. `getErrorsToDraw()` falls back to this without a plan
    */
   rawErrors?: string[];
   /** A string value containing the title for the array */
