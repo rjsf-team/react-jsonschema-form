@@ -563,8 +563,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
   };
 
-  /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it */
-  const submitFromEvent = (event: SubmitEvent<HTMLFormElement>) => {
+  /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it, and returns what
+   * `onSubmit` returned
+   */
+  const submitFromEvent = (event: SubmitEvent<HTMLFormElement>): unknown => {
     event.preventDefault();
     // The event `submit()` dispatched stands in for this form's own submit, so an enclosing form does not get it too
     if (event.nativeEvent === dispatchedSubmit) {
@@ -573,32 +575,34 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // A detached form drops a submit event that still reaches it, such as one from a `<button form>` outside the
     // `<Activity>` that hides it, as it drops `submit()`
     if (isDetached || event.target !== event.currentTarget) {
-      return;
+      return undefined;
     }
     const props = committedProps;
     // oxlint-disable-next-line typescript/no-deprecated
     const { noValidate } = props;
     if (!noValidate && !runValidation(props, () => withExtraDataOmitted(props))) {
-      return;
+      return undefined;
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
     const committed = commit(settled((base) => applySubmit(base, props, withExtraDataOmitted(props))));
-    props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
+    return props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
   };
 
-  /** `submitFromEvent()`, with a throw from the submit `submit()` is running kept for `submit()` to throw */
-  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+  /** `submitFromEvent()`, with a throw from the submit `submit()` is running kept for `submit()` to throw. Returns what
+   * `onSubmit` returned, so the `Form` can keep the form pending while a promise it returned is
+   */
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>): unknown => {
     const running = submission;
     submission = undefined;
     if (!running) {
-      submitFromEvent(event);
-      return;
+      return submitFromEvent(event);
     }
     try {
-      submitFromEvent(event);
+      return submitFromEvent(event);
     } catch (error) {
       running.error = error;
       running.isThrown = true;
+      return undefined;
     }
   };
 

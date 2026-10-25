@@ -1,6 +1,8 @@
 import type { ElementType, ReactNode, Ref, SubmitEvent } from 'react';
 import {
   memo,
+  startTransition,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useInsertionEffect,
@@ -21,6 +23,7 @@ import type {
   RJSFSchema,
   RJSFValidationError,
   SchemaUtilsType,
+  SubmitButtonProps,
   TemplatesType,
   ThemePresentation,
   UiSchema,
@@ -30,6 +33,7 @@ import type {
   NameGeneratorFunction,
 } from '@rjsf/utils';
 import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI_OPTIONS_KEY } from '@rjsf/utils';
+import { useFormStatus } from 'react-dom';
 
 import isDevelopment from '../isDevelopment.ts';
 import NamedFieldContext from './fields/NamedFieldContext.ts';
@@ -134,7 +138,12 @@ export interface FormProps<
   onError?: (errors: RJSFValidationError[]) => void;
   /** You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted
    * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
-   * data you're usually after. The original event will also be passed as a second parameter
+   * data you're usually after. The original event will also be passed as a second parameter.
+   *
+   * When it returns a promise, the form is pending in React's form status until that promise settles: the submit button
+   * gets `pending` and `useFormStatus().pending` is true inside the form. A rejected promise is reported as an unhandled
+   * rejection, as one returned from any other event handler is. The return type stays `void`, which already takes a
+   * function returning a promise, where `void | Promise<void>` would reject a handler returning any other value
    */
   onSubmit?: (data: IChangeEvent<Uninferred<T>, S, F>, event: SubmitEvent<HTMLFormElement>) => void;
   /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
@@ -359,6 +368,28 @@ function Attachment({ attach }: { attach: () => () => void }) {
   return null;
 }
 
+/** Whether `value` is a promise, or any other thenable, that `onSubmit` returned */
+function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
+  return (
+    (typeof value === 'object' || typeof value === 'function') &&
+    value !== null &&
+    typeof Reflect.get(value, 'then') === 'function'
+  );
+}
+
+function ignore() {}
+
+/** The submit button, given whether the form is pending in React's form status. `useFormStatus()` reads the `<form>`
+ * above the component calling it, so it is read here, inside the form, rather than in `Form`
+ */
+function SubmitButtonWithStatus<T, S extends StrictRJSFSchema, F extends FormContextType>({
+  SubmitButton,
+  ...props
+}: SubmitButtonProps<T, S, F> & { SubmitButton: TemplatesType<T, S, F>['ButtonTemplates']['SubmitButton'] }) {
+  const { pending } = useFormStatus();
+  return <SubmitButton {...props} pending={pending} />;
+}
+
 /** The model holds the state; rendering derives from it and the props what to show, and each commit hands that back */
 function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FormProps<T, S, F>,
@@ -394,6 +425,23 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     }
   }, [model, formDataProp, initialFormData]);
   useImperativeHandle(ref, () => model.handle, [model]);
+  // A promise `onSubmit` returned keeps the form pending until it settles. React marks a submit whose default was
+  // prevented as pending when its event started a transition, and an async transition holds its lane until the promise
+  // it awaits settles. The rejection stays the caller's: the transition awaits a copy that ignores it, so it never
+  // reaches an Error Boundary, and a second copy that no one handles reports it as an unhandled rejection, as it was
+  // when the form ignored what `onSubmit` returned
+  const handleSubmit = useCallback(
+    (event: SubmitEvent<HTMLFormElement>) => {
+      const submitted = model.handleSubmit(event);
+      if (isPromiseLike(submitted)) {
+        submitted.then(ignore);
+        startTransition(async () => {
+          await submitted.then(ignore, ignore);
+        });
+      }
+    },
+    [model],
+  );
 
   const {
     children,
@@ -433,7 +481,10 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   // `children` replace the button, so there is none to build then
   const hasChildren = !!children;
   const submitButton = useMemo(
-    () => (hasChildren ? null : <SubmitButton uiSchema={submitUiSchema} registry={registry} />),
+    () =>
+      hasChildren ? null : (
+        <SubmitButtonWithStatus SubmitButton={SubmitButton} uiSchema={submitUiSchema} registry={registry} />
+      ),
     [hasChildren, SubmitButton, submitUiSchema, registry],
   );
 
@@ -468,7 +519,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         encType={enctype}
         acceptCharset={acceptCharset}
         noValidate={noHtml5Validate}
-        onSubmit={model.handleSubmit}
+        onSubmit={handleSubmit}
         ref={setFormElement}
       >
         <Handoff handOff={handOff} />

@@ -16,6 +16,8 @@ export { objectTests } from './objectTests.tsx';
 
 export { selectedOptionDescriptionTests } from './selectedOptionDescriptionTests.tsx';
 
+export { submitPendingTests } from './submitPendingTests.tsx';
+
 export { type GridRenderCustomOptions, gridTests } from './gridTests.tsx';
 
 export { type ThemeGenerators, themeTests } from './themeTests.ts';

@@ -756,6 +756,10 @@ render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, docum
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
 
+When `onSubmit` returns a promise, the form is pending until that promise settles: the submit button gets `pending` and disables itself, and `useFormStatus().pending` is `true` inside the form.
+A rejected promise is reported as an unhandled rejection, so catch errors inside `onSubmit`.
+See [Submitting](../usage/submitting.md), which also shows how to dispatch a `useActionState` action from `onSubmit`.
+
 ## presentation
 
 A `ThemePresentation` declaring which parts of a field (its label, description, errors and help) the fields and widgets you register draw themselves, under the keys you register them by, plus a `default` for every part its own entry for a widget leaves out, which overrides the theme's and `@rjsf/core`'s declarations of those parts, and a `fieldDefault` for every part a field's merged entry leaves out.

@@ -1599,6 +1599,11 @@ export interface SubmitButtonProps<
   readonly uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
   readonly registry: Registry<T, S, F>;
+  /** Whether the form is pending in React's form status, such as while a promise `onSubmit` returned has yet to
+   * settle. The `Form` reads it with `useFormStatus()`, so a button that disables itself while it is set can't submit the
+   * form a second time meanwhile
+   */
+  readonly pending?: boolean;
 }
 
 /** The type that defines the props for an Icon button, extending from a basic HTML button attributes */

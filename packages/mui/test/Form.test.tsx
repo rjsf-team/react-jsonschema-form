@@ -1,7 +1,13 @@
 import Switch from '@mui/material/Switch';
 import { withTheme } from '@rjsf/core';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
+import {
+  checkboxLabelTests,
+  fallbackDescriptionTests,
+  formTests,
+  submitPendingTests,
+  themeTests,
+} from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -952,3 +958,4 @@ describe('mui CheckboxWidget required attribute', () => {
 
 checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'self' });
 fallbackDescriptionTests(Form, false);
+submitPendingTests(Form);

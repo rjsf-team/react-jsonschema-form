@@ -1,6 +1,12 @@
 import { MantineProvider, Switch } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
+import {
+  checkboxLabelTests,
+  fallbackDescriptionTests,
+  formTests,
+  submitPendingTests,
+  themeTests,
+} from '@rjsf/snapshot-tests';
 import type { ArrayFieldItemTemplateProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -616,3 +622,4 @@ describe('mantine CheckboxWidget required attribute', () => {
 
 checkboxLabelTests(WrappedForm, { generateTemplates, generateWidgets, descriptionBy: 'self' });
 fallbackDescriptionTests(WrappedForm, true);
+submitPendingTests(WrappedForm);

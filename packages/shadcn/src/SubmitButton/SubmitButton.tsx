@@ -17,7 +17,12 @@ export default function SubmitButton<
   }
   return (
     <div>
-      <Button type='submit' {...submitButtonProps} className={cn('my-2', submitButtonProps?.className)}>
+      <Button
+        type='submit'
+        {...submitButtonProps}
+        disabled={props.pending || submitButtonProps?.disabled}
+        className={cn('my-2', submitButtonProps?.className)}
+      >
         {submitText}
       </Button>
     </div>

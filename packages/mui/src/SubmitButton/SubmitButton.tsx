@@ -24,7 +24,7 @@ export default function SubmitButton<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ uiSchema }: SubmitButtonProps<T, S, F>) {
+>({ uiSchema, pending }: SubmitButtonProps<T, S, F>) {
   const { submitText, norender, props: submitButtonProps = {} } = getSubmitButtonOptions<T, S, F>(uiSchema);
   if (norender) {
     return null;
@@ -37,6 +37,8 @@ export default function SubmitButton<
     F,
     SubmitButtonMuiProps
   >(uiOptions);
+  // The button takes the `disabled` of whichever of these props it is spread from last, and `pending` adds to it
+  const disabledByProps: unknown = { ...submitButtonProps, ...otherMuiProps, ...submitButton }.disabled;
 
   return (
     <Box {...submitBox} sx={computeSxProps<BoxProps>({ mt: 3 }, submitBox)}>
@@ -47,6 +49,7 @@ export default function SubmitButton<
         {...submitButtonProps}
         {...otherMuiProps}
         {...submitButton}
+        disabled={pending || Boolean(disabledByProps)}
       >
         {submitText}
       </Button>
