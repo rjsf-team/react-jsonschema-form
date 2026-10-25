@@ -18,11 +18,10 @@ export default function AddButton<
   F extends FormContextType = FormContextType,
 >({ uiSchema, registry, className, ...props }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
+  // Core's array and object templates render it straight into their fieldset, so it aligns itself to the end
   return (
-    <div className='p-0 m-0'>
-      <Button {...props} className={cn('w-fit gap-2', className)} variant='outline' type='button'>
-        <PlusCircle size={16} /> {translateString(TranslatableString.AddItemButton)}
-      </Button>
-    </div>
+    <Button {...props} className={cn('mt-2 ml-auto flex w-fit gap-2', className)} variant='outline' type='button'>
+      <PlusCircle size={16} /> {translateString(TranslatableString.AddItemButton)}
+    </Button>
   );
 }

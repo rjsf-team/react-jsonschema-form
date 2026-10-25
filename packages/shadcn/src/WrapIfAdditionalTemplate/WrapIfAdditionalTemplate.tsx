@@ -9,6 +9,7 @@ import {
 
 import { Input } from '../components/ui/input.tsx';
 import { Separator } from '../components/ui/separator.tsx';
+import { cn } from '../lib/utils.ts';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -32,7 +33,6 @@ export default function WrapIfAdditionalTemplate<
     onKeyRename,
     onKeyRenameBlur,
     propertyNamesEnum,
-    rawDescription,
     readonly,
     required,
     schema,
@@ -49,19 +49,17 @@ export default function WrapIfAdditionalTemplate<
 
   if (!additional) {
     return (
-      <div className={classNames} style={style}>
+      <div className={cn('flex flex-col gap-2', classNames)} style={style}>
         {children}
       </div>
     );
   }
 
-  const marginDesc = rawDescription ? -28 : 0;
-  const margin = hasKeyLabel ? 22 + marginDesc : 0;
   const keyId = `${id}-key`;
 
   return (
     <>
-      <div className={`grid grid-cols-12 col-span-12 items-center gap-2 ${classNames ?? ''}`.trim()} style={style}>
+      <div className={cn('grid grid-cols-12 col-span-12 items-end gap-2', classNames)} style={style}>
         <div className='grid gap-2 col-span-5'>
           <div className='flex flex-col gap-2'>
             {hasKeyLabel && (
@@ -99,15 +97,10 @@ export default function WrapIfAdditionalTemplate<
                 />
               )}
             </div>
-            {!!rawDescription && (
-              <span className='text-xs font-medium text-muted-foreground'>
-                <div className='text-sm text-muted-foreground'>&nbsp;</div>
-              </span>
-            )}
           </div>
         </div>
         <div className='grid gap-2 col-span-6 pr-0.5'>{children}</div>
-        <div className='grid gap-2 col-span-1' style={{ marginTop: `${margin}px` }}>
+        <div className='grid gap-2 col-span-1'>
           <RemoveButton
             id={buttonId(id, 'remove')}
             iconType='block'
