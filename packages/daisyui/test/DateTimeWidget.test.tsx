@@ -554,6 +554,51 @@ describe('DateTimeWidget', () => {
       // Above the trigger and inside the right edge, as in the 1024 by 768 viewport of a standards-mode document
       expect(popup()).toHaveStyle({ top: '175px', left: '604px', maxHeight: '768px' });
     });
+
+    /** Shrinks and moves the visual viewport inside the 1024 by 768 client box, which stays as it was, as an on-screen
+     * keyboard or a pinch zoom does. jsdom has no visual viewport at all
+     */
+    function stubVisualViewport(viewport: { offsetTop: number; offsetLeft: number; width: number; height: number }) {
+      const win = document.defaultView!;
+      Object.defineProperty(win, 'visualViewport', { value: viewport, configurable: true });
+      onTestFinished(() => {
+        Reflect.deleteProperty(win, 'visualViewport');
+      });
+    }
+
+    test('above an on-screen keyboard, which shrinks only the visual viewport', async () => {
+      stubVisualViewport({ offsetTop: 0, offsetLeft: 0, width: 1024, height: 400 });
+      const trigger = renderAt({ top: 100, left: 10 });
+      sizeElements(320, 400);
+
+      await user.click(trigger);
+
+      // Scrolling within the 400px above the keyboard, from the top, so Done ends where the keyboard starts rather
+      // than at 525px behind it
+      expect(popup()).toHaveStyle({ top: '0px', maxHeight: '400px' });
+    });
+
+    test.each([
+      ['below its trigger, inside its right edge by its own width', { top: 250, left: 700 }, 200, '275px', '472px'],
+      ['above its trigger where it would run off its bottom', { top: 500, left: 400 }, 200, '295px', '400px'],
+      ['as low as it fits whole where it fits neither below nor above', { top: 380, left: 400 }, 350, '234px', '400px'],
+      [
+        'at its top left corner where the trigger is above and left of it',
+        { top: 100, left: 100 },
+        200,
+        '200px',
+        '300px',
+      ],
+    ])('inside the visual viewport a pinch zoom moved, %s', async (_, rect, height, top, left) => {
+      // The part from (300, 200) to (812, 584) of the client box
+      stubVisualViewport({ offsetTop: 200, offsetLeft: 300, width: 512, height: 384 });
+      const trigger = renderAt(rect);
+      sizeElements(320, height);
+
+      await user.click(trigger);
+
+      expect(popup()).toHaveStyle({ top, left, maxHeight: '384px' });
+    });
   });
 
   test("translates the Done button and the time input's label", async () => {

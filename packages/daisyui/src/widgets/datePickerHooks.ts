@@ -428,20 +428,26 @@ export function useDatePicker<V>({
     // whole page, the body's. Told by `compatMode` rather than `scrollingElement`, which is null in a quirks-mode
     // document whose body scrolls
     const doc = documentOf(trigger);
-    const viewport = doc.compatMode === 'BackCompat' ? doc.body : doc.documentElement;
+    const client = doc.compatMode === 'BackCompat' ? doc.body : doc.documentElement;
     const place = () => {
+      // Of that box, the part the user sees: an on-screen keyboard, by default in Chrome on Android, or a pinch zoom
+      // shrinks and moves only the visual viewport, leaving the client box the popup is fixed in as it was
+      const visual = win.visualViewport;
+      const viewTop = Math.max(0, visual?.offsetTop ?? 0);
+      const viewLeft = Math.max(0, visual?.offsetLeft ?? 0);
+      const viewBottom = Math.min(client.clientHeight, visual ? visual.offsetTop + visual.height : Infinity);
+      const viewRight = Math.min(client.clientWidth, visual ? visual.offsetLeft + visual.width : Infinity);
       // Not `100vh`, which takes in a horizontal scrollbar along the bottom of the viewport
-      popup.style.maxHeight = `${viewport.clientHeight}px`;
+      popup.style.maxHeight = `${viewBottom - viewTop}px`;
       const { top, bottom, left } = trigger.getBoundingClientRect();
       const { offsetWidth: width, offsetHeight: height } = popup;
-      const below = bottom + 5;
       const above = top - 5 - height;
-      let y = below;
-      if (below + height > viewport.clientHeight) {
-        y = above >= 0 ? above : Math.max(0, viewport.clientHeight - height);
+      let y = Math.max(viewTop, bottom + 5);
+      if (y + height > viewBottom) {
+        y = above >= viewTop ? above : Math.max(viewTop, viewBottom - height);
       }
       // A 20px gutter at the right edge, narrowed to whatever room is left by a popup about as wide as the viewport
-      const x = Math.max(0, Math.min(left, viewport.clientWidth - 20 - width));
+      const x = Math.max(viewLeft, Math.min(left, viewRight - 20 - width));
       popup.style.top = `${y}px`;
       popup.style.left = `${x}px`;
     };
