@@ -8,7 +8,8 @@ const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string
 
 /** Pins that the theme's `SubmitButton` is `aria-disabled` while a promise `onSubmit` returned is pending, and stays
  * enabled so a keyboard user keeps focus on it, that it takes no click meanwhile though an `onClick` the uiSchema sets
- * still runs, and that a `disabled` the uiSchema asks for still applies when nothing is pending
+ * still runs and the click counts as a submit attempt, and that a `disabled` the uiSchema asks for still applies when
+ * nothing is pending
  *
  * @param Form - The theme's `Form` component
  */
@@ -98,6 +99,22 @@ export function submitPendingTests(Form: ComponentType<FormProps>) {
       expect(onSubmit).toHaveBeenCalledTimes(1);
       save.resolve(undefined);
       await waitFor(() => expectIdle(button));
+    });
+
+    test('counts a click it cancels while the promise is pending as a submit attempt', async () => {
+      const save = Promise.withResolvers<undefined>();
+      const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+      render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />);
+      const button = screen.getByRole('button', { name: 'Submit' });
+      act(() => button.click());
+
+      act(() => button.click());
+      save.resolve(undefined);
+      await waitFor(() => expectIdle(button));
+      act(() => button.click());
+
+      expect(onSubmit).toHaveBeenCalledTimes(2);
+      expect(onSubmit.mock.lastCall?.[0]).toMatchObject({ submitCount: 3 });
     });
 
     test('stays disabled when the uiSchema disables it and nothing is pending', () => {
