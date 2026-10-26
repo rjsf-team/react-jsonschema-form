@@ -9,7 +9,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 
 ## @rjsf/core
 
-- Avoided retrieving a schema for a visible deprecated field whose `uiSchema` overrides the global `deprecatedHandling`, fixing [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507)
 - Updated `markdown-to-jsx` from `^9.8.2` to `^9.10.3` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
 - Fixed `Form` failing validation with `must be boolean` (or the matching type error) when the root `formData` is a falsy value such as `false`, `0` or `''`. Only `undefined` is now treated as missing before validating, fixing [#5404](https://github.com/rjsf-team/react-jsonschema-form/issues/5404)
 
