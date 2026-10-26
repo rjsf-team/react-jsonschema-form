@@ -1,7 +1,7 @@
 import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
-import { SHADCN_CLASS_MAP } from '../classMap.ts';
+import { generateClassMap } from '../classMap.ts';
 import { createTemplates } from '../Templates/index.ts';
 import { createWidgets } from '../Widgets/index.ts';
 
@@ -17,7 +17,7 @@ function createTheme() {
     templates: createTemplates(),
     widgets: createWidgets(),
     presentation: createPresentation(),
-    classMap: { ...SHADCN_CLASS_MAP },
+    classMap: generateClassMap(),
   };
 }
 

@@ -1,4 +1,4 @@
-import { generateTemplates as coreTemplates } from '@rjsf/core';
+import { generateTemplates as coreTemplates, withTheme } from '@rjsf/core';
 import {
   checkboxLabelTests,
   fallbackDescriptionTests,
@@ -16,7 +16,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
-import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import Form, { generateClassMap, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 const user = userEvent.setup();
@@ -39,6 +39,26 @@ function expectReferencesResolve(container: HTMLElement) {
 
 formTests(Form);
 themeTests({ generateTemplates, generateTheme, generateWidgets });
+
+describe('generateClassMap()', () => {
+  test('is the class map generateTheme() carries, a fresh copy on every call', () => {
+    expect(generateClassMap()).toEqual(generateTheme().classMap);
+    expect(generateClassMap()).not.toBe(generateClassMap());
+  });
+
+  test("styles core's templates in a Form put together from the theme's templates and widgets", () => {
+    const Composed = withTheme({
+      templates: generateTemplates(),
+      widgets: generateWidgets(),
+      classMap: generateClassMap(),
+    });
+    render(
+      <Composed schema={{ type: 'object', properties: { a: { type: 'string', title: 'A' } } }} validator={validator} />,
+    );
+
+    expect(screen.getByText('A').closest('label')).toHaveClass('text-sm', 'font-medium');
+  });
+});
 
 describe('a checkbox whose presentation gives its label and description to the template', () => {
   test('draws each once, from the template', () => {

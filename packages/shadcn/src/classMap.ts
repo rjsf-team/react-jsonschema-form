@@ -4,7 +4,7 @@ import type { ClassMap } from '@rjsf/utils';
  * destructive by a `data-invalid:` variant on the attribute core sets while the field shows its own errors, which
  * out-specifies their base color
  */
-export const SHADCN_CLASS_MAP: ClassMap = {
+const SHADCN_CLASS_MAP: ClassMap = {
   fieldLabel:
     'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive',
   fieldDescription: 'text-sm text-muted-foreground data-invalid:text-destructive',
@@ -22,3 +22,10 @@ export const SHADCN_CLASS_MAP: ClassMap = {
   arrayItemToolbox: 'flex gap-2',
   objectFieldset: 'flex min-w-0 flex-col gap-2',
 };
+
+/** The theme's class map, a fresh copy on every call, for a `Form` put together from the theme's templates and widgets
+ * rather than `generateTheme()`, which passes it as its `classMap`
+ */
+export function generateClassMap(): ClassMap {
+  return { ...SHADCN_CLASS_MAP };
+}
