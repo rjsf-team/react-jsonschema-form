@@ -3,6 +3,7 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   AdditionalPropertyKeySelect,
   buttonId,
+  getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
   TranslatableString,
 } from '@rjsf/utils';
@@ -22,6 +23,8 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     disabled,
+    // Kept out of the props this spreads onto the element
+    hasErrors,
     id,
     label,
     keyName,
@@ -36,12 +39,14 @@ export default function WrapIfAdditionalTemplate<
     onKeyRenameBlur,
     onRemoveProperty,
     propertyNamesEnum,
+    keyNotAllowed,
     rawDescription,
     registry,
     ...rest
   } = props;
   // The key is labelled wherever the value's label is drawn, by the template or the value's own component
   const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
 
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const { templates, translateString } = registry;
@@ -70,6 +75,7 @@ export default function WrapIfAdditionalTemplate<
           )}
           {propertyNamesEnum ? (
             <AdditionalPropertyKeySelect<T, S, F>
+              errorAttributes={keyAttributes}
               id={`${id}-key`}
               label={keyLabel}
               hideLabel
@@ -89,6 +95,7 @@ export default function WrapIfAdditionalTemplate<
               className='input input-bordered'
               id={`${id}-key`}
               aria-label={hasKeyLabel ? undefined : keyLabel}
+              {...keyAttributes}
               onBlur={onKeyRenameBlur}
               defaultValue={keyName}
               disabled={disabled || readonly}

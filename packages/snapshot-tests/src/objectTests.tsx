@@ -124,6 +124,17 @@ export function objectTests(Form: ComponentType<FormProps>) {
       const { asFragment } = render(<Form schema={schema} validator={validator} initialFormData={{ foo: 'foo' }} />);
       expect(asFragment()).toMatchSnapshot();
     });
+    test('patternProperties, a key additionalProperties false forbids', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        patternProperties: { '^[a-z][a-zA-Z]+$': { type: 'string' } },
+        additionalProperties: false,
+      };
+      const { asFragment } = render(
+        <Form schema={schema} validator={validator} initialFormData={{ abc: 'hello', a: 'forbidden' }} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
+    });
     test('deprecated additionalProperties, propertyNames enum', async () => {
       // `deprecatedHandling` defaults to `label`, so every theme's key control has to take the key from `keyName`
       // rather than from the decorated `label` to keep reading, and renaming, the real key

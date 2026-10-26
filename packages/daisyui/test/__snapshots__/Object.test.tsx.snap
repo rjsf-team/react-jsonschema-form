@@ -3296,7 +3296,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         class="dropdown w-full"
                       >
                         <button
-                          aria-controls="_r_11_"
+                          aria-controls="_r_17_"
                           aria-expanded="false"
                           aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
@@ -3319,7 +3319,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                          id="_r_11_"
+                          id="_r_17_"
                           role="listbox"
                         >
                           <li
@@ -3603,6 +3603,254 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > patternProperties, a key additionalProperties false forbids 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-object"
+    >
+      <div
+        class="field-template mb-3"
+      >
+        <div
+          class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+        >
+          <div
+            class="grid grid-cols-1 gap-4 "
+          >
+            <div
+              class=""
+            >
+              <div
+                class="wrap-if-additional-template rjsf-field rjsf-field-string"
+              >
+                <div
+                  class="flex items-baseline"
+                  style="justify-content: space-between;"
+                >
+                  <div>
+                    <label
+                      class="label"
+                      for="root_abc-key"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        abc Key
+                      </span>
+                    </label>
+                    <input
+                      class="input input-bordered"
+                      id="root_abc-key"
+                      type="text"
+                      value="abc"
+                    />
+                  </div>
+                  <div
+                    class="field-template mb-3"
+                  >
+                    <label
+                      class="label"
+                      for="root_abc"
+                    >
+                      <span
+                        class="label-text font-medium"
+                      >
+                        <span
+                          id="root_abc__label"
+                        >
+                          abc
+                        </span>
+                      </span>
+                    </label>
+                    <div
+                      class="form-control"
+                    >
+                      <div
+                        style="position: relative;"
+                      >
+                        <input
+                          class="input input-bordered w-full"
+                          id="root_abc"
+                          name="root_abc"
+                          placeholder=""
+                          type="text"
+                          value="hello"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="flex self-start"
+                    style="margin-top: 32px;"
+                  >
+                    <button
+                      aria-label="Remove"
+                      class="rjsf-object-property-remove"
+                      id="root_abc__remove"
+                      title="Remove"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class=""
+            >
+              <div
+                class="wrap-if-additional-template rjsf-field rjsf-field-null rjsf-field-error"
+              >
+                <div
+                  class="flex items-baseline"
+                  style="justify-content: space-between;"
+                >
+                  <div>
+                    <label
+                      class="label"
+                      for="root_a-key"
+                    >
+                      <span
+                        class="label-text"
+                      >
+                        a Key
+                      </span>
+                    </label>
+                    <input
+                      aria-describedby="root_a__error"
+                      aria-invalid="true"
+                      class="input input-bordered"
+                      id="root_a-key"
+                      type="text"
+                      value="a"
+                    />
+                  </div>
+                  <div
+                    class="field-template mb-3"
+                  >
+                    <div
+                      class="title-field mb-6"
+                    >
+                      <h2
+                        class="text-3xl font-bold text-primary mb-2"
+                      >
+                        <span
+                          id="root_a__title"
+                        >
+                          a
+                        </span>
+                      </h2>
+                      <div
+                        class="divider divider-primary my-0"
+                      />
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                      id="root_a__error"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      >
+                        <li>
+                          The key "a" is not allowed here
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div
+                    class="flex self-start"
+                    style="margin-top: 32px;"
+                  >
+                    <button
+                      aria-label="Remove"
+                      class="rjsf-object-property-remove"
+                      id="root_a__remove"
+                      title="Remove"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="flex justify-end"
+            >
+              <div
+                class="row"
+              >
+                <p
+                  class="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand btn btn-primary btn-sm"
+                >
+                  <button
+                    aria-label="Add"
+                    class="btn-add col-xs-12 btn-primary btn-primary-content"
+                    id="root__add"
+                    title="Add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="svg-inline--fa fa-plus h-5 w-5"
+                      data-icon="plus"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
 <DocumentFragment>
   <form
@@ -3640,7 +3888,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                 class="dropdown w-full"
               >
                 <button
-                  aria-controls="_r_1a_"
+                  aria-controls="_r_1g_"
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-labelledby="root__label"
@@ -3664,7 +3912,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                 </button>
                 <ul
                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
-                  id="_r_1a_"
+                  id="_r_1g_"
                   role="listbox"
                 >
                   <li
