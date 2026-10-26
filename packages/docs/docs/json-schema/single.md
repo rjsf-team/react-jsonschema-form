@@ -153,7 +153,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 ### Ordering `enum` fields
 
-To control the display order of enum options, use `ui:enumOrder`. Use `'*'` to represent all remaining values in their original schema order. Unlisted values not covered by `'*'` are dropped.
+To control the display order of enum options, use `ui:enumOrder`. Use `'*'` to represent all remaining values in their original schema order. Unlisted values not covered by `'*'` are dropped. It orders the options of an `anyOf`/`oneOf` made of constants by their constants in the same way.
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';

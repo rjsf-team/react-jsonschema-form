@@ -135,7 +135,8 @@ function placeText<Text>(
  *   field above already shows is `above`, as is a part with no text under a field above that shows one; text of its
  *   own takes `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the id it would take,
  *   numbered by how many fields above show text of their own, so each level's own text has an id of its own.
- * - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
+ * - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws,
+ *   unless it hides them while this field shows its own, which this field then draws.
  * - A part the field's own component draws takes its ids from `componentId`, the id that component renders under beside
  *   the field's `anyOf`/`oneOf` options, and a part the template draws from `id`.
  * - The control is described by the parts that render, here or above, and is `aria-invalid` whenever errors show.
@@ -214,11 +215,14 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     plansAbove.map((plan) => plan.help),
   );
 
-  const { messages, id: errorsId } = inherited?.errors ?? {
+  // A field above showing errors draws them for both; otherwise this field draws its own, so a control marked invalid
+  // has the message it is described by
+  const errorsAbove = inherited?.errors.messages.length ? inherited.errors : undefined;
+  const { messages, id: errorsId } = errorsAbove ?? {
     messages: hideError ? NONE : errors,
     id: errorId(partId(declaration.errors)),
   };
-  const errorsBy = inherited ? 'above' : declaration.errors;
+  const errorsBy = errorsAbove ? 'above' : declaration.errors;
   const errorsPlan: FieldPresentation['errors'] = {
     messages,
     by: messages.length > 0 ? errorsBy : 'none',

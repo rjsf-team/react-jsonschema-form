@@ -1,13 +1,21 @@
 import { getTestRegistry } from '@rjsf/core/testing';
-import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
+import {
+  checkboxLabelTests,
+  fallbackDescriptionTests,
+  formTests,
+  optionErrorStateTests,
+  themeTests,
+  wrapIfAdditionalErrorStateTests,
+} from '@rjsf/snapshot-tests';
 import type { ErrorSchema, FieldProps, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
+import { errorId, fieldLabelId, helpId, optionHelpId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { ConfigProvider, theme } from 'antd';
 
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import FieldTemplate from '../src/templates/FieldTemplate/index.tsx';
 import CheckboxWidget from '../src/widgets/CheckboxWidget/index.tsx';
 
 const user = userEvent.setup();
@@ -1177,3 +1185,67 @@ describe("antd marks a deprecated field's label, as core does", () => {
 
 checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'template' });
 fallbackDescriptionTests(Form, false);
+
+optionErrorStateTests(Form, (container) =>
+  container
+    .querySelector('label[for="root"]')
+    ?.closest('.ant-form-item')
+    ?.classList.contains('ant-form-item-has-error'),
+);
+
+// A custom field that renders the theme's `FieldTemplate` itself, as v6 custom fields did, may hand it the deprecated
+// `rawErrors` without `hasErrors`: the messages still show, while only `hasErrors` gives the field its error status
+describe("antd's FieldTemplate rendered by hand", () => {
+  function renderByHand(errorProps: { hasErrors?: boolean; rawErrors?: string[]; hideError?: boolean }) {
+    return render(
+      <FieldTemplate
+        id='root_name'
+        fieldPath={toFieldPath('name')}
+        label='Name'
+        keyName='name'
+        schema={{ type: 'string' }}
+        registry={getTestRegistry({}, {}, generateTemplates())}
+        errors={<div>bad name</div>}
+        readonly={false}
+        disabled={false}
+        hasErrors={false}
+        required={false}
+        onChange={vi.fn()}
+        onKeyRename={vi.fn()}
+        onKeyRenameBlur={vi.fn()}
+        onRemoveProperty={vi.fn()}
+        {...errorProps}
+      >
+        <input id='root_name' />
+      </FieldTemplate>,
+    );
+  }
+
+  test('shows the messages it is handed with rawErrors alone, without the error status', () => {
+    const { container } = renderByHand({ rawErrors: ['bad name'] });
+
+    expect(screen.getByText('bad name')).toBeInTheDocument();
+    expect(container.querySelector('.ant-form-item-has-error')).toBeNull();
+  });
+
+  test('gives the field its error status with hasErrors', () => {
+    const { container } = renderByHand({ hasErrors: true });
+
+    expect(screen.getByText('bad name')).toBeInTheDocument();
+    expect(container.querySelector('.ant-form-item-has-error')).toBeInTheDocument();
+  });
+
+  test('shows no messages with neither', () => {
+    renderByHand({});
+
+    expect(screen.queryByText('bad name')).toBeNull();
+  });
+
+  test('hides the messages of rawErrors under hideError, as hasVisibleErrors() does', () => {
+    renderByHand({ rawErrors: ['bad name'], hideError: true });
+
+    expect(screen.queryByText('bad name')).toBeNull();
+  });
+});
+
+wrapIfAdditionalErrorStateTests(Form);

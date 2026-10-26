@@ -54,7 +54,7 @@ the key names the parent schema's [`propertyNames.enum`](../json-schema/objects.
 A theme's `WrapIfAdditionalTemplate` renders it in place of its free-text key input whenever the `propertyNamesEnum`
 prop it is given is defined, so each theme only has to choose where the dropdown goes.
 The key has no description, help or errors of its own, so the `SelectWidget` is given a plan of its own that describes
-it by none, leaves it named by the key's label its template draws beside it where `labelledByTemplate` says so, draws
+it by none but the errors its row shows, given as `errorAttributes`, leaves it named by the key's label its template draws beside it where `labelledByTemplate` says so, draws
 that label where `hideLabel` leaves it to the select, or else names the select by that label's text through
 `aria-label`.
 
@@ -68,6 +68,7 @@ that label where `hideLabel` leaves it to the select, or else names the select b
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
 - [className]: string - Optional class name given to the rendered widget, for a theme that styles the key control itself
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
+- [errorAttributes]: Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'> - Optional attributes the errors its row shows give the key, from [getAdditionalKeyAttributes()](#getadditionalkeyattributes)
 - [hideLabel]: boolean - Optional flag, if true, the widget renders no label of its own, for themes that render one themselves
 - [labelledByTemplate]: boolean - Optional flag, if true, the template draws the key's label beside the widget, with a `for` naming its `id`, so the widget is given no `aria-label` over it
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
@@ -827,6 +828,22 @@ This is the order a widget's UI library needs when it manages its own selection 
 
 - IndexedEnumOptionType&lt;S>[]: The options in `groupedOptions`, flattened to a single list
 
+### getAdditionalKeyAttributes&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getadditionalkeyattributes}
+
+Gets the attributes a `WrapIfAdditionalTemplate` gives the key input of an `additionalProperties` entry while `keyNotAllowed` says the object forbids its key and its row shows errors: `aria-invalid`, and `aria-describedby` naming the row's errors.
+The key is the one control the row of a key the object forbids has, so the message that it is not allowed describes it.
+An allowed key's input stays unmarked while its row shows errors about its value.
+The row shows errors while its `hasErrors` is set.
+A custom `WrapIfAdditionalTemplate` spreads the result onto its free-text key input and passes it to `AdditionalPropertyKeySelect` as `errorAttributes`.
+
+#### Parameters
+
+- props: Pick&lt;WrapIfAdditionalTemplateProps&lt;T, S, F>, 'id' | 'keyNotAllowed' | 'hasErrors' | 'presentation'> - The `id`, `keyNotAllowed`, `hasErrors` and `presentation` of the `WrapIfAdditionalTemplate`
+
+#### Returns
+
+- Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'>: The `aria-describedby` and `aria-invalid`, or neither when the key is allowed or the row shows no errors
+
 ### getAdditionalPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the schema an object says applies to a `key` its own `properties` don't name, so that everything that renders such a property, seeds it or decides whether it is allowed at all reads one answer rather than its own.
@@ -1125,7 +1142,7 @@ A finite epoch number or a valid `Date` is an exact instant. It is converted to 
 
 Gets the error messages a widget, or an `ArrayFieldTemplate` or `ObjectFieldTemplate`, draws itself: the messages its field's plan shows, with `ui:hideError` applied, where the plan's `presentation.errors.by` is `'self'`, and none where they are drawn elsewhere, as by the `FieldTemplate` under `'template'` or, below an `anyOf`/`oneOf` option, by the field above.
 For a component rendered without a plan, as one rendered outside `SchemaField` is, it falls back to the deprecated `rawErrors` while `hideError` is off.
-Read it rather than `rawErrors` or the deprecated [getVisibleErrors()](#getvisibleerrors), and [hasWidgetErrors()](#haswidgeterrors) or [hasTemplateErrors()](#hastemplateerrors) for an error state.
+Read it rather than `rawErrors` or the deprecated [getVisibleErrors()](#getvisibleerrors), and [hasWidgetErrors()](#haswidgeterrors) or a template's `hasErrors` prop for an error state.
 
 #### Parameters
 
@@ -1796,7 +1813,7 @@ A schema [`retrieveSchema()`](#retrieveschematunknownsextendsstrictrjsfschemarjs
 ### getVisibleErrors()
 
 Returns the list of errors that a widget or template should surface in its own UI, which is empty whenever `ui:hideError` is in effect: `rawErrors` is deliberately still provided while errors are hidden, so that custom widgets can render them their own way.
-Deprecated, and kept through v7 for a component rendered without a plan: read [getErrorsToDraw()](#geterrorstodraw) instead, which gives the messages its field's plan shows, with `ui:hideError` applied, only where `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and falls back to this without a plan, and [hasWidgetErrors()](#haswidgeterrors) or [hasTemplateErrors()](#hastemplateerrors) for an error state.
+Deprecated, and kept through v7 for a component rendered without a plan: read [getErrorsToDraw()](#geterrorstodraw) instead, which gives the messages its field's plan shows, with `ui:hideError` applied, only where `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and falls back to this without a plan, and [hasWidgetErrors()](#haswidgeterrors) or a template's `hasErrors` prop for an error state.
 
 #### Parameters
 
@@ -1997,24 +2014,11 @@ Without a plan, as for a template rendered outside `SchemaField`, it follows `di
 
 - boolean: True when the key input is labelled
 
-### hasTemplateErrors&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#hastemplateerrors}
-
-Whether the field a template renders has errors to show, for the template's error state, such as a red outline or an invalid status: the messages its field's plan shows, with `ui:hideError` applied, or, for a template rendered without a plan, as one rendered outside `SchemaField` is, the deprecated `rawErrors` while `hideError` is off.
-Read it rather than `rawErrors`, which stays through v7 only for a template rendered without a plan.
-
-#### Parameters
-
-- props: Pick&lt;FieldTemplateProps&lt;T, S, F>, 'rawErrors' | 'hideError' | 'presentation'> - The template's `rawErrors`, `hideError` and `presentation`
-
-#### Returns
-
-- boolean: True when the field has errors to show
-
 ### hasVisibleErrors()
 
 Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
 It is the boolean form of [getVisibleErrors()](#getvisibleerrors), for the components that only need to decide whether to render an error state rather than render the errors themselves.
-Deprecated, and kept through v7 for a component rendered without a plan: read [hasWidgetErrors()](#haswidgeterrors) or [hasTemplateErrors()](#hastemplateerrors) instead, which read the plan and fall back to this only without one. A component drawing the messages itself reads [getErrorsToDraw()](#geterrorstodraw).
+Deprecated, and kept through v7 for a component rendered without a plan: read [hasWidgetErrors()](#haswidgeterrors) instead, which reads the plan and falls back to this only without one, or a template's `hasErrors` prop. A component drawing the messages itself reads [getErrorsToDraw()](#geterrorstodraw).
 
 #### Parameters
 
@@ -2562,6 +2566,8 @@ If the schema has a `oneOf` or `anyOf` (`anyOf` wins when it has both, as it doe
 - The `const` values from the schema if present, except for an option that declares the property a selector names. When the options aren't all constants and there is no selector, there is no list and `undefined` is returned
 - If the schema has a discriminator (or the uiSchema a `ui:optionsSchemaSelector`), the value of that property, read from every option when they aren't all constants, and otherwise from each constant option that declares it
 
+Options that are all constants are reordered by `ui:enumOrder` as `enum` values are, unless any of them is read through a discriminator or `ui:optionsSchemaSelector`.
+
 An option is labelled with the first of its names. One with no name is labelled by `fallbackLabel`, or with its value (as JSON for an object or array) when there is no `fallbackLabel` or it returns `undefined`:
 
 - An `enum` value's name is its non-empty `ui:enumNames` entry in the `uiSchema`
@@ -2784,7 +2790,7 @@ Each part is placed `template` or `self` by its declared owner, `above` when a f
 
 - The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name. It is `above`, under the id and text of the label drawn there, when the template of a field above rendering the same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a second time; a level with no control, such as a container whose label is its own heading, keeps its label only when no field above already draws its text, or else is `above` under the id of the label that does. A label with a control to name takes [fieldLabelId()](#fieldlabelid); a heading takes [titleId()](#titleid), the id every title template renders it under, so a heading kept beneath a label above has an id of its own. A label of its own with a control to name takes [optionLabelId()](#optionlabelid) instead when a field above draws a label under the id it would take, numbered by how many fields above draw one. The control points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the control above was pointed at that label too, since its template may then draw it with no `for`, or when its id isn't the one that label's `for` names. The label's `requiredMarker` follows `required` whether or not there is a control, so a container's heading is marked too, and an `above` label carries the marker of the label drawn above along with its text and id, while the control's own `required` stays this level's.
 - The description and help show where they have text, the description only where `showLabel` allows it, since `ui:label: false` hides both. Text any field above already shows is `above`, as is a part with no text under a field above that shows one. Text is compared with `===`, so an element `ui:help` is matched only by the same element, which an option inheriting its field's `uiSchema` carries; to repeat one in an option's own `uiSchema`, reuse the one element rather than writing the JSX again. Text of its own takes [optionDescriptionId()](#optiondescriptionid) or [optionHelpId()](#optionhelpid) when a field above shows text under the id it would take, numbered by how many fields above show text of their own, so each level's text has an id of its own.
-- The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
+- The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws, unless it hides them while this field shows its own, which this field then draws.
 - The control is described by the parts that render, here or above, which the plan lists as `describedBy`, and is `aria-invalid` whenever errors show. A field below rendering the same id inherits `describedBy`, so a widget adds the ids of the elements it renders to describe its own control, such as its `examplesId()` list, with [getControlAttributes()](#getcontrolattributes) rather than through the plan.
 - The plan records `showLabel` as resolved, so a widget reads whether `ui:label: false` hides its field's label and description from it. A control whose label it hides, with no label above naming it, takes the label's text as its `aria-label`, since hiding the label is a choice of layout, not of the control's name, or the `aria-label` of the nearest field above rendering the same id whose label is hidden too, as an option's control is named by its field's label while it shows; `getGroupAttributes()` puts it on a group's wrapper. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at the id its plan gives the label: [fieldLabelId()](#fieldlabelid), or [optionLabelId()](#optionlabelid) beneath a label a field above draws under that id.
 

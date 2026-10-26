@@ -752,10 +752,10 @@ describe('BooleanField', () => {
 
   describe('ui:enumNames and ui:enumOrder beside constant options', () => {
     const consoleWarnSuppression = setupConsoleWarnSuppression();
-    const ignoredWarning = expect.stringContaining('sets ui:enumNames or ui:enumOrder');
+    const ignoredWarning = expect.stringContaining('sets ui:enumNames');
     const constantsWarning = expect.stringContaining(
-      'but its options come from its constant `oneOf`, so they are ignored. Label those options with a `title` or a ' +
-        '`ui:title` in `uiSchema.oneOf`, and list them in the order to show them.',
+      'but its options come from its constant `oneOf`, so it is ignored. Label those options with a `title` or a ' +
+        '`ui:title` in `uiSchema.oneOf`.',
     );
     const titledSchema: RJSFSchema = {
       type: 'boolean',
@@ -780,7 +780,7 @@ describe('BooleanField', () => {
       expect(texts(constants.node)).toEqual(['', 'Yes', 'No']);
       expect(texts(enumSpelling.node)).toEqual(['', 'Affirmative', 'Negative']);
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        expect.stringContaining('"root" sets ui:enumNames or ui:enumOrder, which apply only to `enum` values'),
+        expect.stringContaining('"root" sets ui:enumNames, which applies only to `enum` values'),
       );
     });
 
@@ -793,9 +793,8 @@ describe('BooleanField', () => {
       expect(texts(node)).toEqual(['', 'Yes', 'No']);
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
         expect.stringContaining(
-          'but it shows its constant `oneOf` options rather than its `enum`, so they are ignored. Label those ' +
-            'options with a `title` or a `ui:title` in `uiSchema.oneOf`, and list them in the order to show them, ' +
-            'or drop the `oneOf` to show the `enum`.',
+          'but it shows its constant `oneOf` options rather than its `enum`, so it is ignored. Label those ' +
+            'options with a `title` or a `ui:title` in `uiSchema.oneOf`, or drop the `oneOf` to show the `enum`.',
         ),
       );
     });
@@ -809,22 +808,14 @@ describe('BooleanField', () => {
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(constantsWarning);
     });
 
-    it('should keep the order of the constant options over ui:enumOrder, and warn', () => {
+    it.each<[string, UiSchema['ui:enumOrder'], string[]]>([
+      ['a reversed order', [false, true], ['', 'N', 'Y']],
+      ['an order that drops an option', [false], ['', 'N']],
+    ])('should order the constant options by a ui:enumOrder of %s, without warning', (_, enumOrder, expected) => {
       const { node } = createFormComponent({
         schema: titledSchema,
-        uiSchema: { 'ui:widget': 'select', 'ui:enumOrder': [false, true] },
+        uiSchema: { 'ui:widget': 'select', 'ui:enumOrder': enumOrder },
       });
-
-      expect(texts(node)).toEqual(['', 'Y', 'N']);
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(ignoredWarning);
-    });
-
-    it.each<[string, RJSFSchema, UiSchema['ui:enumOrder'], string[]]>([
-      ['only a wildcard', titledSchema, ['*'], ['', 'Y', 'N']],
-      ['the order the options already have', titledSchema, [true, false], ['', 'Y', 'N']],
-      ['the only option', { type: 'boolean', oneOf: [{ const: true, title: 'Y' }] }, [true], ['', 'Y']],
-    ])('should not warn for a ui:enumOrder of %s, which changes nothing', (_, schema, enumOrder, expected) => {
-      const { node } = createFormComponent({ schema, uiSchema: { 'ui:widget': 'select', 'ui:enumOrder': enumOrder } });
 
       expect(texts(node)).toEqual(expected);
       expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(ignoredWarning);
@@ -847,8 +838,8 @@ describe('BooleanField', () => {
       expect(texts(node)).toEqual(['', 'Yes', 'No']);
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
         expect.stringContaining(
-          'but it shows its constant `anyOf` options rather than its `enum`, so they are ignored. Label those ' +
-            'options with a `title` or a `ui:title` in `uiSchema.anyOf`, and list them in the order to show them.',
+          'but it shows its constant `anyOf` options rather than its `enum`, so it is ignored. Label those ' +
+            'options with a `title` or a `ui:title` in `uiSchema.anyOf`.',
         ),
       );
     });
@@ -905,7 +896,7 @@ describe('BooleanField', () => {
     ])('should not warn when rendered through %s', (_, widget) => {
       createFormComponent({
         schema: { type: 'boolean', oneOf: [{ const: true }, { const: false }] },
-        uiSchema: { 'ui:widget': widget, 'ui:enumNames': ['Accept', 'Decline'], 'ui:enumOrder': [false, true] },
+        uiSchema: { 'ui:widget': widget, 'ui:enumNames': ['Accept', 'Decline'] },
       });
 
       expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(ignoredWarning);

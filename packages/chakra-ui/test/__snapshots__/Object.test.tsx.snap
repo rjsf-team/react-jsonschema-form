@@ -11035,6 +11035,764 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > patternProperties, a key additionalProperties false forbids 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  gap: var(--chakra-spacing-4);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+.emotion-3 {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: var(--chakra-spacing-2);
+}
+
+.emotion-4 {
+  grid-column: span 5/span 5;
+}
+
+@layer recipes {
+  .emotion-5 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+.emotion-7 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-7 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-11 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-14 {
+  justify-self: flex-end;
+}
+
+.emotion-15 {
+  padding-inline: 0;
+  padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-15 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-15 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-15 :where(svg) {
+  font-size: 1.2em;
+}
+
+.emotion-24 {
+  margin-top: var(--chakra-spacing-1);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-25 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-26 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
+}
+
+.emotion-27 {
+  margin-top: 0;
+  display: block;
+}
+
+@layer recipes {
+  .emotion-27 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: var(--chakra-colors-fg-error);
+    gap: var(--chakra-spacing-2);
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+}
+
+.emotion-28 {
+  display: block;
+}
+
+@layer recipes {
+  .emotion-32 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-32:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-32:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-32 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-32:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-32:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-33 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        aria-labelledby=""
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div
+            class="emotion-2"
+          >
+            <div>
+              <div
+                class="rjsf-field rjsf-field-string emotion-3"
+              >
+                <div
+                  class="emotion-4"
+                >
+                  <div
+                    class="chakra-field__root emotion-5"
+                    data-part="root"
+                    data-scope="field"
+                    id="field::root_abc-key"
+                    role="group"
+                  >
+                    <label
+                      class="chakra-field__label emotion-6"
+                      data-part="label"
+                      data-scope="field"
+                      for="root_abc-key"
+                      id="field::root_abc-key::label"
+                    >
+                      abc Key
+                    </label>
+                    <input
+                      class="chakra-input emotion-7"
+                      data-part="input"
+                      data-scope="field"
+                      id="root_abc-key"
+                      name="root_abc-key"
+                      type="text"
+                      value="abc"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="emotion-4"
+                >
+                  <fieldset
+                    aria-labelledby=""
+                    class="fieldset__root emotion-0"
+                    data-part="root"
+                    data-scope="fieldset"
+                  >
+                    <div
+                      class="fieldset__content emotion-1"
+                    >
+                      <div
+                        class="chakra-field__root emotion-11"
+                        data-part="root"
+                        data-scope="field"
+                        id="field::root_abc"
+                        role="group"
+                      >
+                        <label
+                          class="chakra-field__label emotion-6"
+                          data-part="label"
+                          data-scope="field"
+                          for="root_abc"
+                          id="field::root_abc::label"
+                        >
+                          abc
+                        </label>
+                        <input
+                          class="chakra-input emotion-13"
+                          data-part="input"
+                          data-scope="field"
+                          id="root_abc"
+                          name="root_abc"
+                          placeholder=""
+                          type="text"
+                          value="hello"
+                        />
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+                <div
+                  class="emotion-14"
+                  style="margin-top: 22px;"
+                >
+                  <button
+                    aria-label="Remove"
+                    class="chakra-button rjsf-object-property-remove emotion-15"
+                    id="root_abc__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-delete"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"
+                      />
+                      <path
+                        d="m12 9 6 6"
+                      />
+                      <path
+                        d="m18 9-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div
+                class="rjsf-field rjsf-field-null rjsf-field-error emotion-3"
+              >
+                <div
+                  class="emotion-4"
+                >
+                  <div
+                    class="chakra-field__root emotion-5"
+                    data-part="root"
+                    data-scope="field"
+                    id="field::root_a-key"
+                    role="group"
+                  >
+                    <label
+                      class="chakra-field__label emotion-6"
+                      data-part="label"
+                      data-scope="field"
+                      for="root_a-key"
+                      id="field::root_a-key::label"
+                    >
+                      a Key
+                    </label>
+                    <input
+                      aria-describedby="root_a__error"
+                      aria-invalid="true"
+                      class="chakra-input emotion-7"
+                      data-part="input"
+                      data-scope="field"
+                      id="root_a-key"
+                      name="root_a-key"
+                      type="text"
+                      value="a"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="emotion-4"
+                >
+                  <fieldset
+                    aria-labelledby=""
+                    class="fieldset__root emotion-0"
+                    data-invalid=""
+                    data-part="root"
+                    data-scope="fieldset"
+                  >
+                    <div
+                      class="fieldset__content emotion-1"
+                    >
+                      <div
+                        class="emotion-24"
+                      >
+                        <h5
+                          class="chakra-heading emotion-25"
+                        >
+                          <span
+                            id="root_a__title"
+                          >
+                            a
+                          </span>
+                        </h5>
+                        <span
+                          aria-orientation="horizontal"
+                          class="chakra-separator emotion-26"
+                          role="separator"
+                        />
+                      </div>
+                    </div>
+                    <span
+                      aria-live="polite"
+                      class="fieldset__errorText emotion-27"
+                      data-part="error-text"
+                      data-scope="fieldset"
+                      id="root_a__error"
+                    >
+                      <span
+                        class="emotion-28"
+                      >
+                        The key "a" is not allowed here
+                      </span>
+                    </span>
+                  </fieldset>
+                </div>
+                <div
+                  class="emotion-14"
+                  style="margin-top: 22px;"
+                >
+                  <button
+                    aria-label="Remove"
+                    class="chakra-button rjsf-object-property-remove emotion-15"
+                    id="root_a__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-delete"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"
+                      />
+                      <path
+                        d="m12 9 6 6"
+                      />
+                      <path
+                        d="m18 9-6 6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="emotion-14"
+            >
+              <button
+                class="chakra-button rjsf-object-property-expand emotion-32"
+                id="root__add"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-plus"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12h14"
+                  />
+                  <path
+                    d="M12 5v14"
+                  />
+                </svg>
+                Add Item
+              </button>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-33"
+    >
+      <button
+        class="chakra-button emotion-32"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
 exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
 <DocumentFragment>
   @layer recipes {
@@ -13510,7 +14268,7 @@ exports[`object fields > with title and description > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_1k_::legend"
+                    id="fieldset::_r_1q_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -13568,7 +14326,7 @@ exports[`object fields > with title and description > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_1m_::legend"
+                    id="fieldset::_r_1s_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -15236,7 +15994,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_2e_::legend"
+                    id="fieldset::_r_2k_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -15294,7 +16052,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_2g_::legend"
+                    id="fieldset::_r_2m_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -16324,7 +17082,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_21_::legend"
+                    id="fieldset::_r_27_::legend"
                   >
                     <sup
                       class="emotion-5"
@@ -16382,7 +17140,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                     class="fieldset__legend emotion-8"
                     data-part="legend"
                     data-scope="fieldset"
-                    id="fieldset::_r_23_::legend"
+                    id="fieldset::_r_29_::legend"
                   >
                     <sup
                       class="emotion-5"
