@@ -541,7 +541,7 @@ describe('a blur that is not a field', () => {
       useFallbackUiForUnsupportedType: true,
     });
 
-    await user.click(elementOf(container, '#root_x___internal_type_selector'));
+    await user.click(elementOf(container, '#root_x__internalTypeSelector'));
     await user.click(document.body);
 
     expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
