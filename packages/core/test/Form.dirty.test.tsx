@@ -1,4 +1,6 @@
-import type { RJSFSchema } from '@rjsf/utils';
+import { isPlainObject } from '@rjsf/utils';
+import type { RJSFSchema, ValidatorType } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import type { Mock } from 'vitest';
@@ -8,9 +10,9 @@ import { createFormComponent, createFormRef, fieldErrorsById, handleOf, input } 
 
 const user = userEvent.setup();
 
-function mountWithHandle(props: Parameters<typeof createFormComponent>[0]) {
+function mountWithHandle(props: Parameters<typeof createFormComponent>[0], v?: ValidatorType) {
   const ref = createFormRef();
-  const result = createFormComponent({ ...props, ref });
+  const result = createFormComponent({ ...props, ref }, v);
   const handle: FormRef = handleOf(ref);
   return { ...result, handle };
 }
@@ -426,6 +428,36 @@ describe('reset', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(handle.getFormData()).toEqual({ name: 'Ada', city: 'Oslo' });
     expect(lastStatus(onChange)).toEqual({ dirty: false, dirtyFields: {}, submitCount: 0 });
+  });
+  it('keeps the seed it last applied when deriving a new one throws', () => {
+    const guarded: RJSFSchema = {
+      ...schema,
+      if: { properties: { name: { const: 'bad' } }, required: ['name'] },
+      then: { required: ['city'] },
+    };
+    const throwing = new Proxy(validator, {
+      get(target, key, receiver) {
+        if (key !== 'isValid') {
+          return Reflect.get(target, key, receiver);
+        }
+        return (...args: Parameters<typeof validator.isValid>) => {
+          const formData: unknown = args[1];
+          if (isPlainObject(formData) && formData.name === 'bad') {
+            throw new Error('bad seed');
+          }
+          return target.isValid(...args);
+        };
+      },
+    });
+    const { handle } = mountWithHandle({ schema: guarded, initialFormData: { name: 'Ada' } }, throwing);
+    act(() => handle.reset({ name: 'Alan' }));
+
+    expect(() => act(() => handle.reset({ name: 'bad' }))).toThrow('bad seed');
+    expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
+
+    act(() => handle.reset());
+
+    expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
   });
 });
 
