@@ -195,6 +195,60 @@ describe('state attributes', () => {
     expect(label?.getAttribute('data-invalid')).toBe(optionHides ? null : 'true');
   });
 
+  // The control stays `aria-invalid` while the field above shows the errors, but the option's own parts follow the option
+  it.each([
+    ['shows', false, 'true'],
+    ['hides', true, null],
+  ])(
+    "marks a checkbox option's label and description by whether the option %s the errors shown above",
+    (_, optionHides, invalid) => {
+      const { node } = createFormComponent({
+        schema: { anyOf: [{ type: 'boolean', title: 'Flag', description: 'flag desc' }, { type: 'number' }] },
+        uiSchema: { 'ui:hideError': false, anyOf: [{ 'ui:hideError': optionHides }, {}] },
+        extraErrors: { __errors: ['wrong'] },
+      });
+
+      expect(screen.getByRole('checkbox')).toHaveAttribute('aria-invalid', 'true');
+      expect(screen.getByRole('checkbox').closest('label')?.getAttribute('data-invalid')).toBe(invalid);
+      expect(node.querySelector('#root__description')?.getAttribute('data-invalid')).toBe(invalid);
+    },
+  );
+
+  it.each([
+    ['shows', false, 'true'],
+    ['hides', true, null],
+  ])("marks a selected option's description by whether the option %s the errors", (_, optionHides, invalid) => {
+    const { node } = createFormComponent({
+      schema: {
+        anyOf: [
+          {
+            type: 'string',
+            oneOf: [
+              { const: 'a', title: 'A', description: 'A desc' },
+              { const: 'b', title: 'B' },
+            ],
+          },
+          { type: 'number' },
+        ],
+      },
+      uiSchema: { anyOf: [{ 'ui:hideError': optionHides }, {}] },
+      initialFormData: 'a',
+      extraErrors: { __errors: ['wrong'] },
+    });
+
+    expect(node.querySelector('#root__selectedOptionDescription')?.getAttribute('data-invalid')).toBe(invalid);
+  });
+
+  it("marks a forbidden key's label data-invalid with its input", () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', patternProperties: { '^abc': { type: 'string' } }, additionalProperties: false },
+      initialFormData: { a: 'forbidden' },
+    });
+
+    expect(node.querySelector('#root_a__key')).toHaveAttribute('aria-invalid', 'true');
+    expect(node.querySelector('label[for="root_a__key"]')).toHaveAttribute('data-invalid', 'true');
+  });
+
   it('marks a disabled or read-only option data-disabled, stacked or inline, and no enabled one', () => {
     const { node } = createFormComponent({
       schema: {

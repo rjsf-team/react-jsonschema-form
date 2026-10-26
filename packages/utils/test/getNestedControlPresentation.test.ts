@@ -5,7 +5,7 @@ const field: FieldPresentation = {
   label: { by: 'template', id: 'root_when__label', text: 'When', requiredMarker: false },
   description: { by: 'template', id: 'root_when__description', text: 'The day' },
   help: { by: 'none', id: 'root_when__help' },
-  errors: { by: 'template', id: 'root_when__error', messages: ['is required'] },
+  errors: { by: 'template', id: 'root_when__error', messages: ['is required'], own: true },
   describedBy: ['root_when__error', 'root_when__description'],
   showLabel: true,
   control: {

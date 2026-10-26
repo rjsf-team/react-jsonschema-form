@@ -25,13 +25,14 @@ export default function SelectedOptionDescription<
     return null;
   }
 
-  const { options, registry, uiSchema } = props;
+  const { options, registry, uiSchema, presentation } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   return (
     <DescriptionFieldTemplate
       id={selected.id}
       description={selected.description}
-      hasErrors={hasWidgetErrors<T, S, F>(props)}
+      // The field's own error state, as the field's other parts have it, rather than its control's
+      hasErrors={presentation ? presentation.errors.own : hasWidgetErrors<T, S, F>(props)}
       schema={selected.schema}
       uiSchema={uiSchema}
       registry={registry}

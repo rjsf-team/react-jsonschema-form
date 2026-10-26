@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import type { GridTemplateProps } from '@rjsf/utils';
 import { joinClassNames } from '@rjsf/utils';
 
@@ -9,7 +8,8 @@ import { joinClassNames } from '@rjsf/utils';
  */
 export default function GridTemplate(props: GridTemplateProps) {
   const { children, column, className, span, style, ...rest } = props;
-  const gridStyle = span === undefined ? style : ({ ...style, '--rjsf-span': span } as CSSProperties);
+  // A row's `span` would reach its columns that have none, through the inherited custom property
+  const gridStyle = column && span !== undefined ? { ...style, '--rjsf-span': span } : style;
   return (
     <div
       className={joinClassNames(column ? 'rjsf-grid-column' : 'rjsf-grid-row', className)}

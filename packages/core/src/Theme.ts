@@ -1,5 +1,6 @@
 import type {
   ClassMap,
+  FormClassMap,
   FormContextType,
   GlobalFormOptions,
   MergedClassMap,
@@ -125,6 +126,26 @@ export function generateTheme<
   };
 }
 
+function isClassMapKey(key: string): key is keyof ClassMap {
+  return Object.hasOwn(CLASS_MAP, key);
+}
+
+/** Keeps the merged map's `ClassMap` keys. A Form `''` entry survives `mergeClassMaps()` so that it drops the theme's
+ * class beneath it; it becomes `undefined` here, so an element reading it bare renders no `class` attribute
+ *
+ * @param map - The theme's class map with the Form's layered on top
+ * @returns - Each `ClassMap` key's class, or `undefined` for none
+ */
+function resolveClassMap(map: FormClassMap): MergedClassMap {
+  const resolved: Record<keyof ClassMap, string | undefined> = { ...CLASS_MAP };
+  for (const [key, value] of Object.entries(map)) {
+    if (isClassMapKey(key)) {
+      resolved[key] = typeof value === 'string' && value ? value : undefined;
+    }
+  }
+  return resolved;
+}
+
 /** Extracts the `GlobalFormOptions` from the given Form `props`
  *
  * @param props - The form props to extract the global form options from
@@ -163,8 +184,6 @@ export function buildRegistry<
 >(props: FormProps<T, S, F>, schema: S, schemaUtils: SchemaUtilsType<T, S, F>): Registry<T, S, F> {
   const { translateString = englishStringTranslator, uiSchema } = props;
   const { fields, templates, widgets, presentation, classMap } = generateTheme<T, S, F>();
-  // Only core's keys are kept, as a function under any other key has no class beneath it to resolve against
-  const mergedClassMap = mergeClassMaps(classMap, props.classMap);
   return {
     fields: { ...fields, ...props.fields },
     templates: {
@@ -177,11 +196,7 @@ export function buildRegistry<
     },
     widgets: { ...widgets, ...props.widgets },
     presentation: mergeThemePresentation(presentation, props.presentation),
-    // A Form `''` entry survives `mergeClassMaps()` so that it drops the theme's class beneath it; it becomes
-    // `undefined` here, so an element reading it bare renders no `class` attribute
-    classMap: Object.fromEntries(
-      Object.keys(classMap).map((key) => [key, mergedClassMap[key as keyof ClassMap] || undefined]),
-    ) as MergedClassMap,
+    classMap: resolveClassMap(mergeClassMaps(classMap, props.classMap)),
     rootSchema: schema,
     // `F` may be narrower than `{}`, but an omitted formContext is an empty object
     formContext: props.formContext ?? ({} as F),

@@ -1381,6 +1381,13 @@ exports[`object fields > additionalProperties with a description, propertyNames 
               >
                 foo Key
               </label>
+              <div
+                aria-hidden="true"
+                class="rjsf-field-description"
+                style="visibility: hidden;"
+              >
+                A description
+              </div>
               <select
                 id="root_foo__key"
                 name="root_foo__key"
@@ -1654,6 +1661,13 @@ exports[`object fields > additionalProperties, description 1`] = `
               >
                 foo Key
               </label>
+              <div
+                aria-hidden="true"
+                class="rjsf-field-description"
+                style="visibility: hidden;"
+              >
+                item description
+              </div>
               <input
                 id="root_foo__key"
                 type="text"
@@ -2415,6 +2429,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
             >
               <label
                 class="rjsf-field-label"
+                data-invalid="true"
                 for="root_a__key"
               >
                 a Key

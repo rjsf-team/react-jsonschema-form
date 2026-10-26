@@ -90,10 +90,15 @@
 
   :where(.rjsf .rjsf-array-item) {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--rjsf-gap);
     align-items: start;
     margin-block-end: var(--rjsf-gap);
+  }
+
+  /* Only an item with a toolbox takes its track, as the gap before an empty one would narrow the item's fields */
+  :where(.rjsf .rjsf-array-item:has(> .rjsf-array-item-toolbox)) {
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   /* Beside the item's input rather than its label: down one line of the label's font, which this `<div>` inherits too,

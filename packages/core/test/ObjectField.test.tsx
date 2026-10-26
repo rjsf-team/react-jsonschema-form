@@ -796,6 +796,21 @@ describe('ObjectField', () => {
     };
     const forbidsUnmatched: RJSFSchema = { ...namedByPattern, additionalProperties: false };
 
+    // The value's description sits between its label and input, so the key column holds an invisible copy of it to keep
+    // the key's input level with the value's
+    it("holds the key input level with the value's past its description with a hidden copy of it", () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { type: 'string', description: 'about the value' } },
+        initialFormData: { foo: 'x' },
+      });
+
+      const copy = node.querySelector('.rjsf-additional-property-key .rjsf-field-description');
+      expect(copy).toHaveAttribute('aria-hidden', 'true');
+      expect(copy).toHaveStyle({ visibility: 'hidden' });
+      expect(copy).toHaveTextContent('about the value');
+      expect(screen.getByRole('textbox', { name: 'foo' })).toHaveAccessibleDescription('about the value');
+    });
+
     async function renameKey(node: ParentNode, from: string, to: string) {
       const keyInput = elementOf(node, `#root_${from}__key`);
       await user.clear(keyInput);

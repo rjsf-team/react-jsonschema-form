@@ -609,6 +609,7 @@ The following props are passed to the `DescriptionFieldTemplate`:
 
 - `description`: The description of the field being rendered.
 - `id`: The id of the field in the hierarchy.
+- `hasErrors`: Whether the field it describes shows its own errors, as `ui:hideError` leaves them. Core's template marks itself `data-invalid` while it is set.
 - `schema`: The schema object for the field.
 - `uiSchema`: The uiSchema object for the field.
 - `registry`: The `registry` object.
@@ -1342,7 +1343,7 @@ All but one of these buttons (i.e. the `SubmitButton`) are rendered currently as
 Each button template (except for the `SubmitButton`) accepts, as props, the standard [HTML button attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) along with the following:
 
 - `iconType`: An alternative specification for the type of the icon button.
-- `icon`: The name representation or actual react element implementation for the icon.
+- `icon`: The name representation or actual react element implementation for the icon. `@rjsf/core`'s `IconButton` draws only `plus`, `copy`, `arrow-up`, `arrow-down` and `remove`, and no icon for any other name.
 - `uiSchema`: The uiSchema object for this field.
 - `registry`: The `registry` object.
 

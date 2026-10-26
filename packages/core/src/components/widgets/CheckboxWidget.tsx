@@ -43,7 +43,9 @@ function CheckboxWidget<
   } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const { classMap } = registry;
-  const hasErrors = hasWidgetErrors<T, S, F>(props);
+  // The field's own error state, as its wrapper has it, rather than its control's, which is invalid while a field above
+  // shows its errors even where this one hides them
+  const hasErrors = presentation ? presentation.errors.own : hasWidgetErrors<T, S, F>(props);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords

@@ -7,7 +7,7 @@ By default, this library renders form fields and widgets as plain HTML5 markup w
 
 Every rule in both is a zero-specificity `:where(.rjsf …)`, so your own CSS overrides it, and both sit in `@layer rjsf`, so unlayered CSS beats them whatever its specificity. A Tailwind app puts them above its preflight, whose `margin: 0`, `padding: 0` and `border: 0` would otherwise undo them, and beneath its utilities, by declaring the layer order once: `@layer theme, base, rjsf, components, utilities;`.
 
-Core marks a field's state with attributes rather than classes, so a stylesheet selects on them: `data-invalid="true"` on the field's wrapper, label, description and help while it shows its own errors, and `data-disabled="true"` on a checkbox or radio option that is disabled or read-only. Each is absent rather than `"false"`, and sits on each part, so a nested field's label doesn't take its parent's state: `.rjsf-field-label[data-invalid]`, or `data-invalid:text-red-600` in Tailwind.
+Core marks a field's state with attributes rather than classes, so a stylesheet selects on them: `data-invalid="true"` on the field's wrapper, label, description and help while it shows its own errors, and `data-disabled="true"` on a checkbox or radio option that is disabled or read-only. Each is absent rather than `"false"`, and sits on each part, so a nested field's label doesn't take its parent's state: `.rjsf-field-label[data-invalid]`, or `data-invalid:text-red-600` in Tailwind. The wrapper also keeps its `rjsf-field-error` class, the marker every theme's wrapper carries, for CSS that reaches the wrapper under any theme.
 You can use a theme built on a UI framework by importing one of the packages listed below.
 
 ## Supported themes

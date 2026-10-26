@@ -872,7 +872,7 @@ export interface FieldProps<
    * @deprecated Kept through v7 for a field rendered without a plan: read `getErrorsToDraw()` for the messages the
    *   field draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
    *   `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and
-   *   `presentation.errors.messages.length > 0` for an error state. Beside a selector, the plan keeps the field's
+   *   `presentation.errors.own` for an error state. Beside a selector, the plan keeps the field's
    *   errors, which its template draws, so the field shows as invalid along with the selector
    */
   rawErrors?: string[];
@@ -1129,6 +1129,10 @@ export interface FieldPresentation {
   errors: PartPresentation & {
     /** The messages to show, with `ui:hideError` applied */
     messages: readonly string[];
+    /** Whether the field shows errors of its own, as `ui:hideError` leaves them, whoever draws them: the error state of
+     * its wrapper and of the label and description drawn for it, where `messages` may be those of a field above
+     */
+    own: boolean;
   };
   /** The ids of the field's parts describing its control, in order, counting only parts that render here or above. A
    * field below rendering the same id inherits them, so the ids of the elements a widget renders to describe its own
@@ -1759,7 +1763,9 @@ export type IconButtonProps<
   Omit<RJSFBaseProps<T, S, F>, 'schema'> & {
     /** An alternative specification for the type of the icon button */
     iconType?: string;
-    /** The name representation or actual react element implementation for the icon */
+    /** The name representation or actual react element implementation for the icon. `@rjsf/core`'s `IconButton` draws
+     * only `plus`, `copy`, `arrow-up`, `arrow-down` and `remove`, and no icon for any other name
+     */
     icon?: string | ReactElement;
   };
 

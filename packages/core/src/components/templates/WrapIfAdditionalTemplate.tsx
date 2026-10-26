@@ -7,9 +7,11 @@ import {
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
   joinClassNames,
+  templateDrawsDescription,
   TranslatableString,
 } from '@rjsf/utils';
 
+import RichDescription from '../RichDescription.tsx';
 import Label from './FieldTemplate/Label.tsx';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
@@ -35,6 +37,7 @@ export default function WrapIfAdditionalTemplate<
     onKeyRenameBlur,
     onRemoveProperty,
     propertyNamesEnum,
+    rawDescription,
     readonly,
     required,
     schema,
@@ -69,7 +72,19 @@ export default function WrapIfAdditionalTemplate<
               required={required}
               id={keyId}
               className={joinClassNames('rjsf-field-label', classMap.fieldLabel)}
+              invalid={keyAttributes['aria-invalid']}
             />
+          )}
+          {/* The value's description sits between its label and input, so an invisible copy of it holds the key's input
+              level with the value's, wrapping alike for a description as wide in either column */}
+          {rawDescription && templateDrawsDescription<T, S, F>(props) && (
+            <div
+              aria-hidden='true'
+              className={joinClassNames('rjsf-field-description', classMap.fieldDescription)}
+              style={{ visibility: 'hidden' }}
+            >
+              <RichDescription<T, S, F> description={rawDescription} registry={registry} uiSchema={uiSchema} />
+            </div>
           )}
           {propertyNamesEnum ? (
             <AdditionalPropertyKeySelect<T, S, F>
