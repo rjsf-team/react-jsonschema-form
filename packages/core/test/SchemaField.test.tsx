@@ -2486,6 +2486,52 @@ describe('SchemaField', () => {
             'component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
         );
       });
+
+      it('warns once for an entry nested beneath an additionalProperties entry, not once per extra key', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            additionalProperties: { type: 'object', properties: { foo: { type: 'string' } } },
+          },
+          uiSchema: { additionalProperties: { foo: { 'ui:FieldTemplate': <div /> } } },
+          initialFormData: { k1: { foo: 'a' }, k2: { foo: 'b' }, k3: { foo: 'c' } },
+        });
+
+        // The `foo` entry is shared by every extra key's object, so the key collapses above it too
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_[]_foo" ([].foo) is a React element rather than ' +
+            'a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
+
+      it('warns once for an items entry nested beneath an additionalProperties entry, not once per extra key', () => {
+        createFormComponent({
+          schema: { type: 'object', additionalProperties: { type: 'array', items: { type: 'string' } } },
+          uiSchema: { additionalProperties: { items: { 'ui:FieldTemplate': <div /> } } },
+          initialFormData: { k1: ['a'], k2: ['b'] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_[]_[]" ([][]) is a React element rather than a ' +
+            'component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
+
+      it('warns once for an additionalProperties entry nested beneath an items entry, not once per row or key', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { arr: { type: 'array', items: { type: 'object', additionalProperties: { type: 'string' } } } },
+          },
+          uiSchema: { arr: { items: { additionalProperties: { 'ui:FieldTemplate': <div /> } } } },
+          initialFormData: { arr: [{ k1: 'a' }, { k2: 'b' }] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_arr_[]_[]" (arr[][]) is a React element rather ' +
+            'than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
     });
 
     describe('recursive definitions', () => {

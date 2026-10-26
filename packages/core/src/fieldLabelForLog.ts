@@ -29,24 +29,23 @@ function formatLabel(id: string, path: string): string {
 /** Names a field the way `fieldLabelForLog()` does, but with each array index written as `[]`, for a warning about
  * the uiSchema entry the field is rendered from rather than about the field itself. Every item an array's `items`
  * entry renders reads alike, so a mistake in that entry is warned about once rather than once per item, which over a
- * long array would also crowd every other warning out of what `logOnce()` remembers. An additional property's key is
- * collapsed the same way where the caller marks the field as one, since every extra key an `additionalProperties`
- * entry renders shares that entry too.
+ * long array would also crowd every other warning out of what `logOnce()` remembers. An additional property's key
+ * is collapsed the same way, since every extra key an `additionalProperties` entry renders - and every field beneath
+ * one - shares the one entry too.
  *
  * @param fieldPath - The `FieldPath` identifying the field in the form
  * @param globalFormOptions - The `GlobalFormOptions` holding the `idPrefix` and `idSeparator` the id is built from
- * @param [additionalProperty=false] - Whether the field is an additional property, whose key is written as `[]`
+ * @param [collapsedKeys] - The indexes of the path segments that are an additional property's key, written as `[]`
  * @returns - The field named as `"root_tasks_[]_title" (tasks[].title)`, or just `"root"` at the root
  */
 export function entryLabelForLog(
   fieldPath: FieldPath,
   globalFormOptions: GlobalFormOptions,
-  additionalProperty = false,
+  collapsedKeys?: readonly number[],
 ): string {
   const segments = fieldPathToList(fieldPath);
-  const last = segments.length - 1;
   const collapses = (index: number, segment: string | number) =>
-    typeof segment === 'number' || (additionalProperty && index === last);
+    typeof segment === 'number' || collapsedKeys?.includes(index) === true;
   const { idPrefix, idSeparator } = globalFormOptions;
   const id = [idPrefix, ...segments.map((segment, index) => (collapses(index, segment) ? '[]' : segment))].join(
     idSeparator,
