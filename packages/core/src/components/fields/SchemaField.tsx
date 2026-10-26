@@ -360,7 +360,7 @@ export function createIsSchemaFieldHidden<
   const expandCycle = memoizeLast(expandRefCycle<S>);
   // The resolver only ever writes back the widget the `uiSchema` names through either spelling and never changes the
   // handling, so a field whose `uiSchema` and the global options name neither a hidden widget nor a `'hide'` is visible
-  // without retrieving. Any other field is retrieved here as well as by its own `SchemaField`, deprecated or not, so
+  // without expanding or retrieving. Any other field is retrieved here as well as by its own `SchemaField`, deprecated or not, so
   // under a global `'hide'` this skips no field
   const mayHide = memoizeLast(
     (ownUiSchema: UiSchema<T, S, F>, globalUiOptions: GlobalUISchemaOptions | undefined) =>
@@ -369,6 +369,9 @@ export function createIsSchemaFieldHidden<
       { ...globalUiOptions, ...getUiOptions<T, S, F>(ownUiSchema) }.deprecatedHandling === 'hide',
   );
   const { resolve: resolveFieldWidget, resolveOwnUiSchema } = createFieldWidgetResolver<T, S, F>();
+  // An expansion keeps the `$ref` that picks the field's `ui:definitions` entry, so a cycle is shortcut before it is
+  // expanded. Kept apart from the resolver's step, which resolves the expansion, so the two don't evict each other
+  const resolveCycleUiSchema = memoizeLast(resolveUiSchema<T, S, F>);
   /** Tells whether the field renders hidden
    *
    * @param schema - The field's schema, as handed to its `SchemaField`
@@ -385,12 +388,14 @@ export function createIsSchemaFieldHidden<
     fieldPath: FieldPath,
     registry: Registry<T, S, F>,
   ): boolean => {
-    const fieldSchema = (schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]
-      ? expandCycle(schema, registry.schemaUtils.getRootSchema())
-      : schema;
-    if (!mayHide(resolveOwnUiSchema(fieldSchema, uiSchema, registry), registry.globalUiOptions)) {
+    const isRefCycle = Boolean((schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+    const ownUiSchema = isRefCycle
+      ? resolveCycleUiSchema(schema, uiSchema, registry)
+      : resolveOwnUiSchema(schema, uiSchema, registry);
+    if (!mayHide(ownUiSchema, registry.globalUiOptions)) {
       return false;
     }
+    const fieldSchema = isRefCycle ? expandCycle(schema, registry.schemaUtils.getRootSchema()) : schema;
     // An expansion carries no cycle flag, and nothing above the field names one for it
     return resolveFieldWidget(fieldSchema, uiSchema, formData, fieldPath, registry, false, false).hidden;
   };

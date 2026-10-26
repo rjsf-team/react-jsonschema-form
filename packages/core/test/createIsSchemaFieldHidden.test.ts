@@ -96,6 +96,14 @@ describe('createIsSchemaFieldHidden()', () => {
     expect(isSchemaFieldHidden(SECRET_CYCLE, undefined, undefined, ROOT_FIELD_PATH, registry)).toBe(false);
   });
 
+  it('expands no $ref cycle whose uiSchema names neither a hidden widget nor a hide', () => {
+    const registry = makeRegistry({ deprecatedHandling: 'disable' });
+    // `expandRefCycle()` is handed the root schema
+    const getRootSchema = vi.spyOn(registry.schemaUtils, 'getRootSchema');
+    expect(isSchemaFieldHidden(OLD_CYCLE, undefined, undefined, ROOT_FIELD_PATH, registry)).toBe(false);
+    expect(getRootSchema).not.toHaveBeenCalled();
+  });
+
   it('returns true for a $ref cycle its own uiSchema gives a hidden widget', () => {
     const uiSchema = { 'ui:widget': 'hidden' };
     expect(isSchemaFieldHidden(SECRET_CYCLE, uiSchema, undefined, ROOT_FIELD_PATH, makeRegistry())).toBe(true);

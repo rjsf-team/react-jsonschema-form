@@ -4,8 +4,8 @@ import { expandRefCycle, getTemplates, getUiOptions } from '@rjsf/utils';
 
 import { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useUiState from '../../hooks/useUiState.ts';
-import useAdditionalDepths from './useAdditionalDepths.ts';
 import { createIsSchemaFieldHidden } from './SchemaField.tsx';
+import useAdditionalDepths from './useAdditionalDepths.ts';
 
 /** The `CyclicSchemaField` component renders a field `retrieveSchema()` collapsed as a `$ref` cycle (marked with
  * `RJSF_REF_CYCLE_KEY`): an Expand button until the field is expanded, and then the field resolved one level further,
