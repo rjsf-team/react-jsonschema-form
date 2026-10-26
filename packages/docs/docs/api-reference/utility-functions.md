@@ -2445,6 +2445,21 @@ If no such value exists, return the `fallback` value.
 
 - R: The value associated with `toLookup` in the form context or `fallback`
 
+### mergeClassMaps()
+
+Layers class maps key by key, the way `@rjsf/core` layers a theme's `classMap` over its own and the `Form`'s over the theme's.
+An entry that is neither a class nor a function, such as one left `undefined`, `null` from JSON or `false` from a conditional, keeps the class beneath it.
+A function entry is called with the class beneath it, or composed with the function beneath it until a class is there to call them with.
+Code that builds a registry for a themed form outside `Form` layers the theme's map and its own with it before handing them to `buildRegistry()`.
+
+#### Parameters
+
+- ...layers: (FormClassMap | undefined)[] - The class maps to layer, from the bottom; `undefined` entries are skipped
+
+#### Returns
+
+- FormClassMap: The layered class map, whose entries are functions only where no layer beneath gives a class
+
 ### mergeDefaultsWithFormData&lt;T = unknown>()
 
 Merges the `defaults` object of type `T` into the `formData` of type `T`

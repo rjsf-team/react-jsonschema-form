@@ -1,10 +1,9 @@
 import type { FormClassMap, RJSFSchema } from '@rjsf/utils';
-import { createSchemaUtils } from '@rjsf/utils';
+import { createSchemaUtils, mergeClassMaps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
 import { buildRegistry, withTheme } from '../src/index.ts';
-import { mergeClassMaps } from '../src/Theme.ts';
 import { createFormComponent } from './testUtils.tsx';
 
 describe('classMap', () => {

@@ -1,11 +1,10 @@
 import type { ReactElement } from 'react';
 import { useMemo } from 'react';
 import type { ClassMap, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { mergeThemePresentation } from '@rjsf/utils';
+import { mergeClassMaps, mergeThemePresentation } from '@rjsf/utils';
 
 import type { FormProps } from './components/Form.tsx';
 import Form from './components/Form.tsx';
-import { mergeClassMaps } from './Theme.ts';
 
 /** The properties for the `withTheme` function, essentially a subset of properties from the `FormProps` that can be
  * overridden while creating a theme
