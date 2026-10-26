@@ -1085,7 +1085,14 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
             )));
       if (optionHoldsNone && shouldMergeDefaultsIntoFormData && rawFormData !== undefined) {
         const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
-        return matching === undefined ? optionValue : mergeDefaultsWithFormData(optionValue, matching);
+        return matching === undefined
+          ? optionValue
+          : mergeDefaultsWithFormData(
+              optionValue,
+              matching,
+              defaultFormStateBehavior?.arrayMinItems?.mergeExtraDefaults,
+              defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined',
+            );
       }
       return optionValue;
     }

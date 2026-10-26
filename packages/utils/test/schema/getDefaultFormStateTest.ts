@@ -2135,6 +2135,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      it.each<[string, RJSFSchema]>([
+        ['an untyped field', { default: { a: 1 } }],
+        [
+          'an object field declaring the key',
+          { type: 'object', properties: { a: { type: 'number' } }, default: { a: 1 } },
+        ],
+        [
+          'an anyOf/oneOf field',
+          {
+            oneOf: [{ type: 'string' }, { type: 'object', properties: { a: { type: 'number' } } }],
+            default: { a: 1 },
+          },
+        ],
+      ])(
+        'fills in a key the data leaves undefined from the default of %s, under useDefaultIfFormDataUndefined',
+        (_, p) => {
+          expect(
+            getDefaultFormState(
+              {
+                validator: testValidator,
+                defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+              },
+              { schema: { type: 'object', properties: { p } }, formData: { p: { a: undefined, b: 2 } } },
+            ),
+          ).toEqual({ p: { a: 1, b: 2 } });
+        },
+      );
+
       it.each<[string, RJSFSchema, GenericObjectType, GenericObjectType]>([
         ['at the top', { b: ENUM_WITH_DEFAULT }, { b: 'zz' }, { b: 'x' }],
         [
