@@ -2472,6 +2472,31 @@ describe('SchemaField', () => {
         ]);
       });
 
+      it('names an option entry nested in another option entry by both', () => {
+        createFormComponent({
+          schema: { anyOf: [{ anyOf: [{ type: 'string' }, { type: 'number' }] }, { type: 'boolean' }] },
+          uiSchema: {
+            anyOf: [
+              {
+                'ui:FieldTemplate': 'Outer' as unknown as UiSchema['ui:FieldTemplate'],
+                anyOf: [{ 'ui:FieldTemplate': 'Inner' as unknown as UiSchema['ui:FieldTemplate'] }],
+              },
+            ],
+          },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy.mock.calls).toEqual([
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root" names no ' +
+              "registered template ('Outer'), so it is ignored.",
+          ],
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of the uiSchema.anyOf[0] ' +
+              'entry of "root" names no registered template (\'Inner\'), so it is ignored.',
+          ],
+        ]);
+      });
+
       it('warns once for an invalid override in an additionalProperties entry, not once per extra key', () => {
         createFormComponent({
           schema: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: { type: 'string' } },

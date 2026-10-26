@@ -915,10 +915,24 @@ function SchemaFieldRender<
     [framedAbove, ownErrors, errorSchema],
   );
 
-  const optionEntryLabel = use(TemplateWarnEntryContext);
+  const entryAbove = use(TemplateWarnEntryContext);
   // An additional property's own key, and the keys above a field nested beneath one, collapse like array indexes:
   // every extra key renders the one entry, so a mistake in it warns once rather than once per key
   const additionalDepths = useAdditionalDepths(schema, fieldPath);
+  // Names the uiSchema entry rather than the field in a template-override warning, so an `items` or
+  // `additionalProperties` mistake warns once, not once per row or extra key. Rendered as a shown `anyOf`/`oneOf`
+  // option, the field renders at the option field's own path, so it takes the option entry's label rather than name
+  // the entry above itself. Memoized, since it is provided to everything below
+  const templateEntry = useMemo(
+    () => ({
+      fieldPath,
+      label:
+        entryAbove?.fieldPath === fieldPath
+          ? entryAbove.label
+          : () => entryLabelForLog(fieldPath, registry.globalFormOptions, additionalDepths),
+    }),
+    [entryAbove, fieldPath, registry.globalFormOptions, additionalDepths],
+  );
 
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
@@ -931,16 +945,10 @@ function SchemaFieldRender<
   // than leave each theme's `ObjectFieldTemplate` to tell that an object it is handed is one and drop its empty frame
   const FieldComponent = plannedAsOptions ? RenderNothing : fieldToRender.FieldComponent;
 
-  // Names the uiSchema entry rather than the field in a template-override warning, so an `items` or
-  // `additionalProperties` mistake warns once, not once per row or extra key; the label is built only when an
-  // override is actually invalid. Rendered as a shown `anyOf`/`oneOf` option, the field renders at the option
-  // field's own path, so it is handed the option entry's label rather than name the entry above itself
-  const templateEntryLabel =
-    optionEntryLabel ?? (() => entryLabelForLog(fieldPath, registry.globalFormOptions, additionalDepths));
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
-    templateEntryLabel,
+    templateEntry.label,
   );
 
   // A field the options give way to renders the choice between them, so with no options it has nothing to choose, which
@@ -1091,10 +1099,9 @@ function SchemaFieldRender<
   };
 
   // The named-field context is provided whether or not a field is named here, since adding or removing a provider would
-  // remount everything below it. The template-warning entry label is reset the same way: it belongs to this field's
-  // own check, and a field below names the entry it is rendered from, not the option entry this one was handed
+  // remount everything below it
   return withUiState(
-    <TemplateWarnEntryContext value={undefined}>
+    <TemplateWarnEntryContext value={templateEntry}>
       <AdditionalPropertyDepthsContext value={additionalDepths}>
         <FieldTemplate {...fieldProps}>
           <>
