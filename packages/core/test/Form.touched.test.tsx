@@ -780,6 +780,25 @@ describe('a blur onBlur causes', () => {
   });
 });
 
+describe("a field the Form's onBlur drops", () => {
+  it('is neither touched nor revealed by its blur', async () => {
+    let dropAddress = () => {};
+    const { container, node, handle } = mountWithHandle({
+      schema: { ...person, properties: { ...person.properties, name: { type: 'string', minLength: 3 } } },
+      initialFormData: { name: 'a', address: { street: 'a' } },
+      liveValidate: 'onBlur',
+      liveErrors: 'field',
+      onBlur: () => dropAddress(),
+    });
+    dropAddress = () => handle.setFieldValue('address', {});
+
+    await blur(container, 'root_address_street');
+
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+    expect(fieldErrorsById(node)).toEqual({});
+  });
+});
+
 describe('a key omitExtraData drops', () => {
   /** Blurs the checkbox `a`, the first field, which a click would toggle */
   async function blurWithoutClick() {
@@ -914,5 +933,22 @@ describe('a blur a parent field causes before it sends its own', () => {
     await blur(container, 'root_name');
 
     expect(handle.getStatus().touchedFields).toEqual({ name: true, address: { city: true } });
+  });
+
+  it('names its own blur a parent field sends in place of the one from below', async () => {
+    function ReplacingObjectField(props: FieldProps) {
+      const { ObjectField } = props.registry.fields;
+      const { onBlur, formData } = props;
+      return <ObjectField {...props} onBlur={() => onBlur('root_address', formData)} />;
+    }
+    const { container, handle } = mountWithHandle({
+      schema: person,
+      uiSchema: { address: { 'ui:field': ReplacingObjectField } },
+      initialFormData: { address: { street: 'a', city: 'b' } },
+    });
+
+    await blur(container, 'root_address_street');
+
+    expect(handle.getStatus().touchedFields).toEqual({ address: { street: true, city: true } });
   });
 });

@@ -18,12 +18,12 @@ export type EventFormData<T> = T extends object ? T : T | undefined;
 
 /** A value nested like the form's data, holding `true` at each field it marks: each field that differs, in
  * `dirtyFields`, or that was touched, in `touchedFields`. An object holds an entry only for its members that hold a
- * mark, and an array an entry for each item, `undefined` where the item holds none. A field marked whole, one that was
- * added, removed or replaced whole, or an array or object whose own widget was touched, holds `true` at each of its
- * leaves, those it held at the blur for a touch, or `true` itself when it is empty or not a plain object or array: a
- * `Date`, a `File` or another `Blob` is marked as one field. So a member may be `true` whatever its type. The root is
- * typed by `T` alone, as `EventFormData` is, though a write at the root that replaces an object or array root whole
- * marks it `true`.
+ * mark, and an array an entry for each item, `undefined` where the item holds none. A field marked whole, one that
+ * was added, removed or replaced whole, holds `true` at each of its leaves, or `true` itself when it is empty or not a
+ * plain object or array: a `Date`, a `File` or another `Blob` is marked as one field. An array or object whose own
+ * widget was touched holds `true` at each leaf it held at the blur, and nothing when it held none. So a member may be
+ * `true` whatever its type. The root is typed by `T` alone, as `EventFormData` is, though a write at the root that
+ * replaces an object or array root whole marks it `true`.
  */
 export type NestedBooleans<T> = T extends Date | Blob
   ? boolean

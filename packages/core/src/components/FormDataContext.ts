@@ -18,14 +18,16 @@ interface FormDataAccess {
    * reached the form at that path.
    */
   sendMove(move: AnnouncedMove, send: () => void): MoveOutcome | undefined;
-  /** Calls `send`, which sends the blur a widget reported, with `fieldPath` as the path of the field it is for and
-   * `touches` as what it touches. The innermost field names them: a blur passes up through every `SchemaField` above
-   * the widget, and only the first to send it knows the path the widget renders and whether the widget is the field's
-   * own or its option selector. A widget's `onBlur` names an id, which a custom `idPrefix` or `idSeparator` can make
-   * ambiguous, so the path travels this way instead. With `replaces`, the blur is named here even though a field below
-   * named it, for a field whose control below sits at a path no data is stored at
+  /** Calls `send`, which sends the blur a widget reported with `id`, with `fieldPath` as the path of the field it is
+   * for and `touches` as what it touches. The innermost field names them: a blur passes up through every `SchemaField`
+   * above the widget, and only the first to send it knows the path the widget renders and whether the widget is the
+   * field's own or its option selector. A widget's `onBlur` names an id, which a custom `idPrefix` or `idSeparator` can
+   * make ambiguous, so the path travels this way instead. A field above that sends a blur with another id while one is
+   * on its way, such as its own widget's before forwarding the one from below, names that blur itself. With `replaces`,
+   * the blur is named here even though a field below named it, for a field whose control below sits at a path no data
+   * is stored at
    */
-  sendBlur(fieldPath: FieldPath, touches: BlurTouch, send: () => void, replaces?: boolean): void;
+  sendBlur(id: string, fieldPath: FieldPath, touches: BlurTouch, send: () => void, replaces?: boolean): void;
   /** The form's current data at `path` */
   readField<D>(path: FieldPath): D;
   /** The form's data at `path` as its last commit rendered it, which a field rendered in that commit was handed */

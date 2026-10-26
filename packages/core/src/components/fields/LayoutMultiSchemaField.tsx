@@ -95,14 +95,13 @@ export default function LayoutMultiSchemaField<
   );
   const allUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const selectorField = getSelectorField<T, S, F>(schema, allUiOptions);
+  if (!selectorField) {
+    throw new Error('No selector field provided for the LayoutMultiSchemaField');
+  }
   // Its widget writes the selector field, so its blur touches that field, as a widget bound to it would
-  const handleBlur = useSendBlur(
-    selectorField === undefined ? fieldPath : toFieldPath(selectorField, fieldPath),
-    onBlur,
-    'field',
-  );
+  const handleBlur = useSendBlur(toFieldPath(selectorField, fieldPath), onBlur, 'field');
   const firstOption = useMemo(
-    () => (selectorField ? getFirstOption<T, S, F>(schema, schemaUtils, selectorField) : undefined),
+    () => getFirstOption<T, S, F>(schema, schemaUtils, selectorField),
     [schema, schemaUtils, selectorField],
   );
   const {
@@ -116,9 +115,6 @@ export default function LayoutMultiSchemaField<
     style: _style,
     ...uiOptions
   } = allUiOptions;
-  if (!selectorField) {
-    throw new Error('No selector field provided for the LayoutMultiSchemaField');
-  }
   const selectedOption = getByPath(formData, selectorField);
   const { Widget } = resolveSelectorWidget<T, S, F>(schema, firstOption, selectorField, allUiOptions, widgets);
 

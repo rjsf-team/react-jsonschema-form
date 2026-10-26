@@ -1,4 +1,6 @@
-import { copyAlongPath, shareData } from '../src/components/formState.ts';
+import { toFieldPath } from '@rjsf/utils';
+
+import { copyAlongPath, shareData, toFormStatus } from '../src/components/formState.ts';
 
 describe('copyAlongPath()', () => {
   it('copies the containers along the path and shares everything off it', () => {
@@ -92,5 +94,17 @@ describe('shareData()', () => {
     );
 
     expect(Reflect.get(Object(marked.formData), marker)).toBe(true);
+  });
+});
+
+describe('toFormStatus()', () => {
+  it('keeps a field touched whole marked true whatever is touched inside it, in either order', () => {
+    const formData = { tags: { a: 1 } };
+    const tags = toFieldPath('tags');
+    const touchedFieldsOf = (...paths: ReturnType<typeof toFieldPath>[]) =>
+      toFormStatus({ formData, baseline: formData, touchedPaths: new Set(paths) }, 0).touchedFields;
+
+    expect(touchedFieldsOf(tags, toFieldPath('a', tags))).toEqual({ tags: true });
+    expect(touchedFieldsOf(toFieldPath('a', tags), tags)).toEqual({ tags: true });
   });
 });

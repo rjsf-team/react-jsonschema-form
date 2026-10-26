@@ -25,7 +25,7 @@ export default function useSendBlur(
   return useCallback(
     (id: string, value: unknown) => {
       if (access) {
-        access.sendBlur(fieldPath, touches, () => onBlur(id, value), replaces);
+        access.sendBlur(id, fieldPath, touches, () => onBlur(id, value), replaces);
       } else {
         onBlur(id, value);
       }

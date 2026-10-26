@@ -176,13 +176,14 @@ function noMarks(formData: unknown): unknown {
 /** `marks` with the field at `path` of `data` marked touched, `true` whether or not it holds a value. An object the
  * data does not hold yet, as one whose fields were blurred but never filled in, is marked as if it were there; a key a
  * change dropped without an announced move is no longer touched, see `withoutDroppedPaths()`. An array item that is not
- * there, or a path through a value that holds no fields, marks nothing. Writes into the containers of `marks`, which
- * the caller built
+ * there, or a path through a value that holds no fields, marks nothing. A field marked whole stays `true` whatever is
+ * marked inside it, in whichever order the paths are marked. Writes into the containers of `marks`, which the caller
+ * built
  *
  * @returns - The marks with the field marked, or undefined when the path marks nothing
  */
 function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
-  if (path.length === 0) {
+  if (path.length === 0 || marks === true) {
     return true;
   }
   const [key, ...rest] = path;
@@ -240,8 +241,8 @@ function touchedMarksOf(formData: unknown, touchedPaths: TouchedPaths): unknown 
  * @param submitCount - How many submits have reached the form since it mounted or was last reset
  * @returns - The status of the form
  */
-export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  { formData, baseline, touchedPaths }: FormState<T, S, F>,
+export function toFormStatus<T>(
+  { formData, baseline, touchedPaths }: DataAndBaseline<T> & { touchedPaths: TouchedPaths },
   submitCount: number,
 ): FormStatus<T> {
   let dirtyFields: NestedBooleans<T> | undefined;
@@ -301,6 +302,11 @@ export type BlurTouch = 'field' | 'leaves' | 'nothing';
 export interface FieldBlur {
   fieldPath: FieldPath;
   touches: BlurTouch;
+}
+
+/** A blur and the form's data when it reached the form */
+export interface BlurAtData<T> extends FieldBlur {
+  dataAtBlur: T | undefined;
 }
 
 const NO_PATHS: ReadonlySet<FieldPath> = new Set();
@@ -1454,10 +1460,9 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
   options: ErrorOptions<S>,
 ): ErrorState<T> {
   const { isSchemaChanged = false, mustValidate, validationSchema, getDataChange = () => UNCHANGED } = options;
-  const isHidden = hiddenErrorsOf(props, {
-    revealed: options.revealed ?? current?.revealed ?? NOTHING_REVEALED,
-  });
+  const revealed = options.revealed ?? current?.revealed ?? NOTHING_REVEALED;
   if (mustValidate) {
+    const isHidden = hiddenErrorsOf(props, { revealed });
     return runLiveValidation(props, context, formData, current?.customErrors, validationSchema, undefined, isHidden);
   }
   // oxlint-disable-next-line typescript/no-deprecated
@@ -1471,6 +1476,9 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
         { errors: current?.schemaValidationErrors ?? [], errorSchema: current?.schemaValidationErrorSchema ?? {} },
         getDataChange(),
       );
+  // Only a validator result that holds errors is filtered, so the pass a parent's re-render makes over a valid form
+  // costs nothing more
+  const isHidden = validation.errors.length > 0 ? hiddenErrorsOf(props, { revealed }) : undefined;
   return {
     ...mergeErrors(validation, props.extraErrors, current?.customErrors, isHidden),
     schemaValidationErrors: validation.errors,
@@ -1885,15 +1893,20 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
 
 /** `current` with the blur `blurred` touching what it touches, see `BlurTouch`, and revealing it when `liveErrors` is
  * `'field'` and `liveValidate` is `'onBlur'`: a field's errors, or for a blur that touches nothing, the container's
- * own errors
+ * own errors. A field a change dropped since the blur reached the form, such as one the `Form`'s `onBlur` writes over,
+ * is neither touched nor revealed, as a change drops the marks of the keys it drops, see `withoutDroppedPaths()`
  */
 function markBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
-  { fieldPath, touches }: FieldBlur,
+  { fieldPath, touches, dataAtBlur }: BlurAtData<T>,
 ): FormState<T, S, F> {
   const { touchedPaths, revealed } = current;
   const isRevealed = props.liveErrors === 'field' && isBlurValidated(props);
+  const blurredPaths = new Set([fieldPath]);
+  if (withoutDroppedPaths(blurredPaths, dataAtBlur, current.formData) !== blurredPaths) {
+    return current;
+  }
   if (touches === 'nothing') {
     return isRevealed
       ? { ...current, revealed: { ...revealed, containers: withPaths(revealed.containers, fieldPath) } }
@@ -1914,13 +1927,14 @@ function markBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
  *
  * @param current - The state at the blur
  * @param props - The current props
- * @param [blurred] - The field blurred and what its blur touches, when a `SchemaField` reported it
+ * @param [blurred] - The field blurred, what its blur touches and the form's data when the blur reached it, when a
+ *        `SchemaField` reported it
  * @returns - The next state, sharing every unchanged subtree with `current`
  */
 export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
-  blurred?: FieldBlur,
+  blurred?: BlurAtData<T>,
 ): FormState<T, S, F> {
   const { omitExtraData, liveOmit } = props;
   const { customErrors, retrievedSchema } = current;

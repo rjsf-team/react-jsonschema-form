@@ -153,8 +153,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // that carried one
   let announced: AnnouncedMove | undefined;
   let moved: { move: AnnouncedMove; outcome: MoveOutcome } | undefined;
-  // The field whose blur is on its way to the form and what the blur touches, see `FormDataAccess.sendBlur()`
-  let blurring: FieldBlur | undefined;
+  // The field whose blur is on its way to the form, what the blur touches and the id the widget reported it with, see
+  // `FormDataAccess.sendBlur()`
+  let blurring: (FieldBlur & { id: string }) | undefined;
   // The form's option selections and cycle expansions, which live as long as the form, see `createUiState()`
   const { uiState } = initial;
   // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
@@ -554,15 +555,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    *
    * @param id - The unique `id` of the field that was blurred
    * @param [blurred] - The field that was blurred and what its blur touches, when a `SchemaField` reported it
+   * @param dataAtBlur - The form's data when the blur reached it, before the `Form`'s `onBlur` ran
    */
-  const blur = (id: string, blurred: FieldBlur | undefined) => {
+  const blur = (id: string, blurred: FieldBlur | undefined, dataAtBlur: T | undefined) => {
     const props = committedProps;
     const { omitExtraData, liveOmit } = props;
     if (isDetached || !(blurred || (omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
       return;
     }
     const start = current();
-    const committed = commit(settled((base) => applyBlur(base, props, blurred)));
+    const committed = commit(settled((base) => applyBlur(base, props, blurred && { ...blurred, dataAtBlur })));
     // Only the `IChangeEvent` members count; the validator's own results and the status are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
       props.onChange?.(eventOf(committed), id);
@@ -772,13 +774,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       formElement = element;
     },
     /** Calls `send` with `fieldPath` as the path of the blur it sends and `touches` as what it touches, unless a field
-     * this one holds has named its own already, see `FormDataAccess.sendBlur()`
+     * this one holds has named the same blur already, see `FormDataAccess.sendBlur()`
      */
-    sendBlur: (fieldPath: FieldPath, touches: BlurTouch, send: () => void, replaces = false) => {
+    sendBlur: (id: string, fieldPath: FieldPath, touches: BlurTouch, send: () => void, replaces = false) => {
       const previous = blurring;
       if (
         previous !== undefined &&
         !replaces &&
+        previous.id === id &&
         isPathPrefix(fieldPathToList(fieldPath), fieldPathToList(previous.fieldPath))
       ) {
         send();
@@ -786,7 +789,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       }
       // A blur named by a field elsewhere, as one a parent's `onBlur` causes for another field before it sends its
       // own, is kept for the blur that named it, which reaches the form once this one has
-      blurring = { fieldPath, touches };
+      blurring = { fieldPath, touches, id };
       try {
         send();
       } finally {
@@ -911,9 +914,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       const blurred = blurring;
       // Taken by this blur, so one that `onBlur` causes names its own field
       blurring = undefined;
+      const dataAtBlur = blurred && current().formData;
       // Before the blur reads the state, so it validates an edit `onBlur` makes instead of reverting it
       callWithDeferredThrow(() => props.onBlur?.(id, data));
-      callWithDeferredThrow(() => blur(id, blurred));
+      callWithDeferredThrow(() => blur(id, blurred, dataAtBlur));
     },
     handleFocus: (id: string, data: unknown) => {
       if (isDetached) {
