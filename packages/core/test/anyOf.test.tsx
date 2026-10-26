@@ -134,7 +134,7 @@ describe('anyOf', () => {
     expect(node.querySelectorAll('select')).toHaveLength(1);
     expect(node.querySelector('select')).toHaveAttribute('id', 'root__anyof_select');
     expect(node.querySelectorAll('span.required')).toHaveLength(1);
-    expect(node.querySelectorAll('#root_XxxOf__description')).toHaveLength(1);
+    expect(node.querySelectorAll('#root__XxxOf__description')).toHaveLength(1);
     // The object renders beside the selected option under an id of its own, so nothing else claims the field's
     expect(node.querySelectorAll('#root__description')).toHaveLength(0);
     expect(node.querySelectorAll('#root_baz')).toHaveLength(1);
@@ -2338,10 +2338,10 @@ describe('anyOf', () => {
 
     it('should not render a spurious XxxOf-prefixed input alongside the anyOf selector', () => {
       // Mirror of the oneOf regression: { type: 'string', anyOf: [...] } must not
-      // render an outer StringField input with id="root_XxxOf".
+      // render an outer StringField input with id="root__XxxOf".
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('input#root_XxxOf')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root__XxxOf')).not.toBeInTheDocument();
     });
 
     it('should render the option text input with the correct root id', () => {
@@ -2372,7 +2372,7 @@ describe('anyOf', () => {
       };
       const { node } = createFormComponent({ schema: numberSchema });
 
-      expect(node.querySelector('input#root_XxxOf')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root__XxxOf')).not.toBeInTheDocument();
       expect(node.querySelector('input#root')).toBeInTheDocument();
     });
 
@@ -2405,7 +2405,7 @@ describe('anyOf', () => {
       };
       const { node } = createFormComponent({ schema: arraySchema });
 
-      expect(node.querySelector('[id="root_XxxOf"]')).not.toBeInTheDocument();
+      expect(node.querySelector('[id="root__XxxOf"]')).not.toBeInTheDocument();
     });
 
     it('should still render common object properties alongside the anyOf selector', () => {

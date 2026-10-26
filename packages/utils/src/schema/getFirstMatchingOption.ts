@@ -31,7 +31,7 @@ export function optionNodeOf<S extends StrictRJSFSchema = RJSFSchema>(option: un
  * @param value - The value
  * @returns - Whether the keyword allows the value
  */
-function typeAllows(type: unknown, value: unknown): boolean {
+export function typeAllows(type: unknown, value: unknown): boolean {
   if (type === undefined) {
     return true;
   }

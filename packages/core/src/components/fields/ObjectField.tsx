@@ -19,7 +19,11 @@ import {
   setByPath,
   setOwn,
   ADDITIONAL_PROPERTIES_KEY,
+  ALL_OF_KEY,
+  ELSE_KEY,
   ERRORS_KEY,
+  REF_KEY,
+  THEN_KEY,
   deepEquals,
   getAdditionalPropertySchema,
   getAdditionalPropertyType,
@@ -27,6 +31,8 @@ import {
   getMatchingPatternProperties,
   getFieldTypeForWidget,
   getOptionUiSchema,
+  getRenderedOptionSchema,
+  getRenderedOptionUiSchema,
   getTemplates,
   getPropertySchema,
   getUiOptions,
@@ -101,28 +107,23 @@ function getDefaultValue<
   }
 }
 
-/** Returns the type a new additional property described by `subSchema` is seeded with: the type
- * `getAdditionalPropertyType()` reads out of it, or, where the `anyOf`/`oneOf` options it leaves the type to disagree
- * about one, the type of the first of those options. The stub `retrieveSchema()` builds for such a subschema names no
- * type, since choosing an option is what settles it, and `MultiSchemaField` opens on the first option until a value
- * matches another one, so that option's type is the one the field the user is handed renders and a seed of any other
- * type is a value that field cannot show.
+/** Returns the `$ref`s resolving `schema` enters: its own, and those of the `allOf` members and the `then`/`else`
+ * branches merged into it, at any depth. Its options, properties and items are subschemas of their own, which resolving
+ * it leaves unresolved.
  *
- * The subschema is read with its options resolved, so an option spelled as a `$ref` -- which names no type of its own,
- * where the field `MultiSchemaField` renders for it takes the type of what it refers to -- is read as the definition it
- * names, as `retrieveSchema()` reads the very same options when it stubs the property. An option that leaves the type
- * to options that disagree again leaves the seed to the `New Value` a property no schema names a type for starts at.
- *
- * @param subSchema - The schema describing the additional property, resolved with its options
- * @returns - The type to seed the new property with, or undefined when no option names one either
+ * @param schema - The schema as written
+ * @returns - The `$ref`s, in the order they are written
  */
-function getSeedType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): string | undefined {
-  const type = getAdditionalPropertyType<S>(subSchema);
-  if (type !== undefined) {
-    return type;
+function enteredRefs<S extends StrictRJSFSchema = RJSFSchema>(schema: unknown): string[] {
+  if (!isSchemaObject<S>(schema)) {
+    return [];
   }
-  const [firstOption] = getXxxOfOptions<S>(subSchema)?.options ?? [];
-  return isObject(firstOption) ? getAdditionalPropertyType<S>(firstOption) : undefined;
+  const ownRef = schema[REF_KEY];
+  const allOf: unknown[] = Array.isArray(schema[ALL_OF_KEY]) ? schema[ALL_OF_KEY] : [];
+  return [
+    ...(typeof ownRef === 'string' ? [ownRef] : []),
+    ...[...allOf, schema[THEN_KEY], schema[ELSE_KEY]].flatMap((member) => enteredRefs<S>(member)),
+  ];
 }
 
 function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
@@ -609,23 +610,19 @@ export default function ObjectField<
     [uiSchema, declarationOf],
   );
 
-  /** Returns the value a property added or renamed to `key` starts out holding, read from the very schema the object
-   * says describes that name, which is the one `retrieveSchema()` stubs the field from, so the seed and the field can't
-   * disagree about the key.
+  /** Returns the value a field rendered from `keySchema` and `keyUiSchema` starts out holding. One with no `const` or
+   * default of its own that offers `anyOf`/`oneOf` options, and isn't a select over them, starts as the option
+   * `MultiSchemaField` opens on with no data, its first, would start: that is the field the user is handed, so a value
+   * of any other option, or the zero value of a type the options disagree about, is one that field can't show or
+   * that fails the option it shows, as a `'New Value'` does a `{ enum: ['a', 'b'] } | null`. The options are read
+   * resolved, as `retrieveSchema()` reads them when it stubs the property, so an option written as a `$ref` is followed
+   * as the definition it names. `seen` holds the `$ref`s the options already followed entered, wherever resolving them
+   * entered one, so an option entering no `$ref` it hasn't entered before ends the descent: only a `$ref` can lead back,
+   * since an inline option is a smaller schema at each level, and each level that goes on enters one more of the
+   * finitely many `$ref`s the schema holds.
    */
-  const seedForKey = useCallback(
-    (key: string) => {
-      const keySchema = schemaForKey(key);
-      if (keySchema === false) {
-        // A schema that forbids the name leaves `retrieveSchema()` nothing but the `{ type: 'null' }` stub to render it
-        // with, so any other seed would be a value no field can show
-        return null;
-      }
-      if (!isSchemaObject<S>(keySchema)) {
-        // A `true`, which is what an `additionalProperties` the schema leaves out reads as, describes no schema to seed
-        // from, so the new property starts at the value a field with no type to render offers
-        return getDefaultValue<T, S, F>(translateString);
-      }
+  const seedFrom = useCallback(
+    function seed(keySchema: S, keyUiSchema: UiSchema<T, S, F> | undefined, seen: ReadonlySet<string>): unknown {
       // Resolved the way `retrieveSchema()` resolves it before stubbing, so a `$ref` and an `allOf` of matching
       // patterns are seeded from what they describe. A resolution against no data at all would answer an `if` inside
       // the subschema with an empty object, which satisfies any condition vacuously, so the schema is resolved again
@@ -636,7 +633,6 @@ export default function ObjectField<
         describedKeySchema.default === undefined
           ? describedKeySchema
           : schemaUtils.retrieveSchema(keySchema, describedKeySchema.default as T);
-      const keyUiSchema = uiSchemaForKey(key);
       // The widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in. Read
       // off the resolved schema, which is the one `SchemaField` is handed: that carries the name of the definition it
       // came from, where an unresolved `$ref` only names one while it sits at the top of the schema, which it does not
@@ -650,9 +646,10 @@ export default function ObjectField<
       // widget picks out of it: a `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a
       // `0` in the textarea. One that names no list is seeded as the field it is stubbed into renders it, which reads
       // a typeless `enum` of numbers as the number its values hold where a field's own type would call it a string
+      const optionsResolvedKeySchema = schemaUtils.retrieveSchema(resolvedKeySchema, undefined, true);
       const type = Array.isArray(resolvedKeySchema.type)
         ? getFieldTypeForWidget(resolvedKeySchema, widget)
-        : getSeedType<S>(schemaUtils.retrieveSchema(resolvedKeySchema, undefined, true));
+        : getAdditionalPropertyType<S>(optionsResolvedKeySchema);
       // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
       // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled
       let firstOption: EnumOptionsType<S> | undefined;
@@ -682,9 +679,49 @@ export default function ObjectField<
       if (newValue !== undefined) {
         return newValue;
       }
+      const xxxOf = getXxxOfOptions<S>(optionsResolvedKeySchema);
+      const [openedOption] = xxxOf?.options ?? [];
+      if (xxxOf && !isConstantSelect<S>(resolvedKeySchema) && isSchemaObject<S>(openedOption)) {
+        const [writtenOption] = getXxxOfOptions<S>(resolvedKeySchema)?.options ?? [];
+        const refs = enteredRefs<S>(writtenOption);
+        if (refs.length === 0 || refs.some((ref) => !seen.has(ref))) {
+          return seed(
+            getRenderedOptionSchema<S>(optionsResolvedKeySchema, openedOption),
+            getRenderedOptionUiSchema<T, S, F>(
+              optionsResolvedKeySchema,
+              openedOption,
+              resolvedKeyUiSchema,
+              getOptionUiSchema<T, S, F>(resolvedKeyUiSchema, xxxOf.key, 0),
+            ),
+            refs.length === 0 ? seen : new Set([...seen, ...refs]),
+          );
+        }
+      }
       return firstOption ? firstOption.value : getDefaultValue<T, S, F>(translateString, type);
     },
-    [rootSchema, schemaForKey, schemaUtils, translateString, uiSchemaForKey, uiSchemaDefinitions, globalUiOptions],
+    [rootSchema, schemaUtils, translateString, uiSchemaDefinitions, globalUiOptions],
+  );
+
+  /** Returns the value a property added or renamed to `key` starts out holding, read from the very schema the object
+   * says describes that name, which is the one `retrieveSchema()` stubs the field from, so the seed and the field can't
+   * disagree about the key.
+   */
+  const seedForKey = useCallback(
+    (key: string) => {
+      const keySchema = schemaForKey(key);
+      if (keySchema === false) {
+        // A schema that forbids the name leaves `retrieveSchema()` nothing but the `{ type: 'null' }` stub to render it
+        // with, so any other seed would be a value no field can show
+        return null;
+      }
+      if (!isSchemaObject<S>(keySchema)) {
+        // A `true`, which is what an `additionalProperties` the schema leaves out reads as, describes no schema to seed
+        // from, so the new property starts at the value a field with no type to render offers
+        return getDefaultValue<T, S, F>(translateString);
+      }
+      return seedFrom(keySchema, uiSchemaForKey(key), new Set());
+    },
+    [schemaForKey, seedFrom, translateString, uiSchemaForKey],
   );
 
   /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback once the new

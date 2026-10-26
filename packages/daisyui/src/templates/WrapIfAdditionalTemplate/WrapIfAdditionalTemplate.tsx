@@ -1,6 +1,7 @@
 import type { WrapIfAdditionalTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
   getAdditionalKeyAttributes,
@@ -53,6 +54,7 @@ export default function WrapIfAdditionalTemplate<
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
+  const keyId = additionalKeyId(id);
   const marginDesc = rawDescription ? 10 : 0;
   const margin = hasKeyLabel ? 32 + marginDesc : 10;
 
@@ -69,14 +71,14 @@ export default function WrapIfAdditionalTemplate<
       <div className='flex items-baseline' style={{ justifyContent: 'space-between' }}>
         <div>
           {hasKeyLabel && (
-            <label htmlFor={`${id}-key`} className='label'>
+            <label htmlFor={keyId} className='label'>
               <span className='label-text'>{keyLabel}</span>
             </label>
           )}
           {propertyNamesEnum ? (
             <AdditionalPropertyKeySelect<T, S, F>
               errorAttributes={keyAttributes}
-              id={`${id}-key`}
+              id={keyId}
               label={keyLabel}
               hideLabel
               labelledByTemplate={hasKeyLabel}
@@ -93,7 +95,7 @@ export default function WrapIfAdditionalTemplate<
               key={keyName}
               type='text'
               className='input input-bordered'
-              id={`${id}-key`}
+              id={keyId}
               aria-label={hasKeyLabel ? undefined : keyLabel}
               {...keyAttributes}
               onBlur={onKeyRenameBlur}
