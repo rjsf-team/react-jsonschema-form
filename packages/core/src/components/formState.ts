@@ -48,9 +48,10 @@ import {
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
-import type { EventFormData, FormStatus, IChangeEvent, NestedBooleans } from './IChangeEvent.ts';
+import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
+import type { UiStateReader } from './uiState.ts';
 import {
   createUiState,
   fieldStateOf,
@@ -244,7 +245,7 @@ function touchedMarksOf(formData: unknown, touchedPaths: TouchedPaths): unknown 
 export function toFormStatus<T>(
   { formData, baseline, touchedPaths }: DataAndBaseline<T> & { touchedPaths: TouchedPaths },
   submitCount: number,
-): FormStatus<T> {
+): RJSFFormStatus<T> {
   let dirtyFields: NestedBooleans<T> | undefined;
   let touched = false;
   let touchedFields: NestedBooleans<T> | undefined;
@@ -1231,6 +1232,8 @@ interface DeriveDataOptions {
    * instance has generated defaults before
    */
   isReset?: boolean;
+  /** The option selections to settle under, in place of the state's own, as for the baseline, see `baselineUiState` */
+  uiState?: UiStateReader;
 }
 
 /** Settles the data for `props` and `inputFormData`: any missing required defaults are filled in, then, when asked,
@@ -1273,6 +1276,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   schemaUtils: SchemaUtilsType<T, S, F>,
 ): { formData: T | undefined; retrievedSchema: S } {
   const { isSanitized = false, edit, heldPath, isReset = false } = options;
+  const uiState = options.uiState ?? current?.uiState;
   const { uiSchema = {} } = props;
   const rootSchema = schemaUtils.getRootSchema();
   // The data is shared against the committed data when there is some, so an unchanged subtree keeps the reference the
@@ -1282,7 +1286,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // though this instance has generated defaults before.
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
   // The defaults of a field offering options are those of the option it shows, which is the form's to keep
-  const fieldState = current && fieldStateOf(current.uiState, schemaUtils, heldPath);
+  const fieldState = uiState && fieldStateOf(uiState, schemaUtils, heldPath);
   const fill = (data: T | undefined) =>
     replaceEqualDeep(
       shareBase,
@@ -1305,12 +1309,12 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     retrievedSchema: resolveRetrievedSchema(current, schemaUtils, data),
   });
   let tree = treeOf(formData);
-  if (isSanitized && current) {
+  if (isSanitized && current && uiState) {
     const seen: string[] = [];
     let previous: FieldTree<T, S, F> = current;
     let roundEdit = edit;
     for (;;) {
-      const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, current.uiState, roundEdit));
+      const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, uiState, roundEdit));
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
       // does, so a default the round dropped is there again
@@ -1602,14 +1606,14 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
   }
   const fromBaseline: FormState<T, S, F> = {
     ...current,
-    uiState: current.baselineUiState,
     formData: baseline,
     // Read only by the sanitize, as the tree the data is diffed against
     retrievedSchema: options.isSanitized
       ? resolveRetrievedSchema(current, current.schemaUtils, baseline)
       : current.retrievedSchema,
   };
-  return settleFormData(fromBaseline, baseline, options, props, schemaUtils).formData;
+  return settleFormData(fromBaseline, baseline, { ...options, uiState: current.baselineUiState }, props, schemaUtils)
+    .formData;
 }
 
 /** Freezes plain objects and arrays in `data`, and nothing else: a `File`, a `Date` or a class instance is left

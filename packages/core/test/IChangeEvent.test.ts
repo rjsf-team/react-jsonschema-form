@@ -1,7 +1,7 @@
 import type { FormState } from '../src/components/Form.tsx';
-import type { EventFormData, FormStatus, IChangeEvent, NestedBooleans } from '../src/index.ts';
+import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from '../src/index.ts';
 
-type EventKey = Exclude<keyof IChangeEvent, 'status' | keyof FormStatus>;
+type EventKey = Exclude<keyof IChangeEvent, 'status' | keyof RJSFFormStatus>;
 type Mutable<O> = { -readonly [K in keyof O]: O[K] };
 /** `formData` is the one deliberate difference: the event narrows it with `EventFormData`, pinned below */
 type SharedKey = Exclude<EventKey, 'formData'>;
@@ -36,7 +36,7 @@ describe('IChangeEvent', () => {
   });
 
   it('carries the form status, with dirtyFields and touchedFields nested like the data', () => {
-    expectTypeOf<Pick<IChangeEvent, keyof FormStatus>>().toEqualTypeOf<FormStatus>();
+    expectTypeOf<Pick<IChangeEvent, keyof RJSFFormStatus>>().toEqualTypeOf<RJSFFormStatus>();
     expectTypeOf<IChangeEvent['dirty']>().toEqualTypeOf<boolean>();
     expectTypeOf<IChangeEvent['touched']>().toEqualTypeOf<boolean>();
     expectTypeOf<IChangeEvent<{ name: string; tags: string[] }>['touchedFields']>().toEqualTypeOf<

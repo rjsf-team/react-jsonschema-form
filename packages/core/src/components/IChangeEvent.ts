@@ -46,7 +46,7 @@ export interface NestedBooleanObject {
 }
 
 /** The form's status, as every `IChangeEvent` and `FormRef.getStatus()` report it */
-export interface FormStatus<T = unknown> {
+export interface RJSFFormStatus<T = unknown> {
   /** Whether the data differs from the baseline: the data the form was last seeded with, on mount or by
    * `FormRef.reset()`, with the schema's defaults filled in
    */
@@ -65,8 +65,10 @@ export interface FormStatus<T = unknown> {
   readonly touchedFields: NestedBooleans<T>;
   /** How many submits have reached the form, valid or not, since the form mounted or was last reset, including one it
    * ignores while a promise `onSubmit` returned is pending. A submit the browser's constraint validation blocks never
-   * reaches it, so it is not counted unless `noHtml5Validate` is set, except while a promise `onSubmit` returned is
-   * pending: the form then ignores the submit before that validation would run, and counts it
+   * reaches it, so it is not counted unless `noHtml5Validate` is set. While a promise `onSubmit` returned is pending,
+   * though, the form ignores a click on its own submit button, Enter in a field that clicks that button, and
+   * `FormRef.submit()` before that validation would run, so it counts those either way. A submit button passed as
+   * `children` or a `<button form>` outside the form still goes through that validation then
    */
   readonly submitCount: number;
 }
@@ -83,7 +85,7 @@ export interface IChangeEvent<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> extends FormStatus<T> {
+> extends RJSFFormStatus<T> {
   /** The JSON schema object for the form */
   readonly schema: S;
   /** The uiSchema for the form */

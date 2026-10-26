@@ -41,7 +41,7 @@ import type { FormRef } from './FormRef.ts';
 import type { RevealedPaths, TouchedPaths } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
-import type { UiState } from './uiState.ts';
+import type { UiState, UiStateReader } from './uiState.ts';
 import UiStateContext from './UiStateContext.ts';
 
 /** `T` itself for any concrete type, but not a position TypeScript infers `T` from. `FormProps` wraps the configuration
@@ -317,7 +317,7 @@ export interface FormState<
   /** The option selections the baseline is derived under, whenever a prop change or an omission derives it again: none
    * for the baseline the form mounted with, and those shown at the last `reset()` for the one it seeded
    */
-  baselineUiState: UiState;
+  baselineUiState: UiStateReader;
   /** Whether there is data to live-validate when a prop changes: the props seeded the form with data, rather than
    * leaving it to the schema's defaults, or it has been edited since it mounted or was last reset
    */
@@ -420,8 +420,14 @@ type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormConte
 > & {
   SubmitButton: TemplatesType<T, S, F>['ButtonTemplates']['SubmitButton'];
   submitting: boolean;
+  /** Whether the form is pending in React's form status, see `FormStatusSubmitButton` */
+  isStatusPending?: boolean;
   /** Cancels the click after calling the app's `onClick`, see `cancelPendingClick` in `formModel.ts` */
-  cancelClick: (event: MouseEvent<HTMLElement>, onClick?: PendingButtonProps['onClick']) => void;
+  cancelClick: (
+    event: MouseEvent<HTMLElement>,
+    onClick: PendingButtonProps['onClick'] | undefined,
+    isStatusPending: boolean,
+  ) => void;
 };
 
 /** The submit button, `aria-disabled` and taking no click while the form is pending, through the props its uiSchema
@@ -431,6 +437,7 @@ type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormConte
 function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContextType>({
   SubmitButton,
   submitting,
+  isStatusPending = false,
   cancelClick,
   uiSchema,
   registry,
@@ -446,9 +453,9 @@ function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContex
        * show its message and move focus, for a submit the form ignores. Enter in a field clicks the form's default
        * button too. The app's own `onClick` still runs
        */
-      onClick: (event) => cancelClick(event, appOnClick),
+      onClick: (event) => cancelClick(event, appOnClick, isStatusPending),
     });
-  }, [submitting, cancelClick, uiSchema]);
+  }, [submitting, isStatusPending, cancelClick, uiSchema]);
   return <SubmitButton uiSchema={pendingUiSchema} registry={registry} pending={submitting} />;
 }
 
@@ -461,7 +468,7 @@ function FormStatusSubmitButton<T, S extends StrictRJSFSchema, F extends FormCon
   ...props
 }: PendingSubmitButtonProps<T, S, F>) {
   const { pending } = useFormStatus();
-  return <PendingSubmitButton {...props} submitting={submitting || pending} />;
+  return <PendingSubmitButton {...props} submitting={submitting || pending} isStatusPending={pending} />;
 }
 
 /** The model holds the state; rendering derives from it and the props what to show, and each commit hands that back */
