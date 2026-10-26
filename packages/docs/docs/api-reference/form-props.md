@@ -847,7 +847,112 @@ A pure function that decides what an edit leaves the form with. The form calls i
 
 It runs for every keystroke, so a rewrite has to hold for a value the user is still typing, and for a field they cleared, which is `undefined`. Upper-casing does; trimming would remove a space as soon as it is typed, so `hello world` would come out as `helloworld`. Trim on submit instead. Leave out a key `next` doesn't hold, as the example does for an empty `code`: `{ ...next, code: undefined }` adds one, so every edit while `code` is empty would come back rewritten.
 
-Return a value on every path: `undefined` leaves the form with no data, which a function body that forgets a `return` does, so the form warns about it in development. What you return is filled in with the schema's defaults like any data the form holds, so a property with a `default` that you leave out, or set to `undefined` under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'`, gets its default back. It is sanitized as the edit would be, too: when it switches an `if`/`then`/`else`, `dependencies` or other conditional, the values of the branch it leaves are dropped, as they are when the user makes that switch in the field. Return `next`'s unchanged subtrees as they are, so their fields do not render again. A copy of `previous` refuses the edit as `previous` itself does, except for an edit that leaves the data as it was, such as an option switch whose data fits both options or a reorder of two equal items: `next` is a copy of `previous` then, so a copy of either takes the edit, and only `previous` itself refuses it. At a root that holds a string, number or boolean, there is no copy to tell apart: such an edit's `next` is `previous` itself, so it can't be refused. The function must be pure: the form may call it again for the same edit. Don't mutate `next` or `previous`, since both share their unchanged parts with the data the form holds; return a new object instead. In development both are frozen, so a mutation throws. It is not called for what the form derives on its own: the defaults for a new schema, the live omit a blur runs, or a `reset()`.
+Return a value on every path: `undefined` leaves the form with no data, which a function body that forgets a `return` does, so the form warns about it in development. What you return is filled in with the schema's defaults like any data the form holds, so a property with a `default` that you leave out, or set to `undefined` under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'`, gets its default back. It is sanitized as the edit would be, too: when it switches an `if`/`then`/`else`, `dependencies` or other conditional, the values of the branch it leaves are dropped, as they are when the user makes that switch in the field. Return `next`'s unchanged subtrees as they are, so their fields do not render again. A copy of `previous` refuses the edit as `previous` itself does, except for an edit that leaves the data as it was, such as an option switch whose data fits both options or a reorder of two equal items: `next` is a copy of `previous` then, so a copy of either takes the edit, and only `previous` itself refuses it. At a root that holds a string, number or boolean, there is no copy to tell apart: such an edit's `next` is `previous` itself, so it can't be refused. The function must be pure: the form may call it again for the same edit. Don't mutate `next` or `previous`, since both share their unchanged parts with the data the form holds; return a new object instead. In development both are frozen, so a mutation throws. It is not called for what the form derives on its own: its defaults, the live omit a blur runs, or a `reset()`. The defaults are filled in on mount and again when the `schema`, a `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent` changes.
+
+### Compute a field from other fields
+
+A field computed from other fields belongs in `transformChange` too. Here `mode` follows `country`, and an `if`/`then` reads `mode` to add `rate`:
+
+```tsx
+import Form from '@rjsf/core';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+interface Settings {
+  country?: 'US' | 'SE';
+  mode?: 'auto' | 'manual';
+  rate?: number;
+}
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    country: { type: 'string', enum: ['US', 'SE'] },
+    mode: { type: 'string', enum: ['auto', 'manual'] },
+  },
+  if: { properties: { mode: { const: 'auto' } }, required: ['mode'] },
+  then: { properties: { rate: { type: 'number' } } },
+};
+
+const uiSchema: UiSchema<Settings> = { mode: { 'ui:readonly': true } };
+
+const initialData: Settings = { country: 'US' };
+
+const withMode = (data: Settings | undefined): Settings => {
+  const mode = data?.country === 'SE' ? 'auto' : 'manual';
+  return data?.mode === mode ? data : { ...data, mode };
+};
+
+<Form
+  schema={schema}
+  uiSchema={uiSchema}
+  validator={validator}
+  initialFormData={withMode(initialData)}
+  transformChange={withMode}
+/>;
+```
+
+A change to `country` and the `mode` it computes are one edit, so the form shows `rate` in the same render. `withMode` returns `next` itself when there is nothing to change, as the `code` rewrite above does for an empty `code`.
+
+Nothing else should set `mode`. An edit to it, from its widget or from `setFieldValue('mode', …)`, is sanitized against the branch it switches to before `withMode` puts `mode` back, so a switch to `manual` drops `rate`, and the value the user entered is lost. The uiSchema marks `mode` `ui:readonly` for the widget; code that wants another `mode` sets `country`.
+
+Before you write a stored record with `setFieldValue('', record)`, drop its `mode` and any `rate` the computed `mode` hides; `withMode` adds `mode` back. What a write leaves otherwise, from the form holding `{ country: 'US', mode: 'manual' }`:
+
+| Write                                                         | Data after it                                                                                            |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `setFieldValue('', { country: 'SE', rate: 5 })`               | `{ country: 'SE', mode: 'auto', rate: 5 }`: the form keeps a value the write sets itself                 |
+| `setFieldValue('', { country: 'US', rate: 5 })`               | `{ country: 'US', mode: 'manual', rate: 5 }`: `rate` is kept, not rendered but submitted                 |
+| `setFieldValue('', { country: 'US', mode: 'auto', rate: 5 })` | `{ country: 'US', mode: 'manual' }`: changing the stored `mode` is an edit to `mode`, which drops `rate` |
+| The third row's write, made right after the second row's      | `{ country: 'US', mode: 'manual', rate: 5 }`: the write changes nothing, so the hidden `rate` stays      |
+
+The form fills `initialFormData` in with the schema's defaults and any [`ui:initialValue`](uiSchema.md#initialvalue) without calling `transformChange`, so compute the field into `initialFormData` yourself, from an `initialData` that already holds any `default` or `ui:initialValue` of `country`; otherwise `mode` is computed before `country` has its value. The defaults the form fills in again when the `schema`, a `ui:emptyValue`, `defaultFormStateBehavior` or `additionalPropertiesWhenAbsent` changes skip `transformChange` too, so when such a change can give `country` a value, such as a new `schema` with a `default` for it, [remount the form under a new `key`](../migration-guides/v7.x%20upgrade%20guide.md#show-other-data-after-mount) as it arrives, with `initialFormData` computed from data that holds that default. The remount starts the form over from `initialFormData`, so read the form's current data with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically) in the event handler that swaps the `schema`, and keep the seed in state with the new `key`. Continuing the example above:
+
+```tsx
+import { useRef, useState } from 'react';
+import type { FormRef } from '@rjsf/core';
+
+const swedishDefault = 'SE';
+
+const swedishSchema: RJSFSchema = {
+  ...schema,
+  properties: { ...schema.properties, country: { type: 'string', enum: ['US', 'SE'], default: swedishDefault } },
+};
+
+function SettingsForm() {
+  const formRef = useRef<FormRef<Settings>>(null);
+  const [form, setForm] = useState({ key: 0, schema, initialFormData: withMode(initialData) });
+
+  function defaultToSweden() {
+    const data = formRef.current?.getFormData();
+    setForm({
+      key: form.key + 1,
+      schema: swedishSchema,
+      initialFormData: withMode({ ...data, country: data?.country ?? swedishDefault }),
+    });
+  }
+
+  return (
+    <>
+      <button type="button" onClick={defaultToSweden}>
+        Default to Sweden
+      </button>
+      <Form
+        key={form.key}
+        ref={formRef}
+        schema={form.schema}
+        uiSchema={uiSchema}
+        validator={validator}
+        initialFormData={form.initialFormData}
+        transformChange={withMode}
+      />
+    </>
+  );
+}
+```
+
+`swedishDefault` is the new default, and a `country` the data already holds overrides it. The `??` matters: clearing the `country` select leaves the key holding `undefined`, which a spread over `{ country: swedishDefault }` would copy. The seed is everything the form holds, the old schema's defaults included, so a default the new `schema` changes applies only where the data holds no value, as it would without a remount. Reading the data in the handler, not in render, keeps the seed fixed, so a later `reset()` returns to it.
+
+Setting the field from a widget's Effect, or calling `setFieldValue()` from `onChange`, makes it a second edit instead: `onChange` reports the first with `mode` out of date before it reports the second, and a widget's Effect also reports a change on mount that the user never made.
 
 ## translateString
 
