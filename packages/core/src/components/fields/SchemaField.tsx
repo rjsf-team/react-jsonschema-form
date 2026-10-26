@@ -702,7 +702,7 @@ export function useSchemaFieldPlan<
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
+  const { schemaUtils, globalUiOptions, fields } = registry;
   const namedFieldAbove = use(NamedFieldContext);
   const namedHere = namedFieldAbove?.fieldPath === fieldPath ? namedFieldAbove : undefined;
   const namedAbove = namedHere !== undefined;
