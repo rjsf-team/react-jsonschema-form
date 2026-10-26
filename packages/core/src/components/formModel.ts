@@ -47,7 +47,8 @@ import {
   validateFormData,
   withMarksSettled,
 } from './formState.ts';
-import { asFieldValue, isPathPrefix } from './uiState.ts';
+import type { RJSFFormStatus } from './IChangeEvent.ts';
+import { asFieldValue, fieldStateOf, isPathPrefix } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
 const HELD_SCALARS_LIMIT = 100;
@@ -252,6 +253,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   let attemptsBeforeReset = 0;
   // How many times `reset()` has run, so a blur whose `onBlur` reset the form touches nothing in the state it left
   let resets = 0;
+  // The status `getStatus()` last handed out, handed out again while the state and the count stand, so repeated reads
+  // share the `dirtyFields` it built
+  let lastStatus: { from: FormState<T, S, F>; status: RJSFFormStatus<T> } | undefined;
   const countSubmit = () => {
     attempts += 1;
   };
@@ -331,8 +335,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * and `validateForm()` act on
    */
   const withExtraDataOmitted = (props: FormProps<T, S, F>) => {
-    const state = current();
-    return props.omitExtraData === true ? omitExtraDataOf(state).formData : state.formData;
+    const { schemaUtils, schema, formData } = current();
+    return props.omitExtraData === true
+      ? schemaUtils.omitExtraData(schema, formData, fieldStateOf(uiState, schemaUtils))
+      : formData;
   };
 
   /** The window of the form element, whose classes the element and what it holds are instances of: a form rendered
@@ -706,7 +712,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const handle: FormRef<T> = {
     getFormData: () => toEventFormData(current().formData),
 
-    getStatus: () => toFormStatus(current(), attempts - attemptsBeforeReset),
+    getStatus: () => {
+      const state = current();
+      const submitCount = attempts - attemptsBeforeReset;
+      if (lastStatus?.from !== state || lastStatus.status.submitCount !== submitCount) {
+        lastStatus = { from: state, status: toFormStatus(state, submitCount) };
+      }
+      return lastStatus.status;
+    },
 
     /** Submits through the form element, see `FormRef.submit()`, whose submit event reaches `handleSubmit()`, which
      * submits the data the form holds. While the inputs show that data, the browser's constraint validation checks them

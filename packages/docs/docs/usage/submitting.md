@@ -213,7 +213,7 @@ Changes the user didn't make leave the form clean. When a new `schema` prop fill
 
 ### Making the saved data the baseline
 
-After a save, call `reset(saved)` on the form's ref with the data you saved. That data becomes the baseline and the form's data, and the form clears its errors, its touched fields and its submit count, without remounting. `reset()` with no argument goes back to the data the last `reset(saved)` passed, or to the props' seed if there was none.
+After a save, call `reset(saved)` on the form's ref with the data you saved. That data, with the schema's defaults filled in as on mount, becomes the baseline and the form's data, and the form clears its errors, its touched fields and its submit count, without remounting. `reset()` with no argument goes back to the data the last `reset(saved)` passed, or to the props' seed if there was none.
 
 The fields stay editable while a save is pending, so the user may change the data after submitting it. `reset(saved)` alone would replace those edits with the saved data. `getFormData()` returns the very object `onSubmit` was given until an edit replaces it, so compare the two by reference, and apply the newer data again as an edit on top of the saved baseline:
 
@@ -229,6 +229,8 @@ function markSaved<T>(form: FormRef<T> | null, saved: T) {
   }
 }
 ```
+
+Since `reset(saved)` fills in the schema's defaults, a field with a `default` that the user cleared before saving can come back. With [`mergeDefaultsIntoFormData`](../api-reference/form-props.md#mergedefaultsintoformdata) set to `'useDefaultIfFormDataUndefined'`, or when `saved` comes from the server without the cleared field, the reset fills the default in, and `markSaved()` keeps it, since no edit was made during the save. The form then shows the default, clean, and the next submit sends it.
 
 Any new data object counts as an edit here, including one the user didn't make: if the form re-derives its data while the save is pending, such as for a new `schema` prop that fills in a default, `markSaved()` applies that data as an edit too, so the form reads dirty after the save.
 
@@ -274,7 +276,9 @@ function EditPersonDialog({ person, onClose }: { person: Person; onClose: () => 
 
 ### Disabling submit when nothing changed
 
-To render from `dirty`, keep it in state from `onChange`. `onChange` fires for every edit and for the reset after a save, so the state follows the user's changes. A prop change, such as a new `schema` filling in a default, updates the status without calling `onChange`; if your form's props change while it is shown, read `getStatus().dirty` after passing them as well. A field typed into and cleared counts as changed, see `dirty` above, so the button stays enabled after that. Disable the default submit button through [`ui:submitButtonOptions`](../api-reference/uiSchema.md#submitbuttonoptions). While a save is pending, the form also marks the button `aria-disabled` and ignores another submit, whatever `disabled` you pass, see [A pending submission](#a-pending-submission):
+To render from `dirty`, keep it in state from `onChange`. `onChange` fires for every edit and for the reset after a save, so the state follows the user's changes. A prop change, such as a new `schema` filling in a default, updates the status without calling `onChange`; if your form's props change while it is shown, read `getStatus().dirty` after passing them as well. A field typed into and cleared counts as changed, see `dirty` above, so the button stays available after that.
+
+Mark the default submit button `aria-disabled` through [`ui:submitButtonOptions`](../api-reference/uiSchema.md#submitbuttonoptions), and cancel its click while nothing has changed, as the form does while a save is pending, see [A pending submission](#a-pending-submission). Don't pass `disabled`: the save makes the form clean, and the browser moves focus away from a focused button that becomes disabled, so a keyboard user who saved with it would lose their place. Canceling the click also stops Enter pressed in a field, which clicks the button, and keeps the browser's constraint validation from running. `FormRef.submit()` doesn't click the button, so check `getStatus().dirty` before calling it. While a save is pending, the form marks the button `aria-disabled` and cancels its click whatever you pass, and still calls your `onClick`:
 
 ```tsx
 function PersonForm({ person }: { person: Person }) {
@@ -287,7 +291,18 @@ function PersonForm({ person }: { person: Person }) {
       schema={schema}
       validator={validator}
       initialFormData={person}
-      uiSchema={{ 'ui:submitButtonOptions': { props: { disabled: !isDirty } } }}
+      uiSchema={{
+        'ui:submitButtonOptions': {
+          props: {
+            'aria-disabled': !isDirty,
+            onClick: (event) => {
+              if (!isDirty) {
+                event.preventDefault();
+              }
+            },
+          },
+        },
+      }}
       onChange={({ dirty }) => setIsDirty(dirty)}
       onSubmit={async ({ formData }) => {
         await save(formData);

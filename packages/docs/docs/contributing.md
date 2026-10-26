@@ -57,6 +57,40 @@ Staged files are automatically formatted upon commit using precommit hooks, assu
 
 CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the repository root for any commit the hooks did not see — one made with `--no-verify`, from a fresh worktree, or through the GitHub web editor.
 
+## Changelog
+
+A PR that changes anything a user of a published package can notice adds an entry to the changelog.
+Append it as the last bullet under the heading of each package whose users notice the change, in the upcoming release at the top of the file.
+If the top heading is dated, that release has shipped: add an undated heading for the next version above it.
+A change that belongs to no single package, such as a new Node or React requirement, goes once under `Dev / docs / playground` instead.
+If the change needs a bigger semver bump than that release's heading names, update the heading.
+A change to a package's peer dependency range goes under that package, and so does a dependency bump that changes what its users get, such as a fix or a new minimum version.
+Tests, CI, refactors, docs fixes, playground changes and dependency bumps users can't notice need no entry, and neither does a fix to a change that isn't released yet: edit that change's entry instead.
+
+Write the entry for someone deciding whether to upgrade, who won't open the PR:
+
+- Start with `Add`, `Change`, `Deprecate`, `Fix` or `Remove`, and name the component, prop or export a user meets, in backticks.
+- Say what users notice, not how the code does it. A fix names what went wrong for them: "Fix `ArrayField` dropping the last item's errors when an item is removed".
+- Leave the reasoning, the alternatives and the edge cases to the PR description, and end the entry with a link to the PR and to the issue it fixes, if any.
+- Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and link the [upgrade guide](#upgrade-guide) section that says what to change.
+  Link it on the docs site, as in `https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/vN.x%20upgrade%20guide#<section>`, since the entry is also copied into a GitHub Release, where relative paths don't resolve.
+- A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower type.
+- Aim for a sentence or two, about 200 characters. If it can't be both short and clear, keep it clear.
+
+For example, instead of an entry that explains the implementation:
+
+> Fixed `ObjectFieldTemplate` rendering a property with no column span when the `colSpan` map in `formContext` has no usable entry for its widget or field name. The lookup now falls through to the schema type and then to the default span, skipping entries that are not a whole number of columns from 0 to 24 and a `ui:field` that names no registered component. …
+
+write what users see:
+
+> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450))
+
+## Upgrade guide
+
+A breaking change also gets a section in the upgrade guide for the next major version N, `packages/docs/docs/migration-guides/vN.x upgrade guide.md`, in the same PR. Create the file if it doesn't exist yet.
+The guide answers one question: "my code broke, what do I change?". Each section has a heading that names the change as users meet it, then says who it affects, what happened before and what happens now, and what to do instead, with a before/after `diff` when code has to change. Link the reference docs for anything more.
+New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide.
+
 ## Documentation
 
 We use [Docusaurus](https://docusaurus.io/) to build our documentation. To run documentation locally, run:
@@ -155,11 +189,14 @@ If you make changes to those libraries, you will have to maintain that coverage,
 
 ## Releasing
 
+Each release starts by turning the upcoming release's section of the changelog into release notes. Commit them on the `rc` branch below before you run `pnpm exec nx release version --git-tag`, so that the tagged commit carries them. Date the section's heading with the day you plan to publish, as in `# 6.100.10 (2026-11-01)`, and if the rc PR merges on a later day, correct the date in that PR before merging it. Start the section with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
+
 To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
 For instance if you are about to create the new `6.100.10` branch, then you would run the following commands:
 
 ```bash
 git checkout -b rc6.100.10
+git commit -m "Release notes for 6.100.10" CHANGELOG.md
 pnpm exec nx release version --git-tag
 git commit -m "Releasing 6.100.10"
 git push
@@ -175,8 +212,7 @@ Then, make a PR to main. Merge the PR into main -- make sure you use "merge comm
 the original commit where the tag was based on is still present in the main branch.
 
 Then, create a release in the GitHub "Releases" tab, select the new tag that you have added,
-and add a description of the changes in the new release. You can copy
-the latest changelog entry in `CHANGELOG.md` to make the release notes, and update as necessary.
+and copy the release's changelog section into its description.
 
 This will trigger a GitHub Actions pipeline that will build and publish all packages to npm.
 

@@ -1894,7 +1894,7 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     ...context,
     formData,
     baseline: formData,
-    baselineUiState: withSelectionsAsOf(context.uiState),
+    baselineUiState: withSelectionsAsOf(context.uiState, (at) => getAt(formData, at)),
     touchedPaths: NO_PATHS,
     revealed: NOTHING_REVEALED,
     isDataPassed: seed !== undefined,
