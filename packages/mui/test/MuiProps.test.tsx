@@ -2,6 +2,8 @@ import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
+import { duplicateIds } from '../../../testing/duplicateIds.ts';
+import { elementOf } from '../../../testing/elementOf.ts';
 import type { BaseInputTemplateMuiProps } from '../src/BaseInputTemplate/BaseInputTemplate.tsx';
 import type { UiSchema as MuiUiSchema } from '../src/index.ts';
 import Form from '../src/index.ts';
@@ -279,8 +281,7 @@ describe('MUI Theme-Specific Props', () => {
 
     const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
 
-    const ids = [...container.querySelectorAll('[id]')].map((element) => element.id);
-    expect(new Set(ids).size).toBe(ids.length);
+    expect(duplicateIds(container)).toEqual([]);
     expect(screen.getAllByRole(role)[0]).toHaveAccessibleDescription('A hint');
   });
 
@@ -295,9 +296,21 @@ describe('MUI Theme-Specific Props', () => {
 
     const { container } = render(<Form schema={schema} validator={validator} />);
 
-    const ids = [...container.querySelectorAll('[id]')].map((element) => element.id);
-    expect(new Set(ids).size).toBe(ids.length);
+    expect(duplicateIds(container)).toEqual([]);
     expect(screen.getAllByRole(role)[0]).toHaveAccessibleName('Foo');
+  });
+
+  it.each<[string, RJSFSchema, string, string]>([
+    ['text input', { type: 'string' }, 'textbox', 'slotProps'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox', 'rjsfSlotProps'],
+  ])("should keep the id a form author gives a %s's label", (_, foo, role, slots) => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { ...foo, title: 'Foo' } } };
+    const uiSchema: UiSchema = { foo: { 'ui:options': { mui: { [slots]: { inputLabel: { id: 'my-label' } } } } } };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(elementOf(container, '#my-label')).toHaveTextContent('Foo');
+    expect(screen.getByRole(role)).toHaveAccessibleName('Foo');
   });
 
   // A select takes its slots from `rjsfSlotProps`, a text input from `slotProps`

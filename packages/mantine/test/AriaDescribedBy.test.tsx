@@ -7,6 +7,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { duplicateIds } from '../../../testing/duplicateIds.ts';
 import { elementOf } from '../../../testing/elementOf.ts';
 import Form from '../src/index.ts';
 import { errorLines, renderErrors } from '../src/utils.tsx';
@@ -335,10 +336,24 @@ describe('aria-describedby', () => {
       />,
     );
 
-    const ids = Array.from(container.querySelectorAll('[id]'), (el) => el.id);
-    expect(new Set(ids).size).toBe(ids.length);
+    expect(duplicateIds(container)).toEqual([]);
     expect(container.querySelector('[id="root_x__wrapperLabel"]')).toHaveTextContent('X');
     expect(container.querySelector('[id="root_x__wrapperDescription"]')).toHaveTextContent('About x');
+  });
+
+  test('keeps the label and description ids a form author gives an input', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'string', title: 'X', description: 'About x' } } }}
+        uiSchema={{
+          x: { 'ui:options': { labelProps: { id: 'my-label' }, descriptionProps: { id: 'my-description' } } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(elementOf(container, '#my-label')).toHaveTextContent('X');
+    expect(elementOf(container, '#my-description')).toHaveTextContent('About x');
   });
 
   test.each([

@@ -174,7 +174,7 @@ export function resolveSlotProps<P extends object, O>(slotProps: MuiSlotProps<P,
  * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
  * @returns - The helper text's id, a part of `id`
  */
-export function helperTextId(id: string) {
+function helperTextId(id: string) {
   return partId(id, 'helperText');
 }
 

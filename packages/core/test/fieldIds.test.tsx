@@ -2,6 +2,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { duplicateIds } from '../../../testing/duplicateIds.ts';
 import { createFormComponent, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -14,12 +15,6 @@ function listedIds(node: Element) {
         (attribute) => element.getAttribute(attribute)?.split(' ').filter(Boolean) ?? [],
       ),
   );
-}
-
-/** The ids carried by more than one element on the page */
-function duplicateIds(node: Element) {
-  const ids = Array.from(node.querySelectorAll('[id]'), (element) => element.id);
-  return ids.filter((id, index) => ids.indexOf(id) !== index);
 }
 
 describe('field ids', () => {

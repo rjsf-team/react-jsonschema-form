@@ -122,8 +122,7 @@ function AltDateParts({
     'Select',
     partProps.id,
     { inputContainer },
-    // Each part's label keeps the id Mantine derives from the part's own id, which no other field's id can spell
-    { describedBy, alsoDescribedBy: shownSuccessId, wrapperOverrides, idsLabel: false },
+    { describedBy, alsoDescribedBy: shownSuccessId, wrapperOverrides },
   );
   return elements.map((part, i) => (
     <AltDatePart

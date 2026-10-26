@@ -110,17 +110,14 @@ export default function SelectWidget<
   // MUI's select gives its `inputProps` to the element with the `combobox` role, rather than to the field's root. An
   // `htmlInput` given through `rjsfSlotProps` is the form author's own choice for that element, so it is applied last
   const textFieldOverrides = { ...otherMuiProps, ...textFieldRemainingProps } as TextFieldProps;
-  const ariaProps = describeByHelperText(
-    widgetAriaProps(props),
-    textFieldOverrides.id ?? id,
-    textFieldOverrides.helperText,
-  );
+  const textFieldId = textFieldOverrides.id ?? id;
+  const ariaProps = describeByHelperText(widgetAriaProps(props), textFieldId, textFieldOverrides.helperText);
   // The combobox shows its value, not a name, so where no label names it, it is named by the field's label, its
   // placeholder or the translated prompt
   const ariaLabel = getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], widgetDrawsLabelText<T, S, F>(props));
   const ownLabel = labelValue(label || undefined, hideLabel, undefined);
   const textFieldLabel = 'label' in textFieldOverrides ? textFieldOverrides.label : ownLabel;
-  const labelId = inputLabelId(textFieldOverrides.id ?? id);
+  const labelId = muiSlotProps?.inputLabel?.id ?? inputLabelId(textFieldId);
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
@@ -167,7 +164,7 @@ export default function SelectWidget<
             multiple,
           },
           htmlInput: withSlotProps({ ...ariaProps, 'aria-label': ariaLabel }, muiSlotProps?.htmlInput),
-          formHelperText: helperTextSlot(textFieldOverrides.id ?? id, muiSlotProps?.formHelperText),
+          formHelperText: helperTextSlot(textFieldId, muiSlotProps?.formHelperText),
         }}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}

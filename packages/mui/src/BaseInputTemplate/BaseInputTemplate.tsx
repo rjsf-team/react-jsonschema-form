@@ -105,9 +105,10 @@ export default function BaseInputTemplate<
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const textFieldOverrides = { ...otherMuiProps, ...textFieldProps } as TextFieldProps;
+  const textFieldId = textFieldOverrides.id ?? id;
   const controlAttributes = describeByHelperText(
     getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []),
-    textFieldOverrides.id ?? id,
+    textFieldId,
     textFieldOverrides.helperText,
   );
   const numericTitle = getNumericInputTitle(derivedInputProps, registry.translateString);
@@ -182,9 +183,9 @@ export default function BaseInputTemplate<
           ...muiSlotProps,
           input: inputProps,
           htmlInput: htmlInputProps,
-          inputLabel: { ...DisplayInputLabelProps, id: inputLabelId(textFieldOverrides.id ?? id) },
+          inputLabel: { ...DisplayInputLabelProps, id: DisplayInputLabelProps.id ?? inputLabelId(textFieldId) },
           formHelperText: helperTextSlot<FormHelperTextProps, TextFieldOwnerState>(
-            textFieldOverrides.id ?? id,
+            textFieldId,
             slotProps?.formHelperText,
             muiSlotProps?.formHelperText,
           ),

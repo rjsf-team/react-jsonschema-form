@@ -112,9 +112,10 @@ function focusableForId(
   if (exact) {
     return findElement(exact.querySelectorAll('*'), (element) => isFocusable(element, view));
   }
+  const partPrefix = partId(elementId, '');
   return findElement(
     formElement.querySelectorAll('input[id], button[id]'),
-    (element) => element.id.startsWith(partId(elementId, '')) && isFocusable(element, view),
+    (element) => element.id.startsWith(partPrefix) && isFocusable(element, view),
   );
 }
 
@@ -316,10 +317,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // A form control named after the field is taken only where it takes focus, since a checkbox that isn't a form
     // control, such as shadcn's, keeps its value in a hidden input named after the field too. A wrapper that isn't
     // focusable and names no focusable form control, such as a slider's root around its thumb or a group of such
-    // checkboxes, leads to the focusable element inside it, as `focusableForId()` finds it. Its fallback, an id starting
-    // with the field's, also matches a sibling's id, such as `root_nameSuffix` for `root_name`, so a field whose own
-    // control can't take focus, being disabled or hidden, leaves focus where it is rather than sending it to another
-    // field. The search stays inside the form, which another form on the page rendering the same ids would defeat through
+    // checkboxes, leads to the focusable element inside it, as `focusableForId()` finds it. A field whose own control
+    // can't take focus, being disabled or hidden, leaves focus where it is rather than sending it to another field. The
+    // search stays inside the form, which another form on the page rendering the same ids would defeat through
     // `getElementById()`, and compares ids as strings, so a property name holding a selector's syntax needs no escaping
     const exact = findElement(formElement.querySelectorAll('[id]'), (element) => element.id === elementId);
     const named = formElement instanceof view.HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
