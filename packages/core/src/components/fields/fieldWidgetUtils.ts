@@ -257,10 +257,9 @@ export function getWidgetErrorProps<
 
 /** Gets the deprecated `rawErrors` a field hands the field component it renders, for one that doesn't read
  * `presentation`: the field's own error messages, whatever `ui:hideError` says, so the component can render them its
- * own way, except that `ArrayField` hands each item's `ArraySchemaField` the array's own, as it always has. The one
- * place a field component is handed them
+ * own way. The one place a field component is handed them
  *
- * @param rawErrors - The field's own error messages, or, for an array's item, the array's
+ * @param rawErrors - The field's own error messages
  * @returns - The `rawErrors` for the field component
  */
 export function getFieldErrorProps<
