@@ -3,7 +3,6 @@ import type {
   FieldPath,
   FieldPathList,
   FormContextType,
-  FormFieldState,
   GenericObjectType,
   StrictRJSFSchema,
   RJSFSchema,
@@ -209,15 +208,6 @@ function dirtyFieldsOf<T>(formData: T | undefined, baseline: T | undefined): Nes
   return asNestedBooleans<T>(Object.is(formData, baseline) ? noMarks(formData) : markChanged(formData, baseline));
 }
 
-/** `build`, run on the first call, whose result every later call returns */
-function lazily<V>(build: () => V): () => V {
-  let built: { value: V } | undefined;
-  return () => {
-    built ??= { value: build() };
-    return built.value;
-  };
-}
-
 /** The touched marks of `formData`, or undefined when nothing touched marks a field. The touched fields cost what was
  * touched
  */
@@ -229,33 +219,36 @@ function touchedMarksOf(formData: unknown, touchedPaths: TouchedPaths): unknown 
   return marks;
 }
 
-/** The form's status, whose `dirtyFields` and touched marks are built on first read, since most events are read without
- * them
+/** The form's status, whose `dirtyFields`, `touched` and `touchedFields` are built on first read, since most events are
+ * read without them
  *
  * @param state - The state of the form
- * @param members - Members the object holding the status has besides it, as an event's
- * @returns - The status of the form, with `members`
+ * @returns - The status of the form
  */
-export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContextType, E extends object>(
-  { formData, baseline, submitCount, touchedPaths }: FormState<T, S, F>,
-  members: E,
-): FormStatus<T> & E {
-  const dirtyFields = lazily(() => dirtyFieldsOf(formData, baseline));
-  // `touched` is read off the marks rather than the paths, so a touched path that marks nothing, such as an item path
-  // the data no longer holds, cannot report a touch `touchedFields` does not show
-  const touchedMarks = lazily(() => touchedMarksOf(formData, touchedPaths));
-  const touchedFields = lazily(() => asNestedBooleans<T>(touchedMarks() ?? noMarks(formData)));
+export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContextType>({
+  formData,
+  baseline,
+  submitCount,
+  touchedPaths,
+}: FormState<T, S, F>): FormStatus<T> {
+  let dirtyFields: NestedBooleans<T> | undefined;
+  let touched: boolean | undefined;
+  let touchedFields: NestedBooleans<T> | undefined;
   return {
-    ...members,
     dirty: !Object.is(formData, baseline),
     get dirtyFields() {
-      return dirtyFields();
+      dirtyFields ??= dirtyFieldsOf(formData, baseline);
+      return dirtyFields;
     },
     get touched() {
-      return touchedMarks() !== undefined;
+      // Read off the marks rather than the paths, so a touched path that marks nothing, such as an item path the data
+      // no longer holds, cannot report a touch `touchedFields` does not show
+      touched ??= touchedMarksOf(formData, touchedPaths) !== undefined;
+      return touched;
     },
     get touchedFields() {
-      return touchedFields();
+      touchedFields ??= asNestedBooleans<T>(touchedMarksOf(formData, touchedPaths) ?? noMarks(formData));
+      return touchedFields;
     },
     submitCount,
   };
@@ -524,7 +517,8 @@ export function toIChangeEvent<
   F extends FormContextType = FormContextType,
 >(state: FormState<T, S, F>, status?: IChangeEvent['status']): IChangeEvent<T, S, F> {
   const { schema, uiSchema, schemaUtils, formData, errors, errorSchema } = state;
-  return toFormStatus(state, {
+  // Assigned onto the status, so its getters stay lazy
+  return Object.assign(toFormStatus(state), {
     schema,
     uiSchema,
     schemaUtils,
@@ -537,8 +531,8 @@ export function toIChangeEvent<
 
 /** The form's data and its baseline */
 export interface DataAndBaseline<T> {
-  formData: T | undefined;
-  baseline: T | undefined;
+  formData?: T;
+  baseline?: T;
 }
 
 /** Shares the data and the baseline of `next` against `start`'s, the ones they were produced from, so an unchanged
@@ -577,51 +571,8 @@ export function shareState<T, S extends StrictRJSFSchema, F extends FormContextT
   start: FormState<T, S, F>,
   next: FormState<T, S, F>,
 ): FormState<T, S, F> {
-  if (Object.is(next.formData, start.formData) && Object.is(next.baseline, start.baseline)) {
-    return replaceEqualDeep(start, next);
-  }
-  const { formData, baseline } = shareData(
-    { formData: start.formData, baseline: start.baseline },
-    { formData: next.formData, baseline: next.baseline },
-  );
-  const rest = replaceEqualDeep(start, { ...next, formData: start.formData, baseline: start.baseline });
-  if (Object.is(formData, start.formData) && Object.is(baseline, start.baseline)) {
-    return rest;
-  }
-  return { ...rest, formData, baseline };
-}
-
-/** The data once `omitData` drops extra data from `formData`, and the baseline that goes with it. A change to the data
- * the user did not make goes to the baseline in the same step, so the baseline is omitted too, but only when the data
- * lost something: omitted up front, it would make the form dirty while the data still holds the extra keys. The
- * baseline is omitted with the options its own data matches, not the ones the user picked since, see
- * `withoutSelections()`, and only once a caller commits it
- *
- * @param baseline - The baseline before the omit
- * @param formData - The data to omit extra data from
- * @param schemaUtils - The schema utilities to omit with
- * @param schema - The root schema
- * @param fieldState - The fields the data shows
- * @param baselineFieldState - The fields the baseline shows
- * @returns - The data after the omit, and how to get the baseline after it
- */
-function omitWithBaseline<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  baseline: T | undefined,
-  formData: T | undefined,
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  schema: S,
-  fieldState: FormFieldState<S>,
-  baselineFieldState: FormFieldState<S>,
-): ExtraDataOmission<T> {
-  const omitted = replaceEqualDeep(formData, schemaUtils.omitExtraData(schema, formData, fieldState));
-  if (Object.is(omitted, formData)) {
-    return { formData, omitBaseline: () => baseline };
-  }
-  return {
-    formData: omitted,
-    omitBaseline: () =>
-      Object.is(baseline, formData) ? omitted : schemaUtils.omitExtraData(schema, baseline, baselineFieldState),
-  };
+  const shared = shareData(start, next);
+  return replaceEqualDeep(start, { ...next, ...shared }, shared);
 }
 
 /** The data and the baseline an omission commits */
@@ -1816,17 +1767,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
 
   let omitted: DataAndBaseline<T> = { formData, baseline: current.baseline };
   if (omitExtraData === true && liveOmit === 'onChange') {
-    const { schemaUtils, schema, uiState } = context;
-    omitted = committedOmission(
-      omitWithBaseline(
-        current.baseline,
-        formData,
-        schemaUtils,
-        schema,
-        fieldStateOf(uiState, schemaUtils, heldPathOf(change)),
-        fieldStateOf(withoutSelections(uiState), schemaUtils),
-      ),
-    );
+    omitted = committedOmission(omitExtraDataOf({ ...current, ...context, formData }, heldPathOf(change)));
   }
 
   return {
@@ -2038,25 +1979,44 @@ export function applyValidation<T, S extends StrictRJSFSchema, F extends FormCon
   return { hasError, next };
 }
 
-/** The data after extra data is omitted, and how to get the baseline after it, see `omitWithBaseline()` */
+/** The data after extra data is omitted, and how to get the baseline after it, see `omitExtraDataOf()` */
 export interface ExtraDataOmission<T> {
   formData: T | undefined;
   omitBaseline: () => T | undefined;
 }
 
-/** The data and the baseline of `current` without the fields the schema does not describe, see `omitWithBaseline()` */
+/** The data once extra data, the fields the schema does not describe, is dropped from `formData`, and the baseline
+ * that goes with it. A change to the data the user did not make goes to the baseline in the same step, so the baseline
+ * is omitted too, but only when the data lost something: omitted up front, it would make the form dirty while the data
+ * still holds the extra keys. The baseline is omitted with the options its own data matches, not the ones the user
+ * picked since, see `withoutSelections()`, and only once a caller commits it
+ *
+ * @param current - The state whose data the omit drops extra data from
+ * @param [heldPath] - The path whose field and the fields above it keep the options they show, see `heldPathOf()`
+ * @returns - The data after the omit, and how to get the baseline after it
+ */
 export function omitExtraDataOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
+  heldPath?: FieldPathList,
 ): ExtraDataOmission<T> {
-  const { schema, schemaUtils, uiState } = current;
-  return omitWithBaseline(
-    current.baseline,
-    current.formData,
-    schemaUtils,
-    schema,
-    fieldStateOf(uiState, schemaUtils),
-    fieldStateOf(withoutSelections(uiState), schemaUtils),
+  const { schema, schemaUtils, uiState, formData, baseline } = current;
+  const omitted = replaceEqualDeep(
+    formData,
+    schemaUtils.omitExtraData(schema, formData, fieldStateOf(uiState, schemaUtils, heldPath)),
   );
+  if (Object.is(omitted, formData)) {
+    return { formData, omitBaseline: () => baseline };
+  }
+  return {
+    formData: omitted,
+    omitBaseline: () =>
+      Object.is(baseline, formData)
+        ? omitted
+        : replaceEqualDeep(
+            baseline,
+            schemaUtils.omitExtraData(schema, baseline, fieldStateOf(withoutSelections(uiState), schemaUtils)),
+          ),
+  };
 }
 
 /** The state after a valid submission: the submitted data, with `extraErrors` as the only errors on display

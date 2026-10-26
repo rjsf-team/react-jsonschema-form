@@ -95,11 +95,12 @@ describe('a promise onSubmit returns', () => {
   it('ignores another submit from a button the form is passed as children while the promise is pending', async () => {
     const save = deferred();
     const onSubmit = vi.fn(() => save.promise);
-    render(
-      <Form schema={schema} validator={validator} initialFormData={{ name: 'a' }} onSubmit={onSubmit}>
-        <button type='submit'>Send</button>
-      </Form>,
-    );
+    createFormComponent({
+      schema,
+      initialFormData: { name: 'a' },
+      onSubmit,
+      children: <button type='submit'>Send</button>,
+    });
     const button = screen.getByRole('button', { name: 'Send' });
 
     await user.click(button);
@@ -355,6 +356,29 @@ describe('a promise onSubmit returns', () => {
     await user.click(screen.getByRole('button', { name: 'Submit' }));
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps a submit onSubmit starts after a FormRef.reset() pending once onSubmit returns', async () => {
+    const save = deferred();
+    const ref = createFormRef();
+    const onSubmit = vi
+      .fn()
+      .mockImplementationOnce(() => {
+        handleOf(ref).reset();
+        handleOf(ref).submit();
+      })
+      .mockReturnValueOnce(save.promise);
+    createFormComponent({ ref, schema, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+
+    act(() => handleOf(ref).submit());
+
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    expectPending(button);
+    save.resolve(undefined);
+    await waitFor(() => expectIdle(button));
   });
 
   it('runs no constraint validation for a submit it ignores, from the submit button, Enter or FormRef.submit()', async () => {

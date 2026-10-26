@@ -614,7 +614,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     try {
       return props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
     } finally {
-      pendingSubmit = undefined;
+      // A submit `onSubmit` started after a `reset()` released this one holds the form now
+      if (pendingSubmit === event) {
+        pendingSubmit = undefined;
+      }
     }
   };
 
@@ -655,7 +658,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const handle: FormRef<T> = {
     getFormData: () => toEventFormData(current().formData),
 
-    getStatus: () => toFormStatus(current(), {}),
+    getStatus: () => toFormStatus(current()),
 
     /** Submits through the form element, see `FormRef.submit()`, whose submit event reaches `handleSubmit()`, which
      * submits the data the form holds. While the inputs show that data, the browser's constraint validation checks them
@@ -708,7 +711,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       // A promise that never settles would otherwise keep the form ignoring submits until it remounts
-      releasePending();
+      if (pendingSubmit !== undefined) {
+        releasePending();
+      }
       const props = committedProps;
       const nextReset = seed !== undefined ? { seed } : resetSeed;
       const nextSeed = nextReset ? nextReset.seed : seedOf(props);
