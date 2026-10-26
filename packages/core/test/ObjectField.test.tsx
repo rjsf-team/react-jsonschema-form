@@ -268,6 +268,75 @@ describe('ObjectField', () => {
       expect(elementOf(container, '[data-field="root_child"]')).toHaveAttribute('data-hidden', 'true');
     });
 
+    it('should leave a sibling mounted, with its own option selection, as a $ref cycle property comes and goes outside a Form', async () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          node: {
+            type: 'object',
+            deprecated: true,
+            properties: {
+              withChild: { type: 'boolean' },
+              counter: { type: 'string' },
+              shape: {
+                oneOf: [
+                  { title: 'First', type: 'object', properties: { x: { type: 'string' } } },
+                  { title: 'Second', type: 'object', properties: { y: { type: 'string' } } },
+                ],
+              },
+            },
+            dependencies: { withChild: { properties: { child: { $ref: '#/definitions/node' } } } },
+          },
+        },
+        $ref: '#/definitions/node',
+      };
+      const ClickCountWidget = () => {
+        const [clicks, setClicks] = useState(0);
+        return (
+          <button type='button' onClick={() => setClicks(clicks + 1)}>
+            Clicked {clicks}
+          </button>
+        );
+      };
+      const registry = {
+        ...getTestRegistry(rootSchema, {}, hiddenFlagTemplates),
+        globalUiOptions: { deprecatedHandling: 'hide' as const },
+      };
+      const { ObjectField: RegistryObjectField } = registry.fields;
+      const renderObject = (formData: GenericObjectType) => (
+        <RegistryObjectField
+          schema={registry.schemaUtils.retrieveSchema(rootSchema, formData)}
+          uiSchema={{ 'ui:deprecatedHandling': 'label', counter: { 'ui:widget': ClickCountWidget } }}
+          id='root'
+          name=''
+          fieldPath={ROOT_FIELD_PATH}
+          formData={formData}
+          errorSchema={{}}
+          registry={registry}
+          onChange={noop}
+          onBlur={noop}
+          onFocus={noop}
+          disabled={false}
+          readonly={false}
+        />
+      );
+      const { container, rerender } = render(renderObject({}));
+      await user.click(screen.getByRole('button', { name: 'Clicked 0' }));
+      expect(elementOf(container, '#root_shape__oneof_select')).toHaveValue('0');
+      await user.selectOptions(elementOf(container, '#root_shape__oneof_select'), 'Second');
+
+      rerender(renderObject({ withChild: true }));
+      expect(screen.getByRole('button', { name: 'Clicked 1' })).toBeVisible();
+      expect(elementOf(container, '#root_shape__oneof_select')).toHaveValue('1');
+      await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
+      expect(elementOf(container, '[data-property="child"]')).toHaveAttribute('data-hidden', 'true');
+      expect(elementOf(container, '[data-field="root_child"]')).toHaveAttribute('data-hidden', 'true');
+
+      rerender(renderObject({}));
+      expect(container.querySelector('[data-property="child"]')).toBeNull();
+      expect(screen.getByRole('button', { name: 'Clicked 1' })).toBeVisible();
+      expect(elementOf(container, '#root_shape__oneof_select')).toHaveValue('1');
+    });
+
     it.each([
       [
         'a deprecated sibling of its $ref under a global hide',
