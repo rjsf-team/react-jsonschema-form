@@ -178,11 +178,12 @@ interface DatePickerPopupProps {
  * ancestor that clips or transforms it, as daisyUI's scrolling modal box does both, covers, clips or offsets it. Its
  * `position` and `z-index` are inline rather than classes: the `top` and `left` `useDatePicker()` writes are viewport
  * coordinates, which place only a fixed popup, and a consumer whose Tailwind build doesn't scan this package gets none
- * of its classes. A browser without popovers has `useDatePicker()` put it back in the field's flow instead. The
- * `right`, `bottom`, `margin`, `padding` and `color` undo the browser's own popover styles, which pin a popover to all
- * four edges of the viewport, pad it and recolor its text, where no Tailwind preflight resets them. Its `box-sizing`,
- * also left to preflight otherwise, keeps its border inside the width and the height cap that `useDatePicker()` fits
- * to the viewport. It scrolls within that height, so a viewport shorter than the popup still reaches its Done button
+ * of its classes. A browser without native popovers, one with only a polyfill's included, has `useDatePicker()` put
+ * it back in the field's flow instead. The `right`, `bottom`, `margin`, `padding` and `color` undo the browser's own
+ * popover styles, which pin a popover to all four edges of the viewport, pad it and recolor its text, where no Tailwind
+ * preflight resets them. Its `box-sizing`, also left to preflight otherwise, keeps its border inside the width and the
+ * height cap that `useDatePicker()` fits to the viewport. It scrolls within that height, so a viewport shorter than
+ * the popup still reaches its Done button
  *
  * @param props - The popup's id and name, the ref to attach, the Done handler and its label, and its contents
  */

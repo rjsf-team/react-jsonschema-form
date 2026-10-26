@@ -404,20 +404,21 @@ export function useDatePicker<V>({
     if (!isOpen || !popup || !trigger) {
       return () => {};
     }
-    // Without popovers, as before Safari 17 and Chrome 114, and in jsdom, which hides a popover it can't show, the popup
-    // stays in the field's flow just below its trigger, positioned against the field's wrapper and stacked under app
-    // chrome as `DateTimeWidget`'s was, scrolling with it and clipped by what clips it. Fixed there, a transformed
-    // ancestor such as daisyUI's modal box would still be what places, scales and clips it, and a part of it the box
-    // clips would be out of reach of the box's scroll
-    if (typeof popup.showPopover !== 'function') {
+    const win = windowOf(trigger);
+    // Without native popovers, as before Safari 17 and Chrome 114, in jsdom, which hides a popover it can't show, and
+    // where a polyfill provides `showPopover()` but can't provide the top layer, the popup stays in the field's flow
+    // just below its trigger, positioned against the field's wrapper and stacked under app chrome as `DateTimeWidget`'s
+    // was, scrolling with it and clipped by what clips it. Fixed there, a transformed ancestor such as daisyUI's modal
+    // box would still be what places, scales and clips it, and a part of it the box clips would be out of reach of the
+    // box's scroll. Told by the `:popover-open` selector, which a polyfill can't add to the browser's own CSS
+    if (!win.CSS?.supports('selector(:popover-open)')) {
       popup.style.position = 'absolute';
       popup.style.marginTop = '5px';
       popup.style.zIndex = '100';
       return () => {};
     }
-    // A Strict Mode remount runs this again on a popup still showing. Told by the attribute this sets just before
-    // showing it rather than by `:popover-open`, which a polyfill's `showPopover()` can come without: `matches()`
-    // throws for a selector the browser doesn't know
+    // A Strict Mode remount runs this again on a popup that is still showing, as the attribute set just before showing
+    // it says
     if (!popup.hasAttribute('popover')) {
       popup.setAttribute('popover', 'manual');
       popup.showPopover();
@@ -428,7 +429,6 @@ export function useDatePicker<V>({
     // document whose body scrolls
     const doc = documentOf(trigger);
     const viewport = doc.compatMode === 'BackCompat' ? doc.body : doc.documentElement;
-    const win = windowOf(trigger);
     const place = () => {
       // Not `100vh`, which takes in a horizontal scrollbar along the bottom of the viewport
       popup.style.maxHeight = `${viewport.clientHeight}px`;

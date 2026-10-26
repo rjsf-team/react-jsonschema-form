@@ -469,27 +469,15 @@ describe('DateTimeWidget', () => {
       });
     });
 
-    test("in the top layer where a polyfill's `showPopover()` comes without the `:popover-open` selector", async () => {
-      const { matches } = Element.prototype;
-      const spy = vi.spyOn(Element.prototype, 'matches').mockImplementation(function polyfilled(
-        this: Element,
-        selectors: string,
-      ) {
-        if (selectors.includes(':popover-open')) {
-          throw new DOMException(`'${selectors}' is not a valid selector`, 'SyntaxError');
-        }
-        return matches.call(this, selectors);
-      });
-      onTestFinished(() => spy.mockRestore());
-      const trigger = renderAt({ top: 30, left: 10 });
-
-      await user.click(trigger);
-
-      expect(vi.mocked(HTMLElement.prototype.showPopover).mock.contexts).toEqual([popup()]);
-    });
-
-    test("in the field's flow just below its trigger, unplaced, where the browser has no popovers", async () => {
-      Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
+    test.each([
+      ['has no popovers', () => Reflect.deleteProperty(HTMLElement.prototype, 'showPopover')],
+      // As `@oddbird/popover-polyfill` provides it, which can't show the popup in the top layer, and so can't take it
+      // out of a transformed ancestor's reach
+      ["has only a polyfill's `showPopover()`", () => {}],
+    ])("in the field's flow just below its trigger, unplaced, where the browser %s", async (_, removePopovers) => {
+      // Neither knows the `:popover-open` selector, which only the browser's own popovers come with
+      vi.mocked(CSS.supports).mockReturnValue(false);
+      removePopovers();
       const trigger = renderAt({ top: 30, left: 10 });
 
       await user.click(trigger);
