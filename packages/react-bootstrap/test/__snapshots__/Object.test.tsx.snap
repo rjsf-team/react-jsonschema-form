@@ -3250,21 +3250,27 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                   class="col-6"
                 >
                   <div>
-                    <div
-                      class="my-1"
+                    <fieldset
+                      aria-labelledby="root_a__title"
+                      class="rjsf-own-title-group"
+                      style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                     >
-                      <h5>
-                        <span
-                          id="root_a__title"
-                        >
-                          a
-                        </span>
-                      </h5>
-                      <hr
-                        class="border-0 bg-secondary mt-0"
-                        style="height: 1px;"
-                      />
-                    </div>
+                      <div
+                        class="my-1"
+                      >
+                        <h5>
+                          <span
+                            id="root_a__title"
+                          >
+                            a
+                          </span>
+                        </h5>
+                        <hr
+                          class="border-0 bg-secondary mt-0"
+                          style="height: 1px;"
+                        />
+                      </div>
+                    </fieldset>
                     <ul
                       class="list-group"
                       id="root_a__error"
