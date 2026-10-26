@@ -114,7 +114,7 @@ export default function DateTimeInput<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
-  const themeProps = cleanupOptions(options, ['timePickerProps']);
+  const themeProps = cleanupOptions(options, props, ['timePickerProps']);
   const { timePickerProps, size, radius, variant, clearable } = options;
   const timePickerOptions = timePickerProps as TimePickerProps | undefined;
   const [pendingTime, setPendingTime] = useState('');
