@@ -859,9 +859,7 @@ export interface FieldProps<
   name: string;
   /** An array of strings listing the field's own error messages, which its `errorSchema` doesn't hold. It carries them
    * whatever `hideError` says, so that a field can render them its own way. It is unset for a field rendered beside a
-   * `oneOf`/`anyOf` option selector, which is handed them instead. A custom `ArraySchemaField` is the exception: each
-   * item is handed the array's own errors and no plan, so it reads its own from its `errorSchema` rather than through
-   * `getErrorsToDraw()`, which would give it the array's
+   * `oneOf`/`anyOf` option selector, which is handed them instead
    * @deprecated Kept through v7 for a field rendered without a plan: read `getErrorsToDraw()` for the messages the
    *   field draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
    *   `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and

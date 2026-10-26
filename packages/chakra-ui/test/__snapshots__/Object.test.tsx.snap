@@ -11669,24 +11669,30 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                     <div
                       class="fieldset__content emotion-1"
                     >
-                      <div
-                        class="emotion-24"
+                      <fieldset
+                        aria-labelledby="root_a__title"
+                        class="rjsf-own-title-group"
+                        style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                       >
-                        <h5
-                          class="chakra-heading emotion-25"
+                        <div
+                          class="emotion-24"
                         >
-                          <span
-                            id="root_a__title"
+                          <h5
+                            class="chakra-heading emotion-25"
                           >
-                            a
-                          </span>
-                        </h5>
-                        <span
-                          aria-orientation="horizontal"
-                          class="chakra-separator emotion-26"
-                          role="separator"
-                        />
-                      </div>
+                            <span
+                              id="root_a__title"
+                            >
+                              a
+                            </span>
+                          </h5>
+                          <span
+                            aria-orientation="horizontal"
+                            class="chakra-separator emotion-26"
+                            role="separator"
+                          />
+                        </div>
+                      </fieldset>
                     </div>
                     <span
                       aria-live="polite"

@@ -75,8 +75,8 @@ describe('conditional items', () => {
       initialFormData: formData,
     });
 
-    expect(node.querySelector('input[label=zipcode]')).not.toBeNull();
-    expect(node.querySelector('input[label=postal_code]')).toBeNull();
+    expect(node.querySelector('input#root_zipcode')).not.toBeNull();
+    expect(node.querySelector('input#root_postal_code')).toBeNull();
   });
 
   it('should render else when condition is false', () => {
@@ -89,8 +89,8 @@ describe('conditional items', () => {
       initialFormData: formData,
     });
 
-    expect(node.querySelector('input[label=zipcode]')).toBeNull();
-    expect(node.querySelector('input[label=postal_code]')).not.toBeNull();
+    expect(node.querySelector('input#root_zipcode')).toBeNull();
+    expect(node.querySelector('input#root_postal_code')).not.toBeNull();
   });
 
   it('should render control when data has not been filled in', () => {
@@ -103,8 +103,8 @@ describe('conditional items', () => {
 
     // An empty formData will make the conditional evaluate to true because no properties are required in the if statement
     // Please see https://github.com/epoberezkin/ajv/issues/913
-    expect(node.querySelector('input[label=zipcode]')).not.toBeNull();
-    expect(node.querySelector('input[label=postal_code]')).toBeNull();
+    expect(node.querySelector('input#root_zipcode')).not.toBeNull();
+    expect(node.querySelector('input#root_postal_code')).toBeNull();
   });
 
   it('should render then when condition is true with reference', () => {
@@ -117,8 +117,8 @@ describe('conditional items', () => {
       initialFormData: formData,
     });
 
-    expect(node.querySelector('input[label=zip_code]')).not.toBeNull();
-    expect(node.querySelector('input[label=postal_code]')).toBeNull();
+    expect(node.querySelector('input#root_zip_code')).not.toBeNull();
+    expect(node.querySelector('input#root_postal_code')).toBeNull();
   });
 
   it('should render else when condition is false with reference', () => {
@@ -131,8 +131,8 @@ describe('conditional items', () => {
       initialFormData: formData,
     });
 
-    expect(node.querySelector('input[label=zip_code]')).toBeNull();
-    expect(node.querySelector('input[label=postal_code]')).not.toBeNull();
+    expect(node.querySelector('input#root_zip_code')).toBeNull();
+    expect(node.querySelector('input#root_postal_code')).not.toBeNull();
   });
 
   describe('allOf if then else', () => {
@@ -184,7 +184,7 @@ describe('conditional items', () => {
         initialFormData: formData,
       });
 
-      expect(node.querySelector('input[label=zipcode]')).not.toBeNull();
+      expect(node.querySelector('input#root_zipcode')).not.toBeNull();
     });
 
     it('should render correctly when condition is false in allOf (1)', () => {
@@ -197,7 +197,7 @@ describe('conditional items', () => {
         initialFormData: formData,
       });
 
-      expect(node.querySelector('input[label=zipcode]')).toBeNull();
+      expect(node.querySelector('input#root_zipcode')).toBeNull();
     });
 
     it('should render correctly when condition is true in allof (2)', () => {
@@ -210,9 +210,9 @@ describe('conditional items', () => {
         initialFormData: formData,
       });
 
-      expect(node.querySelector('input[label=postcode]')).not.toBeNull();
-      expect(node.querySelector('input[label=zipcode]')).toBeNull();
-      expect(node.querySelector('input[label=telephone]')).toBeNull();
+      expect(node.querySelector('input#root_postcode')).not.toBeNull();
+      expect(node.querySelector('input#root_zipcode')).toBeNull();
+      expect(node.querySelector('input#root_telephone')).toBeNull();
     });
 
     it('should render correctly when condition is true in allof (3)', () => {
@@ -225,9 +225,9 @@ describe('conditional items', () => {
         initialFormData: formData,
       });
 
-      expect(node.querySelector('input[label=postcode]')).toBeNull();
-      expect(node.querySelector('input[label=zipcode]')).toBeNull();
-      expect(node.querySelector('input[label=telephone]')).not.toBeNull();
+      expect(node.querySelector('input#root_postcode')).toBeNull();
+      expect(node.querySelector('input#root_zipcode')).toBeNull();
+      expect(node.querySelector('input#root_telephone')).not.toBeNull();
     });
 
     const schemaWithAllOfRef: RJSFSchema = {
@@ -267,7 +267,7 @@ describe('conditional items', () => {
         initialFormData: formData,
       });
 
-      expect(node.querySelector('input[label=postcode]')).not.toBeNull();
+      expect(node.querySelector('input#root_postcode')).not.toBeNull();
     });
   });
 
@@ -291,11 +291,11 @@ describe('conditional items', () => {
     });
 
     // The zipcode field exists, but not as an additional property
-    expect(node.querySelector('input[label=zipcode]')).not.toBeNull();
-    expect(node.querySelector('div.form-additional input[label=zipcode]')).toBeNull();
+    expect(node.querySelector('input#root_zipcode')).not.toBeNull();
+    expect(node.querySelector('div.form-additional input#root_zipcode')).toBeNull();
 
     // The "otherKey" field exists as an additional property
-    expect(node.querySelector('div.form-additional input[label=otherKey]')).not.toBeNull();
+    expect(node.querySelector('div.form-additional input#root_otherKey')).not.toBeNull();
   });
 
   it('re-resolves the conditional branch when a field with a default is cleared', async () => {
