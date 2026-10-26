@@ -145,7 +145,7 @@ The action's state is a good place for errors the server reports. Return them as
   }
   ```
 
-  Canceling the click while saving keeps the browser's constraint validation from running for a submit the form ignores. Or call `useFormStatus()` in them, and start the submission in a transition, by dispatching a `useActionState` action as above or with `startTransition`. While an async transition runs, React holds every other transition in your app until it settles. `onSubmit` returns no promise then, so the form doesn't ignore a second submit, and the button below is `disabled` to stop one. Catch the error inside the transition too: one thrown in a transition the standalone `startTransition` started reaches no Error Boundary and is reported as an uncaught error, and one thrown in a transition `useTransition` started reaches the nearest Error Boundary of the component that called `useTransition`.
+  Canceling the click while saving keeps the browser's constraint validation from running for a submit the form ignores. Or call `useFormStatus()` in them, and start the submission in a transition, by dispatching a `useActionState` action as above or with `startTransition`. While an async transition runs, React holds every other transition in your app until it settles. `onSubmit` returns no promise then, so the form doesn't ignore a second submit, and the button below cancels its click while pending to stop one, as the one above does. Catch the error inside the transition too: one thrown in a transition the standalone `startTransition` started reaches no Error Boundary and is reported as an uncaught error, and one thrown in a transition `useTransition` started reaches the nearest Error Boundary of the component that called `useTransition`.
 
   ```tsx
   import { startTransition } from 'react';
@@ -154,7 +154,15 @@ The action's state is a good place for errors the server reports. Return them as
   function SaveButton() {
     const { pending } = useFormStatus();
     return (
-      <button type='submit' disabled={pending}>
+      <button
+        type='submit'
+        aria-disabled={pending}
+        onClick={(event) => {
+          if (pending) {
+            event.preventDefault();
+          }
+        }}
+      >
         {pending ? 'Saving…' : 'Save'}
       </button>
     );
@@ -164,10 +172,10 @@ The action's state is a good place for errors the server reports. Return them as
     <Form
       schema={schema}
       validator={validator}
-      onSubmit={(data) =>
+      onSubmit={({ formData }) =>
         startTransition(async () => {
           try {
-            await save(data);
+            await save(formData);
           } catch {
             // Show the error, as the first example does
           }

@@ -598,7 +598,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     try {
       return props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
     } finally {
-      pendingSubmit = undefined;
+      // A submit `onSubmit` started after a `reset()` released this one holds the form now
+      if (pendingSubmit === event) {
+        pendingSubmit = undefined;
+      }
     }
   };
 
@@ -688,7 +691,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       // A promise that never settles would otherwise keep the form ignoring submits until it remounts
-      releasePending();
+      if (pendingSubmit !== undefined) {
+        releasePending();
+      }
       const props = committedProps;
       const committed = commit(settled((base) => applyReset(base, props)));
       props.onChange?.(toIChangeEvent(committed));
