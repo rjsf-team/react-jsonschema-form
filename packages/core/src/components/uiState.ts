@@ -189,7 +189,7 @@ export function asFieldValue(value: unknown): unknown {
  * @returns - The field state
  */
 export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  uiState: UiState,
+  uiState: UiStateReader,
   schemaUtils: SchemaUtilsType<T, S, F>,
   editedPath?: FieldPathList,
 ): FormFieldState<S> {
@@ -235,6 +235,24 @@ function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove)
  */
 export function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
   return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
+}
+
+/** Makes each of `selections` hold for the data `dataAt` gives at its field, or for none where the field holds other
+ * data, as the form renders that data
+ */
+function holdForRendered(
+  selections: Map<FieldPath, Map<string, OptionSelection>>,
+  dataAt: (path: FieldPathList) => unknown,
+) {
+  for (const [at, lists] of selections) {
+    const data = dataAt(fieldPathToList(at));
+    for (const [list, selection] of lists) {
+      const holdsFor = isHeldFor(selection, data) ? [data] : [];
+      if (holdsFor.length !== selection.holdsFor.length || selection.isReleased) {
+        lists.set(list, { ...selection, holdsFor, isReleased: false });
+      }
+    }
+  }
 }
 
 /** The selections and expansions of a form at one moment, see `save()` */
@@ -318,17 +336,7 @@ export function createUiState() {
      * or none where the field showed other data, matched again. Called as React commits, where nothing may render, so
      * it changes no option a field shows for the data it rendered and tells no field
      */
-    rendered: (dataAt: (path: FieldPathList) => unknown) => {
-      for (const [at, lists] of selections) {
-        const data = dataAt(fieldPathToList(at));
-        for (const [list, selection] of lists) {
-          const holdsFor = isHeldFor(selection, data) ? [data] : [];
-          if (holdsFor.length !== selection.holdsFor.length || selection.isReleased) {
-            lists.set(list, { ...selection, holdsFor, isReleased: false });
-          }
-        }
-      }
-    },
+    rendered: (dataAt: (path: FieldPathList) => unknown) => holdForRendered(selections, dataAt),
     isExpanded: (path: FieldPath) => expanded.has(path),
     expand: (path: FieldPath) => {
       expanded.add(path);
@@ -393,3 +401,52 @@ export function createUiState() {
 }
 
 export type UiState = ReturnType<typeof createUiState>;
+
+/** What deriving data reads of a `UiState`: the option selected for a list, and whether a cycle is expanded */
+export type UiStateReader = Pick<UiState, 'selection' | 'isExpanded'>;
+
+/** `uiState` with no option selected, for the baseline the form mounted with: it was derived when the form showed the
+ * options its own data matched, so the options the user picked since are the edited data's, not the baseline's
+ */
+export function withoutSelections(uiState: UiState): UiStateReader {
+  return { selection: () => undefined, isExpanded: uiState.isExpanded };
+}
+
+/** `baselineUiState` with the selections of `uiState` that hold for the baseline's data at their field in place of its
+ * own, for re-deriving the baseline: where the data the form shows is the baseline's, the baseline takes the option the
+ * form shows it under, as the baseline of a clean form does
+ *
+ * @param uiState - The form's option selections and cycle expansions
+ * @param baselineUiState - The selections the baseline was derived under
+ * @param dataAt - The baseline's data at a field's path
+ * @returns - The selections to re-derive the baseline under
+ */
+export function withSelectionsHeldFor(
+  uiState: UiState,
+  baselineUiState: UiStateReader,
+  dataAt: (path: FieldPathList) => unknown,
+): UiStateReader {
+  return {
+    selection: (path, list) => {
+      const selection = uiState.selection(path, list);
+      return selection && isHeldFor(selection, dataAt(fieldPathToList(path)))
+        ? selection
+        : baselineUiState.selection(path, list);
+    },
+    isExpanded: baselineUiState.isExpanded,
+  };
+}
+
+/** `uiState` with the options selected now and never the ones picked later, for the baseline `reset()` derives under
+ * the options the form shows at the reset. Each holds for the reset's data, as once the form renders it, so the snapshot
+ * keeps none of the data from before the reset
+ *
+ * @param uiState - The form's option selections and cycle expansions
+ * @param dataAt - The reset's data at a field's path
+ * @returns - The selections as of now, for the baseline
+ */
+export function withSelectionsAsOf(uiState: UiState, dataAt: (path: FieldPathList) => unknown): UiStateReader {
+  const { selections } = uiState.save();
+  holdForRendered(selections, dataAt);
+  return { selection: (path, list) => selections.get(path)?.get(list), isExpanded: uiState.isExpanded };
+}

@@ -1,7 +1,7 @@
 import type { FormState } from '../src/components/Form.tsx';
-import type { EventFormData, IChangeEvent } from '../src/index.ts';
+import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from '../src/index.ts';
 
-type EventKey = Exclude<keyof IChangeEvent, 'status'>;
+type EventKey = Exclude<keyof IChangeEvent, 'status' | keyof RJSFFormStatus>;
 type Mutable<O> = { -readonly [K in keyof O]: O[K] };
 /** `formData` is the one deliberate difference: the event narrows it with `EventFormData`, pinned below */
 type SharedKey = Exclude<EventKey, 'formData'>;
@@ -33,6 +33,22 @@ describe('IChangeEvent', () => {
     >();
     expectTypeOf<IChangeEvent['formData']>().toEqualTypeOf<unknown>();
     expectTypeOf<EventFormData<{ name: string } | undefined>>().toEqualTypeOf<{ name: string } | undefined>();
+  });
+
+  it('carries the form status, with dirtyFields nested like the data', () => {
+    expectTypeOf<Pick<IChangeEvent, keyof RJSFFormStatus>>().toEqualTypeOf<RJSFFormStatus>();
+    expectTypeOf<IChangeEvent['dirty']>().toEqualTypeOf<boolean>();
+    expectTypeOf<IChangeEvent['submitCount']>().toEqualTypeOf<number>();
+    expectTypeOf<
+      IChangeEvent<{ name: string; tags: string[]; address: { city?: string } }>['dirtyFields']
+    >().toEqualTypeOf<{
+      name?: boolean;
+      tags?: boolean | (boolean | undefined)[];
+      address?: boolean | { city?: boolean };
+    }>();
+    expectTypeOf<NestedBooleans<string>>().toEqualTypeOf<boolean>();
+    expectTypeOf<NestedBooleans<{ when: Date }>>().toEqualTypeOf<{ when?: boolean }>();
+    expectTypeOf<NestedBooleans<{ photo: File; scan?: Blob }>>().toEqualTypeOf<{ photo?: boolean; scan?: boolean }>();
   });
 
   it('cannot be written into', () => {

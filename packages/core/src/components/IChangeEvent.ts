@@ -16,6 +16,53 @@ import type {
  */
 export type EventFormData<T> = T extends object ? T : T | undefined;
 
+/** A value nested like the form's data, holding `true` at each field that differs. An object holds an entry only for
+ * its members that differ, and an array an entry for each item, `undefined` where the item does not differ. A field
+ * that was added, removed or replaced whole holds `true` at each of its leaves, or `true` itself when it is empty or
+ * not a plain object or array: a `Date`, a `File` or another `Blob` is marked as one field. So a member may be `true`
+ * whatever its type. The root is typed by `T` alone, as `EventFormData` is, though a write at the root that replaces an
+ * object or array root whole marks it `true`.
+ */
+export type NestedBooleans<T> = T extends Date | Blob
+  ? boolean
+  : T extends readonly (infer Item)[]
+    ? (NestedBooleans<Item> | boolean | undefined)[]
+    : T extends object
+      ? { [K in keyof T]?: NestedBooleans<T[K]> | boolean }
+      : // Tested last: tested first, it makes TypeScript measure `FormRef<T>` as invariant in `T`, so a
+        // `FormRef<MyData>` no longer fits a `FormRef<unknown>`
+        unknown extends T
+        ? NestedBooleanValue
+        : boolean;
+
+/** A `NestedBooleans` of data whose type is not known */
+export type NestedBooleanValue = boolean | NestedBooleanObject | (NestedBooleanValue | undefined)[];
+
+/** An object of `NestedBooleanValue`s */
+export interface NestedBooleanObject {
+  [key: string]: NestedBooleanValue | undefined;
+}
+
+/** The form's status, as every `IChangeEvent` and `FormRef.getStatus()` report it */
+export interface RJSFFormStatus<T = unknown> {
+  /** Whether the data differs from the baseline: the data the form was last seeded with, on mount or by
+   * `FormRef.reset()`, with the schema's defaults filled in
+   */
+  readonly dirty: boolean;
+  /** Where the data differs from the baseline. A field the seed left blank, typed into and cleared, holds `undefined`
+   * where the baseline holds nothing, so it stays marked
+   */
+  readonly dirtyFields: NestedBooleans<T>;
+  /** How many submits have reached the form, valid or not, since the form mounted or was last reset, including one it
+   * ignores while a promise `onSubmit` returned is pending. A submit the browser's constraint validation blocks never
+   * reaches it, so it is not counted unless `noHtml5Validate` is set. While a promise `onSubmit` returned is pending,
+   * though, the form ignores a click on its own submit button, Enter in a field that clicks that button, and
+   * `FormRef.submit()` before that validation would run, so it counts those either way. A submit button passed as
+   * `children` or a `<button form>` outside the form still goes through that validation then
+   */
+  readonly submitCount: number;
+}
+
 /** The event handed to `onChange` and `onSubmit`. It is declared on its own rather than as a `Pick` of `FormState`
  * because it is the public contract while `FormState` is an implementation detail: the state's layout is free to change
  * as long as `toIChangeEvent()` in `formState.ts`, the only place an event is built, still produces this shape.
@@ -28,7 +75,7 @@ export interface IChangeEvent<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> {
+> extends RJSFFormStatus<T> {
   /** The JSON schema object for the form */
   readonly schema: S;
   /** The uiSchema for the form */

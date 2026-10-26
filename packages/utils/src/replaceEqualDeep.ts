@@ -45,8 +45,15 @@ function leavePair<R>(walked: WalkedPairs, result: R): R {
   return result;
 }
 
-function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs): unknown {
-  if (Object.is(prev, next)) {
+/** The member `key` of `unchanged`, when it is a container that has one */
+function unchangedMember(unchanged: unknown, key: string | number): unknown {
+  return typeof unchanged === 'object' && unchanged !== null && Object.hasOwn(unchanged, key)
+    ? Reflect.get(unchanged, key)
+    : undefined;
+}
+
+function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs, unchanged: unknown): unknown {
+  if (Object.is(prev, next) || Object.is(next, unchanged)) {
     return next;
   }
   if (Array.isArray(prev) && Array.isArray(next)) {
@@ -57,7 +64,7 @@ function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs): unkn
     let sameAsPrev = prev.length === next.length;
     let copy: unknown[] | undefined;
     for (let i = 0; i < next.length; i++) {
-      const value: unknown = shareUnchanged(prev[i], next[i], walked);
+      const value: unknown = shareUnchanged(prev[i], next[i], walked, unchangedMember(unchanged, i));
       sameAsPrev &&= Object.is(value, prev[i]);
       if (!Object.is(value, next[i])) {
         copy ??= next.slice();
@@ -72,7 +79,7 @@ function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs): unkn
     return prev.$$typeof === next.$$typeof &&
       prev.type === next.type &&
       prev.key === next.key &&
-      Object.is(shareUnchanged(prev.props, next.props, walked), prev.props)
+      Object.is(shareUnchanged(prev.props, next.props, walked, undefined), prev.props)
       ? prev
       : next;
   }
@@ -88,7 +95,7 @@ function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs): unkn
       // Only an own `prev` member is a previous value; `prev[key]` for a JSON-sourced `__proto__` or `constructor` key
       // would read the inherited member and hand `Object.prototype` itself back as shared data
       const hasPrev = Object.hasOwn(prev, key);
-      const value = shareUnchanged(hasPrev ? prev[key] : undefined, next[key], walked);
+      const value = shareUnchanged(hasPrev ? prev[key] : undefined, next[key], walked, unchangedMember(unchanged, key));
       sameAsPrev &&= hasPrev && Object.is(value, prev[key]);
       if (!Object.is(value, next[key])) {
         // Spread keeps a JSON-sourced own `__proto__` key an own key, so the assignment below never reaches the setter
@@ -120,14 +127,16 @@ function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs): unkn
  * subtree deeply equal to its counterpart in `prev` replaced by the `prev` instance, and `prev` itself when the whole
  * value is unchanged, so consumers comparing by reference see unchanged data as unchanged. Plain objects, arrays,
  * equal-valued `Date`s and React elements of the same type, key and props are shared; any other object is opaque and
- * `next` is kept. A value containing itself is never shared, but does not end the walk. Neither argument is mutated.
+ * `next` is kept. A value containing itself is never shared, but does not end the walk. No argument is mutated.
  *
  * @param prev - The previous value whose references should be retained where possible
  * @param next - The newly computed value
+ * @param [unchanged] - A value `next` was derived from that already shares every subtree equal to `prev`'s: a subtree
+ *   of `next` that is its counterpart in `unchanged` is kept without being walked, so only what changed is compared
  * @returns - `prev` when the values are deeply equal, otherwise `next` (or a copy of it) sharing every unchanged
  *   subtree with `prev`
  */
-export default function replaceEqualDeep<T>(prev: unknown, next: T): T;
-export default function replaceEqualDeep(prev: unknown, next: unknown): unknown {
-  return shareUnchanged(prev, next, []);
+export default function replaceEqualDeep<T>(prev: unknown, next: T, unchanged?: unknown): T;
+export default function replaceEqualDeep(prev: unknown, next: unknown, unchanged?: unknown): unknown {
+  return shareUnchanged(prev, next, [], unchanged);
 }

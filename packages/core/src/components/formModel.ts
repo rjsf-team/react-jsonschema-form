@@ -25,7 +25,7 @@ import isDevelopment from '../isDevelopment.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { AnnouncedMove, FieldChange, KeyMove, MoveOutcome } from './formState.ts';
+import type { AnnouncedMove, ExtraDataOmission, FieldChange, KeyMove, MoveOutcome } from './formState.ts';
 import {
   applyBlur,
   applyChangeToData,
@@ -39,10 +39,15 @@ import {
   freezeFormData,
   isBlurValidated,
   isLiveValidated,
+  omitExtraDataOf,
+  seedOf,
+  shareState,
   toEventFormData,
+  toFormStatus,
   toIChangeEvent,
   validateFormData,
 } from './formState.ts';
+import type { RJSFFormStatus } from './IChangeEvent.ts';
 import { asFieldValue, fieldStateOf } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
@@ -227,10 +232,24 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // What a throw from the submit `submit()` is running became, for `submit()` to throw it to its own caller: the
   // submit runs inside the event it fires, where the browser would report the throw instead
   let submission: { error?: unknown; isThrown: boolean } | undefined;
+  // The data `reset()` was last passed, which seeds every later `reset()` in place of the props' seed
+  let resetSeed: { seed: T } | undefined;
   // Set while the form ignores another submit: while `onSubmit` runs, then while the promise it returned is pending.
   // Ignoring it, which TanStack Form leaves to the app's `disabled={!canSubmit}` button, is decided in the submit event,
   // before a render can show the state, such as for two `submit()` calls in one handler
   let pendingSubmit: object | undefined;
+  // Every submit attempt the form has had, and how many of them came before the last `reset()`. Kept outside the state,
+  // which nothing renders the count from, so counting an attempt commits and re-renders nothing
+  let attempts = 0;
+  let attemptsBeforeReset = 0;
+  // The status `getStatus()` last handed out, handed out again while the state and the count stand, so repeated reads
+  // share the `dirtyFields` it built. Frozen in development, since one reader's mutation would show in every later read
+  let lastStatus: { from: FormState<T, S, F>; status: RJSFFormStatus<T> } | undefined;
+  const countSubmit = () => {
+    attempts += 1;
+  };
+  const eventOf = (state: FormState<T, S, F>, status?: 'submitted') =>
+    toIChangeEvent(state, attempts - attemptsBeforeReset, status);
   const releasePending = () => {
     pendingSubmit = undefined;
     onPendingChange(false);
@@ -264,7 +283,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       derivedCache = {
         props: committedProps,
         from: published,
-        state: derived === published ? published : replaceEqualDeep(rendered, derived),
+        state: derived === published ? published : shareState(rendered, derived),
       };
     }
     return derivedCache.state;
@@ -275,7 +294,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    */
   const commit = (next: FormState<T, S, F>) => {
     const start = current();
-    const committed = replaceEqualDeep(start, next);
+    const committed = shareState(start, next);
     if (isDevelopment) {
       freezeFormData(committed.formData);
     }
@@ -547,7 +566,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
             return deepEquals(held, getByPath(before, key)) ? 'unmoved' : 'none';
           });
         }
-        props.onChange?.(toIChangeEvent(committed), id);
+        props.onChange?.(eventOf(committed), id);
       } catch (error) {
         if (unmoved && edit.isRefused) {
           uiState.restore(unmoved);
@@ -574,13 +593,13 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const committed = commit(settled((base) => applyBlur(base, props)));
     // Only the `IChangeEvent` members count; the validator's own results are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
-      props.onChange?.(toIChangeEvent(committed), id);
+      props.onChange?.(eventOf(committed), id);
     }
   };
 
   /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it, and keeps the form
-   * pending while a promise `onSubmit` returned is. While a submit is pending, it only keeps the event from submitting
-   * the page
+   * pending while a promise `onSubmit` returned is. While a submit is pending, it only counts the submit, as TanStack
+   * Form counts every attempt, and keeps the event from submitting the page
    */
   const submitFromEvent = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -590,22 +609,40 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
     // A detached form drops a submit event that still reaches it, such as one from a `<button form>` outside the
     // `<Activity>` that hides it, as it drops `submit()`
-    if (pendingSubmit !== undefined || isDetached || event.target !== event.currentTarget) {
+    if (isDetached || event.target !== event.currentTarget) {
+      return;
+    }
+    countSubmit();
+    if (pendingSubmit !== undefined) {
       return;
     }
     const props = committedProps;
     // oxlint-disable-next-line typescript/no-deprecated
     const { noValidate } = props;
-    if (!noValidate && !runValidation(props, () => withExtraDataOmitted(props))) {
+    // One omission serves the validation and the commit; it is taken again only for data a nested operation changed
+    let omission: { from: FormState<T, S, F>; omitted: ExtraDataOmission<T> } | undefined;
+    const omitOnce = (base: FormState<T, S, F>) => {
+      if (
+        !omission ||
+        omission.from.formData !== base.formData ||
+        omission.from.baseline !== base.baseline ||
+        omission.from.schemaUtils !== base.schemaUtils
+      ) {
+        omission = { from: base, omitted: omitExtraDataOf(base) };
+      }
+      return omission.omitted;
+    };
+    const isOmitted = props.omitExtraData === true;
+    if (!noValidate && !runValidation(props, () => (isOmitted ? omitOnce(current()).formData : current().formData))) {
       return;
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
-    const committed = commit(settled((base) => applySubmit(base, props, withExtraDataOmitted(props))));
+    const committed = commit(settled((base) => applySubmit(base, props, isOmitted ? omitOnce(base) : undefined)));
     // Held from before `onSubmit` runs, so a submit it starts before it returns its promise is ignored too
     pendingSubmit = event;
     let submitted: unknown;
     try {
-      submitted = props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
+      submitted = props.onSubmit?.(eventOf(committed, 'submitted'), event);
     } finally {
       // A `reset()` in `onSubmit` released this hold, and a submit it started since may hold the form now
       if (pendingSubmit === event) {
@@ -653,6 +690,19 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const handle: FormRef<T> = {
     getFormData: () => toEventFormData(current().formData),
 
+    getStatus: () => {
+      const state = current();
+      const submitCount = attempts - attemptsBeforeReset;
+      if (lastStatus?.from !== state || lastStatus.status.submitCount !== submitCount) {
+        const status = toFormStatus(state, submitCount);
+        if (isDevelopment) {
+          Object.freeze(status);
+        }
+        lastStatus = { from: state, status };
+      }
+      return lastStatus.status;
+    },
+
     /** Submits through the form element, see `FormRef.submit()`, whose submit event reaches `handleSubmit()`, which
      * submits the data the form holds. While the inputs show that data, the browser's constraint validation checks them
      * first, as for a submit button. While they have yet to show an edit, they describe data the form no longer holds,
@@ -666,6 +716,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       // Returns before `requestSubmit()`, whose constraint validation would show its message and move focus for a
       // submit the form ignores
       if (pendingSubmit !== undefined) {
+        countSubmit();
         return;
       }
       const view = formWindow();
@@ -693,21 +744,28 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       }
     },
 
-    /** Resets the form, see `FormRef.reset()`: re-derives its data from the props the way an initial render does,
-     * clears every error and tells `onChange`. `extraErrors` are the props' and stay.
+    /** Resets the form, see `FormRef.reset()`: re-derives its data from the seed the way an initial render does, makes
+     * it the baseline, clears every error and the submit count and tells `onChange`. `extraErrors` are the props' and
+     * stay.
      */
-    reset: () => {
+    reset: (seed?: T) => {
       if (isDetached) {
         warnDroppedCall('reset');
         return;
       }
+      const props = committedProps;
+      const nextReset = seed !== undefined ? { seed } : resetSeed;
+      const nextSeed = nextReset ? nextReset.seed : seedOf(props);
+      const committed = commit(settled((base) => applyReset(base, props, nextSeed)));
+      // Only once the seed derives: one that throws is not replayed by every later `reset()`, and leaves a pending
+      // submit pending
+      resetSeed = nextReset;
+      attemptsBeforeReset = attempts;
       // A promise that never settles would otherwise keep the form ignoring submits until it remounts
       if (pendingSubmit !== undefined) {
         releasePending();
       }
-      const props = committedProps;
-      const committed = commit(settled((base) => applyReset(base, props)));
-      props.onChange?.(toIChangeEvent(committed));
+      props.onChange?.(eventOf(committed));
     },
 
     /** Sets the value of the field at `fieldPath`, see `FormRef.setFieldValue()`. The dotted form splits on `.`
@@ -846,6 +904,30 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     },
     handle,
     handleSubmit,
+    /** Cancels a click on the pending submit button, see `Form`, after calling the app's `onClick`, even when it
+     * throws, since the browser would otherwise run its constraint validation for the submit the form ignores. The
+     * click counts as a submit attempt unless the app's `onClick` made one itself, such as through `submit()`. A form
+     * that is no longer pending takes the click, as it takes any submit then: one a `reset()` in that `onClick`
+     * released, or whose promise settled before React rendered the button again. `isStatusPending` is whether the
+     * button is pending in React's form status, which holds the form whatever the model holds
+     */
+    cancelPendingClick: <E extends { preventDefault: () => void }>(
+      event: E,
+      onClick: ((event: E) => void) | undefined,
+      isStatusPending: boolean,
+    ) => {
+      const attemptsBefore = attempts;
+      try {
+        onClick?.(event);
+      } finally {
+        if (pendingSubmit !== undefined || isStatusPending) {
+          event.preventDefault();
+          if (!isDetached && attempts === attemptsBefore) {
+            countSubmit();
+          }
+        }
+      }
+    },
     handleChange: (value: T | undefined, path: FieldPath, errors?: ErrorSchema<T>, id?: string) =>
       change(value, path, errors, id, callWithDeferredThrow, true),
     // A detached form drops a blur or a focus as it drops a change: its handlers are those of the last render
