@@ -1456,25 +1456,39 @@ describe('ObjectField', () => {
       expect(reported.at(-1)).toEqual({ abc: 0 });
     });
 
-    it('should seed a new property whose options lead back to each other through $refs, without recursing forever', async () => {
-      const { node, onChange } = createFormComponent({
-        schema: {
-          definitions: {
-            e: { anyOf: [{ $ref: '#/definitions/t' }, { type: 'null' }] },
-            t: { anyOf: [{ $ref: '#/definitions/e' }, { type: 'string' }] },
+    // A cycle can enter its `$ref`s anywhere the option is resolved, not only at its top, so each wrapping is a route
+    // back that the seed has to stop at
+    it.each<{ route: string; wrap: (ref: string) => RJSFSchema }>([
+      { route: 'a bare $ref', wrap: (ref) => ({ $ref: ref }) },
+      { route: 'an allOf', wrap: (ref) => ({ allOf: [{ $ref: ref }] }) },
+      {
+        route: 'an allOf beside another $ref',
+        wrap: (ref) => ({ allOf: [{ $ref: '#/definitions/s' }, { $ref: ref }] }),
+      },
+      { route: 'an if/then', wrap: (ref) => ({ if: true, then: { $ref: ref } }) },
+    ])(
+      'should seed a new property whose options lead back to each other through $route, without recursing forever',
+      async ({ wrap }) => {
+        const { node, onChange } = createFormComponent({
+          schema: {
+            definitions: {
+              e: { anyOf: [wrap('#/definitions/t'), { type: 'null' }] },
+              t: { anyOf: [wrap('#/definitions/e'), { type: 'string' }] },
+              s: { title: 'shared' },
+            },
+            type: 'object',
+            additionalProperties: { $ref: '#/definitions/e' },
           },
-          type: 'object',
-          additionalProperties: { $ref: '#/definitions/e' },
-        },
-      });
+        });
 
-      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+        await user.click(elementOf(node, '.rjsf-object-property-expand button'));
 
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({ formData: { newKey: 'New Value' } }),
-        expect.anything(),
-      );
-    });
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { newKey: 'New Value' } }),
+          expect.anything(),
+        );
+      },
+    );
 
     it('should keep a value the user entered when the renamed key is described by another schema', async () => {
       // The seed is the form's to replace until the user enters something; what they entered is theirs to keep, even

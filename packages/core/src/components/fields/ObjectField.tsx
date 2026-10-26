@@ -19,8 +19,11 @@ import {
   setByPath,
   setOwn,
   ADDITIONAL_PROPERTIES_KEY,
+  ALL_OF_KEY,
+  ELSE_KEY,
   ERRORS_KEY,
   REF_KEY,
+  THEN_KEY,
   deepEquals,
   getAdditionalPropertySchema,
   getAdditionalPropertyType,
@@ -102,6 +105,25 @@ function getDefaultValue<
       // We don't have a datatype for some reason (perhaps additionalProperties was true)
       return translateString(TranslatableString.NewStringDefault);
   }
+}
+
+/** Returns the `$ref`s resolving `schema` enters: its own, and those of the `allOf` members and the `then`/`else`
+ * branches merged into it, at any depth. Its options, properties and items are subschemas of their own, which resolving
+ * it leaves unresolved.
+ *
+ * @param schema - The schema as written
+ * @returns - The `$ref`s, in the order they are written
+ */
+function enteredRefs<S extends StrictRJSFSchema = RJSFSchema>(schema: unknown): string[] {
+  if (!isSchemaObject<S>(schema)) {
+    return [];
+  }
+  const ownRef = schema[REF_KEY];
+  const allOf: unknown[] = Array.isArray(schema[ALL_OF_KEY]) ? schema[ALL_OF_KEY] : [];
+  return [
+    ...(typeof ownRef === 'string' ? [ownRef] : []),
+    ...[...allOf, schema[THEN_KEY], schema[ELSE_KEY]].flatMap((member) => enteredRefs<S>(member)),
+  ];
 }
 
 function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
@@ -594,9 +616,10 @@ export default function ObjectField<
    * of any other option, or the zero value of a type the options disagree about, is one that field can't show or
    * that fails the option it shows, as a `'New Value'` does a `{ enum: ['a', 'b'] } | null`. The options are read
    * resolved, as `retrieveSchema()` reads them when it stubs the property, so an option written as a `$ref` is followed
-   * as the definition it names. `seen` holds the `$ref`s of the options already followed, so an option leading back to
-   * one of them ends the descent. Only a `$ref` can lead back: an inline option is a new schema at each level, and
-   * reaches itself again only through a `$ref`.
+   * as the definition it names. `seen` holds the `$ref`s the options already followed entered, wherever resolving them
+   * entered one, so an option entering no `$ref` it hasn't entered before ends the descent: only a `$ref` can lead back,
+   * since an inline option is a smaller schema at each level, and each level that goes on enters one more of the
+   * finitely many `$ref`s the schema holds.
    */
   const seedFrom = useCallback(
     function seed(keySchema: S, keyUiSchema: UiSchema<T, S, F> | undefined, seen: ReadonlySet<string>): unknown {
@@ -660,11 +683,8 @@ export default function ObjectField<
       const [openedOption] = xxxOf?.options ?? [];
       if (xxxOf && !isConstantSelect<S>(resolvedKeySchema) && isSchemaObject<S>(openedOption)) {
         const [writtenOption] = getXxxOfOptions<S>(resolvedKeySchema)?.options ?? [];
-        const followedRef =
-          isSchemaObject<S>(writtenOption) && typeof writtenOption[REF_KEY] === 'string'
-            ? writtenOption[REF_KEY]
-            : undefined;
-        if (followedRef === undefined || !seen.has(followedRef)) {
+        const refs = enteredRefs<S>(writtenOption);
+        if (refs.length === 0 || refs.some((ref) => !seen.has(ref))) {
           return seed(
             getRenderedOptionSchema<S>(optionsResolvedKeySchema, openedOption),
             getRenderedOptionUiSchema<T, S, F>(
@@ -673,7 +693,7 @@ export default function ObjectField<
               resolvedKeyUiSchema,
               getOptionUiSchema<T, S, F>(resolvedKeyUiSchema, xxxOf.key, 0),
             ),
-            followedRef === undefined ? seen : new Set([...seen, followedRef]),
+            refs.length === 0 ? seen : new Set([...seen, ...refs]),
           );
         }
       }
