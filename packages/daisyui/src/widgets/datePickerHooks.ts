@@ -429,6 +429,9 @@ export function useDatePicker<V>({
     // document whose body scrolls
     const doc = documentOf(trigger);
     const client = doc.compatMode === 'BackCompat' ? doc.body : doc.documentElement;
+    // A known `top` and `left` to start from, which `place()` compares with where the browser draws the popup
+    popup.style.top = '0px';
+    popup.style.left = '0px';
     const place = () => {
       // Of that box, the part the user sees: an on-screen keyboard, by default in Chrome on Android, or a pinch zoom
       // shrinks and moves only the visual viewport, leaving the client box the popup is fixed in as it was
@@ -437,17 +440,28 @@ export function useDatePicker<V>({
       const viewLeft = Math.max(0, visual?.offsetLeft ?? 0);
       const viewBottom = Math.min(client.clientHeight, visual ? visual.offsetTop + visual.height : Infinity);
       const viewRight = Math.min(client.clientWidth, visual ? visual.offsetLeft + visual.width : Infinity);
-      // Not `100vh`, which takes in a horizontal scrollbar along the bottom of the viewport
+      // Not `100vh`, which takes in a horizontal scrollbar along the bottom of the viewport. The width replaces only
+      // `w-full`, so the theme's `max-w-xs` still applies, and the popup scrolls whatever no longer fits it
       popup.style.maxHeight = `${viewBottom - viewTop}px`;
-      const { top, bottom, left } = trigger.getBoundingClientRect();
+      popup.style.width = `${viewRight - viewLeft}px`;
+      const rect = trigger.getBoundingClientRect();
+      // Chrome and Firefox measure client rects from the layout viewport the popup is fixed in, but WebKit measures
+      // them from the visual viewport (https://bugs.webkit.org/show_bug.cgi?id=257375), which a pinch zoom moves away
+      // from it. How far the popup is drawn from its own `top` and `left` is that shift, in whichever browser
+      const drawn = popup.getBoundingClientRect();
+      const shiftY = parseFloat(popup.style.top) - drawn.top;
+      const shiftX = parseFloat(popup.style.left) - drawn.left;
       const { offsetWidth: width, offsetHeight: height } = popup;
-      const above = top - 5 - height;
-      let y = Math.max(viewTop, bottom + 5);
-      if (y + height > viewBottom) {
-        y = above >= viewTop ? above : Math.max(viewTop, viewBottom - height);
-      }
+      const above = rect.top + shiftY - 5 - height;
+      const below = rect.bottom + shiftY + 5;
+      // Kept inside both edges of the visible box after choosing a side, as a trigger outside of it, such as one an
+      // on-screen keyboard covers, would otherwise take the popup out of it too
+      const y = Math.max(
+        viewTop,
+        Math.min(below + height > viewBottom && above >= viewTop ? above : below, viewBottom - height),
+      );
       // A 20px gutter at the right edge, narrowed to whatever room is left by a popup about as wide as the viewport
-      const x = Math.max(viewLeft, Math.min(left, viewRight - 20 - width));
+      const x = Math.max(viewLeft, Math.min(rect.left + shiftX, viewRight - 20 - width));
       popup.style.top = `${y}px`;
       popup.style.left = `${x}px`;
     };

@@ -7,7 +7,7 @@ import Form from '../src/index.ts';
 import DateTimeWidget from '../src/widgets/DateTimeWidget/DateTimeWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 import pinTimeZone from './helpers/pinTimeZone.ts';
-import stubViewport from './helpers/stubViewport.ts';
+import stubViewport, { measureClientRectsFrom, rectAt } from './helpers/stubViewport.ts';
 
 const user = userEvent.setup();
 const intersectionObserver = mockIntersectionObserver();
@@ -350,24 +350,19 @@ describe('DateTimeWidget', () => {
         { container: into },
       );
       const trigger = container.querySelector<HTMLElement>('button[aria-haspopup]')!;
-      const { top, left } = rect;
-      vi.spyOn(trigger, 'getBoundingClientRect').mockReturnValue({
-        x: left,
-        y: top,
-        width: 40,
-        height: 20,
-        top,
-        right: left + 40,
-        bottom: top + 20,
-        left,
-        toJSON() {},
-      });
+      vi.spyOn(trigger, 'getBoundingClientRect').mockReturnValue(rectAt(rect.top, rect.left, 40, 20));
       return trigger;
     }
 
-    /** Gives every element a size, which jsdom, laying nothing out, leaves at zero, until the test ends */
+    /** Gives every element a size, which jsdom, laying nothing out, leaves at zero, until the test ends. Its width is
+     * capped by its own `width` style, as `max-w-xs` caps the popup's at its own
+     */
     function sizeElements(width: number, height: number) {
-      const widthSpy = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(width);
+      const widthSpy = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function offsetWidth(
+        this: HTMLElement,
+      ) {
+        return Math.min(width, parseFloat(this.style.width) || width);
+      });
       const heightSpy = vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(height);
       onTestFinished(() => {
         widthSpy.mockRestore();
@@ -599,6 +594,69 @@ describe('DateTimeWidget', () => {
 
       expect(popup()).toHaveStyle({ top, left, maxHeight: '384px' });
     });
+
+    test('above an on-screen keyboard that comes up over its trigger while it is open, Done included', async () => {
+      const viewport = { offsetTop: 0, offsetLeft: 0, width: 1024, height: 768 };
+      stubVisualViewport(viewport);
+      const trigger = renderAt({ top: 600, left: 10 });
+      sizeElements(320, 300);
+      await user.click(trigger);
+      expect(popup()).toHaveStyle({ top: '295px' });
+
+      viewport.height = 400;
+      await new Promise(requestAnimationFrame);
+
+      // Its 300px end where the keyboard starts, rather than at 595px behind it, above the trigger the keyboard hides
+      expect(popup()).toHaveStyle({ top: '100px', maxHeight: '400px' });
+    });
+
+    test('inside the visual viewport a pinch zoom panned above its trigger, Done included', async () => {
+      // The part from (300, 200) to (812, 584) of the client box
+      stubVisualViewport({ offsetTop: 200, offsetLeft: 300, width: 512, height: 384 });
+      const trigger = renderAt({ top: 680, left: 400 });
+      sizeElements(320, 200);
+
+      await user.click(trigger);
+
+      // Its 200px end at that part's bottom, rather than at 675px just above the trigger
+      expect(popup()).toHaveStyle({ top: '384px' });
+    });
+
+    test('no wider than a visual viewport narrower than itself, as it narrows and pans while the popup is open', async () => {
+      // A pinch zoom that leaves 200px of the client box's width in sight, from 300px in
+      const viewport = { offsetTop: 200, offsetLeft: 300, width: 200, height: 384 };
+      stubVisualViewport(viewport);
+      const trigger = renderAt({ top: 250, left: 400 });
+      sizeElements(320, 200);
+      await user.click(trigger);
+      // Its right edge where that part ends, rather than 120px past it, scrolling what no longer fits
+      expect(popup()).toHaveStyle({ width: '200px', left: '300px' });
+
+      Object.assign(viewport, { offsetLeft: 350, width: 150 });
+      await new Promise(requestAnimationFrame);
+
+      expect(popup()).toHaveStyle({ width: '150px', left: '350px' });
+    });
+
+    test.each([
+      ['below', { top: 50, left: 100 }, '275px'],
+      ['above', { top: 300, left: 100 }, '295px'],
+    ])(
+      '%s its trigger where client rects are measured from the visual viewport, as WebKit measures them',
+      async (_, rect, top) => {
+        // The part from (300, 200) to (812, 584) of the client box, whose corner WebKit measures client rects from,
+        // rather than the corner of the layout viewport that a fixed popup's `top` and `left` are measured from
+        stubVisualViewport({ offsetTop: 200, offsetLeft: 300, width: 512, height: 384 });
+        measureClientRectsFrom(200, 300);
+        const trigger = renderAt(rect);
+        sizeElements(320, 200);
+
+        await user.click(trigger);
+
+        // Next to the trigger, which is 200px lower and 300px further right of that corner than its client rect says
+        expect(popup()).toHaveStyle({ top, left: '400px' });
+      },
+    );
   });
 
   test("translates the Done button and the time input's label", async () => {
