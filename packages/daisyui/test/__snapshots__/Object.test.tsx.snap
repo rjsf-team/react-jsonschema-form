@@ -3744,22 +3744,28 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                   <div
                     class="field-template mb-3"
                   >
-                    <div
-                      class="title-field mb-6"
+                    <fieldset
+                      aria-labelledby="root_a__title"
+                      class="rjsf-own-title-group"
+                      style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                     >
-                      <h2
-                        class="text-3xl font-bold text-primary mb-2"
-                      >
-                        <span
-                          id="root_a__title"
-                        >
-                          a
-                        </span>
-                      </h2>
                       <div
-                        class="divider divider-primary my-0"
-                      />
-                    </div>
+                        class="title-field mb-6"
+                      >
+                        <h2
+                          class="text-3xl font-bold text-primary mb-2"
+                        >
+                          <span
+                            id="root_a__title"
+                          >
+                            a
+                          </span>
+                        </h2>
+                        <div
+                          class="divider divider-primary my-0"
+                        />
+                      </div>
+                    </fieldset>
                     <div
                       class="rjsf-field-error-template text-red-600"
                       id="root_a__error"
