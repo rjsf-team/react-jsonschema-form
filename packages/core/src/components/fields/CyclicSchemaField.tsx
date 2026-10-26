@@ -2,7 +2,9 @@ import { useMemo, useSyncExternalStore } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { expandRefCycle, getTemplates, getUiOptions } from '@rjsf/utils';
 
+import { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useUiState from '../../hooks/useUiState.ts';
+import useAdditionalDepths from './useAdditionalDepths.ts';
 
 /** The `CyclicSchemaField` component renders a field `retrieveSchema()` collapsed as a `$ref` cycle (marked with
  * `RJSF_REF_CYCLE_KEY`): an Expand button until the field is expanded, and then the field resolved one level further.
@@ -28,7 +30,13 @@ export default function CyclicSchemaField<
   );
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  // The entry label is built here rather than handed down by `SchemaField`: a prop would leak through to the
+  // expanded field's own `SchemaField` (and from it onto the field it renders), and a fresh label each parent render
+  // would defeat that `SchemaField`'s memo
+  const additionalDepths = useAdditionalDepths(schema, fieldPath);
+  const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions, () =>
+    entryLabelForLog(fieldPath, registry.globalFormOptions, additionalDepths),
+  );
   if (expandedSchema === undefined) {
     return (
       <CyclicSchemaExpandTemplate

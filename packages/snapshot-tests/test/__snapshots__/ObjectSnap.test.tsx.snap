@@ -2201,6 +2201,185 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > patternProperties, a key additionalProperties false forbids 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-object"
+    >
+      <fieldset
+        id="root"
+      >
+        <div
+          class="form-group rjsf-field rjsf-field-string"
+        >
+          <div
+            class="row"
+          >
+            <div
+              class="col-xs-5 form-additional"
+            >
+              <div
+                class="form-group"
+              >
+                <label
+                  class="control-label"
+                  for="root_abc-key"
+                >
+                  abc Key
+                </label>
+                <input
+                  class="form-control"
+                  id="root_abc-key"
+                  type="text"
+                  value="abc"
+                />
+              </div>
+            </div>
+            <div
+              class="form-additional form-group col-xs-5"
+            >
+              <label
+                class="control-label"
+                for="root_abc"
+              >
+                <span
+                  id="root_abc__label"
+                >
+                  abc
+                </span>
+              </label>
+              <input
+                class="form-control"
+                id="root_abc"
+                label="abc"
+                name="root_abc"
+                placeholder=""
+                type="text"
+                value="hello"
+              />
+            </div>
+            <div
+              class="col-xs-2"
+              style="margin-top: 26px;"
+            >
+              <button
+                class="btn btn-danger rjsf-object-property-remove btn-block"
+                id="root_abc__remove"
+                style="border: 0px;"
+                title="Remove"
+                type="button"
+              >
+                <i
+                  class="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="form-group rjsf-field rjsf-field-null rjsf-field-error has-error has-danger"
+        >
+          <div
+            class="row"
+          >
+            <div
+              class="col-xs-5 form-additional"
+            >
+              <div
+                class="form-group"
+              >
+                <label
+                  class="control-label"
+                  for="root_a-key"
+                >
+                  a Key
+                </label>
+                <input
+                  aria-describedby="root_a__error"
+                  aria-invalid="true"
+                  class="form-control"
+                  id="root_a-key"
+                  type="text"
+                  value="a"
+                />
+              </div>
+            </div>
+            <div
+              class="form-additional form-group col-xs-5"
+            >
+              <legend>
+                <span
+                  id="root_a__title"
+                >
+                  a
+                </span>
+              </legend>
+              <div>
+                <ul
+                  class="error-detail bs-callout bs-callout-info"
+                  id="root_a__error"
+                >
+                  <li
+                    class="text-danger"
+                  >
+                    The key "a" is not allowed here
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div
+              class="col-xs-2"
+              style="margin-top: 26px;"
+            >
+              <button
+                class="btn btn-danger rjsf-object-property-remove btn-block"
+                id="root_a__remove"
+                style="border: 0px;"
+                title="Remove"
+                type="button"
+              >
+                <i
+                  class="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+        >
+          <p
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-object-property-expand"
+          >
+            <button
+              class="btn btn-info btn-add col-xs-12"
+              id="root__add"
+              title="Add"
+              type="button"
+            >
+              <i
+                class="glyphicon glyphicon-plus"
+              />
+            </button>
+          </p>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
 <DocumentFragment>
   <form
