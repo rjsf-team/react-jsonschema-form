@@ -988,6 +988,10 @@ describe('getUiRequiredErrorSchema()', () => {
         'the object option selected in an anyOf beside a oneOf whose options name no type',
         { anyOf: [objectOption], oneOf: [{ minProperties: 0 }] },
       ],
+      [
+        'an object whose anyOf options name no type, since the object takes the controls as well',
+        { ...objectOption, anyOf: [{ minProperties: 0 }, { maxProperties: 5 }] },
+      ],
       ['the object option selected in an allOf that resolves to an anyOf', { allOf: [{ anyOf: [objectOption] }] }],
       [
         'the object option selected in an if/then/else that resolves to an anyOf',
@@ -1044,12 +1048,6 @@ describe('getUiRequiredErrorSchema()', () => {
           globalUiOptions,
         ),
       );
-      expect(errors).toHaveLength(1);
-      expect(errors[0].property).toBe('.thing.a');
-    });
-
-    it("still fires at {} for a property of an object whose anyOf options name no type, since the object's own ObjectField renders it", () => {
-      const errors = errorsAtEmptyObject({ ...objectOption, anyOf: [{ minProperties: 0 }, { maxProperties: 5 }] });
       expect(errors).toHaveLength(1);
       expect(errors[0].property).toBe('.thing.a');
     });
