@@ -1,6 +1,6 @@
 import type { FieldPathList, RJSFValidationError, ValidationData } from '@rjsf/utils';
 
-import type { EventFormData } from './IChangeEvent.ts';
+import type { EventFormData, RJSFFormStatus } from './IChangeEvent.ts';
 
 /** Public methods exposed by a Form ref.
  * Commands read and write Form's latest stored value, edits made earlier in the same tick included. Use event handlers
@@ -23,15 +23,27 @@ export interface FormRef<T = unknown> {
    * to show, the inputs describe data the form no longer holds, so schema validation alone checks the value. An
    * element another `tagName` renders has no `requestSubmit()`, so it gets a submit event dispatched to it, which skips
    * the browser's constraint validation as well. An error `onSubmit`, `onError` or a validation callback throws comes
-   * out of this call, as it does from the other methods. While a promise `onSubmit` returned is pending, it does
-   * nothing.
+   * out of this call, as it does from the other methods. While a promise `onSubmit` returned is pending, it only
+   * counts the submit in the status's `submitCount`.
    */
   submit(): void;
-  /** Clears the validation errors and resets the data to the props' `formData`, or else `initialFormData`, and the
-   * schema's defaults, the way the initial render derives it, reporting the result through `onChange`. It also ends a
-   * pending submit, so the form takes a submit again even if the promise `onSubmit` returned never settles
+  /** Reads the form's status: whether its latest stored value differs from the baseline, where, and how many submits
+   * have reached the form. A prop change that re-derives the data, such as a new `schema` filling in a default, moves
+   * the baseline with it and calls no `onChange`, so after one this can differ from the status the last `IChangeEvent`
+   * carried. Every call returns the same object until the form's state changes, which a blur or new errors can do
+   * while the status stays equal, so treat it as read-only and compare its members rather than the object; in
+   * development it is frozen.
    */
-  reset(): void;
+  getStatus(): RJSFFormStatus<T>;
+  /** Clears the validation errors and the submit count, and resets the data to `seed` with the schema's defaults filled
+   * in, the way the initial render derives it, reporting the result through `onChange`. That data becomes the baseline
+   * the form is clean against. Pass the data a save stored, from the handler or action that saved it, so the form is
+   * clean again without remounting. `seed` replaces the props' seed for every later `reset()`. Called with nothing, it
+   * seeds the form from the data the last `reset(seed)` passed, or else from the props' `formData`, or else
+   * `initialFormData`. It also ends a pending submit, so the form takes a submit again even if the promise `onSubmit`
+   * returned never settles.
+   */
+  reset(seed?: T): void;
   /** Sets the value of the field at `fieldPath`, either a dotted path or a `FieldPathList`. Use `''` or `[]` for the
    * root. Passing `undefined` clears the field.
    */

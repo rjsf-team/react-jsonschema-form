@@ -38,9 +38,10 @@ import NamedFieldContext from './fields/NamedFieldContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
+import type { RevealedPaths, TouchedPaths } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
-import type { UiState } from './uiState.ts';
+import type { UiState, UiStateReader } from './uiState.ts';
 import UiStateContext from './UiStateContext.ts';
 
 /** `T` itself for any concrete type, but not a position TypeScript infers `T` from. `FormProps` wraps the configuration
@@ -204,6 +205,16 @@ export interface FormProps<
    * live validation will be performed when a field that was updated is blurred (as a performance optimization).
    */
   liveValidate?: 'onChange' | 'onBlur';
+  /** Which errors live validation shows. `'all'`, the default, shows every error. `'field'` shows a field's errors only
+   * once `liveValidate`'s trigger fired for it, the user changing it under `'onChange'` or blurring it under
+   * `'onBlur'`, and every error once a submit was attempted or `FormRef.validateForm()` ran, until `reset()`. An
+   * array's or object's own errors show once it or a field inside it fired, and adding, removing or moving an array's
+   * items, adding, renaming or removing an object's properties, or, under `'onBlur'`, blurring its option selector,
+   * fires the array or object. `extraErrors`, and the errors fields raise themselves,
+   * always show; `customValidate`'s show as the schema's do. `onChange` carries the errors shown, while `onError` sees
+   * every error. Without `liveValidate` it changes nothing.
+   */
+  liveErrors?: 'all' | 'field';
   /** Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
    * to `true` and the form's data is updated by the user.
    *
@@ -292,6 +303,22 @@ export interface FormState<
    * changes made since
    */
   formData?: T;
+  /** The data the form was last seeded with, on mount or by `reset()`, derived as `formData` was then and kept in step
+   * with every change to `formData` the user did not make: a prop change re-deriving it and extra data omitted from
+   * it. Every subtree of `formData` equal to its counterpart here is that counterpart, see `shareState()`, so the form
+   * is dirty exactly when `formData` is not this
+   */
+  baseline?: T;
+  /** The paths of the fields whose widgets reported a blur since the form mounted or was last reset, moved with the
+   * keys the form moved
+   */
+  touchedPaths: TouchedPaths;
+  /** Where `liveValidate`'s trigger fired, which decides the errors `liveErrors: 'field'` shows */
+  revealed: RevealedPaths;
+  /** The option selections the baseline is derived under, whenever a prop change or an omission derives it again: none
+   * for the baseline the form mounted with, and those shown at the last `reset()` for the one it seeded
+   */
+  baselineUiState: UiStateReader;
   /** Whether there is data to live-validate when a prop changes: the props seeded the form with data, rather than
    * leaving it to the schema's defaults, or it has been edited since it mounted or was last reset
    */
@@ -388,23 +415,20 @@ interface PendingButtonProps {
   onClick: (event: MouseEvent<HTMLElement>) => void;
 }
 
-/** Cancels the click even when the app's `onClick` throws, since the browser would otherwise run its constraint
- * validation for the submit the form ignores
- */
-function cancelAfterAppClick(event: MouseEvent<HTMLElement>, onClick?: (event: MouseEvent<HTMLElement>) => void) {
-  try {
-    onClick?.(event);
-  } finally {
-    event.preventDefault();
-  }
-}
-
 type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
   SubmitButtonProps<T, S, F>,
   'uiSchema' | 'registry'
 > & {
   SubmitButton: TemplatesType<T, S, F>['ButtonTemplates']['SubmitButton'];
   submitting: boolean;
+  /** Whether the form is pending in React's form status, see `FormStatusSubmitButton` */
+  isStatusPending?: boolean;
+  /** Cancels the click after calling the app's `onClick`, see `cancelPendingClick` in `formModel.ts` */
+  cancelClick: (
+    event: MouseEvent<HTMLElement>,
+    onClick: PendingButtonProps['onClick'] | undefined,
+    isStatusPending: boolean,
+  ) => void;
 };
 
 /** The submit button, `aria-disabled` and taking no click while the form is pending, through the props its uiSchema
@@ -414,6 +438,8 @@ type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormConte
 function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContextType>({
   SubmitButton,
   submitting,
+  isStatusPending = false,
+  cancelClick,
   uiSchema,
   registry,
 }: PendingSubmitButtonProps<T, S, F>) {
@@ -428,9 +454,9 @@ function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContex
        * show its message and move focus, for a submit the form ignores. Enter in a field clicks the form's default
        * button too. The app's own `onClick` still runs
        */
-      onClick: (event) => cancelAfterAppClick(event, appOnClick),
+      onClick: (event) => cancelClick(event, appOnClick, isStatusPending),
     });
-  }, [submitting, uiSchema]);
+  }, [submitting, isStatusPending, cancelClick, uiSchema]);
   return <SubmitButton uiSchema={pendingUiSchema} registry={registry} pending={submitting} />;
 }
 
@@ -443,7 +469,7 @@ function FormStatusSubmitButton<T, S extends StrictRJSFSchema, F extends FormCon
   ...props
 }: PendingSubmitButtonProps<T, S, F>) {
   const { pending } = useFormStatus();
-  return <PendingSubmitButton {...props} submitting={submitting || pending} />;
+  return <PendingSubmitButton {...props} submitting={submitting || pending} isStatusPending={pending} />;
 }
 
 /** The model holds the state; rendering derives from it and the props what to show, and each commit hands that back */
@@ -462,8 +488,9 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   });
   const { model } = cache;
   const { setFormElement } = model;
-  // Renders the form after each operation that changed its state. The server snapshot is the store's own: the render
-  // that reads it is the one that created the model, so nothing has been committed to it yet
+  // Renders the form after each operation that changed what it renders from, see `RENDERED_MEMBERS`. The server
+  // snapshot is the store's own: the render that reads it is the one that created the model, so nothing has been
+  // committed to it yet
   const published = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
   // With no operation since the cached derivation, that derivation is the latest state
   const base = published === cache.published ? cache.state : published;
@@ -524,11 +551,12 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         <StatusSubmitButton
           SubmitButton={SubmitButton}
           submitting={submitting}
+          cancelClick={model.cancelPendingClick}
           uiSchema={submitUiSchema}
           registry={registry}
         />
       ),
-    [hasChildren, StatusSubmitButton, SubmitButton, submitting, submitUiSchema, registry],
+    [hasChildren, StatusSubmitButton, SubmitButton, submitting, model, submitUiSchema, registry],
   );
 
   /** The errors in the `ErrorList`, unless disabled by `showErrorList` */

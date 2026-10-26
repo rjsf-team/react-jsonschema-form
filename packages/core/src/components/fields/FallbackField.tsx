@@ -35,6 +35,7 @@ import {
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
+import useSendBlur from '../../hooks/useSendBlur.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 
@@ -410,6 +411,9 @@ function FallbackUiField<
     () => ({ [UI_OPTIONS_KEY]: { label: uiBooleanOption(label) !== false } }),
     [label],
   );
+  // The selector's `SchemaField` sits at a path no data is stored at, so the blur it names is replaced by this field's
+  // own, which touches nothing, as an option selector's does
+  const handleTypeSelectorBlur = useSendBlur(fieldPath, onBlur, 'nothing', true);
 
   // Exactly one of the two fields renders the title: the outer one where a template's label names the value, which its
   // plan gives a control only where the value is one, and the value field otherwise, as where the theme declares the
@@ -472,7 +476,7 @@ function FallbackUiField<
           uiSchema={typeSelectorUiSchema}
           formData={type as T}
           onChange={onTypeChange}
-          onBlur={onBlur}
+          onBlur={handleTypeSelectorBlur}
           onFocus={onFocus}
           registry={registry}
           disabled={disabled}

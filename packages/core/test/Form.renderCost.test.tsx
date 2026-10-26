@@ -5,8 +5,17 @@ import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form, { ArrayFieldItemTemplate as DefaultItemTemplate } from '../src/index.ts';
+import type { FormProps } from '../src/index.ts';
 import { buildRegistry } from '../src/Theme.ts';
-import { AcceptingParent, createFormRef, elementOf, handleOf, ListeningParent, input } from './testUtils.tsx';
+import {
+  AcceptingParent,
+  createFormRef,
+  elementOf,
+  fieldErrorsById,
+  handleOf,
+  ListeningParent,
+  input,
+} from './testUtils.tsx';
 
 // Spied rather than replaced, so the form builds its real registry and every call is counted
 vi.mock('../src/Theme.ts', { spy: true });
@@ -153,6 +162,63 @@ describe('render cost of one update', () => {
     // once for the render of that; each change reports through `onChange`
     expect(onChange).toHaveBeenCalledTimes(2);
     expect(vi.mocked(buildRegistry).mock.calls.length).toBeLessThanOrEqual(4);
+  });
+});
+
+describe('render cost of a blur', () => {
+  function renderCounted(props: Partial<FormProps>) {
+    const ref = createFormRef();
+    const onRender = vi.fn();
+    const { container } = render(
+      <Profiler id='form' onRender={onRender}>
+        <Form ref={ref} schema={schema} validator={validator} {...props} />
+      </Profiler>,
+    );
+    return { container, onRender, handle: handleOf(ref) };
+  }
+
+  async function blur(container: HTMLElement, id: string) {
+    await user.click(input(container, id));
+    await user.click(document.body);
+  }
+
+  it('commits nothing for a first blur that only touches the field', async () => {
+    const { container, onRender, handle } = renderCounted({});
+    await user.click(input(container, 'root_name'));
+    onRender.mockClear();
+
+    await user.click(document.body);
+
+    expect(handle.getStatus().touched).toBe(true);
+    expect(onRender).not.toHaveBeenCalled();
+  });
+
+  it('keeps the touch it did not render through a later prop change that derives the state again', async () => {
+    const ref = createFormRef();
+    const element = (current: RJSFSchema) => <Form ref={ref} schema={current} validator={validator} />;
+    const { container, rerender } = render(element(schema));
+    await blur(container, 'root_name');
+
+    rerender(element({ ...schema, title: 'Person' }));
+
+    expect(handleOf(ref).getStatus().touchedFields).toEqual({ name: true });
+  });
+
+  it("commits once for a first blur that reveals the field's errors under liveErrors 'field'", async () => {
+    const { container, onRender, handle } = renderCounted({
+      initialFormData: { name: 'x' },
+      liveValidate: 'onBlur',
+      liveErrors: 'field',
+    });
+    await user.click(input(container, 'root_name'));
+    expect(fieldErrorsById(container)).toEqual({});
+    onRender.mockClear();
+
+    await user.click(document.body);
+
+    expect(handle.getStatus().touched).toBe(true);
+    expect(onRender).toHaveBeenCalledTimes(1);
+    expect(Object.keys(fieldErrorsById(container))).toEqual(['root_name']);
   });
 });
 
