@@ -3450,8 +3450,10 @@ describe('a dependency oneOf none of whose options declares the dependency key (
     expect(node.querySelector('#root_d')).toBeInTheDocument();
     expect(node.querySelector('#root__oneof_select')).not.toBeInTheDocument();
   });
+});
 
-  it("renders the option the data matches of a dependency's anyOf, with no selector, as it renders an anyOf beside dependencies", () => {
+describe('a dependency anyOf (#5407)', () => {
+  it('renders the option the data matches, with no selector, as it renders an anyOf beside dependencies', () => {
     const anyOf: RJSFSchema[] = [
       { properties: { b: { type: 'string', title: 'B' } } },
       { properties: { c: { type: 'number', title: 'C' } } },
@@ -3474,5 +3476,27 @@ describe('a dependency oneOf none of whose options declares the dependency key (
       expect(node.querySelector('#root_c')).toBeInTheDocument();
       expect(node.querySelector('#root_b')).not.toBeInTheDocument();
     }
+  });
+
+  it("keeps every value of the key's own select when an option declares the key, so changing it brings in the option the new value matches", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', title: 'A', enum: ['x', 'y'] } },
+      dependencies: {
+        a: {
+          anyOf: [
+            { properties: { a: { enum: ['x'] }, b: { type: 'string', title: 'B' } } },
+            { properties: { a: { enum: ['y'] }, c: { type: 'number', title: 'C' } } },
+          ],
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema, initialFormData: { a: 'x' } });
+
+    expect(node.querySelector('#root_b')).toBeInTheDocument();
+    await user.selectOptions(elementOf(node, '#root_a'), 'y');
+
+    expect(node.querySelector('#root_c')).toBeInTheDocument();
+    expect(node.querySelector('#root_b')).not.toBeInTheDocument();
   });
 });
