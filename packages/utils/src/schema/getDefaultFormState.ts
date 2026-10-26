@@ -604,9 +604,10 @@ interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   track: (view: DefaultsView<S>) => void;
 }
 
-/** Returns the policy fields are planned with: which `allOf`s and `if`s are merged, and which options. An option beside
- * `dependencies` is merged as the one the data and the defaults so far match first; an option the fold selected is
- * merged as selected. Every other option list is left on the schema for the fold to select from.
+/** Returns the policy fields are planned with: which `allOf`s and `if`s are merged, and which options. An option of a
+ * list `OptionChoice.dependencies` flags, beside `dependencies` or in a `dependencies` entry, is merged as the one the
+ * data and the defaults so far match first; an option the fold selected is merged as selected. Every other option list
+ * is left on the schema for the fold to select from.
  */
 function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,

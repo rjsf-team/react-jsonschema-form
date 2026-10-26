@@ -1686,6 +1686,88 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           });
         });
 
+        it('merges the option the data matches of a oneOf none of whose options declares the key, rather than the first', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            dependencies: {
+              a: { oneOf: [{ properties: { b: { type: 'string' } } }, { properties: { c: { type: 'number' } } }] },
+            },
+          };
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x', c: 1 })).toEqual({
+            type: 'object',
+            properties: { a: { type: 'string' }, c: { type: 'number' } },
+          });
+        });
+
+        it('drops a oneOf where only some options declare the key, its other options too, when no keyed option holds', () => {
+          // Mock isValid so that the one keyed option's condition fails
+          testValidator.setReturnValues({ isValid: [false] });
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { mixed: { type: 'string' } },
+            dependencies: {
+              mixed: {
+                oneOf: [
+                  { properties: { mixed: { enum: ['x'] }, b: { type: 'string' } } },
+                  { properties: { c: { type: 'number' } } },
+                ],
+              },
+            },
+          };
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, { mixed: 'z', c: 1 })).toEqual({
+            type: 'object',
+            properties: { mixed: { type: 'string' } },
+          });
+          expect(consoleWarnSpy).toHaveBeenCalledWith(
+            `ignoring oneOf in dependencies of "mixed" because there isn't exactly one subschema that is valid`,
+          );
+        });
+
+        it('merges the option the data matches of an anyOf, as it merges an anyOf beside dependencies', () => {
+          const anyOf: RJSFSchema[] = [
+            { properties: { b: { type: 'string' } } },
+            { properties: { c: { type: 'number' } } },
+          ];
+          const dependent: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            dependencies: { a: { anyOf } },
+          };
+          const beside: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            anyOf,
+            dependencies: { a: ['a'] },
+          };
+          const expected = { type: 'object', properties: { a: { type: 'string' }, c: { type: 'number' } } };
+          expect(retrieveSchema({ validator: testValidator }, dependent, dependent, { a: 'x', c: 1 })).toEqual(
+            expected,
+          );
+          expect(retrieveSchema({ validator: testValidator }, beside, beside, { a: 'x', c: 1 })).toEqual({
+            ...expected,
+            required: ['a'],
+          });
+        });
+
+        it("keeps the anyOf the field's own option offers when merging a dependency anyOf", () => {
+          const nested: RJSFSchema[] = [
+            { properties: { m: { type: 'string' } } },
+            { properties: { n: { type: 'number' } } },
+          ];
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            oneOf: [{ properties: { p: { type: 'string' } }, anyOf: nested }],
+            dependencies: { a: { anyOf: [{ properties: { b: { type: 'string' } } }] } },
+          };
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x' })).toEqual({
+            type: 'object',
+            properties: { a: { type: 'string' }, p: { type: 'string' }, b: { type: 'string' } },
+            anyOf: nested,
+          });
+        });
+
         describe('false condition', () => {
           it('should not modify properties', () => {
             const schema: RJSFSchema = {

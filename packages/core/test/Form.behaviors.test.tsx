@@ -3443,4 +3443,29 @@ describe('a dependency oneOf none of whose options declares the dependency key (
     expect(node.querySelector('#root_d')).toBeInTheDocument();
     expect(node.querySelector('#root__oneof_select')).not.toBeInTheDocument();
   });
+
+  it("renders the option the data matches of a dependency's anyOf, with no selector, as it renders an anyOf beside dependencies", () => {
+    const anyOf: RJSFSchema[] = [
+      { properties: { b: { type: 'string', title: 'B' } } },
+      { properties: { c: { type: 'number', title: 'C' } } },
+    ];
+    const dependent: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', title: 'A' } },
+      dependencies: { a: { anyOf } },
+    };
+    const beside: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', title: 'A' } },
+      anyOf,
+      dependencies: { a: ['a'] },
+    };
+    for (const schema of [dependent, beside]) {
+      const { node } = createFormComponent({ schema, initialFormData: { a: 'x', c: 1 } });
+
+      expect(node.querySelector('#root__anyof_select')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_c')).toBeInTheDocument();
+      expect(node.querySelector('#root_b')).not.toBeInTheDocument();
+    }
+  });
 });

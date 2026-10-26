@@ -99,8 +99,8 @@ export interface OptionChoice {
   readonly options: readonly NodeId[];
   /** The list of options as the node holding it declares it */
   readonly list: unknown;
-  /** Whether the schema offering the options has `dependencies`, or is a `dependencies` entry no option of which
-   * declares its key: the cases `retrieveSchema()` merges an option */
+  /** Whether the schema offering the options has `dependencies`, or is a `dependencies` entry offering an `anyOf` or a
+   * `oneOf` no option of which declares its key: the cases `retrieveSchema()` merges an option */
   readonly dependencies: boolean;
   readonly selected?: number;
 }
@@ -730,6 +730,15 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       const dependencies = keywords.has(DEPENDENCIES_KEY);
       part = this.applyOption(part, ANY_OF_KEY, keywords.get(ANY_OF_KEY), dependencies);
       part = this.applyOption(part, ONE_OF_KEY, keywords.get(ONE_OF_KEY), dependencies);
+    } else if (keywords.has(ANY_OF_KEY)) {
+      // A dependency's `anyOf` has no keyed reading, so it is applied as a `oneOf` none of whose options declares the
+      // key is, dropped before its option is merged so an `anyOf` the option offers itself is kept
+      part = this.applyOption(
+        { ...part, schema: withoutKeys(part.schema, ANY_OF_KEY) },
+        ANY_OF_KEY,
+        keywords.get(ANY_OF_KEY),
+        true,
+      );
     }
     part = this.applyDependencies(part, keywords.get(DEPENDENCIES_KEY), keywords.get(PROPERTIES_KEY));
     // A dependency's `if` belongs to the entry its data qualified, so it is applied whatever the policy, as the entry's
