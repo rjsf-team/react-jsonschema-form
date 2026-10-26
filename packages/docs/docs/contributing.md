@@ -61,9 +61,11 @@ CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the 
 
 A PR that changes anything a user of a published package can notice adds an entry to the changelog.
 Append it as the last bullet under the heading of each package whose users notice the change, in the upcoming release at the top of the file.
+If the top heading is dated, that release has shipped: add an undated heading for the next version above it.
 A change that belongs to no single package, such as a new Node or React requirement, goes once under `Dev / docs / playground` instead.
 If the change needs a bigger semver bump than that release's heading names, update the heading.
-Tests, CI, refactors and docs fixes need no entry, and neither does a fix to a change that isn't released yet: edit that change's entry instead.
+A change to a package's peer dependency range goes under that package, and so does a dependency bump that changes what its users get, such as a fix or a new minimum version.
+Tests, CI, refactors, docs fixes, playground changes and dependency bumps users can't notice need no entry, and neither does a fix to a change that isn't released yet: edit that change's entry instead.
 
 Write the entry for someone deciding whether to upgrade, who won't open the PR:
 
@@ -71,6 +73,7 @@ Write the entry for someone deciding whether to upgrade, who won't open the PR:
 - Say what users notice, not how the code does it. A fix names what went wrong for them: "Fix `ArrayField` dropping the last item's errors when an item is removed".
 - Leave the reasoning, the alternatives and the edge cases to the PR description, and end the entry with a link to the PR and to the issue it fixes, if any.
 - Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and link the [upgrade guide](#upgrade-guide) section that says what to change.
+  Link it on the docs site, as in `https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/vN.x%20upgrade%20guide#<section>`, since the entry is also copied into a GitHub Release, where relative paths don't resolve.
 - A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower type.
 - Aim for a sentence or two, about 200 characters. If it can't be both short and clear, keep it clear.
 
@@ -193,6 +196,7 @@ For instance if you are about to create the new `6.100.10` branch, then you woul
 
 ```bash
 git checkout -b rc6.100.10
+git commit -m "Release notes for 6.100.10" CHANGELOG.md
 pnpm exec nx release version --git-tag
 git commit -m "Releasing 6.100.10"
 git push
