@@ -872,7 +872,7 @@ const schema: RJSFSchema = {
 
 const initialData: Settings = { country: 'US' };
 
-const withMode = (data: Settings | undefined): Settings | undefined => {
+const withMode = (data: Settings | undefined): Settings => {
   const mode = data?.country === 'SE' ? 'auto' : 'manual';
   return data?.mode === mode ? data : { ...data, mode };
 };
@@ -888,9 +888,52 @@ const withMode = (data: Settings | undefined): Settings | undefined => {
 
 A change to `country` and the `mode` it computes are one edit, so the form shows `rate` in the same render. `withMode` returns `next` itself when there is nothing to change, as the `code` rewrite above does for an empty `code`.
 
-Nothing else should set `mode`. An edit to it, from its widget or from `setFieldValue('mode', …)`, is sanitized against the branch it switches to before `withMode` puts `mode` back, so a switch to `manual` drops `rate`, and the value the user entered is lost. The uiSchema marks `mode` `ui:readonly` for the widget; code that wants another `mode` sets `country`. A write of the whole value needs nothing more: `setFieldValue('', { country: 'SE', rate: 5 })` keeps the `rate` it sets, since the form keeps a value the write sets itself, and `withMode` adds `mode`.
+Nothing else should set `mode`. An edit to it, from its widget or from `setFieldValue('mode', …)`, is sanitized against the branch it switches to before `withMode` puts `mode` back, so a switch to `manual` drops `rate`, and the value the user entered is lost. The uiSchema marks `mode` `ui:readonly` for the widget; code that wants another `mode` sets `country`. A write of the whole value needs nothing more to get its `mode`: `setFieldValue('', { country: 'SE', rate: 5 })` keeps the `rate` it sets, since the form keeps a value the write sets itself, and `withMode` adds `mode`. It keeps a `rate` the computed `mode` hides just as well: `setFieldValue('', { country: 'US', rate: 5 })` leaves `rate` in the data, not rendered but submitted, so drop a stale `rate` from a stored record before you write it.
 
-The form fills `initialFormData` in with the schema's defaults without calling `transformChange`, so compute the field into `initialFormData` yourself, from an `initialData` that already holds any `default` of `country`; otherwise `mode` is computed before `country` has its value. The defaults a new `schema` fills in skip `transformChange` too, so when a new `schema` can give `country` a default, remount the form under a new `key` as it arrives, with `initialFormData` computed from data that holds that default. The remount starts the form over from `initialFormData`, so what the user entered is lost unless that data is the form's current data, read with `getFormData()` before the new `schema` is passed: `withMode({ country: 'SE', ...formRef.current?.getFormData() })`, where `'SE'` is the new default and a `country` the user picked overrides it.
+The form fills `initialFormData` in with the schema's defaults without calling `transformChange`, so compute the field into `initialFormData` yourself, from an `initialData` that already holds any `default` of `country`; otherwise `mode` is computed before `country` has its value. The defaults a new `schema` fills in skip `transformChange` too, so when a new `schema` can give `country` a default, remount the form under a new `key` as it arrives, with `initialFormData` computed from data that holds that default. The remount starts the form over from `initialFormData`, so read the form's current data with `getFormData()` in the event handler that swaps the `schema`, and keep the seed in state with the new `key`. Continuing the example above:
+
+```tsx
+import { useRef, useState } from 'react';
+import Form, { type FormRef } from '@rjsf/core';
+
+const swedishSchema: RJSFSchema = {
+  ...schema,
+  properties: { ...schema.properties, country: { type: 'string', enum: ['US', 'SE'], default: 'SE' } },
+};
+
+function SettingsForm() {
+  const formRef = useRef<FormRef<Settings>>(null);
+  const [form, setForm] = useState({ key: 0, schema, initialFormData: withMode(initialData) });
+
+  function defaultToSweden() {
+    const data = formRef.current?.getFormData();
+    setForm({
+      key: form.key + 1,
+      schema: swedishSchema,
+      initialFormData: withMode({ ...data, country: data?.country ?? 'SE' }),
+    });
+  }
+
+  return (
+    <>
+      <button type="button" onClick={defaultToSweden}>
+        Default to Sweden
+      </button>
+      <Form
+        key={form.key}
+        ref={formRef}
+        schema={form.schema}
+        uiSchema={{ mode: { 'ui:readonly': true } }}
+        validator={validator}
+        initialFormData={form.initialFormData}
+        transformChange={withMode}
+      />
+    </>
+  );
+}
+```
+
+`'SE'` is the new default, and a `country` the data already holds overrides it. The `??` matters: clearing the `country` select leaves the key holding `undefined`, which a spread over `{ country: 'SE' }` would copy. The seed is everything the form holds, the old schema's defaults included, so a default the new `schema` changes applies only where the data holds no value, as it would without a remount. Reading the data in the handler, not in render, keeps the seed fixed, so a later `reset()` returns to it.
 
 Setting the field from a widget's Effect, or calling `setFieldValue()` from `onChange`, makes it a second edit instead: `onChange` reports the first with `mode` out of date before it reports the second, and a widget's Effect also reports a change on mount that the user never made.
 
