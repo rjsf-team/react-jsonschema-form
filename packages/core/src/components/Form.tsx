@@ -223,7 +223,7 @@ export interface FormProps<
    * trimmed. An edit that leaves the data as it was, such as an option switch whose data fits both options, is refused
    * by `previous` itself alone, since a copy of it is a copy of `next` too. At a root holding a string, number or
    * boolean, such an edit's `next` is `previous` itself, so it can't be refused. It runs for every edit, a field's change and `setFieldValue()` alike, and for those alone: what the form
-   * derives on its own, the defaults for a new schema, the live omit a blur runs and a `reset()`, is stored without it,
+   * derives on its own, the defaults filled in on mount, the defaults for a new schema, the live omit a blur runs and a `reset()`, is stored without it,
    * and the last two are reported through `onChange`. It runs before the form stores the result, validates it and
    * reports it.
    * It must be pure, since the form may call it again for the same edit, and must not mutate `next` or `previous`,
