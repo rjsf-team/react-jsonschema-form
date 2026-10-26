@@ -1069,10 +1069,23 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         parentDefaults: defaults,
       });
       // Data the field takes is its own even where the option it renders through holds none of it, as an option with
-      // no value or with a value that is no object holds none of object data
-      const optionHoldsNone = optionValue === undefined || (isObjectData(rawFormData) && !isObjectData(optionValue));
+      // no value, or one that is no object or takes no object, holds none of object data. Its defaults are merged
+      // beneath the data, as an object field's are
+      const optionHoldsNone =
+        optionValue === undefined ||
+        (isObjectData(rawFormData) &&
+          (!isObjectData(optionValue) ||
+            !optionTakesValueOf<S, F>(
+              context,
+              view,
+              xxxOf.key,
+              choice.index,
+              xxxOf.options[choice.index],
+              rawFormData,
+            )));
       if (optionHoldsNone && shouldMergeDefaultsIntoFormData && rawFormData !== undefined) {
-        return viewFormDataMatching<unknown, S, F>(context, view, rawFormData) ?? optionValue;
+        const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
+        return matching === undefined ? optionValue : mergeDefaultsWithFormData(optionValue, matching);
       }
       return optionValue;
     }
@@ -1285,7 +1298,9 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick. An
   // ancestor default that wins picks the option too, so the option it is checked against is one that can hold it; one
   // no option holds gives way, so the field's own default picks the option, as it does with no ancestor default
-  const ancestorPicks = preferParentDefaults && options.some((option) => takesValueOf<S>(option, defaults));
+  const ancestorPicks =
+    preferParentDefaults &&
+    options.some((option, index) => optionTakesValueOf<S, F>(context, view, key, index, option, defaults));
   const inheritedDefault = ancestorPicks ? defaults : (schema.default ?? defaults);
   const valueToMatch = rawFormData ?? (picksWholeOption || ancestorPicks ? inheritedDefault : schema.default);
   // A constant option equal to the value is the one it picked, whatever the validator makes of the others
@@ -2374,6 +2389,26 @@ function isObjectData(value: unknown): value is Record<string, unknown> {
   );
 }
 
+/** Whether the option at `index` of the `key` options of the field `view` stands for takes a value of the type `value`
+ * has: a boolean option is what it says, and one written as a `$ref` is read as the definition it names, which is
+ * where its type is
+ */
+function optionTakesValueOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  view: DefaultsView<S>,
+  key: string,
+  index: number,
+  option: unknown,
+  value: unknown,
+): boolean {
+  if (!isSchemaObject<S>(option)) {
+    return option === true;
+  }
+  const { graph, node } = offeredOption<S>(view, key, index, option);
+  const read = resolveMergedOwnRef<S>(graph, [{ node, refPath: [] }], option, context.customMergeAllOf);
+  return takesValueOf<S>(read, value);
+}
+
 /** Whether `schema` takes a value of the type `value` has, as its own types say them, see `typeAllows()` */
 function takesValueOf<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
   return typeAllows(getSchemaOwnTypes<S>(schema), value);
@@ -2448,7 +2483,10 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
     for (const key of Object.keys(schemaToMatch.properties).filter((dataKey) => Object.hasOwn(matched, dataKey))) {
       const propertySchema = getPropertySchema<S>(schemaToMatch, key);
       let propertyProvenance: Provenance<S> | undefined;
-      const propertyField = () => (propertyProvenance ??= fieldOfProperty(key, propertySchema));
+      const propertyField = () => {
+        propertyProvenance ??= fieldOfProperty(key, propertySchema);
+        return propertyProvenance;
+      };
       // A property written as a `$ref` is matched as the definition it names, whose `allOf` it is
       let readProperty = propertySchema;
       if (isSchemaObject<S>(propertySchema) && typeof propertySchema[REF_KEY] === 'string') {

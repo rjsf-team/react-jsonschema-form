@@ -6730,6 +6730,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
           },
         );
+        it('gives an ancestor default over the property default where a true option holds it', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            default: { v: 5 },
+            properties: { v: { anyOf: [true, { type: 'string', default: 's' }], default: 'x' } },
+          };
+          expect(getDefaultFormState({ validator: testValidator, defaultFormStateBehavior }, { schema })).toEqual({
+            v: 5,
+          });
+        });
+        it('gives the option the own default picks over an ancestor default no option read through $refs holds', () => {
+          const schema: RJSFSchema = {
+            definitions: { N: { type: 'number', default: 1 }, S: { type: 'string', default: 's' } },
+            type: 'object',
+            default: { v: true },
+            properties: { v: { anyOf: [{ $ref: '#/definitions/N' }, { $ref: '#/definitions/S' }], default: 'x' } },
+          };
+          expect(getDefaultFormState({ validator: testValidator, defaultFormStateBehavior }, { schema })).toEqual({
+            v: 's',
+          });
+        });
         it('keeps a falsy default two levels up over the property default (#5624)', () => {
           const schema: RJSFSchema = {
             type: 'object',
@@ -7688,6 +7709,33 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { b: 2 } })).toEqual({ b: 2 });
       });
+      it.each<[string, RJSFSchema, unknown, unknown]>([
+        [
+          'at the root',
+          { oneOf: [{ type: 'string' }, { type: 'object', properties: { a: { type: 'number' } } }], default: { a: 1 } },
+          { b: 2 },
+          { a: 1, b: 2 },
+        ],
+        [
+          'nested in an object',
+          {
+            type: 'object',
+            properties: {
+              p: {
+                oneOf: [{ type: 'string' }, { type: 'object', properties: { a: { type: 'number' } } }],
+                default: { a: 1 },
+              },
+            },
+          },
+          { p: { b: 2 } },
+          { p: { a: 1, b: 2 } },
+        ],
+      ])(
+        'keeps object data under its object default where it opens on an option taking no object, %s',
+        (_, schema, formData, expected) => {
+          expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).toEqual(expected);
+        },
+      );
       it.each<[string, RJSFSchema, GenericObjectType]>([
         ['at the root', { type: 'object', additionalProperties: { type: 'string', enum: ['a'] } }, { extra: 'zz' }],
         [
