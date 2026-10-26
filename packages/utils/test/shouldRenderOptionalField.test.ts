@@ -109,9 +109,12 @@ describe('getOptionalDataControlsType()', () => {
   test('a schema whose options name no type, and that names none itself, returns undefined', () => {
     expect(typeOf({ anyOf: [{ minLength: 1 }] })).toBeUndefined();
   });
-  test.each<[RJSFSchema]>([[{ const: null }], [{ type: 'null' }]])('a %j option counts as null', (nullOption) => {
-    expect(typeOf({ oneOf: [{ type: 'string' }, nullOption] })).toEqual(['string', 'null']);
-  });
+  test.each<[RJSFSchema]>([[{ const: null }], [{ enum: [null] }], [{ type: 'null' }]])(
+    'a %j option counts as null',
+    (nullOption) => {
+      expect(typeOf({ oneOf: [{ type: 'string' }, nullOption] })).toEqual(['string', 'null']);
+    },
+  );
   test.each<[RJSFSchema, string]>([
     [{ type: ['array', 'null'], items: { type: 'string' }, anyOf: [{ minItems: 1 }, { const: null }] }, 'array'],
     [
@@ -122,7 +125,15 @@ describe('getOptionalDataControlsType()', () => {
       },
       'object',
     ],
-  ])('a const null option under a nullable parent %j still counts as null', (schema, type) => {
+    [
+      {
+        type: ['object', 'null'],
+        properties: { a: { type: 'string' } },
+        anyOf: [{ required: ['a'] }, { enum: [null] }],
+      },
+      'object',
+    ],
+  ])('a null option under a nullable parent %j still counts as null', (schema, type) => {
     expect(typeOf(schema)).toEqual([type, 'null']);
   });
   test.each<[string, RJSFSchema, string | string[]]>([
@@ -149,6 +160,16 @@ describe('getOptionalDataControlsType()', () => {
     ['an object with a boolean option', { ...TEST_ROOT_SCHEMA, oneOf: [false, { required: ['foo'] }] }, 'object'],
   ])('an option naming no type takes the type of its parent, for %s', (_, schema, expected) => {
     expect(typeOf(schema)).toEqual(expected);
+  });
+  test('a properties option keeps its object type under a parent listing several types, whose first it would take', () => {
+    expect(
+      typeOf({ type: ['array', 'object'], anyOf: [{ items: { type: 'string' } }, { properties: { a: {} } }] }),
+    ).toEqual(['array', 'object']);
+  });
+  test('an enum option takes the type of its values', () => {
+    expect(
+      typeOf({ type: 'array', items: { type: 'string' }, anyOf: [{ minItems: 1 }, { enum: [['a'], ['b']] }] }),
+    ).toEqual('array');
   });
   test('an option written as a $ref takes the type of its definition rather than the type of its object parent', () => {
     const rootSchema: RJSFSchema = { definitions: { s: { type: 'string' } } };

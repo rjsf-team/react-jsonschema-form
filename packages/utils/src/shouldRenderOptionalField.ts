@@ -1,5 +1,6 @@
 import { ROOT_FIELD_PATH } from './fieldPath.ts';
 import getRenderedOptionSchema from './getRenderedOptionSchema.ts';
+import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getUiOptions from './getUiOptions.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
@@ -17,11 +18,11 @@ import type {
 
 /** Returns the type of the field that the Optional Data Controls UI is rendered for. An `anyOf`/`oneOf` schema's type
  * is read from its options as they render: each option written as a `$ref` is resolved against `rootSchema`, and each
- * takes what `getRenderedOptionSchema()` passes it from the schema, so an option naming no type has the schema's own,
- * as the option `MultiSchemaField` renders does. The type is the one the options agree on, the unique list of them when
- * they name several, a `null` option counted among them so that such a list keeps the selector the `null` branch is
- * reached through, and `undefined` when they name none. Otherwise, including for an empty `anyOf: []`/`oneOf: []`, it
- * is the schema's own type.
+ * one naming or implying no type of its own takes what `getRenderedOptionSchema()` passes it from the schema, so it has
+ * the schema's own type, as the option `MultiSchemaField` renders does. The type is the one the options agree on, the
+ * unique list of them when they name several, a `null` option counted among them so that such a list keeps the
+ * selector the `null` branch is reached through, and `undefined` when they name none. Otherwise, including for an
+ * empty `anyOf: []`/`oneOf: []`, it is the schema's own type.
  *
  * @param schema - The schema for the field
  * @param rootSchema - The root schema an option written as a `$ref` names its definition in
@@ -43,9 +44,13 @@ export function getOptionalDataControlsType<S extends StrictRJSFSchema = RJSFSch
           return [];
         }
         const resolved = resolveOwnRef<S>(option, rootSchema);
-        // A `const: null` option is the `null` branch, which `getSchemaType()` would read as the type it inherits
-        if (getSchemaType<S>(resolved) === 'null') {
-          return ['null'];
+        const ownTypes = getSchemaOwnTypes<S>(resolved);
+        // Read from the option's own types rather than `getSchemaType()`, which reads any typeless `enum` as `string`:
+        // an `enum: [null]` is the `null` branch too, and an `enum` of arrays a select over whole arrays.
+        // Only an option that implies no type of its own takes the schema's, which keeps a `properties` option an
+        // object under a `['array', 'object']` schema whose first type it would otherwise take
+        if (ownTypes) {
+          return ownTypes.find((type) => type !== 'null') ?? 'null';
         }
         return getSchemaType<S>(getRenderedOptionSchema<S>(schema, resolved)) ?? [];
       }),
