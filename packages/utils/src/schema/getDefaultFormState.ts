@@ -134,6 +134,15 @@ function shouldPopulateAllOfDefaults<S extends StrictRJSFSchema = RJSFSchema>(
   return defaultFormStateBehavior?.allOf === 'populateDefaults' && ALL_OF_KEY in schema;
 }
 
+/** Whether `mergeDefaultsIntoFormData` says a default replaces a value the form data holds as `undefined`
+ *
+ * @param defaultFormStateBehavior - The DefaultFormStateBehavior to check
+ * @returns - True if a default replaces an `undefined` value of the form data
+ */
+function defaultReplacesUndefined(defaultFormStateBehavior?: DefaultFormStateBehavior): boolean {
+  return defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
+}
+
 /** Given a `schema` will return an inner schema that for an array item. This is computed differently based on the
  * `additionalItems` enum and the value of `idx`. There are four possible returns:
  * 1. If `idx` is >= 0, then if `schema.items` is an array the `idx`th element of the array is returned if it is a valid
@@ -1091,7 +1100,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
               optionValue,
               matching,
               defaultFormStateBehavior?.arrayMinItems?.mergeExtraDefaults,
-              defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined',
+              defaultReplacesUndefined(defaultFormStateBehavior),
             );
       }
       return optionValue;
@@ -1175,7 +1184,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         // an object or array, and a key of object data the user left `undefined`, keep it unless
         // `mergeDefaultsIntoFormData` says a default replaces it
         (!isObject(rawFormData) && (rawFormData !== null || props.requiredAsRoot === true)) ||
-          defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined',
+          defaultReplacesUndefined(defaultFormStateBehavior),
         isObject(rawFormData) && mergedAllOf,
       );
     }
@@ -1613,8 +1622,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       ? parentConst
       : undefined;
   const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
-  const defaultReplacesUndefined =
-    defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
   const childProps = (key: string, uiSchemaKey: string) => ({
@@ -1841,7 +1848,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   if (shouldMergeDefaultsIntoFormData) {
     for (const key of Object.keys(formData).filter(isPinned)) {
       const value = formData[key];
-      const keptUndefined = value === undefined && !defaultReplacesUndefined;
+      const keptUndefined = value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior);
       const uncomputed =
         !Object.hasOwn(computed, key) &&
         (value === undefined || !(schema.properties && Object.hasOwn(schema.properties, key)));
