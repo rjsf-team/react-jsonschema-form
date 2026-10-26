@@ -1603,7 +1603,10 @@ export function omitExtraDataOf<T, S extends StrictRJSFSchema, F extends FormCon
     omitBaseline: () =>
       Object.is(baseline, formData)
         ? omitted
-        : schemaUtils.omitExtraData(schema, baseline, fieldStateOf(withoutSelections(uiState), schemaUtils)),
+        : replaceEqualDeep(
+            baseline,
+            schemaUtils.omitExtraData(schema, baseline, fieldStateOf(withoutSelections(uiState), schemaUtils)),
+          ),
   };
 }
 
