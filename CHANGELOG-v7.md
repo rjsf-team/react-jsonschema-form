@@ -1,7 +1,7 @@
 <!--
 
 Add an entry for each change users can notice, following
-https://github.com/rjsf-team/react-jsonschema-form/blob/v7/packages/docs/docs/contributing.md#changelog
+https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/contributing.md#changelog
 
 Append it as the last bullet under each package it affects.
 Update the heading of the upcoming version if the change needs a bigger semver bump.

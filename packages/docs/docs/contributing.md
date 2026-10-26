@@ -59,7 +59,7 @@ CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the 
 
 ## Changelog
 
-A PR that changes anything a user of a published package can notice adds an entry to the changelog: `CHANGELOG-v7.md` on the `v7` branch, `CHANGELOG.md` on `main`.
+A PR that changes anything a user of a published package can notice adds an entry to the changelog.
 Append it as the last bullet under the heading of each package whose users notice the change, in the upcoming release at the top of the file.
 Tests, CI, refactors and docs fixes need no entry, and neither does a fix to a change that isn't released yet: edit that change's entry instead.
 
@@ -81,7 +81,7 @@ write what users see:
 
 ## Upgrade guide
 
-A breaking change also gets a section in the next major version's upgrade guide, such as `packages/docs/docs/migration-guides/v7.x upgrade guide.md`, in the same PR.
+A breaking change also gets a section in the next major version's upgrade guide, in `packages/docs/docs/migration-guides`, in the same PR.
 The guide answers one question: "my code broke, what do I change?". Each section has a heading that names the change as users meet it, who it affects, what happened before and what happens now, and what to do instead, with a before/after `diff` when code has to change. Link the reference docs for anything more.
 New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide.
 
@@ -183,13 +183,7 @@ If you make changes to those libraries, you will have to maintain that coverage,
 
 ## Releasing
 
-First, turn the upcoming release's section of the changelog into release notes, so that the commit you tag carries them: date its heading, as in `# 7.0.0 (2026-11-01)`, start it with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
-
-Until 7.0.0 ships, its section is in `CHANGELOG-v7.md` on the `v7` branch, and `CHANGELOG.md` holds only 6.x releases. When `v7` is merged into `main` for 7.0.0:
-
-- Move the `# 7.0.0` section of `CHANGELOG-v7.md` to the top of `CHANGELOG.md`, and delete `CHANGELOG-v7.md`.
-- Point the `blob/v7` links in the `CHANGELOG.md` header comment and in `PULL_REQUEST_TEMPLATE.md` at `main`.
-- Remove the `CHANGELOG-v7.md` mentions from `PULL_REQUEST_TEMPLATE.md` and from the [Changelog](#changelog) section above.
+First, turn the upcoming release's section of the changelog into release notes, so that the commit you tag carries them: date its heading, as in `# 6.100.10 (2026-11-01)`, start it with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
 
 To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
 For instance if you are about to create the new `6.100.10` branch, then you would run the following commands:
