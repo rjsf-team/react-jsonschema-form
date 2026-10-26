@@ -975,6 +975,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Added the `FormClassMap` type of the `Form`'s `classMap` prop, a `ClassMap` whose entries may also be a function of the class beneath, the theme's, or `@rjsf/core`'s where the theme gives none ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 - Added `joinClassNames()`, which joins the class names of one element into its `className`, leaving out the conditional ones that are `false`, `null`, `undefined` or empty; `@rjsf/core`'s components join their marker classes and class map entries with it ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 - **BREAKING CHANGE:** `DateElement` no longer defaults its `className` to Bootstrap 3's `form-control`, so a `SelectWidget` that renders the `className` it is handed no longer puts `form-control` on the date parts of an `AltDateWidget` rendering `DateElement` without one; pass `className='form-control'` to keep it. Core's `SelectWidget` never rendered that default ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
+- Added `mergeClassMaps()`, which layers class maps key by key as `@rjsf/core` layers a theme's `classMap` over its own and the `Form`'s over the theme's, calling a function entry with the class beneath it, so code building a registry for a themed form outside `Form` can layer them the same way ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 
 ## @rjsf/validator-ajv8
 

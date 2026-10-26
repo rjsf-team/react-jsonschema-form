@@ -1,6 +1,5 @@
 import type {
   ClassMap,
-  FormClassMap,
   FormContextType,
   GlobalFormOptions,
   MergedClassMap,
@@ -14,6 +13,7 @@ import {
   DEFAULT_ID_PREFIX,
   DEFAULT_ID_SEPARATOR,
   englishStringTranslator,
+  mergeClassMaps,
   mergeThemePresentation,
   pickGlobalUiOptions,
   UI_DEFINITIONS_KEY,
@@ -119,28 +119,6 @@ export function generateTheme<
     presentation: generatePresentation(),
     classMap: { ...CLASS_MAP },
   };
-}
-
-/** Layers class maps key by key, the last on top. An entry that is neither a class nor a function, such as one left
- * `undefined`, `null` from JSON or `false` from a conditional, keeps the class beneath it, and a function entry is called
- * with the class beneath it, or composed with the function beneath it until a class is there to call them with
- */
-export function mergeClassMaps(...layers: readonly (FormClassMap | undefined)[]): FormClassMap {
-  const merged: Record<string, string | ((themeClass: string) => string)> = {};
-  const entries = layers
-    .flatMap((layer) => Object.entries(layer ?? {}))
-    .filter(([, value]) => typeof value === 'string' || typeof value === 'function');
-  for (const [key, value] of entries) {
-    const beneath = merged[key];
-    if (typeof value === 'string' || beneath === undefined) {
-      merged[key] = value;
-    } else if (typeof beneath === 'string') {
-      merged[key] = value(beneath);
-    } else {
-      merged[key] = (base) => value(beneath(base));
-    }
-  }
-  return merged;
 }
 
 /** Extracts the `GlobalFormOptions` from the given Form `props`
