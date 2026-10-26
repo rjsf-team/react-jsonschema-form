@@ -15,6 +15,7 @@ import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { renderToString } from 'react-dom/server';
 
 import { elementOf } from '../../../testing/elementOf.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
@@ -956,6 +957,50 @@ describe('mui CheckboxWidget required attribute', () => {
     );
 
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
+  });
+});
+
+describe('mui renderToString and hydration (#4083)', () => {
+  it('renders the dependency a default selects with renderToString under jsdom, and hydrates without a mismatch', () => {
+    const schema: RJSFSchema = {
+      definitions: {
+        guest: {
+          type: 'object',
+          properties: { a: { type: 'string', title: 'a', enum: ['yes', 'no'] } },
+          dependencies: {
+            a: {
+              oneOf: [
+                { properties: { a: { enum: ['no'] } } },
+                { properties: { a: { enum: ['yes'] }, b: { type: 'boolean', title: 'B', default: false } } },
+              ],
+            },
+          },
+        },
+      },
+      type: 'array',
+      minItems: 1,
+      maxItems: 2,
+      items: { $ref: '#/definitions/guest' },
+      default: [{ a: 'yes' }, { a: 'no' }],
+    };
+    const form = <Form schema={schema} validator={validator} />;
+    // React 19 reports an attribute mismatch, the issue's `aria-controls` one, through console.error and not
+    // onRecoverableError, and the server render reports its own warnings there too
+    const consoleErrorSpy = vi.spyOn(console, 'error');
+    try {
+      const container = document.createElement('div');
+      container.innerHTML = renderToString(form);
+      expect(container.querySelector('input#root_0_b[type="checkbox"]')).not.toBeNull();
+      expect(container.querySelector('#root_1_b')).toBeNull();
+      document.body.append(container);
+      const recoverableErrors: unknown[] = [];
+      render(form, { container, hydrate: true, onRecoverableError: (error) => recoverableErrors.push(error) });
+
+      expect(recoverableErrors).toEqual([]);
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
   });
 });
 

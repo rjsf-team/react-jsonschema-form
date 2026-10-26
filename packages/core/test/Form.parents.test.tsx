@@ -1,6 +1,6 @@
-import { Component, useEffect, useLayoutEffect, useState } from 'react';
+import { Component, createContext, use, useEffect, useLayoutEffect, useState } from 'react';
 import type { ErrorSchema, FieldProps, RJSFSchema, RJSFValidationError, UiSchema, WidgetProps } from '@rjsf/utils';
-import { getTemplates, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -16,6 +16,7 @@ import {
   createParentLog,
   createRetainingWidget,
   errorListMessages,
+  expectToHaveBeenCalledWithFormData,
   fieldErrorsById,
   handleOf,
   input,
@@ -649,5 +650,78 @@ describe('typing in a custom widget under a parent that renders for every change
     expect(container.querySelector('#root_name')).toBe(textarea);
     expect(textarea).toHaveFocus();
     expect(textarea).toHaveValue('helXlo');
+  });
+});
+
+describe("a custom upload widget that sets its parent's state before calling onChange (#3914)", () => {
+  const SetParentState = createContext<(file: File) => void>(noop);
+
+  function UploadWidget({ id, value, onChange }: WidgetProps<Data['name']>) {
+    const setParentState = use(SetParentState);
+    return (
+      <>
+        <input
+          id={id}
+          type='file'
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            if (file) {
+              setParentState(file);
+              onChange(file.name);
+            }
+          }}
+        />
+        <output aria-label='stored name'>{value}</output>
+      </>
+    );
+  }
+
+  const upload = new File(['contents'], 'a.txt', { type: 'text/plain' });
+  const uiSchema: UiSchema<Data> = { name: { 'ui:widget': UploadWidget } };
+
+  function UploadingParent({
+    storesEdits,
+    log,
+    onSubmit,
+  }: Pick<ParentProps<Data>, 'log' | 'onSubmit'> & { storesEdits: boolean }) {
+    const [file, setFile] = useState<File>();
+    return (
+      <SetParentState value={setFile}>
+        <output aria-label='file'>{file?.type}</output>
+        {storesEdits ? (
+          <AcceptingParent<Data> schema={schema} uiSchema={uiSchema} initialValue={{}} log={log} onSubmit={onSubmit} />
+        ) : (
+          <Form<Data> schema={schema} validator={validator} uiSchema={uiSchema} onSubmit={onSubmit} />
+        )}
+      </SetParentState>
+    );
+  }
+
+  it('keeps the value when both updates land in one render, the order the issue failed in', async () => {
+    const onSubmit = vi.fn();
+    const log = createParentLog<Data>();
+    const { container } = render(<UploadingParent storesEdits log={log} onSubmit={onSubmit} />);
+
+    await user.upload(screen.getByLabelText('name'), upload);
+    await submitForm(container, user);
+
+    expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('text/plain');
+    expect(screen.getByRole('status', { name: 'stored name' })).toHaveTextContent('a.txt');
+    expect(log.value).toEqual({ name: 'a.txt' });
+    expectToHaveBeenCalledWithFormData(onSubmit, { name: 'a.txt' }, true);
+  });
+
+  it('keeps every value of a form that is passed no formData when the parent re-renders', async () => {
+    const onSubmit = vi.fn();
+    const { container } = render(<UploadingParent storesEdits={false} onSubmit={onSubmit} />);
+
+    await user.type(screen.getByRole('textbox', { name: 'other' }), 'x');
+    await user.upload(screen.getByLabelText('name'), upload);
+    await submitForm(container, user);
+
+    expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('text/plain');
+    expect(screen.getByRole('status', { name: 'stored name' })).toHaveTextContent('a.txt');
+    expect(screen.getByRole('textbox', { name: 'other' })).toHaveValue('x');
+    expectToHaveBeenCalledWithFormData(onSubmit, { name: 'a.txt', other: 'x' }, true);
   });
 });
