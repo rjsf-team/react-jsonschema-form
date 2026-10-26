@@ -3499,4 +3499,27 @@ describe('a dependency anyOf (#5407)', () => {
     expect(node.querySelector('#root_c')).toBeInTheDocument();
     expect(node.querySelector('#root_b')).not.toBeInTheDocument();
   });
+
+  const anyOfInAllOf: RJSFSchema[] = [
+    {
+      anyOf: [
+        { title: 'With B', properties: { b: { type: 'string', title: 'B' } } },
+        { title: 'With C', properties: { c: { type: 'number', title: 'C' } } },
+      ],
+    },
+  ];
+  it.each<[string, RJSFSchema]>([
+    ["the dependency's allOf member", { dependencies: { a: { allOf: anyOfInAllOf } } }],
+    ['an allOf member beside dependencies', { allOf: anyOfInAllOf, dependencies: { a: ['a'] } }],
+  ])('renders a selector for an anyOf %s holds, keeping the data flat', async (_, keywords) => {
+    const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string', title: 'A' } }, ...keywords };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'x' } });
+
+    expect(node.querySelector('#root_b')).toBeInTheDocument();
+    await user.selectOptions(elementOf(node, '#root__anyof_select'), 'With C');
+    await user.type(elementOf(node, '#root_c'), '1');
+
+    expect(node.querySelector('#root_b')).not.toBeInTheDocument();
+    expectToHaveBeenCalledWithFormData(onChange, { a: 'x', c: 1 }, 'root_c');
+  });
 });
