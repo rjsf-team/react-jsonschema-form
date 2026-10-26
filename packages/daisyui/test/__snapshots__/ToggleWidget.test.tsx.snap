@@ -8,18 +8,14 @@ exports[`ToggleWidget > renders correctly 1`] = `
     <label
       class="cursor-pointer label my-auto justify-start"
     >
-      <span
-        class="mr-2"
-      >
-        <input
-          aria-describedby="test-id__error test-id__description test-id__help"
-          checked=""
-          class="toggle "
-          id="test-id"
-          name="test-id"
-          type="checkbox"
-        />
-      </span>
+      <input
+        aria-describedby="test-id__error test-id__description test-id__help"
+        checked=""
+        class="toggle mr-2"
+        id="test-id"
+        name="test-id"
+        type="checkbox"
+      />
       <span
         class="label-text"
       >
@@ -43,19 +39,15 @@ exports[`ToggleWidget > renders disabled state correctly 1`] = `
     <label
       class="cursor-pointer label my-auto justify-start"
     >
-      <span
-        class="mr-2"
-      >
-        <input
-          aria-describedby="test-id__error test-id__description test-id__help"
-          checked=""
-          class="toggle "
-          disabled=""
-          id="test-id"
-          name="test-id"
-          type="checkbox"
-        />
-      </span>
+      <input
+        aria-describedby="test-id__error test-id__description test-id__help"
+        checked=""
+        class="toggle mr-2"
+        disabled=""
+        id="test-id"
+        name="test-id"
+        type="checkbox"
+      />
       <span
         class="label-text"
       >
@@ -79,18 +71,14 @@ exports[`ToggleWidget > renders with custom label 1`] = `
     <label
       class="cursor-pointer label my-auto justify-start"
     >
-      <span
-        class="mr-2"
-      >
-        <input
-          aria-describedby="test-id__error test-id__description test-id__help"
-          checked=""
-          class="toggle "
-          id="test-id"
-          name="test-id"
-          type="checkbox"
-        />
-      </span>
+      <input
+        aria-describedby="test-id__error test-id__description test-id__help"
+        checked=""
+        class="toggle mr-2"
+        id="test-id"
+        name="test-id"
+        type="checkbox"
+      />
       <span
         class="label-text"
       >

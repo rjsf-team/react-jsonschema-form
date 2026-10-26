@@ -1695,7 +1695,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                     >
                       <input
                         checked=""
-                        class="checkbox"
+                        class="checkbox mr-2"
                         id="root_2"
                         name="root[2]"
                         type="checkbox"

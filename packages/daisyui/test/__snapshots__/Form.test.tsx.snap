@@ -227,16 +227,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                           <label
                                             class="label cursor-pointer justify-start"
                                           >
-                                            <span
-                                              class="mr-2"
-                                            >
-                                              <input
-                                                class="checkbox"
-                                                id="root_tasks_0_done"
-                                                name="root[tasks][0][done]"
-                                                type="checkbox"
-                                              />
-                                            </span>
+                                            <input
+                                              class="checkbox mr-2"
+                                              id="root_tasks_0_done"
+                                              name="root[tasks][0][done]"
+                                              type="checkbox"
+                                            />
                                             <span
                                               class="label-text"
                                             >
@@ -415,17 +411,13 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                           <label
                                             class="label cursor-pointer justify-start"
                                           >
-                                            <span
-                                              class="mr-2"
-                                            >
-                                              <input
-                                                checked=""
-                                                class="checkbox"
-                                                id="root_tasks_1_done"
-                                                name="root[tasks][1][done]"
-                                                type="checkbox"
-                                              />
-                                            </span>
+                                            <input
+                                              checked=""
+                                              class="checkbox mr-2"
+                                              id="root_tasks_1_done"
+                                              name="root[tasks][1][done]"
+                                              type="checkbox"
+                                            />
                                             <span
                                               class="label-text"
                                             >
@@ -1602,16 +1594,12 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                     <label
                       class="label cursor-pointer justify-start"
                     >
-                      <span
-                        class="mr-2"
-                      >
-                        <input
-                          class="checkbox"
-                          id="root_active"
-                          name="root[active]"
-                          type="checkbox"
-                        />
-                      </span>
+                      <input
+                        class="checkbox mr-2"
+                        id="root_active"
+                        name="root[active]"
+                        type="checkbox"
+                      />
                       <span
                         class="label-text"
                       >
@@ -1832,16 +1820,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                           <label
                                             class="label cursor-pointer justify-start"
                                           >
-                                            <span
-                                              class="mr-2"
-                                            >
-                                              <input
-                                                class="checkbox"
-                                                id="root_tasks_0_done"
-                                                name="root.tasks.0.done"
-                                                type="checkbox"
-                                              />
-                                            </span>
+                                            <input
+                                              class="checkbox mr-2"
+                                              id="root_tasks_0_done"
+                                              name="root.tasks.0.done"
+                                              type="checkbox"
+                                            />
                                             <span
                                               class="label-text"
                                             >
@@ -2020,17 +2004,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                           <label
                                             class="label cursor-pointer justify-start"
                                           >
-                                            <span
-                                              class="mr-2"
-                                            >
-                                              <input
-                                                checked=""
-                                                class="checkbox"
-                                                id="root_tasks_1_done"
-                                                name="root.tasks.1.done"
-                                                type="checkbox"
-                                              />
-                                            </span>
+                                            <input
+                                              checked=""
+                                              class="checkbox mr-2"
+                                              id="root_tasks_1_done"
+                                              name="root.tasks.1.done"
+                                              type="checkbox"
+                                            />
                                             <span
                                               class="label-text"
                                             >
@@ -2987,16 +2967,12 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     <label
                       class="label cursor-pointer justify-start"
                     >
-                      <span
-                        class="mr-2"
-                      >
-                        <input
-                          class="checkbox"
-                          id="root_active"
-                          name="root.active"
-                          type="checkbox"
-                        />
-                      </span>
+                      <input
+                        class="checkbox mr-2"
+                        id="root_active"
+                        name="root.active"
+                        type="checkbox"
+                      />
                       <span
                         class="label-text"
                       >
@@ -4001,7 +3977,7 @@ exports[`single fields > checkbox field 1`] = `
           class="form-control"
         >
           <input
-            class="checkbox"
+            class="checkbox mr-2"
             id="root"
             name="root"
             type="checkbox"
@@ -4044,17 +4020,13 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
           <label
             class="label cursor-pointer justify-start"
           >
-            <span
-              class="mr-2"
-            >
-              <input
-                aria-describedby="root__description"
-                class="checkbox"
-                id="root"
-                name="root"
-                type="checkbox"
-              />
-            </span>
+            <input
+              aria-describedby="root__description"
+              class="checkbox mr-2"
+              id="root"
+              name="root"
+              type="checkbox"
+            />
             <span
               class="label-text"
             >
@@ -4093,16 +4065,12 @@ exports[`single fields > checkbox field with label 1`] = `
           <label
             class="label cursor-pointer justify-start"
           >
-            <span
-              class="mr-2"
-            >
-              <input
-                class="checkbox"
-                id="root"
-                name="root"
-                type="checkbox"
-              />
-            </span>
+            <input
+              class="checkbox mr-2"
+              id="root"
+              name="root"
+              type="checkbox"
+            />
             <span
               class="label-text"
             >
@@ -4147,17 +4115,13 @@ exports[`single fields > checkbox field with label and description 1`] = `
           <label
             class="label cursor-pointer justify-start"
           >
-            <span
-              class="mr-2"
-            >
-              <input
-                aria-describedby="root__description"
-                class="checkbox"
-                id="root"
-                name="root"
-                type="checkbox"
-              />
-            </span>
+            <input
+              aria-describedby="root__description"
+              class="checkbox mr-2"
+              id="root"
+              name="root"
+              type="checkbox"
+            />
             <span
               class="label-text"
             >
@@ -4210,17 +4174,13 @@ exports[`single fields > checkbox field with label and rich text description 1`]
           <label
             class="label cursor-pointer justify-start"
           >
-            <span
-              class="mr-2"
-            >
-              <input
-                aria-describedby="root__description"
-                class="checkbox"
-                id="root"
-                name="root"
-                type="checkbox"
-              />
-            </span>
+            <input
+              aria-describedby="root__description"
+              class="checkbox mr-2"
+              id="root"
+              name="root"
+              type="checkbox"
+            />
             <span
               class="label-text"
             >
@@ -10186,16 +10146,12 @@ exports[`single fields > required checkbox field 1`] = `
                     <label
                       class="label cursor-pointer justify-start"
                     >
-                      <span
-                        class="mr-2"
-                      >
-                        <input
-                          class="checkbox"
-                          id="root_agree"
-                          name="root_agree"
-                          type="checkbox"
-                        />
-                      </span>
+                      <input
+                        class="checkbox mr-2"
+                        id="root_agree"
+                        name="root_agree"
+                        type="checkbox"
+                      />
                       <span
                         class="label-text"
                       >
@@ -10254,17 +10210,13 @@ exports[`single fields > required checkbox field, default true 1`] = `
                     <label
                       class="label cursor-pointer justify-start"
                     >
-                      <span
-                        class="mr-2"
-                      >
-                        <input
-                          checked=""
-                          class="checkbox"
-                          id="root_agree"
-                          name="root_agree"
-                          type="checkbox"
-                        />
-                      </span>
+                      <input
+                        checked=""
+                        class="checkbox mr-2"
+                        id="root_agree"
+                        name="root_agree"
+                        type="checkbox"
+                      />
                       <span
                         class="label-text"
                       >
