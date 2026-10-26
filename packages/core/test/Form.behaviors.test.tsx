@@ -2503,7 +2503,7 @@ describe('optionalDataControls', () => {
     expect(node.querySelector('#root_n_a')).toEqual(null);
 
     // The object's own Add rather than the option's: the option's stores `{}`, which the object reads as still empty (#5427)
-    await user.click(elementOf(node, `#${optionalControlsId('root_n_XxxOf', 'Add')}`));
+    await user.click(elementOf(node, `#${optionalControlsId(besideOptionsId('root_n'), 'Add')}`));
 
     expect(node.querySelector('#root_n_a')).not.toEqual(null);
   });
