@@ -539,7 +539,7 @@ Any other value passed after mount is ignored, with a warning in development onl
 <Form key={record.id} schema={schema} validator={validator} initialFormData={record} onChange={save} />
 ```
 
-To change the data in place, keeping the errors and the fields' own state, call [`setFieldValue('', data)`](../advanced-customization/internals.md#change-form-data-programmatically) on the form's ref, which reports the new value through `onChange` like any edit.
+To change the data in place, keeping the errors and the fields' own state, call [`setFieldValue('', data)`](../advanced-customization/internals.md#change-form-data-programmatically) on the form's ref, which reports the new value through `onChange` like any edit, so the form reads dirty. To show the data clean, call [`reset(data)`](../usage/submitting.md#making-the-saved-data-the-baseline) instead, which makes it the baseline too.
 
 Only `undefined` means "not passed". `null` seeds the schema's defaults the way `undefined` does. `false`, `0` and `''` are values.
 
@@ -612,7 +612,7 @@ id="root_first">` when rendering `first`.
 
 ## initialFormData
 
-The seed of the form's data, the way `defaultValue` works on an `<input>`. It is read, and filled in with the schema's defaults, when the form mounts and when `reset()` is called, and ignored otherwise, so a value written inline does not replace the data the form holds on a re-render. Every edit is reported through [`onChange`](#onchange); read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). When both props are passed, [`formData`](#formdata), a deprecated name for this prop, is the seed and `initialFormData` is ignored. To show other data after mount, remount the form under a `key`, or call `setFieldValue('', data)` on its ref.
+The seed of the form's data, the way `defaultValue` works on an `<input>`. It is read, and filled in with the schema's defaults, when the form mounts and when `reset()` is called, unless an earlier `reset(saved)` passed data of its own, and ignored otherwise, so a value written inline does not replace the data the form holds on a re-render. Every edit is reported through [`onChange`](#onchange); read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). When both props are passed, [`formData`](#formdata), a deprecated name for this prop, is the seed and `initialFormData` is ignored. To show other data after mount, remount the form under a `key`, or call [`reset(data)`](../usage/submitting.md#making-the-saved-data-the-baseline) on its ref, which makes it the baseline too, so the form reads clean. `setFieldValue('', data)` applies it as an edit instead, so the form reads dirty.
 
 The form's data shares its unchanged parts with the object you pass, so don't mutate that object afterwards; change a copy. In development the form freezes it from its first edit, validation, submit or reset on, so a mutation throws.
 
@@ -657,6 +657,23 @@ render(
 
 You can also create a custom generator by implementing the `NameGeneratorFunction` type, which receives `path` (array of path segments), `idPrefix` (typically `'root'`), and optional `isMultiValue` (boolean for multi-value fields).
 
+## liveErrors
+
+Use this prop with [`liveValidate`](#livevalidate) to choose which errors live validation shows. Without `liveValidate` it changes nothing: errors only appear after a submit.
+
+- Omit this prop, or use `liveErrors="all"`, to show every error, as live validation always has.
+- Use `liveErrors="field"` to show a field's errors only once the user has reached it: once it changed, under `liveValidate="onChange"`, or once it lost focus, under `liveValidate="onBlur"`. A submit attempt, or a call to [`validateForm()`](../usage/validation.md#validate-form-programmatically) on the form's ref, shows every error from then on, until [`reset()`](../advanced-customization/internals.md#read-the-form-status). `validateForm()` doesn't count as a submit, so it leaves `submitCount` as it is.
+
+With `liveErrors="field"`:
+
+- An array's or object's own errors, such as a `minItems` or `minProperties` error, show once the user reached it or any field inside it. Adding, removing or moving an array's items, or adding, renaming or removing an object's properties, counts as reaching the array or object. So does switching an `anyOf` or `oneOf` field's option, or, under `liveValidate="onBlur"`, blurring its selector, which reveals that field's own errors but none of those inside it.
+- [`extraErrors`](#extraerrors) always show, and so do the errors a custom field or widget raises itself. [`customValidate`](#customvalidate)'s errors show the way the schema's do.
+- The error list, each field's errors and the `errors` and `errorSchema` of the [`onChange`](#onchange) event hold only the errors shown. [`onError`](#onerror) still sees every error, so an error that isn't shown still blocks the submit.
+
+```tsx
+<Form schema={schema} validator={validator} liveValidate='onChange' liveErrors='field' />
+```
+
 ## liveOmit
 
 Use this prop with `omitExtraData={true}` to remove extra data while editing, rather than waiting for submission.
@@ -676,6 +693,8 @@ Choose when to validate while editing:
 - Omit this prop to validate on submission only.
 - Use `liveValidate="onChange"` to validate after each edit.
 - Use `liveValidate="onBlur"` to validate when an edited field loses focus.
+
+Live validation shows every error in the form, including those of fields the user hasn't reached yet. Use [`liveErrors="field"`](#liveerrors) to show a field's errors only once the user has reached it.
 
 ## method
 
@@ -706,6 +725,7 @@ Sometimes you may want to trigger events or modify external state when a field h
 ## onChange
 
 Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes, such as the schema's defaults: read those with `getFormData()`. The edit has been applied by the time it is called, so not storing it does not undo it; refuse or rewrite edits in [`transformChange`](#transformchange).
+The event also carries the form's status: `dirty`, `dirtyFields`, `touched`, `touchedFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields). A change to the status alone fires no `onChange`, so a blur that only touches a field fires none: the next event carries it. Neither does a prop change that moves the baseline with the data, so read `getStatus()` after one. `submitCount` counts the submits that reach the form, including one the form ignores while a promise `onSubmit` returned is pending: one the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set, except, while a promise is pending, a click on the form's own submit button, Enter in a field that clicks it, or `submit()`, which the form ignores before that validation would run.
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.

@@ -83,7 +83,7 @@ Use a ref when an action needs to read, update or submit the form programmatical
 const formRef = useRef<FormRef<MyData>>(null);
 ```
 
-The handle exposes `getFormData()`, `submit()`, `reset()`, `setFieldValue()`, `validateForm()`, `validateFormWithFormData()`, `validate()` and `focusOnError()`. Form is a function component, so its ref does not expose class state or lifecycle methods.
+The handle exposes `getFormData()`, `getStatus()`, `submit()`, `reset()`, `setFieldValue()`, `validateForm()`, `validateFormWithFormData()`, `validate()` and `focusOnError()`. Form is a function component, so its ref does not expose class state or lifecycle methods.
 
 ## Read form data programmatically
 
@@ -118,6 +118,10 @@ function DraftEditor() {
 `getFormData()` returns the form's current value: the seed your props handed it on mount or at the last `reset()`, filled in with the schema's defaults, and every edit made since, including one React has yet to show in the inputs.
 
 Inside `onChange`, use `event.formData` to read the edit being reported. Treat data from both the event and the handle as read-only.
+
+## Read the form status
+
+Call `getStatus()` to read whether the form's data differs from its baseline (`dirty`), where (`dirtyFields`), whether the user has touched any field (`touched`), which (`touchedFields`), and how many submits have reached the form (`submitCount`, including one ignored while a promise `onSubmit` returned is pending; a submit the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set, except while a promise is pending for a click on the form's own submit button, Enter in a field that clicks it, or `submit()`, which the form ignores before that validation would run). It returns the status after every edit, `reset()` and submit, which the events carry too, after a prop change, such as a new `schema` filling in a default, which moves the baseline with the data and calls no `onChange`, and after a blur that only touches a field, which calls no `onChange` either. Call `reset(saved)` with the data a save stored to make it the new baseline; `reset()` also clears the touched fields. See [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields).
 
 ## Submit form programmatically
 
@@ -164,11 +168,11 @@ formRef.current?.setFieldValue(['address', 'city'], 'Paris');
 formRef.current?.setFieldValue('', { address: { city: 'Paris', country: 'France' } });
 ```
 
-The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. A `formData` passed after mount does not replace the value: call `setFieldValue('', data)`, or remount the form under a `key`.
+The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. A `formData` passed after mount does not replace the value: call `reset(data)` to show it as the form's clean baseline, `setFieldValue('', data)` to apply it as an edit, which leaves the form dirty, or remount the form under a `key`.
 
 ## Command timing
 
-Use event handlers for actions such as saving, resetting and validating. Other data reaches the form through `setFieldValue('', data)` where it arrives, or a remount under a `key`; a `formData` passed after mount is ignored.
+Use event handlers for actions such as saving, resetting and validating. Other data reaches the form through `reset(data)` where it arrives, or `setFieldValue('', data)` when it is an edit, or a remount under a `key`; a `formData` passed after mount is ignored.
 
 An existing integration may need to issue a command when props change. Use a passive `useEffect` for that synchronization. For example, a descendant receiving a stable `formRef` can validate when its supplied schema changes:
 
