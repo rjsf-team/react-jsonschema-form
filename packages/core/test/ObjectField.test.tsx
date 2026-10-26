@@ -14,6 +14,7 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import { fieldLabelId, isObject, isPlainObject, noop, ROOT_FIELD_PATH, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -1454,6 +1455,40 @@ describe('ObjectField', () => {
 
       expect(reported.at(-1)).toEqual({ abc: 0 });
     });
+
+    // A cycle can enter its `$ref`s anywhere the option is resolved, not only at its top, so each wrapping is a route
+    // back that the seed has to stop at
+    it.each<{ route: string; wrap: (ref: string) => RJSFSchema }>([
+      { route: 'a bare $ref', wrap: (ref) => ({ $ref: ref }) },
+      { route: 'an allOf', wrap: (ref) => ({ allOf: [{ $ref: ref }] }) },
+      {
+        route: 'an allOf beside another $ref',
+        wrap: (ref) => ({ allOf: [{ $ref: '#/definitions/s' }, { $ref: ref }] }),
+      },
+      { route: 'an if/then', wrap: (ref) => ({ if: true, then: { $ref: ref } }) },
+    ])(
+      'should seed a new property whose options lead back to each other through $route, without recursing forever',
+      async ({ wrap }) => {
+        const { node, onChange } = createFormComponent({
+          schema: {
+            definitions: {
+              e: { anyOf: [wrap('#/definitions/t'), { type: 'null' }] },
+              t: { anyOf: [wrap('#/definitions/e'), { type: 'string' }] },
+              s: { title: 'shared' },
+            },
+            type: 'object',
+            additionalProperties: { $ref: '#/definitions/e' },
+          },
+        });
+
+        await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { newKey: 'New Value' } }),
+          expect.anything(),
+        );
+      },
+    );
 
     it('should keep a value the user entered when the renamed key is described by another schema', async () => {
       // The seed is the form's to replace until the user enters something; what they entered is theirs to keep, even
@@ -3127,6 +3162,54 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: ['preset'] }, 'root');
+    });
+
+    it.each<{ additionalProperties: RJSFSchema; expected: unknown }>([
+      { additionalProperties: { anyOf: [{ type: 'integer' }, { type: 'null' }] }, expected: 0 },
+      { additionalProperties: { oneOf: [{ type: 'number' }, { type: 'null' }] }, expected: 0 },
+      { additionalProperties: { type: 'integer', enum: [3, 4] }, expected: 3 },
+      { additionalProperties: { type: 'number', enum: [3, 4] }, expected: 3 },
+      { additionalProperties: { anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'null' }] }, expected: 'a' },
+      { additionalProperties: { oneOf: [{ type: 'integer', enum: [3, 4] }, { type: 'null' }] }, expected: 3 },
+      { additionalProperties: { anyOf: [{ type: 'integer' }, { type: 'null' }], const: null }, expected: null },
+      { additionalProperties: { anyOf: [{ type: 'integer' }, { type: 'null' }], default: null }, expected: null },
+      { additionalProperties: { type: 'integer', enum: [3, 4], default: 4 }, expected: 4 },
+      {
+        additionalProperties: {
+          anyOf: [{ anyOf: [{ type: 'string', enum: ['p', 'q'] }, { type: 'number' }] }, { type: 'null' }],
+        },
+        expected: 'p',
+      },
+      { additionalProperties: { type: 'integer', anyOf: [{ enum: [5, 6] }, { minimum: 10 }] }, expected: 5 },
+      { additionalProperties: { anyOf: [{ $ref: '#/definitions/letter' }, { type: 'null' }] }, expected: 'x' },
+    ])(
+      'should add a value valid for additionalProperties $additionalProperties (#5441)',
+      async ({ additionalProperties, expected }) => {
+        const customSchema: RJSFSchema = {
+          ...schema,
+          additionalProperties,
+          definitions: { letter: { type: 'string', enum: ['x', 'y'] } },
+        };
+        const { onChange } = createFormComponent({ schema: customSchema, initialFormData: {} });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
+        expect(validator.isValid(customSchema, { newKey: expected }, customSchema)).toBe(true);
+      },
+    );
+
+    it("should add the first enabled value of the option an X | null opens on, with that option's ui:enumDisabled (#5441)", async () => {
+      const customSchema: RJSFSchema = {
+        ...schema,
+        additionalProperties: { anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'null' }] },
+      };
+      const uiSchema: UiSchema = { additionalProperties: { anyOf: [{ 'ui:enumDisabled': ['a'] }, {}] } };
+      const { onChange } = createFormComponent({ schema: customSchema, uiSchema, initialFormData: {} });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'b' }, 'root');
     });
 
     it("should add a new default item if default is provided in the additionalProperties' schema", async () => {
