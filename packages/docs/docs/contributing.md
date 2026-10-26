@@ -189,7 +189,7 @@ If you make changes to those libraries, you will have to maintain that coverage,
 
 ## Releasing
 
-Each release starts by turning the upcoming release's section of the changelog into release notes. Commit them on the `rc` branch below before you run `pnpm exec nx release version --git-tag`, so that the tagged commit carries them. Date the section's heading, as in `# 6.100.10 (2026-11-01)`, start it with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
+Each release starts by turning the upcoming release's section of the changelog into release notes. Commit them on the `rc` branch below before you run `pnpm exec nx release version --git-tag`, so that the tagged commit carries them. Date the section's heading with the day you plan to publish, as in `# 6.100.10 (2026-11-01)`, and if the rc PR merges on a later day, correct the date in that PR before merging it. Start the section with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
 
 To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
 For instance if you are about to create the new `6.100.10` branch, then you would run the following commands:
