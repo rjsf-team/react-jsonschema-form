@@ -1,4 +1,5 @@
-import type { RJSFSchema } from '@rjsf/utils';
+import type { FieldProps, RJSFSchema } from '@rjsf/utils';
+import { toFieldPath } from '@rjsf/utils';
 import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -164,6 +165,48 @@ describe('field ids', () => {
     expect(node.querySelector('#root_pet__oneof_select')).toBeInTheDocument();
     expect(node.querySelector('#root_pet__anyof_select')).toBeInTheDocument();
     expect(node.querySelector('#root_pet_tag__anyof_select')).toBeInTheDocument();
+    expect(duplicateIds(node)).toEqual([]);
+  });
+
+  it('gives the type selector of an option offering types of its own an id of its own', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { x: { type: ['string', 'number'], anyOf: [{ type: ['string', 'boolean'] }, { minimum: 1 }] } },
+    };
+    const { node } = createFormComponent({ schema, useFallbackUiForUnsupportedType: true });
+
+    expect(node.querySelectorAll('#root_x__internalTypeSelector')).toHaveLength(1);
+    expect(node.querySelectorAll('#root_x__internalTypeSelector2')).toHaveLength(1);
+    expect(duplicateIds(node)).toEqual([]);
+  });
+
+  it('numbers the selector of a custom field rendering SchemaField with the same id under another path', () => {
+    /** An option field rendering options of its own for the field's id, at a data path beneath the field's */
+    function InnerOptions({ registry, ...props }: FieldProps) {
+      const { SchemaField } = registry.fields;
+      return (
+        <SchemaField
+          {...props}
+          registry={registry}
+          fieldPath={toFieldPath('inner', props.fieldPath)}
+          schema={{ anyOf: [{ type: 'string' }, { type: 'boolean' }] }}
+          uiSchema={{}}
+          formData={undefined}
+        />
+      );
+    }
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { x: { title: 'X', anyOf: [{ type: 'string' }, { type: 'number' }] } },
+    };
+    const { node } = createFormComponent({
+      schema,
+      fields: { InnerOptions },
+      uiSchema: { x: { anyOf: [{ 'ui:field': 'InnerOptions' }, {}] } },
+    });
+
+    expect(node.querySelectorAll('#root_x__anyof_select')).toHaveLength(1);
+    expect(node.querySelectorAll('#root_x__anyof_select2')).toHaveLength(1);
     expect(duplicateIds(node)).toEqual([]);
   });
 });

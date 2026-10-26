@@ -30,7 +30,7 @@ import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './field
 import formDataForNewOption from './formDataForNewOption.ts';
 import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
-import OptionSelectorContext, { useOptionSelectorsAbove } from './OptionSelectorContext.ts';
+import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
 
 /** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
@@ -101,7 +101,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 
   const xxxOfKey = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
-  const selectorsAbove = useOptionSelectorsAbove(fieldPath);
+  const selectorsAbove = useSelectorsAbove(id);
   const selectorDepth = selectorsAbove[xxxOfKey] + 1;
   const fieldId = optionSelectorId(id, xxxOfKey, selectorDepth);
   const selectorsBelow = useMemo(
@@ -339,11 +339,11 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ) : undefined;
 
   const optionsSchemaField = rendersOption ? (
-    <OptionSelectorContext value={selectorsBelow}>
+    <SelectorsAboveContext value={selectorsBelow}>
       <TemplateWarnEntryContext value={optionEntry}>
         <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
       </TemplateWarnEntryContext>
-    </OptionSelectorContext>
+    </SelectorsAboveContext>
   ) : null;
 
   return (

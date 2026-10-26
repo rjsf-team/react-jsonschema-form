@@ -741,15 +741,16 @@ A schema `retrieveSchema()` did not hand out is returned without the flag.
 
 ### fallbackTypeSelectorId()
 
-Return a consistent `id` for the type selector the fallback UI renders for a field of an unsupported type
+Return a consistent `id` for the type selector the fallback UI renders for a field of an unsupported type, numbered from the second on, so the type selector of a value that offers types of its own, such as an `anyOf` option listing several, has an id of its own
 
 #### Parameters
 
 - id: string - The id of the field
+- [depth=1]: number - How many type selectors render `id`, this one included: 2 for the type selector of an option beneath its field's own, which takes `internalTypeSelector2`
 
 #### Returns
 
-- string: The consistent id for the type selector from the given `id`
+- string: The consistent id for the type selector from the given `id` and `depth`
 
 ### fieldLabelId()
 

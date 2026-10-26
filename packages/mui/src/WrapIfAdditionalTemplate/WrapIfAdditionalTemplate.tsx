@@ -71,6 +71,7 @@ export default function WrapIfAdditionalTemplate<
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
+  const keyId = additionalKeyId(id);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const btnStyle: CSSProperties = {
     flex: 1,
@@ -94,7 +95,7 @@ export default function WrapIfAdditionalTemplate<
   return (
     <Grid
       container
-      key={additionalKeyId(id)}
+      key={keyId}
       spacing={2}
       className={classNames}
       style={style}
@@ -112,7 +113,7 @@ export default function WrapIfAdditionalTemplate<
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
             errorAttributes={keyAttributes}
-            id={additionalKeyId(id)}
+            id={keyId}
             label={keyLabel}
             hideLabel={!hasKeyLabel}
             value={keyName}
@@ -131,7 +132,7 @@ export default function WrapIfAdditionalTemplate<
             label={hasKeyLabel ? keyLabel : undefined}
             // Where `ui:label: false` leaves the key unlabelled, its label's text names it, as core's key input is named
             slotProps={{
-              inputLabel: { id: inputLabelId(additionalKeyId(id)) },
+              inputLabel: { id: inputLabelId(keyId) },
               htmlInput: {
                 'aria-label': hasKeyLabel ? undefined : keyLabel,
                 'aria-describedby': keyAttributes['aria-describedby'],
@@ -140,8 +141,8 @@ export default function WrapIfAdditionalTemplate<
             error={keyAttributes['aria-invalid']}
             defaultValue={keyName}
             disabled={disabled || readonly}
-            id={additionalKeyId(id)}
-            name={additionalKeyId(id)}
+            id={keyId}
+            name={keyId}
             onBlur={!readonly ? onKeyRenameBlur : undefined}
             type='text'
           />

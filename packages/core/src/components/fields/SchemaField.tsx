@@ -73,8 +73,8 @@ import { lookUpUiField, resolveNamedField, withoutNamedField } from './namedFiel
 import type { NamedFieldResolution } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 import type { NamedFieldPath } from './NamedFieldContext.ts';
-import { useOptionSelectorsAbove } from './OptionSelectorContext.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
+import { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
 import useAdditionalDepths from './useAdditionalDepths.ts';
@@ -649,10 +649,10 @@ export function useSchemaFieldPlan<
     uiBooleanOption(globalUiOptions?.label) ??
     true;
   // When the options render, the field component renders beside them under an id of its own, to avoid DOM id
-  // duplication with the rendering of the same data address by the `XxxOfField`, numbered by the selectors above at
-  // this path, so an option rendering options of its own doesn't take the id of the component beside its field's. The
+  // duplication with the rendering of the same data address by the `XxxOfField`, numbered by the selectors above for
+  // this id, so an option rendering options of its own doesn't take the id of the component beside its field's. The
   // `fieldPath` stays the truthful data address either way
-  const selectorsAbove = useOptionSelectorsAbove(fieldPath);
+  const selectorsAbove = useSelectorsAbove(fieldId);
   const fieldComponentId = retrievesOptions
     ? besideOptionsId(fieldId, selectorsAbove.anyOf + selectorsAbove.oneOf + 1)
     : fieldId;

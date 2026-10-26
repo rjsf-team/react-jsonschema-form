@@ -42,6 +42,7 @@ describe('idGenerators', () => {
   });
   it('fallback type selector id is generated for simple id', () => {
     expect(fallbackTypeSelectorId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__internalTypeSelector`);
+    expect(fallbackTypeSelectorId(SIMPLE_ID, 2)).toEqual(`${SIMPLE_ID}__internalTypeSelector2`);
   });
   it('description id is generated for simple id', () => {
     expect(descriptionId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__description`);

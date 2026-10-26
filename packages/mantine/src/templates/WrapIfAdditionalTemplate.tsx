@@ -67,6 +67,7 @@ export default function WrapIfAdditionalTemplate<
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
+  const keyId = additionalKeyId(id);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
@@ -93,7 +94,7 @@ export default function WrapIfAdditionalTemplate<
               <>
                 <AdditionalPropertyKeySelect<T, S, F>
                   errorAttributes={keyAttributes}
-                  id={additionalKeyId(id)}
+                  id={keyId}
                   label={keyLabel}
                   hideLabel={!hasKeyLabel}
                   value={keyName}
@@ -120,8 +121,8 @@ export default function WrapIfAdditionalTemplate<
                 required={required}
                 description={hasDescription ? '\u00A0' : undefined}
                 disabled={disabled || readonly}
-                id={additionalKeyId(id)}
-                name={additionalKeyId(id)}
+                id={keyId}
+                name={keyId}
                 onBlur={!readonly ? onKeyRenameBlur : undefined}
               />
             )}

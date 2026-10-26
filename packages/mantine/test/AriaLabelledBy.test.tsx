@@ -6,6 +6,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { duplicateIds } from '../../../testing/duplicateIds.ts';
 import Form from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
 
@@ -480,8 +481,8 @@ describe('aria-labelledby', () => {
     const title = container.querySelector(`[id="${titleId('root')}"]`)!;
     expect(title.tagName).toBe(labelElement.toUpperCase());
     expect(title).not.toHaveAttribute('for');
-    const ids = Array.from(container.querySelectorAll('[id^="root"]'), (el) => el.id);
-    expect(ids.filter((id, index) => ids.indexOf(id) !== index)).toEqual([]);
+    // Only the form's own ids, since Mantine's alt-date renders ids of its own that repeat
+    expect(duplicateIds(container, '[id^="root"]')).toEqual([]);
   });
 
   test.each(titledCases)(

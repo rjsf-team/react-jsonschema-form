@@ -233,11 +233,14 @@ export function besideOptionsId(id: string, depth = 1) {
 }
 
 /** Return a consistent `id` for the type selector the fallback UI renders for a field of an unsupported type, as a part
- * of the field
+ * of the field, numbered from the second on, so the type selector of a value that offers types of its own, such as an
+ * `anyOf` option listing several, has an id of its own
  *
  * @param id - The id of the field
- * @returns - The consistent id for the type selector from the given `id`
+ * @param [depth=1] - How many type selectors render `id`, this one included: 2 for the type selector of an option
+ *        beneath its field's own, which takes `internalTypeSelector2`
+ * @returns - The consistent id for the type selector from the given `id` and `depth`
  */
-export function fallbackTypeSelectorId(id: string) {
-  return partId(id, 'internalTypeSelector');
+export function fallbackTypeSelectorId(id: string, depth = 1) {
+  return optionIdGenerator(id, 'internalTypeSelector', depth);
 }

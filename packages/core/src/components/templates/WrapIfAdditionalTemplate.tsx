@@ -48,6 +48,7 @@ export default function WrapIfAdditionalTemplate<
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
+  const keyId = additionalKeyId(id);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const hasDescription = !!rawDescription;
 
@@ -70,12 +71,12 @@ export default function WrapIfAdditionalTemplate<
       <div className='row'>
         <div className='col-xs-5 form-additional'>
           <div className='form-group'>
-            {hasKeyLabel && <Label label={keyLabel} required={required} id={additionalKeyId(id)} />}
+            {hasKeyLabel && <Label label={keyLabel} required={required} id={keyId} />}
             {hasKeyLabel && rawDescription && <div>&nbsp;</div>}
             {propertyNamesEnum ? (
               <AdditionalPropertyKeySelect<T, S, F>
                 errorAttributes={keyAttributes}
-                id={additionalKeyId(id)}
+                id={keyId}
                 label={keyLabel}
                 hideLabel
                 labelledByTemplate={hasKeyLabel}
@@ -92,7 +93,7 @@ export default function WrapIfAdditionalTemplate<
                 key={keyName}
                 className='form-control'
                 type='text'
-                id={additionalKeyId(id)}
+                id={keyId}
                 aria-label={hasKeyLabel ? undefined : keyLabel}
                 {...keyAttributes}
                 onBlur={onKeyRenameBlur}
