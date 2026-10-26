@@ -974,7 +974,7 @@ export interface ThemePresentation {
  */
 export type MergedThemePresentation = Required<ThemePresentation>;
 
-/** The class names a theme or a form adds to the elements `@rjsf/core` renders, one key per element rather than per
+/** The class names a theme or a form gives the elements `@rjsf/core` renders, one key per element rather than per
  * concept, since CSS frameworks put a concept's class on different elements: Bootstrap 3 puts `checkbox` on the
  * wrapper, daisyUI on the `<input>`. A key's value replaces the class the layer beneath gives its element. The one key
  * named after a state, `disabled`, is added to an option in that state beside its own key's; any other state is a
