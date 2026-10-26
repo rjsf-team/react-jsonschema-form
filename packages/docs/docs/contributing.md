@@ -65,7 +65,7 @@ If the top heading is dated, that release has shipped: add an undated heading fo
 A change that belongs to no single package, such as a new Node or React requirement, goes once under `All packages` instead.
 If the change needs a bigger semver bump than that release's heading names, update the heading.
 A change to a package's peer dependency range goes under that package, and so does a dependency bump that changes what its users get, such as a fix or a new minimum version.
-Tests, CI, refactors, docs fixes, playground changes and dependency bumps users can't notice need no entry, and neither does a change to something that isn't released yet: edit that change's entry instead, keeping its PR link and adding yours after it.
+Tests, CI, refactors, docs changes, playground changes and dependency bumps users can't notice need no entry, and neither does a change to something that isn't released yet: edit that change's entry instead, keeping its PR link and adding yours after it.
 
 Write the entry for someone deciding whether to upgrade, who won't open the PR:
 
