@@ -1252,9 +1252,10 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
 }
 
 /** Freezes plain objects and arrays in `data`, and nothing else: a `File`, a `Date` or a class instance is left
- * alone. Development only, and only ever applied to form data: the form data a consumer receives shares subtrees with
- * the value the change was applied to, the `formData` the consumer passed included, so a mutation of it corrupts the
- * consumer's state silently. Frozen, it throws where the mutation happens instead.
+ * alone. Development only, and only ever applied to form data and the `dirtyFields` built from it: the form data a
+ * consumer receives shares subtrees with the value the change was applied to, the `formData` the consumer passed
+ * included, so a mutation of it corrupts the consumer's state silently. Frozen, it throws where the mutation happens
+ * instead.
  *
  * @param data - The form data to freeze
  */

@@ -371,6 +371,21 @@ describe('getStatus', () => {
     expect(handle.getStatus()).not.toBe(edited);
     expect(handle.getStatus().submitCount).toBe(1);
   });
+
+  it('hands out a status and dirtyFields a reader cannot change for the next one, in development', async () => {
+    const { container, handle } = mountWithHandle({ schema: person });
+    await user.type(input(container, 'root_address_street'), 'x');
+    const status = handle.getStatus();
+    const { dirtyFields } = status;
+    if (!isPlainObject(dirtyFields)) {
+      throw new Error('dirtyFields is not an object');
+    }
+
+    expect(() => Object.assign(status, { dirty: false })).toThrow(TypeError);
+    expect(() => Object.assign(dirtyFields, { name: true })).toThrow(TypeError);
+    expect(Object.isFrozen(Reflect.get(dirtyFields, 'address'))).toBe(true);
+    expect(handle.getStatus()).toEqual({ dirty: true, dirtyFields: { address: { street: true } }, submitCount: 0 });
+  });
 });
 
 describe('submitCount', () => {
@@ -556,6 +571,36 @@ describe('reset', () => {
 
     expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
     expect(handle.getStatus().dirty).toBe(false);
+  });
+
+  it('takes reset(undefined) as reset(), and reset({}) as a blank seed with the defaults filled in', () => {
+    const { handle } = mountWithHandle({ schema, initialFormData: { name: 'Ada' } });
+    act(() => handle.reset({ name: 'Alan' }));
+
+    act(() => handle.reset(undefined));
+    expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
+
+    act(() => handle.reset({}));
+    expect(handle.getFormData()).toEqual({ city: 'Oslo' });
+    expect(handle.getStatus().dirty).toBe(false);
+  });
+
+  it("leaves the app's own object unfrozen, nested objects and arrays included", async () => {
+    const tagged: RJSFSchema = {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        tags: { type: 'array', items: { type: 'string' } },
+        address: { type: 'object', properties: { city: { type: 'string' } } },
+      },
+    };
+    const { container, handle } = mountWithHandle({ schema: tagged });
+    const saved = { name: 'Ada', tags: ['a'], address: { city: 'Oslo' }, updatedAt: { at: 1 } };
+
+    act(() => handle.reset(saved));
+    await user.type(input(container, 'root_name'), 'x');
+
+    expect([saved, saved.tags, saved.address, saved.updatedAt].some((value) => Object.isFrozen(value))).toBe(false);
   });
 
   it('returns to the props seed when called with nothing, clearing submitCount', async () => {

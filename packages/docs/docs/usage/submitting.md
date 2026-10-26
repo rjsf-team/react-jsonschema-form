@@ -215,6 +215,8 @@ Changes the user didn't make leave the form clean. When a new `schema` prop fill
 
 After a save, call `reset(saved)` on the form's ref with the data you saved. That data, with the schema's defaults filled in as on mount, becomes the baseline and the form's data, and the form clears its errors and its submit count, without remounting. `reset()` with no argument goes back to the data the last `reset(saved)` passed, or to the props' seed if there was none.
 
+That makes `saved` the seed for good, as `reset(values)` replaces the default values in react-hook-form and TanStack Form. `reset(undefined)` is the same call as `reset()`. To start on another record, pass it: `reset(record)`, or `reset({})` for a blank form whose data is an object, which fills in the schema's defaults as `initialFormData={{}}` would on mount. To go back to the props' seed, such as after `initialFormData` changes to another record, or to a blank form whose data isn't an object, remount the form under a `key`.
+
 The fields stay editable while a save is pending, so the user may change the data after submitting it. `reset(saved)` alone would replace those edits with the saved data. `getFormData()` returns the very object `onSubmit` was given until an edit replaces it, so compare the two by reference, and apply the newer data again as an edit on top of the saved baseline:
 
 ```tsx
