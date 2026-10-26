@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode, Ref, SubmitEvent } from 'react';
+import type { ElementType, MouseEvent, ReactNode, Ref, SubmitEvent } from 'react';
 import {
   memo,
   useEffect,
@@ -384,16 +384,8 @@ function submitButtonUiSchema<T, S extends StrictRJSFSchema, F extends FormConte
 
 interface PendingButtonProps {
   'aria-disabled': true;
-  onClick: (event: { preventDefault: () => void }) => void;
+  onClick: (event: MouseEvent<HTMLElement>) => void;
 }
-
-/** Cancels the click, as a disabled button gets none, so the browser runs no constraint validation, which would show
- * its message and move focus, for a submit the form ignores. Enter in a field clicks the form's default button too
- */
-const PENDING_BUTTON_PROPS: PendingButtonProps = {
-  'aria-disabled': true,
-  onClick: (event) => event.preventDefault(),
-};
 
 type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormContextType> = SubmitButtonProps<T, S, F> & {
   SubmitButton: TemplatesType<T, S, F>['ButtonTemplates']['SubmitButton'];
@@ -411,7 +403,20 @@ function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContex
   registry,
 }: PendingSubmitButtonProps<T, S, F>) {
   const pendingUiSchema = useMemo(
-    () => (submitting ? submitButtonUiSchema<T, S, F>(uiSchema, PENDING_BUTTON_PROPS) : uiSchema),
+    () =>
+      submitting
+        ? submitButtonUiSchema<T, S, F>(uiSchema, {
+            'aria-disabled': true,
+            /** Cancels the click, as a disabled button gets none, so the browser runs no constraint validation, which
+             * would show its message and move focus, for a submit the form ignores. Enter in a field clicks the form's
+             * default button too. The app's own `onClick` still runs
+             */
+            onClick(event) {
+              getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY]?.props?.onClick?.(event);
+              event.preventDefault();
+            },
+          })
+        : uiSchema,
     [submitting, uiSchema],
   );
   return <SubmitButton uiSchema={pendingUiSchema} registry={registry} pending={submitting} />;
