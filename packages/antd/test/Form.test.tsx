@@ -4,6 +4,7 @@ import {
   fallbackDescriptionTests,
   formTests,
   optionErrorStateTests,
+  submitPendingTests,
   themeTests,
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
@@ -1261,3 +1262,5 @@ describe("antd's FieldTemplate rendered by hand", () => {
 });
 
 wrapIfAdditionalErrorStateTests(Form);
+
+submitPendingTests(Form);

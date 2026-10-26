@@ -2,6 +2,7 @@ import {
   checkboxLabelTests,
   fallbackDescriptionTests,
   formTests,
+  submitPendingTests,
   themeTests,
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
@@ -679,3 +680,5 @@ checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 's
 fallbackDescriptionTests(Form, false);
 
 wrapIfAdditionalErrorStateTests(Form);
+
+submitPendingTests(Form);
