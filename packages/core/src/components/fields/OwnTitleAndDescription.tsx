@@ -54,8 +54,8 @@ export default function OwnTitleAndDescription<
   // `<fieldset>` it names, so a title is drawn inside one with the content it heads, as an object's heading and
   // properties are. A theme's title is often a heading rather than a legend, so the group is named by the title's id
   // whatever element draws it. The fieldset is only there for the group, so it draws none of the border and spacing a
-  // browser gives one, which not every theme resets. Core ships no stylesheet to reset it in, so the reset is inline and
-  // the class is what an app selects it by
+  // browser gives one, which not every theme resets. `rjsf.css` resets it, but that stylesheet is optional and the other
+  // themes don't load it, so the reset is inline and the class is what an app selects it by
   return (
     <fieldset className='rjsf-own-title-group' aria-labelledby={label.id} style={GROUP_ONLY_FIELDSET_STYLE}>
       {content}
