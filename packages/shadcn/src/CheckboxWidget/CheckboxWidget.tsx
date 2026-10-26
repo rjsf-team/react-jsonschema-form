@@ -3,6 +3,7 @@ import {
   fieldShowsOwnErrors,
   getControlAttributes,
   getTemplates,
+  getUiOptions,
   getWidgetDescription,
   hasWidgetErrors,
   labelValue,
@@ -55,7 +56,9 @@ export default function CheckboxWidget<
   const handleBlur = () => onBlur(id, value);
   const handleFocus = () => onFocus(id, value);
 
-  const description = getWidgetDescription<T, S, F>(props);
+  // Without a plan, core's `FieldTemplate` draws the description of a field whose `ui:widget` is the `checkbox` alias
+  const description =
+    presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (
     <div className={`relative ${disabled || readonly ? 'cursor-not-allowed opacity-50' : ''}`}>
       {description && (

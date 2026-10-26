@@ -68,15 +68,12 @@ export default function WrapIfAdditionalTemplate<
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema));
 
   return (
-    <>
+    // One element, so the separator keeps its gap under the row wherever the object's template puts the property
+    <div className={cn('flex flex-col gap-2', classNames)} style={style} data-invalid={hasErrors || undefined}>
       {/* Top-aligned, with the value spanning both rows, so the first is as tall as the key's label, the value's
           description and the key input, and the remove button sits at its foot, beside the key input, whatever errors
           or help follow the value's input */}
-      <div
-        className={cn('grid grid-cols-12 grid-rows-[auto_1fr] col-span-12 items-start gap-x-2', classNames)}
-        style={style}
-        data-invalid={hasErrors || undefined}
-      >
+      <div className='grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2'>
         <div className='grid gap-2 col-span-5'>
           <div className='flex flex-col gap-2'>
             {hasKeyLabel && (
@@ -104,23 +101,24 @@ export default function WrapIfAdditionalTemplate<
                 />
               </div>
             )}
-            <div className='pl-0.5 pt-0.5'>
-              {propertyNamesEnum ? (
-                <AdditionalPropertyKeySelect<T, S, F>
-                  errorAttributes={keyAttributes}
-                  id={keyId}
-                  label={keyLabel}
-                  hideLabel
-                  labelledByTemplate={hasKeyLabel}
-                  value={keyName}
-                  propertyNamesEnum={propertyNamesEnum}
-                  onKeyRename={onKeyRename}
-                  disabled={disabled}
-                  readonly={readonly}
-                  required={required}
-                  registry={registry}
-                />
-              ) : (
+            {propertyNamesEnum ? (
+              <AdditionalPropertyKeySelect<T, S, F>
+                errorAttributes={keyAttributes}
+                id={keyId}
+                label={keyLabel}
+                hideLabel
+                labelledByTemplate={hasKeyLabel}
+                value={keyName}
+                propertyNamesEnum={propertyNamesEnum}
+                onKeyRename={onKeyRename}
+                disabled={disabled}
+                readonly={readonly}
+                required={required}
+                registry={registry}
+              />
+            ) : (
+              // The theme's `SelectWidget` pads itself; the input takes the same 2px the value's input wrapper has
+              <div className='pl-0.5 pt-0.5'>
                 <Input
                   key={keyName}
                   aria-label={hasKeyLabel ? undefined : keyLabel}
@@ -134,8 +132,8 @@ export default function WrapIfAdditionalTemplate<
                   type='text'
                   className='w-full border shadow-sm'
                 />
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
         <div className='grid gap-2 col-span-6 row-span-2 pr-0.5'>{children}</div>
@@ -151,7 +149,7 @@ export default function WrapIfAdditionalTemplate<
           />
         </div>
       </div>
-      <Separator className='mt-2' />
-    </>
+      <Separator />
+    </div>
   );
 }

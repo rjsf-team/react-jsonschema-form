@@ -14,7 +14,9 @@ const SHADCN_CLASS_MAP: ClassMap = {
   fieldHelp: 'text-xs font-medium text-muted-foreground data-invalid:text-destructive',
   multiSchema: 'p-4 border rounded-md bg-background shadow-sm',
   multiSchemaSelector: 'mb-4',
-  arrayFieldset: 'min-w-0',
+  // The fieldsets place the add button core renders straight into them at their end, so the button carries no margin
+  // of its own into a custom template
+  arrayFieldset: 'min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto',
   arrayItemList: 'mb-2',
   // One column unless there is a toolbox, as the gap before an empty one would narrow the field. Top-aligned, so errors
   // or help under the input don't move the toolbox; past a label, which core marks the item `data-display-label` for,
@@ -24,7 +26,8 @@ const SHADCN_CLASS_MAP: ClassMap = {
   arrayItem:
     'mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13',
   arrayItemToolbox: 'flex gap-2',
-  objectFieldset: 'flex min-w-0 flex-col gap-2',
+  objectFieldset:
+    'flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto',
   // Core's `AltDateWidget`, which the theme renders: its parts in one wrapping row, each select a steady width
   altDateList: 'flex flex-wrap items-center gap-2',
   altDateListItem: 'min-w-24 has-[>button]:min-w-0',

@@ -79,14 +79,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_tasks"
           >
             <legend
@@ -118,7 +118,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    class="flex min-w-0 flex-col gap-2"
+                    class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                     id="root_tasks_0"
                   >
                     <legend
@@ -307,7 +307,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    class="flex min-w-0 flex-col gap-2"
+                    class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                     id="root_tasks_1"
                   >
                     <legend
@@ -515,7 +515,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_tasks__add"
               type="button"
@@ -573,14 +573,14 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_tags"
           >
             <legend
@@ -867,7 +867,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_tags__add"
               type="button"
@@ -925,7 +925,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -1059,14 +1059,14 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_person"
           >
             <legend
@@ -1146,7 +1146,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_person_address"
               >
                 <legend
@@ -1250,7 +1250,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -1372,7 +1372,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -1467,7 +1467,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -1588,7 +1588,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -1641,14 +1641,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_tasks"
           >
             <legend
@@ -1680,7 +1680,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    class="flex min-w-0 flex-col gap-2"
+                    class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                     id="root_tasks_0"
                   >
                     <legend
@@ -1869,7 +1869,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
                 >
                   <fieldset
-                    class="flex min-w-0 flex-col gap-2"
+                    class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                     id="root_tasks_1"
                   >
                     <legend
@@ -2077,7 +2077,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_tasks__add"
               type="button"
@@ -2135,14 +2135,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_tags"
           >
             <legend
@@ -2429,7 +2429,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_tags__add"
               type="button"
@@ -2487,14 +2487,14 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_person"
           >
             <legend
@@ -2574,7 +2574,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_person_address"
               >
                 <legend
@@ -2678,7 +2678,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -2773,7 +2773,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -3024,7 +3024,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -3648,7 +3648,7 @@ exports[`single fields > Cyclic schema 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <legend
@@ -3680,7 +3680,7 @@ exports[`single fields > Cyclic schema 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_child"
           >
             <legend
@@ -4543,7 +4543,7 @@ exports[`single fields > field with description 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -4604,7 +4604,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -4665,7 +4665,7 @@ exports[`single fields > field with markdown description 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -4732,7 +4732,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -5041,7 +5041,7 @@ exports[`single fields > hidden field 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -5210,7 +5210,7 @@ exports[`single fields > optional data controls > does not show optional control
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <legend
@@ -5236,7 +5236,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
             <legend
@@ -5289,7 +5289,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObjectOptional"
               >
                 <legend
@@ -5344,7 +5344,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObject"
               >
                 <legend
@@ -5400,7 +5400,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -5426,7 +5426,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArrayOptional__add"
                   type="button"
@@ -5464,7 +5464,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -5490,7 +5490,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArrayOptional2__add"
                   type="button"
@@ -5528,7 +5528,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -5555,7 +5555,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArray__add"
                   type="button"
@@ -5595,7 +5595,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -5621,7 +5621,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArrayOptional__add"
               type="button"
@@ -5659,7 +5659,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
             <legend
@@ -5715,7 +5715,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -5742,7 +5742,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArray__add"
               type="button"
@@ -5854,7 +5854,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_optionalObjectWithOneofs"
               >
                 <div
@@ -5967,14 +5967,14 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <div
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_optionalArrayWithAnyofs__add"
                   type="button"
@@ -6034,7 +6034,7 @@ exports[`single fields > optional data controls > does not show optional control
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <legend
@@ -6060,7 +6060,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
             <legend
@@ -6114,7 +6114,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObjectOptional"
               >
                 <legend
@@ -6170,7 +6170,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObject"
               >
                 <legend
@@ -6227,7 +6227,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -6253,7 +6253,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional__add"
@@ -6292,7 +6292,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -6318,7 +6318,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional2__add"
@@ -6357,7 +6357,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -6384,7 +6384,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArray__add"
@@ -6425,7 +6425,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -6451,7 +6451,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               disabled=""
               id="root_nestedArrayOptional__add"
@@ -6490,7 +6490,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
             <legend
@@ -6547,7 +6547,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -6574,7 +6574,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               disabled=""
               id="root_nestedArray__add"
@@ -6688,7 +6688,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_optionalObjectWithOneofs"
               >
                 <div
@@ -6802,14 +6802,14 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <div
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_optionalArrayWithAnyofs__add"
@@ -6870,7 +6870,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <legend
@@ -6896,7 +6896,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="rjsf-optional-object-field flex min-w-0 flex-col gap-2"
+            class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
             <legend
@@ -6986,7 +6986,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2"
+                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObjectOptional"
               >
                 <legend
@@ -7047,7 +7047,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObject"
               >
                 <legend
@@ -7103,7 +7103,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -7129,7 +7129,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArrayOptional__add"
                   type="button"
@@ -7167,7 +7167,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -7231,7 +7231,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -7258,7 +7258,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_nestedObjectOptional_deepArray__add"
                   type="button"
@@ -7298,7 +7298,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -7441,7 +7441,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArrayOptional__add"
               type="button"
@@ -7479,7 +7479,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
             <legend
@@ -7535,7 +7535,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -7562,7 +7562,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArray__add"
               type="button"
@@ -7606,7 +7606,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2"
+                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_optionalObjectWithOneofs"
               >
                 <legend
@@ -7675,7 +7675,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend
@@ -7761,7 +7761,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <legend
@@ -7787,7 +7787,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="rjsf-optional-object-field flex min-w-0 flex-col gap-2"
+            class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
             <legend
@@ -7841,7 +7841,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2"
+                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObjectOptional"
               >
                 <legend
@@ -7874,7 +7874,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_nestedObjectOptional_deepObject"
               >
                 <legend
@@ -7931,7 +7931,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional"
               >
                 <legend
@@ -7957,7 +7957,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional__add"
@@ -7996,7 +7996,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArrayOptional2"
               >
                 <legend
@@ -8032,7 +8032,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_nestedObjectOptional_deepArray"
               >
                 <legend
@@ -8059,7 +8059,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list mb-2"
                 />
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   disabled=""
                   id="root_nestedObjectOptional_deepArray__add"
@@ -8100,7 +8100,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -8208,7 +8208,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               </div>
             </div>
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               disabled=""
               id="root_nestedArrayOptional__add"
@@ -8247,7 +8247,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
             <legend
@@ -8304,7 +8304,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -8331,7 +8331,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               disabled=""
               id="root_nestedArray__add"
@@ -8376,7 +8376,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2"
+                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_optionalObjectWithOneofs"
               >
                 <legend
@@ -8417,7 +8417,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend
@@ -8475,7 +8475,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <legend
@@ -8501,7 +8501,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="rjsf-optional-object-field flex min-w-0 flex-col gap-2"
+            class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
             <legend
@@ -8562,7 +8562,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -8626,7 +8626,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
             <legend
@@ -8682,7 +8682,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -8709,7 +8709,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               id="root_nestedArray__add"
               type="button"
@@ -8753,7 +8753,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2"
+                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_optionalObjectWithOneofs"
               >
                 <legend
@@ -8822,7 +8822,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend
@@ -8908,7 +8908,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <legend
@@ -8934,7 +8934,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="rjsf-optional-object-field flex min-w-0 flex-col gap-2"
+            class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObjectOptional"
           >
             <legend
@@ -8967,7 +8967,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArrayOptional"
           >
             <legend
@@ -9003,7 +9003,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
-            class="flex min-w-0 flex-col gap-2"
+            class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_nestedObject"
           >
             <legend
@@ -9060,7 +9060,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
-            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+            class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_nestedArray"
           >
             <legend
@@ -9087,7 +9087,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-array-item-list mb-2"
             />
             <button
-              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+              class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
               data-slot="button"
               disabled=""
               id="root_nestedArray__add"
@@ -9132,7 +9132,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2"
+                class="rjsf-optional-object-field flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_optionalObjectWithOneofs"
               >
                 <legend
@@ -9173,7 +9173,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_optionalArrayWithAnyofs"
               >
                 <legend
@@ -9491,7 +9491,7 @@ exports[`single fields > required checkbox field 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -9555,7 +9555,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -11926,7 +11926,7 @@ exports[`single fields > title field 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <legend
@@ -12138,7 +12138,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div

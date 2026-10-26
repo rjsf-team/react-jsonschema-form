@@ -9,14 +9,14 @@ exports[`array fields > array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
           class="rjsf-array-item-list mb-2"
         />
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -72,7 +72,7 @@ exports[`array fields > array icons 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -374,7 +374,7 @@ exports[`array fields > array icons 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -496,7 +496,7 @@ exports[`array fields > empty errors array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -550,7 +550,7 @@ exports[`array fields > fixed array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -679,7 +679,7 @@ exports[`array fields > has errors 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -749,7 +749,7 @@ exports[`array fields > no errors 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
-        class="flex min-w-0 flex-col gap-2"
+        class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
         <div
@@ -803,7 +803,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -816,7 +816,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_0"
               >
                 <div
@@ -978,7 +978,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_1"
               >
                 <div
@@ -1135,7 +1135,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -1191,7 +1191,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -1427,7 +1427,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -1549,7 +1549,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -1690,7 +1690,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-array min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-array min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -1703,7 +1703,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_0"
               >
                 <div
@@ -1939,7 +1939,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   </div>
                 </div>
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_0__add"
                   type="button"
@@ -2073,7 +2073,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <fieldset
-                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+                class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_1"
               >
                 <div
@@ -2309,7 +2309,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   </div>
                 </div>
                 <button
-                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+                  class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
                   data-slot="button"
                   id="root_1__add"
                   type="button"
@@ -2438,7 +2438,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -2494,7 +2494,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -2507,7 +2507,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_0"
               >
                 <div
@@ -2669,7 +2669,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_1"
               >
                 <div
@@ -2826,7 +2826,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -2882,7 +2882,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -3118,7 +3118,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -3174,7 +3174,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-object min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -3187,7 +3187,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_0"
               >
                 <div
@@ -3352,7 +3352,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
-                class="flex min-w-0 flex-col gap-2"
+                class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_1"
               >
                 <div
@@ -3512,7 +3512,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -3568,7 +3568,7 @@ exports[`with title and description > array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -3600,7 +3600,7 @@ exports[`with title and description > array 1`] = `
           class="rjsf-array-item-list mb-2"
         />
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -3656,7 +3656,7 @@ exports[`with title and description > array icons 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -4031,7 +4031,7 @@ exports[`with title and description > array icons 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -4170,7 +4170,7 @@ exports[`with title and description > fixed array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -4321,7 +4321,7 @@ exports[`with title and description from both > array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -4353,7 +4353,7 @@ exports[`with title and description from both > array 1`] = `
           class="rjsf-array-item-list mb-2"
         />
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -4409,7 +4409,7 @@ exports[`with title and description from both > array icons 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -4784,7 +4784,7 @@ exports[`with title and description from both > array icons 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -4923,7 +4923,7 @@ exports[`with title and description from both > fixed array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -5074,7 +5074,7 @@ exports[`with title and description from uiSchema > array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -5106,7 +5106,7 @@ exports[`with title and description from uiSchema > array 1`] = `
           class="rjsf-array-item-list mb-2"
         />
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -5162,7 +5162,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -5537,7 +5537,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -5676,7 +5676,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <legend
@@ -5827,14 +5827,14 @@ exports[`with title and description with global label off > array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
           class="rjsf-array-item-list mb-2"
         />
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -5890,7 +5890,7 @@ exports[`with title and description with global label off > array icons 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
@@ -6196,7 +6196,7 @@ exports[`with title and description with global label off > array icons 1`] = `
           </div>
         </div>
         <button
-          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 mt-2 ms-auto flex w-fit gap-2 rjsf-array-item-add"
+          class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 flex w-fit gap-2 rjsf-array-item-add"
           data-slot="button"
           id="root__add"
           type="button"
@@ -6318,7 +6318,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <fieldset
-        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0"
+        class="rjsf-field rjsf-field-array rjsf-field-array-fixed-items min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
         id="root"
       >
         <div
