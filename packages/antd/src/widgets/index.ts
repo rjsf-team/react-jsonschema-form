@@ -6,6 +6,7 @@ import CheckboxesWidget from './CheckboxesWidget/index.tsx';
 import CheckboxWidget from './CheckboxWidget/index.tsx';
 import DateTimeWidget from './DateTimeWidget/index.tsx';
 import DateWidget from './DateWidget/index.tsx';
+import HiddenWidget from './HiddenWidget/index.tsx';
 import PasswordWidget from './PasswordWidget/index.tsx';
 import RadioWidget from './RadioWidget/index.tsx';
 import RangeWidget from './RangeWidget/index.tsx';
@@ -21,6 +22,7 @@ export function createWidgets() {
     CheckboxWidget,
     DateTimeWidget,
     DateWidget,
+    HiddenWidget,
     PasswordWidget,
     RadioWidget,
     RangeWidget,

@@ -19,6 +19,7 @@ const schema: RJSFSchema = {
     checkbox: { type: 'boolean', title: 'Checkbox' },
     range: { type: 'number', title: 'Range', minimum: 0, maximum: 10 },
     rating: { type: 'integer', title: 'Rating' },
+    hiddenList: { type: 'array', title: 'Hidden list', items: { type: 'string' } },
     date: { type: 'string', format: 'date', title: 'Date' },
     altDate: { type: 'string', format: 'date', title: 'Alt date' },
     list: { type: 'array', title: 'List', items: { type: 'string' } },
@@ -31,6 +32,7 @@ const uiSchema: UiSchema = {
   textarea: { 'ui:widget': 'textarea' },
   range: { 'ui:widget': 'range' },
   rating: { 'ui:widget': 'RatingWidget' },
+  hiddenList: { items: { 'ui:widget': 'hidden' } },
   altDate: { 'ui:widget': 'alt-date' },
 };
 
@@ -40,7 +42,7 @@ function renderForm(componentDisabled: boolean) {
       <Form
         schema={schema}
         uiSchema={uiSchema}
-        initialFormData={{ select: 'a', range: 4, rating: 2, list: ['x'], extra: { key: 'value' } }}
+        initialFormData={{ select: 'a', range: 4, rating: 2, hiddenList: ['h'], list: ['x'], extra: { key: 'value' } }}
         validator={validator}
       />
     </ConfigProvider>,
@@ -71,7 +73,7 @@ describe('antd DisabledContext', () => {
     }
   });
 
-  it('posts nothing from the hidden select, range and rating inputs under the context, as for a disabled native control', () => {
+  it('posts nothing from the hidden select, range and rating inputs or a hidden field under the context, as for a disabled native control', () => {
     const form = renderForm(true).querySelector('form');
 
     expect(form).not.toBeNull();
@@ -79,6 +81,7 @@ describe('antd DisabledContext', () => {
     expect(posted?.getAll('root_select')).toEqual([]);
     expect(posted?.getAll('root_range')).toEqual([]);
     expect(posted?.getAll('root_rating')).toEqual([]);
+    expect(posted?.getAll('root_hiddenList_0')).toEqual([]);
   });
 
   it('takes the rating out of the tab order and ignores a click on a star under the context', async () => {
@@ -101,5 +104,7 @@ describe('antd DisabledContext', () => {
     expect(container.querySelector('#root_number')).toBeEnabled();
     expect(container.querySelector('#root_checkbox')).toBeEnabled();
     expect(screen.getByRole('radio', { name: '2 stars' })).toHaveAttribute('tabindex', '0');
+    const form = container.querySelector('form');
+    expect(form ? new FormData(form).getAll('root_hiddenList_0') : undefined).toEqual(['h']);
   });
 });
