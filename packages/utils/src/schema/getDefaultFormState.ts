@@ -1651,7 +1651,12 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     );
     return { value, holdsNull };
   };
-  for (const key of Object.keys(schema.properties ?? {})) {
+  const isStubbed = (propertySchema: unknown) =>
+    isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
+  const propertyKeys = Object.keys(schema.properties ?? {}).filter(
+    (key) => isPinned(key) || !isStubbed(getPropertySchema<S>(schema, key)),
+  );
+  for (const key of propertyKeys) {
     const propertySchema = getPropertySchema<S>(schema, key);
     const { seeds, edge } = childSeeds(view, key);
     // A property written as a `$ref` keeps its `const` and `type` in the definition it names, which is read where the
@@ -1669,11 +1674,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // A property stubbed by `stubExistingAdditionalProperties()` from `additionalProperties`/`patternProperties`
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.
-    const addedByAdditionalProperty =
-      isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
-    if (addedByAdditionalProperty && !isPinned(key)) {
-      continue;
-    }
+    const addedByAdditionalProperty = isStubbed(propertySchema);
     const child = defaultsChild(view, seeds, edge, propertySchema);
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
