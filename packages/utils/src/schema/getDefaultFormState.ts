@@ -1854,7 +1854,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       const keptUndefined = value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior);
       const uncomputed =
         !Object.hasOwn(computed, key) &&
-        (value === undefined || !(schema.properties && Object.hasOwn(schema.properties, key)));
+        (value === undefined || !schema.properties || !Object.hasOwn(schema.properties, key));
       if (keptUndefined || uncomputed) {
         setOwn(computed, key, value);
       }
