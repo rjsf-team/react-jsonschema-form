@@ -466,8 +466,8 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   // the promise's error and no one handles it, so a rejection is reported as an unhandled rejection, as react-hook-form's
   // and TanStack Form's `handleSubmit` rethrow it, and never reaches an Error Boundary
   const [submitting, setSubmitting] = useState(false);
-  // Ignoring a submit while one is pending, as TanStack Form does, is decided in the submit event, before a render can
-  // show the state, such as for two `submit()` calls in one handler
+  // Ignoring a submit while one is pending, which TanStack Form leaves to the app's `disabled={!canSubmit}` button, is
+  // decided in the submit event, before a render can show the state, such as for two `submit()` calls in one handler
   const pendingSubmit = useRef<Promise<unknown>>(undefined);
   const handleSubmit = useCallback(
     (event: SubmitEvent<HTMLFormElement>) => {
