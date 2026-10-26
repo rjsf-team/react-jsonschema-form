@@ -47,6 +47,18 @@ describe('createIsSchemaFieldHidden()', () => {
     );
   });
 
+  it('returns true for a hide its ui:definitions entry sets', () => {
+    const registry = makeRegistry(undefined, { '#/definitions/old': { 'ui:deprecatedHandling': 'hide' } });
+    expect(isSchemaFieldHidden(OLD_REF, undefined, undefined, ROOT_FIELD_PATH, registry)).toBe(true);
+  });
+
+  it('retrieves no schema for a field whose uiSchema names neither a hidden widget nor a hide', () => {
+    const registry = makeRegistry({ deprecatedHandling: 'disable' });
+    const retrieveSchema = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
+    expect(isSchemaFieldHidden(OLD_REF, { 'ui:widget': 'text' }, 'a', ROOT_FIELD_PATH, registry)).toBe(false);
+    expect(retrieveSchema).not.toHaveBeenCalled();
+  });
+
   it('ignores a widget in the global options', () => {
     const registry = makeRegistry({ widget: 'hidden' } as GlobalUISchemaOptions);
     expect(isSchemaFieldHidden({ type: 'string' }, undefined, undefined, ROOT_FIELD_PATH, registry)).toBe(false);

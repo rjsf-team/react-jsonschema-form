@@ -301,6 +301,39 @@ describe('ObjectField', () => {
       expect(node.querySelector('input#root_a')).toHaveAttribute('type', 'hidden');
     });
 
+    it.each<[string, RJSFSchema]>([
+      [
+        'if/then',
+        {
+          if: { properties: { a: { const: 'x' } }, required: ['a'] },
+          then: { properties: { b: { deprecated: true } } },
+        },
+      ],
+      ['dependencies', { dependencies: { a: { properties: { b: { deprecated: true } } } } }],
+    ])(
+      'should agree with FieldTemplate on hidden as a sibling makes a property deprecated through %s',
+      async (_, condition) => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' }, b: { type: 'string' } },
+            ...condition,
+          },
+          uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
+          templates: hiddenFlagTemplates,
+        });
+        const a = elementOf(node, 'input#root_a');
+        expect(node.querySelector('[data-property="b"]')).toHaveAttribute('data-hidden', 'false');
+        expect(node.querySelector('[data-field="root_b"]')).toHaveAttribute('data-hidden', 'false');
+        await user.type(a, 'x');
+        expect(node.querySelector('[data-property="b"]')).toHaveAttribute('data-hidden', 'true');
+        expect(node.querySelector('[data-field="root_b"]')).toHaveAttribute('data-hidden', 'true');
+        await user.clear(a);
+        expect(node.querySelector('[data-property="b"]')).toHaveAttribute('data-hidden', 'false');
+        expect(node.querySelector('[data-field="root_b"]')).toHaveAttribute('data-hidden', 'false');
+      },
+    );
+
     it('should not resolve a property again for an edit to its sibling', async () => {
       const registries: Registry[] = [];
       const RegistryReadingTemplate = (props: ObjectFieldTemplateProps) => {

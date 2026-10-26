@@ -73,9 +73,6 @@ import {
 import { createIsSchemaFieldHidden } from './SchemaField.tsx';
 import { useShownOptionBeside } from './ShownOptionContext.ts';
 
-/** The subscription of an object with no `$ref` cycle among its properties, whose expansions it has nothing to read */
-const subscribeToNothing = () => () => {};
-
 /** Creates what keeps an object's `createIsSchemaFieldHidden()` checks, one per property name, as each property's
  * `SchemaField` keeps its own plan, so a property whose own schema, uiSchema and data are unchanged is not resolved
  * again. A property no longer laid out loses its check
@@ -552,57 +549,23 @@ export default function ObjectField<
   const rendersProperties = !renderOptionalField || hasFormData;
   // `CyclicSchemaField` keeps a cycle's expansion to the form's ui state, so it is read here as well: an expanded cycle
   // renders the field one level further, which can be hidden. Only a property `retrieveSchema()` flagged as a cycle can
-  // be expanded, so an object with none subscribes to nothing
+  // be expanded
   const { uiState, isOwn: ownsUiState } = useUiState();
   const cycleProperties = useMemo(
     () =>
       rendersProperties
         ? Object.keys(schemaProperties).filter(
-            (property) => getByPath<RJSFMarkedSchema | null>(schemaProperties, property)?.[RJSF_REF_CYCLE_KEY],
+            (property) => (getPropertySchema<S>(schema, property) as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY],
           )
         : [],
-    [rendersProperties, schemaProperties],
+    [rendersProperties, schemaProperties, schema],
   );
-  // One `'1'` or `'0'` per cycle property, in order
+  // A string, which the store compares by value, so a change to anything else in the ui state re-renders nothing
   const readExpandedCycles = () =>
-    cycleProperties.map((property) => (uiState.isExpanded(toFieldPath(property, fieldPath)) ? '1' : '0')).join('');
-  const expandedCycles = useSyncExternalStore(
-    cycleProperties.length > 0 ? uiState.subscribe : subscribeToNothing,
-    readExpandedCycles,
-    readExpandedCycles,
-  );
+    JSON.stringify(cycleProperties.filter((property) => uiState.isExpanded(toFieldPath(property, fieldPath))));
+  const expandedCycles = useSyncExternalStore(uiState.subscribe, readExpandedCycles, readExpandedCycles);
+  const expandedCycleProperties = useMemo(() => new Set<string>(JSON.parse(expandedCycles)), [expandedCycles]);
   const propertyHiddenChecks = useMemo(() => createPropertyHiddenChecks<T, S, F>(), []);
-  const hiddenProperties = useMemo(() => {
-    const expanded = new Set(cycleProperties.filter((_, index) => expandedCycles[index] === '1'));
-    const properties = rendersProperties ? Object.keys(schemaProperties) : [];
-    const checks = propertyHiddenChecks(properties);
-    return new Set(
-      properties.filter((property, index) =>
-        checks[index](
-          getPropertySchema<S>(schema, property),
-          getByPath<UiSchema<T, S, F> | undefined>(
-            uiSchema,
-            declaresProperty<S>(schemaProperties, property) ? property : ADDITIONAL_PROPERTIES_KEY,
-          ),
-          getByPath<T>(formData, property),
-          toFieldPath(property, fieldPath),
-          registry,
-          expanded.has(property),
-        ),
-      ),
-    );
-  }, [
-    rendersProperties,
-    schema,
-    schemaProperties,
-    uiSchema,
-    formData,
-    fieldPath,
-    registry,
-    cycleProperties,
-    expandedCycles,
-    propertyHiddenChecks,
-  ]);
   let orderedProperties: string[] = [];
 
   /** Computes the next available key name from the `preferredKey`, indexing through the already existing keys until one
@@ -996,6 +959,7 @@ export default function ObjectField<
     }
   }
 
+  const hiddenChecks = propertyHiddenChecks(orderedProperties);
   const { ObjectFieldTemplate: Template } = getTemplates<T, S, F>(registry, uiOptions);
   const optionalDataControl = renderOptionalField ? (
     <OptionalDataControlsField {...props} schema={schema} />
@@ -1013,7 +977,7 @@ export default function ObjectField<
     title: shownTitle,
     description: shownDescription,
     presentation,
-    properties: orderedProperties.map((propertyName) => {
+    properties: orderedProperties.map((propertyName, index) => {
       // Read off the schema this render resolved rather than through `uiSchemaForKey()`, which answers for the
       // callbacks from the schema the last render committed: `declaresProperty()` is the question both of them put
       const addedByAdditionalProperties = !declaresProperty<S>(schema.properties ?? {}, propertyName);
@@ -1021,19 +985,21 @@ export default function ObjectField<
         uiSchema,
         addedByAdditionalProperties ? ADDITIONAL_PROPERTIES_KEY : propertyName,
       );
+      const propertySchema = getPropertySchema<S>(schema, propertyName);
+      const propertyFormData = getByPath<T>(formData, propertyName);
       const content = (
         <ObjectFieldProperty<T, S, F>
           key={getStableKey(propertyName)}
           propertyName={propertyName}
           required={isRequired<S>(schema, propertyName)}
-          schema={getPropertySchema<S>(schema, propertyName)}
+          schema={propertySchema}
           uiSchema={fieldUiSchema}
           errorSchema={getByPath(errorSchema, propertyName)}
           // Derived from the schema rather than raised on rename, so the error can't follow the property to a name that
           // is allowed, and shows without waiting for validation, which ajv8 and ata report on the object, not the key
           keyNotAllowed={addedByAdditionalProperties && getAdditionalPropertySchema<S>(schema, propertyName) === false}
           fieldPath={fieldPath}
-          formData={getByPath(formData, propertyName)}
+          formData={propertyFormData}
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}
@@ -1053,7 +1019,14 @@ export default function ObjectField<
         readonly,
         disabled,
         required,
-        hidden: hiddenProperties.has(propertyName),
+        hidden: hiddenChecks[index](
+          propertySchema,
+          fieldUiSchema,
+          propertyFormData,
+          toFieldPath(propertyName, fieldPath),
+          registry,
+          expandedCycleProperties.has(propertyName),
+        ),
       };
     }),
     readonly,
@@ -1071,6 +1044,12 @@ export default function ObjectField<
     className: renderOptionalField ? 'rjsf-optional-object-field' : undefined,
   };
   const template = <Template {...templateProps} onAddProperty={onAddProperty} />;
-  // Outside a `Form` and any `SchemaField`, the properties share the store the expansions are read from above
-  return ownsUiState ? <UiStateContext value={uiState}>{template}</UiStateContext> : template;
+  // Outside a `Form` and any `SchemaField`, the properties share the store the expansions are read from above, while
+  // the object has a cycle among them. Without one, `undefined` leaves each property its own store, as no provider
+  // would, and keeps the tree's shape, so a cycle property appearing with the data doesn't remount the properties
+  return ownsUiState ? (
+    <UiStateContext value={cycleProperties.length > 0 ? uiState : undefined}>{template}</UiStateContext>
+  ) : (
+    template
+  );
 }

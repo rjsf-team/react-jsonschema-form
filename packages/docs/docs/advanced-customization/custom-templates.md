@@ -1101,7 +1101,7 @@ The following props are part of each element in `properties`:
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
 - `readonly`: A boolean value stating if the property is read-only.
-- `hidden`: A boolean value stating if the property should be hidden.
+- `hidden`: A boolean value stating if the property should be hidden: whether its field renders hidden through `ui:widget: 'hidden'` or a `deprecatedHandling` of `'hide'`, as its `FieldTemplate` is told. It can change with the data, such as for a property that `dependencies` or `if`/`then` mark `deprecated`, and a template that renders a hidden property under another parent, or leaves it out, mounts the property's field afresh when it does. It is decided the way the default `SchemaField` and `CyclicSchemaField` resolve the property, see [Custom SchemaField](./custom-widgets-fields.md#custom-schemafield).
 
 > Note: Array and object field templates are always rendered inside the FieldTemplate. To fully customize an object field template, you may need to specify both `ui:FieldTemplate` and `ui:ObjectFieldTemplate`.
 
