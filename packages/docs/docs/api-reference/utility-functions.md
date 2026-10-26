@@ -93,7 +93,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
 - onBlur: (id: string, value: any) => void - Callback for the widget's blur event
 - onFocus: (id: string, value: any) => void - Callback for the widget's focus event
-- [className='form-control']: string - Optional class name given to the rendered widget
+- [className]: string - Optional class name given to the rendered widget
 - [autofocus]: boolean - Optional flag, if true, the widget autofocuses
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [readonly]: boolean - Optional flag, if true, the widget is read-only

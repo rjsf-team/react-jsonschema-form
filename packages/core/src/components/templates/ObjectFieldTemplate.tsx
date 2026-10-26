@@ -6,13 +6,13 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
-  buttonId,
   descriptionId,
   getTemplates,
   getUiOptions,
-  joinClassNames,
-  titleDrawsOptionalDataControl,
   titleId,
+  buttonId,
+  titleDrawsOptionalDataControl,
+  joinClassNames,
 } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the

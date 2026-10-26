@@ -4,11 +4,11 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   getControlAttributes,
   getTemplates,
+  labelValue,
+  schemaRequiresTrueValue,
   getUiOptions,
   getWidgetDescription,
   joinClassNames,
-  labelValue,
-  schemaRequiresTrueValue,
   widgetDrawsLabel,
 } from '@rjsf/utils';
 

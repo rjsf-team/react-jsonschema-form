@@ -120,7 +120,7 @@ export interface FormProps<
    * which are layered over `core`'s
    */
   presentation?: ThemePresentation;
-  /** The class names to add to the elements `@rjsf/core` renders, by element, layered over the theme's `classMap`,
+  /** The class names of the elements `@rjsf/core` renders, by element, layered over the theme's `classMap`,
    * which is layered over `@rjsf/core`'s. A class given here replaces the theme's class for that element, and a
    * function is called with the theme's class to extend it
    */
