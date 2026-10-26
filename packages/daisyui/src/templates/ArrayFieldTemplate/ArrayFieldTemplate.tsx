@@ -31,6 +31,7 @@ export default function ArrayFieldTemplate<
     canAdd,
     className,
     disabled,
+    hasErrors,
     id,
     items,
     optionalDataControl,
@@ -80,6 +81,7 @@ export default function ArrayFieldTemplate<
       <ArrayFieldDescriptionTemplate
         id={id}
         description={shownDescription}
+        hasErrors={hasErrors}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}

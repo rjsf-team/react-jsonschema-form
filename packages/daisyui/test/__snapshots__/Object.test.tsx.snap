@@ -572,7 +572,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-end gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -611,7 +611,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             </div>
                           </div>
                           <div
-                            class="rjsf-array-item-toolbox flex justify-end"
+                            class="rjsf-array-item-toolbox mt-1 flex justify-end"
                           >
                             <div
                               class="join"
@@ -690,7 +690,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-end gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -729,7 +729,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                             </div>
                           </div>
                           <div
-                            class="rjsf-array-item-toolbox flex justify-end"
+                            class="rjsf-array-item-toolbox mt-1 flex justify-end"
                           >
                             <div
                               class="join"
@@ -1317,7 +1317,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-end gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -1356,7 +1356,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             </div>
                           </div>
                           <div
-                            class="rjsf-array-item-toolbox flex justify-end"
+                            class="rjsf-array-item-toolbox mt-1 flex justify-end"
                           >
                             <div
                               class="join"
@@ -1435,7 +1435,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-end gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -1474,7 +1474,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                             </div>
                           </div>
                           <div
-                            class="rjsf-array-item-toolbox flex justify-end"
+                            class="rjsf-array-item-toolbox mt-1 flex justify-end"
                           >
                             <div
                               class="join"

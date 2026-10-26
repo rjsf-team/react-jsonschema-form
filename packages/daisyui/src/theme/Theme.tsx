@@ -3,7 +3,7 @@ import { use, useMemo, useSyncExternalStore } from 'react';
 import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
-import { DAISYUI_CLASS_MAP } from '../classMap.ts';
+import { generateClassMap } from '../classMap.ts';
 import { createTemplates } from '../templates/Templates.tsx';
 import { DAISY_GLOBAL_UI_OPTIONS_KEYS } from '../utils.ts';
 import { createWidgets } from '../widgets/Widgets.tsx';
@@ -27,7 +27,7 @@ function createTheme() {
     templates: createTemplates(),
     widgets: { ...widgets, boolean: widgets.toggle },
     presentation: createPresentation(),
-    classMap: { ...DAISYUI_CLASS_MAP },
+    classMap: generateClassMap(),
     globalUiOptionsKeys: [...DAISY_GLOBAL_UI_OPTIONS_KEYS],
   };
 }

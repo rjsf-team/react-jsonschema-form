@@ -26,6 +26,7 @@ export default function ObjectFieldTemplate<
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
+    hasErrors,
     title,
     properties,
     required,
@@ -69,6 +70,7 @@ export default function ObjectFieldTemplate<
         <DescriptionFieldTemplate
           id={presentation?.description.id ?? descriptionId(id)}
           description={description}
+          hasErrors={hasErrors}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}

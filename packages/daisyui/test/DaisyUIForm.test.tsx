@@ -67,7 +67,19 @@ describe('DaisyUI array field title/description', () => {
     const uiSchema: UiSchema = { tags: { 'ui:options': { label: false } } };
     const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
     expect(container.querySelector('h3')).toBeNull();
-    expect(container.querySelector('.text-sm.text-accent')).toBeNull();
+    expect(container.querySelector('.rjsf-field-description')).toBeNull();
+  });
+
+  test("marks the array's and the object's descriptions invalid while each has errors of its own", () => {
+    const { container } = render(
+      <Form
+        schema={{ ...schema, description: 'The form' }}
+        validator={validator}
+        extraErrors={{ __errors: ['form error'], tags: { __errors: ['tags error'] } }}
+      />,
+    );
+    expect(container.querySelector('#root__description')).toHaveAttribute('data-invalid', 'true');
+    expect(container.querySelector('#root_tags__description')).toHaveAttribute('data-invalid', 'true');
   });
 });
 
