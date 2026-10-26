@@ -1,13 +1,12 @@
 import type { ReactNode } from 'react';
-import { useCallback, useMemo, useState } from 'react';
-import { Box, Group } from '@mantine/core';
+import { use, useCallback, useMemo, useState } from 'react';
+import { Box, Group, InputWrapperContext } from '@mantine/core';
 import { assignTime, DateInput, TimePicker } from '@mantine/dates';
 import type { DateStringValue, TimePickerProps } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   dateElementAriaLabel,
   dateElementLabel,
-  getControlDescribedBy,
   getDateTimeLocalValue,
   labelValue,
   TranslatableString,
@@ -16,13 +15,7 @@ import {
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
-import {
-  cleanupOptions,
-  getDescriptionProps,
-  getWidgetError,
-  useInputAriaProps,
-  useShownSuccessId,
-} from '../../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../../utils.tsx';
 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);
@@ -71,6 +64,14 @@ function hasSeconds(format: string) {
   const unescaped = format.replace(/\[[^\]]*\]/g, '');
   // Future-proofing in case the dayjs localized format extension is included (`LTS`)
   return /s|LTS/.test(unescaped);
+}
+
+/** The `TimePicker` beside the date input, which sits inside the field's `InputWrapper`, so it can describe its hours
+ * segment by the same ids as the date input, those the wrapper context holds, the success message included
+ */
+function TimePickerField({ hoursInputProps, ...props }: TimePickerProps) {
+  const { describedBy } = use(InputWrapperContext);
+  return <TimePicker {...props} hoursInputProps={{ 'aria-describedby': describedBy, ...hoursInputProps }} />;
 }
 
 /** The `DateTimeInput` is a base component that used by other Date-Time widget components. When `schema.format` is
@@ -189,68 +190,60 @@ export default function DateTimeInput<
     }
   }, [onFocus, id, value]);
 
-  const ariaDescribedByProps = useInputAriaProps('DateInput', props);
   const error = getWidgetError<T, S, F>(props);
-
-  const ariaContainer = ariaDescribedByProps.inputContainer;
   const { translateString } = registry;
   const withSeconds =
     (typeof displayFormat === 'string' && hasSeconds(displayFormat)) ||
     (typeof valueFormat === 'string' && hasSeconds(valueFormat));
-  const successId = useShownSuccessId(id);
-  const describedBy = getControlDescribedBy<T, S, F>(props);
-  const timeContainer = useCallback(
-    (children: ReactNode) =>
-      ariaContainer(
-        <Group gap='xs' wrap='nowrap' align='flex-start'>
-          <Box flex={1}>{children}</Box>
-          <TimePicker
-            key={timeResetKey}
-            {...timePickerOptions}
-            size={size}
-            radius={radius}
-            variant={variant}
-            value={timeValue}
-            onChange={handleTimeChange}
-            onFocus={handleFocus}
-            onBlur={handleTimeBlur}
-            withSeconds={withSeconds}
-            disabled={disabled || readonly}
-            readOnly={readonly}
-            error={!!error}
-            role='group'
-            aria-label={dateElementAriaLabel(
-              dateElementLabel(TranslatableString.TimeLabel, translateString),
-              translateString,
-              label,
-            )}
-            hoursInputLabel={dateElementLabel(TranslatableString.HourLabel, translateString)}
-            minutesInputLabel={dateElementLabel(TranslatableString.MinuteLabel, translateString)}
-            secondsInputLabel={dateElementLabel(TranslatableString.SecondLabel, translateString)}
-            hoursInputProps={{
-              id: `${id}-time`,
-              'aria-describedby': [describedBy, successId].filter(Boolean).join(' '),
-              'aria-invalid': !!error || undefined,
-              ...timePickerOptions?.hoursInputProps,
-            }}
-            popoverProps={{ withinPortal: false, ...timePickerOptions?.popoverProps }}
-            clearable={clearable}
-            clearButtonProps={
-              clearable
-                ? {
-                    ...timePickerOptions?.clearButtonProps,
-                    onClick: (event) => {
-                      handleTimeChange('');
-                      timePickerOptions?.clearButtonProps?.onClick?.(event);
-                    },
-                  }
-                : undefined
-            }
-          />
-        </Group>,
-      ),
+  const withTimePicker = useCallback(
+    (children: ReactNode) => (
+      <Group gap='xs' wrap='nowrap' align='flex-start'>
+        <Box flex={1}>{children}</Box>
+        <TimePickerField
+          key={timeResetKey}
+          {...timePickerOptions}
+          size={size}
+          radius={radius}
+          variant={variant}
+          value={timeValue}
+          onChange={handleTimeChange}
+          onFocus={handleFocus}
+          onBlur={handleTimeBlur}
+          withSeconds={withSeconds}
+          disabled={disabled || readonly}
+          readOnly={readonly}
+          error={!!error}
+          role='group'
+          aria-label={dateElementAriaLabel(
+            dateElementLabel(TranslatableString.TimeLabel, translateString),
+            translateString,
+            label,
+          )}
+          hoursInputLabel={dateElementLabel(TranslatableString.HourLabel, translateString)}
+          minutesInputLabel={dateElementLabel(TranslatableString.MinuteLabel, translateString)}
+          secondsInputLabel={dateElementLabel(TranslatableString.SecondLabel, translateString)}
+          hoursInputProps={{
+            id: `${id}-time`,
+            'aria-invalid': !!error || undefined,
+            ...timePickerOptions?.hoursInputProps,
+          }}
+          popoverProps={{ withinPortal: false, ...timePickerOptions?.popoverProps }}
+          clearable={clearable}
+          clearButtonProps={
+            clearable
+              ? {
+                  ...timePickerOptions?.clearButtonProps,
+                  onClick: (event) => {
+                    handleTimeChange('');
+                    timePickerOptions?.clearButtonProps?.onClick?.(event);
+                  },
+                }
+              : undefined
+          }
+        />
+      </Group>
+    ),
     [
-      ariaContainer,
       id,
       timeValue,
       handleTimeChange,
@@ -264,25 +257,13 @@ export default function DateTimeInput<
       timePickerOptions,
       translateString,
       withSeconds,
-      successId,
-      describedBy,
       size,
       radius,
       variant,
       clearable,
     ],
   );
-  const containerProps = useMemo(
-    () =>
-      withTime
-        ? {
-            ...ariaDescribedByProps,
-            inputContainer: timeContainer,
-            wrapperProps: { ...ariaDescribedByProps.wrapperProps, inputContainer: timeContainer },
-          }
-        : ariaDescribedByProps,
-    [withTime, ariaDescribedByProps, timeContainer],
-  );
+  const containerProps = useInputAriaProps('DateInput', props, undefined, withTime ? withTimePicker : undefined);
 
   return (
     <DateInput
