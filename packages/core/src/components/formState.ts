@@ -42,6 +42,7 @@ import {
   ONE_OF_KEY,
 } from '@rjsf/utils';
 
+import isDevelopment from '../isDevelopment.ts';
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
@@ -171,7 +172,8 @@ function dirtyFieldsOf<T>(formData: T | undefined, baseline: T | undefined): Nes
   return asNestedBooleans<T>(marks);
 }
 
-/** The form's status, whose `dirtyFields` is built on first read, since most events are read without it
+/** The form's status, whose `dirtyFields` is built on first read, since most events are read without it. Frozen in
+ * development as it is built, since `getStatus()` hands the same marks to every reader
  *
  * @param state - The data and the baseline of the form
  * @param submitCount - How many submits have reached the form since it mounted or was last reset
@@ -182,7 +184,12 @@ export function toFormStatus<T>({ formData, baseline }: DataAndBaseline<T>, subm
   return {
     dirty: !Object.is(formData, baseline),
     get dirtyFields() {
-      dirtyFields ??= dirtyFieldsOf(formData, baseline);
+      if (dirtyFields === undefined) {
+        dirtyFields = dirtyFieldsOf(formData, baseline);
+        if (isDevelopment) {
+          freezeFormData(dirtyFields);
+        }
+      }
       return dirtyFields;
     },
     submitCount,
