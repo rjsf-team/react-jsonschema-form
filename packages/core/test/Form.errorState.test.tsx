@@ -1201,7 +1201,7 @@ describe('Error state consistency when deriving from new props', () => {
       />,
     );
     const rename = async (from: string, to: string) => {
-      const keyInput = input(container, `root_${from}-key`);
+      const keyInput = input(container, `root_${from}__key`);
       await user.clear(keyInput);
       await user.type(keyInput, to);
       await user.tab();
@@ -1260,7 +1260,7 @@ describe('Error state consistency when deriving from new props', () => {
     const tooShort = 'must NOT have fewer than 3 characters';
     expect(errorListMessages(container)).toEqual([required, `.extra ${tooShort}`]);
 
-    const keyInput = input(container, 'root_extra-key');
+    const keyInput = input(container, 'root_extra__key');
     await user.clear(keyInput);
     await user.type(keyInput, 'email');
     await user.tab();

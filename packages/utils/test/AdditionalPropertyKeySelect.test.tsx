@@ -2,6 +2,7 @@
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import type { AdditionalPropertyKeySelectProps, Registry, RJSFSchema, WidgetProps } from '../src/index.ts';
 import { AdditionalPropertyKeySelect, widgetAriaProps } from '../src/index.ts';
 
@@ -35,7 +36,7 @@ const user = userEvent.setup();
 const registry = { widgets: { SelectWidget } } as unknown as Registry;
 
 const baseProps: AdditionalPropertyKeySelectProps = {
-  id: 'root_a-key',
+  id: 'root_a__key',
   label: 'a Key',
   value: 'a',
   propertyNamesEnum: ['a', 'b'],
@@ -50,7 +51,7 @@ describe('AdditionalPropertyKeySelect', () => {
 
   it("renders the theme's SelectWidget with the allowed names as its options", () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} />);
-    const select = container.querySelector<HTMLSelectElement>('#root_a-key')!;
+    const select = elementOf(container, '#root_a__key', HTMLSelectElement);
 
     expect([...select.options].map((option) => option.textContent)).toEqual(['a', 'b']);
     expect(select).toHaveValue('a');
@@ -59,7 +60,7 @@ describe('AdditionalPropertyKeySelect', () => {
   it('describes the select by none of the ids a widget rendered without a plan falls back to, which no element has', () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} />);
 
-    expect(container.querySelector('#root_a-key')).not.toHaveAttribute('aria-describedby');
+    expect(container.querySelector('#root_a__key')).not.toHaveAttribute('aria-describedby');
   });
 
   it('marks the select invalid and describes it by the errors its row shows', () => {
@@ -69,7 +70,7 @@ describe('AdditionalPropertyKeySelect', () => {
         errorAttributes={{ 'aria-describedby': 'root_a__error', 'aria-invalid': true }}
       />,
     );
-    const select = container.querySelector('#root_a-key');
+    const select = container.querySelector('#root_a__key');
 
     expect(select).toHaveAttribute('aria-describedby', 'root_a__error');
     expect(select).toHaveAttribute('aria-invalid', 'true');
@@ -80,23 +81,23 @@ describe('AdditionalPropertyKeySelect', () => {
       <AdditionalPropertyKeySelect {...baseProps} errorAttributes={{ 'aria-invalid': true }} />,
     );
 
-    expect(container.querySelector('#root_a-key')).toHaveAttribute('aria-invalid', 'true');
+    expect(container.querySelector('#root_a__key')).toHaveAttribute('aria-invalid', 'true');
   });
 
   it("names the select by the key's label where neither it nor its template draws that label", () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} hideLabel />);
 
-    expect(container.querySelector('#root_a-key')).toHaveAttribute('aria-label', 'a Key');
+    expect(container.querySelector('#root_a__key')).toHaveAttribute('aria-label', 'a Key');
   });
 
   it("leaves the select named by the key's label its template draws beside it, with no aria-label over it", () => {
     const { container } = render(
       <>
-        <label htmlFor='root_a-key'>a Key</label>
+        <label htmlFor='root_a__key'>a Key</label>
         <AdditionalPropertyKeySelect {...baseProps} hideLabel labelledByTemplate />
       </>,
     );
-    const select = container.querySelector('#root_a-key');
+    const select = container.querySelector('#root_a__key');
 
     expect(select).not.toHaveAttribute('aria-label');
     expect(select).toHaveAccessibleName('a Key');
@@ -112,17 +113,17 @@ describe('AdditionalPropertyKeySelect', () => {
       />,
     );
 
-    expect(container.querySelector('#root_a-key')).not.toHaveAttribute('aria-label');
+    expect(container.querySelector('#root_a__key')).not.toHaveAttribute('aria-label');
     expect(Spy.mock.lastCall![0].presentation).toMatchObject({
       label: { by: 'self', text: 'a Key', requiredMarker: true },
-      control: { id: 'root_a-key', attributes: { required: true } },
+      control: { id: 'root_a__key', attributes: { required: true } },
     });
   });
 
   it('renames the key to the selected name', async () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} />);
 
-    await user.selectOptions(container.querySelector('#root_a-key')!, 'b');
+    await user.selectOptions(elementOf(container, '#root_a__key'), 'b');
 
     expect(baseProps.onKeyRename).toHaveBeenCalledWith('b');
   });
@@ -170,7 +171,7 @@ describe('AdditionalPropertyKeySelect', () => {
 
   it('shows a value outside the allowed names as a disabled option so the key stays readable', () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} value='zzz' />);
-    const select = container.querySelector<HTMLSelectElement>('#root_a-key')!;
+    const select = elementOf(container, '#root_a__key', HTMLSelectElement);
 
     expect([...select.options].map((option) => option.textContent)).toEqual(['zzz', 'a', 'b']);
     expect(select).toHaveValue('zzz');
@@ -193,7 +194,7 @@ describe('AdditionalPropertyKeySelect', () => {
 
   it('forwards the disabled, readonly and required flags to the widget', () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} disabled readonly required />);
-    const select = container.querySelector<HTMLSelectElement>('#root_a-key')!;
+    const select = elementOf(container, '#root_a__key', HTMLSelectElement);
 
     expect(select).toBeDisabled();
     expect(select).toBeRequired();

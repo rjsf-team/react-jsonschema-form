@@ -6,6 +6,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { duplicateIds } from '../../../testing/duplicateIds.ts';
 import Form from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
 
@@ -247,9 +248,9 @@ describe('aria-labelledby', () => {
     const partNames = () => screen.getAllByRole('combobox').map((part) => part.getAttribute('aria-label'));
     const { rerender } = renderField({ type: 'string', title: 'Birthday' }, { 'ui:widget': 'alt-date' });
 
-    expect(screen.getAllByRole('combobox').map((part) => part.id)).toEqual(['root_year', 'root_month', 'root_day']);
+    expect(screen.getAllByRole('combobox').map((part) => part.id)).toEqual(['root__year', 'root__month', 'root__day']);
     for (const part of screen.getAllByRole('combobox')) {
-      expect(part).toHaveAccessibleName(`Birthday, ${part.id.replace('root_', '')}`);
+      expect(part).toHaveAccessibleName(`Birthday, ${part.id.replace('root__', '')}`);
       expect(part).not.toHaveAttribute('aria-labelledby');
     }
     expect(screen.getByText('Birthday')).toBeVisible();
@@ -480,8 +481,8 @@ describe('aria-labelledby', () => {
     const title = container.querySelector(`[id="${titleId('root')}"]`)!;
     expect(title.tagName).toBe(labelElement.toUpperCase());
     expect(title).not.toHaveAttribute('for');
-    const ids = Array.from(container.querySelectorAll('[id^="root"]'), (el) => el.id);
-    expect(ids.filter((id, index) => ids.indexOf(id) !== index)).toEqual([]);
+    // Only the form's own ids, since Mantine's alt-date renders ids of its own that repeat
+    expect(duplicateIds(container, '[id^="root"]')).toEqual([]);
   });
 
   test.each(titledCases)(
@@ -928,9 +929,9 @@ describe("the field's id is on the element a user focuses", () => {
   test.each<[string, RJSFSchema, UiSchema, string]>([
     ...controls.map(([name, x, ui]): [string, RJSFSchema, UiSchema, string] => [name, x, ui, 'root_x']),
     ['password input', { type: 'string' }, { 'ui:widget': 'password' }, 'root_x'],
-    ['radio group', enumSchema, { 'ui:widget': 'radio' }, 'root_x-0'],
-    ['checkboxes group', checkboxesSchema, { 'ui:widget': 'checkboxes' }, 'root_x-0'],
-    ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 'root_x_year'],
+    ['radio group', enumSchema, { 'ui:widget': 'radio' }, 'root_x__0'],
+    ['checkboxes group', checkboxesSchema, { 'ui:widget': 'checkboxes' }, 'root_x__0'],
+    ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 'root_x__year'],
   ])('moves focus to a %s with errors when focusOnFirstError is set', async (_, x, ui, focusedId) => {
     render(
       <WrappedForm

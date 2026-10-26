@@ -2895,13 +2895,13 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_choices-0"
-                            id="checkbox:root_choices-0"
+                            for="root_choices__0"
+                            id="checkbox:root_choices__0"
                           >
                             <input
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_choices-0:label"
-                              id="root_choices-0"
+                              aria-labelledby="checkbox:root_choices__0:label"
+                              id="root_choices__0"
                               name="root[choices][]"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -2914,7 +2914,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_choices-0:control"
+                              id="checkbox:root_choices__0:control"
                             >
                               <svg
                                 class="emotion-11"
@@ -2928,7 +2928,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_choices-0:label"
+                              id="checkbox:root_choices__0:label"
                             >
                               <p>
                                 foo
@@ -2941,13 +2941,13 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_choices-1"
-                            id="checkbox:root_choices-1"
+                            for="root_choices__1"
+                            id="checkbox:root_choices__1"
                           >
                             <input
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_choices-1:label"
-                              id="root_choices-1"
+                              aria-labelledby="checkbox:root_choices__1:label"
+                              id="root_choices__1"
                               name="root[choices][]"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -2960,7 +2960,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_choices-1:control"
+                              id="checkbox:root_choices__1:control"
                             >
                               <svg
                                 class="emotion-11"
@@ -2974,7 +2974,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_choices-1:label"
+                              id="checkbox:root_choices__1:label"
                             >
                               <p>
                                 bar
@@ -2987,13 +2987,13 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_choices-2"
-                            id="checkbox:root_choices-2"
+                            for="root_choices__2"
+                            id="checkbox:root_choices__2"
                           >
                             <input
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_choices-2:label"
-                              id="root_choices-2"
+                              aria-labelledby="checkbox:root_choices__2:label"
+                              id="root_choices__2"
                               name="root[choices][]"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -3006,7 +3006,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_choices-2:control"
+                              id="checkbox:root_choices__2:control"
                             >
                               <svg
                                 class="emotion-11"
@@ -3020,7 +3020,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_choices-2:label"
+                              id="checkbox:root_choices__2:label"
                             >
                               <p>
                                 baz
@@ -3953,13 +3953,13 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                             data-ssr=""
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_option-0"
+                            for="root_option__0"
                             id="radio-group:_r_bu_:radio:0"
                           >
                             <input
                               aria-labelledby="radio-group:_r_bu_:radio:label:0"
                               data-ownedby="root_option"
-                              id="root_option-0"
+                              id="root_option__0"
                               name="root[option]"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="radio"
@@ -3997,13 +3997,13 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                             data-ssr=""
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_option-1"
+                            for="root_option__1"
                             id="radio-group:_r_bu_:radio:1"
                           >
                             <input
                               aria-labelledby="radio-group:_r_bu_:radio:label:1"
                               data-ownedby="root_option"
-                              id="root_option-1"
+                              id="root_option__1"
                               name="root[option]"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="radio"
@@ -9827,13 +9827,13 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-0"
+                  for="root__0"
                   id="radio-group:_r_er_:radio:__rjsf_index:0"
                 >
                   <input
                     aria-labelledby="radio-group:_r_er_:radio:label:__rjsf_index:0"
                     data-ownedby="root"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -9871,14 +9871,14 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                   data-ssr=""
                   data-state="checked"
                   dir="ltr"
-                  for="root-1"
+                  for="root__1"
                   id="radio-group:_r_er_:radio:__rjsf_index:1"
                 >
                   <input
                     aria-labelledby="radio-group:_r_er_:radio:label:__rjsf_index:1"
                     checked=""
                     data-ownedby="root"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -15305,7 +15305,7 @@ exports[`single fields > Cyclic schema 1`] = `
                           </div>
                           <button
                             class="chakra-button emotion-19"
-                            id="root_child_child-button"
+                            id="root_child_child__expand"
                             type="button"
                           >
                             Expand Cycle
@@ -17449,13 +17449,13 @@ exports[`single fields > checkboxes field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-0"
-                  id="checkbox:root-0"
+                  for="root__0"
+                  id="checkbox:root__0"
                 >
                   <input
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-0:label"
-                    id="root-0"
+                    aria-labelledby="checkbox:root__0:label"
+                    id="root__0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -17468,7 +17468,7 @@ exports[`single fields > checkboxes field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-0:control"
+                    id="checkbox:root__0:control"
                   >
                     <svg
                       class="emotion-8"
@@ -17482,7 +17482,7 @@ exports[`single fields > checkboxes field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-0:label"
+                    id="checkbox:root__0:label"
                   >
                     <p>
                       foo
@@ -17495,13 +17495,13 @@ exports[`single fields > checkboxes field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-1"
-                  id="checkbox:root-1"
+                  for="root__1"
+                  id="checkbox:root__1"
                 >
                   <input
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-1:label"
-                    id="root-1"
+                    aria-labelledby="checkbox:root__1:label"
+                    id="root__1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -17514,7 +17514,7 @@ exports[`single fields > checkboxes field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-1:control"
+                    id="checkbox:root__1:control"
                   >
                     <svg
                       class="emotion-8"
@@ -17528,7 +17528,7 @@ exports[`single fields > checkboxes field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-1:label"
+                    id="checkbox:root__1:label"
                   >
                     <p>
                       bar
@@ -17541,13 +17541,13 @@ exports[`single fields > checkboxes field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-2"
-                  id="checkbox:root-2"
+                  for="root__2"
+                  id="checkbox:root__2"
                 >
                   <input
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-2:label"
-                    id="root-2"
+                    aria-labelledby="checkbox:root__2:label"
+                    id="root__2"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -17560,7 +17560,7 @@ exports[`single fields > checkboxes field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-2:control"
+                    id="checkbox:root__2:control"
                   >
                     <svg
                       class="emotion-8"
@@ -17574,7 +17574,7 @@ exports[`single fields > checkboxes field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-2:label"
+                    id="checkbox:root__2:label"
                   >
                     <p>
                       fuzz
@@ -17587,13 +17587,13 @@ exports[`single fields > checkboxes field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-3"
-                  id="checkbox:root-3"
+                  for="root__3"
+                  id="checkbox:root__3"
                 >
                   <input
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-3:label"
-                    id="root-3"
+                    aria-labelledby="checkbox:root__3:label"
+                    id="root__3"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -17606,7 +17606,7 @@ exports[`single fields > checkboxes field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-3:control"
+                    id="checkbox:root__3:control"
                   >
                     <svg
                       class="emotion-8"
@@ -17620,7 +17620,7 @@ exports[`single fields > checkboxes field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-3:label"
+                    id="checkbox:root__3:label"
                   >
                     <p>
                       qux
@@ -18033,15 +18033,15 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                   data-scope="checkbox"
                   data-state="checked"
                   dir="ltr"
-                  for="root-0"
-                  id="checkbox:root-0"
+                  for="root__0"
+                  id="checkbox:root__0"
                 >
                   <input
                     aria-describedby="root__description root__help"
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-0:label"
+                    aria-labelledby="checkbox:root__0:label"
                     checked=""
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18054,7 +18054,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     data-scope="checkbox"
                     data-state="checked"
                     dir="ltr"
-                    id="checkbox:root-0:control"
+                    id="checkbox:root__0:control"
                   >
                     <svg
                       class="emotion-11"
@@ -18072,7 +18072,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     data-scope="checkbox"
                     data-state="checked"
                     dir="ltr"
-                    id="checkbox:root-0:label"
+                    id="checkbox:root__0:label"
                   >
                     <p>
                       option1
@@ -18085,14 +18085,14 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-1"
-                  id="checkbox:root-1"
+                  for="root__1"
+                  id="checkbox:root__1"
                 >
                   <input
                     aria-describedby="root__description root__help"
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-1:label"
-                    id="root-1"
+                    aria-labelledby="checkbox:root__1:label"
+                    id="root__1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18105,7 +18105,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-1:control"
+                    id="checkbox:root__1:control"
                   >
                     <svg
                       class="emotion-11"
@@ -18119,7 +18119,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-1:label"
+                    id="checkbox:root__1:label"
                   >
                     <p>
                       option2
@@ -18132,14 +18132,14 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-2"
-                  id="checkbox:root-2"
+                  for="root__2"
+                  id="checkbox:root__2"
                 >
                   <input
                     aria-describedby="root__description root__help"
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-2:label"
-                    id="root-2"
+                    aria-labelledby="checkbox:root__2:label"
+                    id="root__2"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18152,7 +18152,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-2:control"
+                    id="checkbox:root__2:control"
                   >
                     <svg
                       class="emotion-11"
@@ -18166,7 +18166,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-2:label"
+                    id="checkbox:root__2:label"
                   >
                     <p>
                       option3
@@ -18573,14 +18573,14 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-0"
-                  id="checkbox:root-0"
+                  for="root__0"
+                  id="checkbox:root__0"
                 >
                   <input
                     aria-describedby="root__description"
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-0:label"
-                    id="root-0"
+                    aria-labelledby="checkbox:root__0:label"
+                    id="root__0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18593,7 +18593,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-0:control"
+                    id="checkbox:root__0:control"
                   >
                     <svg
                       class="emotion-10"
@@ -18607,7 +18607,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-0:label"
+                    id="checkbox:root__0:label"
                   >
                     <p>
                       red
@@ -18620,14 +18620,14 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-1"
-                  id="checkbox:root-1"
+                  for="root__1"
+                  id="checkbox:root__1"
                 >
                   <input
                     aria-describedby="root__description"
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-1:label"
-                    id="root-1"
+                    aria-labelledby="checkbox:root__1:label"
+                    id="root__1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18640,7 +18640,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-1:control"
+                    id="checkbox:root__1:control"
                   >
                     <svg
                       class="emotion-10"
@@ -18654,7 +18654,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-1:label"
+                    id="checkbox:root__1:label"
                   >
                     <p>
                       green
@@ -18667,14 +18667,14 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-2"
-                  id="checkbox:root-2"
+                  for="root__2"
+                  id="checkbox:root__2"
                 >
                   <input
                     aria-describedby="root__description"
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-2:label"
-                    id="root-2"
+                    aria-labelledby="checkbox:root__2:label"
+                    id="root__2"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18687,7 +18687,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-2:control"
+                    id="checkbox:root__2:control"
                   >
                     <svg
                       class="emotion-10"
@@ -18701,7 +18701,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-2:label"
+                    id="checkbox:root__2:label"
                   >
                     <p>
                       blue
@@ -32417,13 +32417,13 @@ exports[`single fields > radio field 1`] = `
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-0"
+                  for="root__0"
                   id="radio-group:_r_4m_:radio:0"
                 >
                   <input
                     aria-labelledby="radio-group:_r_4m_:radio:label:0"
                     data-ownedby="root"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -32461,13 +32461,13 @@ exports[`single fields > radio field 1`] = `
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-1"
+                  for="root__1"
                   id="radio-group:_r_4m_:radio:1"
                 >
                   <input
                     aria-labelledby="radio-group:_r_4m_:radio:label:1"
                     data-ownedby="root"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -32890,14 +32890,14 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-0"
+                  for="root__0"
                   id="radio-group:_r_43_:radio:0"
                 >
                   <input
                     aria-describedby="root__description"
                     aria-labelledby="radio-group:_r_43_:radio:label:0"
                     data-ownedby="root"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -32935,14 +32935,14 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-1"
+                  for="root__1"
                   id="radio-group:_r_43_:radio:1"
                 >
                   <input
                     aria-describedby="root__description"
                     aria-labelledby="radio-group:_r_43_:radio:label:1"
                     data-ownedby="root"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -36718,13 +36718,13 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-0"
-                  id="checkbox:root-0"
+                  for="root__0"
+                  id="checkbox:root__0"
                 >
                   <input
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-0:label"
-                    id="root-0"
+                    aria-labelledby="checkbox:root__0:label"
+                    id="root__0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -36737,7 +36737,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-0:control"
+                    id="checkbox:root__0:control"
                   >
                     <svg
                       class="emotion-7"
@@ -36751,7 +36751,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-0:label"
+                    id="checkbox:root__0:label"
                   >
                     <p>
                       foo
@@ -36765,14 +36765,14 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-1"
-                  id="checkbox:root-1"
+                  for="root__1"
+                  id="checkbox:root__1"
                 >
                   <input
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-1:label"
+                    aria-labelledby="checkbox:root__1:label"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -36786,7 +36786,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-1:control"
+                    id="checkbox:root__1:control"
                   >
                     <svg
                       class="emotion-7"
@@ -36802,7 +36802,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-1:label"
+                    id="checkbox:root__1:label"
                   >
                     <p>
                       bar
@@ -36815,13 +36815,13 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-2"
-                  id="checkbox:root-2"
+                  for="root__2"
+                  id="checkbox:root__2"
                 >
                   <input
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-2:label"
-                    id="root-2"
+                    aria-labelledby="checkbox:root__2:label"
+                    id="root__2"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -36834,7 +36834,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-2:control"
+                    id="checkbox:root__2:control"
                   >
                     <svg
                       class="emotion-7"
@@ -36848,7 +36848,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-2:label"
+                    id="checkbox:root__2:label"
                   >
                     <p>
                       fuzz
@@ -36861,13 +36861,13 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-3"
-                  id="checkbox:root-3"
+                  for="root__3"
+                  id="checkbox:root__3"
                 >
                   <input
                     aria-invalid="false"
-                    aria-labelledby="checkbox:root-3:label"
-                    id="root-3"
+                    aria-labelledby="checkbox:root__3:label"
+                    id="root__3"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -36880,7 +36880,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-3:control"
+                    id="checkbox:root__3:control"
                   >
                     <svg
                       class="emotion-7"
@@ -36894,7 +36894,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     data-scope="checkbox"
                     data-state="unchecked"
                     dir="ltr"
-                    id="checkbox:root-3:label"
+                    id="checkbox:root__3:label"
                   >
                     <p>
                       qux
@@ -39301,13 +39301,13 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-0"
+                  for="root__0"
                   id="radio-group:_r_1r_:radio:0"
                 >
                   <input
                     aria-labelledby="radio-group:_r_1r_:radio:label:0"
                     data-ownedby="root"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -39346,14 +39346,14 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-1"
+                  for="root__1"
                   id="radio-group:_r_1r_:radio:1"
                 >
                   <input
                     aria-labelledby="radio-group:_r_1r_:radio:label:1"
                     data-ownedby="root"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -39716,14 +39716,14 @@ exports[`single fields > select field single choice form disabled using radio wi
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-0"
+                  for="root__0"
                   id="radio-group:_r_21_:radio:0"
                 >
                   <input
                     aria-labelledby="radio-group:_r_21_:radio:label:0"
                     data-ownedby="root"
                     disabled=""
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -39764,14 +39764,14 @@ exports[`single fields > select field single choice form disabled using radio wi
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-1"
+                  for="root__1"
                   id="radio-group:_r_21_:radio:1"
                 >
                   <input
                     aria-labelledby="radio-group:_r_21_:radio:label:1"
                     data-ownedby="root"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -42357,14 +42357,14 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-0"
+                  for="root__0"
                   id="radio-group:_r_1u_:radio:0"
                 >
                   <input
                     aria-labelledby="radio-group:_r_1u_:radio:label:0"
                     data-ownedby="root"
                     disabled=""
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -42405,14 +42405,14 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="root-1"
+                  for="root__1"
                   id="radio-group:_r_1u_:radio:1"
                 >
                   <input
                     aria-labelledby="radio-group:_r_1u_:radio:label:1"
                     data-ownedby="root"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"

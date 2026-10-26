@@ -7,6 +7,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
   getAdditionalKeyAttributes,
@@ -69,6 +70,7 @@ export default function WrapIfAdditionalTemplate<
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
+  const keyId = additionalKeyId(id);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
   if (!additional) {
@@ -95,7 +97,7 @@ export default function WrapIfAdditionalTemplate<
               colon={colon}
               className='form-group'
               hasFeedback
-              htmlFor={`${id}-key`}
+              htmlFor={keyId}
               label={hasKeyLabel ? keyLabel : undefined}
               labelCol={labelCol}
               required={required}
@@ -106,7 +108,7 @@ export default function WrapIfAdditionalTemplate<
               {propertyNamesEnum ? (
                 <AdditionalPropertyKeySelect<T, S, F>
                   errorAttributes={keyAttributes}
-                  id={`${id}-key`}
+                  id={keyId}
                   label={keyLabel}
                   hideLabel
                   labelledByTemplate={hasKeyLabel}
@@ -126,8 +128,8 @@ export default function WrapIfAdditionalTemplate<
                   className='form-control'
                   defaultValue={keyName}
                   disabled={control.disabled}
-                  id={`${id}-key`}
-                  name={`${id}-key`}
+                  id={keyId}
+                  name={keyId}
                   onBlur={!readonly ? onKeyRenameBlur : undefined}
                   readOnly={readonly}
                   style={INPUT_STYLE}

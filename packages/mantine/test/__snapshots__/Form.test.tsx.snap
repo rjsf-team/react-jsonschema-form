@@ -262,7 +262,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                       data-size="sm"
                                       for="root_tasks_0_title"
-                                      id="root_tasks_0_title-label"
+                                      id="root_tasks_0_title__wrapperLabel"
                                       style="--input-label-size: var(--mantine-font-size-sm);"
                                     >
                                       title
@@ -525,7 +525,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                       data-size="sm"
                                       for="root_tasks_1_title"
-                                      id="root_tasks_1_title-label"
+                                      id="root_tasks_1_title__wrapperLabel"
                                       style="--input-label-size: var(--mantine-font-size-sm);"
                                     >
                                       title
@@ -888,7 +888,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                               data-required="true"
                               data-size="sm"
                               for="root_tags_0"
-                              id="root_tags_0-label"
+                              id="root_tags_0__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               tags-1
@@ -1060,7 +1060,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                               data-required="true"
                               data-size="sm"
                               for="root_tags_1"
-                              id="root_tags_1-label"
+                              id="root_tags_1__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               tags-2
@@ -1356,7 +1356,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                           <input
                             class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                             data-with-error-styles="true"
-                            id="root_choices-0"
+                            id="root_choices__0"
                             name="root[choices][]"
                             type="checkbox"
                             value="0"
@@ -1381,7 +1381,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         >
                           <label
                             class="m_8ee546b8 mantine-Checkbox-label"
-                            for="root_choices-0"
+                            for="root_choices__0"
                           >
                             foo
                           </label>
@@ -1404,7 +1404,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                           <input
                             class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                             data-with-error-styles="true"
-                            id="root_choices-1"
+                            id="root_choices__1"
                             name="root[choices][]"
                             type="checkbox"
                             value="1"
@@ -1429,7 +1429,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         >
                           <label
                             class="m_8ee546b8 mantine-Checkbox-label"
-                            for="root_choices-1"
+                            for="root_choices__1"
                           >
                             bar
                           </label>
@@ -1452,7 +1452,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                           <input
                             class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                             data-with-error-styles="true"
-                            id="root_choices-2"
+                            id="root_choices__2"
                             name="root[choices][]"
                             type="checkbox"
                             value="2"
@@ -1477,7 +1477,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         >
                           <label
                             class="m_8ee546b8 mantine-Checkbox-label"
-                            for="root_choices-2"
+                            for="root_choices__2"
                           >
                             baz
                           </label>
@@ -1601,7 +1601,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_person_firstName"
-                          id="root_person_firstName-label"
+                          id="root_person_firstName__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           firstName
@@ -1639,7 +1639,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_person_lastName"
-                          id="root_person_lastName-label"
+                          id="root_person_lastName__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           lastName
@@ -1710,7 +1710,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_person_address_street"
-                                  id="root_person_address_street-label"
+                                  id="root_person_address_street__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   street
@@ -1748,7 +1748,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_person_address_city"
-                                  id="root_person_address_city-label"
+                                  id="root_person_address_city__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   city
@@ -1880,7 +1880,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                           <input
                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                             data-with-error-styles="true"
-                            id="root_option-0"
+                            id="root_option__0"
                             name="root[option]"
                             type="radio"
                             value="0"
@@ -1905,7 +1905,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         >
                           <label
                             class="m_8ee546b8 mantine-Radio-label"
-                            for="root_option-0"
+                            for="root_option__0"
                           >
                             foo
                           </label>
@@ -1927,7 +1927,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                           <input
                             class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                             data-with-error-styles="true"
-                            id="root_option-1"
+                            id="root_option__1"
                             name="root[option]"
                             type="radio"
                             value="1"
@@ -1952,7 +1952,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         >
                           <label
                             class="m_8ee546b8 mantine-Radio-label"
-                            for="root_option-1"
+                            for="root_option__1"
                           >
                             bar
                           </label>
@@ -2261,7 +2261,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_firstName"
-                  id="root_firstName-label"
+                  id="root_firstName__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   firstName
@@ -2299,7 +2299,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                   data-size="sm"
                   for="root_age"
-                  id="root_age-label"
+                  id="root_age__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   age
@@ -2507,7 +2507,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-Textarea-label"
                   data-size="sm"
                   for="root_description"
-                  id="root_description-label"
+                  id="root_description__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   description
@@ -2682,7 +2682,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                       data-size="sm"
                                       for="root_tasks_0_title"
-                                      id="root_tasks_0_title-label"
+                                      id="root_tasks_0_title__wrapperLabel"
                                       style="--input-label-size: var(--mantine-font-size-sm);"
                                     >
                                       title
@@ -2945,7 +2945,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                       data-size="sm"
                                       for="root_tasks_1_title"
-                                      id="root_tasks_1_title-label"
+                                      id="root_tasks_1_title__wrapperLabel"
                                       style="--input-label-size: var(--mantine-font-size-sm);"
                                     >
                                       title
@@ -3308,7 +3308,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                               data-required="true"
                               data-size="sm"
                               for="root_tags_0"
-                              id="root_tags_0-label"
+                              id="root_tags_0__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               tags-1
@@ -3480,7 +3480,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                               data-required="true"
                               data-size="sm"
                               for="root_tags_1"
-                              id="root_tags_1-label"
+                              id="root_tags_1__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               tags-2
@@ -3783,7 +3783,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_person_firstName"
-                          id="root_person_firstName-label"
+                          id="root_person_firstName__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           firstName
@@ -3821,7 +3821,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_person_lastName"
-                          id="root_person_lastName-label"
+                          id="root_person_lastName__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           lastName
@@ -3892,7 +3892,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_person_address_street"
-                                  id="root_person_address_street-label"
+                                  id="root_person_address_street__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   street
@@ -3930,7 +3930,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_person_address_city"
-                                  id="root_person_address_city-label"
+                                  id="root_person_address_city__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   city
@@ -4259,7 +4259,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_firstName"
-                  id="root_firstName-label"
+                  id="root_firstName__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   firstName
@@ -4297,7 +4297,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-NumberInput-label"
                   data-size="sm"
                   for="root_age"
-                  id="root_age-label"
+                  id="root_age__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   age
@@ -4501,7 +4501,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                   <input
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="__rjsf_index:0"
@@ -4526,7 +4526,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     Number
                   </label>
@@ -4550,7 +4550,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                     checked=""
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="__rjsf_index:1"
@@ -4575,7 +4575,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     String
                   </label>
@@ -6311,7 +6311,7 @@ exports[`single fields > Cyclic schema 1`] = `
                                 class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
                                 data-size="xs"
                                 data-variant="outline"
-                                id="root_child_child-button"
+                                id="root_child_child__expand"
                                 style="--button-height: var(--button-height-xs); --button-padding-x: var(--button-padding-x-xs); --button-fz: var(--mantine-font-size-xs); --button-bg: transparent; --button-hover: var(--mantine-color-yellow-outline-hover); --button-color: var(--mantine-color-yellow-outline); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-yellow-outline);"
                                 type="button"
                               >
@@ -6892,7 +6892,7 @@ exports[`single fields > checkboxes field 1`] = `
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="checkbox"
                     value="0"
@@ -6917,7 +6917,7 @@ exports[`single fields > checkboxes field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     foo
                   </label>
@@ -6940,7 +6940,7 @@ exports[`single fields > checkboxes field 1`] = `
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="checkbox"
                     value="1"
@@ -6965,7 +6965,7 @@ exports[`single fields > checkboxes field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     bar
                   </label>
@@ -6988,7 +6988,7 @@ exports[`single fields > checkboxes field 1`] = `
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-2"
+                    id="root__2"
                     name="root"
                     type="checkbox"
                     value="2"
@@ -7013,7 +7013,7 @@ exports[`single fields > checkboxes field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-2"
+                    for="root__2"
                   >
                     fuzz
                   </label>
@@ -7036,7 +7036,7 @@ exports[`single fields > checkboxes field 1`] = `
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-3"
+                    id="root__3"
                     name="root"
                     type="checkbox"
                     value="3"
@@ -7061,7 +7061,7 @@ exports[`single fields > checkboxes field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-3"
+                    for="root__3"
                   >
                     qux
                   </label>
@@ -7130,7 +7130,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
         </div>
         <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-CheckboxGroup-description"
-          id="root-description"
+          id="root__wrapperDescription"
         >
           <p
             class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
@@ -7168,7 +7168,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     checked=""
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="checkbox"
                     value="0"
@@ -7193,7 +7193,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     option1
                   </label>
@@ -7217,7 +7217,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     aria-describedby="root__description root__help"
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="checkbox"
                     value="1"
@@ -7242,7 +7242,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     option2
                   </label>
@@ -7266,7 +7266,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     aria-describedby="root__description root__help"
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-2"
+                    id="root__2"
                     name="root"
                     type="checkbox"
                     value="2"
@@ -7291,7 +7291,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-2"
+                    for="root__2"
                   >
                     option3
                   </label>
@@ -7368,7 +7368,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
         </div>
         <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-CheckboxGroup-description"
-          id="root-description"
+          id="root__wrapperDescription"
         >
           <p
             class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
@@ -7404,7 +7404,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     aria-describedby="root__description"
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="checkbox"
                     value="0"
@@ -7429,7 +7429,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     red
                   </label>
@@ -7453,7 +7453,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     aria-describedby="root__description"
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="checkbox"
                     value="1"
@@ -7478,7 +7478,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     green
                   </label>
@@ -7502,7 +7502,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                     aria-describedby="root__description"
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-2"
+                    id="root__2"
                     name="root"
                     type="checkbox"
                     value="2"
@@ -7527,7 +7527,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-2"
+                    for="root__2"
                   >
                     blue
                   </label>
@@ -7614,7 +7614,7 @@ exports[`single fields > field with description 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_my-field"
-                  id="root_my-field-label"
+                  id="root_my-field__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   my-field
@@ -7622,7 +7622,7 @@ exports[`single fields > field with description 1`] = `
                 <div
                   class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                   data-size="sm"
-                  id="root_my-field-description"
+                  id="root_my-field__wrapperDescription"
                   style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   <p
@@ -7729,7 +7729,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_my-field"
-                  id="root_my-field-label"
+                  id="root_my-field__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   my-field
@@ -7737,7 +7737,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                 <div
                   class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                   data-size="sm"
-                  id="root_my-field-description"
+                  id="root_my-field__wrapperDescription"
                   style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   <p
@@ -7844,7 +7844,7 @@ exports[`single fields > field with markdown description 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_my-field"
-                  id="root_my-field-label"
+                  id="root_my-field__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   my-field
@@ -7852,7 +7852,7 @@ exports[`single fields > field with markdown description 1`] = `
                 <div
                   class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                   data-size="sm"
-                  id="root_my-field-description"
+                  id="root_my-field__wrapperDescription"
                   style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   <p
@@ -7965,7 +7965,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_my-field"
-                  id="root_my-field-label"
+                  id="root_my-field__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   my-field
@@ -7973,7 +7973,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                 <div
                   class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                   data-size="sm"
-                  id="root_my-field-description"
+                  id="root_my-field__wrapperDescription"
                   style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                 >
                   <p
@@ -8983,7 +8983,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_nestedObjectOptional_test"
-                          id="root_nestedObjectOptional_test-label"
+                          id="root_nestedObjectOptional_test__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           test
@@ -9054,7 +9054,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                  id="root_nestedObjectOptional_deepObjectOptional_deepTest-label"
+                                  id="root_nestedObjectOptional_deepObjectOptional_deepTest__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   deepTest
@@ -9136,7 +9136,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_nestedObjectOptional_deepObject_deepTest"
-                                  id="root_nestedObjectOptional_deepObject_deepTest-label"
+                                  id="root_nestedObjectOptional_deepObject_deepTest__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   deepTest
@@ -9529,7 +9529,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_nestedObject_test"
-                          id="root_nestedObject_test-label"
+                          id="root_nestedObject_test__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           test
@@ -9850,7 +9850,7 @@ exports[`single fields > optional data controls > does not show optional control
                               class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                               data-size="sm"
                               for="root_optionalObjectWithOneofs_name"
-                              id="root_optionalObjectWithOneofs_name-label"
+                              id="root_optionalObjectWithOneofs_name__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               name
@@ -10239,7 +10239,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_nestedObjectOptional_test"
-                          id="root_nestedObjectOptional_test-label"
+                          id="root_nestedObjectOptional_test__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           test
@@ -10313,7 +10313,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_nestedObjectOptional_deepObjectOptional_deepTest"
-                                  id="root_nestedObjectOptional_deepObjectOptional_deepTest-label"
+                                  id="root_nestedObjectOptional_deepObjectOptional_deepTest__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   deepTest
@@ -10398,7 +10398,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_nestedObjectOptional_deepObject_deepTest"
-                                  id="root_nestedObjectOptional_deepObject_deepTest-label"
+                                  id="root_nestedObjectOptional_deepObject_deepTest__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   deepTest
@@ -10802,7 +10802,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_nestedObject_test"
-                          id="root_nestedObject_test-label"
+                          id="root_nestedObject_test__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           test
@@ -11133,7 +11133,7 @@ exports[`single fields > optional data controls > does not show optional control
                               class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                               data-size="sm"
                               for="root_optionalObjectWithOneofs_name"
-                              id="root_optionalObjectWithOneofs_name-label"
+                              id="root_optionalObjectWithOneofs_name__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               name
@@ -11598,7 +11598,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_nestedObjectOptional_test"
-                          id="root_nestedObjectOptional_test-label"
+                          id="root_nestedObjectOptional_test__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           test
@@ -11781,7 +11781,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_nestedObjectOptional_deepObject_deepTest"
-                                  id="root_nestedObjectOptional_deepObject_deepTest-label"
+                                  id="root_nestedObjectOptional_deepObject_deepTest__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   deepTest
@@ -12193,7 +12193,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               data-required="true"
                               data-size="sm"
                               for="root_nestedArrayOptional_0"
-                              id="root_nestedArrayOptional_0-label"
+                              id="root_nestedArrayOptional_0__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               nestedArrayOptional-1
@@ -12370,7 +12370,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_nestedObject_test"
-                          id="root_nestedObject_test-label"
+                          id="root_nestedObject_test__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           test
@@ -12823,7 +12823,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_nestedObjectOptional_test"
-                          id="root_nestedObjectOptional_test-label"
+                          id="root_nestedObjectOptional_test__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           test
@@ -12946,7 +12946,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                                   data-size="sm"
                                   for="root_nestedObjectOptional_deepObject_deepTest"
-                                  id="root_nestedObjectOptional_deepObject_deepTest-label"
+                                  id="root_nestedObjectOptional_deepObject_deepTest__wrapperLabel"
                                   style="--input-label-size: var(--mantine-font-size-sm);"
                                 >
                                   deepTest
@@ -13233,7 +13233,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               data-required="true"
                               data-size="sm"
                               for="root_nestedArrayOptional_0"
-                              id="root_nestedArrayOptional_0-label"
+                              id="root_nestedArrayOptional_0__wrapperLabel"
                               style="--input-label-size: var(--mantine-font-size-sm);"
                             >
                               nestedArrayOptional-1
@@ -13417,7 +13417,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_nestedObject_test"
-                          id="root_nestedObject_test-label"
+                          id="root_nestedObject_test__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           test
@@ -13962,7 +13962,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_nestedObject_test"
-                          id="root_nestedObject_test-label"
+                          id="root_nestedObject_test__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           test
@@ -14502,7 +14502,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                           data-size="sm"
                           for="root_nestedObject_test"
-                          id="root_nestedObject_test-label"
+                          id="root_nestedObject_test__wrapperLabel"
                           style="--input-label-size: var(--mantine-font-size-sm);"
                         >
                           test
@@ -14905,7 +14905,7 @@ exports[`single fields > radio field 1`] = `
                   <input
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="0"
@@ -14930,7 +14930,7 @@ exports[`single fields > radio field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     Yes
                   </label>
@@ -14952,7 +14952,7 @@ exports[`single fields > radio field 1`] = `
                   <input
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="1"
@@ -14977,7 +14977,7 @@ exports[`single fields > radio field 1`] = `
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     No
                   </label>
@@ -15042,7 +15042,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
         </div>
         <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-RadioGroup-description"
-          id="root-description"
+          id="root__wrapperDescription"
         >
           <p
             class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
@@ -15077,7 +15077,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                     aria-describedby="root__description"
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="0"
@@ -15102,7 +15102,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     Yes
                   </label>
@@ -15125,7 +15125,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                     aria-describedby="root__description"
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="1"
@@ -15150,7 +15150,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-1"
+                    for="root__1"
                   >
                     No
                   </label>
@@ -16281,7 +16281,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="checkbox"
                     value="0"
@@ -16306,7 +16306,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     foo
                   </label>
@@ -16330,7 +16330,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="checkbox"
                     value="1"
@@ -16357,7 +16357,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
                     data-disabled="true"
-                    for="root-1"
+                    for="root__1"
                   >
                     bar
                   </label>
@@ -16380,7 +16380,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-2"
+                    id="root__2"
                     name="root"
                     type="checkbox"
                     value="2"
@@ -16405,7 +16405,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-2"
+                    for="root__2"
                   >
                     fuzz
                   </label>
@@ -16428,7 +16428,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   <input
                     class="mantine-focus-auto m_26063560 mantine-Checkbox-input"
                     data-with-error-styles="true"
-                    id="root-3"
+                    id="root__3"
                     name="root"
                     type="checkbox"
                     value="3"
@@ -16453,7 +16453,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 >
                   <label
                     class="m_8ee546b8 mantine-Checkbox-label"
-                    for="root-3"
+                    for="root__3"
                   >
                     qux
                   </label>
@@ -17223,7 +17223,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                   <input
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="0"
@@ -17248,7 +17248,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
-                    for="root-0"
+                    for="root__0"
                   >
                     foo
                   </label>
@@ -17271,7 +17271,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="1"
@@ -17298,7 +17298,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
                     data-disabled="true"
-                    for="root-1"
+                    for="root__1"
                   >
                     bar
                   </label>
@@ -17378,7 +17378,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="0"
@@ -17405,7 +17405,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
                     data-disabled="true"
-                    for="root-0"
+                    for="root__0"
                   >
                     foo
                   </label>
@@ -17428,7 +17428,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="1"
@@ -17455,7 +17455,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
                     data-disabled="true"
-                    for="root-1"
+                    for="root__1"
                   >
                     bar
                   </label>
@@ -18172,7 +18172,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-0"
+                    id="root__0"
                     name="root"
                     type="radio"
                     value="0"
@@ -18199,7 +18199,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
                     data-disabled="true"
-                    for="root-0"
+                    for="root__0"
                   >
                     foo
                   </label>
@@ -18222,7 +18222,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
                     disabled=""
-                    id="root-1"
+                    id="root__1"
                     name="root"
                     type="radio"
                     value="1"
@@ -18249,7 +18249,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
                     data-disabled="true"
-                    for="root-1"
+                    for="root__1"
                   >
                     bar
                   </label>
@@ -18318,7 +18318,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
         <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-Select-description"
           data-size="sm"
-          id="root-description"
+          id="root__wrapperDescription"
           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
         >
           <p
@@ -18905,7 +18905,7 @@ exports[`single fields > select widget with selected oneOf option description be
         <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-Select-description"
           data-size="sm"
-          id="root-description"
+          id="root__wrapperDescription"
           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
         >
           <p
@@ -19197,7 +19197,7 @@ exports[`single fields > string field > field with markdown help and description
           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
           data-size="sm"
           for="root"
-          id="root-label"
+          id="root__wrapperLabel"
           style="--input-label-size: var(--mantine-font-size-sm);"
         >
           Markdown Help and Description
@@ -19205,7 +19205,7 @@ exports[`single fields > string field > field with markdown help and description
         <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
           data-size="sm"
-          id="root-description"
+          id="root__wrapperDescription"
           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
         >
           <p
@@ -19314,7 +19314,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
           data-size="sm"
           for="root"
-          id="root-label"
+          id="root__wrapperLabel"
           style="--input-label-size: var(--mantine-font-size-sm);"
         >
           Markdown Help Test
@@ -19322,7 +19322,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
         <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
           data-size="sm"
-          id="root-description"
+          id="root__wrapperDescription"
           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
         >
           <p
@@ -19422,7 +19422,7 @@ exports[`single fields > string field > field with markdown help text without a 
           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
           data-size="sm"
           for="root"
-          id="root-label"
+          id="root__wrapperLabel"
           style="--input-label-size: var(--mantine-font-size-sm);"
         >
           Raw Help Test
@@ -19430,7 +19430,7 @@ exports[`single fields > string field > field with markdown help text without a 
         <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
           data-size="sm"
-          id="root-description"
+          id="root__wrapperDescription"
           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
         >
           <p
@@ -19783,7 +19783,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
           class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
           data-size="sm"
           for="root"
-          id="root-label"
+          id="root__wrapperLabel"
           style="--input-label-size: var(--mantine-font-size-sm);"
         >
           Required Field with Markdown Help
@@ -19791,7 +19791,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
         <div
           class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
           data-size="sm"
-          id="root-description"
+          id="root__wrapperDescription"
           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
         >
           <p
@@ -20213,7 +20213,7 @@ exports[`single fields > title field 1`] = `
                   class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
                   data-size="sm"
                   for="root_title"
-                  id="root_title-label"
+                  id="root_title__wrapperLabel"
                   style="--input-label-size: var(--mantine-font-size-sm);"
                 >
                   Titre 2
