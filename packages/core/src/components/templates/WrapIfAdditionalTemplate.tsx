@@ -4,14 +4,16 @@ import {
   additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
+  descriptionId,
   getAdditionalKeyAttributes,
+  getTemplates,
+  getUiOptions,
   hasAdditionalKeyLabel,
   joinClassNames,
   templateDrawsDescription,
   TranslatableString,
 } from '@rjsf/utils';
 
-import RichDescription from '../RichDescription.tsx';
 import Label from './FieldTemplate/Label.tsx';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
@@ -62,6 +64,7 @@ export default function WrapIfAdditionalTemplate<
       </div>
     );
   }
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema));
   return (
     <div className={classNames} style={style} data-invalid={hasErrors || undefined}>
       <div className='rjsf-additional-property'>
@@ -75,15 +78,19 @@ export default function WrapIfAdditionalTemplate<
               invalid={keyAttributes['aria-invalid']}
             />
           )}
-          {/* The value's description sits between its label and input, so an invisible copy of it holds the key's input
-              level with the value's, wrapping alike for a description as wide in either column */}
+          {/* The value's description sits between its label and input, so an invisible copy of it, drawn by the same
+              template under an id of its own, holds the key's input level with the value's, wrapping alike for a
+              description as wide in either column */}
           {rawDescription && templateDrawsDescription<T, S, F>(props) && (
-            <div
-              aria-hidden='true'
-              className={joinClassNames('rjsf-field-description', classMap.fieldDescription)}
-              style={{ visibility: 'hidden' }}
-            >
-              <RichDescription<T, S, F> description={rawDescription} registry={registry} uiSchema={uiSchema} />
+            <div aria-hidden='true' style={{ visibility: 'hidden' }}>
+              <DescriptionFieldTemplate
+                id={descriptionId(keyId)}
+                description={rawDescription}
+                hasErrors={hasErrors}
+                schema={schema}
+                uiSchema={uiSchema}
+                registry={registry}
+              />
             </div>
           )}
           {propertyNamesEnum ? (

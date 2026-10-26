@@ -804,11 +804,32 @@ describe('ObjectField', () => {
         initialFormData: { foo: 'x' },
       });
 
-      const copy = node.querySelector('.rjsf-additional-property-key .rjsf-field-description');
-      expect(copy).toHaveAttribute('aria-hidden', 'true');
+      const copy = node.querySelector('.rjsf-additional-property-key > [aria-hidden="true"]');
       expect(copy).toHaveStyle({ visibility: 'hidden' });
-      expect(copy).toHaveTextContent('about the value');
+      expect(copy?.querySelector('.rjsf-field-description')).toHaveTextContent('about the value');
+      expect(copy?.querySelector('[id]')).toHaveAttribute('id', 'root_foo__key__description');
       expect(screen.getByRole('textbox', { name: 'foo' })).toHaveAccessibleDescription('about the value');
+    });
+
+    it('draws the hidden copy of the description through the template the value column uses', () => {
+      function DescriptionFieldTemplate({ id, description }: DescriptionFieldProps) {
+        return (
+          <details id={id} className='custom-description'>
+            <summary>More</summary>
+            {description}
+          </details>
+        );
+      }
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { type: 'string', description: 'about the value' } },
+        uiSchema: { additionalProperties: { 'ui:DescriptionFieldTemplate': DescriptionFieldTemplate } },
+        initialFormData: { foo: 'x' },
+      });
+
+      expect(node.querySelector('.rjsf-additional-property-value .custom-description')).toBeInTheDocument();
+      expect(
+        node.querySelector('.rjsf-additional-property-key > [aria-hidden="true"] .custom-description'),
+      ).toHaveAttribute('id', 'root_foo__key__description');
     });
 
     async function renameKey(node: ParentNode, from: string, to: string) {

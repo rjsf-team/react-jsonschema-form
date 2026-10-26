@@ -68,7 +68,7 @@ For more information on how to create a custom theme, see documentation on the `
 ## Laying out core's markup with Tailwind
 
 An app built on Tailwind can lay out most of core's markup through the [class map](../advanced-customization/custom-themes.md#class-map), so it follows the app's own spacing scale.
-This map is the Tailwind equivalent of every rule in `rjsf.css` whose element has a class map key. Tailwind's base styles already reset the `fieldset`, the lists and `box-sizing`, so those parts of `rjsf.css` need no classes:
+This map is the Tailwind equivalent of every rule in `rjsf.css` whose element has a class map key, but for the array item toolbox's offset, which depends on the item's label and description. Tailwind's base styles already reset the `fieldset`, the lists and `box-sizing`, so those parts of `rjsf.css` need no classes:
 
 ```tsx
 import Form from '@rjsf/core';
@@ -91,7 +91,8 @@ const layout: ClassMap = {
   radioInput: 'm-0 align-middle [&+span]:ms-1.5 [&+span]:align-middle',
   altDateList: 'flex flex-wrap gap-3',
   rangeWrapper: 'flex items-center gap-3',
-  arrayItem: 'grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 mb-3',
+  // Only an item with a toolbox takes its track, as the gap before an empty one would narrow the item's fields
+  arrayItem: 'grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-3 mb-3',
   arrayItemToolbox: 'flex gap-1',
   arrayFieldset: 'min-w-0',
   objectFieldset: 'min-w-0',
@@ -100,7 +101,7 @@ const layout: ClassMap = {
 render(<Form schema={schema} validator={validator} classMap={layout} />, document.getElementById('app'));
 ```
 
-The rest of `rjsf.css` lays out elements the class map has no key for: the gap between fields, the `legend` and the optional-data control in it, the add button, the additional-property row, the cyclic-schema box and the [layout grid](./layout-grid.md)'s rows and columns.
+The rest of `rjsf.css` lays out elements the class map has no key for, or reaches them through the markup around them: the gap between fields, the `legend` and the optional-data control in it, the array item toolbox's offset down to the item's input past its label and description, the add button, the additional-property row, the cyclic-schema box and the [layout grid](./layout-grid.md)'s rows and columns.
 For those, keep `rjsf.css` above Tailwind's preflight and beneath your utilities, where the classes above win over its rules for the elements that have a key:
 
 ```css
