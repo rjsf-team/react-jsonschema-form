@@ -95,6 +95,7 @@ export default function FieldTemplate<
     formData,
     help,
     hideError,
+    hasErrors,
     // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     displayLabel,
     onKeyRename,
@@ -147,6 +148,7 @@ export default function FieldTemplate<
       // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
       presentation={presentation}
+      hasErrors={hasErrors}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}

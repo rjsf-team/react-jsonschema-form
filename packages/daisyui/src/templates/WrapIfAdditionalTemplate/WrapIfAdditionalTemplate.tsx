@@ -22,6 +22,8 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     disabled,
+    // Kept out of the props this spreads onto the element
+    hasErrors,
     id,
     label,
     keyName,

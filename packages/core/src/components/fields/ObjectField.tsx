@@ -917,7 +917,7 @@ export default function ObjectField<
     disabled,
     required,
     hideError,
-    ...getContainerErrorProps<T, S, F>(rawErrors),
+    ...getContainerErrorProps<T, S, F>(rawErrors, hideError),
     id,
     uiSchema,
     errorSchema,
