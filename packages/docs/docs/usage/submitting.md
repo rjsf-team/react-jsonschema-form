@@ -152,7 +152,13 @@ function EditPersonDialog({ person, onClose }: { person: Person; onClose: () => 
   }
 
   return (
-    <dialog open onCancel={close}>
+    <dialog
+      open
+      onCancel={(event) => {
+        event.preventDefault();
+        close();
+      }}
+    >
       <Form
         ref={formRef}
         schema={schema}
