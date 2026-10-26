@@ -24,7 +24,7 @@ export default function TitleField<
         </h5>
         {optionalDataControl}
       </Title>
-      <Separator dir='horizontal' style={{ height: '1px' }} className='my-1' />
+      <Separator className='my-1' />
     </>
   );
 }

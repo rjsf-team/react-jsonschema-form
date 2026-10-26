@@ -36,9 +36,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
               data-orientation="horizontal"
               data-slot="separator"
-              dir="horizontal"
               role="none"
-              style="height: 1px;"
             />
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -91,9 +89,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                   data-orientation="horizontal"
                   data-slot="separator"
-                  dir="horizontal"
                   role="none"
-                  style="height: 1px;"
                 />
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -244,7 +240,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_customField__key"
               >
                 customField Key
@@ -336,7 +332,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -508,7 +503,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 value="on"
               />
               <label
-                class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+                class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight data-invalid:text-destructive"
                 data-slot="label"
                 for="root_active"
               >
@@ -541,15 +536,13 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
               class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
               data-orientation="horizontal"
               data-slot="separator"
-              dir="horizontal"
               role="none"
-              style="height: 1px;"
             />
             <div
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -678,7 +671,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -1004,9 +997,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
               data-orientation="horizontal"
               data-slot="separator"
-              dir="horizontal"
               role="none"
-              style="height: 1px;"
             />
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -1059,9 +1050,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                   data-orientation="horizontal"
                   data-slot="separator"
-                  dir="horizontal"
                   role="none"
-                  style="height: 1px;"
                 />
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -1229,15 +1218,13 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
               class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
               data-orientation="horizontal"
               data-slot="separator"
-              dir="horizontal"
               role="none"
-              style="height: 1px;"
             />
             <div
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -1366,7 +1353,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -1678,7 +1665,7 @@ exports[`object fields > additionalProperties 1`] = `
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo Key
@@ -1770,7 +1757,6 @@ exports[`object fields > additionalProperties 1`] = `
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -1843,14 +1829,14 @@ exports[`object fields > additionalProperties with a description, propertyNames 
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo Key
               </label>
               <div
                 aria-hidden="true"
-                class="invisible text-sm"
+                class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive invisible"
               >
                 A description
               </div>
@@ -1994,7 +1980,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -2067,7 +2052,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo Key
@@ -2110,9 +2095,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
                 data-slot="separator"
-                dir="horizontal"
                 role="none"
-                style="height: 1px;"
               />
               <div
                 class="rjsf-array-item-list mb-2"
@@ -2198,7 +2181,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -2271,14 +2253,14 @@ exports[`object fields > additionalProperties, description 1`] = `
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo Key
               </label>
               <div
                 aria-hidden="true"
-                class="invisible text-sm"
+                class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive invisible"
               >
                 item description
               </div>
@@ -2376,7 +2358,6 @@ exports[`object fields > additionalProperties, description 1`] = `
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -2449,7 +2430,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo Key
@@ -2541,7 +2522,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -2614,7 +2594,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo Key
@@ -2657,9 +2637,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
                 data-slot="separator"
-                dir="horizontal"
                 role="none"
-                style="height: 1px;"
               />
               <div
                 class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -2736,7 +2714,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -2809,7 +2786,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo Key
@@ -2947,7 +2924,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -3020,7 +2996,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo (deprecated) Key
@@ -3158,7 +3134,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -3315,7 +3290,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_abc__key"
               >
                 abc Key
@@ -3407,7 +3382,6 @@ exports[`object fields > patternProperties, a key additionalProperties false for
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <div
@@ -3420,7 +3394,8 @@ exports[`object fields > patternProperties, a key additionalProperties false for
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
+                data-invalid="true"
                 for="root_a__key"
               >
                 a Key
@@ -3466,9 +3441,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
                 data-slot="separator"
-                dir="horizontal"
                 role="none"
-                style="height: 1px;"
               />
             </fieldset>
             <div>
@@ -3530,7 +3503,6 @@ exports[`object fields > patternProperties, a key additionalProperties false for
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -3684,9 +3656,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
               class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
               data-orientation="horizontal"
               data-slot="separator"
-              dir="horizontal"
               role="none"
-              style="height: 1px;"
             />
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -3754,7 +3724,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_additionalProperty__key"
               >
                 additionalProperty Key
@@ -3846,7 +3816,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -3926,9 +3895,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
-          style="height: 1px;"
         />
         <div
           class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive"
@@ -3946,7 +3913,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo Key
@@ -4038,7 +4005,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -4118,9 +4084,7 @@ exports[`object fields > with title and description > object 1`] = `
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
-          style="height: 1px;"
         />
         <div
           class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive"
@@ -4243,9 +4207,7 @@ exports[`object fields > with title and description > show add button and fields
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
-          style="height: 1px;"
         />
         <div
           class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive"
@@ -4263,7 +4225,7 @@ exports[`object fields > with title and description > show add button and fields
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_additionalProperty__key"
               >
                 additionalProperty Key
@@ -4355,7 +4317,6 @@ exports[`object fields > with title and description > show add button and fields
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -4435,9 +4396,7 @@ exports[`object fields > with title and description from both > additionalProper
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
-          style="height: 1px;"
         />
         <div
           class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive"
@@ -4455,7 +4414,7 @@ exports[`object fields > with title and description from both > additionalProper
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo Key
@@ -4547,7 +4506,6 @@ exports[`object fields > with title and description from both > additionalProper
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -4627,9 +4585,7 @@ exports[`object fields > with title and description from both > object 1`] = `
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
-          style="height: 1px;"
         />
         <div
           class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive"
@@ -4752,9 +4708,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
-          style="height: 1px;"
         />
         <div
           class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive"
@@ -4772,7 +4726,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_foo__key"
               >
                 foo Key
@@ -4864,7 +4818,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -4944,9 +4897,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
-          style="height: 1px;"
         />
         <div
           class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive"
@@ -5069,9 +5020,7 @@ exports[`object fields > with title and description from uiSchema > show add but
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
-          style="height: 1px;"
         />
         <div
           class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive"
@@ -5089,7 +5038,7 @@ exports[`object fields > with title and description from uiSchema > show add but
               class="flex flex-col gap-2"
             >
               <label
-                class="text-sm font-medium text-muted-foreground leading-none"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive text-muted-foreground"
                 for="root_additionalProperty__key"
               >
                 additionalProperty Key
@@ -5181,7 +5130,6 @@ exports[`object fields > with title and description from uiSchema > show add but
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -5332,7 +5280,6 @@ exports[`object fields > with title and description with global label off > addi
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button
@@ -5549,7 +5496,6 @@ exports[`object fields > with title and description with global label off > show
           class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px mt-2"
           data-orientation="horizontal"
           data-slot="separator"
-          dir="horizontal"
           role="none"
         />
         <button

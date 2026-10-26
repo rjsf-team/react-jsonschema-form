@@ -37,9 +37,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
                 data-slot="separator"
-                dir="horizontal"
                 role="none"
-                style="height: 1px;"
               />
             </div>
           </div>
@@ -1012,9 +1010,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
                 data-slot="separator"
-                dir="horizontal"
                 role="none"
-                style="height: 1px;"
               />
             </div>
           </div>
@@ -2018,9 +2014,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
                 data-slot="separator"
-                dir="horizontal"
                 role="none"
-                style="height: 1px;"
               />
             </div>
           </div>
@@ -2846,9 +2840,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
                 data-slot="separator"
-                dir="horizontal"
                 role="none"
-                style="height: 1px;"
               />
             </div>
           </div>
@@ -3818,9 +3810,7 @@ exports[`Three even column grid > renders person and address in three columns, n
               class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
               data-orientation="horizontal"
               data-slot="separator"
-              dir="horizontal"
               role="none"
-              style="height: 1px;"
             />
           </div>
         </div>
@@ -4386,9 +4376,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
               class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
               data-orientation="horizontal"
               data-slot="separator"
-              dir="horizontal"
               role="none"
-              style="height: 1px;"
             />
           </div>
         </div>

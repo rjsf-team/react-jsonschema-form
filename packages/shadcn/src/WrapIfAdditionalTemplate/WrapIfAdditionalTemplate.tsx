@@ -47,7 +47,7 @@ export default function WrapIfAdditionalTemplate<
   // The key is labelled wherever the value's label is drawn, by the template or the value's own component
   const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
   const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
-  const { templates, translateString } = registry;
+  const { templates, translateString, classMap } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
@@ -75,14 +75,19 @@ export default function WrapIfAdditionalTemplate<
         <div className='grid gap-2 col-span-5'>
           <div className='flex flex-col gap-2'>
             {hasKeyLabel && (
-              <label htmlFor={keyId} className='text-sm font-medium text-muted-foreground leading-none'>
+              <label
+                htmlFor={keyId}
+                className={cn('rjsf-field-label', classMap.fieldLabel, 'text-muted-foreground')}
+                data-invalid={keyAttributes['aria-invalid'] || undefined}
+              >
                 {keyLabel}
+                {required && <span className='rjsf-required'>*</span>}
               </label>
             )}
             {/* The value's description sits between its label and input, so the key's input is held level with the
                 value's by an invisible copy of it, which wraps alike for a description as wide in either column */}
             {rawDescription && templateDrawsDescription<T, S, F>(props) && (
-              <div aria-hidden='true' className='invisible text-sm'>
+              <div aria-hidden='true' className={cn('rjsf-field-description', classMap.fieldDescription, 'invisible')}>
                 <RichDescription<T, S, F> description={rawDescription} registry={registry} uiSchema={uiSchema} />
               </div>
             )}
@@ -133,7 +138,7 @@ export default function WrapIfAdditionalTemplate<
           />
         </div>
       </div>
-      <Separator dir='horizontal' className='mt-2' />
+      <Separator className='mt-2' />
     </>
   );
 }
