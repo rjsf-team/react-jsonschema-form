@@ -1488,18 +1488,17 @@ A `pattern` that the value fails is reported by the browser as a bare "Please ma
 
 ### getOptionalDataControlsType&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the type of the field that the Optional Data Controls UI is rendered for. An `anyOf`/`oneOf` schema has no `type` of its own, so its type is the unique list of its options' types (a single type when they all agree), read from its `anyOf` when it carries both keywords, as `getXxxOfKey()` decides, and `undefined` when no option names a type; otherwise it is the schema's own type. An empty `anyOf: []`/`oneOf: []` counts as no option list, so such a schema returns its own type.
-`shouldRenderOptionalField()` decides whether to render the controls from this type, and `OptionalDataControlsField` uses it to pick the empty value it adds, so the two always agree.
-
-The type of an `anyOf`/`oneOf` schema whose options name no type of their own is provisional: it may come to take the parent's `type` into account ([#5360](https://github.com/rjsf-team/react-jsonschema-form/issues/5360)).
+Returns the type of the field that the Optional Data Controls UI is rendered for. An `anyOf`/`oneOf` schema's type is read from its options as they render, from its `anyOf` when it carries both keywords, as `getXxxOfKey()` decides: an option written as a `$ref` is resolved against `rootSchema`, and an option naming no type takes the schema's own, as `getRenderedOptionSchema()` passes it on. The type is the one the options agree on, the unique list of them when they name several, a `null` option counted among them so that such a list keeps the selector the `null` branch is reached through, and `undefined` when they name none. Otherwise, including for an empty `anyOf: []`/`oneOf: []`, it is the schema's own type.
+`shouldRenderOptionalField()` decides whether to render the controls from this type, `getUiRequiredErrorSchema()` reads it to tell which fields are hidden behind the controls, and `OptionalDataControlsField` uses it to pick the empty value it adds, so they always agree.
 
 #### Parameters
 
 - schema: S - The schema for the field
+- rootSchema: S - The root schema an option written as a `$ref` names its definition in
 
 #### Returns
 
-- string | string[] | undefined: The type of the field, the unique list of its `anyOf`/`oneOf` options' types, or `undefined` when neither names one
+- string | string[] | undefined: The type of the field, the list of its `anyOf`/`oneOf` options' types when they name several, or `undefined` when neither names one
 
 ### getOptionSelectorSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

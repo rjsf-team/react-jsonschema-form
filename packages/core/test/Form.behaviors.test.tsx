@@ -2444,7 +2444,7 @@ describe('optionalDataControls', () => {
     expect(onError).not.toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalled();
   });
-  it('blocks submit on a ui:required property an object renders beside anyOf options that name no type', async () => {
+  it('does not block submit on a ui:required property of an object whose anyOf options name no type, since the object hides it behind its Add button', async () => {
     const thingSchema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -2458,11 +2458,12 @@ describe('optionalDataControls', () => {
       noHtml5Validate: true,
     });
 
-    expect(node.querySelector('#root_thing_a')).not.toEqual(null);
+    expect(node.querySelector(`#${optionalControlsId('root_thing', 'Add')}`)).not.toEqual(null);
+    expect(node.querySelector('#root_thing_a')).toEqual(null);
     await submitForm(node, user);
 
-    expect(onSubmit).not.toHaveBeenCalled();
-    expect(onError).toHaveBeenCalled();
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
   });
   it('does not hide the option a root anyOf selects behind the optional data controls', () => {
     const rootAnyOf: RJSFSchema = {
@@ -2485,6 +2486,26 @@ describe('optionalDataControls', () => {
 
     expect(node.querySelector(`#${optionalControlsId('root', 'Add')}`)).toEqual(null);
     expect(node.querySelector(`#${optionalControlsId('root_child', 'Add')}`)).not.toEqual(null);
+  });
+  it('renders an optional object whose oneOf options name no type behind the Add button, and its fields once clicked', async () => {
+    const atLeastOneOf: RJSFSchema = {
+      type: 'object',
+      properties: {
+        n: {
+          type: 'object',
+          properties: { a: { type: 'string' }, b: { type: 'string' } },
+          oneOf: [{ required: ['a'] }, { required: ['b'] }],
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema: atLeastOneOf, uiSchema: objectOnUiSchema });
+    expect(node.querySelector(`#${optionalControlsId('root_n', 'Add')}`)).not.toEqual(null);
+    expect(node.querySelector('#root_n_a')).toEqual(null);
+
+    // The option's Add rather than the object's own: the latter stores `{}`, which the object reads as still empty (#5427)
+    await user.click(node.querySelector<HTMLButtonElement>(`#${optionalControlsId('root_n_XxxOf', 'Add')}`)!);
+
+    expect(node.querySelector('#root_n_a')).not.toEqual(null);
   });
 });
 
