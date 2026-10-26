@@ -2739,6 +2739,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(isValid).toHaveBeenCalledTimes(1);
       });
 
+      it('retrieveSchema() merges a dependency oneOf whose options declare no inherited member it is keyed by', () => {
+        const schema: RJSFSchema = JSON.parse(
+          '{"type":"object","dependencies":{"toString":{"oneOf":[{"properties":{"foo":{"type":"string"}}}]}}}',
+        );
+        const result = retrieveSchema({ validator: testValidator }, schema, schema, { toString: 't' });
+        expect(Object.keys(result.properties ?? {})).toEqual(['foo']);
+        expect(result.oneOf).toBeUndefined();
+      });
+
       it('retrieveSchema() does not apply a dependency named after an inherited member', () => {
         const schema: RJSFSchema = JSON.parse(
           '{"type":"object","properties":{"a":{"type":"string"}},"dependencies":{"toString":{"properties":{"b":{"type":"string"}}}}}',
