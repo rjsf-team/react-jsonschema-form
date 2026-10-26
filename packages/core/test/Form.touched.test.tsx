@@ -288,6 +288,17 @@ describe('liveErrors', () => {
       expect(Object.keys(fieldErrorsById(node)).sort()).toEqual(['root_a', 'root_b']);
     });
 
+    it('keeps every error revealed after a submit made before liveErrors switched to field', async () => {
+      const { container, node, rerender } = createFormComponent({ schema: pair, liveValidate: 'onChange' });
+      await user.type(input(container, 'root_a'), 'x');
+      await submitWithoutBlur(node);
+
+      rerender({ schema: pair, liveValidate: 'onChange', liveErrors: 'field' });
+      await user.type(input(container, 'root_a'), 'x');
+
+      expect(Object.keys(fieldErrorsById(node)).sort()).toEqual(['root_a', 'root_b']);
+    });
+
     it('always shows extraErrors', async () => {
       const extraErrors: ErrorSchema = { b: { __errors: ['taken'] } };
       const { container, node } = createFormComponent({
