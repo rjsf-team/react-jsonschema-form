@@ -2484,7 +2484,7 @@ describe('SchemaField', () => {
         // Every extra key renders the one `additionalProperties` entry, so like an `items` entry its key collapses
         // and the entry warns once
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_[]" ([]) is a React element rather than a ' +
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_{}" ({}) is a React element rather than a ' +
             'component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
         );
       });
@@ -2503,7 +2503,7 @@ describe('SchemaField', () => {
 
         // The `foo` entry is shared by every extra key's object, so the key collapses above it too
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_[]_foo" ([].foo) is a React element rather than ' +
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_{}_foo" ({}.foo) is a React element rather than ' +
             'a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
         );
       });
@@ -2520,7 +2520,7 @@ describe('SchemaField', () => {
         });
 
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_[]_[]" ([][]) is a React element rather than a ' +
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_{}_[]" ({}[]) is a React element rather than a ' +
             'component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
         );
       });
@@ -2542,8 +2542,34 @@ describe('SchemaField', () => {
         });
 
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_arr_[]_[]" (arr[][]) is a React element rather ' +
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_arr_[]_{}" (arr[]{}) is a React element rather ' +
             'than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
+
+      it('warns once for an option entry beneath an additionalProperties entry, naming the option entry', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            additionalProperties: {
+              type: 'object',
+              anyOf: [
+                { type: 'object', properties: { b: { type: 'string' } } },
+                { type: 'object', properties: { c: { type: 'string' } } },
+              ],
+            },
+          },
+          uiSchema: {
+            additionalProperties: {
+              anyOf: [{ 'ui:FieldTemplate': 'Typo' as unknown as UiSchema['ui:FieldTemplate'] }],
+            },
+          },
+          initialFormData: { k1: { b: 'x' }, k2: { b: 'y' } },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root_{}" ({}) names no ' +
+            "registered template ('Typo'), so it is ignored.",
         );
       });
     });

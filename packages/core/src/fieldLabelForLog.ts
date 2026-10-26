@@ -19,8 +19,8 @@ export default function fieldLabelForLog(id: string, fieldPath: FieldPath): stri
   return formatLabel(id, fieldPath);
 }
 
-/** Takes the path as a plain string because `entryLabelForLog()` writes array indexes as `[]`, outside the `FieldPath`
- * grammar
+/** Takes the path as a plain string because `entryLabelForLog()` writes array indexes as `[]` and extra keys as `{}`,
+ * outside the `FieldPath` grammar
  */
 function formatLabel(id: string, path: string): string {
   return `"${id}"${path ? ` (${path})` : ''}`;
@@ -30,12 +30,12 @@ function formatLabel(id: string, path: string): string {
  * the uiSchema entry the field is rendered from rather than about the field itself. Every item an array's `items`
  * entry renders reads alike, so a mistake in that entry is warned about once rather than once per item, which over a
  * long array would also crowd every other warning out of what `logOnce()` remembers. An additional property's key
- * is collapsed the same way, since every extra key an `additionalProperties` entry renders - and every field beneath
- * one - shares the one entry too.
+ * is collapsed the same way, written as `{}` so the label points at an `additionalProperties` entry rather than an
+ * `items` one, since every extra key that entry renders - and every field beneath one - shares the one entry too.
  *
  * @param fieldPath - The `FieldPath` identifying the field in the form
  * @param globalFormOptions - The `GlobalFormOptions` holding the `idPrefix` and `idSeparator` the id is built from
- * @param [collapsedKeys] - The indexes of the path segments that are an additional property's key, written as `[]`
+ * @param [collapsedKeys] - The indexes of the path segments that are an additional property's key, written as `{}`
  * @returns - The field named as `"root_tasks_[]_title" (tasks[].title)`, or just `"root"` at the root
  */
 export function entryLabelForLog(

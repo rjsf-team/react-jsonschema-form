@@ -25,12 +25,12 @@ import {
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
+import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
-import useAdditionalDepths from './useAdditionalDepths.ts';
 
 /** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
  * description, which the field's plan already carries to the option's, so the option keeps the title and description
@@ -140,11 +140,11 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // data changes, so this only spares a render that leaves the data as it was, and the switch away from the option
   const renderedOption = useMemo(() => (option ? getRenderedOptionSchema<S>(schema, option) : null), [schema, option]);
   const rendersOption = renderedOption !== null && renderedOption.type !== 'null';
+  // The `SchemaField` rendering this has already added its own key's depth to the context
+  const additionalDepths = use(AdditionalPropertyDepthsContext);
   // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't
   // tell apart from a `uiSchema` it inherits, so a field the option's own entry names is warned about here instead,
   // unless it is `SchemaField`, which renders the option the same either way
-  // The `SchemaField` rendering this has already added its own key's depth to the context
-  const additionalDepths = use(AdditionalPropertyDepthsContext);
   const namedForPath = use(NamedFieldContext)?.fieldPath === fieldPath;
   if (rendersOption && namedForPath && optionUiSchema !== uiSchema) {
     const optionField = getUiOptions<T, S, F>(optionUiSchema).field;
