@@ -211,7 +211,7 @@ describe('getTemplate', () => {
     expect(warnSuppression.consoleSpy.mock.calls[3][0]).toContain("'object'");
   });
 
-  it("returns a custom name's truthy override as given, the way it always has, with no warning", () => {
+  it("returns a custom name's truthy override as given, with no warning", () => {
     const registryGroup = { Save: FakeTemplate };
     const overrideGroup = { Save: CustomTemplate };
     const customRegistry: Registry = { ...registry, templates: { ...registry.templates, MyButtons: registryGroup } };
@@ -317,7 +317,7 @@ describe('getTemplates', () => {
   it('does not warn about an ordinary option that shares its name with a custom template', () => {
     const customRegistry: Registry = { ...registry, templates: { ...registry.templates, help: FakeTemplate } };
     const options: UIOptionsType = { help: 'Enter your name' };
-    expect(getTemplates(customRegistry, options)).toBe(customRegistry.templates);
+    expect(getTemplates(customRegistry, options, () => '"root"')).toBe(customRegistry.templates);
     expect(warnSuppression.consoleSpy).not.toHaveBeenCalled();
   });
   it('returns the registry templates themselves when no uiOptions override one', () => {
