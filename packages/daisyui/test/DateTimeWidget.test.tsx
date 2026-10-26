@@ -431,6 +431,21 @@ describe('DateTimeWidget', () => {
       expect(popup()).toHaveStyle({ top: '143px' });
     });
 
+    test('writing nothing once placed where its trigger is at a fractional offset', async () => {
+      // Off the 1/64px grid the browser snaps the popup's own `top` and `left` to
+      const trigger = renderAt({ top: 30.37, left: 10.37 });
+      await user.click(trigger);
+      await new Promise(requestAnimationFrame);
+      const placed = { top: popup().style.top, left: popup().style.left };
+      expect(parseFloat(placed.top)).toBeCloseTo(55.37);
+      expect(parseFloat(placed.left)).toBeCloseTo(10.37);
+
+      await new Promise(requestAnimationFrame);
+      await new Promise(requestAnimationFrame);
+
+      expect({ top: popup().style.top, left: popup().style.left }).toEqual(placed);
+    });
+
     test.each([
       ['as wide as the viewport', 320, '0px'],
       ['too wide for the gutter', 310, '0px'],
@@ -464,23 +479,34 @@ describe('DateTimeWidget', () => {
       });
     });
 
+    const removeShowPopover = () => Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
+    // Not knowing the `:popover-open` selector, which only the browser's own popovers come with
+    const rejectPopoverOpen = () => vi.mocked(CSS.supports).mockReturnValue(false);
+
     test.each([
-      ['has no popovers', () => Reflect.deleteProperty(HTMLElement.prototype, 'showPopover')],
+      [
+        'has no popovers',
+        () => {
+          rejectPopoverOpen();
+          removeShowPopover();
+        },
+      ],
       // As `@oddbird/popover-polyfill` provides it, which can't show the popup in the top layer, and so can't take it
       // out of a transformed ancestor's reach
-      ["has only a polyfill's `showPopover()`", () => {}],
+      ["has only a polyfill's `showPopover()`", rejectPopoverOpen],
+      // As a DOM shim in a consumer's tests can, which would otherwise throw from the layout effect
+      ['knows `:popover-open` but has no `showPopover()`', removeShowPopover],
     ])("in the field's flow just below its trigger, unplaced, where the browser %s", async (_, removePopovers) => {
-      // Neither knows the `:popover-open` selector, which only the browser's own popovers come with
-      vi.mocked(CSS.supports).mockReturnValue(false);
       removePopovers();
       const trigger = renderAt({ top: 30, left: 10 });
 
       await user.click(trigger);
 
       // Where a transformed ancestor, as daisyUI's modal box is, lays it out and its scroll reaches it, rather than
-      // fixed against that ancestor at viewport coordinates it would scale, and clip out of the scroll's reach
-      // Positioned against the field's wrapper, and stacked under app chrome as the popup in the flow always was
-      expect(popup()).toHaveStyle({ position: 'absolute', marginTop: '5px', zIndex: '100' });
+      // fixed against that ancestor at viewport coordinates it would scale, and clip out of the scroll's reach.
+      // Positioned against the field's wrapper, stacked under app chrome, and as wide as its contents in a field
+      // narrower than the calendar
+      expect(popup()).toHaveStyle({ position: 'absolute', marginTop: '5px', zIndex: '100', minWidth: 'min-content' });
       expect(trigger.closest('.form-control')).toHaveClass('relative');
       expect(popup().style.top).toBe('');
       expect(popup()).not.toHaveAttribute('popover');
@@ -496,6 +522,27 @@ describe('DateTimeWidget', () => {
 
       intersectionObserver.enterNode(trigger);
       expect(popup()).not.toHaveStyle({ visibility: 'hidden' });
+    });
+
+    test('measuring nothing while it is hidden, and placed by its trigger before it shows again', async () => {
+      const trigger = renderAt({ top: 30, left: 10 });
+      await user.click(trigger);
+      intersectionObserver.leaveNode(trigger);
+      const measure = vi.mocked(trigger.getBoundingClientRect);
+      measure.mockClear();
+
+      await new Promise(requestAnimationFrame);
+      expect(measure).not.toHaveBeenCalled();
+
+      // Scrolled back into sight further down
+      measure.mockReturnValue(rectAt(300, 10, 40, 20));
+      intersectionObserver.enterNode(trigger);
+      expect(popup()).toHaveStyle({ top: '325px' });
+      expect(popup()).not.toHaveStyle({ visibility: 'hidden' });
+
+      // And following it once a frame again
+      await new Promise(requestAnimationFrame);
+      expect(measure).toHaveBeenCalledTimes(2);
     });
 
     test('giving the focus back to its trigger when it hides holding it, so the focus never falls to the body', async () => {

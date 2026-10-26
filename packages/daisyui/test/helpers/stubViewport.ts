@@ -3,15 +3,19 @@ export function rectAt(top: number, left: number, width = 0, height = 0): DOMRec
   return { x: left, y: top, width, height, top, right: left + width, bottom: top + height, left, toJSON() {} };
 }
 
-/** Has every element drawn at its own `top` and `left` in client rects measured from (`left`, `top`) of the coordinates
- * those are in, where jsdom draws everything at the viewport's corner. A fixed element's client rect is measured from
- * where its own `top` and `left` are, (0, 0), in Chrome and Firefox, and from the visual viewport's corner in WebKit.
- * Installed as a plain method rather than a spy, which `vi.spyOn()` on one element would take over for every element
+/** A length snapped to the 1/64px layout unit Chrome and WebKit lay boxes out in */
+const snap = (length: number) => Math.round(length * 64) / 64;
+
+/** Has every element drawn at its own `top` and `left`, snapped as a browser snaps them, in client rects measured from
+ * (`left`, `top`) of the coordinates those are in, where jsdom draws everything at the viewport's corner. A fixed
+ * element's client rect is measured from where its own `top` and `left` are, (0, 0), in Chrome and Firefox, and from the
+ * visual viewport's corner in WebKit. Installed as a plain method rather than a spy, which `vi.spyOn()` on one element
+ * would take over for every element
  */
 export function measureClientRectsFrom(top: number, left: number) {
   Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
     value(this: HTMLElement) {
-      return rectAt((parseFloat(this.style.top) || 0) - top, (parseFloat(this.style.left) || 0) - left);
+      return rectAt(snap(parseFloat(this.style.top) || 0) - top, snap(parseFloat(this.style.left) || 0) - left);
     },
     configurable: true,
   });

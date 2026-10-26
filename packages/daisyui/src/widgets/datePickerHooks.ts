@@ -407,14 +407,17 @@ export function useDatePicker<V>({
     const win = windowOf(trigger);
     // Without native popovers, as before Safari 17 and Chrome 114, in jsdom, which hides a popover it can't show, and
     // where a polyfill provides `showPopover()` but can't provide the top layer, the popup stays in the field's flow
-    // just below its trigger, positioned against the field's wrapper and stacked under app chrome as `DateTimeWidget`'s
-    // was, scrolling with it and clipped by what clips it. Fixed there, a transformed ancestor such as daisyUI's modal
-    // box would still be what places, scales and clips it, and a part of it the box clips would be out of reach of the
-    // box's scroll. Told by the `:popover-open` selector, which a polyfill can't add to the browser's own CSS
-    if (!win.CSS?.supports('selector(:popover-open)')) {
+    // just below its trigger, positioned against the field's wrapper and stacked under app chrome at `z-index: 100`,
+    // scrolling with it and clipped by what clips it. Fixed there, a transformed ancestor such as daisyUI's modal box
+    // would still be what places, scales and clips it, and a part of it the box clips would be out of reach of the
+    // box's scroll. As wide as the field there, it is kept at least as wide as its contents, so a column narrower than
+    // the calendar's week doesn't scroll that week sideways. Told by the `:popover-open` selector, which a polyfill
+    // can't add to the browser's own CSS, and by `showPopover()`, which a DOM shim that knows the selector can lack
+    if (!win.CSS?.supports('selector(:popover-open)') || typeof popup.showPopover !== 'function') {
       popup.style.position = 'absolute';
       popup.style.marginTop = '5px';
       popup.style.zIndex = '100';
+      popup.style.minWidth = 'min-content';
       return () => {};
     }
     // A Strict Mode remount runs this again on a popup that is still showing, as the attribute set just before showing
@@ -447,10 +450,12 @@ export function useDatePicker<V>({
       const rect = trigger.getBoundingClientRect();
       // Chrome and Firefox measure client rects from the layout viewport the popup is fixed in, but WebKit measures
       // them from the visual viewport (https://bugs.webkit.org/show_bug.cgi?id=257375), which a pinch zoom moves away
-      // from it. How far the popup is drawn from its own `top` and `left` is that shift, in whichever browser
+      // from it. How far the popup is drawn from its own `top` and `left` is that shift, in whichever browser. Rounded
+      // to whole pixels, since it also holds the browser's sub-pixel snapping of that `top` and `left`, which would
+      // otherwise feed into the next frame's and have a trigger at a fractional offset rewrite them every frame
       const drawn = popup.getBoundingClientRect();
-      const shiftY = parseFloat(popup.style.top) - drawn.top;
-      const shiftX = parseFloat(popup.style.left) - drawn.left;
+      const shiftY = Math.round(parseFloat(popup.style.top) - drawn.top);
+      const shiftX = Math.round(parseFloat(popup.style.left) - drawn.left);
       const { offsetWidth: width, offsetHeight: height } = popup;
       const above = rect.top + shiftY - 5 - height;
       const below = rect.bottom + shiftY + 5;
@@ -465,24 +470,29 @@ export function useDatePicker<V>({
       popup.style.top = `${y}px`;
       popup.style.left = `${x}px`;
     };
-    place();
     let frame = 0;
     const follow = () => {
       place();
       frame = win.requestAnimationFrame(follow);
     };
-    frame = win.requestAnimationFrame(follow);
+    follow();
     // A scrolling panel clips the trigger but not the fixed popup, which is hidden while none of the trigger shows
-    // rather than left floating over whatever is at its place. Hidden, it can't hold the focus, which would fall to
-    // the document body and leave Tab to start the page over, so the focus goes back to the trigger first, without
-    // scrolling it back into the view the user scrolled it out of. The observer doesn't exist outside a browser, such
-    // as in a consumer's jsdom tests
+    // rather than left floating over whatever is at its place, and stops following it until it shows again, placed
+    // before it does. Hidden, it can't hold the focus, which would fall to the document body and leave Tab to start
+    // the page over, so the focus goes back to the trigger first, without scrolling it back into the view the user
+    // scrolled it out of. The observer doesn't exist outside a browser, such as in a consumer's jsdom tests
     const sight =
       'IntersectionObserver' in win
         ? new win.IntersectionObserver((entries) => {
             const isInSight = entries[entries.length - 1].isIntersecting;
-            if (!isInSight && popup.contains(activeElementOf(popup))) {
-              trigger.focus({ preventScroll: true });
+            if (!isInSight) {
+              win.cancelAnimationFrame(frame);
+              frame = 0;
+              if (popup.contains(activeElementOf(popup))) {
+                trigger.focus({ preventScroll: true });
+              }
+            } else if (!frame) {
+              follow();
             }
             popup.style.visibility = isInSight ? '' : 'hidden';
           })
