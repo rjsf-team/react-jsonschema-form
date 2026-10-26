@@ -477,7 +477,17 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const path = fieldPathToList(fieldPath);
     // The selections and expansions under keys the change moves, or under a property it removes, move before it is
     // applied, so the sanitize reads them where the change puts the data; a change the form refuses puts them back
-    const uiMove = keyMoveOf({ fieldPath, newValue, newKeyOf: move?.newKeyOf, newOwnKeyOf: move?.newOwnKeyOf });
+    const fieldChange: FieldChange<T> = {
+      newValue,
+      fieldPath,
+      newErrorSchema,
+      newKeyOf: move?.newKeyOf,
+      newOwnKeyOf: move?.newOwnKeyOf,
+      dropsOwnErrors: move?.dropsOwnErrors,
+      isAnnouncedMove: move !== undefined,
+      isFieldEdit,
+    };
+    const uiMove = keyMoveOf(fieldChange);
     const containerPath = uiMove && fieldPathToList(uiMove.container);
     deliver(() => {
       const before = containerPath && getAt<unknown>(current().formData, containerPath);
@@ -490,20 +500,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       try {
         const committed = commit(
           settled((base) => {
-            const { next, edited } = applyEdit(
-              base,
-              {
-                newValue,
-                fieldPath,
-                newErrorSchema,
-                newKeyOf: move?.newKeyOf,
-                newOwnKeyOf: move?.newOwnKeyOf,
-                dropsOwnErrors: move?.dropsOwnErrors,
-                isAnnouncedMove: move !== undefined,
-                isFieldEdit,
-              },
-              props,
-            );
+            const { next, edited } = applyEdit(base, fieldChange, props);
             // `applyEdit()` hands `base` itself back only for an edit `transformChange` refused
             edit = { isRefused: next === base, edited };
             return next;

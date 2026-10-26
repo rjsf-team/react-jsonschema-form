@@ -13,6 +13,7 @@ import type {
 } from '@rjsf/utils';
 import {
   getByPath,
+  hasByPath,
   setByPath,
   propertyToPath,
   toPath,
@@ -172,14 +173,14 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
     return true;
   }
   const [key, ...rest] = path;
-  if (Array.isArray(data) ? !holdsKey(data, key) : data !== undefined && !isPlainObject(data)) {
+  if (Array.isArray(data) ? !hasByPath(data, key) : data !== undefined && !isPlainObject(data)) {
     return undefined;
   }
   let container: GenericObjectType = isPlainObject(marks) ? marks : {};
   if (Array.isArray(data)) {
     container = Array.isArray(marks) ? marks : Array.from({ length: data.length });
   }
-  const marked = markPath(memberOf(container, key), memberOf(data, key), rest);
+  const marked = markPath(getByPath(container, key), getByPath(data, key), rest);
   if (marked === undefined) {
     return undefined;
   }
@@ -232,8 +233,18 @@ export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContex
   touchedPaths,
 }: FormState<T, S, F>): FormStatus<T> {
   let dirtyFields: NestedBooleans<T> | undefined;
-  let touched: boolean | undefined;
+  let touched = false;
   let touchedFields: NestedBooleans<T> | undefined;
+  const buildTouched = () => {
+    if (touchedFields === undefined) {
+      const marks = touchedMarksOf(formData, touchedPaths);
+      // Read off the marks rather than the paths, so a touched path that marks nothing, such as an item path the data
+      // no longer holds, cannot report a touch `touchedFields` does not show
+      touched = marks !== undefined;
+      touchedFields = asNestedBooleans<T>(marks ?? noMarks(formData));
+    }
+    return touchedFields;
+  };
   return {
     dirty: !Object.is(formData, baseline),
     get dirtyFields() {
@@ -241,14 +252,11 @@ export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContex
       return dirtyFields;
     },
     get touched() {
-      // Read off the marks rather than the paths, so a touched path that marks nothing, such as an item path the data
-      // no longer holds, cannot report a touch `touchedFields` does not show
-      touched ??= touchedMarksOf(formData, touchedPaths) !== undefined;
+      buildTouched();
       return touched;
     },
     get touchedFields() {
-      touchedFields ??= asNestedBooleans<T>(touchedMarksOf(formData, touchedPaths) ?? noMarks(formData));
-      return touchedFields;
+      return buildTouched();
     },
     submitCount,
   };
@@ -287,16 +295,6 @@ const NO_PATHS: ReadonlySet<FieldPath> = new Set();
 
 const NOTHING_REVEALED: RevealedPaths = { fields: NO_PATHS, containers: NO_PATHS, all: false };
 
-/** Whether `container`, an array or object of the form's data, holds `key` */
-function holdsKey(container: unknown, key: string | number): container is object {
-  return (Array.isArray(container) || isPlainObject(container)) && Object.hasOwn(container, key);
-}
-
-/** The member at `key` of `container`, undefined when it holds none */
-function memberOf(container: unknown, key: string | number): unknown {
-  return holdsKey(container, key) ? Reflect.get(container, key) : undefined;
-}
-
 /** `paths` without those under a key `previous` held that `next` does not: a change that dropped a key without
  * announcing a move, as `setFieldValue()` writing over a whole object does, leaves no field there to keep a mark for,
  * so a key added again later starts untouched. A field the data never held a value for, as one blurred while empty, is
@@ -315,14 +313,14 @@ function withoutDroppedPaths(paths: ReadonlySet<FieldPath>, previous: unknown, n
     let before = previous;
     let after = next;
     for (const key of fieldPathToList(fieldPath)) {
-      if (Object.is(before, after) || !holdsKey(before, key)) {
+      if (Object.is(before, after) || !hasByPath(before, key)) {
         return false;
       }
-      if (!holdsKey(after, key)) {
+      if (!hasByPath(after, key)) {
         return true;
       }
-      before = memberOf(before, key);
-      after = memberOf(after, key);
+      before = getByPath(before, key);
+      after = getByPath(after, key);
     }
     return false;
   };
@@ -330,9 +328,9 @@ function withoutDroppedPaths(paths: ReadonlySet<FieldPath>, previous: unknown, n
   return kept.length === paths.size ? paths : new Set(kept);
 }
 
-/** `paths` with `path` in it, `paths` itself when it holds it already */
-function withPath(paths: ReadonlySet<FieldPath>, path: FieldPath): ReadonlySet<FieldPath> {
-  return paths.has(path) ? paths : new Set([...paths, path]);
+/** `paths` with `added` in it, `paths` itself when it holds them already */
+function withPaths(paths: ReadonlySet<FieldPath>, ...added: FieldPath[]): ReadonlySet<FieldPath> {
+  return added.every((path) => paths.has(path)) ? paths : new Set([...paths, ...added]);
 }
 
 /** The array or object whose keys a change moves, and where each goes */
@@ -436,25 +434,21 @@ function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContext
   formData: T | undefined,
   move?: ContainerKeyMove,
 ): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
+  const { touchedPaths, revealed } = current;
+  if (touchedPaths.size === 0 && revealed.fields.size === 0 && revealed.containers.size === 0) {
+    return { touchedPaths, revealed };
+  }
   // The moved paths are checked against the earlier data with the same keys moved, so a path a move re-keyed is checked
-  // against the value that moved with it. Built only once a path needs checking
-  let previous: { data: unknown } | undefined;
-  const follow = (paths: ReadonlySet<FieldPath>) => {
-    if (paths.size === 0) {
-      return paths;
-    }
-    previous ??= {
-      data: move
-        ? withKeysMoved(current.formData, formData, fieldPathToList(move.container), move.newKeyOf)
-        : current.formData,
-    };
-    return withoutDroppedPaths(withPathsMoved(paths, move), previous.data, formData);
-  };
-  const { revealed } = current;
+  // against the value that moved with it
+  const previous = move
+    ? withKeysMoved(current.formData, formData, fieldPathToList(move.container), move.newKeyOf)
+    : current.formData;
+  const follow = (paths: ReadonlySet<FieldPath>) =>
+    withoutDroppedPaths(withPathsMoved(paths, move), previous, formData);
   const fields = follow(revealed.fields);
   const containers = follow(revealed.containers);
   return {
-    touchedPaths: follow(current.touchedPaths),
+    touchedPaths: follow(touchedPaths),
     revealed:
       fields === revealed.fields && containers === revealed.containers ? revealed : { ...revealed, fields, containers },
   };
@@ -478,9 +472,9 @@ function marksAfterChange<T, S extends StrictRJSFSchema, F extends FormContextTy
   if (isRevealedByField(props) && !change.editedPath) {
     const container = move?.container ?? (change.isAnnouncedMove ? change.fieldPath : undefined);
     if (container !== undefined) {
-      revealed = { ...revealed, containers: withPath(revealed.containers, container) };
+      revealed = { ...revealed, containers: withPaths(revealed.containers, container) };
     } else if (change.isFieldEdit && isLiveValidated(props)) {
-      revealed = { ...revealed, fields: withPath(revealed.fields, change.fieldPath) };
+      revealed = { ...revealed, fields: withPaths(revealed.fields, change.fieldPath) };
     }
   }
   return { ...followed, revealed };
@@ -492,10 +486,9 @@ function marksAfterChange<T, S extends StrictRJSFSchema, F extends FormContextTy
  */
 function hiddenErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
-  state: Pick<FormState<T, S, F>, 'revealed' | 'submitCount'> | undefined,
+  { revealed, submitCount }: Pick<FormState<T, S, F>, 'revealed' | 'submitCount'>,
 ): ((path: FieldPathList) => boolean) | undefined {
-  const revealed = state?.revealed ?? NOTHING_REVEALED;
-  if (!isRevealedByField(props) || revealed.all || (state?.submitCount ?? 0) > 0) {
+  if (!isRevealedByField(props) || revealed.all || submitCount > 0) {
     return undefined;
   }
   const fields = [...revealed.fields].map(fieldPathToList);
@@ -1883,20 +1876,18 @@ function markBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
   { fieldPath, touches }: FieldBlur,
 ): FormState<T, S, F> {
   const { touchedPaths, revealed } = current;
-  const isRevealed = isRevealedByField(props) && isBlurValidated(props);
+  const isRevealed = props.liveErrors === 'field' && isBlurValidated(props);
   if (touches === 'nothing') {
     return isRevealed
-      ? { ...current, revealed: { ...revealed, containers: withPath(revealed.containers, fieldPath) } }
+      ? { ...current, revealed: { ...revealed, containers: withPaths(revealed.containers, fieldPath) } }
       : current;
   }
   const touched =
     touches === 'leaves' ? leafPathsOf(getAt(current.formData, fieldPathToList(fieldPath)), fieldPath) : [fieldPath];
   return {
     ...current,
-    touchedPaths: touched.every((leaf) => touchedPaths.has(leaf))
-      ? touchedPaths
-      : new Set([...touchedPaths, ...touched]),
-    revealed: isRevealed ? { ...revealed, fields: withPath(revealed.fields, fieldPath) } : revealed,
+    touchedPaths: withPaths(touchedPaths, ...touched),
+    revealed: isRevealed ? { ...revealed, fields: withPaths(revealed.fields, fieldPath) } : revealed,
   };
 }
 
