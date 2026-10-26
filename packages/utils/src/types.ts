@@ -1067,8 +1067,9 @@ export interface ClassMap {
   submitButton?: string;
 }
 
-/** The `classMap` a `Form` takes: a `ClassMap` whose entries may also be a function of the class the theme gives the
- * element, so a form can extend that class (`fieldLabel: (base) => joinClassNames(base, 'uppercase')`) rather than repeat it
+/** The `classMap` a `Form` takes: a `ClassMap` whose entries may also be a function of the class beneath, the theme's,
+ * or `@rjsf/core`'s where no theme gives the element one, so a form can extend that class
+ * (`fieldLabel: (base) => joinClassNames(base, 'uppercase')`) rather than repeat it
  */
 export type FormClassMap = { [K in keyof ClassMap]?: ClassMap[K] | ((themeClass: string) => string) };
 

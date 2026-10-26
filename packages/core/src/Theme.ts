@@ -120,13 +120,15 @@ export function generateTheme<
   };
 }
 
-/** Layers class maps key by key, the last on top. An entry left `undefined`, as a conditional one is, keeps the class
- * beneath it rather than rendering "undefined", and a function entry is called with the class beneath it, or composed
- * with the function beneath it until a class is there to call them with
+/** Layers class maps key by key, the last on top. An entry that is neither a class nor a function, such as one left
+ * `undefined`, `null` from JSON or `false` from a conditional, keeps the class beneath it, and a function entry is called
+ * with the class beneath it, or composed with the function beneath it until a class is there to call them with
  */
 export function mergeClassMaps(...layers: readonly (FormClassMap | undefined)[]): FormClassMap {
   const merged: Record<string, string | ((themeClass: string) => string)> = {};
-  const entries = layers.flatMap((layer) => Object.entries(layer ?? {})).filter(([, value]) => value !== undefined);
+  const entries = layers
+    .flatMap((layer) => Object.entries(layer ?? {}))
+    .filter(([, value]) => typeof value === 'string' || typeof value === 'function');
   for (const [key, value] of entries) {
     const beneath = merged[key];
     if (typeof value === 'string' || beneath === undefined) {

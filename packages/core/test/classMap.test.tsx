@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '@rjsf/utils';
+import type { FormClassMap, RJSFSchema } from '@rjsf/utils';
 import { createSchemaUtils } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -19,6 +19,16 @@ describe('classMap', () => {
     expect(registry.classMap.input).toBe('theme-input');
     expect(registry.classMap.select).toBe('form-control');
     expect(registry.classMap.textarea).toBe('');
+  });
+
+  // From JavaScript or a map read as JSON, a `null` or a conditional's `false` keeps the class beneath it too
+  it('keeps the class beneath an entry that is neither a class nor a function', () => {
+    const schema: RJSFSchema = { type: 'string' };
+    const classMap = { input: null, select: false } as unknown as FormClassMap;
+    const registry = buildRegistry({ schema, validator, classMap }, schema, createSchemaUtils({ validator }, schema));
+
+    expect(registry.classMap.input).toBe('form-control');
+    expect(registry.classMap.select).toBe('form-control');
   });
 
   it('renders a mapped class in place of the default and keeps the marker and state classes beside it', () => {

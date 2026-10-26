@@ -52,7 +52,7 @@ The value of this prop will be passed to the `class` [HTML attribute on the form
 
 A `ClassMap` of class names for the elements `@rjsf/core` renders, one key per element: the `<input>` of `BaseInputTemplate` under `input`, the `<label>` the `FieldTemplate` draws under `fieldLabel`, the `<div>` around a checkbox under `checkboxWrapper`, and so on; `ClassMap` in `@rjsf/utils` lists them.
 A class given here replaces the class the theme gives that element, and the theme's replaces `@rjsf/core`'s, which are Bootstrap 3's.
-A function is called with the theme's class instead, so a form can add a class to it without repeating it: `classMap={{ fieldLabel: (themeClass) => joinClassNames(themeClass, 'uppercase') }}`, with [`joinClassNames()`](./utility-functions.md#joinclassnames) leaving out a theme class that is empty.
+A function is called with the class beneath instead, the theme's, or `@rjsf/core`'s where the theme gives none, so a form can add a class to it without repeating it: `classMap={{ fieldLabel: (themeClass) => joinClassNames(themeClass, 'uppercase') }}`, with [`joinClassNames()`](./utility-functions.md#joinclassnames) leaving out a theme class that is empty.
 The merged result, with every entry a class, is `registry.classMap`.
 See [Custom Themes](../advanced-customization/custom-themes.md#class-map) for more information.
 
