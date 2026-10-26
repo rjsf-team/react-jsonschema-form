@@ -99,6 +99,23 @@ describe('a native submit', () => {
     }
   });
 
+  it.each<[string, UiSchema, string[]]>([
+    ['for form data out of enum order', { 'ui:widget': 'select', 'ui:optionValueFormat': 'realValue' }, ['c', 'a']],
+    [
+      'under groups that draw a later option first',
+      { 'ui:widget': 'select', 'ui:optgroups': { G: ['c'] } },
+      ['a', 'c'],
+    ],
+  ])('gets the multi-select values in the order core draws its options, %s', (_, multiUiSchema, multi) => {
+    const props = { schema, uiSchema: { ...uiSchema, multi: multiUiSchema }, initialFormData: { multi }, validator };
+    const { container: core } = render(<CoreForm {...props} />);
+    const { container: antd } = render(<Form {...props} />);
+
+    const posted = entriesOf(antd.querySelector('form'), 'root_multi');
+    expect(posted).toHaveLength(2);
+    expect(posted).toEqual(entriesOf(core.querySelector('form'), 'root_multi'));
+  });
+
   it('gets what core posts for a select with nothing selected', () => {
     const { container: core } = render(<CoreForm schema={schema} uiSchema={uiSchema} validator={validator} />);
     const { container: antd } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
