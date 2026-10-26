@@ -1830,6 +1830,55 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect(keysOf(beside)).toEqual(['a', 'b', 'z']);
         });
 
+        it.each<[string, (anyOf: RJSFSchema[]) => RJSFSchema]>([
+          ['allOf member', (anyOf) => ({ allOf: [{ anyOf }] })],
+          ['then branch', (anyOf) => ({ if: { properties: { a: { const: 'x' } } }, then: { anyOf } })],
+        ])("keeps an anyOf a dependency's %s holds, as it keeps one beside dependencies", (_, holding) => {
+          const anyOf: RJSFSchema[] = [
+            { properties: { b: { type: 'string' } } },
+            { properties: { c: { type: 'number' } } },
+          ];
+          const dependent: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            dependencies: { a: holding(anyOf) },
+          };
+          const beside: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            ...holding(anyOf),
+            dependencies: { a: ['a'] },
+          };
+          const expected = { type: 'object', properties: { a: { type: 'string' } }, anyOf };
+          expect(retrieveSchema({ validator: testValidator }, dependent, dependent, { a: 'x' })).toEqual(expected);
+          expect(retrieveSchema({ validator: testValidator }, beside, beside, { a: 'x' })).toEqual({
+            ...expected,
+            required: ['a'],
+          });
+        });
+
+        it.each<[string, unknown]>([
+          ['an empty anyOf, as it drops one', []],
+          ['an anyOf that is not a list, as it keeps one', { properties: { b: { type: 'string' } } }],
+        ])('treats a dependency entry offering %s beside dependencies', (_, anyOf) => {
+          const dependent: RJSFSchema = JSON.parse(
+            JSON.stringify({ type: 'object', properties: { a: { type: 'string' } }, dependencies: { a: { anyOf } } }),
+          );
+          const beside: RJSFSchema = JSON.parse(
+            JSON.stringify({
+              type: 'object',
+              properties: { a: { type: 'string' } },
+              anyOf,
+              dependencies: { a: ['a'] },
+            }),
+          );
+          const { required, ...besideResult } = retrieveSchema({ validator: testValidator }, beside, beside, {
+            a: 'x',
+          });
+          expect(required).toEqual(['a']);
+          expect(retrieveSchema({ validator: testValidator }, dependent, dependent, { a: 'x' })).toEqual(besideResult);
+        });
+
         describe('false condition', () => {
           it('should not modify properties', () => {
             const schema: RJSFSchema = {
