@@ -1577,6 +1577,11 @@ function itemField<S extends StrictRJSFSchema>(
   return defaultsChild(view, seeds, edge, fallback);
 }
 
+/** Whether `propertySchema` is the stub `stubExistingAdditionalProperties()` made for an additional property */
+function isStubbed(propertySchema: unknown): boolean {
+  return isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
+}
+
 /** Computes the default value for objects.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -1658,8 +1663,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     );
     return { value, holdsNull };
   };
-  const isStubbed = (propertySchema: unknown) =>
-    isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
   const propertyKeys = Object.keys(schema.properties ?? {}).filter(
     (key) => isPinned(key) || !isStubbed(getPropertySchema<S>(schema, key)),
   );
@@ -1924,9 +1927,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
       // As the properties the object names read theirs, an additional property the retrieve stubbed sharing one entry
       const propertyUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
         uiSchema,
-        isObject(propertySchema) && Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG) === true
-          ? ADDITIONAL_PROPERTIES_KEY
-          : key,
+        isStubbed(propertySchema) ? ADDITIONAL_PROPERTIES_KEY : key,
       );
       const { value, holdsNull } = foldReporting(nullsOnly, `branch:${key}`, child, {
         rawFormData: propertyFormData,
