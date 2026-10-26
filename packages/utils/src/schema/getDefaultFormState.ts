@@ -1597,6 +1597,15 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
   const parentConst = schema[CONST_KEY];
+  // Under `constAsDefaults: 'always'` an object `const` takes precedence over the data, so an extra key it doesn't name
+  // is dropped, whether the object stubs it among its properties or computes it from its `additionalProperties`
+  const pinnedKeys =
+    defaultFormStateBehavior?.constAsDefaults === 'always' &&
+    isObjectData(parentConst) &&
+    !constIsAjvDataReference(schema)
+      ? parentConst
+      : undefined;
+  const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
   const defaultReplacesUndefined =
     defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
@@ -1655,6 +1664,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // property, rather than a dynamically-named entry.
     const addedByAdditionalProperty =
       isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
+    if (addedByAdditionalProperty && !isPinned(key)) {
+      continue;
+    }
     const child = defaultsChild(view, seeds, edge, propertySchema);
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
@@ -1762,7 +1774,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
         .forEach((key) => keys.add(key));
     }
-    keys.forEach((key) => {
+    [...keys].filter(isPinned).forEach((key) => {
       const { value, holdsNull } = foldReporting(
         context,
         `additional:${key}`,
@@ -1802,7 +1814,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const nullsOnly = nullsOnlyContext(context);
     const child = defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalProperties);
     Object.keys(formData)
-      .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
+      .filter((key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && isPinned(key))
       .forEach((key) => {
         const { value, holdsNull } = foldReporting(nullsOnly, `additionalNull:${key}`, child, {
           rawFormData: getByPath(formData, key),
@@ -1821,16 +1833,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   }
   // The data is the user's: a key it holds as `undefined` stays so unless `mergeDefaultsIntoFormData` says a default
   // replaces that and one does, and one no property names and no additional property was computed for is kept as it
-  // is. A `null` it holds was kept or replaced by the field of the key, as in any other container. Under
-  // `constAsDefaults: 'always'` an object `const` takes precedence over the data, so a key it doesn't name is dropped
-  const pinnedKeys =
-    defaultFormStateBehavior?.constAsDefaults === 'always' &&
-    isObjectData(parentConst) &&
-    !constIsAjvDataReference(schema)
-      ? parentConst
-      : undefined;
+  // is. A `null` it holds was kept or replaced by the field of the key, as in any other container
   if (shouldMergeDefaultsIntoFormData) {
-    for (const key of Object.keys(formData).filter((dataKey) => !pinnedKeys || Object.hasOwn(pinnedKeys, dataKey))) {
+    for (const key of Object.keys(formData).filter(isPinned)) {
       const value = formData[key];
       const keptUndefined = value === undefined && !defaultReplacesUndefined;
       const uncomputed =

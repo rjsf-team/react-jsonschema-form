@@ -2272,6 +2272,49 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           { o: { a: 2, b: 5 } },
           { o: { a: 2 } },
         ],
+        [
+          'at the root, where the object takes extra keys',
+          {
+            type: 'object',
+            const: { a: 1 },
+            additionalProperties: { type: 'number' },
+            properties: { a: { type: 'number' } },
+          },
+          { a: 2, b: 5 },
+          { a: 2 },
+        ],
+        [
+          'inside an object that takes extra keys',
+          {
+            type: 'object',
+            properties: {
+              o: {
+                type: 'object',
+                const: { a: 1 },
+                additionalProperties: { type: 'number' },
+                properties: { a: { type: 'number' } },
+              },
+            },
+          },
+          { o: { a: 2, b: 5 } },
+          { o: { a: 2 } },
+        ],
+        [
+          'inside an object whose extra keys a pattern describes',
+          {
+            type: 'object',
+            properties: {
+              o: {
+                type: 'object',
+                const: { a: 1 },
+                patternProperties: { '^b': { type: 'number' } },
+                properties: { a: { type: 'number' } },
+              },
+            },
+          },
+          { o: { a: 2, b: 5 } },
+          { o: { a: 2 } },
+        ],
       ])('keeps only the data keys an object const names %s', (_name, schema, formData, expected) => {
         expect(
           getDefaultFormState(
