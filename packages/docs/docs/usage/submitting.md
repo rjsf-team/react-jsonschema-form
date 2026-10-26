@@ -5,7 +5,7 @@ This page covers what happens while that submission is in flight, how `Form` fit
 
 ## A pending submission
 
-When `onSubmit` returns a promise, the submit button gets the `pending` prop until that promise settles. The submit button of `@rjsf/core` and of every theme disables itself while it is set, so the form can't be submitted a second time meanwhile. A button that is disabled also keeps the browser from submitting the form when Enter is pressed in a field.
+When `onSubmit` returns a promise, the submit button gets the `pending` prop until that promise settles. Meanwhile the form sets `disabled` in the props `ui:submitButtonOptions` give the button, as it does for a [`disabled`](../api-reference/form-props.md#disabled) form, so the submit button of `@rjsf/core`, of every theme and a custom one that spreads those props is disabled, and the form can't be submitted a second time meanwhile. A button that is disabled also keeps the browser from submitting the form when Enter is pressed in a field.
 
 ```tsx
 import Form from '@rjsf/core';
@@ -21,7 +21,9 @@ async function save({ formData }) {
 render(<Form schema={schema} validator={validator} onSubmit={save} />, document.getElementById('app'));
 ```
 
-The form does not handle a rejection for you. A promise that rejects is reported as an unhandled rejection, as an error thrown by any other event handler is, and it never reaches an Error Boundary. Catch the error inside `onSubmit` to show it, for example as [`extraErrors`](#errors-from-the-server).
+The form does not handle a rejection for you. When the promise rejects, the form's own copy of it rejects with the same error and is reported as an unhandled rejection, even if you handle the promise you return, and it never reaches an Error Boundary. Catch the error inside `onSubmit` and return a promise that resolves, and show the error, for example as [`extraErrors`](#errors-from-the-server).
+
+Only a promise counts, such as one an `async` function returns. The form leaves another thenable alone, such as a query builder, since calling its `then()` again may run its request a second time. `await` it in an `async` `onSubmit` instead.
 
 A promise that never settles keeps the submit button disabled until the form unmounts.
 
@@ -56,7 +58,7 @@ function PersonForm() {
     return {};
   }, {});
   return (
-    <Form
+    <Form<Person>
       ref={formRef}
       schema={schema}
       validator={validator}
@@ -67,10 +69,11 @@ function PersonForm() {
 }
 ```
 
-- **The action gets the validated, typed data**, not the DOM's `FormData`. `FormData` would turn numbers and booleans into strings, hold some widgets' encoded option values instead of the values themselves, and miss the values of widgets that don't render native form controls.
+- **The action gets the validated, typed data**, not the DOM's `FormData`. `Form` can't infer the data's type from the schema, so `<Form<Person>>` gives `formData` the type the action takes. `FormData` would turn numbers and booleans into strings, hold some widgets' encoded option values instead of the values themselves, and miss the values of widgets that don't render native form controls.
 - **The form is pending while the action runs**, so the submit button disables itself and `useFormStatus().pending` is `true` inside the form. `isPending` tells the component that owns the action the same.
 - **The form keeps showing its data.** React resets a `<form>` after an action passed to its `action` prop succeeds, but `Form` handles its own submit, so nothing is reset.
 - **The saved data becomes the form's baseline.** The action calls `reset(person)` once the save succeeds, so the form is clean again. See [Unsaved changes](#unsaved-changes).
+- **The form has to render a `<form>`.** With a [`tagName`](../api-reference/form-props.md#tagname) such as `'div'`, a submit through `FormRef.submit()` that starts a transition makes React throw, since React builds a `FormData` from the element the submit event reaches, and the submit button doesn't read `useFormStatus()`, which would read an enclosing form's.
 - **Don't pass the action to `Form`'s `action` prop.** That prop is the HTML attribute: `Form` prevents the browser's own submit, so React never calls a function passed there.
 
 ### Errors from the server

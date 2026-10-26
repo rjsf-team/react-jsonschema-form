@@ -2,7 +2,6 @@ import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema 
 import {
   getTemplates,
   getUiOptions,
-  hasTemplateErrors,
   templateDrawsDescription,
   templateDrawsLabel,
   templateLabelFor,
@@ -32,6 +31,7 @@ export default function FieldTemplate<
     classNames,
     style,
     disabled,
+    hasErrors: hasError,
     label,
     keyName,
     hidden,
@@ -39,6 +39,7 @@ export default function FieldTemplate<
     onKeyRenameBlur,
     onRemoveProperty,
     propertyNamesEnum,
+    keyNotAllowed,
     readonly,
     required,
     schema,
@@ -47,7 +48,6 @@ export default function FieldTemplate<
   } = props;
   const displayLabel = templateDrawsLabel<T, S, F>(props);
   const uiOptions = getUiOptions(uiSchema);
-  const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
     return <div className='hidden'>{children}</div>;
@@ -66,10 +66,12 @@ export default function FieldTemplate<
       // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
       presentation={presentation}
+      hasErrors={hasError}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
       propertyNamesEnum={propertyNamesEnum}
+      keyNotAllowed={keyNotAllowed}
       rawDescription={rawDescription}
       readonly={readonly}
       required={required}

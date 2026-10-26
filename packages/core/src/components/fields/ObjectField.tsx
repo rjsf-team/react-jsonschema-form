@@ -19,6 +19,7 @@ import {
   setByPath,
   setOwn,
   ADDITIONAL_PROPERTIES_KEY,
+  ERRORS_KEY,
   deepEquals,
   getAdditionalPropertySchema,
   getAdditionalPropertyType,
@@ -220,6 +221,8 @@ interface ObjectFieldPropertyProps<
   handleRemoveProperty: (keyName: string) => void;
   /** The key names this property may be renamed to, when the parent schema's `propertyNames` constrains them */
   propertyNamesEnum?: string[];
+  /** Whether the parent schema forbids this additional property's key, which its row then says */
+  keyNotAllowed?: boolean;
 }
 
 /** The `ObjectFieldProperty` component is used to render the `SchemaField` for a child property of an object
@@ -248,9 +251,24 @@ function ObjectFieldPropertyFn<
     handleRemoveProperty,
     addedByAdditionalProperties,
     propertyNamesEnum,
+    keyNotAllowed,
   } = props;
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
-  const { globalFormOptions, fields } = registry;
+  const { globalFormOptions, fields, translateString } = registry;
+  // Memoized so the row's error schema keeps its identity across renders and `SchemaField` below isn't re-rendered
+  const shownErrorSchema = useMemo<ErrorSchema<T> | undefined>(
+    () =>
+      keyNotAllowed
+        ? {
+            ...errorSchema,
+            [ERRORS_KEY]: [
+              ...(errorSchema?.[ERRORS_KEY] ?? []),
+              translateString(TranslatableString.AdditionalPropertyKeyNotAllowed, [propertyName]),
+            ],
+          }
+        : errorSchema,
+    [keyNotAllowed, errorSchema, translateString, propertyName],
+  );
   const { SchemaField } = fields;
   const innerFieldPath = toFieldPath(propertyName, fieldPath);
   const innerFieldId = fieldPathToId(innerFieldPath, globalFormOptions);
@@ -309,7 +327,7 @@ function ObjectFieldPropertyFn<
       required={required}
       schema={schema}
       uiSchema={uiSchema}
-      errorSchema={errorSchema}
+      errorSchema={shownErrorSchema}
       fieldPath={innerFieldPath}
       id={innerFieldId}
       formData={formData}
@@ -318,6 +336,7 @@ function ObjectFieldPropertyFn<
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
       propertyNamesEnum={propertyNamesEnum}
+      keyNotAllowed={keyNotAllowed}
       onChange={onPropertyChange}
       onBlur={onBlur}
       onFocus={onFocus}
@@ -889,6 +908,9 @@ export default function ObjectField<
           schema={getPropertySchema<S>(schema, propertyName)}
           uiSchema={fieldUiSchema}
           errorSchema={getByPath(errorSchema, propertyName)}
+          // Derived from the schema rather than raised on rename, so the error can't follow the property to a name that
+          // is allowed, and shows without waiting for validation, which ajv8 and ata report on the object, not the key
+          keyNotAllowed={addedByAdditionalProperties && getAdditionalPropertySchema<S>(schema, propertyName) === false}
           fieldPath={fieldPath}
           formData={getByPath(formData, propertyName)}
           handleKeyRename={handleKeyRename}
@@ -917,7 +939,7 @@ export default function ObjectField<
     disabled,
     required,
     hideError,
-    ...getContainerErrorProps<T, S, F>(rawErrors),
+    ...getContainerErrorProps<T, S, F>(rawErrors, hideError),
     id,
     uiSchema,
     errorSchema,

@@ -14,10 +14,14 @@ export { hideErrorTests } from './hideErrorTests.tsx';
 
 export { objectTests } from './objectTests.tsx';
 
+export { optionErrorStateTests } from './optionErrorStateTests.tsx';
+
 export { selectedOptionDescriptionTests } from './selectedOptionDescriptionTests.tsx';
 
 export { submitPendingTests } from './submitPendingTests.tsx';
 
 export { type GridRenderCustomOptions, gridTests } from './gridTests.tsx';
+
+export { wrapIfAdditionalErrorStateTests } from './wrapIfAdditionalErrorStateTests.tsx';
 
 export { type ThemeGenerators, themeTests } from './themeTests.ts';

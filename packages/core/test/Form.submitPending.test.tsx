@@ -1,6 +1,7 @@
 import { Component, startTransition, useActionState, useState, useTransition } from 'react';
 import type { ReactNode } from 'react';
 import type { RJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import { getSubmitButtonOptions } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -12,6 +13,10 @@ import { createFormComponent, createFormRef, handleOf } from './testUtils.tsx';
 const user = userEvent.setup();
 
 const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', title: 'Name' } } };
+
+interface Person {
+  name?: string;
+}
 
 // React entangles every ongoing async transition, so one a failed test left unsettled would hold the next test's
 // transitions too
@@ -60,6 +65,68 @@ describe('a promise onSubmit returns', () => {
     save.resolve(undefined);
 
     await waitFor(() => expect(seen.at(-1)).toBe(false));
+  });
+
+  it('disables a custom SubmitButton template that spreads the props its uiSchema gives the button', async () => {
+    const save = deferred();
+    function SpreadingSubmitButton({ uiSchema }: SubmitButtonProps) {
+      const { props } = getSubmitButtonOptions(uiSchema);
+      return (
+        <button type='submit' {...props}>
+          Save
+        </button>
+      );
+    }
+    createFormComponent({
+      schema,
+      initialFormData: { name: 'a' },
+      templates: { ButtonTemplates: { SubmitButton: SpreadingSubmitButton } },
+      onSubmit: () => save.promise,
+    });
+    const button = screen.getByRole('button', { name: 'Save' });
+
+    await user.click(button);
+
+    expect(button).toBeDisabled();
+    save.resolve(undefined);
+    await waitFor(() => expect(button).toBeEnabled());
+  });
+
+  it('leaves a thenable that is not a promise alone, since calling its then() again can rerun a lazy request', async () => {
+    const then = vi.fn();
+    createFormComponent({ schema, initialFormData: { name: 'a' }, onSubmit: () => ({ then }) });
+    const button = screen.getByRole('button', { name: 'Submit' });
+
+    await user.click(button);
+
+    expect(then).not.toHaveBeenCalled();
+    expect(button).toBeEnabled();
+  });
+
+  it('reads no enclosing form status when it renders as an element other than a form', async () => {
+    const outerSave = deferred();
+    function OuterStatus() {
+      const { pending } = useFormStatus();
+      return <output aria-label='outer'>{pending ? 'pending' : 'idle'}</output>;
+    }
+    render(
+      <form
+        action={async () => {
+          await outerSave.promise;
+        }}
+      >
+        <Form tagName='div' schema={schema} validator={validator} initialFormData={{ name: 'a' }} />
+        <OuterStatus />
+        <button type='submit'>Outer</button>
+      </form>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Outer' }));
+
+    expect(screen.getByRole('status', { name: 'outer' })).toHaveTextContent('pending');
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeEnabled();
+    outerSave.resolve(undefined);
+    await waitFor(() => expect(screen.getByRole('status', { name: 'outer' })).toHaveTextContent('idle'));
   });
 
   it('leaves the submit button enabled for an onSubmit that returns nothing', async () => {
@@ -242,7 +309,7 @@ describe('a promise onSubmit returns', () => {
 describe('a useActionState dispatch started from onSubmit', () => {
   it('receives the validated data, keeps the form pending while it runs and leaves the inputs as they are', async () => {
     const save = deferred();
-    const received: unknown[] = [];
+    const received: Person[] = [];
     function StatusButton() {
       const { pending } = useFormStatus();
       return (
@@ -252,7 +319,7 @@ describe('a useActionState dispatch started from onSubmit', () => {
       );
     }
     function Parent() {
-      const [saves, dispatch, isPending] = useActionState(async (previous: number, formData: unknown) => {
+      const [saves, dispatch, isPending] = useActionState(async (previous: number, formData: Person) => {
         received.push(formData);
         await save.promise;
         return previous + 1;
@@ -260,7 +327,7 @@ describe('a useActionState dispatch started from onSubmit', () => {
       return (
         <>
           <output aria-label='saves'>{`${saves}${isPending ? ' pending' : ''}`}</output>
-          <Form
+          <Form<Person>
             schema={schema}
             validator={validator}
             initialFormData={{ name: 'a' }}

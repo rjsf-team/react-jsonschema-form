@@ -1,3 +1,4 @@
+import type { TextInputProps } from '@mantine/core';
 import { Flex, Grid, Input, TextInput } from '@mantine/core';
 import type {
   FormContextType,
@@ -10,10 +11,22 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   AdditionalPropertyKeySelect,
   buttonId,
+  getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
   TranslatableString,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
+
+import { useAriaDescribedByProps } from '../utils.tsx';
+
+/** The key's text input. Mantine's input takes its `aria-describedby` from its wrapper's context and its `aria-invalid`
+ * from `error`, over any given to it directly; a component of its own so only a key input runs the hook, not every field
+ * the template wraps
+ */
+function KeyTextInput({ id, describedBy, ...props }: TextInputProps & { id: string; describedBy?: string }) {
+  const ariaProps = useAriaDescribedByProps('TextInput', id, {}, { describedBy });
+  return <TextInput id={id} {...props} {...ariaProps} />;
+}
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -46,6 +59,7 @@ export default function WrapIfAdditionalTemplate<
   } = props;
   // The key is labelled wherever the value's label is drawn, by the template or the value's own component
   const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   // A description this theme's widget draws itself still takes a row, so the key lines up with the value whoever draws it
   const hasDescription = props.presentation ? props.presentation.description.by !== 'none' : !!rawDescription;
   const { templates, translateString } = registry;
@@ -77,6 +91,7 @@ export default function WrapIfAdditionalTemplate<
             {propertyNamesEnum ? (
               <>
                 <AdditionalPropertyKeySelect<T, S, F>
+                  errorAttributes={keyAttributes}
                   id={`${id}-key`}
                   label={keyLabel}
                   hideLabel={!hasKeyLabel}
@@ -93,11 +108,13 @@ export default function WrapIfAdditionalTemplate<
                 {hasDescription && <Input.Description>&nbsp;</Input.Description>}
               </>
             ) : (
-              <TextInput
+              <KeyTextInput
                 key={keyName}
                 className='form-group'
                 label={hasKeyLabel ? keyLabel : undefined}
                 aria-label={hasKeyLabel ? undefined : keyLabel}
+                describedBy={keyAttributes['aria-describedby']}
+                error={keyAttributes['aria-invalid']}
                 defaultValue={keyName}
                 required={required}
                 description={hasDescription ? '\u00A0' : undefined}

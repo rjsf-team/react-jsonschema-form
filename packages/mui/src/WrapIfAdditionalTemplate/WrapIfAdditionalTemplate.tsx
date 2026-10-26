@@ -13,6 +13,7 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   AdditionalPropertyKeySelect,
   buttonId,
+  getAdditionalKeyAttributes,
   getUiOptions,
   hasAdditionalKeyLabel,
   TranslatableString,
@@ -64,6 +65,7 @@ export default function WrapIfAdditionalTemplate<
   } = props;
   // The key is labelled wherever the value's label is drawn, by the template or the value's own component
   const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
@@ -108,6 +110,7 @@ export default function WrapIfAdditionalTemplate<
       >
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
+            errorAttributes={keyAttributes}
             id={`${id}-key`}
             label={keyLabel}
             hideLabel={!hasKeyLabel}
@@ -126,7 +129,13 @@ export default function WrapIfAdditionalTemplate<
             required={required}
             label={hasKeyLabel ? keyLabel : undefined}
             // Where `ui:label: false` leaves the key unlabelled, its label's text names it, as core's key input is named
-            slotProps={{ htmlInput: { 'aria-label': hasKeyLabel ? undefined : keyLabel } }}
+            slotProps={{
+              htmlInput: {
+                'aria-label': hasKeyLabel ? undefined : keyLabel,
+                'aria-describedby': keyAttributes['aria-describedby'],
+              },
+            }}
+            error={keyAttributes['aria-invalid']}
             defaultValue={keyName}
             disabled={disabled || readonly}
             id={`${id}-key`}

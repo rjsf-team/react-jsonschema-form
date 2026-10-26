@@ -60,6 +60,25 @@ describe('getNestedControlPresentation()', () => {
     });
   });
 
+  it('describes a control without a field by the attributes it is given, keeping its plan in step with them', () => {
+    const plan = getNestedControlPresentation({
+      id: 'root_a-key',
+      label: 'a Key',
+      attributes: { 'aria-describedby': 'root_a__error root_a__help', 'aria-invalid': true },
+    });
+
+    expect(plan.describedBy).toEqual(['root_a__error', 'root_a__help']);
+    expect(plan.control?.attributes).toEqual({
+      'aria-label': 'a Key',
+      'aria-describedby': 'root_a__error root_a__help',
+      'aria-invalid': true,
+    });
+    expect(
+      getNestedControlPresentation({ id: 'root_a-key', label: 'a Key', attributes: { 'aria-invalid': true } })
+        .describedBy,
+    ).toEqual([]);
+  });
+
   it('takes nothing from a field that describes nothing and has no errors, or has no control', () => {
     const quiet = { ...field, control: { id: 'root_when', attributes: {} } };
     const expected = { id: 'root_when_year', attributes: { 'aria-label': 'When, year' } };
