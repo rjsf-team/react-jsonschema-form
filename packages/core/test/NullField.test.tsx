@@ -49,6 +49,7 @@ describe('NullField', () => {
       expect(legend?.parentElement?.firstElementChild).toBe(legend);
       expect(legend?.parentElement).toContainElement(node.querySelector('#root_n__description'));
       expect(legend?.parentElement).toHaveAccessibleName('Nothing');
+      expect(legend?.parentElement).toHaveClass('rjsf-own-title-group');
     });
 
     it('should draw no fieldset for a null field that draws only a description', () => {

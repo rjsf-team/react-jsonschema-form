@@ -3462,6 +3462,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                 >
                   <fieldset
                     aria-labelledby="root_a__title"
+                    class="rjsf-own-title-group"
                     style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                   >
                     <div

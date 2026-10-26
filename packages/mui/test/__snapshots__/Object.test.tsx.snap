@@ -17005,6 +17005,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                 >
                   <fieldset
                     aria-labelledby="root_a__title"
+                    class="rjsf-own-title-group"
                     style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                   >
                     <div
