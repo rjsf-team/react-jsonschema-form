@@ -59,6 +59,20 @@ describe('createIsSchemaFieldHidden()', () => {
     expect(retrieveSchema).not.toHaveBeenCalled();
   });
 
+  it('resolves the uiSchema once for a field it retrieves', () => {
+    const registry = makeRegistry({ deprecatedHandling: 'hide' });
+    // `resolveUiSchema()` reads the definitions once a call
+    let definitionReads = 0;
+    Object.defineProperty(registry, 'uiSchemaDefinitions', {
+      get: () => {
+        definitionReads += 1;
+        return undefined;
+      },
+    });
+    expect(isSchemaFieldHidden(OLD_REF, undefined, 'a', ROOT_FIELD_PATH, registry)).toBe(true);
+    expect(definitionReads).toBe(1);
+  });
+
   it('ignores a widget in the global options', () => {
     const registry = makeRegistry({ widget: 'hidden' } as GlobalUISchemaOptions);
     expect(isSchemaFieldHidden({ type: 'string' }, undefined, undefined, ROOT_FIELD_PATH, registry)).toBe(false);

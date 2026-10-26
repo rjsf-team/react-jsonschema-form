@@ -581,6 +581,7 @@ export default function ObjectField<
     JSON.stringify(cycleProperties.filter((property) => uiState.isExpanded(toFieldPath(property, fieldPath))));
   const expandedCycles = useSyncExternalStore(uiState.subscribe, readExpandedCycles, readExpandedCycles);
   const expandedCycleProperties = useMemo(() => new Set<string>(JSON.parse(expandedCycles)), [expandedCycles]);
+  // Kept in a closure rather than a ref, since `react/refs` rejects reading or writing a ref during render
   const propertyHiddenChecks = useMemo(() => createPropertyHiddenChecks<T, S, F>(), []);
   let orderedProperties: string[] = [];
 
