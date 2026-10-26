@@ -366,14 +366,19 @@ function Attachment({ attach }: { attach: () => () => void }) {
   return null;
 }
 
-/** The submit button's uiSchema, with `disabled` set in the props it gives the button, which every `SubmitButton` spreads */
-function disabledSubmitUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
+/** The submit button's uiSchema, with `disabled` set in the props it gives the button when asked, which every
+ * `SubmitButton` spreads
+ */
+function submitButtonUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiSchema: UiSchema<T, S, F> | undefined,
+  disabled: boolean | undefined,
 ): UiSchema<T, S, F> {
   const submitOptions = getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY] ?? {};
   return {
     [UI_OPTIONS_KEY]: {
-      [SUBMIT_BTN_OPTIONS_KEY]: { ...submitOptions, props: { ...submitOptions.props, disabled: true } },
+      [SUBMIT_BTN_OPTIONS_KEY]: disabled
+        ? { ...submitOptions, props: { ...submitOptions.props, disabled: true } }
+        : submitOptions,
     },
   };
 }
@@ -393,7 +398,7 @@ function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContex
   registry,
 }: PendingSubmitButtonProps<T, S, F>) {
   const pendingUiSchema = useMemo(
-    () => (submitting ? disabledSubmitUiSchema<T, S, F>(uiSchema) : uiSchema),
+    () => (submitting ? submitButtonUiSchema<T, S, F>(uiSchema, true) : uiSchema),
     [submitting, uiSchema],
   );
   return <SubmitButton uiSchema={pendingUiSchema} registry={registry} pending={submitting} />;
@@ -488,17 +493,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   const FormTag = tagName || 'form';
 
   // Memoized so the submit button, which is not a field, keeps its props across renders that changed nothing of its own
-  const submitUiSchema = useMemo(
-    () =>
-      disabled
-        ? disabledSubmitUiSchema<T, S, F>(uiSchema)
-        : {
-            [UI_OPTIONS_KEY]: {
-              [SUBMIT_BTN_OPTIONS_KEY]: getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY] ?? {},
-            },
-          },
-    [uiSchema, disabled],
-  );
+  const submitUiSchema = useMemo(() => submitButtonUiSchema<T, S, F>(uiSchema, disabled), [uiSchema, disabled]);
   // The element too: a theme's `SubmitButton` may not be memoized, so an element that is kept is what skips it for a keystroke.
   // `children` replace the button, so there is none to build then
   const hasChildren = !!children;
