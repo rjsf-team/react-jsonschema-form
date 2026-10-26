@@ -61,6 +61,7 @@ CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the 
 
 A PR that changes anything a user of a published package can notice adds an entry to the changelog.
 Append it as the last bullet under the heading of each package whose users notice the change, in the upcoming release at the top of the file.
+If the change needs a bigger semver bump than that release's heading names, update the heading.
 Tests, CI, refactors and docs fixes need no entry, and neither does a fix to a change that isn't released yet: edit that change's entry instead.
 
 Write the entry for someone deciding whether to upgrade, who won't open the PR:
@@ -68,7 +69,8 @@ Write the entry for someone deciding whether to upgrade, who won't open the PR:
 - Start with `Add`, `Change`, `Deprecate`, `Fix` or `Remove`, and name the component, prop or export a user meets, in backticks.
 - Say what users notice, not how the code does it. A fix names what went wrong for them: "Fix `ArrayField` dropping the last item's errors when an item is removed".
 - Leave the reasoning, the alternatives and the edge cases to the PR description, and end the entry with a link to the PR and to the issue it fixes.
-- Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and link the [upgrade guide](#upgrade-guide) section that says what to change. A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower type.
+- Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and link the [upgrade guide](#upgrade-guide) section that says what to change.
+- A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower type.
 - Aim for a sentence or two, about 200 characters. If it can't be both short and clear, keep it clear.
 
 For example, instead of an entry that explains the implementation:
@@ -82,7 +84,7 @@ write what users see:
 ## Upgrade guide
 
 A breaking change also gets a section in the next major version's upgrade guide, in `packages/docs/docs/migration-guides`, in the same PR.
-The guide answers one question: "my code broke, what do I change?". Each section has a heading that names the change as users meet it, who it affects, what happened before and what happens now, and what to do instead, with a before/after `diff` when code has to change. Link the reference docs for anything more.
+The guide answers one question: "my code broke, what do I change?". Each section has a heading that names the change as users meet it, then says who it affects, what happened before and what happens now, and what to do instead, with a before/after `diff` when code has to change. Link the reference docs for anything more.
 New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide.
 
 ## Documentation
@@ -205,7 +207,7 @@ Then, make a PR to main. Merge the PR into main -- make sure you use "merge comm
 the original commit where the tag was based on is still present in the main branch.
 
 Then, create a release in the GitHub "Releases" tab, select the new tag that you have added,
-and copy that section of the changelog into the release's description.
+and copy the release's changelog section into its description.
 
 This will trigger a GitHub Actions pipeline that will build and publish all packages to npm.
 
