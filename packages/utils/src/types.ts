@@ -1620,8 +1620,9 @@ export interface SubmitButtonProps<
   /** The `registry` object */
   readonly registry: Registry<T, S, F>;
   /** Whether a submission is in flight: a promise `onSubmit` returned has yet to settle, or the form is pending in
-   * React's form status, as it is while a transition `onSubmit` started runs. A button that disables itself while it is
-   * set can't submit the form a second time meanwhile
+   * React's form status, as it is while a transition `onSubmit` started runs. Meanwhile the props of
+   * `ui:submitButtonOptions` set `aria-disabled` and cancel a click, so a button that spreads them takes no second
+   * submit without `disabled`, which would move focus off it
    */
   readonly pending?: boolean;
 }

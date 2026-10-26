@@ -1504,7 +1504,7 @@ The following props are passed to a `SubmitButton`:
 
 - `uiSchema`: The uiSchema object for this field, used to extract the `UISchemaSubmitButtonOptions`.
 - `registry`: The `registry` object.
-- `pending`: Whether a submission is in flight: a promise `onSubmit` returned has yet to settle, or the form is pending in React's form status, as it is while a transition `onSubmit` started runs. Meanwhile the form sets `aria-disabled` in the props of the `UISchemaSubmitButtonOptions`, and ignores another submit while a promise `onSubmit` returned is pending, so a button that spreads those props stays focusable; use `pending` to show the submission, such as with a spinner or a style for `aria-disabled`. See [Submitting](../usage/submitting.md).
+- `pending`: Whether a submission is in flight: a promise `onSubmit` returned has yet to settle, or the form is pending in React's form status, as it is while a transition `onSubmit` started runs. Meanwhile the form sets `aria-disabled` and an `onClick` that cancels the click in the props of the `UISchemaSubmitButtonOptions`, so a button that spreads those props takes no second submit and stays focusable. Don't set `disabled` from `pending`, since the browser moves focus off a focused button that becomes disabled. Use `pending` to show the submission, such as with a spinner or a style for `aria-disabled`. See [Submitting](../usage/submitting.md).
 
 ## Custom Templates
 
