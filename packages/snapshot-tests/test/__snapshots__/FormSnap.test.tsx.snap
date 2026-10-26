@@ -150,7 +150,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="rjsf-array-item-toolbox"
                 >
                   <button
-                    aria-label="Move up"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                     disabled=""
                     id="root_tasks_0__moveUp"
@@ -175,7 +174,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Move down"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                     id="root_tasks_0__moveDown"
                     title="Move down"
@@ -199,7 +197,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Remove"
                     class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                     id="root_tasks_0__remove"
                     title="Remove"
@@ -291,7 +288,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="rjsf-array-item-toolbox"
                 >
                   <button
-                    aria-label="Move up"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                     id="root_tasks_1__moveUp"
                     title="Move up"
@@ -315,7 +311,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Move down"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                     disabled=""
                     id="root_tasks_1__moveDown"
@@ -340,7 +335,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Remove"
                     class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                     id="root_tasks_1__remove"
                     title="Remove"
@@ -367,7 +361,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               </div>
             </div>
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               id="root_tasks__add"
               title="Add"
@@ -468,7 +461,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   class="rjsf-array-item-toolbox"
                 >
                   <button
-                    aria-label="Move up"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                     disabled=""
                     id="root_tags_0__moveUp"
@@ -493,7 +485,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Move down"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                     id="root_tags_0__moveDown"
                     title="Move down"
@@ -517,7 +508,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Remove"
                     class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                     id="root_tags_0__remove"
                     title="Remove"
@@ -576,7 +566,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   class="rjsf-array-item-toolbox"
                 >
                   <button
-                    aria-label="Move up"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                     id="root_tags_1__moveUp"
                     title="Move up"
@@ -600,7 +589,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Move down"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                     disabled=""
                     id="root_tags_1__moveDown"
@@ -625,7 +613,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Remove"
                     class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                     id="root_tags_1__remove"
                     title="Remove"
@@ -652,7 +639,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               </div>
             </div>
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               id="root_tags__add"
               title="Add"
@@ -1293,7 +1279,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="rjsf-array-item-toolbox"
                 >
                   <button
-                    aria-label="Move up"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                     disabled=""
                     id="root_tasks_0__moveUp"
@@ -1318,7 +1303,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Move down"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                     id="root_tasks_0__moveDown"
                     title="Move down"
@@ -1342,7 +1326,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Remove"
                     class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                     id="root_tasks_0__remove"
                     title="Remove"
@@ -1434,7 +1417,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="rjsf-array-item-toolbox"
                 >
                   <button
-                    aria-label="Move up"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                     id="root_tasks_1__moveUp"
                     title="Move up"
@@ -1458,7 +1440,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Move down"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                     disabled=""
                     id="root_tasks_1__moveDown"
@@ -1483,7 +1464,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Remove"
                     class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                     id="root_tasks_1__remove"
                     title="Remove"
@@ -1510,7 +1490,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               </div>
             </div>
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               id="root_tasks__add"
               title="Add"
@@ -1611,7 +1590,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   class="rjsf-array-item-toolbox"
                 >
                   <button
-                    aria-label="Move up"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                     disabled=""
                     id="root_tags_0__moveUp"
@@ -1636,7 +1614,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Move down"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                     id="root_tags_0__moveDown"
                     title="Move down"
@@ -1660,7 +1637,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Remove"
                     class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                     id="root_tags_0__remove"
                     title="Remove"
@@ -1719,7 +1695,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   class="rjsf-array-item-toolbox"
                 >
                   <button
-                    aria-label="Move up"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                     id="root_tags_1__moveUp"
                     title="Move up"
@@ -1743,7 +1718,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Move down"
                     class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                     disabled=""
                     id="root_tags_1__moveDown"
@@ -1768,7 +1742,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     </svg>
                   </button>
                   <button
-                    aria-label="Remove"
                     class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                     id="root_tags_1__remove"
                     title="Remove"
@@ -1795,7 +1768,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               </div>
             </div>
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               id="root_tags__add"
               title="Add"
@@ -3774,7 +3746,6 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   id="root_nestedObjectOptional_deepArrayOptional__add"
                   title="Add"
@@ -3817,7 +3788,6 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   id="root_nestedObjectOptional_deepArrayOptional2__add"
                   title="Add"
@@ -3865,7 +3835,6 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   id="root_nestedObjectOptional_deepArray__add"
                   title="Add"
@@ -3910,7 +3879,6 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list"
             />
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               id="root_nestedArrayOptional__add"
               title="Add"
@@ -3999,7 +3967,6 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list"
             />
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               id="root_nestedArray__add"
               title="Add"
@@ -4147,7 +4114,6 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   id="root_optionalArrayWithAnyofs__add"
                   title="Add"
@@ -4338,7 +4304,6 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional__add"
@@ -4382,7 +4347,6 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional2__add"
@@ -4431,7 +4395,6 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   disabled=""
                   id="root_nestedObjectOptional_deepArray__add"
@@ -4477,7 +4440,6 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list"
             />
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               disabled=""
               id="root_nestedArrayOptional__add"
@@ -4568,7 +4530,6 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-array-item-list"
             />
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               disabled=""
               id="root_nestedArray__add"
@@ -4719,7 +4680,6 @@ exports[`single fields > optional data controls > does not show optional control
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   disabled=""
                   id="root_optionalArrayWithAnyofs__add"
@@ -4796,7 +4756,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="rjsf-title-optional-data"
               >
                 <button
-                  aria-label="Remove data for optional field"
                   class="rjsf-button rjsf-button-default rjsf-remove-optional-data"
                   id="root_nestedObjectOptional__optionalRemove"
                   title="Remove data for optional field"
@@ -4859,7 +4818,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="rjsf-title-optional-data"
                   >
                     <button
-                      aria-label="Add data for optional field"
                       class="rjsf-button rjsf-button-default rjsf-add-optional-data"
                       id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
                       title="Add data for optional field"
@@ -4945,7 +4903,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   id="root_nestedObjectOptional_deepArrayOptional__add"
                   title="Add"
@@ -4987,7 +4944,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="rjsf-title-optional-data"
                   >
                     <button
-                      aria-label="Add data for optional field"
                       class="rjsf-button rjsf-button-default rjsf-add-optional-data"
                       id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
                       title="Add data for optional field"
@@ -5040,7 +4996,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   id="root_nestedObjectOptional_deepArray__add"
                   title="Add"
@@ -5084,7 +5039,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 class="rjsf-title-optional-data"
               >
                 <button
-                  aria-label="Remove data for optional field"
                   class="rjsf-button rjsf-button-default rjsf-remove-optional-data"
                   id="root_nestedArrayOptional__optionalRemove"
                   title="Remove data for optional field"
@@ -5146,7 +5100,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-toolbox"
                 >
                   <button
-                    aria-label="Remove"
                     class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                     id="root_nestedArrayOptional_0__remove"
                     title="Remove"
@@ -5173,7 +5126,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               </div>
             </div>
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               id="root_nestedArrayOptional__add"
               title="Add"
@@ -5262,7 +5214,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-array-item-list"
             />
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               id="root_nestedArray__add"
               title="Add"
@@ -5310,7 +5261,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="rjsf-title-optional-data"
                   >
                     <button
-                      aria-label="Add data for optional field"
                       class="rjsf-button rjsf-button-default rjsf-add-optional-data"
                       id="root_optionalObjectWithOneofs__optionalAdd"
                       title="Add data for optional field"
@@ -5362,7 +5312,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="rjsf-title-optional-data"
                   >
                     <button
-                      aria-label="Add data for optional field"
                       class="rjsf-button rjsf-button-default rjsf-add-optional-data"
                       id="root_optionalArrayWithAnyofs__optionalAdd"
                       title="Add data for optional field"
@@ -5543,7 +5492,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   disabled=""
                   id="root_nestedObjectOptional_deepArrayOptional__add"
@@ -5616,7 +5564,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-list"
                 />
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   disabled=""
                   id="root_nestedObjectOptional_deepArray__add"
@@ -5696,7 +5643,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-array-item-toolbox"
                 >
                   <button
-                    aria-label="Remove"
                     class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                     disabled=""
                     id="root_nestedArrayOptional_0__remove"
@@ -5724,7 +5670,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               </div>
             </div>
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               disabled=""
               id="root_nestedArrayOptional__add"
@@ -5815,7 +5760,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-array-item-list"
             />
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               disabled=""
               id="root_nestedArray__add"
@@ -5951,7 +5895,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="rjsf-title-optional-data"
               >
                 <button
-                  aria-label="Add data for optional field"
                   class="rjsf-button rjsf-button-default rjsf-add-optional-data"
                   id="root_nestedObjectOptional__optionalAdd"
                   title="Add data for optional field"
@@ -5995,7 +5938,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 class="rjsf-title-optional-data"
               >
                 <button
-                  aria-label="Add data for optional field"
                   class="rjsf-button rjsf-button-default rjsf-add-optional-data"
                   id="root_nestedArrayOptional__optionalAdd"
                   title="Add data for optional field"
@@ -6089,7 +6031,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-array-item-list"
             />
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               id="root_nestedArray__add"
               title="Add"
@@ -6137,7 +6078,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     class="rjsf-title-optional-data"
                   >
                     <button
-                      aria-label="Add data for optional field"
                       class="rjsf-button rjsf-button-default rjsf-add-optional-data"
                       id="root_optionalObjectWithOneofs__optionalAdd"
                       title="Add data for optional field"
@@ -6189,7 +6129,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     class="rjsf-title-optional-data"
                   >
                     <button
-                      aria-label="Add data for optional field"
                       class="rjsf-button rjsf-button-default rjsf-add-optional-data"
                       id="root_optionalArrayWithAnyofs__optionalAdd"
                       title="Add data for optional field"
@@ -6363,7 +6302,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-array-item-list"
             />
             <button
-              aria-label="Add"
               class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
               disabled=""
               id="root_nestedArray__add"
@@ -8155,7 +8093,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
         value="foo"
       />
       <button
-        aria-label="clear input"
         class="rjsf-button rjsf-button-default rjsf-btn-clear"
         title="clear input"
         type="button"

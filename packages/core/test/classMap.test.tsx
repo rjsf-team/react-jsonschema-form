@@ -153,7 +153,7 @@ describe('state attributes', () => {
     }
   });
 
-  it("marks a container's and a checkbox's own description data-invalid while they show errors", () => {
+  it("marks a container's and a checkbox's own description, and a checkbox's own label, data-invalid while they show errors", () => {
     createFormComponent({
       schema: {
         type: 'object',
@@ -169,6 +169,13 @@ describe('state attributes', () => {
     for (const text of ['object description', 'list description', 'flag description']) {
       expect(screen.getByText(text).closest('.rjsf-field-description')).toHaveAttribute('data-invalid', 'true');
     }
+    expect(screen.getByRole('checkbox').closest('label')).toHaveAttribute('data-invalid', 'true');
+  });
+
+  it("leaves a checkbox's own label unmarked while it shows no errors", () => {
+    createFormComponent({ schema: { type: 'boolean', title: 'Flag' } });
+
+    expect(screen.getByRole('checkbox').closest('label')).not.toHaveAttribute('data-invalid');
   });
 
   // An option's label follows its own errors and `ui:hideError`, as its wrapper's class and its help do, whatever the

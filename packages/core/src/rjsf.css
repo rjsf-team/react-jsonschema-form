@@ -16,9 +16,11 @@
     min-width: 0;
   }
 
+  /* Full width, as a legend otherwise sizes to its content, so the optional-data button's auto margin has room */
   :where(.rjsf legend) {
     display: flex;
     align-items: center;
+    inline-size: 100%;
     padding: 0;
     margin-block-end: var(--rjsf-gap);
   }
@@ -100,6 +102,15 @@
     margin-block-start: calc(1lh + 0.25rem);
   }
 
+  /* A description between them adds a line and its margin, as `rjsf-theme.css` spaces it */
+  :where(
+    .rjsf
+      .rjsf-array-item:has(> .rjsf-field > .rjsf-field-label:first-child + .rjsf-field-description)
+      > .rjsf-array-item-toolbox
+  ) {
+    margin-block-start: calc(2lh + 0.5rem);
+  }
+
   :where(.rjsf .rjsf-array-item-toolbox) {
     display: flex;
     gap: 0.25rem;
@@ -127,7 +138,9 @@
     margin-block-start: var(--rjsf-gap);
   }
 
+  /* A custom property inherits, so each row resets it, or a column without a span takes the span of the column it is in */
   :where(.rjsf .rjsf-grid-row) {
+    --rjsf-span: 12;
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: var(--rjsf-gap);

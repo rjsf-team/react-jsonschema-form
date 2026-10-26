@@ -21,12 +21,10 @@ function IconButtonFn<
   const { classMap } = registry;
   const path = typeof icon === 'string' && Object.hasOwn(ICON_PATHS, icon) ? ICON_PATHS[icon] : undefined;
   return (
-    // The icon is hidden from assistive technology, so the title names the button, as a label, unless the caller
-    // names it otherwise
+    // The icon is hidden from assistive technology, so the title names the button
     <button
       type='button'
       className={joinClassNames('rjsf-button', `rjsf-button-${iconType}`, classMap.iconButton, className)}
-      aria-label={otherProps.title}
       {...otherProps}
     >
       {typeof icon === 'object'

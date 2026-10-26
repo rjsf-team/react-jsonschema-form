@@ -16,7 +16,6 @@ exports[`array fields > array 1`] = `
           class="rjsf-array-item-list"
         />
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -87,7 +86,6 @@ exports[`array fields > array icons 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -112,7 +110,6 @@ exports[`array fields > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move down"
@@ -136,7 +133,6 @@ exports[`array fields > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_0__copy"
                 title="Copy"
@@ -160,7 +156,6 @@ exports[`array fields > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove"
@@ -204,7 +199,6 @@ exports[`array fields > array icons 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move up"
@@ -228,7 +222,6 @@ exports[`array fields > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -253,7 +246,6 @@ exports[`array fields > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_1__copy"
                 title="Copy"
@@ -277,7 +269,6 @@ exports[`array fields > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove"
@@ -304,7 +295,6 @@ exports[`array fields > array icons 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -691,7 +681,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -716,7 +705,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move down"
@@ -740,7 +728,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove"
@@ -825,7 +812,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move up"
@@ -849,7 +835,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -874,7 +859,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove"
@@ -901,7 +885,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -972,7 +955,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -997,7 +979,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move down"
@@ -1021,7 +1002,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove"
@@ -1065,7 +1045,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move up"
@@ -1089,7 +1068,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -1114,7 +1092,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove"
@@ -1141,7 +1118,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -1352,7 +1328,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       class="rjsf-array-item-toolbox"
                     >
                       <button
-                        aria-label="Move up"
                         class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                         disabled=""
                         id="root_0_0__moveUp"
@@ -1377,7 +1352,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </svg>
                       </button>
                       <button
-                        aria-label="Move down"
                         class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                         id="root_0_0__moveDown"
                         title="Move down"
@@ -1401,7 +1375,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </svg>
                       </button>
                       <button
-                        aria-label="Remove"
                         class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                         id="root_0_0__remove"
                         title="Remove"
@@ -1445,7 +1418,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       class="rjsf-array-item-toolbox"
                     >
                       <button
-                        aria-label="Move up"
                         class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                         id="root_0_1__moveUp"
                         title="Move up"
@@ -1469,7 +1441,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </svg>
                       </button>
                       <button
-                        aria-label="Move down"
                         class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                         disabled=""
                         id="root_0_1__moveDown"
@@ -1494,7 +1465,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </svg>
                       </button>
                       <button
-                        aria-label="Remove"
                         class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                         id="root_0_1__remove"
                         title="Remove"
@@ -1521,7 +1491,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   </div>
                 </div>
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   id="root_0__add"
                   title="Add"
@@ -1550,7 +1519,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -1575,7 +1543,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move down"
@@ -1599,7 +1566,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove"
@@ -1656,7 +1622,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       class="rjsf-array-item-toolbox"
                     >
                       <button
-                        aria-label="Move up"
                         class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                         disabled=""
                         id="root_1_0__moveUp"
@@ -1681,7 +1646,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </svg>
                       </button>
                       <button
-                        aria-label="Move down"
                         class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                         id="root_1_0__moveDown"
                         title="Move down"
@@ -1705,7 +1669,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </svg>
                       </button>
                       <button
-                        aria-label="Remove"
                         class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                         id="root_1_0__remove"
                         title="Remove"
@@ -1749,7 +1712,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                       class="rjsf-array-item-toolbox"
                     >
                       <button
-                        aria-label="Move up"
                         class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                         id="root_1_1__moveUp"
                         title="Move up"
@@ -1773,7 +1735,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </svg>
                       </button>
                       <button
-                        aria-label="Move down"
                         class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                         disabled=""
                         id="root_1_1__moveDown"
@@ -1798,7 +1759,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         </svg>
                       </button>
                       <button
-                        aria-label="Remove"
                         class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                         id="root_1_1__remove"
                         title="Remove"
@@ -1825,7 +1785,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   </div>
                 </div>
                 <button
-                  aria-label="Add"
                   class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
                   id="root_1__add"
                   title="Add"
@@ -1854,7 +1813,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move up"
@@ -1878,7 +1836,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -1903,7 +1860,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove"
@@ -1930,7 +1886,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -2042,7 +1997,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -2067,7 +2021,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move down"
@@ -2091,7 +2044,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove"
@@ -2176,7 +2128,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move up"
@@ -2200,7 +2151,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -2225,7 +2175,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove"
@@ -2252,7 +2201,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -2323,7 +2271,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -2348,7 +2295,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move down"
@@ -2372,7 +2318,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove"
@@ -2416,7 +2361,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move up"
@@ -2440,7 +2384,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -2465,7 +2408,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove"
@@ -2492,7 +2434,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -2580,7 +2521,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move report.pdf up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -2605,7 +2545,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move report.pdf down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move report.pdf down"
@@ -2629,7 +2568,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy report.pdf"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_0__copy"
                 title="Copy report.pdf"
@@ -2653,7 +2591,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove report.pdf"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove report.pdf"
@@ -2714,7 +2651,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move invoice.pdf up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move invoice.pdf up"
@@ -2738,7 +2674,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move invoice.pdf down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -2763,7 +2698,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy invoice.pdf"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_1__copy"
                 title="Copy invoice.pdf"
@@ -2787,7 +2721,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove invoice.pdf"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove invoice.pdf"
@@ -2814,7 +2747,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -2880,7 +2812,6 @@ exports[`with title and description > array 1`] = `
           class="rjsf-array-item-list"
         />
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -2986,7 +2917,6 @@ exports[`with title and description > array icons 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -3011,7 +2941,6 @@ exports[`with title and description > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move down"
@@ -3035,7 +2964,6 @@ exports[`with title and description > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_0__copy"
                 title="Copy"
@@ -3059,7 +2987,6 @@ exports[`with title and description > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove"
@@ -3125,7 +3052,6 @@ exports[`with title and description > array icons 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move up"
@@ -3149,7 +3075,6 @@ exports[`with title and description > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -3174,7 +3099,6 @@ exports[`with title and description > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_1__copy"
                 title="Copy"
@@ -3198,7 +3122,6 @@ exports[`with title and description > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove"
@@ -3225,7 +3148,6 @@ exports[`with title and description > array icons 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -3472,7 +3394,6 @@ exports[`with title and description from both > array 1`] = `
           class="rjsf-array-item-list"
         />
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -3578,7 +3499,6 @@ exports[`with title and description from both > array icons 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -3603,7 +3523,6 @@ exports[`with title and description from both > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move down"
@@ -3627,7 +3546,6 @@ exports[`with title and description from both > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_0__copy"
                 title="Copy"
@@ -3651,7 +3569,6 @@ exports[`with title and description from both > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove"
@@ -3717,7 +3634,6 @@ exports[`with title and description from both > array icons 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move up"
@@ -3741,7 +3657,6 @@ exports[`with title and description from both > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -3766,7 +3681,6 @@ exports[`with title and description from both > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_1__copy"
                 title="Copy"
@@ -3790,7 +3704,6 @@ exports[`with title and description from both > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove"
@@ -3817,7 +3730,6 @@ exports[`with title and description from both > array icons 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -4064,7 +3976,6 @@ exports[`with title and description from uiSchema > array 1`] = `
           class="rjsf-array-item-list"
         />
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -4170,7 +4081,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -4195,7 +4105,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move down"
@@ -4219,7 +4128,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_0__copy"
                 title="Copy"
@@ -4243,7 +4151,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove"
@@ -4309,7 +4216,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move up"
@@ -4333,7 +4239,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -4358,7 +4263,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_1__copy"
                 title="Copy"
@@ -4382,7 +4286,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove"
@@ -4409,7 +4312,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -4643,7 +4545,6 @@ exports[`with title and description with global label off > array 1`] = `
           class="rjsf-array-item-list"
         />
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"
@@ -4715,7 +4616,6 @@ exports[`with title and description with global label off > array icons 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 disabled=""
                 id="root_0__moveUp"
@@ -4740,7 +4640,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 id="root_0__moveDown"
                 title="Move down"
@@ -4764,7 +4663,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_0__copy"
                 title="Copy"
@@ -4788,7 +4686,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_0__remove"
                 title="Remove"
@@ -4833,7 +4730,6 @@ exports[`with title and description with global label off > array icons 1`] = `
               class="rjsf-array-item-toolbox"
             >
               <button
-                aria-label="Move up"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-up"
                 id="root_1__moveUp"
                 title="Move up"
@@ -4857,7 +4753,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Move down"
                 class="rjsf-button rjsf-button-default rjsf-array-item-move-down"
                 disabled=""
                 id="root_1__moveDown"
@@ -4882,7 +4777,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Copy"
                 class="rjsf-button rjsf-button-default rjsf-array-item-copy"
                 id="root_1__copy"
                 title="Copy"
@@ -4906,7 +4800,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                 </svg>
               </button>
               <button
-                aria-label="Remove"
                 class="rjsf-button rjsf-button-danger rjsf-array-item-remove"
                 id="root_1__remove"
                 title="Remove"
@@ -4933,7 +4826,6 @@ exports[`with title and description with global label off > array icons 1`] = `
           </div>
         </div>
         <button
-          aria-label="Add"
           class="rjsf-button rjsf-button-info rjsf-btn-add rjsf-array-item-add"
           id="root__add"
           title="Add"

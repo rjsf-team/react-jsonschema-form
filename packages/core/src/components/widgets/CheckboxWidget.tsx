@@ -43,6 +43,7 @@ function CheckboxWidget<
   } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const { classMap } = registry;
+  const hasErrors = hasWidgetErrors<T, S, F>(props);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
@@ -77,13 +78,13 @@ function CheckboxWidget<
         <DescriptionFieldTemplate
           id={description.id}
           description={description.text}
-          hasErrors={hasWidgetErrors<T, S, F>(props)}
+          hasErrors={hasErrors}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
       )}
-      <label className={classMap.checkboxLabel}>
+      <label className={classMap.checkboxLabel} data-invalid={hasErrors || undefined}>
         <input
           type='checkbox'
           className={classMap.checkboxInput}

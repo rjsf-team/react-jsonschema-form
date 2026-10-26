@@ -41,7 +41,7 @@
     border-color: var(--rjsf-danger);
   }
 
-  :where(.rjsf .rjsf-field-label[data-invalid], .rjsf .rjsf-field-help[data-invalid]) {
+  :where(.rjsf .rjsf-field-label, .rjsf .rjsf-checkbox > label, .rjsf .rjsf-field-help):where([data-invalid]) {
     color: var(--rjsf-danger);
   }
 

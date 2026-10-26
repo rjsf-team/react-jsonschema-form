@@ -539,7 +539,9 @@ export interface GridTemplateProps extends GenericObjectType {
    * for Rows vs Columns. NOTE: This is falsy by default when not specified
    */
   column?: boolean;
-  /** How many of a row's 12 tracks a column spans; a column without one is full width */
+  /** How many of a row's tracks a column spans. Core's `GridTemplate` reads it on its 12-track grid, where a column
+   * without one is full width; another theme may read it on its own grid, such as antd's 24 columns, or ignore it
+   */
   span?: number;
 }
 
