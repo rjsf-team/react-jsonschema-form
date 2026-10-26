@@ -16,6 +16,7 @@ import {
   createParentLog,
   createRetainingWidget,
   errorListMessages,
+  expectToHaveBeenCalledWithFormData,
   fieldErrorsById,
   handleOf,
   input,
@@ -653,10 +654,17 @@ describe('typing in a custom widget under a parent that renders for every change
 });
 
 describe("a custom upload widget that sets its parent's state before calling onChange (#3914)", () => {
-  const SetParentState = createContext<(value: string) => void>(noop);
+  interface ParentStore {
+    setParentState: (file: File) => void;
+    /** Held until the test has seen the parent commit its new state, for the order the issue's `flushSync` workaround
+     * forced
+     */
+    parentCommitted?: Promise<unknown>;
+  }
+  const ParentStore = createContext<ParentStore>({ setParentState: noop });
 
   function UploadWidget({ id, value, onChange }: WidgetProps<Data['name']>) {
-    const setParentState = use(SetParentState);
+    const { setParentState, parentCommitted } = use(ParentStore);
     return (
       <>
         <input
@@ -665,8 +673,10 @@ describe("a custom upload widget that sets its parent's state before calling onC
           onChange={async (event) => {
             const file = event.target.files?.[0];
             if (file) {
-              // Reading the file first, as the issue's upload widget does, makes both updates land after the event
-              setParentState(await file.text());
+              setParentState(file);
+              if (parentCommitted) {
+                await parentCommitted;
+              }
               onChange(file.name);
             }
           }}
@@ -678,66 +688,88 @@ describe("a custom upload widget that sets its parent's state before calling onC
 
   const upload = new File(['contents'], 'a.txt', { type: 'text/plain' });
 
-  it('keeps the value in the form and in the parent that passes formData and stores what onChange reports', async () => {
+  function UploadingParent({
+    log,
+    onSubmit,
+    parentCommitted,
+  }: Pick<ParentProps<Data>, 'log' | 'onSubmit'> & Pick<ParentStore, 'parentCommitted'>) {
+    const [file, setFile] = useState<File>();
+    return (
+      <ParentStore value={{ setParentState: setFile, parentCommitted }}>
+        <output aria-label='file'>{file?.type}</output>
+        <AcceptingParent<Data>
+          schema={schema}
+          uiSchema={{ name: { 'ui:widget': UploadWidget } }}
+          initialValue={{}}
+          log={log}
+          onSubmit={onSubmit}
+        />
+      </ParentStore>
+    );
+  }
+
+  it('keeps the value when both updates land in one render, the order the issue failed in', async () => {
     const onSubmit = vi.fn();
     const log = createParentLog<Data>();
-    function Parent() {
-      const [file, setFile] = useState('');
-      return (
-        <SetParentState value={setFile}>
-          <output aria-label='file'>{file}</output>
-          <AcceptingParent<Data>
-            schema={schema}
-            uiSchema={{ name: { 'ui:widget': UploadWidget } }}
-            initialValue={{}}
-            log={log}
-            onSubmit={onSubmit}
-          />
-        </SetParentState>
-      );
-    }
-    const { container } = render(<Parent />);
+    const { container } = render(<UploadingParent log={log} onSubmit={onSubmit} />);
 
     await user.upload(screen.getByLabelText('name'), upload);
-    await waitFor(() => expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('contents'));
     await submitForm(container, user);
 
-    expect(log.value).toEqual({ name: 'a.txt' });
+    expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('text/plain');
     expect(screen.getByRole('status', { name: 'stored name' })).toHaveTextContent('a.txt');
-    expect(onSubmit).toHaveBeenLastCalledWith(
-      expect.objectContaining({ formData: { name: 'a.txt' } }),
-      expect.anything(),
-    );
+    expect(log.value).toEqual({ name: 'a.txt' });
+    expectToHaveBeenCalledWithFormData(onSubmit, { name: 'a.txt' }, true);
+  });
+
+  it('keeps the value when the parent re-renders with its new state next to the stale form data first', async () => {
+    const onSubmit = vi.fn();
+    const log = createParentLog<Data>();
+    const { promise: parentCommitted, resolve: continueUpload } = Promise.withResolvers();
+    const { container } = render(<UploadingParent log={log} onSubmit={onSubmit} parentCommitted={parentCommitted} />);
+
+    await user.upload(screen.getByLabelText('name'), upload);
+
+    expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('text/plain');
+    expect(screen.getByRole('status', { name: 'stored name' })).toBeEmptyDOMElement();
+    expect(log.value).toEqual({});
+
+    await act(async () => {
+      continueUpload(undefined);
+      await parentCommitted;
+    });
+    await submitForm(container, user);
+
+    expect(screen.getByRole('status', { name: 'stored name' })).toHaveTextContent('a.txt');
+    expect(log.value).toEqual({ name: 'a.txt' });
+    expectToHaveBeenCalledWithFormData(onSubmit, { name: 'a.txt' }, true);
   });
 
   it('keeps every value of a form that is passed no formData when the parent re-renders', async () => {
     const onSubmit = vi.fn();
     function Parent() {
-      const [file, setFile] = useState('');
+      const [file, setFile] = useState<File>();
       return (
-        <SetParentState value={setFile}>
-          <output aria-label='file'>{file}</output>
+        <ParentStore value={{ setParentState: setFile }}>
+          <output aria-label='file'>{file?.type}</output>
           <Form<Data>
             schema={schema}
             validator={validator}
             uiSchema={{ name: { 'ui:widget': UploadWidget } }}
             onSubmit={onSubmit}
           />
-        </SetParentState>
+        </ParentStore>
       );
     }
     const { container } = render(<Parent />);
 
     await user.type(screen.getByRole('textbox', { name: 'other' }), 'x');
     await user.upload(screen.getByLabelText('name'), upload);
-    await waitFor(() => expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('contents'));
     await submitForm(container, user);
 
+    expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('text/plain');
     expect(screen.getByRole('status', { name: 'stored name' })).toHaveTextContent('a.txt');
     expect(screen.getByRole('textbox', { name: 'other' })).toHaveValue('x');
-    expect(onSubmit).toHaveBeenLastCalledWith(
-      expect.objectContaining({ formData: { name: 'a.txt', other: 'x' } }),
-      expect.anything(),
-    );
+    expectToHaveBeenCalledWithFormData(onSubmit, { name: 'a.txt', other: 'x' }, true);
   });
 });

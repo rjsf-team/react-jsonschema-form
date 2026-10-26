@@ -160,13 +160,15 @@ describe('render cost of an edit in a long list (#3183)', () => {
   const rows: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
   const initialFormData = Array.from({ length: 20 }, (_, index) => ({ a: `item ${index}` }));
   const renders = new Map<string, number>();
-  function CountingTextWidget({ id, value, onChange }: WidgetProps) {
+  function CountingTextWidget({ id, value, onChange, onFocus, onBlur }: WidgetProps) {
     renders.set(id, (renders.get(id) ?? 0) + 1);
     return (
       <input
         id={id}
         value={typeof value === 'string' ? value : ''}
         onChange={(event) => onChange(event.target.value)}
+        onFocus={(event) => onFocus(id, event.target.value)}
+        onBlur={(event) => onBlur(id, event.target.value)}
       />
     );
   }

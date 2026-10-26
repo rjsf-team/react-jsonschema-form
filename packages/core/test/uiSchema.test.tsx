@@ -537,7 +537,7 @@ describe('uiSchema', () => {
       });
     });
 
-    describe('oneOf constant options disabled (#2776)', () => {
+    it('should disable a listed constant of a $ref to a oneOf, in a checkboxes array and in a select (#2776)', () => {
       const schema: RJSFSchema = {
         type: 'object',
         definitions: {
@@ -559,21 +559,14 @@ describe('uiSchema', () => {
         single: { 'ui:enumDisabled': ['B'] },
       };
 
-      it('should disable the listed constant in a checkboxes array whose items are a $ref to a oneOf', () => {
-        createFormComponent({ schema, uiSchema });
+      createFormComponent({ schema, uiSchema });
 
-        expect(screen.getByRole('checkbox', { name: 'Group Beta' })).toBeDisabled();
-        expect(screen.getByRole('checkbox', { name: 'Group Alfa' })).toBeEnabled();
-        expect(screen.getByRole('checkbox', { name: 'Group Celsius' })).toBeEnabled();
-      });
-
-      it('should disable the listed constant in a select over the same oneOf', () => {
-        createFormComponent({ schema, uiSchema });
-
-        expect(screen.getByRole('option', { name: 'Group Beta' })).toBeDisabled();
-        expect(screen.getByRole('option', { name: 'Group Alfa' })).toBeEnabled();
-        expect(screen.getByRole('option', { name: 'Group Celsius' })).toBeEnabled();
-      });
+      expect(screen.getByRole('checkbox', { name: 'Group Beta' })).toBeDisabled();
+      expect(screen.getByRole('checkbox', { name: 'Group Alfa' })).toBeEnabled();
+      expect(screen.getByRole('checkbox', { name: 'Group Celsius' })).toBeEnabled();
+      expect(screen.getByRole('option', { name: 'Group Beta' })).toBeDisabled();
+      expect(screen.getByRole('option', { name: 'Group Alfa' })).toBeEnabled();
+      expect(screen.getByRole('option', { name: 'Group Celsius' })).toBeEnabled();
     });
   });
 

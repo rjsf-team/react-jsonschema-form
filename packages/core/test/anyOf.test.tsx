@@ -2441,14 +2441,15 @@ describe('anyOf', () => {
   it('scores an ambiguous oneOf whose option has an anyOf key that is present but undefined (#5365)', () => {
     const schema: RJSFSchema = {
       oneOf: [
+        { properties: { p: {}, q: { type: 'string' } } },
         { properties: { p: { type: 'string', anyOf: undefined } } },
-        { properties: { p: { type: 'string' }, extra: { type: 'number' } } },
       ],
     };
 
     const { node } = createFormComponent({ schema, initialFormData: { p: 'x' } });
 
-    expect(screen.getByRole('combobox')).toHaveDisplayValue('Option 1');
+    // Both options accept the data, so only scoring `p` against the second picks it over the first
+    expect(screen.getByRole('combobox')).toHaveDisplayValue('Option 2');
     expect(elementOf(node, 'input#root_p')).toHaveValue('x');
   });
 
