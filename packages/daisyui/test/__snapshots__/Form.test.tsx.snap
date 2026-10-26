@@ -143,7 +143,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-object"
@@ -327,7 +327,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-object"
@@ -605,7 +605,8 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          data-display-label="true"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -723,7 +724,8 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          data-display-label="true"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -1736,7 +1738,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-object"
@@ -1920,7 +1922,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-object"
@@ -2198,7 +2200,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          data-display-label="true"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -2316,7 +2319,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          data-display-label="true"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -7847,7 +7851,8 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          data-display-label="true"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"
@@ -8687,7 +8692,8 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          data-display-label="true"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-string"

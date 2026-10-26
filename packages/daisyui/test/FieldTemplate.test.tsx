@@ -391,8 +391,8 @@ describe('FieldTemplate', () => {
       expect(screen.getByRole('group', { name: 'Agree' })).toBeInTheDocument();
     });
 
-    // A label points at each select whether or not the field has a property name of its own, so a root field — which
-    // has none — has to describe the value its selects display just as a titled property does
+    // Each select is named whether or not the field has a property name of its own, so a root field — which has none —
+    // has to describe the value its selects display just as a titled property does
     describe.each([
       [
         'a titled property',
@@ -403,7 +403,7 @@ describe('FieldTemplate', () => {
       ],
       ['a root field', dateSchema, '2020-05-03', altDate, ''],
     ])('for %s', (_, schema, formData, uiSchema, namePrefix) => {
-      test('names each of its selects with its own label, and shows the value it holds', () => {
+      test('names each of its selects, and shows the value it holds', () => {
         render(<Form schema={schema} uiSchema={uiSchema} initialFormData={formData} validator={validator} />);
 
         // Each select is a combobox named by its `aria-label`, whose contents are its value. Both are spelled out

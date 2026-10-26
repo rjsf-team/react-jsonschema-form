@@ -26,9 +26,9 @@ const DAISYUI_CLASS_MAP: ClassMap = {
   fieldHelp: 'text-gray-500 text-sm',
   errorListTitle: 'font-bold text-red-600',
   errorListItems: 'list-disc list-inside text-red-600',
-  // Top-aligned, so errors or help under the input don't move the toolbox; past a label, down to the input
+  // Top-aligned, so errors or help under the input don't move the toolbox; past a label core marks, down to the input
   arrayItem:
-    'fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px [&:has(>.rjsf-field>.field-template>label:first-child)>.rjsf-array-item-toolbox]:mt-5',
+    'fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5',
   arrayItemToolbox: 'mt-1 flex justify-end',
   multiSchema: 'p-4 border rounded-sm shadow-sm',
   multiSchemaSelector: 'mb-4',
