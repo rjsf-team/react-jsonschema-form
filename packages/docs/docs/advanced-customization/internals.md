@@ -168,11 +168,11 @@ formRef.current?.setFieldValue(['address', 'city'], 'Paris');
 formRef.current?.setFieldValue('', { address: { city: 'Paris', country: 'France' } });
 ```
 
-The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. A `formData` passed after mount does not replace the value: call `setFieldValue('', data)`, or remount the form under a `key`.
+The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. A `formData` passed after mount does not replace the value: call `reset(data)` to show it as the form's clean baseline, `setFieldValue('', data)` to apply it as an edit, which leaves the form dirty, or remount the form under a `key`.
 
 ## Command timing
 
-Use event handlers for actions such as saving, resetting and validating. Other data reaches the form through `setFieldValue('', data)` where it arrives, or a remount under a `key`; a `formData` passed after mount is ignored.
+Use event handlers for actions such as saving, resetting and validating. Other data reaches the form through `reset(data)` where it arrives, or `setFieldValue('', data)` when it is an edit, or a remount under a `key`; a `formData` passed after mount is ignored.
 
 An existing integration may need to issue a command when props change. Use a passive `useEffect` for that synchronization. For example, a descendant receiving a stable `formRef` can validate when its supplied schema changes:
 
