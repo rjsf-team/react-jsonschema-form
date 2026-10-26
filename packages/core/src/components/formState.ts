@@ -45,6 +45,7 @@ import {
   ONE_OF_KEY,
 } from '@rjsf/utils';
 
+import isDevelopment from '../isDevelopment.ts';
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
@@ -236,7 +237,8 @@ function touchedMarksOf(formData: unknown, touchedPaths: TouchedPaths): unknown 
 }
 
 /** The form's status, whose `dirtyFields`, `touched` and `touchedFields` are built on first read, since most events are
- * read without them
+ * read without them. The marks are frozen in development as they are built, since `getStatus()` hands the same marks
+ * to every reader
  *
  * @param state - The state of the form
  * @param submitCount - How many submits have reached the form since it mounted or was last reset
@@ -256,13 +258,21 @@ export function toFormStatus<T>(
       // no longer holds, cannot report a touch `touchedFields` does not show
       touched = marks !== undefined;
       touchedFields = asNestedBooleans<T>(marks ?? noMarks(formData));
+      if (isDevelopment) {
+        freezeFormData(touchedFields);
+      }
     }
     return touchedFields;
   };
   return {
     dirty: !Object.is(formData, baseline),
     get dirtyFields() {
-      dirtyFields ??= dirtyFieldsOf(formData, baseline);
+      if (dirtyFields === undefined) {
+        dirtyFields = dirtyFieldsOf(formData, baseline);
+        if (isDevelopment) {
+          freezeFormData(dirtyFields);
+        }
+      }
       return dirtyFields;
     },
     get touched() {

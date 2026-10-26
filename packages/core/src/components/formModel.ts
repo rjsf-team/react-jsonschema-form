@@ -702,8 +702,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       if (lastStatus?.from !== state || lastStatus.status.submitCount !== submitCount) {
         const status = toFormStatus(state, submitCount);
         if (isDevelopment) {
-          freezeFormData(status.dirtyFields);
-          freezeFormData(status.touchedFields);
           Object.freeze(status);
         }
         lastStatus = { from: state, status };

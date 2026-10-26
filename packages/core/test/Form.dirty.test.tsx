@@ -419,6 +419,45 @@ describe('dirty', () => {
         submitCount: 0,
       });
     });
+
+    it('re-derives a baseline a schema prop change gave the clean data with the option the data was derived under', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { note: { type: 'string' } },
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: {} },
+        ],
+      };
+      const { container, handle, rerender } = mountWithHandle({ schema, initialFormData: {} });
+      await user.selectOptions(optionSelect(container), 'B');
+      expect(handle.getStatus().dirty).toBe(false);
+      const withDefault: RJSFSchema = {
+        ...schema,
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string', default: 'd' } } },
+        ],
+      };
+      rerender({ schema: withDefault, initialFormData: {} });
+      expect(handle.getFormData()).toEqual({ b: 'd' });
+      expect(handle.getStatus().dirty).toBe(false);
+      await user.type(input(container, 'root_note'), 'x');
+
+      rerender({
+        schema: { ...withDefault, properties: { ...withDefault.properties, c: { type: 'string', default: 'c' } } },
+        initialFormData: {},
+      });
+
+      expect(handle.getFormData()).toEqual({ b: 'd', note: 'x', c: 'c' });
+      expect(handle.getStatus()).toEqual({
+        dirty: true,
+        dirtyFields: { note: true },
+        touched: false,
+        touchedFields: {},
+        submitCount: 0,
+      });
+    });
   });
 
   it('keeps every item a keystroke did not reach identical to the data the form started from', async () => {

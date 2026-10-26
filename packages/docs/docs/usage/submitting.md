@@ -286,6 +286,21 @@ Mark the default submit button `aria-disabled` through [`ui:submitButtonOptions`
 function PersonForm({ person }: { person: Person }) {
   const formRef = useRef<FormRef<Person>>(null);
   const [isDirty, setIsDirty] = useState(false);
+  const uiSchema = useMemo<UiSchema<Person>>(
+    () => ({
+      'ui:submitButtonOptions': {
+        props: {
+          'aria-disabled': !isDirty,
+          onClick: (event) => {
+            if (!isDirty) {
+              event.preventDefault();
+            }
+          },
+        },
+      },
+    }),
+    [isDirty],
+  );
 
   return (
     <Form
@@ -293,18 +308,7 @@ function PersonForm({ person }: { person: Person }) {
       schema={schema}
       validator={validator}
       initialFormData={person}
-      uiSchema={{
-        'ui:submitButtonOptions': {
-          props: {
-            'aria-disabled': !isDirty,
-            onClick: (event) => {
-              if (!isDirty) {
-                event.preventDefault();
-              }
-            },
-          },
-        },
-      }}
+      uiSchema={uiSchema}
       onChange={({ dirty }) => setIsDirty(dirty)}
       onSubmit={async ({ formData }) => {
         await save(formData);
