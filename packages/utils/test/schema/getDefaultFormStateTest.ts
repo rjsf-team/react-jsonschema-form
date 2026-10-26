@@ -7806,6 +7806,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       ])('keeps an additional property its field takes none of as the user left it, %s', (_, schema, formData) => {
         expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).toEqual(formData);
       });
+      it.each<[string, RJSFSchema, GenericObjectType, GenericObjectType]>([
+        [
+          'at the root',
+          { type: 'object', additionalProperties: { type: 'object', properties: { n: { type: 'string' } } } },
+          { k: { n: { bad: 1 }, m: { kept: 1 } } },
+          { k: { m: { kept: 1 } } },
+        ],
+        [
+          'under a pattern',
+          { type: 'object', patternProperties: { '^k': { type: 'object', properties: { n: { type: 'string' } } } } },
+          { k: { n: { bad: 1 }, m: { kept: 1 } } },
+          { k: { m: { kept: 1 } } },
+        ],
+        [
+          'nested in an object',
+          {
+            type: 'object',
+            properties: {
+              o: { type: 'object', additionalProperties: { type: 'object', properties: { n: { type: 'string' } } } },
+            },
+          },
+          { o: { k: { n: { bad: 1 }, m: { kept: 1 } } } },
+          { o: { k: { m: { kept: 1 } } } },
+        ],
+      ])(
+        "drops object data a property an extra key's schema declares can't take, keeping the extra key's own, %s",
+        (_, schema, formData, expected) => {
+          expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).toEqual(expected);
+        },
+      );
       it('gives the defaults of a field none of whose options, nor the field itself, takes its object data', () => {
         const schema: RJSFSchema = { type: 'string', default: 'd', anyOf: [{ minLength: 1 }, { maxLength: 5 }] };
         expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { b: 2 } })).toEqual('d');
