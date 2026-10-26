@@ -1718,13 +1718,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       // A property the data holds is the user's, so it is kept with its defaults merged in, as its field computed it,
       // whatever the form's settings say about adding defaults. Where its field takes none of the data, an `allOf` the
       // property is read through decides it holds nothing, object data its schema can't take is left out, and any other
-      // value is kept as the user left it, as a select keeps a value its options no longer offer. An extra key stubbed
-      // among the properties keeps object data its schema can't take, its default too, as the extra keys of an object
-      // one level down do
+      // value is kept as the user left it, as a select keeps a value its options no longer offer, and an extra key
+      // stubbed among the properties keeps the data `extraKeyKeepsData()` says it does
       const retrievesProperty = populatesAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty);
-      const extraKeyDropsObject =
-        addedByAdditionalProperty && isObjectData(formData[key]) && !isObjectData(property.value);
-      if ((property.value !== undefined || retrievesProperty) && !extraKeyDropsObject) {
+      const keepsData = addedByAdditionalProperty && extraKeyKeepsData(formData[key], property.value);
+      if ((property.value !== undefined || retrievesProperty) && !keepsData) {
         setOwn(computed, key, property.value);
       } else if (addedByAdditionalProperty || !isObjectData(formData[key])) {
         setOwn(computed, key, formData[key]);
@@ -1795,12 +1793,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         fillOverUndefined(nullFills, rawFormData, key, value);
         onNullFill?.();
       }
-      // Object data its schema can't take is kept, its default too, as for an extra key stubbed among the properties
-      const keepsObjectData = shouldMergeDefaultsIntoFormData && isObjectData(formData[key]) && !isObjectData(value);
       maybeAddDefaultToObject(
         computed,
         key,
-        keepsObjectData ? formData[key] : value,
+        shouldMergeDefaultsIntoFormData && extraKeyKeepsData(formData[key], value) ? formData[key] : value,
         includeUndefinedValues,
         required,
         formDataRequired,
@@ -1858,6 +1854,18 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     return computed;
   }
   return computeDefaultBasedOnSchemaTypeAndDefaults<unknown, S>(view.schema, computed);
+}
+
+/** Whether an extra key keeps the object data the user gave it over `value`, the value its field computed from that
+ * data: object data its schema can't take is still the user's, whether the key is stubbed among the properties or
+ * computed from the `additionalProperties`, and whether or not its schema has a default
+ *
+ * @param data - The extra key's data
+ * @param value - The value the extra key's field computed
+ * @returns - Whether the data is kept in place of `value`
+ */
+function extraKeyKeepsData(data: unknown, value: unknown): boolean {
+  return isObjectData(data) && !isObjectData(value);
 }
 
 /** The `null` a missing value of a `null` schema is filled in as, for each property an `allOf` or `if` of the object
