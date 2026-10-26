@@ -433,11 +433,14 @@ export default class Form<
    */
   private changeCount = 0;
 
-  /** The state an updater queued by `onChange` is applying its change to. React hands each updater the result of the
-   * one before it, which `this.state` does not hold until the batch commits, so the helpers the change runs through
-   * read this instead while it is set
+  /** The number of the latest change reported through `onChange`. A change queued in a transition can commit after a
+   * later urgent one was already reported, and its own state then lacks that later change
    */
-  private updaterBaseState?: FormState<T, S, F>;
+  private lastReportedChange = 0;
+
+  /** Whether the committed state holds a change that skipped live validation for a later change of its batch to run it
+   */
+  private hasUnvalidatedChange = false;
 
   /** The `formData` last handed to `onChange`, wrapped so that never having reported a change is distinguishable from
    * having reported `undefined`. A parent that stores what it receives is holding the form's own data even when it
@@ -677,6 +680,8 @@ export default class Form<
    *          changed, only called when those paths are needed, which is when live validation is not going to run
    * @param [skipLiveValidate=false] - Optional flag, if true, means that we are not running live validation
    * @param [shouldSanitize=false] - Optional flag, if true, means that we should attempt to sanitize formData
+   * @param [prevState=this.state] - The state the new one is derived from, which a `setState` updater passes since
+   *          `this.state` does not yet hold the updates queued before it
    * @returns - The new state for the `Form`
    */
   getStateFromProps(
@@ -687,8 +692,9 @@ export default class Form<
     getFormDataChangedFields: () => string[] = () => [],
     skipLiveValidate = false,
     shouldSanitize = false,
+    prevState: FormState<T, S, F> | undefined = this.state,
   ): FormState<T, S, F> {
-    const state: FormState<T, S, F> = this.baseState() || {};
+    const state: FormState<T, S, F> = prevState || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
     const validator = 'validator' in props ? props.validator : this.props.validator;
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
@@ -751,8 +757,9 @@ export default class Form<
       ) as T;
       // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
       const formHash = shouldSanitize ? hashObject({ formData }) : '';
-      computedRetrievedSchema = this.updateRetrievedSchema(
+      computedRetrievedSchema = Form.updateRetrievedSchema(
         retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
+        state.retrievedSchema,
       );
       if (
         shouldSanitize &&
@@ -816,6 +823,7 @@ export default class Form<
         // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.
         // Else in the case where it hasn't changed,
         retrievedSchema !== undefined,
+        props,
       );
       errors = liveValidation.errors;
       errorSchema = liveValidation.errorSchema;
@@ -903,15 +911,17 @@ export default class Form<
    * @param schema - The schema used to validate against
    * @param [altSchemaUtils] - The alternate schemaUtils to use for validation
    * @param [retrievedSchema] - An optionally retrieved schema for per
+   * @param [props=this.props] - The props supplying `customValidate`, `transformErrors` and `uiSchema`
    */
   validate(
     formData: T | undefined,
     schema = this.state.schema,
     altSchemaUtils?: SchemaUtilsType<T, S, F>,
     retrievedSchema?: S,
+    props: FormProps<T, S, F> = this.props,
   ): ValidationData<T> {
     const schemaUtils = altSchemaUtils || this.state.schemaUtils;
-    const { customValidate, transformErrors, uiSchema } = this.props;
+    const { customValidate, transformErrors, uiSchema } = props;
     // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
     // Otherwise validate against the original schema so AJV sees the full constraint set.
     const validationSchema = retrievedSchema ?? schema;
@@ -985,6 +995,7 @@ export default class Form<
    * @param [customErrors] - The customErrors from custom components
    * @param [retrievedSchema] - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`
    * @param [mergeIntoOriginalErrorSchema=false] - Optional flag indicating whether we merge into original schema
+   * @param [props=this.props] - The props supplying `customValidate`, `transformErrors` and `uiSchema`
    * @returns - An object containing `errorSchema`, `errors`, `schemaValidationErrors` and `schemaValidationErrorSchema`
    * @private
    */
@@ -997,8 +1008,9 @@ export default class Form<
     customErrors?: ErrorSchemaBuilder<T>,
     retrievedSchema?: S,
     mergeIntoOriginalErrorSchema = false,
+    props: FormProps<T, S, F> = this.props,
   ) {
-    const schemaValidation = this.validate(formData, rootSchema, schemaUtils, retrievedSchema);
+    const schemaValidation = this.validate(formData, rootSchema, schemaUtils, retrievedSchema, props);
     const { errors } = schemaValidation;
     let { errorSchema } = schemaValidation;
     // We merge 'originalErrorSchema' with 'schemaValidation.errorSchema.'; This done to display the raised field error.
@@ -1041,7 +1053,7 @@ export default class Form<
    *               instead.
    */
   omitExtraData = (formData?: T): T | undefined => {
-    const { schema, schemaUtils } = this.baseState();
+    const { schema, schemaUtils } = this.state;
     return schemaUtils.omitExtraData(schema, formData);
   };
 
@@ -1063,7 +1075,8 @@ export default class Form<
    * batch's updaters in order, each to the result of the one before, so changes made close together do not overwrite
    * one another, and they commit together, so any number of them is one update rather than one nested in the commit of
    * the last. A change that throws, from `customValidate` or `transformErrors` say, leaves the state as it was and is
-   * rethrown from a timeout, since the updater runs while React renders, where a throw would unmount the form.
+   * rethrown from a timeout, since the updater runs while React renders, where a throw would unmount the form. Error
+   * boundaries therefore do not see it.
    *
    * @param newValue - The new form data from a change to a field
    * @param path - The path to the change into which to set the formData
@@ -1073,20 +1086,21 @@ export default class Form<
   onChange = (newValue: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
     this.changeCount += 1;
     const changeNumber = this.changeCount;
-    let outcome: { changed: FormState<T, S, F> } | { error: unknown } | undefined;
+    let outcome:
+      | { changed: FormState<T, S, F>; skippedValidation: boolean }
+      | { error: unknown; isLast: boolean }
+      | undefined;
     this.setState(
-      (prevState) => {
-        this.updaterBaseState = prevState;
+      (prevState, props) => {
+        const isLast = changeNumber === this.changeCount;
         try {
-          const isLast = changeNumber === this.changeCount;
-          const state = this.processChange({ newValue, path, newErrorSchema, id }, isLast);
-          outcome = { changed: { ...prevState, ...state } };
+          const state = this.processChange({ newValue, path, newErrorSchema, id }, isLast, prevState, props);
+          const skippedValidation = !isLast && Form.isLiveValidatedOnChange(props);
+          outcome = { changed: { ...prevState, ...state }, skippedValidation };
           return state as FormState<T, S, F>;
         } catch (error) {
-          outcome = { error };
+          outcome = { error, isLast };
           return null;
-        } finally {
-          this.updaterBaseState = undefined;
         }
       },
       () => {
@@ -1094,16 +1108,85 @@ export default class Form<
           return;
         }
         if ('error' in outcome) {
-          const { error } = outcome;
+          const { error, isLast } = outcome;
+          if (isLast && this.hasUnvalidatedChange) {
+            this.validateUnvalidatedChange(id);
+          }
           setTimeout(() => {
             throw error;
           });
           return;
         }
+        this.hasUnvalidatedChange = outcome.skippedValidation;
+        if (changeNumber < this.lastReportedChange) {
+          // React rebased the later changes already reported onto this one, so only the committed state holds both
+          this.reportChange(toIChangeEvent(this.state), id);
+          return;
+        }
+        this.lastReportedChange = changeNumber;
         this.reportChange(toIChangeEvent(outcome.changed), id);
       },
     );
   };
+
+  /** Whether the `props` live validate each change made to a field
+   *
+   * @param props - The props to check
+   */
+  private static isLiveValidatedOnChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
+    props: FormProps<T, S, F>,
+  ) {
+    // oxlint-disable-next-line typescript/no-deprecated
+    const { noValidate, liveValidate } = props;
+    return !noValidate && (liveValidate === true || liveValidate === 'onChange');
+  }
+
+  /** Live validates the committed state when the change that was to do so threw. Every change of a batch but its last
+   * skips live validation, so when the last throws, the ones before it are committed unvalidated. A validation that
+   * throws too is dropped, since the change's own error is already being rethrown. Nothing is reported when the errors
+   * already match the data.
+   *
+   * @param [id] - The id of the field whose change threw
+   */
+  private validateUnvalidatedChange(id?: string) {
+    const changeNumber = this.changeCount;
+    let validated: FormState<T, S, F> | undefined;
+    this.setState(
+      (prevState, props) => {
+        validated = undefined;
+        if (changeNumber !== this.changeCount || !Form.isLiveValidatedOnChange(props)) {
+          return null;
+        }
+        const { schema, schemaUtils, schemaValidationErrorSchema, formData, customErrors, retrievedSchema } = prevState;
+        try {
+          const validation = this.liveValidate(
+            schema,
+            schemaUtils,
+            schemaValidationErrorSchema,
+            formData,
+            props.extraErrors,
+            customErrors,
+            retrievedSchema,
+            false,
+            props,
+          );
+          if (deepEquals(validation.errors, prevState.errors)) {
+            return null;
+          }
+          validated = { ...prevState, ...validation };
+          return validation as FormState<T, S, F>;
+        } catch {
+          return null;
+        }
+      },
+      () => {
+        this.hasUnvalidatedChange = false;
+        if (validated) {
+          this.reportChange(toIChangeEvent(validated), id);
+        }
+      },
+    );
+  }
 
   /** Applies a change made to a field to the state an updater queued by `onChange` was handed, returning the partial
    * state the change makes. The `newValue` is set into the `formData` at `path`, along with a new, optional
@@ -1114,14 +1197,20 @@ export default class Form<
    *
    * @param change - The change to apply
    * @param isLast - Whether no later change has been queued, so live validation runs
+   * @param prevState - The state the updater was handed, which holds every change queued before this one
+   * @param props - The props the updater was handed, which are those of the render applying the change
    */
-  private processChange(change: FieldChange<T>, isLast: boolean): Partial<FormState<T, S, F>> {
+  private processChange(
+    change: FieldChange<T>,
+    isLast: boolean,
+    prevState: FormState<T, S, F>,
+    props: FormProps<T, S, F>,
+  ): Partial<FormState<T, S, F>> {
     const { newValue, path, newErrorSchema } = change;
-    const base = this.baseState();
     // oxlint-disable-next-line typescript/no-deprecated
-    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, disabled, readonly } = this.props;
-    const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = base;
-    let { customErrors, retrievedSchema } = base;
+    const { extraErrors, omitExtraData, liveOmit, noValidate, disabled, readonly } = props;
+    const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = prevState;
+    let { customErrors, retrievedSchema } = prevState;
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
     // pattern in getStateFromProps/getDerivedStateFromProps and avoids the duplication that
     // happened when state.errorSchema (already containing merged extraErrors) was passed in.
@@ -1185,13 +1274,14 @@ export default class Form<
         retrievedSchema && !isRootPath && !isObject(newValue) && !Array.isArray(newValue) && !disabled && !readonly;
       // Skip live validation here; it runs later in this function.
       const newState = this.getStateFromProps(
-        this.props,
+        props,
         inputForDefaults,
         undefined,
         undefined,
         undefined,
         true,
         shouldSanitize,
+        prevState,
       );
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
@@ -1206,13 +1296,12 @@ export default class Form<
       }
     }
 
-    const mustValidate = !noValidate && (liveValidate === true || liveValidate === 'onChange');
+    const mustValidate = Form.isLiveValidatedOnChange(props);
     let state: Partial<FormState<T, S, F>> = { formData, retrievedSchema };
     let newFormData = formData;
 
     if (omitExtraData === true && (liveOmit === true || liveOmit === 'onChange')) {
-      // oxlint-disable-next-line typescript/no-deprecated
-      newFormData = this.omitExtraData(formData);
+      newFormData = schemaUtils.omitExtraData(schema, formData);
       state = { ...state, formData: newFormData };
     }
 
@@ -1233,7 +1322,7 @@ export default class Form<
           mergeBaseErrorSchema = newErrorSchema;
         }
       } else {
-        // A copy, since the builder in `base` is the state's own, which a change that throws must leave as it was
+        // A copy, since the builder in `prevState` is the state's own, which a change that throws must leave as it was
         customErrors = new ErrorSchemaBuilder<T>(customErrors?.ErrorSchema);
         if (isRootPath) {
           const pathErrors = newErrorSchema[ERRORS_KEY];
@@ -1247,8 +1336,18 @@ export default class Form<
         }
       }
     } else if (customErrors && getByPath(customErrors.ErrorSchema, [...path, ERRORS_KEY])) {
-      // If we have custom errors and the path has an error, then we need to clear it
+      // If we have custom errors and the path has an error, then we need to clear it, on a copy as above
+      customErrors = new ErrorSchemaBuilder<T>(customErrors.ErrorSchema);
       customErrors.clearErrors(path);
+      state = { ...state, customErrors };
+      if (!noValidate && !(mustValidate && isLast)) {
+        const mergedErrors = Form.mergeErrors<T>(
+          { errorSchema: schemaValidationErrorSchema || {}, errors: prevState.schemaValidationErrors || [] },
+          extraErrors,
+          customErrors,
+        );
+        state = { ...state, ...mergedErrors };
+      }
     }
     if (mustValidate && isLast) {
       const liveValidation = this.liveValidate(
@@ -1259,6 +1358,8 @@ export default class Form<
         extraErrors,
         customErrors,
         retrievedSchema,
+        false,
+        props,
       );
       state = { ...state, formData: newFormData, ...liveValidation, customErrors };
     } else if (!noValidate && newErrorSchema) {
@@ -1281,19 +1382,12 @@ export default class Form<
    *    avoiding the performance cost of recompiling the schema.
    *
    * @param retrievedSchema The new retrieved schema.
+   * @param [prevRetrievedSchema] The retrieved schema of the state the new one replaces.
    * @returns The new retrieved schema if it has changed, else the old retrieved schema.
    */
-  private updateRetrievedSchema(retrievedSchema: S) {
-    const base = this.baseState();
-    const isTheSame = deepEquals(retrievedSchema, base?.retrievedSchema);
-    return isTheSame ? base.retrievedSchema : retrievedSchema;
-  }
-
-  /** The state a change is applied to: the one an updater queued by `onChange` was handed while it runs, otherwise the
-   * committed state
-   */
-  private baseState(): FormState<T, S, F> {
-    return this.updaterBaseState || this.state;
+  private static updateRetrievedSchema<S>(retrievedSchema: S, prevRetrievedSchema?: S) {
+    const isTheSame = deepEquals(retrievedSchema, prevRetrievedSchema);
+    return isTheSame ? prevRetrievedSchema! : retrievedSchema;
   }
 
   /**

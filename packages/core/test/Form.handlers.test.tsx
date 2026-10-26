@@ -1,4 +1,4 @@
-import { createRef, useEffect, useLayoutEffect, useState } from 'react';
+import { createRef, startTransition, useEffect, useLayoutEffect, useState } from 'react';
 import type { ErrorSchema, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
@@ -258,6 +258,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
         onChange.mockClear();
 
+        // fireEvent, since user-event finishes a click asynchronously and this checks the burst lands before it returns
         fireEvent.click(node.querySelector('button')!);
 
         expect(onChange).toHaveBeenCalledTimes(40);
@@ -299,6 +300,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
             uiSchema: { foo: { 'ui:widget': sendWidget(values) } },
           });
           onChange.mockClear();
+          // fireEvent, so the whole burst is applied before the assertions below
           fireEvent.click(node.querySelector('button')!);
           expect(onChange).toHaveBeenCalledTimes(values.length);
           return onChange.mock.lastCall![0].errors.map(({ property }: { property: string }) => property);
@@ -377,6 +379,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         });
         onChange.mockClear();
 
+        // fireEvent throughout, since user-event waits on timers, which hang under the fake timers flushing the rethrow
         fireEvent.change(node.querySelector('#root_foo')!, { target: { value: 'boom' } });
 
         expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
@@ -415,6 +418,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         });
         onChange.mockClear();
 
+        // fireEvent, since user-event waits on timers, which hang under the fake timers flushing the rethrow
         fireEvent.click(node.querySelector('button')!);
 
         expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
@@ -459,6 +463,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
           },
         });
 
+        // fireEvent throughout, since user-event waits on timers, which hang under the fake timers flushing the rethrow
         fireEvent.click(node.querySelector('#root_baz_raise')!);
         isTransformFailing = true;
         fireEvent.click(node.querySelector('#root_foo_raise')!);
@@ -474,6 +479,134 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       } finally {
         vi.useRealTimers();
       }
+    });
+    it('should keep a custom error when the change clearing it throws', () => {
+      vi.useFakeTimers();
+      try {
+        const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, qux: { type: 'string' } } };
+        const FooWidget = ({ onChange }: WidgetProps) => (
+          <>
+            <button
+              type='button'
+              id='raise'
+              onClick={() => onChange('raised', { __errors: ['raised on foo'] } as ErrorSchema)}
+            >
+              raise
+            </button>
+            <button type='button' id='edit' onClick={() => onChange('boom')}>
+              edit
+            </button>
+          </>
+        );
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          uiSchema: { foo: { 'ui:widget': FooWidget } },
+          customValidate: (formData, errors) => {
+            if (formData?.foo === 'boom') {
+              throw new Error('customValidate failed');
+            }
+            return errors;
+          },
+        });
+
+        // fireEvent throughout, since user-event waits on timers, which hang under the fake timers flushing the rethrow
+        fireEvent.click(node.querySelector('#raise')!);
+        fireEvent.click(node.querySelector('#edit')!);
+        expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
+        onChange.mockClear();
+        fireEvent.change(node.querySelector('#root_qux')!, { target: { value: 'fine' } });
+
+        expectToHaveBeenCalledWithFormData(onChange, { foo: 'raised', qux: 'fine' }, 'root_qux');
+        expect(onChange.mock.lastCall![0].errors.map(({ message }: { message: string }) => message)).toEqual([
+          'raised on foo',
+        ]);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+    it('should live validate the changes before the last change of a burst when that change throws', () => {
+      vi.useFakeTimers();
+      try {
+        const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+        const SendWidget = ({ onChange }: WidgetProps) => (
+          <button type='button' onClick={() => ['a', 'boom'].forEach((v) => onChange(v))}>
+            send
+          </button>
+        );
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          uiSchema: { foo: { 'ui:widget': SendWidget } },
+          customValidate: (formData, errors) => {
+            if (formData?.foo === 'boom') {
+              throw new Error('customValidate failed');
+            }
+            return errors;
+          },
+        });
+        onChange.mockClear();
+
+        // fireEvent, since user-event waits on timers, which hang under the fake timers flushing the rethrow
+        fireEvent.click(node.querySelector('button')!);
+
+        expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
+        const [lastEvent] = onChange.mock.lastCall!;
+        expect(lastEvent.formData).toEqual({ foo: 'a' });
+        expect(lastEvent.errors.map(({ property }: { property: string }) => property)).toEqual(['.foo']);
+        expect(node.querySelectorAll('#root_foo__error li')).toHaveLength(1);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+    it('should last report both changes when a change in a transition commits after a later urgent one', async () => {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, baz: { type: 'string' } } };
+      const ref = createRef<Form>();
+      const { onChange } = createFormComponent({ ref, schema });
+      onChange.mockClear();
+
+      await act(async () => {
+        startTransition(() => ref.current!.setFieldValue('foo', 'in transition'));
+        ref.current!.setFieldValue('baz', 'urgent');
+      });
+
+      expect(onChange.mock.calls.map(([event]) => event.formData)).toEqual([
+        { baz: 'urgent' },
+        { foo: 'in transition', baz: 'urgent' },
+      ]);
+    });
+    it('should apply a change with the props the parent set in the same event', async () => {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+      const TypeWidget = ({ onChange, registry }: WidgetProps) => (
+        <button
+          type='button'
+          onClick={() => {
+            registry.formContext.enableLiveValidate();
+            onChange('a');
+          }}
+        >
+          type
+        </button>
+      );
+      const onChange = vi.fn();
+      function Parent() {
+        const [liveValidate, setLiveValidate] = useState(false);
+        return (
+          <Form
+            schema={schema}
+            uiSchema={{ foo: { 'ui:widget': TypeWidget } }}
+            validator={customizeValidator<GenericObjectType>()}
+            formContext={{ enableLiveValidate: () => setLiveValidate(true) }}
+            liveValidate={liveValidate}
+            onChange={onChange}
+          />
+        );
+      }
+      const { container } = render(<Parent />);
+
+      await user.click(container.querySelector('button')!);
+
+      expect(onChange.mock.lastCall![0].errors.map(({ property }: { property: string }) => property)).toEqual(['.foo']);
     });
     it('should modify an allOf field when the defaults are set', async () => {
       const schema: RJSFSchema = {

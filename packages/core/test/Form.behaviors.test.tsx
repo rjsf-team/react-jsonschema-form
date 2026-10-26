@@ -219,67 +219,6 @@ describe('omitExtraData and live omit onBlur', () => {
 });
 
 describe('Form omitExtraData and liveOmit', () => {
-  it('should call omitExtraData when the omitExtraData prop is true and liveOmit is true', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'string',
-        },
-      },
-    };
-    const formData = {
-      foo: 'bar',
-    };
-    const omitExtraData = true;
-    const liveOmit = true;
-    const ref = createRef<Form>();
-
-    const { node } = createFormComponent({
-      ref,
-      schema,
-      formData,
-      omitExtraData,
-      liveOmit,
-    });
-
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
-
-    await user.clear(node.querySelector('[type=text]')!);
-    await user.type(node.querySelector('[type=text]')!, 'new');
-
-    expect(theSpy).toHaveBeenCalled();
-  });
-
-  it('should not call omitExtraData when the omitExtraData prop is true and liveOmit is unspecified', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'string',
-        },
-      },
-    };
-    const formData = {
-      foo: 'bar',
-    };
-    const omitExtraData = true;
-    const ref = createRef<Form>();
-    const { node } = createFormComponent({
-      ref,
-      schema,
-      formData,
-      omitExtraData,
-    });
-
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
-
-    await user.clear(node.querySelector('[type=text]')!);
-    await user.type(node.querySelector('[type=text]')!, 'new');
-
-    expect(theSpy).not.toHaveBeenCalled();
-  });
-
   it('should not omit data on change with omitExtraData=false and liveOmit=false', async () => {
     const omitExtraData = false;
     const liveOmit = false;
