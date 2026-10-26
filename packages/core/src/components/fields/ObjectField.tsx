@@ -222,7 +222,6 @@ interface ObjectFieldPropertyProps<
   F extends FormContextType = FormContextType,
 > extends Pick<
   FieldProps<T, S, F>,
-  | 'fieldPath'
   | 'schema'
   | 'registry'
   | 'uiSchema'
@@ -236,6 +235,8 @@ interface ObjectFieldPropertyProps<
   | 'required'
   | 'hideError'
 > {
+  /** The property's own path, built once by `ObjectField` so that its `hidden` check resolves the field rendered here */
+  fieldPath: FieldPath;
   /** The name of the property within the parent object */
   propertyName: string;
   /** Flag indicating whether this property was added by the additionalProperties UI */
@@ -295,8 +296,7 @@ function ObjectFieldPropertyFn<
     [keyNotAllowed, errorSchema, translateString, propertyName],
   );
   const { SchemaField } = fields;
-  const innerFieldPath = toFieldPath(propertyName, fieldPath);
-  const innerFieldId = fieldPathToId(innerFieldPath, globalFormOptions);
+  const innerFieldId = fieldPathToId(fieldPath, globalFormOptions);
 
   /** The `onChange` handler installed on this property's `SchemaField`. A change at this property's own path is
    * stored as `storedValue()` says, so a cleared `additionalProperties` entry keeps its key and its key input. Every
@@ -308,10 +308,10 @@ function ObjectFieldPropertyFn<
       // path (rather than merely its length) tells apart "this property changed" from "a descendant changed"; a
       // cleared descendant must stay `undefined` so it is omitted from the formData exactly like a cleared property
       // declared in `properties` (#5222).
-      const sent = path === innerFieldPath ? storedValue(value, path, addedByAdditionalProperties) : value;
+      const sent = path === fieldPath ? storedValue(value, path, addedByAdditionalProperties) : value;
       onChange(sent, path, newErrorSchema, id);
     },
-    [onChange, addedByAdditionalProperties, innerFieldPath],
+    [onChange, addedByAdditionalProperties, fieldPath],
   );
 
   /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty.
@@ -353,7 +353,7 @@ function ObjectFieldPropertyFn<
       schema={schema}
       uiSchema={uiSchema}
       errorSchema={shownErrorSchema}
-      fieldPath={innerFieldPath}
+      fieldPath={fieldPath}
       id={innerFieldId}
       formData={formData}
       wasPropertyKeyModified={wasPropertyKeyModified}
@@ -965,6 +965,7 @@ export default function ObjectField<
       );
       const propertySchema = getPropertySchema<S>(schema, propertyName);
       const propertyFormData = getByPath<T>(formData, propertyName);
+      const propertyFieldPath = toFieldPath(propertyName, fieldPath);
       const content = (
         <ObjectFieldProperty<T, S, F>
           key={getStableKey(propertyName)}
@@ -976,7 +977,7 @@ export default function ObjectField<
           // Derived from the schema rather than raised on rename, so the error can't follow the property to a name that
           // is allowed, and shows without waiting for validation, which ajv8 and ata report on the object, not the key
           keyNotAllowed={addedByAdditionalProperties && getAdditionalPropertySchema<S>(schema, propertyName) === false}
-          fieldPath={fieldPath}
+          fieldPath={propertyFieldPath}
           formData={propertyFormData}
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
@@ -997,13 +998,7 @@ export default function ObjectField<
         readonly,
         disabled,
         required,
-        hidden: hiddenChecks[index](
-          propertySchema,
-          fieldUiSchema,
-          propertyFormData,
-          toFieldPath(propertyName, fieldPath),
-          registry,
-        ),
+        hidden: hiddenChecks[index](propertySchema, fieldUiSchema, propertyFormData, propertyFieldPath, registry),
       };
     }),
     readonly,

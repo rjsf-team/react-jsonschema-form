@@ -366,7 +366,7 @@ export function createIsSchemaFieldHidden<
     (ownUiSchema: UiSchema<T, S, F>, globalUiOptions: GlobalUISchemaOptions | undefined) =>
       ownUiSchema[UI_WIDGET_KEY] === 'hidden' ||
       ownUiSchema[UI_OPTIONS_KEY]?.widget === 'hidden' ||
-      { ...globalUiOptions, ...getUiOptions<T, S, F>(ownUiSchema) }.deprecatedHandling === 'hide',
+      getUiOptions<T, S, F>(ownUiSchema, globalUiOptions).deprecatedHandling === 'hide',
   );
   const { resolve: resolveFieldWidget, resolveOwnUiSchema } = createFieldWidgetResolver<T, S, F>();
   // An expansion keeps the `$ref` that picks the field's `ui:definitions` entry, so a cycle is shortcut before it is
