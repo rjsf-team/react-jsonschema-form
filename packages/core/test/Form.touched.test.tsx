@@ -1,4 +1,4 @@
-import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+import type { ErrorSchema, FieldProps, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { isPlainObject } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -546,8 +546,10 @@ describe('a blur that is not a field', () => {
 
     expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
   });
+});
 
-  it("touches nothing and reveals only the cell's own errors for a layout grid's discriminated cell", async () => {
+describe("a layout grid's discriminated cell", () => {
+  it('touches the selector field its widget writes', async () => {
     const { node, handle } = mountWithHandle({
       schema: {
         type: 'object',
@@ -562,7 +564,13 @@ describe('a blur that is not a field', () => {
     await user.click(screen.getByRole('radio', { name: 'Choice 1' }));
     await user.click(document.body);
 
-    expect(handle.getStatus()).toMatchObject({ dirty: false, touched: false, touchedFields: {} });
+    expect(handle.getStatus()).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: true,
+      touchedFields: { pick: { answer: true } },
+      submitCount: 0,
+    });
     expect(Object.keys(fieldErrorsById(node))).toEqual(['root_pick']);
   });
 });
@@ -729,6 +737,143 @@ describe('a blur onBlur causes', () => {
       }
     };
     const { container, handle } = mountWithHandle({ schema: person, onBlur });
+
+    await blur(container, 'root_name');
+
+    expect(handle.getStatus().touchedFields).toEqual({ name: true, address: { city: true } });
+  });
+});
+
+describe('a key omitExtraData drops', () => {
+  /** Blurs the checkbox `a`, the first field, which a click would toggle */
+  async function blurWithoutClick() {
+    await user.click(document.body);
+    await user.tab();
+    await user.click(document.body);
+  }
+
+  const branched: RJSFSchema = {
+    type: 'object',
+    properties: { a: { type: 'boolean' } },
+    if: { properties: { a: { const: true } }, required: ['a'] },
+    then: { properties: { b: { type: 'string', minLength: 3 } } },
+  };
+
+  it("is no longer touched or revealed once liveOmit 'onBlur' drops it", async () => {
+    const { container, node, handle } = mountWithHandle({
+      schema: branched,
+      initialFormData: { a: true, b: 'x' },
+      omitExtraData: true,
+      liveOmit: 'onBlur',
+      liveValidate: 'onBlur',
+      liveErrors: 'field',
+    });
+    await blur(container, 'root_b');
+    expect(Object.keys(fieldErrorsById(node))).toEqual(['root_b']);
+    // A write at the root is taken as written, so the key the branch no longer describes stays until the omission
+    act(() => handle.setFieldValue('', { a: false, b: 'x' }));
+
+    await blurWithoutClick();
+
+    expect(handle.getFormData()).toEqual({ a: false });
+    expect(handle.getStatus()).toMatchObject({ touched: true, touchedFields: { a: true } });
+    act(() => handle.setFieldValue('', { a: true, b: 'x' }));
+    await blurWithoutClick();
+    expect(handle.getStatus().touchedFields).toEqual({ a: true });
+    expect(fieldErrorsById(node)).toEqual({});
+  });
+
+  it('is no longer touched once a submit drops it', async () => {
+    const { container, node, handle } = mountWithHandle({
+      schema: branched,
+      initialFormData: { a: true, b: 'xyz' },
+      omitExtraData: true,
+    });
+    await blur(container, 'root_b');
+    act(() => handle.setFieldValue('', { a: false, b: 'xyz' }));
+
+    await submitForm(node, user, true);
+
+    expect(handle.getFormData()).toEqual({ a: false });
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+  });
+});
+
+describe('a schema prop change that drops a revealed key', () => {
+  it('shows none of its errors', async () => {
+    const props = {
+      schema: {
+        type: 'object',
+        properties: { a: { type: 'string', minLength: 3 }, b: { type: 'string', minLength: 3 } },
+      },
+      initialFormData: { a: 'x', b: 'y' },
+      liveValidate: 'onChange',
+      liveErrors: 'field',
+    } satisfies Parameters<typeof createFormComponent>[0];
+    const { container, node, handle, rerender } = mountWithHandle(props);
+    await user.type(input(container, 'root_b'), 'z');
+    expect(Object.keys(fieldErrorsById(node))).toEqual(['root_b']);
+
+    rerender({
+      ...props,
+      schema: { type: 'object', properties: { a: { type: 'string', minLength: 3 } }, required: ['b'] },
+      ref: createFormRef(),
+    });
+
+    expect(handle.getFormData()).toEqual({ a: 'x' });
+    expect(errorListMessages(node)).toEqual([]);
+  });
+});
+
+describe('a move transformChange rewrites back under liveErrors field', () => {
+  it('shows the errors of the item the edit revealed', async () => {
+    const { container, node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { count: { type: 'number' }, items: { type: 'array', items: { type: 'string', maxLength: 1 } } },
+      },
+      initialFormData: { items: ['a', 'b', 'c'] },
+      liveValidate: 'onChange',
+      liveErrors: 'field',
+      transformChange: (next) =>
+        isPlainObject(next)
+          ? {
+              count: typeof next.count === 'number' ? next.count + 1 : 1,
+              items: Array.isArray(next.items) ? next.items.filter((item) => typeof item === 'string').toSorted() : [],
+            }
+          : next,
+    });
+    await user.type(input(container, 'root_items_0'), 'x');
+    expect(Object.keys(fieldErrorsById(node))).toEqual(['root_items_0']);
+
+    await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
+
+    expect(lastEvent(onChange).errorProperties).toEqual(['.items.0']);
+    expect(Object.keys(fieldErrorsById(node))).toEqual(['root_items_0']);
+    expect(errorListMessages(node)).toHaveLength(1);
+  });
+});
+
+describe('a blur a parent field causes before it sends its own', () => {
+  it('touches each field its own blur reached', async () => {
+    function MovingFocusObjectField(props: FieldProps) {
+      const { ObjectField } = props.registry.fields;
+      const { onBlur } = props;
+      return (
+        <ObjectField
+          {...props}
+          onBlur={(id, value) => {
+            if (id === 'root_name') {
+              const other = document.getElementById('root_address_city');
+              other?.focus();
+              other?.blur();
+            }
+            onBlur(id, value);
+          }}
+        />
+      );
+    }
+    const { container, handle } = mountWithHandle({ schema: person, uiSchema: { 'ui:field': MovingFocusObjectField } });
 
     await blur(container, 'root_name');
 

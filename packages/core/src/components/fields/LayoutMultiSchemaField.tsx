@@ -8,6 +8,7 @@ import {
   ONE_OF_KEY,
   getUiOptions,
   getXxxOfKey,
+  toFieldPath,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 
@@ -86,8 +87,6 @@ export default function LayoutMultiSchemaField<
   } = props;
   const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
-  // Its widget is an option selector, no field of the data, even though `SchemaField` renders it as the field
-  const handleBlur = useSendBlur(fieldPath, onBlur, 'nothing');
   const uiSchema = useMemo(() => omitFieldDirectives<T, S, F>(namingUiSchema), [namingUiSchema]);
   const keyword = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
   const enumOptions = useMemo(
@@ -96,6 +95,12 @@ export default function LayoutMultiSchemaField<
   );
   const allUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const selectorField = getSelectorField<T, S, F>(schema, allUiOptions);
+  // Its widget writes the selector field, so its blur touches that field, as a widget bound to it would
+  const handleBlur = useSendBlur(
+    selectorField === undefined ? fieldPath : toFieldPath(selectorField, fieldPath),
+    onBlur,
+    'field',
+  );
   const firstOption = useMemo(
     () => (selectorField ? getFirstOption<T, S, F>(schema, schemaUtils, selectorField) : undefined),
     [schema, schemaUtils, selectorField],

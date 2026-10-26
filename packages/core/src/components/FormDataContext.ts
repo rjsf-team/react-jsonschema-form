@@ -22,9 +22,10 @@ interface FormDataAccess {
    * `touches` as what it touches. The innermost field names them: a blur passes up through every `SchemaField` above
    * the widget, and only the first to send it knows the path the widget renders and whether the widget is the field's
    * own or its option selector. A widget's `onBlur` names an id, which a custom `idPrefix` or `idSeparator` can make
-   * ambiguous, so the path travels this way instead
+   * ambiguous, so the path travels this way instead. With `replaces`, the blur is named here even though a field below
+   * named it, for a field whose control below sits at a path no data is stored at
    */
-  sendBlur(fieldPath: FieldPath, touches: BlurTouch, send: () => void): void;
+  sendBlur(fieldPath: FieldPath, touches: BlurTouch, send: () => void, replaces?: boolean): void;
   /** The form's current data at `path` */
   readField<D>(path: FieldPath): D;
   /** The form's data at `path` as its last commit rendered it, which a field rendered in that commit was handed */

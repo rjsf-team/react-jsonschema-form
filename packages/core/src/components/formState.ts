@@ -629,6 +629,16 @@ function committedOmission<T>({ formData, omitBaseline }: ExtraDataOmission<T>):
   return { formData, baseline: omitBaseline() };
 }
 
+/** `current` with `omission` committed: the touched and revealed fields lose the keys it dropped, as they do for every
+ * other change to the data
+ */
+function withOmission<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  omission: ExtraDataOmission<T>,
+): FormState<T, S, F> {
+  return { ...current, ...committedOmission(omission), ...marksFollowingData(current, omission.formData) };
+}
+
 /** A field change, applied by `applyChangeToData()` and `applyChangeToErrorsOf()` */
 export interface FieldChange<T> {
   /** The `FieldPath` into the formData/errorSchema at which the `newValue`/`newErrorSchema` will be set */
@@ -1371,6 +1381,10 @@ interface ErrorOptions<S> {
    * to clear the changed fields' errors
    */
   getDataChange?: () => DataChange;
+  /** The fields revealed once the pass's data settled, which decide the errors `liveErrors: 'field'` hides; the
+   * committed ones when the pass leaves them as they are
+   */
+  revealed?: RevealedPaths;
 }
 
 /** What differs between two values of the form's data */
@@ -1481,7 +1495,10 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
   options: ErrorOptions<S>,
 ): ErrorState<T> {
   const { isSchemaChanged = false, mustValidate, validationSchema, getDataChange = () => UNCHANGED } = options;
-  const isHidden = hiddenErrorsOf(props, current);
+  const isHidden = hiddenErrorsOf(props, {
+    revealed: options.revealed ?? current?.revealed ?? NOTHING_REVEALED,
+    submitCount: current?.submitCount ?? 0,
+  });
   if (mustValidate) {
     return runLiveValidation(props, context, formData, current?.customErrors, validationSchema, undefined, isHidden);
   }
@@ -1570,8 +1587,12 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // Construction validates nothing: the errors of a seed the user has not touched are not shown until they are earned
   const isDataChanged = current !== undefined && formData !== current.formData;
   const isDataPassed = current ? current.isDataPassed : inputFormData !== undefined;
+  const marks = current
+    ? marksFollowingData(current, formData)
+    : { touchedPaths: NO_PATHS, revealed: NOTHING_REVEALED };
   const errors = reconcileErrors(current, props, context, formData, {
     isSchemaChanged,
+    revealed: marks.revealed,
     mustValidate: mustLiveValidate(props, isDataPassed, isDataChanged || isValidationPropChanged),
     validationSchema: areSchemaUtilsReused ? context.retrievedSchema : undefined,
     // Without a validation pass, the errors of the fields the data changed at describe values that are gone. The
@@ -1584,7 +1605,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     formData,
     baseline,
     submitCount: current?.submitCount ?? 0,
-    ...(current ? marksFollowingData(current, formData) : { touchedPaths: NO_PATHS, revealed: NOTHING_REVEALED }),
+    ...marks,
     isDataPassed,
     ...errors,
     initialDefaultsGenerated: true,
@@ -1956,19 +1977,19 @@ export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextTy
   const { customErrors, retrievedSchema } = current;
   const marked = blurred ? markBlur(current, props, blurred) : current;
   const omitted =
-    omitExtraData === true && liveOmit === 'onBlur' ? committedOmission(omitExtraDataOf(current)) : undefined;
+    omitExtraData === true && liveOmit === 'onBlur' ? withOmission(marked, omitExtraDataOf(current)) : marked;
   const validation = isBlurValidated(props)
     ? runLiveValidation(
         props,
         current,
-        (omitted ?? current).formData,
+        omitted.formData,
         customErrors,
         retrievedSchema,
         undefined,
-        hiddenErrorsOf(props, marked),
+        hiddenErrorsOf(props, omitted),
       )
     : undefined;
-  return { ...marked, ...omitted, ...validation };
+  return { ...omitted, ...validation };
 }
 
 /** Validates `formData` for a submission or `validateForm()`: whether the errors block, the merged errors to report,
@@ -2052,8 +2073,7 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   omitted?: ExtraDataOmission<T>,
 ): FormState<T, S, F> {
   return {
-    ...current,
-    ...(omitted && committedOmission(omitted)),
+    ...(omitted ? withOmission(current, omitted) : current),
     ...extraErrorsAlone(props.extraErrors),
   };
 }

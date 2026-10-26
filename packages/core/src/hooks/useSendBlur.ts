@@ -11,22 +11,25 @@ import type { BlurTouch } from '../components/formState.ts';
  * @param fieldPath - The `FieldPath` of the field
  * @param onBlur - The `onBlur` the field was handed
  * @param touches - What a blur sent through the returned `onBlur` touches
+ * @param [replaces] - Whether the blur is named here even though a field below named it, see
+ *        `FormDataAccess.sendBlur()`
  * @returns - The `onBlur` to hand down
  */
 export default function useSendBlur(
   fieldPath: FieldPath,
   onBlur: FieldProps['onBlur'],
   touches: BlurTouch,
+  replaces = false,
 ): FieldProps['onBlur'] {
   const access = use(FormDataContext);
   return useCallback(
     (id: string, value: unknown) => {
       if (access) {
-        access.sendBlur(fieldPath, touches, () => onBlur(id, value));
+        access.sendBlur(fieldPath, touches, () => onBlur(id, value), replaces);
       } else {
         onBlur(id, value);
       }
     },
-    [access, fieldPath, onBlur, touches],
+    [access, fieldPath, onBlur, touches, replaces],
   );
 }

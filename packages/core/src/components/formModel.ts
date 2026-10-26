@@ -47,7 +47,7 @@ import {
   validateFormData,
   withMarksSettled,
 } from './formState.ts';
-import { asFieldValue } from './uiState.ts';
+import { asFieldValue, isPathPrefix } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
 const HELD_SCALARS_LIMIT = 100;
@@ -418,21 +418,21 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // Unvalidated, the change still moves its errors with the keys it moved and settles the fields' own errors, which
     // the rewrite then carries through its one validation
     const withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
-    const rewritten = applyChangeToErrorsOf(
-      applyChangeToData(withEditErrors, rewrite, props),
-      edited.formData,
-      rewrite,
-      props,
-      isValidated,
-    );
-    // The rewrite moves no key, so the marks the change moved are settled by what the rewrite kept under each key
+    let rewrittenData = applyChangeToData(withEditErrors, rewrite, props);
+    // The rewrite moves no key, so the marks the change moved are settled by what the rewrite kept under each key,
+    // before the validation that hides the errors of the fields they don't reveal
     const move = keyMoveOf(change);
-    if (!move) {
-      return { next: rewritten, edited };
+    if (move) {
+      const at = fieldPathToList(move.container);
+      const fateOf = moveFateOf(
+        getAt(rewrittenData.formData, at),
+        getAt(edited.formData, at),
+        getAt(base.formData, at),
+      );
+      rewrittenData = withMarksSettled(rewrittenData, base, move.container, fateOf);
     }
-    const at = fieldPathToList(move.container);
-    const fateOf = moveFateOf(getAt(rewritten.formData, at), getAt(edited.formData, at), getAt(base.formData, at));
-    return { next: withMarksSettled(rewritten, base, move.container, fateOf), edited };
+    const rewritten = applyChangeToErrorsOf(rewrittenData, edited.formData, rewrite, props, isValidated);
+    return { next: rewritten, edited };
   };
 
   /** Applies a change to the field at `fieldPath` with `applyEdit()`, commits the result and reports it through
@@ -721,18 +721,25 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       formElement = element;
     },
     /** Calls `send` with `fieldPath` as the path of the blur it sends and `touches` as what it touches, unless a field
-     * below has named its own already, see `FormDataAccess.sendBlur()`
+     * this one holds has named its own already, see `FormDataAccess.sendBlur()`
      */
-    sendBlur: (fieldPath: FieldPath, touches: BlurTouch, send: () => void) => {
-      if (blurring !== undefined) {
+    sendBlur: (fieldPath: FieldPath, touches: BlurTouch, send: () => void, replaces = false) => {
+      const previous = blurring;
+      if (
+        previous !== undefined &&
+        !replaces &&
+        isPathPrefix(fieldPathToList(fieldPath), fieldPathToList(previous.fieldPath))
+      ) {
         send();
         return;
       }
+      // A blur named by a field elsewhere, as one a parent's `onBlur` causes for another field before it sends its
+      // own, is kept for the blur that named it, which reaches the form once this one has
       blurring = { fieldPath, touches };
       try {
         send();
       } finally {
-        blurring = undefined;
+        blurring = previous;
       }
     },
     sendMove: (move: AnnouncedMove, send: () => void) => {
