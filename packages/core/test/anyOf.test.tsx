@@ -2437,6 +2437,32 @@ describe('anyOf', () => {
 
     expectToHaveBeenCalledWithFormData(onSubmit, { val: 'abc' }, true);
   });
+
+  it('scores an ambiguous oneOf whose option has an anyOf key that is present but undefined (#5365)', () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { properties: { p: { type: 'string', anyOf: undefined } } },
+        { properties: { p: { type: 'string' }, extra: { type: 'number' } } },
+      ],
+    };
+
+    const { node } = createFormComponent({ schema, initialFormData: { p: 'x' } });
+
+    expect(elementOf(node, 'input#root_p')).toHaveValue('x');
+  });
+
+  it('renders a recursive $ref under a root whose anyOf key is present but undefined (#5365)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      anyOf: undefined,
+      definitions: { node: { type: 'object', properties: { child: { $ref: '#/definitions/node' } } } },
+      properties: { root: { $ref: '#/definitions/node' } },
+    };
+
+    createFormComponent({ schema, uiSchema: { root: { 'ui:title': 'X' } } });
+
+    expect(screen.getByText('X')).toBeInTheDocument();
+  });
 });
 
 describe('anyOf with a precompiled validator', () => {

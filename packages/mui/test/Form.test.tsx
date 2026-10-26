@@ -5,9 +5,8 @@ import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } f
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { act, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
@@ -979,18 +978,20 @@ describe('mui server rendering (#4083)', () => {
     const container = document.createElement('div');
     document.body.append(container);
     container.innerHTML = renderToString(form);
-    // The dependency is resolved for the server render, so the first item's `b` is in its markup
     expect(container.querySelector('input#root_0_b[type="checkbox"]')).toBeInTheDocument();
     expect(container.querySelector('#root_1_b')).not.toBeInTheDocument();
     const recoverableErrors: unknown[] = [];
+    // React 19 reports an attribute mismatch, the issue's `aria-controls` one, through console.error and not
+    // onRecoverableError
+    const consoleErrorSpy = vi.spyOn(console, 'error');
+    try {
+      render(form, { container, hydrate: true, onRecoverableError: (error) => recoverableErrors.push(error) });
 
-    const root = await act(async () =>
-      hydrateRoot(container, form, { onRecoverableError: (error) => recoverableErrors.push(error) }),
-    );
-
-    expect(recoverableErrors).toEqual([]);
-    act(() => root.unmount());
-    container.remove();
+      expect(recoverableErrors).toEqual([]);
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
   });
 });
 

@@ -671,20 +671,17 @@ describe("a custom widget that sets its parent's state before calling onChange (
 
   it('keeps the value in the form and in the parent that passes formData and stores what onChange reports', async () => {
     const onSubmit = vi.fn();
+    const log = createParentLog<Data>();
     function Parent() {
-      const [data, setData] = useState<Data | undefined>({});
       const [file, setFile] = useState('');
       return (
         <SetParentState value={setFile}>
           <output aria-label='file'>{file}</output>
-          <output aria-label='stored'>{data?.name}</output>
-          <Form<Data>
+          <AcceptingParent<Data>
             schema={schema}
-            validator={validator}
-            // oxlint-disable-next-line typescript/no-deprecated -- pins the v5 controlled pattern, passing back what onChange reported as `formData`
-            formData={data}
             uiSchema={{ name: { 'ui:widget': ParentStateWidget } }}
-            onChange={(event) => setData(event.formData)}
+            initialValue={{}}
+            log={log}
             onSubmit={onSubmit}
           />
         </SetParentState>
@@ -696,7 +693,7 @@ describe("a custom widget that sets its parent's state before calling onChange (
     await submitForm(container, user);
 
     expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('ab');
-    expect(screen.getByRole('status', { name: 'stored' })).toHaveTextContent('ab');
+    expect(log.value).toEqual({ name: 'ab' });
     expect(screen.getByRole('textbox', { name: 'name' })).toHaveValue('ab');
     expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { name: 'ab' } }), expect.anything());
   });

@@ -189,7 +189,7 @@ describe('render cost of an edit in a long list (#3183)', () => {
     await user.type(input(container, 'root_0_a'), 'z');
 
     expect(input(container, 'root_0_a')).toHaveValue('item 0z');
-    expect([...renders.keys()]).toEqual(['root_0_a']);
+    expect(Object.fromEntries(renders)).toEqual({ root_0_a: 1 });
   });
 
   it('re-renders only the two rows that trade places for a move down', async () => {
@@ -199,17 +199,18 @@ describe('render cost of an edit in a long list (#3183)', () => {
 
     expect(input(container, 'root_0_a')).toHaveValue('item 1');
     expect(input(container, 'root_1_a')).toHaveValue('item 0');
-    expect([...renders.keys()].sort()).toEqual(['root_0_a', 'root_1_a']);
+    expect(Object.fromEntries(renders)).toEqual({ root_0_a: 1, root_1_a: 1 });
   });
 
-  it('re-renders none of the rows before a removed one', async () => {
+  it('re-renders only the rows that shift up into a removed one, once each', async () => {
     const { container } = renderList();
 
     await user.click(elementOf(container, '#root_10__remove'));
 
     expect(input(container, 'root_10_a')).toHaveValue('item 11');
     expect(container.querySelector('#root_19_a')).toBeNull();
-    const rendered = [...renders.keys()];
-    expect(rendered.filter((id) => Number(id.split('_')[1]) < 10)).toEqual([]);
+    expect(Object.fromEntries(renders)).toEqual(
+      Object.fromEntries(Array.from({ length: 9 }, (_, index) => [`root_${10 + index}_a`, 1])),
+    );
   });
 });
