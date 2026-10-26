@@ -26,6 +26,7 @@ export default function BaseInputTemplate<
   const {
     id,
     name, // remove this from ...rest
+    label, // remove this from ...rest
     htmlName,
     value,
     readonly,
