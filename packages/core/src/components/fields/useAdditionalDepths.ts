@@ -17,8 +17,9 @@ import { isAdditionalPropertySchema } from './fieldWidgetUtils.ts';
  */
 export default function useAdditionalDepths(schema: unknown, fieldPath: FieldPath): readonly number[] | undefined {
   const additionalDepthsAbove = use(AdditionalPropertyDepthsContext);
+  const isAdditional = isAdditionalPropertySchema(schema);
   return useMemo(() => {
     const ownDepth = fieldPathToList(fieldPath).length - 1;
-    return isAdditionalPropertySchema(schema) ? [...(additionalDepthsAbove ?? []), ownDepth] : additionalDepthsAbove;
-  }, [additionalDepthsAbove, schema, fieldPath]);
+    return isAdditional ? [...(additionalDepthsAbove ?? []), ownDepth] : additionalDepthsAbove;
+  }, [additionalDepthsAbove, isAdditional, fieldPath]);
 }
