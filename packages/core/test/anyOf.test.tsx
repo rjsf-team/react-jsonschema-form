@@ -2448,6 +2448,7 @@ describe('anyOf', () => {
 
     const { node } = createFormComponent({ schema, initialFormData: { p: 'x' } });
 
+    expect(screen.getByRole('combobox')).toHaveDisplayValue('Option 1');
     expect(elementOf(node, 'input#root_p')).toHaveValue('x');
   });
 

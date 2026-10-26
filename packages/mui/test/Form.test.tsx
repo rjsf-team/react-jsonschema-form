@@ -959,7 +959,7 @@ describe('mui CheckboxWidget required attribute', () => {
 });
 
 describe('mui server rendering (#4083)', () => {
-  it('renders the dependency a default selects on the server, and hydrates without a mismatch', async () => {
+  it('renders the dependency a default selects on the server, and hydrates without a mismatch', () => {
     const schema: RJSFSchema = {
       definitions: {
         guest: {
@@ -983,10 +983,10 @@ describe('mui server rendering (#4083)', () => {
     };
     const form = <Form schema={schema} validator={validator} />;
     const container = document.createElement('div');
-    document.body.append(container);
     container.innerHTML = renderToString(form);
-    expect(container.querySelector('input#root_0_b[type="checkbox"]')).toBeInTheDocument();
-    expect(container.querySelector('#root_1_b')).not.toBeInTheDocument();
+    expect(container.querySelector('input#root_0_b[type="checkbox"]')).not.toBeNull();
+    expect(container.querySelector('#root_1_b')).toBeNull();
+    document.body.append(container);
     const recoverableErrors: unknown[] = [];
     // React 19 reports an attribute mismatch, the issue's `aria-controls` one, through console.error and not
     // onRecoverableError

@@ -652,22 +652,31 @@ describe('typing in a custom widget under a parent that renders for every change
   });
 });
 
-describe("a custom widget that sets its parent's state before calling onChange (#3914)", () => {
+describe("a custom upload widget that sets its parent's state before calling onChange (#3914)", () => {
   const SetParentState = createContext<(value: string) => void>(noop);
 
-  function ParentStateWidget({ id, value, onChange }: WidgetProps<Data['name']>) {
+  function UploadWidget({ id, value, onChange }: WidgetProps<Data['name']>) {
     const setParentState = use(SetParentState);
     return (
-      <input
-        id={id}
-        value={value ?? ''}
-        onChange={(event) => {
-          setParentState(event.target.value);
-          onChange(event.target.value);
-        }}
-      />
+      <>
+        <input
+          id={id}
+          type='file'
+          onChange={async (event) => {
+            const file = event.target.files?.[0];
+            if (file) {
+              // Reading the file first, as the issue's upload widget does, makes both updates land after the event
+              setParentState(await file.text());
+              onChange(file.name);
+            }
+          }}
+        />
+        <output aria-label='stored name'>{value}</output>
+      </>
     );
   }
+
+  const upload = new File(['contents'], 'a.txt', { type: 'text/plain' });
 
   it('keeps the value in the form and in the parent that passes formData and stores what onChange reports', async () => {
     const onSubmit = vi.fn();
@@ -679,7 +688,7 @@ describe("a custom widget that sets its parent's state before calling onChange (
           <output aria-label='file'>{file}</output>
           <AcceptingParent<Data>
             schema={schema}
-            uiSchema={{ name: { 'ui:widget': ParentStateWidget } }}
+            uiSchema={{ name: { 'ui:widget': UploadWidget } }}
             initialValue={{}}
             log={log}
             onSubmit={onSubmit}
@@ -689,13 +698,16 @@ describe("a custom widget that sets its parent's state before calling onChange (
     }
     const { container } = render(<Parent />);
 
-    await user.type(screen.getByRole('textbox', { name: 'name' }), 'ab');
+    await user.upload(screen.getByLabelText('name'), upload);
+    await waitFor(() => expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('contents'));
     await submitForm(container, user);
 
-    expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('ab');
-    expect(log.value).toEqual({ name: 'ab' });
-    expect(screen.getByRole('textbox', { name: 'name' })).toHaveValue('ab');
-    expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { name: 'ab' } }), expect.anything());
+    expect(log.value).toEqual({ name: 'a.txt' });
+    expect(screen.getByRole('status', { name: 'stored name' })).toHaveTextContent('a.txt');
+    expect(onSubmit).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { name: 'a.txt' } }),
+      expect.anything(),
+    );
   });
 
   it('keeps every value of a form that is passed no formData when the parent re-renders', async () => {
@@ -708,7 +720,7 @@ describe("a custom widget that sets its parent's state before calling onChange (
           <Form<Data>
             schema={schema}
             validator={validator}
-            uiSchema={{ name: { 'ui:widget': ParentStateWidget } }}
+            uiSchema={{ name: { 'ui:widget': UploadWidget } }}
             onSubmit={onSubmit}
           />
         </SetParentState>
@@ -717,14 +729,14 @@ describe("a custom widget that sets its parent's state before calling onChange (
     const { container } = render(<Parent />);
 
     await user.type(screen.getByRole('textbox', { name: 'other' }), 'x');
-    await user.type(screen.getByRole('textbox', { name: 'name' }), 'ab');
+    await user.upload(screen.getByLabelText('name'), upload);
+    await waitFor(() => expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('contents'));
     await submitForm(container, user);
 
-    expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('ab');
-    expect(screen.getByRole('textbox', { name: 'name' })).toHaveValue('ab');
+    expect(screen.getByRole('status', { name: 'stored name' })).toHaveTextContent('a.txt');
     expect(screen.getByRole('textbox', { name: 'other' })).toHaveValue('x');
     expect(onSubmit).toHaveBeenLastCalledWith(
-      expect.objectContaining({ formData: { name: 'ab', other: 'x' } }),
+      expect.objectContaining({ formData: { name: 'a.txt', other: 'x' } }),
       expect.anything(),
     );
   });
