@@ -7,8 +7,8 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', title: 'Name' } } };
 
 /** Pins that the theme's `SubmitButton` is `aria-disabled` while a promise `onSubmit` returned is pending, and stays
- * enabled so a keyboard user keeps focus on it, that it takes no click meanwhile though an `onClick` the uiSchema sets
- * still runs, and that a `disabled` the uiSchema asks for still applies when nothing is pending
+ * enabled so a keyboard user keeps focus on it, that it takes no click meanwhile though an `onClickCapture` and an
+ * `onClick` the uiSchema sets still run, and that a `disabled` the uiSchema asks for still applies when nothing is pending
  *
  * @param Form - The theme's `Form` component
  */
@@ -96,6 +96,32 @@ export function submitPendingTests(Form: ComponentType<FormProps>) {
       expect(onClick).toHaveBeenLastCalledWith(expect.objectContaining({ type: 'click', target: button }));
       expect(click.defaultPrevented).toBe(true);
       expect(onSubmit).toHaveBeenCalledTimes(1);
+      save.resolve(undefined);
+      await waitFor(() => expectIdle(button));
+    });
+
+    test('calls an onClickCapture the uiSchema sets while the promise is pending, before its onClick', async () => {
+      const save = Promise.withResolvers<undefined>();
+      const calls: string[] = [];
+      const onClickCapture = vi.fn(() => calls.push('capture'));
+      const onClick = vi.fn(() => calls.push('click'));
+      render(
+        <Form
+          schema={schema}
+          uiSchema={{ 'ui:submitButtonOptions': { props: { onClick, onClickCapture } } }}
+          validator={validator}
+          onSubmit={async () => save.promise}
+        />,
+      );
+      const button = screen.getByRole('button', { name: 'Submit' });
+      act(() => button.click());
+      calls.length = 0;
+
+      act(() => button.click());
+
+      expectPending(button);
+      expect(calls).toEqual(['capture', 'click']);
+      expect(onClickCapture).toHaveBeenLastCalledWith(expect.objectContaining({ type: 'click', target: button }));
       save.resolve(undefined);
       await waitFor(() => expectIdle(button));
     });
