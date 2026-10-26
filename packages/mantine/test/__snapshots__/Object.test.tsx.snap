@@ -32,10 +32,10 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_m0_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_nf_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_m0_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_nf_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -65,10 +65,10 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_m5_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_nk_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_m5_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_nk_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -136,10 +136,10 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_mg_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_nv_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_mg_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_nv_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -319,10 +319,10 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_n7_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_om_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_n7_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_om_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -370,16 +370,16 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-_r_ng_"
+                class="m_8bffd616 mantine-Flex-root __m__-_r_ov_"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_ni_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_p1_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_ni_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_p1_"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -388,10 +388,10 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_nk_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_p3_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_nk_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_p3_"
                     >
                       <div
                         class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -425,10 +425,10 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_nr_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_pa_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_nr_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_pa_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -604,10 +604,10 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_oa_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_pp_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_oa_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_pp_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -831,7 +831,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_p7_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_qm_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -1003,7 +1003,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_pn_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_r6_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -1272,10 +1272,10 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_l7_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_mm_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_l7_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_mm_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1501,10 +1501,10 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_r5_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_sk_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_r5_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_sk_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1534,10 +1534,10 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_ra_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                  .__m__-_r_sp_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                 </style>
                 <div
-                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_ra_"
+                  class="m_2415a157 mantine-SimpleGrid-root __m__-_r_sp_"
                   style="margin-bottom: var(--mantine-spacing-sm);"
                 >
                   <div
@@ -1605,10 +1605,10 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                         <style
                           data-mantine-styles="inline"
                         >
-                          .__m__-_r_rl_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                          .__m__-_r_t4_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
                         </style>
                         <div
-                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_rl_"
+                          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_t4_"
                           style="margin-bottom: var(--mantine-spacing-sm);"
                         >
                           <div
@@ -1750,10 +1750,10 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_s6_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_tl_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_s6_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_tl_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -1920,7 +1920,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_ss_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_ub_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -2092,7 +2092,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                     style="margin-bottom: var(--mantine-spacing-xs);"
                   >
                     <div
-                      class="m_8bffd616 mantine-Flex-root __m__-_r_tc_"
+                      class="m_8bffd616 mantine-Flex-root __m__-_r_ur_"
                       style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
                     >
                       <div
@@ -2361,10 +2361,10 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_qc_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_rr_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_qc_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_rr_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -3578,14 +3578,14 @@ exports[`object fields > additionalProperties, description 1`] = `
                         >
                           foo Key
                         </label>
-                        <p
+                        <div
                           class="m_fe47ce59 mantine-InputWrapper-description mantine-TextInput-description"
                           data-size="sm"
                           id="root_foo-key-description"
                           style="--input-description-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
                         >
                            
-                        </p>
+                        </div>
                         <div
                           class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
                           data-size="sm"
@@ -3593,7 +3593,6 @@ exports[`object fields > additionalProperties, description 1`] = `
                           style="--input-margin-top: calc(var(--mantine-spacing-xs) / 2); --input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
                         >
                           <input
-                            aria-describedby="root_foo-key-description"
                             class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
                             data-variant="default"
                             id="root_foo-key"
@@ -4719,10 +4718,10 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_8e_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_9t_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_8e_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_9t_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -4732,16 +4731,16 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-_r_8h_"
+                class="m_8bffd616 mantine-Flex-root __m__-_r_a0_"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_8j_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_a2_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_8j_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_a2_"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -4750,10 +4749,10 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_8l_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_a4_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_8l_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_a4_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-Select-root"
@@ -4851,7 +4850,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                       data-checked="true"
                                       data-combobox-active="true"
                                       data-combobox-option="true"
-                                      id="_r_97_"
+                                      id="_r_am_"
                                       role="option"
                                       value="0"
                                     >
@@ -4877,7 +4876,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                       aria-selected="false"
                                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                                       data-combobox-option="true"
-                                      id="_r_99_"
+                                      id="_r_ao_"
                                       role="option"
                                       value="1"
                                     >
@@ -4889,7 +4888,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                       aria-selected="false"
                                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                                       data-combobox-option="true"
-                                      id="_r_9b_"
+                                      id="_r_aq_"
                                       role="option"
                                       value="2"
                                     >
@@ -4927,10 +4926,10 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_9d_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_as_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_9d_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_as_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -5265,6 +5264,388 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > patternProperties, a key additionalProperties false forbids 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="m_7485cace mantine-Container-root"
+        data-fluid="true"
+        data-strategy="block"
+        id="root"
+        style="padding: 0rem;"
+      >
+        <style
+          data-mantine-styles="inline"
+        >
+          .__m__-_r_8e_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+        </style>
+        <div
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_8e_"
+          style="margin-bottom: var(--mantine-spacing-sm);"
+        >
+          <div
+            class=""
+          >
+            <div
+              class="rjsf-field rjsf-field-string"
+            >
+              <div
+                class="m_8bffd616 mantine-Flex-root __m__-_r_8h_"
+                style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
+              >
+                <style
+                  data-mantine-styles="inline"
+                >
+                  .__m__-_r_8j_{--grid-gap:var(--mantine-spacing-md);}
+                </style>
+                <div
+                  class="m_410352e9 mantine-Grid-root __m__-_r_8j_"
+                  style="--grid-align: center; width: 100%;"
+                >
+                  <div
+                    class="m_dee7bd2f mantine-Grid-inner"
+                  >
+                    <style
+                      data-mantine-styles="inline"
+                    >
+                      .__m__-_r_8l_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                    </style>
+                    <div
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_8l_"
+                    >
+                      <div
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
+                      >
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
+                          data-size="sm"
+                          for="root_abc-key"
+                          id="root_abc-key-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
+                        >
+                          abc Key
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
+                            data-variant="default"
+                            id="root_abc-key"
+                            name="root_abc-key"
+                            value="abc"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <style
+                      data-mantine-styles="inline"
+                    >
+                      .__m__-_r_8s_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                    </style>
+                    <div
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_8s_"
+                    >
+                      <div
+                        class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-size="sm"
+                      >
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
+                          data-size="sm"
+                          for="root_abc"
+                          id="root_abc-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
+                        >
+                          abc
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
+                            data-variant="default"
+                            id="root_abc"
+                            name="root_abc"
+                            placeholder=""
+                            type="text"
+                            value="hello"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_abc__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
+                  >
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
+                    >
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class=""
+          >
+            <div
+              class="rjsf-field rjsf-field-null rjsf-field-error"
+            >
+              <div
+                class="m_8bffd616 mantine-Flex-root __m__-_r_96_"
+                style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
+              >
+                <style
+                  data-mantine-styles="inline"
+                >
+                  .__m__-_r_98_{--grid-gap:var(--mantine-spacing-md);}
+                </style>
+                <div
+                  class="m_410352e9 mantine-Grid-root __m__-_r_98_"
+                  style="--grid-align: center; width: 100%;"
+                >
+                  <div
+                    class="m_dee7bd2f mantine-Grid-inner"
+                  >
+                    <style
+                      data-mantine-styles="inline"
+                    >
+                      .__m__-_r_9a_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                    </style>
+                    <div
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_9a_"
+                    >
+                      <div
+                        class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                        data-error="true"
+                        data-size="sm"
+                      >
+                        <label
+                          class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
+                          data-size="sm"
+                          for="root_a-key"
+                          id="root_a-key-label"
+                          style="--input-label-size: var(--mantine-font-size-sm);"
+                        >
+                          a Key
+                        </label>
+                        <div
+                          class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                          data-error="true"
+                          data-size="sm"
+                          data-variant="default"
+                          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                        >
+                          <input
+                            aria-describedby="root_a__error"
+                            aria-invalid="true"
+                            class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
+                            data-error="true"
+                            data-variant="default"
+                            id="root_a-key"
+                            name="root_a-key"
+                            value="a"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <style
+                      data-mantine-styles="inline"
+                    >
+                      .__m__-_r_9h_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                    </style>
+                    <div
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_9h_"
+                    >
+                      <h3
+                        class="m_8a5d1357 mantine-Title-root"
+                        data-order="3"
+                        style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
+                      >
+                        <span
+                          id="root_a__title"
+                        >
+                          a
+                        </span>
+                      </h3>
+                      <div
+                        class="m_8f816625 mantine-InputWrapper-error"
+                        id="root_a__error"
+                      >
+                        The key "a" is not allowed here
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <button
+                    class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                    data-size="sm"
+                    data-variant="subtle"
+                    id="root_a__remove"
+                    style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                    title="Remove"
+                    type="button"
+                  >
+                    <span
+                      class="m_8d3afb97 mantine-ActionIcon-icon"
+                    >
+                      <svg
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-x"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0 0h24v24H0z"
+                          fill="none"
+                          stroke="none"
+                        />
+                        <path
+                          d="M18 6l-12 12"
+                        />
+                        <path
+                          d="M6 6l12 12"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="m_4081bf90 mantine-Group-root"
+          style="--group-gap: var(--mantine-spacing-md); --group-align: center; --group-justify: flex-end; --group-wrap: wrap; margin-top: var(--mantine-spacing-xs);"
+        >
+          <button
+            class="mantine-focus-auto mantine-active rjsf-object-property-expand m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+            data-size="sm"
+            data-variant="subtle"
+            id="root__add"
+            style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+            title="Add Item"
+            type="button"
+          >
+            <span
+              class="m_8d3afb97 mantine-ActionIcon-icon"
+            >
+              <svg
+                class="icon icon-tabler icons-tabler-outline icon-tabler-plus"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                  stroke="none"
+                />
+                <path
+                  d="M12 5l0 14"
+                />
+                <path
+                  d="M5 12l14 0"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
 <DocumentFragment>
   <style
@@ -5387,7 +5768,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                         data-checked="true"
                         data-combobox-active="true"
                         data-combobox-option="true"
-                        id="_r_b9_"
+                        id="_r_co_"
                         role="option"
                         value="0"
                       >
@@ -5413,7 +5794,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                         aria-selected="false"
                         class="m_92253aa5 mantine-Select-option m_390b5f4"
                         data-combobox-option="true"
-                        id="_r_bb_"
+                        id="_r_cq_"
                         role="option"
                         value="1"
                       >
@@ -5471,10 +5852,10 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
             <style
               data-mantine-styles="inline"
             >
-              .__m__-_r_bf_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+              .__m__-_r_cu_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
             </style>
             <div
-              class="m_2415a157 mantine-SimpleGrid-root __m__-_r_bf_"
+              class="m_2415a157 mantine-SimpleGrid-root __m__-_r_cu_"
               style="margin-bottom: var(--mantine-spacing-sm);"
             >
               <div
@@ -5572,10 +5953,10 @@ exports[`object fields > show add button and fields if additionalProperties is t
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_9s_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_bb_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_9s_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_bb_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -5585,16 +5966,16 @@ exports[`object fields > show add button and fields if additionalProperties is t
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-_r_9v_"
+                class="m_8bffd616 mantine-Flex-root __m__-_r_be_"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_a1_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_bg_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_a1_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_bg_"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -5603,10 +5984,10 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_a3_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_bi_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_a3_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_bi_"
                     >
                       <div
                         class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -5640,10 +6021,10 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_aa_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_bp_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_aa_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_bp_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -5838,10 +6219,10 @@ exports[`object fields > with title and description > additionalProperties 1`] =
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_cl_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_e4_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_cl_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_e4_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -5851,16 +6232,16 @@ exports[`object fields > with title and description > additionalProperties 1`] =
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-_r_co_"
+                class="m_8bffd616 mantine-Flex-root __m__-_r_e7_"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_cq_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_e9_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_cq_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_e9_"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -5869,10 +6250,10 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_cs_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_eb_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_cs_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_eb_"
                     >
                       <div
                         class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -5906,10 +6287,10 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_d3_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_ei_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_d3_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_ei_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -6104,10 +6485,10 @@ exports[`object fields > with title and description > object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_bs_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_db_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_bs_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_db_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -6346,10 +6727,10 @@ exports[`object fields > with title and description > show add button and fields
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_dk_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_f3_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_dk_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_f3_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -6359,16 +6740,16 @@ exports[`object fields > with title and description > show add button and fields
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-_r_dn_"
+                class="m_8bffd616 mantine-Flex-root __m__-_r_f6_"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_dp_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_f8_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_dp_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_f8_"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -6377,10 +6758,10 @@ exports[`object fields > with title and description > show add button and fields
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_dr_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_fa_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_dr_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_fa_"
                     >
                       <div
                         class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -6414,10 +6795,10 @@ exports[`object fields > with title and description > show add button and fields
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_e2_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_fh_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_e2_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_fh_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -6612,10 +6993,10 @@ exports[`object fields > with title and description from both > additionalProper
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_i3_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_ji_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_i3_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_ji_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -6625,16 +7006,16 @@ exports[`object fields > with title and description from both > additionalProper
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-_r_i6_"
+                class="m_8bffd616 mantine-Flex-root __m__-_r_jl_"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_i8_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_jn_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_i8_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_jn_"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -6643,10 +7024,10 @@ exports[`object fields > with title and description from both > additionalProper
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_ia_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_jp_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_ia_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_jp_"
                     >
                       <div
                         class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -6680,10 +7061,10 @@ exports[`object fields > with title and description from both > additionalProper
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_ih_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_k0_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_ih_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_k0_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -6878,10 +7259,10 @@ exports[`object fields > with title and description from both > object 1`] = `
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_ha_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_ip_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_ha_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_ip_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -7120,10 +7501,10 @@ exports[`object fields > with title and description from uiSchema > additionalPr
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_fc_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_gr_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_fc_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_gr_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -7133,16 +7514,16 @@ exports[`object fields > with title and description from uiSchema > additionalPr
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-_r_ff_"
+                class="m_8bffd616 mantine-Flex-root __m__-_r_gu_"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_fh_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_h0_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_fh_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_h0_"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -7151,10 +7532,10 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_fj_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_h2_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_fj_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_h2_"
                     >
                       <div
                         class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -7188,10 +7569,10 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_fq_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_h9_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_fq_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_h9_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -7386,10 +7767,10 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_ej_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_g2_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_ej_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_g2_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -7628,10 +8009,10 @@ exports[`object fields > with title and description from uiSchema > show add but
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_gb_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_hq_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_gb_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_hq_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -7641,16 +8022,16 @@ exports[`object fields > with title and description from uiSchema > show add but
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-_r_ge_"
+                class="m_8bffd616 mantine-Flex-root __m__-_r_ht_"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_gg_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_hv_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_gg_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_hv_"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -7659,10 +8040,10 @@ exports[`object fields > with title and description from uiSchema > show add but
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_gi_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_i1_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_gi_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_i1_"
                     >
                       <div
                         class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -7696,10 +8077,10 @@ exports[`object fields > with title and description from uiSchema > show add but
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_gp_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_i8_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_gp_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_i8_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -7875,10 +8256,10 @@ exports[`object fields > with title and description with global label off > addi
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_jh_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_l0_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_jh_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_l0_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -7888,16 +8269,16 @@ exports[`object fields > with title and description with global label off > addi
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-_r_jk_"
+                class="m_8bffd616 mantine-Flex-root __m__-_r_l3_"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_jm_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_l5_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_jm_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_l5_"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -7906,10 +8287,10 @@ exports[`object fields > with title and description with global label off > addi
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_jo_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_l7_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_jo_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_l7_"
                     >
                       <div
                         class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -7935,10 +8316,10 @@ exports[`object fields > with title and description with global label off > addi
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_ju_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_ld_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_ju_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_ld_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -8106,10 +8487,10 @@ exports[`object fields > with title and description with global label off > obje
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_j0_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_kf_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_j0_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_kf_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -8281,10 +8662,10 @@ exports[`object fields > with title and description with global label off > show
         <style
           data-mantine-styles="inline"
         >
-          .__m__-_r_kc_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+          .__m__-_r_lr_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
         </style>
         <div
-          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_kc_"
+          class="m_2415a157 mantine-SimpleGrid-root __m__-_r_lr_"
           style="margin-bottom: var(--mantine-spacing-sm);"
         >
           <div
@@ -8294,16 +8675,16 @@ exports[`object fields > with title and description with global label off > show
               class="rjsf-field rjsf-field-string"
             >
               <div
-                class="m_8bffd616 mantine-Flex-root __m__-_r_kf_"
+                class="m_8bffd616 mantine-Flex-root __m__-_r_lu_"
                 style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
               >
                 <style
                   data-mantine-styles="inline"
                 >
-                  .__m__-_r_kh_{--grid-gap:var(--mantine-spacing-md);}
+                  .__m__-_r_m0_{--grid-gap:var(--mantine-spacing-md);}
                 </style>
                 <div
-                  class="m_410352e9 mantine-Grid-root __m__-_r_kh_"
+                  class="m_410352e9 mantine-Grid-root __m__-_r_m0_"
                   style="--grid-align: center; width: 100%;"
                 >
                   <div
@@ -8312,10 +8693,10 @@ exports[`object fields > with title and description with global label off > show
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_kj_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_m2_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_kj_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_m2_"
                     >
                       <div
                         class="form-group m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
@@ -8341,10 +8722,10 @@ exports[`object fields > with title and description with global label off > show
                     <style
                       data-mantine-styles="inline"
                     >
-                      .__m__-_r_kp_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
+                      .__m__-_r_m8_{--col-flex-grow:auto;--col-flex-basis:calc(50% - 0.5 * var(--grid-column-gap));--col-max-width:calc(50% - 0.5 * var(--grid-column-gap));}
                     </style>
                     <div
-                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_kp_"
+                      class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_m8_"
                     >
                       <div
                         class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"

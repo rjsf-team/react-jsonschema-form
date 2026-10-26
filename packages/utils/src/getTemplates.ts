@@ -10,20 +10,29 @@ import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJS
  *
  * @param registry - The `Registry` from which to read the templates
  * @param [uiOptions={}] - The `UIOptionsType` from which to read alternate templates
+ * @param [entryLabel] - Builds the label of the uiSchema entry the field is rendered from, for the override
+ * warnings, as in `getTemplate()`; omitted by callers that only resolve, which stay silent
  * @returns - The templates from either the `uiSchema` or `registry`
  */
 export default function getTemplates<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(registry: Registry<T, S, F>, uiOptions: UIOptionsType<T, S, F> = {}): Readonly<TemplatesType<T, S, F>> {
+>(
+  registry: Registry<T, S, F>,
+  uiOptions: UIOptionsType<T, S, F> = {},
+  entryLabel?: () => string,
+): Readonly<TemplatesType<T, S, F>> {
   // Every field and widget calls this on each render, so the registry's own map is returned as-is, without allocating,
   // unless an override actually applies
   let templates: TemplatesType<T, S, F> | undefined;
   for (const name in uiOptions) {
     if (Object.hasOwn(uiOptions, name) && Object.hasOwn(registry.templates, name)) {
-      templates ??= { ...registry.templates };
-      templates[name] = getTemplate(name, registry, uiOptions);
+      const template = getTemplate(name, registry, uiOptions, entryLabel);
+      if (template !== registry.templates[name]) {
+        templates ??= { ...registry.templates };
+        templates[name] = template;
+      }
     }
   }
   return templates ?? registry.templates;

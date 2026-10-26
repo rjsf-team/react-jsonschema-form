@@ -10,6 +10,10 @@ export interface NamedFieldPath {
   framedAbove: boolean;
   /** Whether that `SchemaField` has rendered the `anyOf`/`oneOf` options at that path beside the named field */
   optionsRendered: boolean;
+  /** The field's own errors, which the `SchemaField` that named the field takes out of the `errorSchema` it hands on,
+   * for the `SchemaField` framed inside its template to take as its own
+   */
+  errors?: string[];
 }
 
 /** The data path a `SchemaField` above has rendered the field its `ui:field` or `$id` names for. `SchemaField` and

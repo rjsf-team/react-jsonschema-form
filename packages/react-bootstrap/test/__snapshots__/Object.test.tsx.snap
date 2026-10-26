@@ -3120,6 +3120,246 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > patternProperties, a key additionalProperties false forbids 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-string row"
+              >
+                <div
+                  class="col-5"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_abc-key"
+                    >
+                      abc Key
+                    </label>
+                    <input
+                      class="form-control"
+                      id="root_abc-key"
+                      name="root_abc-key"
+                      type="text"
+                      value="abc"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="col-6"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_abc"
+                    >
+                      <span
+                        id="root_abc__label"
+                      >
+                        abc
+                      </span>
+                    </label>
+                    <input
+                      class="form-control"
+                      id="root_abc"
+                      name="root_abc"
+                      placeholder=""
+                      type="text"
+                      value="hello"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px; max-height: 2.5rem;"
+                >
+                  <button
+                    class="btn btn-danger btn-sm"
+                    id="root_abc__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-null rjsf-field-error row"
+              >
+                <div
+                  class="col-5"
+                >
+                  <div>
+                    <label
+                      class="form-label"
+                      for="root_a-key"
+                    >
+                      a Key
+                    </label>
+                    <input
+                      aria-describedby="root_a__error"
+                      aria-invalid="true"
+                      class="form-control is-invalid"
+                      id="root_a-key"
+                      name="root_a-key"
+                      type="text"
+                      value="a"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="col-6"
+                >
+                  <div>
+                    <div
+                      class="my-1"
+                    >
+                      <h5>
+                        <span
+                          id="root_a__title"
+                        >
+                          a
+                        </span>
+                      </h5>
+                      <hr
+                        class="border-0 bg-secondary mt-0"
+                        style="height: 1px;"
+                      />
+                    </div>
+                    <ul
+                      class="list-group"
+                      id="root_a__error"
+                    >
+                      <li
+                        class="border-0 m-0 p-0 list-group-item"
+                      >
+                        <small
+                          class="m-0 text-danger"
+                        >
+                          The key "a" is not allowed here
+                        </small>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div
+                  class="py-4 d-grid gap-2 col-1"
+                  style="margin-top: 12px; max-height: 2.5rem;"
+                >
+                  <button
+                    class="btn btn-danger btn-sm"
+                    id="root_a__remove"
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="1em"
+                      stroke="currentColor"
+                      stroke-width="0"
+                      viewBox="0 0 512 512"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="row"
+          >
+            <div
+              class="py-0.5 col-1 offset-11"
+            >
+              <button
+                class="ml-1 rjsf-object-property-expand btn btn-primary"
+                id="root__add"
+                style="width: 100%;"
+                title="Add Item"
+                type="button"
+              >
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 16 16"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                    fill-rule="evenodd"
+                  />
+                  <path
+                    clip-rule="evenodd"
+                    d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
 <DocumentFragment>
   <form
