@@ -4,6 +4,7 @@ import {
   checkboxLabelTests,
   fallbackDescriptionTests,
   formTests,
+  submitPendingTests,
   themeTests,
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
@@ -790,3 +791,5 @@ describe("fluentui-rc's anyOf option error state", () => {
 });
 
 wrapIfAdditionalErrorStateTests(Form);
+
+submitPendingTests(Form);

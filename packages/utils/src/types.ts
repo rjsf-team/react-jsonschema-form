@@ -5,6 +5,7 @@ import type {
   ComponentType,
   FocusEvent,
   HTMLAttributes,
+  MouseEvent,
   ReactElement,
   ReactNode,
   StyleHTMLAttributes,
@@ -1619,6 +1620,12 @@ export interface SubmitButtonProps<
   readonly uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
   readonly registry: Registry<T, S, F>;
+  /** Whether a submission is in flight: a promise `onSubmit` returned has yet to settle, or the form is pending in
+   * React's form status, as it is while a transition `onSubmit` started runs. Meanwhile the props of
+   * `ui:submitButtonOptions` set `aria-disabled` and cancel a click, so a button that spreads them takes no second
+   * submit without `disabled`, which would move focus off it
+   */
+  readonly pending?: boolean;
 }
 
 /** The type that defines the props for an Icon button, extending from a basic HTML button attributes */
@@ -1646,6 +1653,8 @@ export interface UISchemaSubmitButtonOptions {
     disabled?: boolean;
     /** The class name for the submit button */
     className?: string;
+    /** Called for a click on the submit button, also while the form is pending, when the form cancels the click */
+    onClick?: Bivariant<[event: MouseEvent<HTMLElement>]>;
   };
 }
 

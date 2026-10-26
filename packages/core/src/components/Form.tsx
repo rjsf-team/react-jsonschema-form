@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode, Ref, SubmitEvent } from 'react';
+import type { ElementType, MouseEvent, ReactNode, Ref, SubmitEvent } from 'react';
 import {
   memo,
   useEffect,
@@ -21,6 +21,7 @@ import type {
   RJSFSchema,
   RJSFValidationError,
   SchemaUtilsType,
+  SubmitButtonProps,
   TemplatesType,
   ThemePresentation,
   UiSchema,
@@ -30,6 +31,7 @@ import type {
   NameGeneratorFunction,
 } from '@rjsf/utils';
 import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI_OPTIONS_KEY } from '@rjsf/utils';
+import { useFormStatus } from 'react-dom';
 
 import isDevelopment from '../isDevelopment.ts';
 import NamedFieldContext from './fields/NamedFieldContext.ts';
@@ -134,9 +136,13 @@ export interface FormProps<
   onError?: (errors: RJSFValidationError[]) => void;
   /** You can pass a function as the `onSubmit` prop of your `Form` component to listen to when the form is submitted
    * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
-   * data you're usually after. The original event will also be passed as a second parameter
+   * data you're usually after. The original event will also be passed as a second parameter.
+   *
+   * When it returns a promise, the form ignores another submit until that promise settles, and meanwhile the submit
+   * button gets `pending` and `aria-disabled`, which keeps it focusable, rather than `disabled`. When the promise rejects, the form's own copy of it rejects with the same error and is reported as an unhandled rejection,
+   * even where you handle the promise you returned
    */
-  onSubmit?: (data: IChangeEvent<Uninferred<T>, S, F>, event: SubmitEvent<HTMLFormElement>) => void;
+  onSubmit?: (data: IChangeEvent<Uninferred<T>, S, F>, event: SubmitEvent<HTMLFormElement>) => unknown;
   /** Sometimes you may want to trigger events or modify external state when a field has been touched, so you can pass
    * an `onBlur` handler, which will receive the id of the input that was blurred and the field value
    */
@@ -360,17 +366,99 @@ function Attachment({ attach }: { attach: () => () => void }) {
   return null;
 }
 
+/** The submit button's uiSchema, with `buttonProps` added to the props it gives the button, which every `SubmitButton`
+ * spreads
+ */
+function submitButtonUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiSchema: UiSchema<T, S, F> | undefined,
+  buttonProps: { disabled: true } | PendingButtonProps | undefined,
+): UiSchema<T, S, F> {
+  const submitOptions = getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY] ?? {};
+  return {
+    [UI_OPTIONS_KEY]: {
+      [SUBMIT_BTN_OPTIONS_KEY]: buttonProps
+        ? { ...submitOptions, props: { ...submitOptions.props, ...buttonProps } }
+        : submitOptions,
+    },
+  };
+}
+
+interface PendingButtonProps {
+  'aria-disabled': true;
+  onClick: (event: MouseEvent<HTMLElement>) => void;
+}
+
+/** Cancels the click even when the app's `onClick` throws, since the browser would otherwise run its constraint
+ * validation for the submit the form ignores
+ */
+function cancelAfterAppClick(event: MouseEvent<HTMLElement>, onClick?: (event: MouseEvent<HTMLElement>) => void) {
+  try {
+    onClick?.(event);
+  } finally {
+    event.preventDefault();
+  }
+}
+
+type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
+  SubmitButtonProps<T, S, F>,
+  'uiSchema' | 'registry'
+> & {
+  SubmitButton: TemplatesType<T, S, F>['ButtonTemplates']['SubmitButton'];
+  submitting: boolean;
+};
+
+/** The submit button, `aria-disabled` and taking no click while the form is pending, through the props its uiSchema
+ * gives the button. Not `disabled`: the browser moves focus off a focused button that becomes disabled, so a keyboard
+ * user who submitted would lose their place
+ */
+function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContextType>({
+  SubmitButton,
+  submitting,
+  uiSchema,
+  registry,
+}: PendingSubmitButtonProps<T, S, F>) {
+  const pendingUiSchema = useMemo(() => {
+    if (!submitting) {
+      return uiSchema;
+    }
+    const appOnClick = getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY]?.props?.onClick;
+    return submitButtonUiSchema<T, S, F>(uiSchema, {
+      'aria-disabled': true,
+      /** Cancels the click, as a disabled button gets none, so the browser runs no constraint validation, which would
+       * show its message and move focus, for a submit the form ignores. Enter in a field clicks the form's default
+       * button too. The app's own `onClick` still runs
+       */
+      onClick: (event) => cancelAfterAppClick(event, appOnClick),
+    });
+  }, [submitting, uiSchema]);
+  return <SubmitButton uiSchema={pendingUiSchema} registry={registry} pending={submitting} />;
+}
+
+/** `PendingSubmitButton`, pending too while the form is pending in React's form status, as it is while a transition
+ * `onSubmit` started runs. `useFormStatus()` reads the `<form>` above the component calling it, so it is read here,
+ * inside the form, rather than in `Form`
+ */
+function FormStatusSubmitButton<T, S extends StrictRJSFSchema, F extends FormContextType>({
+  submitting,
+  ...props
+}: PendingSubmitButtonProps<T, S, F>) {
+  const { pending } = useFormStatus();
+  return <PendingSubmitButton {...props} submitting={submitting || pending} />;
+}
+
 /** The model holds the state; rendering derives from it and the props what to show, and each commit hands that back */
 function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FormProps<T, S, F>,
 ) {
   const { ref } = props;
+  // Whether a promise `onSubmit` returned is pending, which the model reports
+  const [submitting, setSubmitting] = useState(false);
   // The model is created once and kept in the render cache, so the form has the one model for as long as it is mounted.
   // The cache also holds what the last render derived, which React documents as storing information from previous
   // renders: a render with the same props and no operation since reuses it rather than deriving it again
   const [cache, setCache] = useState(() => {
     const state = initialState(props);
-    return { model: createFormModel(props, state), published: state, props, state };
+    return { model: createFormModel(props, state, setSubmitting), published: state, props, state };
   });
   const { model } = cache;
   const { setFormElement } = model;
@@ -420,22 +508,27 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   const FormTag = tagName || 'form';
 
   // Memoized so the submit button, which is not a field, keeps its props across renders that changed nothing of its own
-  const submitUiSchema = useMemo(() => {
-    const submitOptions = getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY] ?? {};
-    return {
-      [UI_OPTIONS_KEY]: {
-        [SUBMIT_BTN_OPTIONS_KEY]: disabled
-          ? { ...submitOptions, props: { ...submitOptions.props, disabled: true } }
-          : submitOptions,
-      },
-    };
-  }, [uiSchema, disabled]);
+  const submitUiSchema = useMemo(
+    () => submitButtonUiSchema<T, S, F>(uiSchema, disabled ? { disabled: true } : undefined),
+    [uiSchema, disabled],
+  );
   // The element too: a theme's `SubmitButton` may not be memoized, so an element that is kept is what skips it for a keystroke.
   // `children` replace the button, so there is none to build then
   const hasChildren = !!children;
+  // An element other than a form has no form status of its own, and `useFormStatus()` would read an enclosing form's
+  const StatusSubmitButton =
+    typeof FormTag === 'string' && FormTag !== 'form' ? PendingSubmitButton : FormStatusSubmitButton;
   const submitButton = useMemo(
-    () => (hasChildren ? null : <SubmitButton uiSchema={submitUiSchema} registry={registry} />),
-    [hasChildren, SubmitButton, submitUiSchema, registry],
+    () =>
+      hasChildren ? null : (
+        <StatusSubmitButton
+          SubmitButton={SubmitButton}
+          submitting={submitting}
+          uiSchema={submitUiSchema}
+          registry={registry}
+        />
+      ),
+    [hasChildren, StatusSubmitButton, SubmitButton, submitting, submitUiSchema, registry],
   );
 
   /** The errors in the `ErrorList`, unless disabled by `showErrorList` */
