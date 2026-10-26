@@ -19,8 +19,8 @@ export default function fieldLabelForLog(id: string, fieldPath: FieldPath): stri
   return formatLabel(id, fieldPath);
 }
 
-/** Takes the path as a plain string because `entryLabelForLog()` writes array indexes as `[]`, outside the `FieldPath`
- * grammar
+/** Takes the path as a plain string because `entryLabelForLog()` writes array indexes as `[]` and extra keys as `{}`,
+ * outside the `FieldPath` grammar
  */
 function formatLabel(id: string, path: string): string {
   return `"${id}"${path ? ` (${path})` : ''}`;
@@ -29,20 +29,32 @@ function formatLabel(id: string, path: string): string {
 /** Names a field the way `fieldLabelForLog()` does, but with each array index written as `[]`, for a warning about
  * the uiSchema entry the field is rendered from rather than about the field itself. Every item an array's `items`
  * entry renders reads alike, so a mistake in that entry is warned about once rather than once per item, which over a
- * long array would also crowd every other warning out of what `logOnce()` remembers.
+ * long array would also crowd every other warning out of what `logOnce()` remembers. An additional property's key
+ * is collapsed the same way, written as `{}` so the label points at an `additionalProperties` entry rather than an
+ * `items` one, since every extra key that entry renders - and every field beneath one - shares the one entry too.
  *
  * @param fieldPath - The `FieldPath` identifying the field in the form
  * @param globalFormOptions - The `GlobalFormOptions` holding the `idPrefix` and `idSeparator` the id is built from
+ * @param [collapsedKeys] - The indexes of the path segments that are an additional property's key, written as `{}`
  * @returns - The field named as `"root_tasks_[]_title" (tasks[].title)`, or just `"root"` at the root
  */
-export function entryLabelForLog(fieldPath: FieldPath, globalFormOptions: GlobalFormOptions): string {
+export function entryLabelForLog(
+  fieldPath: FieldPath,
+  globalFormOptions: GlobalFormOptions,
+  collapsedKeys?: readonly number[],
+): string {
   const segments = fieldPathToList(fieldPath);
+  const marker = (index: number, segment: string | number) => {
+    if (typeof segment === 'number') {
+      return '[]';
+    }
+    return collapsedKeys?.includes(index) ? '{}' : undefined;
+  };
   const { idPrefix, idSeparator } = globalFormOptions;
-  const id = [idPrefix, ...segments.map((segment) => (typeof segment === 'number' ? '[]' : segment))].join(idSeparator);
-  const path = segments.reduce<string>(
-    (entryPath, segment) =>
-      typeof segment === 'number' ? `${entryPath}[]` : toFieldPath(segment, entryPath as FieldPath),
-    ROOT_FIELD_PATH,
-  );
+  const id = [idPrefix, ...segments.map((segment, index) => marker(index, segment) ?? segment)].join(idSeparator);
+  const path = segments.reduce<string>((entryPath, segment, index) => {
+    const collapsed = marker(index, segment);
+    return collapsed ? `${entryPath}${collapsed}` : toFieldPath(segment, entryPath as FieldPath);
+  }, ROOT_FIELD_PATH);
   return formatLabel(id, path);
 }

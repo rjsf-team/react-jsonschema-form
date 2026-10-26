@@ -114,6 +114,10 @@ export const TranslatableString = {
   TitleOptionPrefix: '%1 option %2',
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
   KeyLabel: '%1 Key',
+  /** Error for an additional property key the object's schema forbids, where %1 will be replaced by the key as
+   * provided by ObjectField
+   */
+  AdditionalPropertyKeyNotAllowed: 'The key "%1" is not allowed here',
   /** Deprecated label, where %1 will be replaced by the label as provided by SchemaField */
   DeprecatedLabel: '%1 (deprecated)',
   /** Accessible name of one of the selects an AltDateWidget renders, where %1 will be replaced by the field's label
