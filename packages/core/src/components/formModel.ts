@@ -563,9 +563,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   };
 
   /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it, and returns what
-   * `onSubmit` returned
+   * `onSubmit` returned. While `isSubmitting`, it only keeps the event from submitting the page
    */
-  const submitFromEvent = (event: SubmitEvent<HTMLFormElement>): unknown => {
+  const submitFromEvent = (event: SubmitEvent<HTMLFormElement>, isSubmitting: boolean): unknown => {
     event.preventDefault();
     // The event `submit()` dispatched stands in for this form's own submit, so an enclosing form does not get it too
     if (event.nativeEvent === dispatchedSubmit) {
@@ -573,7 +573,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
     // A detached form drops a submit event that still reaches it, such as one from a `<button form>` outside the
     // `<Activity>` that hides it, as it drops `submit()`
-    if (isDetached || event.target !== event.currentTarget) {
+    if (isSubmitting || isDetached || event.target !== event.currentTarget) {
       return undefined;
     }
     const props = committedProps;
@@ -588,16 +588,17 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   };
 
   /** `submitFromEvent()`, with a throw from the submit `submit()` is running kept for `submit()` to throw. Returns what
-   * `onSubmit` returned, so the `Form` can keep the form pending while a promise it returned is
+   * `onSubmit` returned, so the `Form` can keep the form pending while a promise it returned is, and ignore a submit
+   * meanwhile
    */
-  const handleSubmit = (event: SubmitEvent<HTMLFormElement>): unknown => {
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>, isSubmitting: boolean): unknown => {
     const running = submission;
     submission = undefined;
     if (!running) {
-      return submitFromEvent(event);
+      return submitFromEvent(event, isSubmitting);
     }
     try {
-      return submitFromEvent(event);
+      return submitFromEvent(event, isSubmitting);
     } catch (error) {
       running.error = error;
       running.isThrown = true;

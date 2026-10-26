@@ -7,6 +7,7 @@ import {
   useInsertionEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from 'react';
@@ -139,8 +140,8 @@ export interface FormProps<
    * and its data are valid. It will be passed a result object having a `formData` attribute, which is the valid form
    * data you're usually after. The original event will also be passed as a second parameter.
    *
-   * When it returns a promise, the submit button gets `pending` and is disabled until that promise settles. When the
-   * promise rejects, the form's own copy of it rejects with the same error and is reported as an unhandled rejection,
+   * When it returns a promise, the form ignores another submit until that promise settles, and meanwhile the submit
+   * button gets `pending` and `aria-disabled`, which keeps it focusable, rather than `disabled`. When the promise rejects, the form's own copy of it rejects with the same error and is reported as an unhandled rejection,
    * even where you handle the promise you returned
    */
   onSubmit?: (data: IChangeEvent<Uninferred<T>, S, F>, event: SubmitEvent<HTMLFormElement>) => unknown;
@@ -366,18 +367,18 @@ function Attachment({ attach }: { attach: () => () => void }) {
   return null;
 }
 
-/** The submit button's uiSchema, with `disabled` set in the props it gives the button when asked, which every
- * `SubmitButton` spreads
+/** The submit button's uiSchema, with `buttonProps` added to the props it gives the button, which every `SubmitButton`
+ * spreads
  */
 function submitButtonUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiSchema: UiSchema<T, S, F> | undefined,
-  disabled: boolean | undefined,
+  buttonProps: { disabled: true } | { 'aria-disabled': true } | undefined,
 ): UiSchema<T, S, F> {
   const submitOptions = getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY] ?? {};
   return {
     [UI_OPTIONS_KEY]: {
-      [SUBMIT_BTN_OPTIONS_KEY]: disabled
-        ? { ...submitOptions, props: { ...submitOptions.props, disabled: true } }
+      [SUBMIT_BTN_OPTIONS_KEY]: buttonProps
+        ? { ...submitOptions, props: { ...submitOptions.props, ...buttonProps } }
         : submitOptions,
     },
   };
@@ -388,8 +389,9 @@ type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormConte
   submitting: boolean;
 };
 
-/** The submit button, disabled while the form is pending through the props its uiSchema gives the button, as a disabled
- * form's is, so a custom `SubmitButton` that spreads them can't submit the form a second time meanwhile either
+/** The submit button, `aria-disabled` while the form is pending through the props its uiSchema gives the button. Not
+ * `disabled`: the browser moves focus off a focused button that becomes disabled, so a keyboard user who submitted would
+ * lose their place, and the form ignores a second submit meanwhile anyway
  */
 function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContextType>({
   SubmitButton,
@@ -398,7 +400,7 @@ function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContex
   registry,
 }: PendingSubmitButtonProps<T, S, F>) {
   const pendingUiSchema = useMemo(
-    () => (submitting ? submitButtonUiSchema<T, S, F>(uiSchema, true) : uiSchema),
+    () => (submitting ? submitButtonUiSchema<T, S, F>(uiSchema, { 'aria-disabled': true }) : uiSchema),
     [submitting, uiSchema],
   );
   return <SubmitButton uiSchema={pendingUiSchema} registry={registry} pending={submitting} />;
@@ -451,19 +453,26 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     }
   }, [model, formDataProp, initialFormData]);
   useImperativeHandle(ref, () => model.handle, [model]);
-  // The form counts the promises `onSubmit` returned in its own state rather than awaiting them in a transition, since
+  // The form keeps the promise `onSubmit` returned in its own state rather than awaiting it in a transition, since
   // React holds every transition in the app until all its async ones settle. The copy `finally()` returns rejects with
   // the promise's error and no one handles it, so a rejection is reported as an unhandled rejection, as react-hook-form's
   // and TanStack Form's `handleSubmit` rethrow it, and never reaches an Error Boundary
-  const [submissions, setSubmissions] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+  // Ignoring a submit while one is pending, as TanStack Form does, is decided in the submit event, before a render can
+  // show the state, such as for two `submit()` calls in one handler
+  const pendingSubmit = useRef<Promise<unknown>>(undefined);
   const handleSubmit = useCallback(
     (event: SubmitEvent<HTMLFormElement>) => {
-      const submitted = model.handleSubmit(event);
+      const submitted = model.handleSubmit(event, pendingSubmit.current !== undefined);
       // Only a promise: another thenable, such as a query builder, may run its request again on each `then()` call
       if (submitted instanceof Promise) {
-        setSubmissions((count) => count + 1);
+        pendingSubmit.current = submitted;
+        setSubmitting(true);
         // oxlint-disable-next-line no-void
-        void submitted.finally(() => setSubmissions((count) => count - 1));
+        void submitted.finally(() => {
+          pendingSubmit.current = undefined;
+          setSubmitting(false);
+        });
       }
     },
     [model],
@@ -493,11 +502,13 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   const FormTag = tagName || 'form';
 
   // Memoized so the submit button, which is not a field, keeps its props across renders that changed nothing of its own
-  const submitUiSchema = useMemo(() => submitButtonUiSchema<T, S, F>(uiSchema, disabled), [uiSchema, disabled]);
+  const submitUiSchema = useMemo(
+    () => submitButtonUiSchema<T, S, F>(uiSchema, disabled ? { disabled: true } : undefined),
+    [uiSchema, disabled],
+  );
   // The element too: a theme's `SubmitButton` may not be memoized, so an element that is kept is what skips it for a keystroke.
   // `children` replace the button, so there is none to build then
   const hasChildren = !!children;
-  const submitting = submissions > 0;
   // An element other than a form has no form status of its own, and `useFormStatus()` would read an enclosing form's
   const StatusSubmitButton =
     typeof FormTag === 'string' && FormTag !== 'form' ? PendingSubmitButton : FormStatusSubmitButton;
