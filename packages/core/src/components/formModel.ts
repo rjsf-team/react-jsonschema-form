@@ -123,6 +123,13 @@ function focusableForId(
   );
 }
 
+/** Whether `value` is a native promise, from this realm or another, such as an iframe's `fetch()`. Only a promise keeps
+ * the form pending: another thenable, such as a query builder, may run its request again on each `then()` call
+ */
+function isPromise(value: unknown): value is Promise<unknown> {
+  return Object.prototype.toString.call(value) === '[object Promise]';
+}
+
 /** The model holds the form's state between renders and performs every operation on it. An operation starts from the
  * current state and reads the props once, as it starts, so that everything it computes and reports belongs to one
  * moment.
@@ -571,11 +578,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
   };
 
-  /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it, and returns what
-   * `onSubmit` returned. While a submit is pending, it only counts the submit, as TanStack Form counts every attempt,
-   * and keeps the event from submitting the page
+  /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it, and keeps the form
+   * pending while a promise `onSubmit` returned is. While a submit is pending, it only counts the submit, as TanStack
+   * Form counts every attempt, and keeps the event from submitting the page
    */
-  const submitFromEvent = (event: SubmitEvent<HTMLFormElement>): unknown => {
+  const submitFromEvent = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     // The event `submit()` dispatched stands in for this form's own submit, so an enclosing form does not get it too
     if (event.nativeEvent === dispatchedSubmit) {
@@ -584,11 +591,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // A detached form drops a submit event that still reaches it, such as one from a `<button form>` outside the
     // `<Activity>` that hides it, as it drops `submit()`
     if (isDetached || event.target !== event.currentTarget) {
-      return undefined;
+      return;
     }
     countSubmit();
     if (pendingSubmit !== undefined) {
-      return undefined;
+      return;
     }
     const props = committedProps;
     // oxlint-disable-next-line typescript/no-deprecated
@@ -608,7 +615,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     };
     const isOmitted = props.omitExtraData === true;
     if (!noValidate && !runValidation(props, () => (isOmitted ? omitOnce(current()).formData : current().formData))) {
-      return undefined;
+      return;
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
     const committed = commit(settled((base) => applySubmit(base, props, isOmitted ? omitOnce(base) : undefined)));
@@ -617,45 +624,47 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     let submitted: unknown;
     try {
       submitted = props.onSubmit?.(eventOf(committed, 'submitted'), event);
-      return submitted;
     } finally {
-      // A `reset()` in `onSubmit` released this hold, and a submit it started since may hold the form now. Only a
-      // promise keeps it: another thenable, such as a query builder, may run its request again on each `then()` call
+      // A `reset()` in `onSubmit` released this hold, and a submit it started since may hold the form now
       if (pendingSubmit === event) {
-        pendingSubmit = submitted instanceof Promise ? submitted : undefined;
+        pendingSubmit = undefined;
+        if (isPromise(submitted)) {
+          holdPending(submitted);
+        }
       }
     }
   };
 
-  /** `submitFromEvent()`, with a throw from the submit `submit()` is running kept for `submit()` to throw, keeping the
-   * form pending while a promise `onSubmit` returned is
+  /** Keeps the form pending until `submitted` settles. The form keeps the promise in its own state rather than awaiting
+   * it in a transition, since React holds every transition in the app until all its async ones settle. The copy
+   * `finally()` returns rejects with the promise's error and no one handles it, so a rejection is reported as an
+   * unhandled rejection, as react-hook-form's and TanStack Form's `handleSubmit` rethrow it, and never reaches an Error
+   * Boundary
    */
+  const holdPending = (submitted: Promise<unknown>) => {
+    pendingSubmit = submitted;
+    onPendingChange(true);
+    // oxlint-disable-next-line no-void
+    void submitted.finally(() => {
+      // A `reset()` released the form meanwhile, and a submit since may be pending
+      if (pendingSubmit === submitted) {
+        releasePending();
+      }
+    });
+  };
+
+  /** `submitFromEvent()`, with a throw from the submit `submit()` is running kept for `submit()` to throw */
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     const running = submission;
     submission = undefined;
-    let submitted: unknown;
     try {
-      submitted = submitFromEvent(event);
+      submitFromEvent(event);
     } catch (error) {
       if (!running) {
         throw error;
       }
       running.error = error;
       running.isThrown = true;
-    }
-    // The form keeps the promise in its own state rather than awaiting it in a transition, since React holds every
-    // transition in the app until all its async ones settle. The copy `finally()` returns rejects with the promise's
-    // error and no one handles it, so a rejection is reported as an unhandled rejection, as react-hook-form's and
-    // TanStack Form's `handleSubmit` rethrow it, and never reaches an Error Boundary
-    if (submitted instanceof Promise && pendingSubmit === submitted) {
-      onPendingChange(true);
-      // oxlint-disable-next-line no-void
-      void submitted.finally(() => {
-        // A `reset()` released the form meanwhile, and a submit since may be pending
-        if (pendingSubmit === submitted) {
-          releasePending();
-        }
-      });
     }
   };
 

@@ -414,7 +414,10 @@ interface PendingButtonProps {
   onClick: (event: MouseEvent<HTMLElement>) => void;
 }
 
-type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormContextType> = SubmitButtonProps<T, S, F> & {
+type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
+  SubmitButtonProps<T, S, F>,
+  'uiSchema' | 'registry'
+> & {
   SubmitButton: TemplatesType<T, S, F>['ButtonTemplates']['SubmitButton'];
   submitting: boolean;
   /** Cancels the click after calling the app's `onClick`, see `cancelPendingClick` in `formModel.ts` */
@@ -432,21 +435,20 @@ function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContex
   uiSchema,
   registry,
 }: PendingSubmitButtonProps<T, S, F>) {
-  const pendingUiSchema = useMemo(
-    () =>
-      submitting
-        ? submitButtonUiSchema<T, S, F>(uiSchema, {
-            'aria-disabled': true,
-            /** Cancels the click, as a disabled button gets none, so the browser runs no constraint validation, which
-             * would show its message and move focus, for a submit the form ignores. Enter in a field clicks the form's
-             * default button too. The app's own `onClick` still runs
-             */
-            onClick: (event) =>
-              cancelClick(event, getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY]?.props?.onClick),
-          })
-        : uiSchema,
-    [submitting, cancelClick, uiSchema],
-  );
+  const pendingUiSchema = useMemo(() => {
+    if (!submitting) {
+      return uiSchema;
+    }
+    const appOnClick = getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY]?.props?.onClick;
+    return submitButtonUiSchema<T, S, F>(uiSchema, {
+      'aria-disabled': true,
+      /** Cancels the click, as a disabled button gets none, so the browser runs no constraint validation, which would
+       * show its message and move focus, for a submit the form ignores. Enter in a field clicks the form's default
+       * button too. The app's own `onClick` still runs
+       */
+      onClick: (event) => cancelClick(event, appOnClick),
+    });
+  }, [submitting, cancelClick, uiSchema]);
   return <SubmitButton uiSchema={pendingUiSchema} registry={registry} pending={submitting} />;
 }
 

@@ -5,6 +5,7 @@ import { getSubmitButtonOptions } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { runInNewContext } from 'node:vm';
 import { useFormStatus } from 'react-dom';
 
 import Form from '../src/index.ts';
@@ -228,6 +229,23 @@ describe('a promise onSubmit returns', () => {
 
     expect(then).not.toHaveBeenCalled();
     expectIdle(button);
+  });
+
+  it('marks the submit button aria-disabled for a promise from another realm, such as an iframe fetch()', async () => {
+    const save = deferred();
+    const foreign: unknown = runInNewContext('(async () => await settle)()', { settle: save.promise });
+    expect(foreign).not.toBeInstanceOf(Promise);
+    const onSubmit = vi.fn(() => foreign);
+    createFormComponent({ schema, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    await user.click(button);
+
+    expectPending(button);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    save.resolve(undefined);
+    await waitFor(() => expectIdle(button));
   });
 
   it('reads no enclosing form status when it renders as an element other than a form', async () => {
