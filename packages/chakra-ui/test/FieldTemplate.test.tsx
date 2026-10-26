@@ -26,6 +26,7 @@ describe('FieldTemplate rendered without a plan, as outside SchemaField', () => 
           registry={registry}
           readonly={false}
           disabled={false}
+          hasErrors={false}
           required={false}
           onChange={vi.fn()}
           onKeyRename={vi.fn()}
