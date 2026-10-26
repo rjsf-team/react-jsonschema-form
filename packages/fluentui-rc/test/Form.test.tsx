@@ -1,6 +1,12 @@
-import { Switch } from '@fluentui/react-components';
+import { Switch, useFieldContext_unstable } from '@fluentui/react-components';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
+import {
+  checkboxLabelTests,
+  fallbackDescriptionTests,
+  formTests,
+  themeTests,
+  wrapIfAdditionalErrorStateTests,
+} from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -749,3 +755,38 @@ describe('fluentui-rc CheckboxWidget required attribute', () => {
 
 checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'self' });
 fallbackDescriptionTests(Form, false);
+
+// The option's `Field` takes its validation state from the option's own errors and `ui:hideError`, whatever the field
+// above does. The control's `aria-invalid` follows the plan, which marks it invalid whenever errors are drawn for it, so
+// the `Field`'s own state is read from inside it, through Fluent's field context
+function FieldStateWidget({ id }: WidgetProps) {
+  const field = useFieldContext_unstable();
+  return <span id={id} data-validation-state={field?.validationState ?? 'none'} />;
+}
+
+describe("fluentui-rc's anyOf option error state", () => {
+  test.each([
+    ['shows', false, 'error'],
+    ['hides', true, 'none'],
+  ])(
+    'puts the option in the error state by whether it %s the errors, whatever the field above does',
+    (_, optionHides, state) => {
+      const { container } = render(
+        <Form
+          schema={{ anyOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] }}
+          uiSchema={{ 'ui:hideError': !optionHides, anyOf: [{ 'ui:hideError': optionHides }, {}] }}
+          extraErrors={{ __errors: ['wrong'] }}
+          showErrorList={false}
+          widgets={{ TextWidget: FieldStateWidget }}
+          validator={validator}
+        />,
+      );
+
+      expect(container.querySelector('#root')).toHaveAttribute('data-validation-state', state);
+      // Drawn once by whichever shows them, so an option in the error state has a message with it
+      expect(screen.getAllByText('wrong')).toHaveLength(1);
+    },
+  );
+});
+
+wrapIfAdditionalErrorStateTests(Form);

@@ -4,6 +4,7 @@ import {
   additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
+  getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
   TranslatableString,
 } from '@rjsf/utils';
@@ -35,6 +36,7 @@ export default function WrapIfAdditionalTemplate<
   } = props;
   // The key is labelled wherever the value's label is drawn, by the template or the value's own component
   const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
@@ -62,6 +64,7 @@ export default function WrapIfAdditionalTemplate<
           {hasKeyLabel && <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>}
           {propertyNamesEnum ? (
             <AdditionalPropertyKeySelect<T, S, F>
+              errorAttributes={keyAttributes}
               id={keyId}
               label={keyLabel}
               hideLabel
@@ -78,6 +81,8 @@ export default function WrapIfAdditionalTemplate<
             <Form.Control
               key={keyName}
               aria-label={hasKeyLabel ? undefined : keyLabel}
+              {...keyAttributes}
+              isInvalid={keyAttributes['aria-invalid']}
               required={required}
               defaultValue={keyName}
               disabled={disabled || readonly}

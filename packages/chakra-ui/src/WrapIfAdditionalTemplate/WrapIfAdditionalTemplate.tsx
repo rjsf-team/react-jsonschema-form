@@ -5,6 +5,7 @@ import {
   additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
+  getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
   TranslatableString,
 } from '@rjsf/utils';
@@ -37,6 +38,7 @@ export default function WrapIfAdditionalTemplate<
   } = props;
   // The key is labelled wherever the value's label is drawn, by the template or the value's own component
   const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
@@ -64,6 +66,7 @@ export default function WrapIfAdditionalTemplate<
       <GridItem colSpan={5} style={{ marginTop: hasDescription ? '36px' : undefined }}>
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
+            errorAttributes={keyAttributes}
             id={additionalKeyId(id)}
             label={keyLabel}
             hideLabel={!hasKeyLabel}
@@ -87,6 +90,7 @@ export default function WrapIfAdditionalTemplate<
               type='text'
               mb={1}
               aria-label={hasKeyLabel ? undefined : keyLabel}
+              {...keyAttributes}
             />
           </Field>
         )}

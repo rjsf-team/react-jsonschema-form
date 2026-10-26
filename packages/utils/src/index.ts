@@ -16,6 +16,7 @@ import dataURItoBlob from './dataURItoBlob.ts';
 import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
 import deepEquals, { deepEqualsUndefinedAsMissing } from './deepEquals.ts';
+import describeUnresolvedComponent from './describeUnresolvedComponent.ts';
 import englishStringTranslator from './englishStringTranslator.ts';
 import enumOptionsAutofocusIndex from './enumOptionsAutofocusIndex.ts';
 import enumOptionsDeselectValue from './enumOptionsDeselectValue.ts';
@@ -42,6 +43,7 @@ import {
 } from './fieldPath.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
+import getAdditionalKeyAttributes from './getAdditionalKeyAttributes.ts';
 import getArrayDescription from './getArrayDescription.ts';
 import getChangedFields from './getChangedFields.ts';
 import getControlAriaLabel from './getControlAriaLabel.ts';
@@ -107,7 +109,6 @@ import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hasAdditionalKeyLabel from './hasAdditionalKeyLabel.ts';
 import hashForSchema, { hashObject, hashString, schemaKey, sortedJSONStringify } from './hashForSchema.ts';
-import hasTemplateErrors from './hasTemplateErrors.ts';
 import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
 import hasWidgetErrors from './hasWidgetErrors.ts';
@@ -271,6 +272,7 @@ export {
   deepEquals,
   deepEqualsUndefinedAsMissing,
   DEFAULT_BOOLEAN_WIDGET,
+  describeUnresolvedComponent,
   descriptionId,
   englishStringTranslator,
   enumOptionSelectedValue,
@@ -294,6 +296,7 @@ export {
   // oxlint-disable-next-line typescript/no-deprecated -- re-exported for callers written against 6.x
   findSchemaDefinition,
   flattenGroupedOptions,
+  getAdditionalKeyAttributes,
   getAdditionalPropertySchema,
   getArrayDescription,
   getChangedFields,
@@ -355,7 +358,6 @@ export {
   guessType,
   hasAdditionalKeyLabel,
   hasByPath,
-  hasTemplateErrors,
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   hasVisibleErrors,
   hasWidget,

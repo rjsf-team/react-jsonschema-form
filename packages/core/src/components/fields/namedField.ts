@@ -10,9 +10,15 @@ import type {
   UIOptionsType,
   UiSchema,
 } from '@rjsf/utils';
-import { getByPath, getUiOptions, isComponentType, UI_FIELD_KEY, UI_OPTIONS_KEY } from '@rjsf/utils';
+import {
+  describeUnresolvedComponent,
+  getByPath,
+  getUiOptions,
+  isComponentType,
+  UI_FIELD_KEY,
+  UI_OPTIONS_KEY,
+} from '@rjsf/utils';
 
-import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import { entryLabelForLog } from '../../fieldLabelForLog.ts';
 
 /** Looks up what a `ui:field` refers to: the value registered under it when it is a name, otherwise the `ui:field`

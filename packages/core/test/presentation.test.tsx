@@ -10,15 +10,7 @@ import type {
   Widget,
   WidgetProps,
 } from '@rjsf/utils';
-import {
-  errorId,
-  fieldLabelId,
-  hasTemplateErrors,
-  helpId,
-  optionHelpId,
-  selectedOptionDescriptionId,
-  titleId,
-} from '@rjsf/utils';
+import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionId, titleId } from '@rjsf/utils';
 import { screen, within } from '@testing-library/react';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
@@ -252,6 +244,88 @@ describe('the plan SchemaField builds', () => {
     },
   );
 
+  // A field a named field frames for its own data takes its errors from the field naming it, through the context,
+  // whatever the named field does with the deprecated `rawErrors`: where the named field hides them and it shows them,
+  // it draws them itself
+  it.each([
+    ['hands on', false],
+    ['drops', true],
+  ])(
+    "plans a framed field's own errors where the field naming it hides them, when that field %s its rawErrors",
+    (_, dropsRawErrors) => {
+      const framedTemplates: FieldTemplateProps[] = [];
+      function FieldTemplate(templateProps: FieldTemplateProps) {
+        if (templateProps.presentation?.inherited) {
+          framedTemplates.push(templateProps);
+        }
+        return <CoreFieldTemplate {...templateProps} />;
+      }
+      function FramingField(props: FieldProps) {
+        const { SchemaField } = props.registry.fields;
+        // oxlint-disable-next-line typescript/no-deprecated -- a wrapper leaving the deprecated prop out
+        const { rawErrors, ...withoutRawErrors } = props;
+        const fieldProps = dropsRawErrors ? withoutRawErrors : props;
+        return <SchemaField {...fieldProps} uiSchema={{ ...props.uiSchema, 'ui:hideError': false }} />;
+      }
+      createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'string' } } },
+        uiSchema: { foo: { 'ui:field': FramingField, 'ui:hideError': true } },
+        extraErrors: { foo: { __errors: ['is wrong'] } },
+        showErrorList: false,
+        templates: { FieldTemplate },
+      });
+
+      const framed = framedTemplates.at(-1)!;
+      expect(framed.hasErrors).toBe(true);
+      expect(framed.presentation?.errors).toMatchObject({ messages: ['is wrong'], by: 'template' });
+      expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
+      expect(screen.getAllByText('is wrong')).toHaveLength(1);
+    },
+  );
+
+  // Beside the options the selected option is handed the named field's errors, so the field it frames takes none
+  it('leaves the errors of a named field beside its options to the selected option, drawn once', () => {
+    function FramingField(props: FieldProps) {
+      const { SchemaField } = props.registry.fields;
+      return <SchemaField {...props} uiSchema={{ ...props.uiSchema, 'ui:hideError': false }} />;
+    }
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        anyOf: [{ properties: { b: { type: 'string' } } }, { properties: { c: { type: 'number' } } }],
+      },
+      uiSchema: { 'ui:field': FramingField, 'ui:hideError': true, anyOf: [{ 'ui:hideError': false }, {}] },
+      extraErrors: { __errors: ['is wrong'] },
+      showErrorList: false,
+    });
+
+    expect(screen.getAllByText('is wrong')).toHaveLength(1);
+  });
+
+  // A framed field rendering the options itself, as below a named field the options give way to, hands the selected
+  // option the errors it took from the context, so the option follows its own `ui:hideError` as it does unnamed
+  it('hands the selected option of a framed field rendering the options the errors it took from the context', () => {
+    function FramingField(props: FieldProps) {
+      const { SchemaField } = props.registry.fields;
+      return <SchemaField {...props} />;
+    }
+    const { node } = createFormComponent({
+      schema: { anyOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] },
+      uiSchema: {
+        'ui:field': FramingField,
+        'ui:fieldReplacesAnyOrOneOf': true,
+        'ui:hideError': true,
+        anyOf: [{ 'ui:hideError': false }, {}],
+      },
+      extraErrors: { __errors: ['is wrong'] },
+      showErrorList: false,
+    });
+
+    expect(screen.getAllByText('is wrong')).toHaveLength(1);
+    expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(1);
+  });
+
   describe("an anyOf field's option selector", () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -401,8 +475,8 @@ describe('the plan SchemaField builds', () => {
   });
 
   // The class and the help's error state follow the option's own errors and `ui:hideError`, as the deprecated
-  // `rawErrors` its template is handed do, while its plan, which `hasTemplateErrors()` reads, takes the errors as the
-  // field above shows them
+  // `rawErrors` its template is handed do, while its plan takes the errors as the field above shows them, or its own
+  // where the field above hides them, so an option marked in error has the message its control is described by
   it.each([
     ['shows', true, false],
     ['hides', false, true],
@@ -435,7 +509,72 @@ describe('the plan SchemaField builds', () => {
       expect(optionHelps.at(-1)?.hasErrors).toBe(!optionHides);
       // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop the class agrees with
       expect(option.rawErrors).toEqual(optionHides ? undefined : ['is wrong']);
-      expect(hasTemplateErrors(option)).toBe(!aboveHides);
+      expect(option.presentation?.errors).toMatchObject({
+        messages: ['is wrong'],
+        by: aboveHides ? 'template' : 'above',
+      });
+    },
+  );
+
+  // Core's `WrapIfAdditionalTemplate` takes its `has-error` from `hasErrors` alone, in both its branches: an option
+  // following its own `ui:hideError` rather than the field above's, and an extra key's row
+  it.each([
+    ['shows', true, false],
+    ['hides', false, true],
+  ])(
+    "marks an anyOf option's and an extra key's wrapper has-error by whether each %s the errors",
+    (_, aboveHides, optionHides) => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { foo: { anyOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] } },
+          additionalProperties: { type: 'string' },
+        },
+        uiSchema: {
+          foo: { 'ui:hideError': aboveHides, anyOf: [{ 'ui:hideError': optionHides }, {}] },
+          additionalProperties: { 'ui:hideError': optionHides },
+        },
+        initialFormData: { extra: 'value' },
+        extraErrors: { foo: { __errors: ['is wrong'] }, extra: { __errors: ['is wrong'] } },
+        showErrorList: false,
+      });
+
+      const optionWrapper = node.querySelector('#root_foo')?.closest('.rjsf-field');
+      expect(optionWrapper?.classList.contains('has-error')).toBe(!optionHides);
+      const extraWrapper = node.querySelector('#root_extra')?.closest('.rjsf-field');
+      expect(extraWrapper?.classList.contains('has-error')).toBe(!optionHides);
+    },
+  );
+
+  // A container takes its error state from its own errors and `ui:hideError`, as its `FieldTemplate` does, where the
+  // plan's errors are the field above's
+  it.each([
+    ['object', 'shows', true, false],
+    ['object', 'hides', false, true],
+    ['array', 'shows', true, false],
+    ['array', 'hides', false, true],
+  ] satisfies ['object' | 'array', string, boolean, boolean][])(
+    "hands an anyOf option's %s container hasErrors by whether the option %s the errors",
+    (type, _, aboveHides, optionHides) => {
+      const containers: (boolean | undefined)[] = [];
+      function ObjectFieldTemplate(templateProps: ObjectFieldTemplateProps) {
+        containers.push(templateProps.hasErrors);
+        return null;
+      }
+      function ArrayFieldTemplate(templateProps: ArrayFieldTemplateProps) {
+        containers.push(templateProps.hasErrors);
+        return null;
+      }
+      const container: RJSFSchema =
+        type === 'object' ? { type, properties: { a: { type: 'string' } } } : { type, items: { type: 'string' } };
+      createFormComponent({
+        schema: { anyOf: [container, { type: 'number' }] },
+        uiSchema: { 'ui:hideError': aboveHides, anyOf: [{ 'ui:hideError': optionHides }, {}] },
+        extraErrors: { __errors: ['wrong'] },
+        templates: { ObjectFieldTemplate, ArrayFieldTemplate },
+      });
+
+      expect(containers.at(-1)).toBe(!optionHides);
     },
   );
 

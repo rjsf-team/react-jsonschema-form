@@ -10,6 +10,7 @@ import {
   additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
+  getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
   TranslatableString,
   UI_OPTIONS_KEY,
@@ -53,6 +54,7 @@ export default function WrapIfAdditionalTemplate<
   } = props;
   // The key is labelled wherever the value's label is drawn, by the template or the value's own component
   const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
+  const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,
@@ -97,10 +99,12 @@ export default function WrapIfAdditionalTemplate<
               labelCol={labelCol}
               required={required}
               style={wrapperStyle}
+              validateStatus={keyAttributes['aria-invalid'] ? 'error' : undefined}
               wrapperCol={wrapperCol}
             >
               {propertyNamesEnum ? (
                 <AdditionalPropertyKeySelect<T, S, F>
+                  errorAttributes={keyAttributes}
                   id={additionalKeyId(id)}
                   label={keyLabel}
                   hideLabel
@@ -117,6 +121,7 @@ export default function WrapIfAdditionalTemplate<
                 <Input
                   key={keyName}
                   aria-label={hasKeyLabel ? undefined : keyLabel}
+                  {...keyAttributes}
                   className='form-control'
                   defaultValue={keyName}
                   disabled={disabled || (readonlyAsDisabled && readonly)}

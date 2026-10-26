@@ -7,7 +7,6 @@ import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema
 import {
   getTemplates,
   getUiOptions,
-  hasTemplateErrors,
   templateDrawsDescription,
   templateDrawsLabel,
   templateDrawsPlannedLabel,
@@ -52,6 +51,7 @@ export default function FieldTemplate<
     onKeyRenameBlur,
     onRemoveProperty,
     propertyNamesEnum,
+    keyNotAllowed,
     readonly,
     required,
     errors,
@@ -61,10 +61,10 @@ export default function FieldTemplate<
     schema,
     uiSchema,
     registry,
+    hasErrors: hasError,
   } = props;
   const displayLabel = templateDrawsLabel<T, S, F>(props);
   const uiOptions = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
-  const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
@@ -89,11 +89,13 @@ export default function FieldTemplate<
       // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
       presentation={presentation}
+      hasErrors={hasError}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
       propertyNamesEnum={propertyNamesEnum}
+      keyNotAllowed={keyNotAllowed}
       readonly={readonly}
       required={required}
       schema={schema}
