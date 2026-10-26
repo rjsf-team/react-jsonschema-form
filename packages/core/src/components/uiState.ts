@@ -231,14 +231,29 @@ function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove)
   return fieldPathFromList(moved);
 }
 
-/** The key of the array or object at `container` that `path` runs through, undefined for a path outside it or for the
- * container itself
+/** The entries, kept by path, that hold after a move at `container` that `transformChange` rewrote, key by key as
+ * `fateOf` says of each: an entry of `moved` under a key holding what the move put there, or outside the container,
+ * stays, one of `unmoved`, the entries before the move, under a key holding what it held before comes back, and any
+ * other is dropped
  */
-export function keyUnder(container: FieldPathList, path: FieldPath): string | undefined {
-  const segments = fieldPathToList(path);
-  return segments.length > container.length && isPathPrefix(container, segments)
-    ? String(segments[container.length])
-    : undefined;
+export function settledEntries<E>(
+  moved: Iterable<E>,
+  unmoved: Iterable<E>,
+  pathOf: (entry: E) => FieldPath,
+  container: FieldPath,
+  fateOf: (key: string) => MoveFate,
+): E[] {
+  const containerSegments = fieldPathToList(container);
+  const fateAt = (entry: E) => {
+    const segments = fieldPathToList(pathOf(entry));
+    return segments.length > containerSegments.length && isPathPrefix(containerSegments, segments)
+      ? fateOf(String(segments[containerSegments.length]))
+      : 'moved';
+  };
+  return [
+    ...[...moved].filter((entry) => fateAt(entry) === 'moved'),
+    ...[...unmoved].filter((entry) => fateAt(entry) === 'unmoved'),
+  ];
 }
 
 /** Whether `prefix` addresses `path` itself or a container holding it, comparing the segments the way `toPath()` spells
@@ -364,21 +379,8 @@ export function createUiState() {
      * the state from before, `unmoved`, and any other key loses its state, so its data is matched again
      */
     settleMove: (container: FieldPath, unmoved: UiStateSnapshot, fateOf: (key: string) => MoveFate) => {
-      const containerSegments = fieldPathToList(container);
-      const keyOf = (path: FieldPath) => keyUnder(containerSegments, path);
-      const isKept = (path: FieldPath) => {
-        const key = keyOf(path);
-        return key === undefined || fateOf(key) === 'moved';
-      };
-      const isRestored = (path: FieldPath) => {
-        const key = keyOf(path);
-        return key !== undefined && fateOf(key) === 'unmoved';
-      };
-      selections = new Map([
-        ...[...selections].filter(([path]) => isKept(path)),
-        ...[...unmoved.selections].filter(([path]) => isRestored(path)),
-      ]);
-      expanded = new Set([...[...expanded].filter(isKept), ...[...unmoved.expanded].filter(isRestored)]);
+      selections = new Map(settledEntries(selections, unmoved.selections, ([path]) => path, container, fateOf));
+      expanded = new Set(settledEntries(expanded, unmoved.expanded, (path) => path, container, fateOf));
       notify();
     },
     /** Moves the selections and expansions under the array or object at `container` as its keys moved */

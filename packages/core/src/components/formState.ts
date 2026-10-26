@@ -17,6 +17,7 @@ import {
   setByPath,
   propertyToPath,
   toPath,
+  toFieldPath,
   unsetByPath,
   createSchemaUtils,
   deepEquals,
@@ -50,7 +51,7 @@ import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, FormStatus, IChangeEvent, NestedBooleans } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
-import { createUiState, fieldStateOf, isPathPrefix, keyUnder, movedPaths, withoutSelections } from './uiState.ts';
+import { createUiState, fieldStateOf, isPathPrefix, movedPaths, settledEntries, withoutSelections } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
  *
@@ -172,45 +173,32 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
     return true;
   }
   const [key, ...rest] = path;
-  if (Array.isArray(data)) {
-    if (!holdsKey(data, key)) {
-      return undefined;
-    }
-    const index = Number(key);
-    const items: unknown[] = Array.isArray(marks) ? marks : Array.from({ length: data.length });
-    const item = markPath(items[index], data[index], rest);
-    if (item === undefined) {
-      return undefined;
-    }
-    items[index] = item;
-    return items;
-  }
-  const container = isPlainObject(data) ? data : undefined;
-  if (data !== undefined && !container) {
+  if (Array.isArray(data) ? !holdsKey(data, key) : data !== undefined && !isPlainObject(data)) {
     return undefined;
   }
-  const members: GenericObjectType = isPlainObject(marks) ? marks : {};
-  const name = String(key);
-  const member = container && holdsKey(container, name) ? container[name] : undefined;
-  const marked = markPath(Object.hasOwn(members, name) ? members[name] : undefined, member, rest);
+  let container: GenericObjectType = isPlainObject(marks) ? marks : {};
+  if (Array.isArray(data)) {
+    container = Array.isArray(marks) ? marks : Array.from({ length: data.length });
+  }
+  const marked = markPath(memberOf(container, key), memberOf(data, key), rest);
   if (marked === undefined) {
     return undefined;
   }
-  setOwn(members, name, marked);
-  return members;
+  setOwn(container, key, marked);
+  return container;
 }
 
-/** The paths of the leaves `value`, the value at `path`, holds: `path` itself for a value that is no array or object,
- * and none for an empty array or object
+/** The paths of the leaves `value`, the value at `fieldPath`, holds: `fieldPath` itself for a value that is no array or
+ * object, and none for an empty array or object or for no value
  */
-function leafPathsOf(value: unknown, path: FieldPathList): FieldPathList[] {
+function leafPathsOf(value: unknown, fieldPath: FieldPath): FieldPath[] {
   if (Array.isArray(value)) {
-    return value.flatMap((item, index) => leafPathsOf(item, [...path, index]));
+    return value.flatMap((item, index) => leafPathsOf(item, toFieldPath(index, fieldPath)));
   }
   if (isPlainObject(value)) {
-    return Object.entries(value).flatMap(([key, member]) => leafPathsOf(member, [...path, key]));
+    return Object.entries(value).flatMap(([key, member]) => leafPathsOf(member, toFieldPath(key, fieldPath)));
   }
-  return value === undefined ? [] : [path];
+  return value === undefined ? [] : [fieldPath];
 }
 
 /** The `dirtyFields` of `formData`. The data shares with the baseline every subtree equal to it, see `shareState()`,
@@ -219,6 +207,15 @@ function leafPathsOf(value: unknown, path: FieldPathList): FieldPathList[] {
  */
 function dirtyFieldsOf<T>(formData: T | undefined, baseline: T | undefined): NestedBooleans<T> {
   return asNestedBooleans<T>(Object.is(formData, baseline) ? noMarks(formData) : markChanged(formData, baseline));
+}
+
+/** `build`, run on the first call, whose result every later call returns */
+function lazily<V>(build: () => V): () => V {
+  let built: { value: V } | undefined;
+  return () => {
+    built ??= { value: build() };
+    return built.value;
+  };
 }
 
 /** The touched marks of `formData`, or undefined when nothing touched marks a field. The touched fields cost what was
@@ -236,35 +233,29 @@ function touchedMarksOf(formData: unknown, touchedPaths: TouchedPaths): unknown 
  * them
  *
  * @param state - The state of the form
- * @returns - The status of the form
+ * @param members - Members the object holding the status has besides it, as an event's
+ * @returns - The status of the form, with `members`
  */
-export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContextType>({
-  formData,
-  baseline,
-  submitCount,
-  touchedPaths,
-}: FormState<T, S, F>): FormStatus<T> {
-  let dirtyFields: { built: NestedBooleans<T> } | undefined;
-  let touchedStatus: Pick<FormStatus<T>, 'touched' | 'touchedFields'> | undefined;
-  const touchedOf = () => {
-    // `touched` is read off the marks rather than the paths, so a touched path that marks nothing, such as a
-    // whole-array widget holding no items, cannot report a touch `touchedFields` does not show
-    const marks = touchedMarksOf(formData, touchedPaths);
-    return { touched: marks !== undefined, touchedFields: asNestedBooleans<T>(marks ?? noMarks(formData)) };
-  };
+export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContextType, E extends object>(
+  { formData, baseline, submitCount, touchedPaths }: FormState<T, S, F>,
+  members: E,
+): FormStatus<T> & E {
+  const dirtyFields = lazily(() => dirtyFieldsOf(formData, baseline));
+  // `touched` is read off the marks rather than the paths, so a touched path that marks nothing, such as an item path
+  // the data no longer holds, cannot report a touch `touchedFields` does not show
+  const touchedMarks = lazily(() => touchedMarksOf(formData, touchedPaths));
+  const touchedFields = lazily(() => asNestedBooleans<T>(touchedMarks() ?? noMarks(formData)));
   return {
+    ...members,
     dirty: !Object.is(formData, baseline),
     get dirtyFields() {
-      dirtyFields ??= { built: dirtyFieldsOf(formData, baseline) };
-      return dirtyFields.built;
+      return dirtyFields();
     },
     get touched() {
-      touchedStatus ??= touchedOf();
-      return touchedStatus.touched;
+      return touchedMarks() !== undefined;
     },
     get touchedFields() {
-      touchedStatus ??= touchedOf();
-      return touchedStatus.touchedFields;
+      return touchedFields();
     },
     submitCount,
   };
@@ -303,25 +294,14 @@ const NO_PATHS: ReadonlySet<FieldPath> = new Set();
 
 const NOTHING_REVEALED: RevealedPaths = { fields: NO_PATHS, containers: NO_PATHS, all: false };
 
-/** `revealed` with each of its sets put through `update`, `revealed` itself when that changed none of them */
-function updateRevealed(
-  revealed: RevealedPaths,
-  update: (set: ReadonlySet<FieldPath>) => ReadonlySet<FieldPath>,
-): RevealedPaths {
-  const fields = update(revealed.fields);
-  const containers = update(revealed.containers);
-  return fields === revealed.fields && containers === revealed.containers
-    ? revealed
-    : { ...revealed, fields, containers };
+/** Whether `container`, an array or object of the form's data, holds `key` */
+function holdsKey(container: unknown, key: string | number): container is object {
+  return (Array.isArray(container) || isPlainObject(container)) && Object.hasOwn(container, key);
 }
 
-/** Whether `container`, an array or object of the form's data, holds `key` */
-function holdsKey(container: unknown, key: string | number): boolean {
-  if (Array.isArray(container)) {
-    const index = Number(key);
-    return Number.isInteger(index) && index >= 0 && index < container.length;
-  }
-  return isPlainObject(container) && Object.hasOwn(container, String(key));
+/** The member at `key` of `container`, undefined when it holds none */
+function memberOf(container: unknown, key: string | number): unknown {
+  return holdsKey(container, key) ? Reflect.get(container, key) : undefined;
 }
 
 /** `paths` without those under a key `previous` held that `next` does not: a change that dropped a key without
@@ -348,8 +328,8 @@ function withoutDroppedPaths(paths: ReadonlySet<FieldPath>, previous: unknown, n
       if (!holdsKey(after, key)) {
         return true;
       }
-      before = Reflect.get(Object(before), key);
-      after = Reflect.get(Object(after), key);
+      before = memberOf(before, key);
+      after = memberOf(after, key);
     }
     return false;
   };
@@ -436,19 +416,8 @@ export function withMarksSettled<T, S extends StrictRJSFSchema, F extends FormCo
   container: FieldPath,
   fateOf: (key: string) => MoveFate,
 ): FormState<T, S, F> {
-  const containerPath = fieldPathToList(container);
-  const fateAt = (path: FieldPath) => {
-    const key = keyUnder(containerPath, path);
-    return key === undefined ? undefined : fateOf(key);
-  };
-  const settle = (moved: ReadonlySet<FieldPath>, before: ReadonlySet<FieldPath>) => {
-    const kept = [...moved].filter((path) => {
-      const fate = fateAt(path);
-      return fate === undefined || fate === 'moved';
-    });
-    const restored = [...before].filter((path) => fateAt(path) === 'unmoved');
-    return kept.length === moved.size && restored.length === 0 ? moved : new Set([...kept, ...restored]);
-  };
+  const settle = (moved: ReadonlySet<FieldPath>, before: ReadonlySet<FieldPath>) =>
+    new Set(settledEntries(moved, before, (path) => path, container, fateOf));
   const { revealed } = state;
   return {
     ...state,
@@ -488,7 +457,14 @@ function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContext
     };
     return withoutDroppedPaths(withPathsMoved(paths, move), previous.data, formData);
   };
-  return { touchedPaths: follow(current.touchedPaths), revealed: updateRevealed(current.revealed, follow) };
+  const { revealed } = current;
+  const fields = follow(revealed.fields);
+  const containers = follow(revealed.containers);
+  return {
+    touchedPaths: follow(current.touchedPaths),
+    revealed:
+      fields === revealed.fields && containers === revealed.containers ? revealed : { ...revealed, fields, containers },
+  };
 }
 
 /** The touched fields and the revealed ones after `change`, which left `formData`: both follow the keys it moved, and
@@ -505,7 +481,6 @@ function marksAfterChange<T, S extends StrictRJSFSchema, F extends FormContextTy
 ): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
   const move = keyMoveOf(change);
   const followed = marksFollowingData(current, formData, move);
-  const { touchedPaths } = followed;
   let { revealed } = followed;
   if (isRevealedByField(props) && !change.editedPath) {
     const container = move?.container ?? (change.isAnnouncedMove ? change.fieldPath : undefined);
@@ -515,7 +490,7 @@ function marksAfterChange<T, S extends StrictRJSFSchema, F extends FormContextTy
       revealed = { ...revealed, fields: withPath(revealed.fields, change.fieldPath) };
     }
   }
-  return { touchedPaths, revealed };
+  return { ...followed, revealed };
 }
 
 /** Whether `liveErrors: 'field'` hides the errors at a path in `state`, or undefined when it hides none: a field's
@@ -549,27 +524,15 @@ export function toIChangeEvent<
   F extends FormContextType = FormContextType,
 >(state: FormState<T, S, F>, status?: IChangeEvent['status']): IChangeEvent<T, S, F> {
   const { schema, uiSchema, schemaUtils, formData, errors, errorSchema } = state;
-  const formStatus = toFormStatus(state);
-  return {
+  return toFormStatus(state, {
     schema,
     uiSchema,
     schemaUtils,
     formData: toEventFormData(formData),
     errors,
     errorSchema,
-    dirty: formStatus.dirty,
-    get dirtyFields() {
-      return formStatus.dirtyFields;
-    },
-    get touched() {
-      return formStatus.touched;
-    },
-    get touchedFields() {
-      return formStatus.touchedFields;
-    },
-    submitCount: formStatus.submitCount,
     ...(status !== undefined && { status }),
-  };
+  });
 }
 
 /** `next`, already shared against `start`, shared against `baseline` as well, descending only where it differs from
@@ -2007,9 +1970,8 @@ function markBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ? { ...current, revealed: { ...revealed, containers: withPath(revealed.containers, fieldPath) } }
       : current;
   }
-  const path = fieldPathToList(fieldPath);
   const touched =
-    touches === 'leaves' ? leafPathsOf(getAt(current.formData, path), path).map(fieldPathFromList) : [fieldPath];
+    touches === 'leaves' ? leafPathsOf(getAt(current.formData, fieldPathToList(fieldPath)), fieldPath) : [fieldPath];
   return {
     ...current,
     touchedPaths: touched.every((leaf) => touchedPaths.has(leaf))

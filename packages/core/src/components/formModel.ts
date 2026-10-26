@@ -617,7 +617,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const handle: FormRef<T> = {
     getFormData: () => toEventFormData(current().formData),
 
-    getStatus: () => toFormStatus(current()),
+    getStatus: () => toFormStatus(current(), {}),
 
     /** Submits through the form element, see `FormRef.submit()`, whose submit event reaches `handleSubmit()`, which
      * submits the data the form holds. While the inputs show that data, the browser's constraint validation checks them
