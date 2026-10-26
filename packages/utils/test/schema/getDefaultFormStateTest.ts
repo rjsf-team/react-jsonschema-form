@@ -8317,7 +8317,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       describe('a select over object constants (#5407)', () => {
         type Dependencies = NonNullable<RJSFSchema['dependencies']>;
         const defaultOfSelect = (
-          dependencies: Dependencies,
+          field: RJSFSchema,
           {
             defaultOn = 'parent',
             behavior,
@@ -8335,7 +8335,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                     type: 'object',
                     enum: [{ a: 1 }, { a: 2 }],
                     ...(defaultOn === 'field' && { default: { a: 1 } }),
-                    dependencies,
+                    ...field,
                   },
                 },
               },
@@ -8403,7 +8403,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { a: 1 },
           ],
         ])('%s', (_, dependencies, behavior, formData, expected) => {
-          expect(defaultOfSelect(dependencies, { behavior, formData })).toStrictEqual({ x: expected });
+          expect(defaultOfSelect({ dependencies }, { behavior, formData })).toStrictEqual({ x: expected });
         });
         // Neither result was decided: the kept default lacks `b`, so the form starts invalid, and the const matches no
         // option, so the select starts with nothing chosen
@@ -8411,19 +8411,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ['keeps the inherited default under a property list it fails', { a: ['b'] }, { a: 1 }],
           ["gives a dependency's const that none of the select's options holds", { a: { const: { a: 3 } } }, { a: 3 }],
         ])('%s (current behaviour)', (_, dependencies, expected) => {
-          expect(defaultOfSelect(dependencies)).toStrictEqual({ x: expected });
+          expect(defaultOfSelect({ dependencies })).toStrictEqual({ x: expected });
         });
         it.each(formDataInputs)(
           "gives a dependency oneOf option's const over the inherited default for %s",
           (_, formData) => {
-            expect(defaultOfSelect(branchWithoutKey, { formData })).toStrictEqual({ x: { a: 2 } });
+            expect(defaultOfSelect({ dependencies: branchWithoutKey }, { formData })).toStrictEqual({ x: { a: 2 } });
           },
         );
         it.each(formDataInputs)(
           "gives a dependency oneOf none of whose options declares the key its option's const without warning that it ignores it for %s",
           (_, formData) => {
             consoleWarnSpy.mockClear();
-            expect(defaultOfSelect(branchWithoutKey, { formData })).toStrictEqual({ x: { a: 2 } });
+            expect(defaultOfSelect({ dependencies: branchWithoutKey }, { formData })).toStrictEqual({ x: { a: 2 } });
             expect(consoleWarnSpy).not.toHaveBeenCalledWith(
               `ignoring oneOf in dependencies of "a" because there isn't exactly one subschema that is valid`,
             );
@@ -8432,36 +8432,32 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         it.each<DefaultFormStateBehavior['constAsDefaults']>(['always', 'skipOneOf', 'never'])(
           'gives a dependency oneOf none of whose options declares the key the default a oneOf beside dependencies gets, under constAsDefaults %s',
           (constAsDefaults) => {
-            const selectWith = (field: RJSFSchema): RJSFSchema => ({
-              type: 'object',
-              default: { x: { a: 1 } },
-              properties: { x: { type: 'object', enum: [{ a: 1 }, { a: 2 }], ...field } },
-            });
-            const context = { validator: testValidator, defaultFormStateBehavior: { constAsDefaults } };
-            expect(
-              getDefaultFormState(context, { schema: selectWith({ dependencies: branchWithoutKey }) }),
-            ).toStrictEqual(
-              getDefaultFormState(context, {
-                schema: selectWith({ oneOf: [{ const: { a: 2 } }], dependencies: { a: ['a'] } }),
-              }),
+            const behavior = { constAsDefaults };
+            expect(defaultOfSelect({ dependencies: branchWithoutKey }, { behavior })).toStrictEqual(
+              defaultOfSelect({ oneOf: [{ const: { a: 2 } }], dependencies: { a: ['a'] } }, { behavior }),
             );
           },
         );
         it("gives a dependency's const over the select's own default", () => {
-          expect(defaultOfSelect(pinningA2, { defaultOn: 'field' })).toStrictEqual({ x: { a: 2 } });
+          expect(defaultOfSelect({ dependencies: pinningA2 }, { defaultOn: 'field' })).toStrictEqual({ x: { a: 2 } });
         });
         it("keeps the select's own default over a dependency's const when constAsDefaults is never", () => {
           expect(
-            defaultOfSelect(pinningA2, { defaultOn: 'field', behavior: { constAsDefaults: 'never' } }),
+            defaultOfSelect(
+              { dependencies: pinningA2 },
+              { defaultOn: 'field', behavior: { constAsDefaults: 'never' } },
+            ),
           ).toStrictEqual({ x: { a: 1 } });
         });
         // getDefaultFormState fills in only what form data leaves out, so a dependency's const can't replace a value
         // that is there
         it("keeps form data over a dependency's const", () => {
-          expect(defaultOfSelect(pinningA2, { formData: { x: { a: 1 } } })).toStrictEqual({ x: { a: 1 } });
+          expect(defaultOfSelect({ dependencies: pinningA2 }, { formData: { x: { a: 1 } } })).toStrictEqual({
+            x: { a: 1 },
+          });
         });
         it("fills in no default when only a dependency's const names one", () => {
-          expect(defaultOfSelect(pinningA2, { defaultOn: 'none' })).toStrictEqual({});
+          expect(defaultOfSelect({ dependencies: pinningA2 }, { defaultOn: 'none' })).toStrictEqual({});
         });
       });
       it.each([
