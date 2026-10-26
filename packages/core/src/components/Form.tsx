@@ -297,8 +297,10 @@ export interface FormState<
    * is dirty exactly when `formData` is not this
    */
   baseline?: T;
-  /** How many submits have reached the form since it mounted or was last reset */
-  submitCount: number;
+  /** The option selections the baseline is derived under, whenever a prop change or an omission derives it again: none
+   * for the baseline the form mounted with, and those shown at the last `reset()` for the one it seeded
+   */
+  baselineUiState: UiState;
   /** Whether there is data to live-validate when a prop changes: the props seeded the form with data, rather than
    * leaving it to the schema's defaults, or it has been edited since it mounted or was last reset
    */
@@ -395,25 +397,11 @@ interface PendingButtonProps {
   onClick: (event: MouseEvent<HTMLElement>) => void;
 }
 
-/** Cancels the click even when the app's `onClick` throws, since the browser would otherwise run its constraint
- * validation for the submit the form ignores
- */
-function cancelAfterAppClick(
-  event: MouseEvent<HTMLElement>,
-  cancelClick: PendingButtonProps['onClick'],
-  onClick?: (event: MouseEvent<HTMLElement>) => void,
-) {
-  try {
-    onClick?.(event);
-  } finally {
-    cancelClick(event);
-  }
-}
-
 type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormContextType> = SubmitButtonProps<T, S, F> & {
   SubmitButton: TemplatesType<T, S, F>['ButtonTemplates']['SubmitButton'];
   submitting: boolean;
-  cancelClick: PendingButtonProps['onClick'];
+  /** Cancels the click after calling the app's `onClick`, see `cancelPendingClick` in `formModel.ts` */
+  cancelClick: (event: MouseEvent<HTMLElement>, onClick?: PendingButtonProps['onClick']) => void;
 };
 
 /** The submit button, `aria-disabled` and taking no click while the form is pending, through the props its uiSchema
@@ -437,11 +425,7 @@ function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContex
              * default button too. The app's own `onClick` still runs
              */
             onClick: (event) =>
-              cancelAfterAppClick(
-                event,
-                cancelClick,
-                getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY]?.props?.onClick,
-              ),
+              cancelClick(event, getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY]?.props?.onClick),
           })
         : uiSchema,
     [submitting, cancelClick, uiSchema],

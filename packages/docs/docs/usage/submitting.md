@@ -207,7 +207,7 @@ The form compares its data with a baseline: the data it was last seeded with, on
   Clearing a field stores `undefined`, which is not the same as the field being absent or holding `''`. So a field the seed left out, or seeded with `''`, stays dirty once it is typed into and cleared, as it does in react-hook-form. For a field seeded with `''`, set [`ui:emptyValue`](../api-reference/uiSchema.md#emptyvalue) to `''` on that field to have clearing store `''`, which makes the form clean again. A field the seed left out has no such fix: seed it with `''` and set `ui:emptyValue` if it matters.
 
 - `dirtyFields`: where it differs, nested like the data, with `true` at each field that changed, for example `{ address: { city: true } }`. For an array it holds an entry for each item, `undefined` where the item is unchanged. An object or array field added, removed or replaced whole, such as one cleared from `{}` to nothing, can hold `true` itself, so check that a member is an object before reading into it.
-- `submitCount`: how many submits have reached the form since it mounted or was last reset, valid or not, including one the form [ignores while a save is pending](#a-pending-submission), as TanStack Form counts every submit attempt. The browser's own constraint validation, such as for a `required` input left empty, blocks a submit before it reaches the form, so such a submit isn't counted unless you set [`noHtml5Validate`](../api-reference/form-props.md#nohtml5validate).
+- `submitCount`: how many submits have reached the form since it mounted or was last reset, valid or not, including one the form [ignores while a save is pending](#a-pending-submission), as TanStack Form counts every submit attempt. The browser's own constraint validation, such as for a `required` input left empty, blocks a submit before it reaches the form, so such a submit isn't counted unless you set [`noHtml5Validate`](../api-reference/form-props.md#nohtml5validate). While a save is pending, though, the form ignores a submit before the browser's validation would run, so that submit is counted either way.
 
 Changes the user didn't make leave the form clean. When a new `schema` prop fills in a default, or `omitExtraData` with `liveOmit` drops data the schema doesn't describe, the baseline changes with the data. A prop change calls no `onChange`, so the status it leaves, which can turn a dirty form clean, is read with `getStatus()` after passing the new props. A change that follows from the user's own edit does count: when changing one field makes a conditional schema drop another field's value, both fields are dirty.
 
@@ -229,6 +229,8 @@ function markSaved<T>(form: FormRef<T> | null, saved: T) {
   }
 }
 ```
+
+Any new data object counts as an edit here, including one the user didn't make: if the form re-derives its data while the save is pending, such as for a new `schema` prop that fills in a default, `markSaved()` applies that data as an edit too, so the form reads dirty after the save.
 
 Call it in the handler or action that saves, once the save succeeds, as the [`useActionState` example](#with-useactionstate) does, rather than in an Effect that watches for the save to finish. The save is what causes the reset, so it belongs where the save happens; see [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect).
 
