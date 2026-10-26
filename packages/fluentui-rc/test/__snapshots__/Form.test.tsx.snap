@@ -978,7 +978,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                   >
                     <input
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_choices-0"
+                      id="root_choices__0"
                       name="root[choices][]"
                       type="checkbox"
                       value="0"
@@ -989,7 +989,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_choices-0"
+                      for="root_choices__0"
                     >
                       foo
                     </label>
@@ -999,7 +999,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                   >
                     <input
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_choices-1"
+                      id="root_choices__1"
                       name="root[choices][]"
                       type="checkbox"
                       value="1"
@@ -1010,7 +1010,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_choices-1"
+                      for="root_choices__1"
                     >
                       bar
                     </label>
@@ -1020,7 +1020,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                   >
                     <input
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_choices-2"
+                      id="root_choices__2"
                       name="root[choices][]"
                       type="checkbox"
                       value="2"
@@ -1031,7 +1031,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_choices-2"
+                      for="root_choices__2"
                     >
                       baz
                     </label>
@@ -1325,7 +1325,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                   >
                     <input
                       class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                      id="root_option-0"
+                      id="root_option__0"
                       name="root[option]"
                       type="radio"
                       value="0"
@@ -1336,7 +1336,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     />
                     <label
                       class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_option-0"
+                      for="root_option__0"
                     >
                       foo
                     </label>
@@ -1346,7 +1346,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                   >
                     <input
                       class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                      id="root_option-1"
+                      id="root_option__1"
                       name="root[option]"
                       type="radio"
                       value="1"
@@ -1357,7 +1357,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     />
                     <label
                       class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_option-1"
+                      for="root_option__1"
                     >
                       bar
                     </label>
@@ -3033,7 +3033,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
           >
             <input
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="__rjsf_index:0"
@@ -3044,7 +3044,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             />
             <label
               class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-0"
+              for="root__0"
             >
               Number
             </label>
@@ -3055,7 +3055,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             <input
               checked=""
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="__rjsf_index:1"
@@ -3066,7 +3066,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             />
             <label
               class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-1"
+              for="root__1"
             >
               String
             </label>
@@ -3913,7 +3913,7 @@ exports[`single fields > Cyclic schema 1`] = `
                       >
                         <button
                           class="fui-Button r1f29ykk"
-                          id="root_child_child-button"
+                          id="root_child_child__expand"
                           type="button"
                         >
                           Expand Cycle
@@ -4228,7 +4228,7 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <input
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-0"
+              id="root__0"
               name="root"
               type="checkbox"
               value="0"
@@ -4239,7 +4239,7 @@ exports[`single fields > checkboxes field 1`] = `
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-0"
+              for="root__0"
             >
               foo
             </label>
@@ -4249,7 +4249,7 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <input
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-1"
+              id="root__1"
               name="root"
               type="checkbox"
               value="1"
@@ -4260,7 +4260,7 @@ exports[`single fields > checkboxes field 1`] = `
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-1"
+              for="root__1"
             >
               bar
             </label>
@@ -4270,7 +4270,7 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <input
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-2"
+              id="root__2"
               name="root"
               type="checkbox"
               value="2"
@@ -4281,7 +4281,7 @@ exports[`single fields > checkboxes field 1`] = `
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-2"
+              for="root__2"
             >
               fuzz
             </label>
@@ -4291,7 +4291,7 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <input
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-3"
+              id="root__3"
               name="root"
               type="checkbox"
               value="3"
@@ -4302,7 +4302,7 @@ exports[`single fields > checkboxes field 1`] = `
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-3"
+              for="root__3"
             >
               qux
             </label>
@@ -4354,7 +4354,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               aria-describedby="root__description root__help"
               checked=""
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-0"
+              id="root__0"
               name="root"
               type="checkbox"
               value="0"
@@ -4381,7 +4381,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             </div>
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-0"
+              for="root__0"
             >
               option1
             </label>
@@ -4392,7 +4392,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             <input
               aria-describedby="root__description root__help"
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-1"
+              id="root__1"
               name="root"
               type="checkbox"
               value="1"
@@ -4403,7 +4403,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-1"
+              for="root__1"
             >
               option2
             </label>
@@ -4414,7 +4414,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             <input
               aria-describedby="root__description root__help"
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-2"
+              id="root__2"
               name="root"
               type="checkbox"
               value="2"
@@ -4425,7 +4425,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-2"
+              for="root__2"
             >
               option3
             </label>
@@ -4493,7 +4493,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <input
               aria-describedby="root__description"
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-0"
+              id="root__0"
               name="root"
               type="checkbox"
               value="0"
@@ -4504,7 +4504,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-0"
+              for="root__0"
             >
               red
             </label>
@@ -4515,7 +4515,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <input
               aria-describedby="root__description"
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-1"
+              id="root__1"
               name="root"
               type="checkbox"
               value="1"
@@ -4526,7 +4526,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-1"
+              for="root__1"
             >
               green
             </label>
@@ -4537,7 +4537,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <input
               aria-describedby="root__description"
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-2"
+              id="root__2"
               name="root"
               type="checkbox"
               value="2"
@@ -4548,7 +4548,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-2"
+              for="root__2"
             >
               blue
             </label>
@@ -9963,7 +9963,7 @@ exports[`single fields > radio field 1`] = `
           >
             <input
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="0"
@@ -9974,7 +9974,7 @@ exports[`single fields > radio field 1`] = `
             />
             <label
               class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-0"
+              for="root__0"
             >
               Yes
             </label>
@@ -9984,7 +9984,7 @@ exports[`single fields > radio field 1`] = `
           >
             <input
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="1"
@@ -9995,7 +9995,7 @@ exports[`single fields > radio field 1`] = `
             />
             <label
               class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-1"
+              for="root__1"
             >
               No
             </label>
@@ -10046,7 +10046,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             <input
               aria-describedby="root__description"
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="0"
@@ -10057,7 +10057,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             />
             <label
               class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-0"
+              for="root__0"
             >
               Yes
             </label>
@@ -10068,7 +10068,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             <input
               aria-describedby="root__description"
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="1"
@@ -10079,7 +10079,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             />
             <label
               class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-1"
+              for="root__1"
             >
               No
             </label>
@@ -10617,7 +10617,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           >
             <input
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-0"
+              id="root__0"
               name="root"
               type="checkbox"
               value="0"
@@ -10628,7 +10628,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-0"
+              for="root__0"
             >
               foo
             </label>
@@ -10639,7 +10639,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             <input
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
               disabled=""
-              id="root-1"
+              id="root__1"
               name="root"
               type="checkbox"
               value="1"
@@ -10650,7 +10650,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             />
             <label
               class="fui-Label fui-Checkbox__label ___15ir9mh_par4jj0 fk6fouc f1ym3bx4 f1cyfu5x fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-1"
+              for="root__1"
             >
               bar
             </label>
@@ -10660,7 +10660,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           >
             <input
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-2"
+              id="root__2"
               name="root"
               type="checkbox"
               value="2"
@@ -10671,7 +10671,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-2"
+              for="root__2"
             >
               fuzz
             </label>
@@ -10681,7 +10681,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           >
             <input
               class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-              id="root-3"
+              id="root__3"
               name="root"
               type="checkbox"
               value="3"
@@ -10692,7 +10692,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             />
             <label
               class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-3"
+              for="root__3"
             >
               qux
             </label>
@@ -10958,7 +10958,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
           >
             <input
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="0"
@@ -10969,7 +10969,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             />
             <label
               class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-0"
+              for="root__0"
             >
               foo
             </label>
@@ -10980,7 +10980,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             <input
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
               disabled=""
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="1"
@@ -10991,7 +10991,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             />
             <label
               class="fui-Label fui-Radio__label ___36z1kg0_1wqrnzl fk6fouc f1s2aq7o f1cyfu5x fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-1"
+              for="root__1"
             >
               bar
             </label>
@@ -11035,7 +11035,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             <input
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
               disabled=""
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="0"
@@ -11046,7 +11046,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             />
             <label
               class="fui-Label fui-Radio__label ___36z1kg0_1wqrnzl fk6fouc f1s2aq7o f1cyfu5x fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-0"
+              for="root__0"
             >
               foo
             </label>
@@ -11057,7 +11057,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             <input
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
               disabled=""
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="1"
@@ -11068,7 +11068,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             />
             <label
               class="fui-Label fui-Radio__label ___36z1kg0_1wqrnzl fk6fouc f1s2aq7o f1cyfu5x fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-1"
+              for="root__1"
             >
               bar
             </label>
@@ -11378,7 +11378,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             <input
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
               disabled=""
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="0"
@@ -11389,7 +11389,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             />
             <label
               class="fui-Label fui-Radio__label ___36z1kg0_1wqrnzl fk6fouc f1s2aq7o f1cyfu5x fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-0"
+              for="root__0"
             >
               foo
             </label>
@@ -11400,7 +11400,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             <input
               class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
               disabled=""
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="1"
@@ -11411,7 +11411,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             />
             <label
               class="fui-Label fui-Radio__label ___36z1kg0_1wqrnzl fk6fouc f1s2aq7o f1cyfu5x fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-              for="root-1"
+              for="root__1"
             >
               bar
             </label>

@@ -18,6 +18,7 @@ import {
   fieldPathToId,
   fieldPathToList,
   getByPath,
+  partId,
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
@@ -90,7 +91,8 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
  * after the field takes focus: the first focusable element inside a widget's wrapper carrying the id, such as a slider's
  * root around its thumb, but none inside a container's `<fieldset>`, since an object's or an array's own error is about
  * none of the controls in it; and where no element carries the id, the first native input or button standing in for
- * one whose id starts with the field's, as radio buttons' and checkboxes' do
+ * one whose id is a part of the field's, as radio buttons' and checkboxes' are. A part's id, unlike any id that merely
+ * starts with the field's, can't be a sibling field's, such as `root_when_year` beside `root_when`
  *
  * @param formElement - The form searched
  * @param exact - The element carrying the field's id, if any
@@ -110,9 +112,10 @@ function focusableForId(
   if (exact) {
     return findElement(exact.querySelectorAll('*'), (element) => isFocusable(element, view));
   }
+  const partPrefix = partId(elementId, '');
   return findElement(
     formElement.querySelectorAll('input[id], button[id]'),
-    (element) => element.id.startsWith(elementId) && isFocusable(element, view),
+    (element) => element.id.startsWith(partPrefix) && isFocusable(element, view),
   );
 }
 
@@ -295,19 +298,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const formWindow = () => formElement?.ownerDocument.defaultView;
 
   /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
-   * field, then, using the `idPrefix` and `idSeparator` converts that path into an id. Then the input element with that
-   * id is attempted to be found in the form element. If it is located, then it is focused.
+   * field, then converts that path into the id the field renders under, as `fieldPathToId()` does for every field. Then
+   * the input element with that id is attempted to be found in the form element. If it is located, then it is focused.
    *
    * @param error - The error on which to focus
    */
   const focusOnError = (error: RJSFValidationError) => {
-    const { idPrefix = 'root', idSeparator = '_' } = committedProps;
-    const { property } = error;
-    const path = propertyToPath(property);
-    // The id of the root element is the idPrefix, so prepend it to the path
-    path.unshift(idPrefix);
-
-    const elementId = path.join(idSeparator);
+    const elementId = fieldPathToId(
+      fieldPathFromList(propertyToPath(error.property)),
+      current().registry.globalFormOptions,
+    );
     const view = formWindow();
     if (!formElement || !view) {
       return;
@@ -317,10 +317,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // A form control named after the field is taken only where it takes focus, since a checkbox that isn't a form
     // control, such as shadcn's, keeps its value in a hidden input named after the field too. A wrapper that isn't
     // focusable and names no focusable form control, such as a slider's root around its thumb or a group of such
-    // checkboxes, leads to the focusable element inside it, as `focusableForId()` finds it. Its fallback, an id starting
-    // with the field's, also matches a sibling's id, such as `root_nameSuffix` for `root_name`, so a field whose own
-    // control can't take focus, being disabled or hidden, leaves focus where it is rather than sending it to another
-    // field. The search stays inside the form, which another form on the page rendering the same ids would defeat through
+    // checkboxes, leads to the focusable element inside it, as `focusableForId()` finds it. A field whose own control
+    // can't take focus, being disabled or hidden, leaves focus where it is rather than sending it to another field. The
+    // search stays inside the form, which another form on the page rendering the same ids would defeat through
     // `getElementById()`, and compares ids as strings, so a property name holding a selector's syntax needs no escaping
     const exact = findElement(formElement.querySelectorAll('[id]'), (element) => element.id === elementId);
     const named = formElement instanceof view.HTMLFormElement ? formElement.elements.namedItem(elementId) : null;

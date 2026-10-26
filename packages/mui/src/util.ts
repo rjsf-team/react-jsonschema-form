@@ -19,6 +19,7 @@ import type {
   UiSchema,
   GenericObjectType,
 } from '@rjsf/utils';
+import { partId } from '@rjsf/utils';
 
 type SxArray = Extract<SxProps<Theme>, readonly unknown[]>;
 
@@ -167,13 +168,47 @@ export function resolveSlotProps<P extends object, O>(slotProps: MuiSlotProps<P,
   return typeof slotProps === 'function' ? slotProps(ownerState) : slotProps;
 }
 
-/** Adds the id of the helper text MUI's `TextField` renders for its `helperText` to the `aria-describedby` a widget
- * gives the `TextField`'s control. That attribute replaces the one MUI links its helper text by, and the field's plan
- * knows only the parts RJSF draws, not this one MUI draws
+/** The id a widget gives the helper text MUI's `TextField` renders for its `helperText`, through the `formHelperText`
+ * slot, in place of the `-helper-text` id MUI derives, which another field's id can spell
+ *
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
+ * @returns - The helper text's id, a part of `id`
+ */
+function helperTextId(id: string) {
+  return partId(id, 'helperText');
+}
+
+/** The id a widget gives the label MUI's `TextField` renders for its `label`, through the `inputLabel` slot, in place of
+ * the `-label` id MUI derives, which another field's id can spell
+ *
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
+ * @returns - The label's id, a part of `id`
+ */
+export function inputLabelId(id: string) {
+  return partId(id, 'inputLabel');
+}
+
+/** The `formHelperText` slot of a widget's `TextField`: the props form authors give the helper text, with the id
+ * `helperTextId()` gives it applied last, since the control's `aria-describedby` names the helper text by that id
+ *
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
+ * @param slotProps - The props form authors give the slot, each an object or MUI's `(ownerState) => props`, later
+ *   ones winning
+ * @returns - The slot's props, as MUI's `(ownerState) => props`
+ */
+export function helperTextSlot<P extends object, O>(id: string, ...slotProps: (MuiSlotProps<P, O> | undefined)[]) {
+  return (ownerState: O) => ({
+    ...slotProps.reduce<Partial<P>>((acc, slot) => ({ ...acc, ...resolveSlotProps(slot, ownerState) }), {}),
+    id: helperTextId(id),
+  });
+}
+
+/** Adds the id `helperTextId()` gives the helper text MUI's `TextField` renders for its `helperText` to the
+ * `aria-describedby` a widget gives the `TextField`'s control. That attribute replaces the one MUI links its helper
+ * text by, and the field's plan knows only the parts RJSF draws, not this one MUI draws
  *
  * @param attributes - The attributes the widget gives its control
- * @param id - The `TextField`'s id, from which MUI builds its helper text's id: an `id` in `ui:options.mui`, which
- *   replaces the field's, else the field's
+ * @param id - The `TextField`'s id: an `id` in `ui:options.mui`, which replaces the field's, else the field's
  * @param helperText - The `helperText` the `TextField` is given
  * @returns - The attributes, described by the helper text too where one renders
  */
@@ -185,6 +220,6 @@ export function describeByHelperText<A extends { 'aria-describedby'?: string }>(
   if (!helperText) {
     return attributes;
   }
-  const describedBy = [attributes['aria-describedby'], `${id}-helper-text`].filter(Boolean).join(' ');
+  const describedBy = [attributes['aria-describedby'], helperTextId(id)].filter(Boolean).join(' ');
   return { ...attributes, 'aria-describedby': describedBy };
 }

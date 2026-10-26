@@ -796,7 +796,7 @@ describe('ObjectField', () => {
     const forbidsUnmatched: RJSFSchema = { ...namedByPattern, additionalProperties: false };
 
     async function renameKey(node: ParentNode, from: string, to: string) {
-      const keyInput = elementOf(node, `#root_${from}-key`);
+      const keyInput = elementOf(node, `#root_${from}__key`);
       await user.clear(keyInput);
       await user.type(keyInput, to);
       await user.tab();
@@ -868,7 +868,7 @@ describe('ObjectField', () => {
 
       // Merging `child` with the pattern that matches it is left undone, so the `$ref` stays inside an `allOf` where
       // `SchemaField` cannot see it. Without the cycle flag on that `allOf` the key nests until the heap is gone
-      const expandButton = node.querySelector<HTMLButtonElement>('#root_child-button')!;
+      const expandButton = elementOf(node, '#root_child__expand', HTMLButtonElement);
       expect(expandButton).not.toBeNull();
       expect(expandButton).toHaveTextContent('Expand Cycle');
       expect(node.querySelector('#root_name')).not.toBeNull();
@@ -1009,7 +1009,7 @@ describe('ObjectField', () => {
         initialFormData: { first: 1 },
       });
 
-      expect(node.querySelector("[for='root_first-key']")).toHaveTextContent('first Key');
+      expect(node.querySelector("[for='root_first__key']")).toHaveTextContent('first Key');
     });
 
     it("names the additional property key's input by its label where ui:label: false hides it", () => {
@@ -1019,8 +1019,8 @@ describe('ObjectField', () => {
         initialFormData: { first: 1 },
       });
 
-      expect(node.querySelector("[for='root_first-key']")).toBeNull();
-      expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
+      expect(node.querySelector("[for='root_first__key']")).toBeNull();
+      expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first__key');
     });
 
     it('should render a label for the additional property key if additionalProperties is true', () => {
@@ -1029,7 +1029,7 @@ describe('ObjectField', () => {
         initialFormData: { first: 1 },
       });
 
-      expect(node.querySelector("[for='root_first-key']")).toHaveTextContent('first Key');
+      expect(node.querySelector("[for='root_first__key']")).toHaveTextContent('first Key');
     });
 
     it('should not render a label for the additional property key if additionalProperties is false', () => {
@@ -1038,7 +1038,7 @@ describe('ObjectField', () => {
         initialFormData: { first: 1 },
       });
 
-      expect(node.querySelector("[for='root_first-key']")).toBeNull();
+      expect(node.querySelector("[for='root_first__key']")).toBeNull();
     });
 
     it('should render a text input for the additional property key', () => {
@@ -1047,7 +1047,7 @@ describe('ObjectField', () => {
         initialFormData: { first: 1 },
       });
 
-      expect(node.querySelector('#root_first-key')).toHaveValue('first');
+      expect(node.querySelector('#root_first__key')).toHaveValue('first');
     });
 
     it('should render a label for the additional property value', () => {
@@ -1074,7 +1074,7 @@ describe('ObjectField', () => {
         initialFormData: { first: 1 },
       });
 
-      const textNode = node.querySelector('#root_first-key')!;
+      const textNode = elementOf(node, '#root_first__key');
       await user.clear(textNode);
       await user.type(textNode, 'newFirst');
       await user.tab();
@@ -1095,7 +1095,7 @@ describe('ObjectField', () => {
         initialFormData: { start: '2020-05-03' },
       });
 
-      const textNode = node.querySelector('#root_start-key')!;
+      const textNode = elementOf(node, '#root_start__key');
       await user.clear(textNode);
       await user.type(textNode, 'end');
       await user.tab();
@@ -1112,7 +1112,7 @@ describe('ObjectField', () => {
         initialFormData: JSON.parse('{"__proto__": "kept", "first": "renamed"}'),
       });
 
-      const textNode = node.querySelector('#root_first-key')!;
+      const textNode = elementOf(node, '#root_first__key');
       await user.clear(textNode);
       await user.type(textNode, 'newFirst');
       await user.tab();
@@ -1126,7 +1126,7 @@ describe('ObjectField', () => {
     it('should keep the value of a key renamed to __proto__ under that property', async () => {
       const { node, onChange } = createFormComponent({ schema, initialFormData: { first: 'kept' } });
 
-      const textNode = node.querySelector('#root_first-key')!;
+      const textNode = elementOf(node, '#root_first__key');
       await user.clear(textNode);
       await user.type(textNode, '__proto__');
       await user.tab();
@@ -1148,17 +1148,17 @@ describe('ObjectField', () => {
         initialFormData: { 'Custom title': 1 },
       });
 
-      const textNode = node.querySelector('#root_Custom\\ title-key')!;
+      const textNode = elementOf(node, '#root_Custom-_20title__key');
       await user.clear(textNode);
       await user.type(textNode, 'Renamed custom title');
       await user.tab();
 
       expectToHaveBeenCalledWithFormData(onChange, { 'Renamed custom title': 1 }, 'root');
 
-      const keyInput = node.querySelector('#root_Renamed\\ custom\\ title-key');
+      const keyInput = node.querySelector('#root_Renamed-_20custom-_20title__key');
       expect(keyInput).toHaveValue('Renamed custom title');
 
-      const keyInputLabel = node.querySelector('label[for="root_Renamed\\ custom\\ title-key"]');
+      const keyInputLabel = node.querySelector('label[for="root_Renamed-_20custom-_20title__key"]');
       expect(keyInputLabel).toHaveTextContent('Renamed custom title Key');
     });
 
@@ -1174,7 +1174,7 @@ describe('ObjectField', () => {
         initialFormData: { 'Custom title': 1 },
       });
 
-      const textNode = node.querySelector('#root_Custom\\ title-key')!;
+      const textNode = elementOf(node, '#root_Custom-_20title__key');
       await user.clear(textNode);
       await user.type(textNode, 'Renamed custom title');
       await user.tab();
@@ -1189,7 +1189,7 @@ describe('ObjectField', () => {
         initialFormData: { first: 1, second: 2, third: 3 },
       });
 
-      const textNode = node.querySelector('#root_second-key')!;
+      const textNode = elementOf(node, '#root_second__key');
       await user.clear(textNode);
       await user.type(textNode, 'newSecond');
       await user.tab();
@@ -1208,12 +1208,12 @@ describe('ObjectField', () => {
         initialFormData: { first: 'one', second: 'two' },
       });
 
-      const textNode = node.querySelector('#root_second-key')!;
+      const textNode = elementOf(node, '#root_second__key');
       await user.clear(textNode);
       await user.type(textNode, '1');
       await user.tab();
 
-      const propertyKeys = [...node.querySelectorAll<HTMLInputElement>('input[id$="-key"]')].map(
+      const propertyKeys = [...node.querySelectorAll<HTMLInputElement>('input[id$="__key"]')].map(
         (input) => input.value,
       );
       expect(propertyKeys).toEqual(['first', '1']);
@@ -1228,7 +1228,7 @@ describe('ObjectField', () => {
         initialFormData: { abc: 'hello' },
       });
 
-      const textNode = node.querySelector('#root_abc-key')!;
+      const textNode = elementOf(node, '#root_abc__key');
       await user.clear(textNode);
       await user.type(textNode, 'xyz');
       await user.tab();
@@ -1262,7 +1262,7 @@ describe('ObjectField', () => {
 
     it('should mark the key input of a forbidden key invalid and describe it by the message', () => {
       const { node } = createFormComponent({ schema: forbidsUnmatched, initialFormData: { a: 'forbidden' } });
-      const keyInput = elementOf(node, '#root_a-key');
+      const keyInput = elementOf(node, '#root_a__key');
       expect(keyInput).toHaveAttribute('aria-invalid', 'true');
       expect(keyInput).toHaveAttribute('aria-describedby', 'root_a__error');
       expect(elementOf(node, '#root_a__error')).toHaveTextContent('The key "a" is not allowed here');
@@ -1275,7 +1275,7 @@ describe('ObjectField', () => {
         extraErrors: { foo: { __errors: ['Too short'] } },
       });
       expect(fieldErrorsById(node)).toEqual({ root_foo: ['Too short'] });
-      const keyInput = elementOf(node, '#root_foo-key');
+      const keyInput = elementOf(node, '#root_foo__key');
       expect(keyInput).not.toHaveAttribute('aria-invalid');
       expect(keyInput).not.toHaveAttribute('aria-describedby');
     });
@@ -1346,7 +1346,7 @@ describe('ObjectField', () => {
       ],
     ])('should render neither a row nor the message for an extra key of an object closed by %s', (_, schema) => {
       const { node } = createFormComponent({ schema, initialFormData: { abc: 'hello', a: 'forbidden' } });
-      expect(node.querySelector('#root_a-key')).toBeNull();
+      expect(node.querySelector('#root_a__key')).toBeNull();
       expect(fieldErrorsById(node)).toEqual({});
     });
 
@@ -1404,7 +1404,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
 
-      const keyInput = node.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'abc');
       await user.tab();
@@ -1447,7 +1447,7 @@ describe('ObjectField', () => {
       const { container } = render(<Parent />);
 
       await user.click(elementOf(container, '.rjsf-object-property-expand button'));
-      const keyInput = elementOf(container, '#root_newKey-key');
+      const keyInput = elementOf(container, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'abc');
       await user.tab();
@@ -1467,7 +1467,7 @@ describe('ObjectField', () => {
       await user.clear(valueInput);
       await user.type(valueInput, 'typed');
 
-      const keyInput = node.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'abc');
       await user.tab();
@@ -1487,7 +1487,7 @@ describe('ObjectField', () => {
         initialFormData: { score: 0 },
       });
 
-      const keyInput = node.querySelector('#root_score-key')!;
+      const keyInput = elementOf(node, '#root_score__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'pct_score');
       await user.tab();
@@ -1513,7 +1513,7 @@ describe('ObjectField', () => {
       await user.clear(valueInput);
       await user.type(valueInput, '0');
 
-      const keyInput = node.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 's_x');
       await user.tab();
@@ -1560,7 +1560,7 @@ describe('ObjectField', () => {
       await user.click(elementOf(node, '.rjsf-object-property-expand button'));
       expect(readData()).toEqual({ newKey: 'the parent wrote this' });
 
-      const keyInput = elementOf(node, '#root_newKey-key');
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'num1');
       await user.tab();
@@ -1606,7 +1606,7 @@ describe('ObjectField', () => {
       await user.type(input(node, 'root_newKey'), 'typed');
       expect(readData()).toEqual({ newKey: 'New Value' });
 
-      const keyInput = elementOf(node, '#root_newKey-key');
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'num1');
       await user.tab();
@@ -1638,7 +1638,7 @@ describe('ObjectField', () => {
       await user.type(input(node, 'root_newKey'), 'typed');
       expect(handleOf(ref).getFormData()).toEqual({ newKey: 'New Value' });
 
-      const keyInput = elementOf(node, '#root_newKey-key');
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'num1');
       await user.tab();
@@ -1656,15 +1656,15 @@ describe('ObjectField', () => {
           isPlainObject(next) && 'renamed' in next && isPlainObject(previous) ? { ...previous } : next,
       });
 
-      const keyInput = elementOf(node, '#root_first-key');
+      const keyInput = elementOf(node, '#root_first__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'renamed');
       await user.tab();
 
       expect(handleOf(ref).getFormData()).toEqual({ first: 'a', second: 'b' });
-      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
-        'root_first-key',
-        'root_second-key',
+      expect([...node.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_first__key',
+        'root_second__key',
       ]);
     });
 
@@ -1676,13 +1676,13 @@ describe('ObjectField', () => {
         initialFormData: { A: 'a', C: 'c' },
         transformChange: (next, previous) => (isPlainObject(next) && 'D' in next ? previous : next),
       });
-      const keyA = elementOf(node, '#root_A-key');
+      const keyA = elementOf(node, '#root_A__key');
       await user.clear(keyA);
       await user.type(keyA, 'B');
       await user.tab();
       const valueB = elementOf(node, '#root_B');
 
-      const keyC = elementOf(node, '#root_C-key');
+      const keyC = elementOf(node, '#root_C__key');
       await user.clear(keyC);
       await user.type(keyC, 'D');
       await user.tab();
@@ -1703,7 +1703,7 @@ describe('ObjectField', () => {
             ? previous
             : next,
       });
-      const keyInput = elementOf(node, '#root_newKey-key');
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'foo');
       await user.tab();
@@ -1725,15 +1725,15 @@ describe('ObjectField', () => {
         transformChange: (next, previous) => (isPlainObject(next) && 'renamed' in next ? previous : next),
       });
 
-      const keyInput = elementOf(node, '#root_first-key');
+      const keyInput = elementOf(node, '#root_first__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'renamed');
       await user.tab();
 
       expect(handleOf(ref).getFormData()).toEqual({ first: 'a', second: 'b' });
-      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
-        'root_first-key',
-        'root_second-key',
+      expect([...node.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_first__key',
+        'root_second__key',
       ]);
     });
 
@@ -1749,15 +1749,15 @@ describe('ObjectField', () => {
             : next,
       });
 
-      const keyInput = elementOf(node, '#root_first-key');
+      const keyInput = elementOf(node, '#root_first__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'RENAMED');
       await user.tab();
 
       expect(handleOf(ref).getFormData()).toEqual({ renamed: 'a', second: 'b' });
-      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
-        'root_renamed-key',
-        'root_second-key',
+      expect([...node.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_renamed__key',
+        'root_second__key',
       ]);
     });
 
@@ -1772,7 +1772,7 @@ describe('ObjectField', () => {
       });
       const valueA = elementOf(node, '#root_A');
 
-      const keyInput = elementOf(node, '#root_A-key');
+      const keyInput = elementOf(node, '#root_A__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'B');
       await user.tab();
@@ -1796,10 +1796,10 @@ describe('ObjectField', () => {
       await user.click(node.querySelectorAll('.rjsf-object-property-remove')[0]);
 
       expect(handleOf(ref).getFormData()).toEqual({ first: 'a', second: 'b', third: 'c' });
-      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
-        'root_first-key',
-        'root_second-key',
-        'root_third-key',
+      expect([...node.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_first__key',
+        'root_second__key',
+        'root_third__key',
       ]);
     });
 
@@ -1831,9 +1831,9 @@ describe('ObjectField', () => {
       await user.click(addButton());
 
       expect(Object.keys(handleOf(ref).getFormData() ?? {})).toEqual(['newKey-1', 'newKey']);
-      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
-        'root_newKey-1-key',
-        'root_newKey-key',
+      expect([...node.querySelectorAll('input[id$="__key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_newKey-1__key',
+        'root_newKey__key',
       ]);
     });
 
@@ -1852,7 +1852,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'AP' }, 'root');
 
-      const keyInput = node.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'count');
       await user.tab();
@@ -1882,7 +1882,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'AP' }, 'root');
 
-      const keyInput = node.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'note');
       await user.tab();
@@ -1906,7 +1906,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
 
-      const keyInput = node.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'count');
       await user.tab();
@@ -1946,10 +1946,10 @@ describe('ObjectField', () => {
       });
 
       expect(node.querySelector('#root_b')).toHaveValue('keep me');
-      expect(node.querySelector('#root_b-key')).toHaveValue('b');
+      expect(node.querySelector('#root_b__key')).toHaveValue('b');
       // The discriminator both options declare is the option's to render, so it takes no second field
       expect(node.querySelectorAll('#root_kind')).toHaveLength(1);
-      expect(node.querySelector('#root_kind-key')).toBeNull();
+      expect(node.querySelector('#root_kind__key')).toBeNull();
     });
 
     it('should render a key an option takes through patterns of its own just once', async () => {
@@ -2055,9 +2055,9 @@ describe('ObjectField', () => {
       });
 
       expect(node.querySelector('#root_onlyA')).toHaveValue('left over');
-      expect(node.querySelector('#root_onlyA-key')).toBeInTheDocument();
+      expect(node.querySelector('#root_onlyA__key')).toBeInTheDocument();
       expect(node.querySelectorAll('#root_onlyB')).toHaveLength(1);
-      expect(node.querySelector('#root_onlyB-key')).toBeNull();
+      expect(node.querySelector('#root_onlyB__key')).toBeNull();
     });
 
     it('should render a key a oneOf option declares only where that option renders it', async () => {
@@ -2075,7 +2075,7 @@ describe('ObjectField', () => {
 
       expect(node.querySelectorAll('#root_a')).toHaveLength(1);
       expect(node.querySelector('#root_a')).toHaveValue('v');
-      expect(node.querySelector('#root_a-key')).toBeNull();
+      expect(node.querySelector('#root_a__key')).toBeNull();
     });
 
     it('should render no field for a key whose name unevaluatedProperties forbids', async () => {
@@ -2092,7 +2092,7 @@ describe('ObjectField', () => {
       });
 
       expect(node.querySelector('#root_abc')).toHaveValue('hello');
-      expect(node.querySelector<HTMLInputElement>('#root_xyz-key')).toHaveValue('xyz');
+      expect(node.querySelector<HTMLInputElement>('#root_xyz__key')).toHaveValue('xyz');
       expect(node.querySelector('#root_xyz')).toBeNull();
     });
 
@@ -2110,7 +2110,7 @@ describe('ObjectField', () => {
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
-      await user.selectOptions(node.querySelector('select#root_abc-key')!, 'xyz');
+      await user.selectOptions(elementOf(node, 'select#root_abc__key'), 'xyz');
 
       expectToHaveBeenCalledWithFormData(onChange, { xyz: 'New Value' }, 'root');
       expect(node.querySelector('#root_xyz')).toHaveValue('New Value');
@@ -2164,7 +2164,7 @@ describe('ObjectField', () => {
         initialFormData: { abc: 'stranded' },
       });
 
-      expect(node.querySelector<HTMLInputElement>('#root_abc-key')).toHaveValue('abc');
+      expect(node.querySelector<HTMLInputElement>('#root_abc__key')).toHaveValue('abc');
       expect(node.querySelector('#root_abc')).toBeNull();
     });
 
@@ -2314,7 +2314,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
 
-      const keyInput = node.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'num1');
       await user.tab();
@@ -2413,7 +2413,7 @@ describe('ObjectField', () => {
       expect(promotedInputs).toHaveLength(1);
       expect(promotedInputs[0]).toHaveValue('two');
 
-      const propertyKeys = [...node.querySelectorAll<HTMLInputElement>('input[id$="-key"]')].map(
+      const propertyKeys = [...node.querySelectorAll<HTMLInputElement>('input[id$="__key"]')].map(
         (input) => input.value,
       );
       expect(propertyKeys).toEqual(['first']);
@@ -2452,7 +2452,7 @@ describe('ObjectField', () => {
         formRef.current!.reset();
       });
 
-      const keyInput = node.querySelector('#root_options_efs-key');
+      const keyInput = node.querySelector('#root_options_efs__key');
       await user.clear(keyInput!);
       await user.type(keyInput!, 'efsKey');
       await user.tab();
@@ -2470,7 +2470,7 @@ describe('ObjectField', () => {
         initialFormData: formData,
       });
 
-      const textNode = node.querySelector('#root_first-key')!;
+      const textNode = elementOf(node, '#root_first__key');
       await user.clear(textNode);
       await user.type(textNode, 'second');
       await user.tab();
@@ -2491,7 +2491,7 @@ describe('ObjectField', () => {
         },
       });
 
-      const textNode = node.querySelector('#root_first-key')!;
+      const textNode = elementOf(node, '#root_first__key');
       await user.clear(textNode);
       await user.type(textNode, 'second');
       await user.tab();
@@ -2514,7 +2514,7 @@ describe('ObjectField', () => {
         },
       });
 
-      const textNode = node.querySelector('#root_first-key')!;
+      const textNode = elementOf(node, '#root_first__key');
       await user.clear(textNode);
       await user.type(textNode, 'second');
       await user.tab();
@@ -2531,7 +2531,7 @@ describe('ObjectField', () => {
         initialFormData: formData,
       });
 
-      const textNode = node.querySelector('#root_first-key')!;
+      const textNode = elementOf(node, '#root_first__key');
       await user.click(textNode);
       await user.tab();
 
@@ -2554,7 +2554,7 @@ describe('ObjectField', () => {
         initialFormData: formData,
       });
 
-      const textNode = node.querySelector('#root_first-key')!;
+      const textNode = elementOf(node, '#root_first__key');
       await user.clear(textNode);
       await user.type(textNode, 'second');
       await user.tab();
@@ -2582,14 +2582,14 @@ describe('ObjectField', () => {
         initialFormData: { first: 'a value' },
       });
 
-      const keyInput = node.querySelector<HTMLInputElement>('#root_first-key')!;
+      const keyInput = elementOf(node, '#root_first__key', HTMLInputElement);
       expect(keyInput).toHaveValue('first');
 
       await user.click(keyInput);
       await user.tab();
 
       expect(onChange).not.toHaveBeenCalled();
-      expect(node.querySelector('#root_first-key')).toHaveValue('first');
+      expect(node.querySelector('#root_first__key')).toHaveValue('first');
     });
 
     it('should preserve focus on value field after renaming key via Tab', async () => {
@@ -2598,7 +2598,7 @@ describe('ObjectField', () => {
         initialFormData: { first: 1 },
       });
 
-      const keyInput = node.querySelector<HTMLInputElement>('#root_first-key')!;
+      const keyInput = elementOf(node, '#root_first__key', HTMLInputElement);
       await user.clear(keyInput);
       await user.type(keyInput, 'renamed');
       await user.tab();
@@ -2615,7 +2615,7 @@ describe('ObjectField', () => {
       });
 
       // Rename "first" to "second"
-      const keyInput = node.querySelector('#root_first-key')!;
+      const keyInput = elementOf(node, '#root_first__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'second');
       await user.tab();
@@ -2624,7 +2624,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       // Rename the new property to "first" (the old name)
-      const newKeyInput = node.querySelector('#root_newKey-key');
+      const newKeyInput = node.querySelector('#root_newKey__key');
       expect(newKeyInput).not.toBeNull();
       await user.clear(newKeyInput!);
       await user.type(newKeyInput!, 'first');
@@ -2642,7 +2642,7 @@ describe('ObjectField', () => {
       });
 
       // Start editing the key
-      const keyInput = node.querySelector<HTMLInputElement>('#root_first-key')!;
+      const keyInput = elementOf(node, '#root_first__key', HTMLInputElement);
       await user.clear(keyInput);
       await user.type(keyInput, 'renamed');
 
@@ -2673,8 +2673,8 @@ describe('ObjectField', () => {
         initialFormData: formData,
       });
 
-      const firstKeyNode = node.querySelector('#root_first-key')!;
-      const secondKeyNode = node.querySelector('#root_second-key')!;
+      const firstKeyNode = elementOf(node, '#root_first__key');
+      const secondKeyNode = elementOf(node, '#root_second__key');
 
       await user.clear(firstKeyNode);
       await user.type(firstKeyNode, 'renamedFirst');
@@ -2694,20 +2694,20 @@ describe('ObjectField', () => {
       });
 
       // First rename
-      const keyInput1 = node.querySelector('#root_first-key')!;
+      const keyInput1 = elementOf(node, '#root_first__key');
       await user.clear(keyInput1);
       await user.type(keyInput1, 'second');
       await user.tab();
 
       // Second rename of the same property
-      const keyInput2 = node.querySelector('#root_second-key');
+      const keyInput2 = node.querySelector('#root_second__key');
       expect(keyInput2).not.toBeNull();
       await user.clear(keyInput2!);
       await user.type(keyInput2!, 'third');
       await user.tab();
 
       // The property should exist with the final name
-      const keyInput3 = node.querySelector('#root_third-key');
+      const keyInput3 = node.querySelector('#root_third__key');
       expect(keyInput3).not.toBeNull();
       expect(node.querySelector('#root_third')).not.toBeNull();
     });
@@ -2725,7 +2725,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       // Rename the new property
-      const keyInput = node.querySelector('#root_newKey-key');
+      const keyInput = node.querySelector('#root_newKey__key');
       expect(keyInput).not.toBeNull();
       await user.clear(keyInput!);
       await user.type(keyInput!, 'renamed');
@@ -2742,7 +2742,7 @@ describe('ObjectField', () => {
 
       // Rename "first" to "other" — previousKey should not be "first" (collision)
       // nor "first-1" (also exists). It should be "first-2" or similar
-      const keyInput = node.querySelector('#root_first-key')!;
+      const keyInput = elementOf(node, '#root_first__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'other');
       await user.tab();
@@ -2762,14 +2762,14 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       // Rename the newly added property for the first time
-      const newKeyInput = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
+      const newKeyInput = elementOf(node, '#root_newKey__key', HTMLInputElement);
       expect(newKeyInput).not.toBeNull();
       await user.clear(newKeyInput);
       await user.type(newKeyInput, 'second');
       await user.tab();
 
       // The renamed key and its value input should exist (component was reused, not remounted)
-      expect(node.querySelector('#root_second-key')).not.toBeNull();
+      expect(node.querySelector('#root_second__key')).not.toBeNull();
       expect(node.querySelector('#root_second')).not.toBeNull();
     });
 
@@ -2780,7 +2780,7 @@ describe('ObjectField', () => {
       });
 
       // Rename "first" → "renamed"
-      const keyInput = node.querySelector('#root_first-key')!;
+      const keyInput = elementOf(node, '#root_first__key');
       await user.clear(keyInput);
       await user.type(keyInput, 'renamed');
       await user.tab();
@@ -2789,7 +2789,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       // Rename new property to "first" (the old name)
-      const newKeyInput = node.querySelector('#root_newKey-key');
+      const newKeyInput = node.querySelector('#root_newKey__key');
       expect(newKeyInput).not.toBeNull();
       await user.clear(newKeyInput!);
       await user.type(newKeyInput!, 'first');
@@ -2810,7 +2810,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       // Rename "newKey" → "first"
-      const keyInput = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey__key', HTMLInputElement);
       await user.clear(keyInput);
       await user.type(keyInput, 'first');
       await user.tab();
@@ -2819,7 +2819,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       // The new property's key input should show "newKey", not "first"
-      const newKeyInput = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
+      const newKeyInput = elementOf(node, '#root_newKey__key', HTMLInputElement);
       expect(newKeyInput).not.toBeNull();
       expect(newKeyInput.value).toBe('newKey');
     });
@@ -2832,14 +2832,14 @@ describe('ObjectField', () => {
 
       // Add first property and rename to "first"
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
-      const keyInput1 = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
+      const keyInput1 = elementOf(node, '#root_newKey__key', HTMLInputElement);
       await user.clear(keyInput1);
       await user.type(keyInput1, 'first');
       await user.tab();
 
       // Add second property and rename to "second"
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
-      const keyInput2 = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
+      const keyInput2 = elementOf(node, '#root_newKey__key', HTMLInputElement);
       await user.clear(keyInput2);
       await user.type(keyInput2, 'second');
       await user.tab();
@@ -2849,8 +2849,8 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_second')).not.toBeNull();
 
       // Key inputs should show their actual property names, not carry over values
-      const firstKeyInput = node.querySelector<HTMLInputElement>('#root_first-key')!;
-      const secondKeyInput = node.querySelector<HTMLInputElement>('#root_second-key')!;
+      const firstKeyInput = elementOf(node, '#root_first__key', HTMLInputElement);
+      const secondKeyInput = elementOf(node, '#root_second__key', HTMLInputElement);
       expect(firstKeyInput.value).toBe('first');
       expect(secondKeyInput.value).toBe('second');
     });
@@ -2865,7 +2865,7 @@ describe('ObjectField', () => {
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
       // Rename "newKey" to "first" (duplicate — will become "first-1")
-      const keyInput = node.querySelector<HTMLInputElement>('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey__key', HTMLInputElement);
       await user.clear(keyInput);
       await user.type(keyInput, 'first');
       await user.tab();
@@ -2875,7 +2875,7 @@ describe('ObjectField', () => {
       expect(valueInput).not.toBeNull();
 
       // The key input should show the actual property name "first-1", not "first"
-      const renamedKeyInput = node.querySelector<HTMLInputElement>('#root_first-1-key')!;
+      const renamedKeyInput = elementOf(node, '#root_first-1__key', HTMLInputElement);
       expect(renamedKeyInput).not.toBeNull();
       expect(renamedKeyInput.value).toBe('first-1');
     });
@@ -3291,7 +3291,7 @@ describe('ObjectField', () => {
         initialFormData: {},
       });
 
-      const defaultKeyInput = node.querySelector('#root_defaultKey-key')!;
+      const defaultKeyInput = elementOf(node, '#root_defaultKey__key');
       await user.clear(defaultKeyInput);
       await user.type(defaultKeyInput, 'newDefaultKey');
       await user.tab();
@@ -3457,9 +3457,9 @@ describe('ObjectField', () => {
         schema,
         initialFormData: { first: 1 },
       });
-      expect(node.querySelector('#root_first-key')).toHaveValue('first');
+      expect(node.querySelector('#root_first__key')).toHaveValue('first');
       await user.click(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger')!);
-      expect(node.querySelector('#root_first-key')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_first__key')).not.toBeInTheDocument();
     });
 
     it('delete button should delete correct pair', async () => {
@@ -3470,7 +3470,7 @@ describe('ObjectField', () => {
       const selector = '.form-group > .row > .form-additional + .col-xs-2 > .btn-danger';
       expect(node.querySelectorAll(selector)).toHaveLength(3);
       await user.click(node.querySelectorAll(selector)[1]);
-      expect(node.querySelector('#root_second-key')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_second__key')).not.toBeInTheDocument();
       expect(node.querySelectorAll(selector)).toHaveLength(2);
     });
 
@@ -3553,7 +3553,7 @@ describe('ObjectField', () => {
           `root_Example_${propName}`,
         );
         // the entry and its key input must survive the clear
-        expect(node.querySelector('#root_Example-key')).toHaveValue('Example');
+        expect(node.querySelector('#root_Example__key')).toHaveValue('Example');
       },
     );
 
@@ -3577,7 +3577,7 @@ describe('ObjectField', () => {
 
       expectToHaveBeenCalledWithFormData(onChange, { Example: { name: 'custom-default' } }, 'root_Example_name');
       // the entry and its key input must survive the clear
-      expect(node.querySelector('#root_Example-key')).toHaveValue('Example');
+      expect(node.querySelector('#root_Example__key')).toHaveValue('Example');
     });
 
     it('deleting content of a nested value input behind a $ref should omit the key rather than store an empty string (issue #5222)', async () => {
@@ -3601,7 +3601,7 @@ describe('ObjectField', () => {
       await user.clear(node.querySelector('#root_Example_name')!);
 
       expectToHaveBeenCalledWithFormData(onChange, { Example: { name: undefined } }, 'root_Example_name');
-      expect(node.querySelector('#root_Example-key')).toHaveValue('Example');
+      expect(node.querySelector('#root_Example__key')).toHaveValue('Example');
     });
   });
 
@@ -3623,7 +3623,7 @@ describe('ObjectField', () => {
       await user.click(elementOf(node, '.rjsf-object-property-expand button'));
 
       expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
-      expect(node.querySelector('#root_newKey-key')).toHaveValue('newKey');
+      expect(node.querySelector('#root_newKey__key')).toHaveValue('newKey');
     });
 
     it("renders the extra keys of the data with key inputs under 'allow', and none under 'forbid'", () => {
@@ -3635,7 +3635,7 @@ describe('ObjectField', () => {
 
       const { node } = createFormComponent({ schema, initialFormData, additionalPropertiesWhenAbsent: 'allow' });
 
-      expect(node.querySelector('#root_extra-key')).toHaveValue('extra');
+      expect(node.querySelector('#root_extra__key')).toHaveValue('extra');
       expect(node.querySelector('#root_extra')).toHaveValue('y');
     });
 
@@ -3681,7 +3681,7 @@ describe('ObjectField', () => {
         // A1 declares `x`, where the object's read `x` and `extra` as its own beside A's
         expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
         expect(node.querySelectorAll('#root_x')).toHaveLength(1);
-        expect(node.querySelectorAll('#root_extra-key')).toHaveLength(1);
+        expect(node.querySelectorAll('#root_extra__key')).toHaveLength(1);
         await user.click(elementOf(node, '.rjsf-object-property-expand button'));
 
         expectToHaveBeenCalledWithFormData(onChange, { x: 'a', extra: 'e', newKey: 'New Value' }, 'root');
@@ -3710,10 +3710,10 @@ describe('ObjectField', () => {
 
         // The object names no extra-key keyword, and A's field takes the extra keys all the same, leaving `p` to the
         // object's
-        for (const id of ['root_p', 'root_x', 'root_extra-key']) {
+        for (const id of ['root_p', 'root_x', 'root_extra__key']) {
           expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
         }
-        expect(node.querySelector('#root_p-key')).toBeNull();
+        expect(node.querySelector('#root_p__key')).toBeNull();
         expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
       },
     );
@@ -3732,10 +3732,10 @@ describe('ObjectField', () => {
       const { node } = createFormComponent({ schema, initialFormData: { p: '1', x: 'a', extra: 'e' } });
 
       // A takes the object's type, so its field renders beside A1's and takes A1's extra keys
-      for (const id of ['root_p', 'root_x', 'root_extra-key']) {
+      for (const id of ['root_p', 'root_x', 'root_extra__key']) {
         expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
       }
-      expect(node.querySelector('#root_p-key')).toBeNull();
+      expect(node.querySelector('#root_p__key')).toBeNull();
       expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
     });
 
@@ -3749,8 +3749,8 @@ describe('ObjectField', () => {
       const { node } = createFormComponent({ schema, initialFormData: { p: '1', x: 'a', extra: 'e' } });
 
       expect(node.querySelectorAll('#root_p')).toHaveLength(1);
-      expect(node.querySelector('#root_p-key')).toBeNull();
-      expect(node.querySelectorAll('#root_extra-key')).toHaveLength(1);
+      expect(node.querySelector('#root_p__key')).toBeNull();
+      expect(node.querySelectorAll('#root_extra__key')).toHaveLength(1);
     });
 
     it('forbids an extra key an option forbids, though the object above it describes the key, where the option takes them', () => {
@@ -3765,7 +3765,7 @@ describe('ObjectField', () => {
 
       // Judged by the object's keywords and the option's apart, as validation judges it: A rejects the key
       expect(node.querySelector('input#root_p1')).toBeNull();
-      expect(node.querySelector('#root_p1-key')).toHaveValue('p1');
+      expect(node.querySelector('#root_p1__key')).toHaveValue('p1');
     });
 
     it('renders the extra keys once, in the innermost field, through options offering options two levels down', () => {
@@ -3783,7 +3783,7 @@ describe('ObjectField', () => {
       };
       const { node } = createFormComponent({ schema, initialFormData: { p: '1', q: '2', x: 'a', extra: 'e' } });
 
-      for (const id of ['root_p', 'root_q', 'root_x', 'root_extra-key']) {
+      for (const id of ['root_p', 'root_q', 'root_x', 'root_extra__key']) {
         expect(node.querySelectorAll(`#${id}`)).toHaveLength(1);
       }
       expect(node.querySelectorAll('.rjsf-object-property-expand button')).toHaveLength(1);
@@ -3812,7 +3812,7 @@ describe('ObjectField', () => {
           initialFormData: { a: 'x' },
         });
 
-        expect(node.querySelector('#root_XxxOf')).not.toBeInTheDocument();
+        expect(node.querySelector('#root__XxxOf')).not.toBeInTheDocument();
         expect(screen.getAllByText('Thing')).toHaveLength(1);
       });
       it('renders its own field beside the option while the data holds an extra key', () => {
@@ -3823,19 +3823,19 @@ describe('ObjectField', () => {
           initialFormData: { a: 'x', extra: 'e' },
         });
 
-        expect(node.querySelector('#root_XxxOf')).toBeInTheDocument();
-        expect(node.querySelector('#root_extra-key')).toBeInTheDocument();
+        expect(node.querySelector('#root__XxxOf')).toBeInTheDocument();
+        expect(node.querySelector('#root_extra__key')).toBeInTheDocument();
       });
       it("drops its own field once the data reaches the object's maxProperties", async () => {
         const { node } = createFormComponent({
           schema: union({ maxProperties: 1 }),
           additionalPropertiesWhenAbsent: 'allow',
         });
-        expect(node.querySelector('#root_XxxOf')).toBeInTheDocument();
+        expect(node.querySelector('#root__XxxOf')).toBeInTheDocument();
 
         await user.type(node.querySelector('#root_a')!, 'x');
 
-        expect(node.querySelector('#root_XxxOf')).not.toBeInTheDocument();
+        expect(node.querySelector('#root__XxxOf')).not.toBeInTheDocument();
         expect(node.querySelector('#root_a')).toHaveFocus();
       });
     });
@@ -3954,9 +3954,9 @@ describe('ObjectField', () => {
     it('should render the additional property key as a select of the allowed names', () => {
       const { node } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
-      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      const keySelect = elementOf(node, 'select#root_a__key', HTMLSelectElement);
       expect(keySelect).not.toBeNull();
-      expect(node.querySelector('input#root_a-key')).toBeNull();
+      expect(node.querySelector('input#root_a__key')).toBeNull();
       expect([...keySelect.options].map((option) => option.textContent)).toEqual(['a', 'b', 'c', 'd']);
       expect(keySelect).toHaveDisplayValue('a');
     });
@@ -3965,7 +3965,7 @@ describe('ObjectField', () => {
       const { node } = createFormComponent({ schema, initialFormData: { a: 'first', c: 'second' } });
 
       const optionsFor = (key: string) =>
-        [...node.querySelector<HTMLSelectElement>(`select#root_${key}-key`)!.options]
+        [...elementOf(node, `select#root_${key}__key`, HTMLSelectElement).options]
           .map((option) => option.textContent)
           .filter(Boolean);
       expect(optionsFor('a')).toEqual(['a', 'b', 'd']);
@@ -3975,7 +3975,7 @@ describe('ObjectField', () => {
     it('should rename the property as soon as a name is selected', async () => {
       const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
-      await user.selectOptions(node.querySelector('select#root_a-key')!, 'd');
+      await user.selectOptions(elementOf(node, 'select#root_a__key'), 'd');
 
       expectToHaveBeenCalledWithFormData(onChange, { d: 'first' }, 'root');
     });
@@ -4214,7 +4214,7 @@ describe('ObjectField', () => {
         initialFormData: { a: 'first' },
       });
 
-      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      const keySelect = elementOf(node, 'select#root_a__key', HTMLSelectElement);
       expect([...keySelect.options].map((option) => option.textContent)).toEqual(['a', 'b']);
       expect(keySelect).toHaveDisplayValue('a');
 
@@ -4271,14 +4271,14 @@ describe('ObjectField', () => {
         initialFormData: { a: '1', b: '2', c: '3', d: '4', zzz: '5' },
       });
 
-      expect(node.querySelector('select#root_zzz-key')).toBeNull();
-      expect(node.querySelector('input#root_zzz-key')).toHaveValue('zzz');
+      expect(node.querySelector('select#root_zzz__key')).toBeNull();
+      expect(node.querySelector('input#root_zzz__key')).toHaveValue('zzz');
     });
 
     it('should show a key the enum no longer allows as a disabled option rather than a blank select', () => {
       const { node } = createFormComponent({ schema, initialFormData: { a: '1', zzz: '2' } });
 
-      const keySelect = node.querySelector<HTMLSelectElement>('select#root_zzz-key')!;
+      const keySelect = elementOf(node, 'select#root_zzz__key', HTMLSelectElement);
       expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual([
         'zzz',
         'b',
@@ -4292,7 +4292,7 @@ describe('ObjectField', () => {
     it('should offer no blank placeholder option to select', () => {
       const { node } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
-      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      const keySelect = elementOf(node, 'select#root_a__key', HTMLSelectElement);
       expect([...keySelect.options].some((option) => option.value === '')).toBe(false);
     });
 
@@ -4305,7 +4305,7 @@ describe('ObjectField', () => {
       };
       const { node } = createFormComponent({ schema: refSchema, initialFormData: { a: 'first' } });
 
-      const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
+      const keySelect = elementOf(node, 'select#root_a__key', HTMLSelectElement);
       expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual(['a', 'b']);
     });
 
@@ -4319,8 +4319,8 @@ describe('ObjectField', () => {
 
       const { node } = createFormComponent({ schema: brokenRefSchema, initialFormData: { a: 'first' } });
 
-      expect(node.querySelector('select#root_a-key')).toBeNull();
-      expect(node.querySelector('input#root_a-key')).toHaveValue('a');
+      expect(node.querySelector('select#root_a__key')).toBeNull();
+      expect(node.querySelector('input#root_a__key')).toHaveValue('a');
     });
 
     it('should keep the text input when propertyNames carries no enum', () => {
@@ -4329,8 +4329,8 @@ describe('ObjectField', () => {
         initialFormData: { a: 'first' },
       });
 
-      expect(node.querySelector('select#root_a-key')).toBeNull();
-      expect(node.querySelector('input#root_a-key')).toHaveValue('a');
+      expect(node.querySelector('select#root_a__key')).toBeNull();
+      expect(node.querySelector('input#root_a__key')).toHaveValue('a');
     });
 
     it('should keep the text input for a property that is declared rather than additional', () => {
@@ -4344,8 +4344,8 @@ describe('ObjectField', () => {
         initialFormData: { a: 'first', b: 'second' },
       });
 
-      expect(node.querySelector('#root_a-key')).toBeNull();
-      expect(node.querySelector('select#root_b-key')).not.toBeNull();
+      expect(node.querySelector('#root_a__key')).toBeNull();
+      expect(node.querySelector('select#root_b__key')).not.toBeNull();
     });
   });
   describe('markdown', () => {
