@@ -20,7 +20,7 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
-import { computeSxProps, getMuiProps } from '../util.ts';
+import { computeSxProps, getMuiProps, inputLabelId } from '../util.ts';
 /** Properties available for the `rjsfSlotProps` target of the WrapIfAdditionalTemplate. */
 export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the WrapIfAdditionalTemplate. */
@@ -131,6 +131,7 @@ export default function WrapIfAdditionalTemplate<
             label={hasKeyLabel ? keyLabel : undefined}
             // Where `ui:label: false` leaves the key unlabelled, its label's text names it, as core's key input is named
             slotProps={{
+              inputLabel: { id: inputLabelId(additionalKeyId(id)) },
               htmlInput: {
                 'aria-label': hasKeyLabel ? undefined : keyLabel,
                 'aria-describedby': keyAttributes['aria-describedby'],

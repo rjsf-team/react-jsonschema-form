@@ -306,10 +306,6 @@ function ownIdOr(ownProps: GenericObjectType | undefined, fallback: string): str
   return typeof ownId === 'string' && ownId ? ownId : fallback;
 }
 
-function successIdOf(id: string, ownSuccessProps: GenericObjectType | undefined): string {
-  return ownIdOr(ownSuccessProps, partId(id, 'success'));
-}
-
 /** Whether `Input.Wrapper` renders the element with `id`, which it lists in its context's `describedBy` when it does */
 function isRendered(describedBy: string | undefined, id: string) {
   return !!describedBy?.split(' ').includes(id);
@@ -650,7 +646,7 @@ export function useFieldWrapperProps<
     : resolved;
   const error = getWidgetError<T, S, F>(widgetProps);
   const ownSuccessProps = asObject(resolved.successProps);
-  const successId = successIdOf(id, ownSuccessProps);
+  const successId = ownIdOr(ownSuccessProps, partId(id, 'success'));
   return {
     wrapperProps: {
       ...wrapperProps,
@@ -721,7 +717,7 @@ export function useAriaDescribedByProps(
   const ownSuccessProps = asObject(resolved.successProps);
   return useAriaContainerProps({
     id,
-    successId: successIdOf(id, ownSuccessProps),
+    successId: ownIdOr(ownSuccessProps, partId(id, 'success')),
     describedBy: [describedBy, alsoDescribedBy].filter(Boolean).join(' '),
     ownDescriptionProps: resolved.descriptionProps,
     // Mantine's `Select` and `MultiSelect` name their listbox by the `-label` id they derive, whatever the label's id
@@ -825,7 +821,7 @@ export function useGroupAriaProps<
   const ownSuccessProps = asObject(resolved.successProps);
   const containerProps = useAriaContainerProps({
     id,
-    successId: successIdOf(id, ownSuccessProps),
+    successId: ownIdOr(ownSuccessProps, partId(id, 'success')),
     labelId: labelledBy,
     ownDescriptionProps: resolved.descriptionProps,
     // A group gives its label the field's title id itself
