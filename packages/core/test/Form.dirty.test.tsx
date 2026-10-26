@@ -26,6 +26,8 @@ function lastStatus(onChange: Mock) {
   return {
     dirty: Reflect.get(event, 'dirty'),
     dirtyFields: Reflect.get(event, 'dirtyFields'),
+    touched: Reflect.get(event, 'touched'),
+    touchedFields: Reflect.get(event, 'touchedFields'),
     submitCount: Reflect.get(event, 'submitCount'),
   };
 }
@@ -43,7 +45,13 @@ describe('dirty', () => {
     const { handle, onChange } = mountWithHandle({ schema: person });
 
     expect(handle.getFormData()).toEqual({ name: 'Ada' });
-    expect(handle.getStatus()).toMatchObject({ dirty: false, dirtyFields: {}, submitCount: 0 });
+    expect(handle.getStatus()).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
     expect(onChange).not.toHaveBeenCalled();
   });
 
@@ -52,8 +60,14 @@ describe('dirty', () => {
 
     await user.type(input(container, 'root_address_street'), 'x');
 
-    expect(lastStatus(onChange)).toEqual({ dirty: true, dirtyFields: { address: { street: true } }, submitCount: 0 });
-    expect(handle.getStatus()).toMatchObject(lastStatus(onChange));
+    expect(lastStatus(onChange)).toEqual({
+      dirty: true,
+      dirtyFields: { address: { street: true } },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+    expect(handle.getStatus()).toEqual(lastStatus(onChange));
   });
 
   it("leaves a cleared field seeded with '' dirty, unless ui:emptyValue stores '' for it", async () => {
@@ -61,7 +75,13 @@ describe('dirty', () => {
     const plain = mountWithHandle({ schema, initialFormData: { name: '' } });
     await user.type(input(plain.container, 'root_name'), 'x');
     await user.clear(input(plain.container, 'root_name'));
-    expect(plain.handle.getStatus()).toMatchObject({ dirty: true, dirtyFields: { name: true }, submitCount: 0 });
+    expect(plain.handle.getStatus()).toEqual({
+      dirty: true,
+      dirtyFields: { name: true },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
     plain.unmount();
 
     const withEmptyValue = mountWithHandle({
@@ -72,7 +92,13 @@ describe('dirty', () => {
     await user.type(input(withEmptyValue.container, 'root_name'), 'x');
     await user.clear(input(withEmptyValue.container, 'root_name'));
 
-    expect(withEmptyValue.handle.getStatus()).toMatchObject({ dirty: false, dirtyFields: {}, submitCount: 0 });
+    expect(withEmptyValue.handle.getStatus()).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
   });
 
   it('leaves a field the seed left blank dirty once it is typed into and cleared, nested fields too', async () => {
@@ -82,7 +108,13 @@ describe('dirty', () => {
     await user.clear(input(container, 'root_address_city'));
 
     expect(handle.getFormData()).toEqual({ name: 'Ada', address: { city: undefined } });
-    expect(handle.getStatus()).toMatchObject({ dirty: true, dirtyFields: { address: { city: true } }, submitCount: 0 });
+    expect(handle.getStatus()).toEqual({
+      dirty: true,
+      dirtyFields: { address: { city: true } },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
   });
 
   it('updates the status for a prop change without calling onChange', async () => {
@@ -101,7 +133,13 @@ describe('dirty', () => {
     });
 
     expect(handle.getFormData()).toEqual({ name: 'Ada', nickname: 'x' });
-    expect(handle.getStatus()).toMatchObject({ dirty: false, dirtyFields: {}, submitCount: 0 });
+    expect(handle.getStatus()).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
     expect(onChange).not.toHaveBeenCalled();
   });
 
@@ -141,7 +179,13 @@ describe('dirty', () => {
     expect(lastStatus(onChange).dirty).toBe(true);
     await user.type(name, '{Backspace}');
 
-    expect(lastStatus(onChange)).toEqual({ dirty: false, dirtyFields: {}, submitCount: 0 });
+    expect(lastStatus(onChange)).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
   });
 
   it('stays clean when a new schema prop fills in a default', () => {
@@ -152,7 +196,13 @@ describe('dirty', () => {
     });
 
     expect(handle.getFormData()).toEqual({ name: 'Ada', age: 30 });
-    expect(handle.getStatus()).toMatchObject({ dirty: false, dirtyFields: {}, submitCount: 0 });
+    expect(handle.getStatus()).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
   });
 
   it('keeps only the edit dirty when a new schema prop fills in a default after it', async () => {
@@ -185,7 +235,13 @@ describe('dirty', () => {
       await user.type(name, '{Backspace}');
       await user.tab();
 
-      expect(handle.getStatus()).toMatchObject({ dirty: false, dirtyFields: {}, submitCount: 0 });
+      expect(handle.getStatus()).toEqual({
+        dirty: false,
+        dirtyFields: {},
+        touched: true,
+        touchedFields: { name: true, address: { street: true } },
+        submitCount: 0,
+      });
     },
   );
 
@@ -222,6 +278,8 @@ describe('dirty', () => {
     expect(lastStatus(onChange)).toEqual({
       dirty: true,
       dirtyFields: { kind: true, detail: true },
+      touched: false,
+      touchedFields: {},
       submitCount: 0,
     });
   });
@@ -239,9 +297,11 @@ describe('dirty', () => {
     act(() => handle.setFieldValue('address', undefined));
     act(() => handle.setFieldValue('tags', []));
 
-    expect(handle.getStatus()).toMatchObject({
+    expect(handle.getStatus()).toEqual({
       dirty: true,
       dirtyFields: { address: true, tags: true },
+      touched: false,
+      touchedFields: {},
       submitCount: 0,
     });
   });
@@ -271,12 +331,24 @@ describe('dirty', () => {
       });
 
       await user.selectOptions(optionSelect(container), 'B');
-      expect(handle.getStatus()).toMatchObject({ dirty: true, dirtyFields: { a: true }, submitCount: 0 });
+      expect(handle.getStatus()).toEqual({
+        dirty: true,
+        dirtyFields: { a: true },
+        touched: false,
+        touchedFields: {},
+        submitCount: 0,
+      });
       await user.selectOptions(optionSelect(container), 'A');
       await user.type(input(container, 'root_a'), 'x');
 
       expect(handle.getFormData()).toEqual({ a: 'x' });
-      expect(handle.getStatus()).toMatchObject({ dirty: false, dirtyFields: {}, submitCount: 0 });
+      expect(handle.getStatus()).toEqual({
+        dirty: false,
+        dirtyFields: {},
+        touched: false,
+        touchedFields: {},
+        submitCount: 0,
+      });
     });
 
     it("re-derives the baseline for a schema prop change with the baseline's own option, not the one picked since", async () => {
@@ -293,7 +365,13 @@ describe('dirty', () => {
       rerender({ schema: { ...schema, properties: { c: { type: 'string', default: 'c' } } }, initialFormData: {} });
 
       expect(handle.getFormData()).toEqual({ b: 'd', c: 'c' });
-      expect(handle.getStatus()).toMatchObject({ dirty: true, dirtyFields: { b: true }, submitCount: 0 });
+      expect(handle.getStatus()).toEqual({
+        dirty: true,
+        dirtyFields: { b: true },
+        touched: false,
+        touchedFields: {},
+        submitCount: 0,
+      });
     });
   });
 
@@ -373,7 +451,13 @@ describe('submitCount', () => {
     await user.click(screen.getByRole('button', { name: 'Submit' }));
     await user.type(input(container, 'root_name'), 'x');
 
-    expect(lastStatus(onChange)).toEqual({ dirty: true, dirtyFields: { name: true }, submitCount: 1 });
+    expect(lastStatus(onChange)).toEqual({
+      dirty: true,
+      dirtyFields: { name: true },
+      touched: false,
+      touchedFields: {},
+      submitCount: 1,
+    });
   });
 });
 
@@ -401,12 +485,24 @@ describe('reset', () => {
     expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
     expect(input(container, 'root_name')).toHaveValue('Alan');
     expect(fieldErrorsById(container)).toEqual({});
-    expect(lastStatus(onChange)).toEqual({ dirty: false, dirtyFields: {}, submitCount: 0 });
-    expect(handle.getStatus()).toMatchObject(lastStatus(onChange));
+    expect(lastStatus(onChange)).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+    expect(handle.getStatus()).toEqual(lastStatus(onChange));
 
     await user.clear(input(container, 'root_name'));
     await user.type(input(container, 'root_name'), 'Ada');
-    expect(handle.getStatus()).toMatchObject({ dirty: true, dirtyFields: { name: true }, submitCount: 0 });
+    expect(handle.getStatus()).toEqual({
+      dirty: true,
+      dirtyFields: { name: true },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
   });
 
   it('returns to the data reset last passed when called with nothing', async () => {
@@ -424,14 +520,26 @@ describe('reset', () => {
     const { container, handle, onChange } = mountWithHandle({ schema, initialFormData: { name: 'Ada' } });
     await user.type(input(container, 'root_name'), 'x');
     await user.click(screen.getByRole('button', { name: 'Submit' }));
-    expect(handle.getStatus()).toMatchObject({ dirty: true, dirtyFields: { name: true }, submitCount: 1 });
+    expect(handle.getStatus()).toEqual({
+      dirty: true,
+      dirtyFields: { name: true },
+      touched: true,
+      touchedFields: { name: true },
+      submitCount: 1,
+    });
     onChange.mockClear();
 
     act(() => handle.reset());
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(handle.getFormData()).toEqual({ name: 'Ada', city: 'Oslo' });
-    expect(lastStatus(onChange)).toEqual({ dirty: false, dirtyFields: {}, submitCount: 0 });
+    expect(lastStatus(onChange)).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
   });
   it('keeps the seed it last applied when deriving a new one throws', () => {
     const guarded: RJSFSchema = {
