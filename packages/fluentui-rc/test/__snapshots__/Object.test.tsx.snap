@@ -3460,25 +3460,31 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                 <div
                   class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
                 >
-                  <div
-                    class="___12hmf4e_0000000 f2zxqi febqm8h"
+                  <fieldset
+                    aria-labelledby="root_a__title"
+                    class="rjsf-own-title-group"
+                    style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                   >
-                    <h5
-                      class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
-                      style="margin-block: 0px;"
-                    >
-                      <span
-                        id="root_a__title"
-                      >
-                        a
-                      </span>
-                    </h5>
                     <div
-                      aria-orientation="horizontal"
-                      class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
-                      role="separator"
-                    />
-                  </div>
+                      class="___12hmf4e_0000000 f2zxqi febqm8h"
+                    >
+                      <h5
+                        class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                        style="margin-block: 0px;"
+                      >
+                        <span
+                          id="root_a__title"
+                        >
+                          a
+                        </span>
+                      </h5>
+                      <div
+                        aria-orientation="horizontal"
+                        class="fui-Divider ___14drqcq_z8b5q40 f122n59 f1ewtqcl f22iagw f1063pyq fqerorx f10pi13n fk6fouc fy9rknc figsok6 fwrc4pm f17mccla fyl8oag f16vkdww fhsnbul f1gw3sf2 f1ly5f7u f1s3tz6t f1wl9k8s f13zj6fq fkfq4zb f1vccso1 f1geml7w f1r7kh1m fjml6kk f16j7guv fx01ahm fl8d8yv fj1a37q fly5x3f f163fonl f51yk4v f13rof3u f8rth92 f6czdpx f1iyka9k fzynn9s fekrn8e f1kyqvp9 fesgyo"
+                        role="separator"
+                      />
+                    </div>
+                  </fieldset>
                   <ul
                     class="___1f4kp4s_0000000 f1hu3pq6 f19f4twv f1cnd47f ftrb29c"
                     id="root_a__error"

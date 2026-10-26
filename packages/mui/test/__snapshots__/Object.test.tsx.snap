@@ -17003,22 +17003,28 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                 <div
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
-                  <div
-                    class="MuiBox-root emotion-33"
+                  <fieldset
+                    aria-labelledby="root_a__title"
+                    class="rjsf-own-title-group"
+                    style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                   >
-                    <h5
-                      class="MuiTypography-root MuiTypography-h5 emotion-34"
+                    <div
+                      class="MuiBox-root emotion-33"
                     >
-                      <span
-                        id="root_a__title"
+                      <h5
+                        class="MuiTypography-root MuiTypography-h5 emotion-34"
                       >
-                        a
-                      </span>
-                    </h5>
-                    <hr
-                      class="MuiDivider-root MuiDivider-fullWidth emotion-35"
-                    />
-                  </div>
+                        <span
+                          id="root_a__title"
+                        >
+                          a
+                        </span>
+                      </h5>
+                      <hr
+                        class="MuiDivider-root MuiDivider-fullWidth emotion-35"
+                      />
+                    </div>
+                  </fieldset>
                   <ul
                     class="MuiList-root MuiList-dense emotion-36"
                     id="root_a__error"

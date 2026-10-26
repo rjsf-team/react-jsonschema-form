@@ -3403,7 +3403,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                                       >
                                         <div
                                           class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                          name="root_foo__key"
                                           style="width: 100%;"
                                         >
                                           <div
@@ -3447,6 +3446,11 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                                             </span>
                                           </div>
                                         </div>
+                                        <input
+                                          name="root_foo__key"
+                                          type="hidden"
+                                          value="0"
+                                        />
                                       </div>
                                     </div>
                                   </div>
@@ -4867,7 +4871,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                                       >
                                         <div
                                           class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                          name="root_foo__key"
                                           style="width: 100%;"
                                         >
                                           <div
@@ -4911,6 +4914,11 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                                             </span>
                                           </div>
                                         </div>
+                                        <input
+                                          name="root_foo__key"
+                                          type="hidden"
+                                          value="0"
+                                        />
                                       </div>
                                     </div>
                                   </div>
@@ -5157,7 +5165,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                       >
                                         <div
                                           class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                          name="root_foo__key"
                                           style="width: 100%;"
                                         >
                                           <div
@@ -5201,6 +5208,11 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                                             </span>
                                           </div>
                                         </div>
+                                        <input
+                                          name="root_foo__key"
+                                          type="hidden"
+                                          value="0"
+                                        />
                                       </div>
                                     </div>
                                   </div>
@@ -5904,21 +5916,27 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                                     <div
                                       class="ant-form-item-control-input-content"
                                     >
-                                      <label
-                                        class=""
-                                        title="a"
+                                      <fieldset
+                                        aria-labelledby="root_a__title"
+                                        class="rjsf-own-title-group"
+                                        style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                                       >
-                                        <span
-                                          id="root_a__title"
+                                        <label
+                                          class=""
+                                          title="a"
                                         >
-                                          a
-                                        </span>
-                                      </label>
-                                      <div
-                                        class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
-                                        role="separator"
-                                        style="margin-block: 1px;"
-                                      />
+                                          <span
+                                            id="root_a__title"
+                                          >
+                                            a
+                                          </span>
+                                        </label>
+                                        <div
+                                          class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
+                                          role="separator"
+                                          style="margin-block: 1px;"
+                                        />
+                                      </fieldset>
                                     </div>
                                   </div>
                                   <div
@@ -6093,7 +6111,6 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                   <div>
                     <div
                       class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                      name="root__anyof_select"
                       style="width: 100%;"
                     >
                       <div
@@ -6138,6 +6155,11 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                         </span>
                       </div>
                     </div>
+                    <input
+                      name="root__anyof_select"
+                      type="hidden"
+                      value="0"
+                    />
                   </div>
                   <div
                     class="rjsf-field rjsf-field-object"
