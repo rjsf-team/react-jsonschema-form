@@ -2827,6 +2827,7 @@ This is structural sharing, as TanStack Query's `replaceEqualDeep` does for fetc
 
 - prev: unknown - The previous value whose references should be retained where possible
 - next: T - The newly computed value
+- [unchanged]: unknown - A value `next` was derived from that already shares every subtree equal to `prev`'s with `prev`. A subtree of `next` that is its counterpart in `unchanged` is kept without being walked, so only what changed is compared. Pass it only when that precondition holds: a subtree it skips is never compared with `prev`, so one that does not share would keep its own instance
 
 #### Returns
 

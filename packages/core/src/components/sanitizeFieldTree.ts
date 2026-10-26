@@ -22,7 +22,7 @@ import {
 } from '@rjsf/utils';
 
 import type { FieldEdit, KeyMove } from './formState.ts';
-import type { UiState } from './uiState.ts';
+import type { UiStateReader } from './uiState.ts';
 import { asFieldValue, isPathPrefix, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 
 /** What the tree diff needs that does not change as it descends */
@@ -31,7 +31,7 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   oldSchemaUtils: SchemaUtilsType<T, S, F>;
   /** The schema utilities the new tree is built with */
   schemaUtils: SchemaUtilsType<T, S, F>;
-  uiState: UiState;
+  uiState: UiStateReader;
   /** The path of the change being made, if there is one: the value there is the user's, and the selections at or
    * above it hold
    */
@@ -440,7 +440,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
 export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F extends FormContextType>(
   previous: FieldTree<T, S, F>,
   next: FieldTree<T, S, F>,
-  uiState: UiState,
+  uiState: UiStateReader,
   edit?: FieldEdit,
 ): T | undefined {
   const sanitized = walk(

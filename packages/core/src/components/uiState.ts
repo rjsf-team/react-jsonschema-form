@@ -21,7 +21,7 @@ import {
   REQUIRED_KEY,
 } from '@rjsf/utils';
 
-import type { KeyMove } from './formState.ts';
+import type { KeyMove, MoveFate } from './formState.ts';
 
 /** The option selected for a field's option list, and the field's data it holds for, see `useOptionSelection()` */
 export interface OptionSelection {
@@ -189,7 +189,7 @@ export function asFieldValue(value: unknown): unknown {
  * @returns - The field state
  */
 export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  uiState: UiState,
+  uiState: UiStateReader,
   schemaUtils: SchemaUtilsType<T, S, F>,
   editedPath?: FieldPathList,
 ): FormFieldState<S> {
@@ -206,6 +206,11 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
       ),
     isExpanded: (fieldPath) => uiState.isExpanded(fieldPath),
   };
+}
+
+/** `paths` with each moved as `movedPath()` moves it, without those under a key that went */
+export function movedPaths(paths: ReadonlySet<FieldPath>, container: FieldPathList, newKeyOf: KeyMove): Set<FieldPath> {
+  return new Set([...paths].flatMap((path) => movedPath(path, container, newKeyOf) ?? []));
 }
 
 /** The new path of `path` once the keys of the array or object at `container` moved as `newKeyOf` says, undefined for
@@ -226,6 +231,31 @@ function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove)
   return fieldPathFromList(moved);
 }
 
+/** The entries, kept by path, that hold after a move at `container` that `transformChange` rewrote, key by key as
+ * `fateOf` says of each: an entry of `moved` under a key holding what the move put there, or outside the container,
+ * stays, one of `unmoved`, the entries before the move, under a key holding what it held before comes back, and any
+ * other is dropped
+ */
+export function settledEntries<E>(
+  moved: Iterable<E>,
+  unmoved: Iterable<E>,
+  pathOf: (entry: E) => FieldPath,
+  container: FieldPath,
+  fateOf: (key: string) => MoveFate,
+): E[] {
+  const containerSegments = fieldPathToList(container);
+  const fateAt = (entry: E) => {
+    const segments = fieldPathToList(pathOf(entry));
+    return segments.length > containerSegments.length && isPathPrefix(containerSegments, segments)
+      ? fateOf(String(segments[containerSegments.length]))
+      : 'moved';
+  };
+  return [
+    ...[...moved].filter((entry) => fateAt(entry) === 'moved'),
+    ...[...unmoved].filter((entry) => fateAt(entry) === 'unmoved'),
+  ];
+}
+
 /** Whether `prefix` addresses `path` itself or a container holding it, comparing the segments the way `toPath()` spells
  * them, so a numeric array index and its string form are the same segment
  *
@@ -235,6 +265,24 @@ function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove)
  */
 export function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
   return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
+}
+
+/** Makes each of `selections` hold for the data `dataAt` gives at its field, or for none where the field holds other
+ * data, as the form renders that data
+ */
+function holdForRendered(
+  selections: Map<FieldPath, Map<string, OptionSelection>>,
+  dataAt: (path: FieldPathList) => unknown,
+) {
+  for (const [at, lists] of selections) {
+    const data = dataAt(fieldPathToList(at));
+    for (const [list, selection] of lists) {
+      const holdsFor = isHeldFor(selection, data) ? [data] : [];
+      if (holdsFor.length !== selection.holdsFor.length || selection.isReleased) {
+        lists.set(list, { ...selection, holdsFor, isReleased: false });
+      }
+    }
+  }
 }
 
 /** The selections and expansions of a form at one moment, see `save()` */
@@ -318,17 +366,7 @@ export function createUiState() {
      * or none where the field showed other data, matched again. Called as React commits, where nothing may render, so
      * it changes no option a field shows for the data it rendered and tells no field
      */
-    rendered: (dataAt: (path: FieldPathList) => unknown) => {
-      for (const [at, lists] of selections) {
-        const data = dataAt(fieldPathToList(at));
-        for (const [list, selection] of lists) {
-          const holdsFor = isHeldFor(selection, data) ? [data] : [];
-          if (holdsFor.length !== selection.holdsFor.length || selection.isReleased) {
-            lists.set(list, { ...selection, holdsFor, isReleased: false });
-          }
-        }
-      }
-    },
+    rendered: (dataAt: (path: FieldPathList) => unknown) => holdForRendered(selections, dataAt),
     isExpanded: (path: FieldPath) => expanded.has(path),
     expand: (path: FieldPath) => {
       expanded.add(path);
@@ -348,31 +386,9 @@ export function createUiState() {
      * form holds the moved item under keeps the moved state, one holding the item it held before the move takes back
      * the state from before, `unmoved`, and any other key loses its state, so its data is matched again
      */
-    settleMove: (
-      container: FieldPath,
-      unmoved: UiStateSnapshot,
-      fateOf: (key: string) => 'moved' | 'unmoved' | 'none',
-    ) => {
-      const containerSegments = fieldPathToList(container);
-      const keyOf = (path: FieldPath) => {
-        const segments = fieldPathToList(path);
-        return segments.length > containerSegments.length && isPathPrefix(containerSegments, segments)
-          ? String(segments[containerSegments.length])
-          : undefined;
-      };
-      const isKept = (path: FieldPath) => {
-        const key = keyOf(path);
-        return key === undefined || fateOf(key) === 'moved';
-      };
-      const isRestored = (path: FieldPath) => {
-        const key = keyOf(path);
-        return key !== undefined && fateOf(key) === 'unmoved';
-      };
-      selections = new Map([
-        ...[...selections].filter(([path]) => isKept(path)),
-        ...[...unmoved.selections].filter(([path]) => isRestored(path)),
-      ]);
-      expanded = new Set([...[...expanded].filter(isKept), ...[...unmoved.expanded].filter(isRestored)]);
+    settleMove: (container: FieldPath, unmoved: UiStateSnapshot, fateOf: (key: string) => MoveFate) => {
+      selections = new Map(settledEntries(selections, unmoved.selections, ([path]) => path, container, fateOf));
+      expanded = new Set(settledEntries(expanded, unmoved.expanded, (path) => path, container, fateOf));
       notify();
     },
     /** Moves the selections and expansions under the array or object at `container` as its keys moved */
@@ -386,10 +402,59 @@ export function createUiState() {
         }
       }
       selections = movedSelections;
-      expanded = new Set([...expanded].flatMap((path) => movedPath(path, containerSegments, newKeyOf) ?? []));
+      expanded = movedPaths(expanded, containerSegments, newKeyOf);
       notify();
     },
   };
 }
 
 export type UiState = ReturnType<typeof createUiState>;
+
+/** What deriving data reads of a `UiState`: the option selected for a list, and whether a cycle is expanded */
+export type UiStateReader = Pick<UiState, 'selection' | 'isExpanded'>;
+
+/** `uiState` with no option selected, for the baseline the form mounted with: it was derived when the form showed the
+ * options its own data matched, so the options the user picked since are the edited data's, not the baseline's
+ */
+export function withoutSelections(uiState: UiState): UiStateReader {
+  return { selection: () => undefined, isExpanded: uiState.isExpanded };
+}
+
+/** `baselineUiState` with the selections of `uiState` that hold for the baseline's data at their field in place of its
+ * own, for re-deriving the baseline: where the data the form shows is the baseline's, the baseline takes the option the
+ * form shows it under, as the baseline of a clean form does
+ *
+ * @param uiState - The form's option selections and cycle expansions
+ * @param baselineUiState - The selections the baseline was derived under
+ * @param dataAt - The baseline's data at a field's path
+ * @returns - The selections to re-derive the baseline under
+ */
+export function withSelectionsHeldFor(
+  uiState: UiState,
+  baselineUiState: UiStateReader,
+  dataAt: (path: FieldPathList) => unknown,
+): UiStateReader {
+  return {
+    selection: (path, list) => {
+      const selection = uiState.selection(path, list);
+      return selection && isHeldFor(selection, dataAt(fieldPathToList(path)))
+        ? selection
+        : baselineUiState.selection(path, list);
+    },
+    isExpanded: baselineUiState.isExpanded,
+  };
+}
+
+/** `uiState` with the options selected now and never the ones picked later, for the baseline `reset()` derives under
+ * the options the form shows at the reset. Each holds for the reset's data, as once the form renders it, so the snapshot
+ * keeps none of the data from before the reset
+ *
+ * @param uiState - The form's option selections and cycle expansions
+ * @param dataAt - The reset's data at a field's path
+ * @returns - The selections as of now, for the baseline
+ */
+export function withSelectionsAsOf(uiState: UiState, dataAt: (path: FieldPathList) => unknown): UiStateReader {
+  const { selections } = uiState.save();
+  holdForRendered(selections, dataAt);
+  return { selection: (path, list) => selections.get(path)?.get(list), isExpanded: uiState.isExpanded };
+}

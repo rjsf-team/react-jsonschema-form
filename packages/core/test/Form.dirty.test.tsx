@@ -1,0 +1,892 @@
+import { isPlainObject } from '@rjsf/utils';
+import type { RJSFSchema, ValidatorType } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { act, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import type { Mock } from 'vitest';
+
+import type { FormRef } from '../src/index.ts';
+import { createFormComponent, createFormRef, fieldErrorsById, handleOf, input } from './testUtils.tsx';
+
+const user = userEvent.setup();
+
+function mountWithHandle(props: Parameters<typeof createFormComponent>[0], v?: ValidatorType) {
+  const ref = createFormRef();
+  const result = createFormComponent({ ...props, ref }, v);
+  const handle: FormRef = handleOf(ref);
+  return { ...result, handle };
+}
+
+/** The status members of the last event `onChange` was called with */
+function lastStatus(onChange: Mock) {
+  const event: unknown = onChange.mock.lastCall?.[0];
+  if (typeof event !== 'object' || event === null) {
+    throw new Error('onChange has not been called');
+  }
+  return {
+    dirty: Reflect.get(event, 'dirty'),
+    dirtyFields: Reflect.get(event, 'dirtyFields'),
+    touched: Reflect.get(event, 'touched'),
+    touchedFields: Reflect.get(event, 'touchedFields'),
+    submitCount: Reflect.get(event, 'submitCount'),
+  };
+}
+
+const person: RJSFSchema = {
+  type: 'object',
+  properties: {
+    name: { type: 'string', default: 'Ada' },
+    address: { type: 'object', properties: { street: { type: 'string' }, city: { type: 'string' } } },
+  },
+};
+
+describe('dirty', () => {
+  it('starts clean, schema defaults included', () => {
+    const { handle, onChange } = mountWithHandle({ schema: person });
+
+    expect(handle.getFormData()).toEqual({ name: 'Ada' });
+    expect(handle.getStatus()).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('marks the edited path of a nested object in dirtyFields', async () => {
+    const { container, onChange, handle } = mountWithHandle({ schema: person });
+
+    await user.type(input(container, 'root_address_street'), 'x');
+
+    expect(lastStatus(onChange)).toEqual({
+      dirty: true,
+      dirtyFields: { address: { street: true } },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+    expect(handle.getStatus()).toEqual(lastStatus(onChange));
+  });
+
+  it("leaves a cleared field seeded with '' dirty, unless ui:emptyValue stores '' for it", async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+    const plain = mountWithHandle({ schema, initialFormData: { name: '' } });
+    await user.type(input(plain.container, 'root_name'), 'x');
+    await user.clear(input(plain.container, 'root_name'));
+    expect(plain.handle.getStatus()).toEqual({
+      dirty: true,
+      dirtyFields: { name: true },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+    plain.unmount();
+
+    const withEmptyValue = mountWithHandle({
+      schema,
+      uiSchema: { name: { 'ui:emptyValue': '' } },
+      initialFormData: { name: '' },
+    });
+    await user.type(input(withEmptyValue.container, 'root_name'), 'x');
+    await user.clear(input(withEmptyValue.container, 'root_name'));
+
+    expect(withEmptyValue.handle.getStatus()).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+  });
+
+  it('leaves a field the seed left blank dirty once it is typed into and cleared, nested fields too', async () => {
+    const { container, handle } = mountWithHandle({ schema: person, initialFormData: {} });
+
+    await user.type(input(container, 'root_address_city'), 'x');
+    await user.clear(input(container, 'root_address_city'));
+
+    expect(handle.getFormData()).toEqual({ name: 'Ada', address: { city: undefined } });
+    expect(handle.getStatus()).toEqual({
+      dirty: true,
+      dirtyFields: { address: { city: true } },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+  });
+
+  it('updates the status for a prop change without calling onChange', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string' }, nickname: { type: 'string' } },
+    };
+    const { container, handle, onChange, rerender } = mountWithHandle({ schema, initialFormData: { name: 'Ada' } });
+    await user.type(input(container, 'root_nickname'), 'x');
+    expect(lastStatus(onChange).dirty).toBe(true);
+    onChange.mockClear();
+
+    rerender({
+      schema: { type: 'object', properties: { name: { type: 'string' }, nickname: { type: 'string', default: 'x' } } },
+      initialFormData: { name: 'Ada' },
+    });
+
+    expect(handle.getFormData()).toEqual({ name: 'Ada', nickname: 'x' });
+    expect(handle.getStatus()).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('marks the edited item of an array in dirtyFields', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { items: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } } },
+    };
+    const { container, onChange } = mountWithHandle({
+      schema,
+      initialFormData: { items: [{ name: 'a' }, { name: 'b' }, { name: 'c' }] },
+    });
+
+    await user.type(input(container, 'root_items_1_name'), 'x');
+
+    expect(lastStatus(onChange).dirtyFields).toEqual({ items: [undefined, { name: true }, undefined] });
+  });
+
+  it('marks an added array item and a removed property in dirtyFields', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { tags: { type: 'array', items: { type: 'string' } }, note: { type: 'string' } },
+    };
+    const { handle } = mountWithHandle({ schema, initialFormData: { tags: ['a'], note: 'n' } });
+
+    act(() => handle.setFieldValue('tags', ['a', 'b']));
+    act(() => handle.setFieldValue('note', undefined));
+
+    expect(handle.getStatus().dirtyFields).toEqual({ tags: [undefined, true], note: true });
+  });
+
+  it('is clean again once an edit is undone', async () => {
+    const { container, onChange } = mountWithHandle({ schema: person, initialFormData: { name: 'Ada' } });
+    const name = input(container, 'root_name');
+
+    await user.type(name, 'm');
+    expect(lastStatus(onChange).dirty).toBe(true);
+    await user.type(name, '{Backspace}');
+
+    expect(lastStatus(onChange)).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+  });
+
+  it('stays clean when a new schema prop fills in a default', () => {
+    const { handle, rerender } = mountWithHandle({ schema: person });
+
+    rerender({
+      schema: { ...person, properties: { ...person.properties, age: { type: 'number', default: 30 } } },
+    });
+
+    expect(handle.getFormData()).toEqual({ name: 'Ada', age: 30 });
+    expect(handle.getStatus()).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+  });
+
+  it('keeps only the edit dirty when a new schema prop fills in a default after it', async () => {
+    const { container, handle, rerender } = mountWithHandle({ schema: person });
+    await user.type(input(container, 'root_address_city'), 'x');
+
+    rerender({
+      schema: { ...person, properties: { ...person.properties, age: { type: 'number', default: 30 } } },
+    });
+
+    expect(handle.getFormData()).toEqual({ name: 'Ada', address: { city: 'x' }, age: 30 });
+    expect(handle.getStatus().dirtyFields).toEqual({ address: { city: true } });
+  });
+
+  it.each(['onChange', 'onBlur'] as const)(
+    'is clean after an edit is undone when liveOmit %s drops extra data',
+    async (liveOmit) => {
+      const { container, handle } = mountWithHandle({
+        schema: person,
+        initialFormData: { name: 'Ada', extra: 1 },
+        omitExtraData: true,
+        liveOmit,
+      });
+      const name = input(container, 'root_name');
+
+      await user.type(name, 'm');
+      await user.tab();
+      expect(handle.getFormData()).not.toHaveProperty('extra');
+      expect(handle.getStatus().dirty).toBe(true);
+      await user.type(name, '{Backspace}');
+      await user.tab();
+
+      expect(handle.getStatus()).toEqual({
+        dirty: false,
+        dirtyFields: {},
+        touched: true,
+        touchedFields: { name: true, address: { street: true } },
+        submitCount: 0,
+      });
+    },
+  );
+
+  it('is clean after a submit that omitted extra data', async () => {
+    const { handle, onSubmit } = mountWithHandle({
+      schema: person,
+      initialFormData: { name: 'Ada', extra: 1 },
+      omitExtraData: true,
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(handle.getFormData()).not.toHaveProperty('extra');
+    expect(handle.getStatus().dirty).toBe(false);
+  });
+
+  it('counts the data an if/then switch drops after the user changed the field that decides it', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string', enum: ['a', 'b'] } },
+      if: { properties: { kind: { const: 'a' } } },
+      then: { properties: { detail: { type: 'string', default: 'x' } } },
+    };
+    const { container, onChange } = mountWithHandle({ schema, initialFormData: { kind: 'a' } });
+    const select = container.querySelector('#root_kind');
+    if (!(select instanceof HTMLSelectElement)) {
+      throw new Error('There is no select #root_kind');
+    }
+
+    await user.selectOptions(select, 'b');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ kind: 'b' });
+    expect(lastStatus(onChange)).toEqual({
+      dirty: true,
+      dirtyFields: { kind: true, detail: true },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+  });
+
+  it('marks a field added or removed with an empty object or array as changed', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        address: { type: 'object', properties: { city: { type: 'string' } } },
+        tags: { type: 'array', items: { type: 'string' } },
+      },
+    };
+    const { handle } = mountWithHandle({ schema, initialFormData: { address: {} } });
+
+    act(() => handle.setFieldValue('address', undefined));
+    act(() => handle.setFieldValue('tags', []));
+
+    expect(handle.getStatus()).toEqual({
+      dirty: true,
+      dirtyFields: { address: true, tags: true },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+  });
+
+  it('marks no item at a hole both a sparse array and its baseline have', () => {
+    const sparse = (last: number) => {
+      const items: number[] = new Array(3);
+      items[0] = 1;
+      items[2] = last;
+      return items;
+    };
+    const { handle } = mountWithHandle({
+      schema: { type: 'array', items: { type: 'number' } },
+      initialFormData: sparse(3),
+    });
+
+    act(() => handle.setFieldValue('', sparse(4)));
+
+    expect(handle.getStatus().dirtyFields).toEqual([undefined, undefined, true]);
+  });
+
+  describe('switching anyOf/oneOf options', () => {
+    function optionSelect(container: HTMLElement) {
+      const select = container.querySelector('#root__oneof_select');
+      if (!(select instanceof HTMLSelectElement)) {
+        throw new Error('There is no select #root__oneof_select');
+      }
+      return select;
+    }
+
+    it('is dirty after a switch that liveOmit drops data on, and clean once the seeded option and value are back', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } }, required: ['a'] },
+          { title: 'B', properties: { b: { type: 'string' } }, required: ['b'] },
+        ],
+      };
+      const { container, handle } = mountWithHandle({
+        schema,
+        initialFormData: { a: 'x' },
+        omitExtraData: true,
+        liveOmit: 'onChange',
+      });
+
+      await user.selectOptions(optionSelect(container), 'B');
+      expect(handle.getStatus()).toEqual({
+        dirty: true,
+        dirtyFields: { a: true },
+        touched: false,
+        touchedFields: {},
+        submitCount: 0,
+      });
+      await user.selectOptions(optionSelect(container), 'A');
+      await user.type(input(container, 'root_a'), 'x');
+
+      expect(handle.getFormData()).toEqual({ a: 'x' });
+      expect(handle.getStatus()).toEqual({
+        dirty: false,
+        dirtyFields: {},
+        touched: false,
+        touchedFields: {},
+        submitCount: 0,
+      });
+    });
+
+    it("re-derives the baseline for a schema prop change with the baseline's own option, not the one picked since", async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string', default: 'd' } } },
+        ],
+      };
+      const { container, handle, rerender } = mountWithHandle({ schema, initialFormData: {} });
+      await user.selectOptions(optionSelect(container), 'B');
+
+      rerender({ schema: { ...schema, properties: { c: { type: 'string', default: 'c' } } }, initialFormData: {} });
+
+      expect(handle.getFormData()).toEqual({ b: 'd', c: 'c' });
+      expect(handle.getStatus()).toEqual({
+        dirty: true,
+        dirtyFields: { b: true },
+        touched: false,
+        touchedFields: {},
+        submitCount: 0,
+      });
+    });
+
+    it('re-derives the baseline reset(saved) seeded with the option shown at the reset', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { note: { type: 'string' } },
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string', default: 'z' } } },
+          { title: 'B', properties: { b: { type: 'string' } } },
+        ],
+      };
+      const { container, handle, rerender } = mountWithHandle({ schema, initialFormData: {} });
+      await user.selectOptions(optionSelect(container), 'B');
+      act(() => handle.reset(handle.getFormData()));
+      await user.type(input(container, 'root_note'), 'x');
+
+      rerender({
+        schema: { ...schema, properties: { ...schema.properties, c: { type: 'string', default: 'c' } } },
+        initialFormData: {},
+      });
+
+      expect(optionSelect(container)).toHaveDisplayValue('B');
+      expect(handle.getStatus()).toEqual({
+        dirty: true,
+        dirtyFields: { note: true },
+        touched: false,
+        touchedFields: {},
+        submitCount: 0,
+      });
+    });
+
+    it('re-derives a baseline a schema prop change gave the clean data with the option the data was derived under', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { note: { type: 'string' } },
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: {} },
+        ],
+      };
+      const { container, handle, rerender } = mountWithHandle({ schema, initialFormData: {} });
+      await user.selectOptions(optionSelect(container), 'B');
+      expect(handle.getStatus().dirty).toBe(false);
+      const withDefault: RJSFSchema = {
+        ...schema,
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string', default: 'd' } } },
+        ],
+      };
+      rerender({ schema: withDefault, initialFormData: {} });
+      expect(handle.getFormData()).toEqual({ b: 'd' });
+      expect(handle.getStatus().dirty).toBe(false);
+      await user.type(input(container, 'root_note'), 'x');
+
+      rerender({
+        schema: { ...withDefault, properties: { ...withDefault.properties, c: { type: 'string', default: 'c' } } },
+        initialFormData: {},
+      });
+
+      expect(handle.getFormData()).toEqual({ b: 'd', note: 'x', c: 'c' });
+      expect(handle.getStatus()).toEqual({
+        dirty: true,
+        dirtyFields: { note: true },
+        touched: false,
+        touchedFields: {},
+        submitCount: 0,
+      });
+    });
+
+    it.each<[string, RJSFSchema[]]>([
+      [
+        'reorders the options',
+        [
+          { title: 'B', properties: { b: { type: 'string' }, c: { type: 'string', default: 'c' } } },
+          { title: 'A', properties: { a: { type: 'string' } } },
+        ],
+      ],
+      [
+        'adds an option the data matches ahead of the one it shows',
+        [
+          { title: 'C', properties: { b: { type: 'string' }, c: { type: 'string', default: 'c' } } },
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string' } } },
+        ],
+      ],
+    ])(
+      'keeps a field whose edit was undone clean when a schema prop change %s while another field is dirty',
+      async (_change, nextOptions) => {
+        const schemaOf = (oneOf: RJSFSchema[]): RJSFSchema => ({
+          type: 'object',
+          properties: { note: { type: 'string' }, x: { type: 'object', oneOf } },
+        });
+        const seed = { x: { b: '1' } };
+        const { container, handle, rerender } = mountWithHandle({
+          schema: schemaOf([
+            { title: 'A', properties: { a: { type: 'string' } } },
+            { title: 'B', properties: { b: { type: 'string' } } },
+          ]),
+          initialFormData: seed,
+        });
+        await user.type(input(container, 'root_x_b'), '2{Backspace}');
+        expect(handle.getStatus().dirty).toBe(false);
+        await user.type(input(container, 'root_note'), 'n');
+
+        rerender({ schema: schemaOf(nextOptions), initialFormData: seed });
+
+        expect(handle.getStatus()).toEqual({
+          dirty: true,
+          dirtyFields: { note: true },
+          touched: false,
+          touchedFields: {},
+          submitCount: 0,
+        });
+      },
+    );
+  });
+
+  it('keeps every item a keystroke did not reach identical to the data the form started from', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { items: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } } },
+    };
+    const initialFormData = { items: Array.from({ length: 50 }, (_, index) => ({ name: `item ${index}` })) };
+    const ref = createFormRef<{ items: { name: string }[] }>();
+    const { container } = createFormComponent({ schema, initialFormData, ref });
+    const handle = handleOf(ref);
+    const before = handle.getFormData();
+
+    await user.type(input(container, 'root_items_7_name'), 'x');
+
+    const changed = handle.getFormData().items.flatMap((item, index) => (item === before.items[index] ? [] : [index]));
+    expect(changed).toEqual([7]);
+    expect(handle.getStatus().dirtyFields).toEqual({
+      items: Array.from({ length: 50 }, (_, index) => (index === 7 ? { name: true } : undefined)),
+    });
+  });
+});
+
+describe('getStatus', () => {
+  it("hands back the same status, dirtyFields included, until the form's state changes", async () => {
+    const { container, handle } = mountWithHandle({ schema: person, noHtml5Validate: true });
+    const clean = handle.getStatus();
+    expect(handle.getStatus()).toBe(clean);
+
+    await user.type(input(container, 'root_name'), 'x');
+    const edited = handle.getStatus();
+    expect(edited).not.toBe(clean);
+    expect(edited.dirtyFields).toBe(edited.dirtyFields);
+    expect(handle.getStatus()).toBe(edited);
+    expect(handle.getStatus().dirtyFields).toBe(edited.dirtyFields);
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    expect(handle.getStatus()).not.toBe(edited);
+    expect(handle.getStatus().submitCount).toBe(1);
+  });
+
+  it('hands out a status and dirtyFields a reader cannot change for the next one, in development', async () => {
+    const { container, handle } = mountWithHandle({ schema: person });
+    await user.type(input(container, 'root_address_street'), 'x');
+    const status = handle.getStatus();
+    const { dirtyFields } = status;
+    if (!isPlainObject(dirtyFields)) {
+      throw new Error('dirtyFields is not an object');
+    }
+
+    expect(() => Object.assign(status, { dirty: false })).toThrow(TypeError);
+    expect(() => Object.assign(dirtyFields, { name: true })).toThrow(TypeError);
+    expect(Object.isFrozen(Reflect.get(dirtyFields, 'address'))).toBe(true);
+    expect(Object.isFrozen(status.touchedFields)).toBe(true);
+    expect(handle.getStatus()).toEqual({
+      dirty: true,
+      dirtyFields: { address: { street: true } },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+  });
+});
+
+describe('submitCount', () => {
+  const required: RJSFSchema = { type: 'object', required: ['name'], properties: { name: { type: 'string' } } };
+
+  it('counts every submit attempt, valid or not, including FormRef.submit()', async () => {
+    const { container, handle, onSubmit, onError } = mountWithHandle({ schema: required, noHtml5Validate: true });
+    const button = screen.getByRole('button', { name: 'Submit' });
+
+    await user.click(button);
+    expect(onError).toHaveBeenCalledTimes(1);
+    expect(handle.getStatus().submitCount).toBe(1);
+
+    await user.type(input(container, 'root_name'), 'x');
+    await user.click(button);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onSubmit.mock.lastCall?.[0]).toMatchObject({ submitCount: 2, dirty: true, status: 'submitted' });
+
+    act(() => handle.submit());
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    expect(handle.getStatus().submitCount).toBe(3);
+  });
+
+  it('counts a submit the form ignores while a promise onSubmit returned is pending, as TanStack Form does', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    const { container, handle } = mountWithHandle({ schema: required, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    await user.click(button);
+    await user.type(input(container, 'root_name'), '{Enter}');
+    act(() => handle.submit());
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(handle.getStatus().submitCount).toBe(4);
+    await act(async () => save.resolve(undefined));
+    await user.click(button);
+    expect(onSubmit.mock.lastCall?.[0]).toMatchObject({ submitCount: 5 });
+  });
+
+  it('counts a pending click on a submit button whose options set an onClick, which still runs', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    const onClick = vi.fn();
+    const { handle } = mountWithHandle({
+      schema: required,
+      uiSchema: { 'ui:submitButtonOptions': { props: { onClick } } },
+      initialFormData: { name: 'a' },
+      onSubmit,
+    });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    await user.click(button);
+
+    expect(onClick).toHaveBeenCalledTimes(2);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(handle.getStatus().submitCount).toBe(2);
+    await act(async () => save.resolve(undefined));
+  });
+
+  it('counts a pending click once when the onClick its options set submits through FormRef.submit()', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    let submitFromClick = () => {};
+    const { handle } = mountWithHandle({
+      schema: required,
+      uiSchema: { 'ui:submitButtonOptions': { props: { onClick: () => submitFromClick() } } },
+      initialFormData: { name: 'a' },
+      onSubmit,
+    });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+    submitFromClick = () => handle.submit();
+
+    await user.click(button);
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(handle.getStatus().submitCount).toBe(2);
+    await act(async () => save.resolve(undefined));
+  });
+
+  it('takes a click whose onClick resets the pending form, counting it after the reset', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    let resetFromClick = () => {};
+    const { handle } = mountWithHandle({
+      schema: required,
+      uiSchema: { 'ui:submitButtonOptions': { props: { onClick: () => resetFromClick() } } },
+      initialFormData: { name: 'a' },
+      onSubmit,
+    });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+    resetFromClick = () => handle.reset();
+
+    await user.click(button);
+
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    expect(handle.getStatus().submitCount).toBe(1);
+  });
+
+  it('takes a click on the pending button once the promise settled, before React renders it idle', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    const { handle } = mountWithHandle({ schema: required, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    // Clicked inside one `act()`, which holds React's render until it ends, so the button still has its pending
+    // `onClick`; user-event awaits React between its steps, so it can't click in that window
+    await act(async () => {
+      save.resolve(undefined);
+      await save.promise;
+      await Promise.resolve();
+      button.click();
+    });
+
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    expect(handle.getStatus().submitCount).toBe(2);
+  });
+
+  it("does not count a submit the browser's constraint validation blocks", async () => {
+    const { handle, onSubmit, onError } = mountWithHandle({ schema: required });
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    act(() => handle.submit());
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).not.toHaveBeenCalled();
+    expect(handle.getStatus().submitCount).toBe(0);
+  });
+
+  it('rides along on the next onChange', async () => {
+    const { container, onChange } = mountWithHandle({ schema: required, noHtml5Validate: true });
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    await user.type(input(container, 'root_name'), 'x');
+
+    expect(lastStatus(onChange)).toEqual({
+      dirty: true,
+      dirtyFields: { name: true },
+      touched: false,
+      touchedFields: {},
+      submitCount: 1,
+    });
+  });
+});
+
+describe('reset', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string', minLength: 3 }, city: { type: 'string', default: 'Oslo' } },
+  };
+
+  it('makes the data passed the new baseline, clearing errors and submitCount', async () => {
+    const { container, handle, onChange } = mountWithHandle({
+      schema,
+      initialFormData: { name: 'Ada' },
+      noHtml5Validate: true,
+    });
+    await user.clear(input(container, 'root_name'));
+    await user.type(input(container, 'root_name'), 'Al');
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    expect(fieldErrorsById(container)).not.toEqual({});
+    onChange.mockClear();
+
+    act(() => handle.reset({ name: 'Alan' }));
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
+    expect(input(container, 'root_name')).toHaveValue('Alan');
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(lastStatus(onChange)).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+    expect(handle.getStatus()).toEqual(lastStatus(onChange));
+
+    await user.clear(input(container, 'root_name'));
+    await user.type(input(container, 'root_name'), 'Ada');
+    expect(handle.getStatus()).toEqual({
+      dirty: true,
+      dirtyFields: { name: true },
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+  });
+
+  it('returns to the data reset last passed when called with nothing', async () => {
+    const { container, handle } = mountWithHandle({ schema, initialFormData: { name: 'Ada' } });
+    act(() => handle.reset({ name: 'Alan' }));
+    await user.type(input(container, 'root_name'), 'x');
+
+    act(() => handle.reset());
+
+    expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
+    expect(handle.getStatus().dirty).toBe(false);
+  });
+
+  it('takes reset(undefined) as reset(), and reset({}) as a blank seed with the defaults filled in', () => {
+    const { handle } = mountWithHandle({ schema, initialFormData: { name: 'Ada' } });
+    act(() => handle.reset({ name: 'Alan' }));
+
+    act(() => handle.reset(undefined));
+    expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
+
+    act(() => handle.reset({}));
+    expect(handle.getFormData()).toEqual({ city: 'Oslo' });
+    expect(handle.getStatus().dirty).toBe(false);
+  });
+
+  it("leaves the app's own object unfrozen, nested objects and arrays included", async () => {
+    const tagged: RJSFSchema = {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        tags: { type: 'array', items: { type: 'string' } },
+        address: { type: 'object', properties: { city: { type: 'string' } } },
+      },
+    };
+    const { container, handle } = mountWithHandle({ schema: tagged });
+    const saved = { name: 'Ada', tags: ['a'], address: { city: 'Oslo' }, updatedAt: { at: 1 } };
+
+    act(() => handle.reset(saved));
+    await user.type(input(container, 'root_name'), 'x');
+
+    expect([saved, saved.tags, saved.address, saved.updatedAt].some((value) => Object.isFrozen(value))).toBe(false);
+  });
+
+  it('returns to the props seed when called with nothing, clearing submitCount', async () => {
+    const { container, handle, onChange } = mountWithHandle({ schema, initialFormData: { name: 'Ada' } });
+    await user.type(input(container, 'root_name'), 'x');
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    expect(handle.getStatus()).toEqual({
+      dirty: true,
+      dirtyFields: { name: true },
+      touched: true,
+      touchedFields: { name: true },
+      submitCount: 1,
+    });
+    onChange.mockClear();
+
+    act(() => handle.reset());
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(handle.getFormData()).toEqual({ name: 'Ada', city: 'Oslo' });
+    expect(lastStatus(onChange)).toEqual({
+      dirty: false,
+      dirtyFields: {},
+      touched: false,
+      touchedFields: {},
+      submitCount: 0,
+    });
+  });
+  // Deriving a seed whose `name` is `'bad'` throws, through the validator `if` calls
+  const guarded: RJSFSchema = {
+    ...schema,
+    if: { properties: { name: { const: 'bad' } }, required: ['name'] },
+    then: { required: ['city'] },
+  };
+  const throwing = new Proxy(validator, {
+    get(target, key, receiver) {
+      if (key !== 'isValid') {
+        const member: unknown = Reflect.get(target, key, receiver);
+        return member;
+      }
+      return (...args: Parameters<typeof validator.isValid>) => {
+        const formData: unknown = args[1];
+        if (isPlainObject(formData) && formData.name === 'bad') {
+          throw new Error('bad seed');
+        }
+        return target.isValid(...args);
+      };
+    },
+  });
+
+  it('keeps the seed it last applied when deriving a new one throws', () => {
+    const { handle } = mountWithHandle({ schema: guarded, initialFormData: { name: 'Ada' } }, throwing);
+    act(() => handle.reset({ name: 'Alan' }));
+
+    expect(() => act(() => handle.reset({ name: 'bad' }))).toThrow('bad seed');
+    expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
+
+    act(() => handle.reset());
+
+    expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
+  });
+
+  it('keeps a pending submit pending when deriving the seed throws', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    const { handle } = mountWithHandle({ schema: guarded, initialFormData: { name: 'Ada' }, onSubmit }, throwing);
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    expect(() => act(() => handle.reset({ name: 'bad' }))).toThrow('bad seed');
+    await user.click(button);
+
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    await act(async () => save.resolve(undefined));
+  });
+});
+
+describe('onChange', () => {
+  it('fires no more often than for the edits themselves', async () => {
+    const { container, onChange } = mountWithHandle({ schema: person, initialFormData: { name: 'Ada' } });
+    const name = input(container, 'root_name');
+
+    await user.type(name, 'abc');
+    await user.tab();
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    await user.type(name, '{Backspace}');
+
+    expect(onChange).toHaveBeenCalledTimes(4);
+  });
+});
