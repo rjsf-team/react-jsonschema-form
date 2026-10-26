@@ -1,7 +1,14 @@
 import Switch from '@mui/material/Switch';
 import { withTheme } from '@rjsf/core';
 import { getTestRegistry } from '@rjsf/core/testing';
-import { checkboxLabelTests, fallbackDescriptionTests, formTests, themeTests } from '@rjsf/snapshot-tests';
+import {
+  checkboxLabelTests,
+  fallbackDescriptionTests,
+  formTests,
+  optionErrorStateTests,
+  themeTests,
+  wrapIfAdditionalErrorStateTests,
+} from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -997,3 +1004,9 @@ describe('mui server rendering (#4083)', () => {
 
 checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'self' });
 fallbackDescriptionTests(Form, false);
+
+optionErrorStateTests(Form, () =>
+  screen.getByText('Help').closest('.MuiFormHelperText-root')?.classList.contains('Mui-error'),
+);
+
+wrapIfAdditionalErrorStateTests(Form);

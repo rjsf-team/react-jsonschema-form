@@ -5601,6 +5601,457 @@ exports[`object fields > object 1`] = `
 </DocumentFragment>
 `;
 
+exports[`object fields > patternProperties, a key additionalProperties false forbids 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    style="margin-inline: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
+                          style="margin-inline: -12px;"
+                        >
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-oc1rc0 css-var-root"
+                            style="padding-inline: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="form-group"
+                            >
+                              <div
+                                class="ant-form-item form-group css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+                              >
+                                <div
+                                  class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                >
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  >
+                                    <label
+                                      class=""
+                                      for="root_abc-key"
+                                      title="abc Key"
+                                    >
+                                      abc Key
+                                    </label>
+                                  </div>
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input"
+                                    >
+                                      <div
+                                        class="ant-form-item-control-input-content"
+                                      >
+                                        <span
+                                          class="ant-input-affix-wrapper css-dev-only-do-not-override-oc1rc0 ant-input-outlined form-control css-var-root ant-input-css-var"
+                                          style="width: 100%;"
+                                        >
+                                          <input
+                                            class="ant-input css-dev-only-do-not-override-oc1rc0"
+                                            id="root_abc-key"
+                                            name="root_abc-key"
+                                            type="text"
+                                            value="abc"
+                                          />
+                                          <span
+                                            class="ant-input-suffix"
+                                          />
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-oc1rc0 css-var-root"
+                            style="padding-inline: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+                            >
+                              <div
+                                class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              >
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                >
+                                  <label
+                                    class=""
+                                    for="root_abc"
+                                  >
+                                    <span
+                                      id="root_abc__label"
+                                      title="abc"
+                                    >
+                                      abc
+                                    </span>
+                                  </label>
+                                </div>
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                >
+                                  <div
+                                    class="ant-form-item-control-input"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input-content"
+                                    >
+                                      <span
+                                        class="ant-input-affix-wrapper css-dev-only-do-not-override-oc1rc0 ant-input-outlined css-var-root ant-input-css-var"
+                                        style="width: 100%;"
+                                      >
+                                        <input
+                                          class="ant-input css-dev-only-do-not-override-oc1rc0"
+                                          id="root_abc"
+                                          name="root_abc"
+                                          placeholder=""
+                                          type="text"
+                                          value="hello"
+                                        />
+                                        <span
+                                          class="ant-input-suffix"
+                                        />
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
+                            style="padding-inline: 12px; flex: 0 0 120px; margin-top: 40px;"
+                          >
+                            <button
+                              class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
+                              id="root_abc__remove"
+                              style="padding-top: 4px;"
+                              title="Remove"
+                              type="button"
+                            >
+                              <span
+                                class="ant-btn-icon"
+                              >
+                                <span
+                                  aria-label="delete"
+                                  class="anticon anticon-delete"
+                                  role="img"
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    data-icon="delete"
+                                    fill="currentColor"
+                                    focusable="false"
+                                    height="1em"
+                                    viewBox="64 64 896 896"
+                                    width="1em"
+                                  >
+                                    <path
+                                      d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"
+                                    />
+                                  </svg>
+                                </span>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-null rjsf-field-error"
+                      >
+                        <div
+                          class="ant-row ant-row-top css-dev-only-do-not-override-oc1rc0 css-var-root"
+                          style="margin-inline: -12px;"
+                        >
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-oc1rc0 css-var-root"
+                            style="padding-inline: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="form-group"
+                            >
+                              <div
+                                class="ant-form-item form-group css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-has-feedback ant-form-item-has-error ant-form-item-horizontal"
+                              >
+                                <div
+                                  class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                >
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  >
+                                    <label
+                                      class=""
+                                      for="root_a-key"
+                                      title="a Key"
+                                    >
+                                      a Key
+                                    </label>
+                                  </div>
+                                  <div
+                                    class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input"
+                                    >
+                                      <div
+                                        class="ant-form-item-control-input-content"
+                                      >
+                                        <span
+                                          class="ant-input-affix-wrapper css-dev-only-do-not-override-oc1rc0 ant-input-outlined ant-input-status-error form-control css-var-root ant-input-css-var"
+                                          style="width: 100%;"
+                                        >
+                                          <input
+                                            aria-describedby="root_a__error"
+                                            aria-invalid="true"
+                                            class="ant-input css-dev-only-do-not-override-oc1rc0"
+                                            id="root_a-key"
+                                            name="root_a-key"
+                                            type="text"
+                                            value="a"
+                                          />
+                                          <span
+                                            class="ant-input-suffix"
+                                          >
+                                            <span
+                                              class="ant-form-item-feedback-icon ant-form-item-feedback-icon-error"
+                                            >
+                                              <span
+                                                aria-label="close-circle"
+                                                class="anticon anticon-close-circle"
+                                                role="img"
+                                              >
+                                                <svg
+                                                  aria-hidden="true"
+                                                  data-icon="close-circle"
+                                                  fill="currentColor"
+                                                  fill-rule="evenodd"
+                                                  focusable="false"
+                                                  height="1em"
+                                                  viewBox="64 64 896 896"
+                                                  width="1em"
+                                                >
+                                                  <path
+                                                    d="M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z"
+                                                  />
+                                                </svg>
+                                              </span>
+                                            </span>
+                                          </span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col form-additional css-dev-only-do-not-override-oc1rc0 css-var-root"
+                            style="padding-inline: 12px; flex: 1 1 0%;"
+                          >
+                            <div
+                              class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-with-help ant-form-item-has-feedback ant-form-item-has-error ant-form-item-horizontal"
+                            >
+                              <div
+                                class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              >
+                                <div
+                                  class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                >
+                                  <div
+                                    class="ant-form-item-control-input"
+                                  >
+                                    <div
+                                      class="ant-form-item-control-input-content"
+                                    >
+                                      <label
+                                        class=""
+                                        title="a"
+                                      >
+                                        <span
+                                          id="root_a__title"
+                                        >
+                                          a
+                                        </span>
+                                      </label>
+                                      <div
+                                        class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
+                                        role="separator"
+                                        style="margin-block: 1px;"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="ant-form-item-additional"
+                                  >
+                                    <div
+                                      class="ant-form-item-explain ant-form-show-help-appear ant-form-show-help-appear-start ant-form-show-help css-var-root ant-form-css-var ant-form-item-explain-connected css-dev-only-do-not-override-oc1rc0"
+                                    >
+                                      <div
+                                        class="ant-form-show-help-item-appear ant-form-show-help-item-appear-start ant-form-show-help-item ant-form-item-explain-error"
+                                        style="height: 0px; opacity: 0;"
+                                      >
+                                        <div
+                                          id="root_a__error"
+                                        >
+                                          <div>
+                                            The key "a" is not allowed here
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
+                            style="padding-inline: 12px; flex: 0 0 120px; margin-top: 40px;"
+                          >
+                            <button
+                              class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
+                              id="root_a__remove"
+                              style="padding-top: 4px;"
+                              title="Remove"
+                              type="button"
+                            >
+                              <span
+                                class="ant-btn-icon"
+                              >
+                                <span
+                                  aria-label="delete"
+                                  class="anticon anticon-delete"
+                                  role="img"
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    data-icon="delete"
+                                    fill="currentColor"
+                                    focusable="false"
+                                    height="1em"
+                                    viewBox="64 64 896 896"
+                                    width="1em"
+                                  >
+                                    <path
+                                      d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"
+                                    />
+                                  </svg>
+                                </span>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                  >
+                    <div
+                      class="ant-row ant-row-end css-dev-only-do-not-override-oc1rc0 css-var-root"
+                      style="margin-inline: -12px;"
+                    >
+                      <div
+                        class="ant-col css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        style="padding-inline: 12px; flex: 0 0 120px;"
+                      >
+                        <button
+                          class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
+                          id="root__add"
+                          style="padding-top: 4px;"
+                          title="Add Item"
+                          type="button"
+                        >
+                          <span
+                            class="ant-btn-icon"
+                          >
+                            <span
+                              aria-label="plus-circle"
+                              class="anticon anticon-plus-circle"
+                              role="img"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                data-icon="plus-circle"
+                                fill="currentColor"
+                                focusable="false"
+                                height="1em"
+                                viewBox="64 64 896 896"
+                                width="1em"
+                              >
+                                <path
+                                  d="M696 480H544V328c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v152H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h152v152c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V544h152c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"
+                                />
+                                <path
+                                  d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`object fields > pure anyOf union, with no frame of its own beside the option 1`] = `
 <DocumentFragment>
   <form

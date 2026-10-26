@@ -22,6 +22,7 @@ import {
   getXxxOfKey,
   hashObject,
   isComponentType,
+  describeUnresolvedComponent,
   isConstantSelect,
   isObject,
   isPlainObject,
@@ -39,7 +40,6 @@ import {
   ITEMS_KEY,
 } from '@rjsf/utils';
 
-import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import { isAdditionalPropertySchema, storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';
@@ -825,6 +825,7 @@ function LayoutGridFieldComponent<
       onKeyRenameBlur: _onKeyRenameBlur,
       onRemoveProperty: _onRemoveProperty,
       propertyNamesEnum: _propertyNamesEnum,
+      keyNotAllowed: _keyNotAllowed,
       ...cellProps
     } = otherProps;
 
