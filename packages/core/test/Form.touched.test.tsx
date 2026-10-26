@@ -799,6 +799,25 @@ describe("a field the Form's onBlur drops", () => {
   });
 });
 
+describe("a field blurred while the Form's onBlur resets the form", () => {
+  it('is neither touched nor revealed in the state the reset left', async () => {
+    let resetOnBlur = () => {};
+    const { container, node, handle } = mountWithHandle({
+      schema: { type: 'object', properties: { name: { type: 'string', minLength: 3 } } },
+      initialFormData: { name: 'a' },
+      liveValidate: 'onBlur',
+      liveErrors: 'field',
+      onBlur: () => resetOnBlur(),
+    });
+    resetOnBlur = () => handle.reset(handle.getFormData());
+
+    await blur(container, 'root_name');
+
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+    expect(fieldErrorsById(node)).toEqual({});
+  });
+});
+
 describe('a key omitExtraData drops', () => {
   /** Blurs the checkbox `a`, the first field, which a click would toggle */
   async function blurWithoutClick() {

@@ -220,6 +220,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // which nothing renders the count from, so counting an attempt commits and re-renders nothing
   let attempts = 0;
   let attemptsBeforeReset = 0;
+  // How many times `reset()` has run, so a blur whose `onBlur` reset the form touches nothing in the state it left
+  let resets = 0;
   const countSubmit = () => {
     attempts += 1;
   };
@@ -731,6 +733,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       // submit pending
       resetSeed = nextReset;
       attemptsBeforeReset = attempts;
+      resets += 1;
       // A promise that never settles would otherwise keep the form ignoring submits until it remounts
       if (pendingSubmit !== undefined) {
         releasePending();
@@ -933,9 +936,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       // Taken by this blur, so one that `onBlur` causes names its own field
       blurring = undefined;
       const dataAtBlur = blurred && current().formData;
+      const resetsAtBlur = resets;
       // Before the blur reads the state, so it validates an edit `onBlur` makes instead of reverting it
       callWithDeferredThrow(() => props.onBlur?.(id, data));
-      callWithDeferredThrow(() => blur(id, blurred, dataAtBlur));
+      callWithDeferredThrow(() => blur(id, resets === resetsAtBlur ? blurred : undefined, dataAtBlur));
     },
     handleFocus: (id: string, data: unknown) => {
       if (isDetached) {

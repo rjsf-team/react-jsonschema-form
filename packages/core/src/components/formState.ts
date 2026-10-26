@@ -314,6 +314,25 @@ const NO_PATHS: ReadonlySet<FieldPath> = new Set();
 
 const NOTHING_REVEALED: RevealedPaths = { fields: NO_PATHS, containers: NO_PATHS, all: false };
 
+/** Whether a change from `previous` to `next` dropped the key at `fieldPath` or one above it, see
+ * `withoutDroppedPaths()`
+ */
+function isPathDropped(fieldPath: FieldPath, previous: unknown, next: unknown): boolean {
+  let before = previous;
+  let after = next;
+  for (const key of fieldPathToList(fieldPath)) {
+    if (Object.is(before, after) || !hasByPath(before, key)) {
+      return false;
+    }
+    if (!hasByPath(after, key)) {
+      return true;
+    }
+    before = getByPath(before, key);
+    after = getByPath(after, key);
+  }
+  return false;
+}
+
 /** `paths` without those under a key `previous` held that `next` does not: a change that dropped a key without
  * announcing a move, as `setFieldValue()` writing over a whole object does, leaves no field there to keep a mark for,
  * so a key added again later starts untouched. A field the data never held a value for, as one blurred while empty, is
@@ -328,22 +347,7 @@ function withoutDroppedPaths(paths: ReadonlySet<FieldPath>, previous: unknown, n
   if (paths.size === 0 || Object.is(previous, next)) {
     return paths;
   }
-  const isDropped = (fieldPath: FieldPath) => {
-    let before = previous;
-    let after = next;
-    for (const key of fieldPathToList(fieldPath)) {
-      if (Object.is(before, after) || !hasByPath(before, key)) {
-        return false;
-      }
-      if (!hasByPath(after, key)) {
-        return true;
-      }
-      before = getByPath(before, key);
-      after = getByPath(after, key);
-    }
-    return false;
-  };
-  const kept = [...paths].filter((fieldPath) => !isDropped(fieldPath));
+  const kept = [...paths].filter((fieldPath) => !isPathDropped(fieldPath, previous, next));
   return kept.length === paths.size ? paths : new Set(kept);
 }
 
@@ -426,17 +430,18 @@ export function withMarksSettled<T, S extends StrictRJSFSchema, F extends FormCo
   container: FieldPath,
   fateOf: (key: string) => MoveFate,
 ): FormState<T, S, F> {
-  const settle = (moved: ReadonlySet<FieldPath>, before: ReadonlySet<FieldPath>) =>
-    new Set(settledEntries(moved, before, (path) => path, container, fateOf));
+  const settle = (moved: ReadonlySet<FieldPath>, before: ReadonlySet<FieldPath>) => {
+    const settled = settledEntries(moved, before, (path) => path, container, fateOf);
+    return settled.length === moved.size && settled.every((path) => moved.has(path)) ? moved : new Set(settled);
+  };
   const { revealed } = state;
+  const fields = settle(revealed.fields, unmoved.revealed.fields);
+  const containers = settle(revealed.containers, unmoved.revealed.containers);
   return {
     ...state,
     touchedPaths: settle(state.touchedPaths, unmoved.touchedPaths),
-    revealed: {
-      ...revealed,
-      fields: settle(revealed.fields, unmoved.revealed.fields),
-      containers: settle(revealed.containers, unmoved.revealed.containers),
-    },
+    revealed:
+      fields === revealed.fields && containers === revealed.containers ? revealed : { ...revealed, fields, containers },
   };
 }
 
@@ -512,11 +517,18 @@ function hiddenErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType
   if (!isRevealedByField(props) || revealed.all) {
     return undefined;
   }
-  const fields = [...revealed.fields].map(fieldPathToList);
-  const containers = [...revealed.containers].map(fieldPathToList);
-  return (path) =>
-    !fields.some((field) => isPathPrefix(path, field) || isPathPrefix(field, path)) &&
-    !containers.some((container) => isPathPrefix(path, container));
+  // Parsed on the first error checked, so a pass whose validation holds none parses nothing
+  let parsed: { fields: FieldPathList[]; containers: FieldPathList[] } | undefined;
+  return (path) => {
+    parsed ??= {
+      fields: [...revealed.fields].map(fieldPathToList),
+      containers: [...revealed.containers].map(fieldPathToList),
+    };
+    return (
+      !parsed.fields.some((field) => isPathPrefix(path, field) || isPathPrefix(field, path)) &&
+      !parsed.containers.some((container) => isPathPrefix(path, container))
+    );
+  };
 }
 
 /** Converts the full `FormState` into the `IChangeEvent` version by picking out the public values
@@ -818,7 +830,9 @@ function mergeErrors<T>(
   customErrors?: ErrorSchema<T>,
   isHidden?: (path: FieldPathList) => boolean,
 ): ValidationData<T> {
-  const shown = isHidden ? withoutErrors(schemaValidation, isHidden) : schemaValidation;
+  // A result holding no errors has none to hide, so a valid form skips the walk
+  const shown =
+    isHidden && schemaValidation.errors.length > 0 ? withoutErrors(schemaValidation, isHidden) : schemaValidation;
   // With `preventDuplicates`, a message a field already carries is shown on it once and listed once, the raised errors
   // after the validator's and `extraErrors`
   const withExtra = validationDataMerge(shown, extraErrors, true);
@@ -1465,8 +1479,8 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
 ): ErrorState<T> {
   const { isSchemaChanged = false, mustValidate, validationSchema, getDataChange = () => UNCHANGED } = options;
   const revealed = options.revealed ?? current?.revealed ?? NOTHING_REVEALED;
+  const isHidden = hiddenErrorsOf(props, { revealed });
   if (mustValidate) {
-    const isHidden = hiddenErrorsOf(props, { revealed });
     return runLiveValidation(props, context, formData, current?.customErrors, validationSchema, undefined, isHidden);
   }
   // oxlint-disable-next-line typescript/no-deprecated
@@ -1480,9 +1494,6 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
         { errors: current?.schemaValidationErrors ?? [], errorSchema: current?.schemaValidationErrorSchema ?? {} },
         getDataChange(),
       );
-  // Only a validator result that holds errors is filtered, so the pass a parent's re-render makes over a valid form
-  // costs nothing more
-  const isHidden = validation.errors.length > 0 ? hiddenErrorsOf(props, { revealed }) : undefined;
   return {
     ...mergeErrors(validation, props.extraErrors, current?.customErrors, isHidden),
     schemaValidationErrors: validation.errors,
@@ -1907,8 +1918,7 @@ function markBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
 ): FormState<T, S, F> {
   const { touchedPaths, revealed } = current;
   const isRevealed = props.liveErrors === 'field' && isBlurValidated(props);
-  const blurredPaths = new Set([fieldPath]);
-  if (withoutDroppedPaths(blurredPaths, dataAtBlur, current.formData) !== blurredPaths) {
+  if (isPathDropped(fieldPath, dataAtBlur, current.formData)) {
     return current;
   }
   if (touches === 'nothing') {
