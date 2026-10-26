@@ -224,6 +224,73 @@ describe('dirty', () => {
     });
   });
 
+  it('marks a field added or removed with an empty object or array as changed', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        address: { type: 'object', properties: { city: { type: 'string' } } },
+        tags: { type: 'array', items: { type: 'string' } },
+      },
+    };
+    const { handle } = mountWithHandle({ schema, initialFormData: { address: {} } });
+
+    act(() => handle.setFieldValue('address', undefined));
+    act(() => handle.setFieldValue('tags', []));
+
+    expect(handle.getStatus()).toEqual({ dirty: true, dirtyFields: { address: true, tags: true }, submitCount: 0 });
+  });
+
+  describe('switching anyOf/oneOf options', () => {
+    function optionSelect(container: HTMLElement) {
+      const select = container.querySelector('#root__oneof_select');
+      if (!(select instanceof HTMLSelectElement)) {
+        throw new Error('There is no select #root__oneof_select');
+      }
+      return select;
+    }
+
+    it('is dirty after a switch that liveOmit drops data on, and clean once the seeded option and value are back', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } }, required: ['a'] },
+          { title: 'B', properties: { b: { type: 'string' } }, required: ['b'] },
+        ],
+      };
+      const { container, handle } = mountWithHandle({
+        schema,
+        initialFormData: { a: 'x' },
+        omitExtraData: true,
+        liveOmit: 'onChange',
+      });
+
+      await user.selectOptions(optionSelect(container), 'B');
+      expect(handle.getStatus()).toEqual({ dirty: true, dirtyFields: { a: true }, submitCount: 0 });
+      await user.selectOptions(optionSelect(container), 'A');
+      await user.type(input(container, 'root_a'), 'x');
+
+      expect(handle.getFormData()).toEqual({ a: 'x' });
+      expect(handle.getStatus()).toEqual({ dirty: false, dirtyFields: {}, submitCount: 0 });
+    });
+
+    it("re-derives the baseline for a schema prop change with the baseline's own option, not the one picked since", async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string', default: 'd' } } },
+        ],
+      };
+      const { container, handle, rerender } = mountWithHandle({ schema, initialFormData: {} });
+      await user.selectOptions(optionSelect(container), 'B');
+
+      rerender({ schema: { ...schema, properties: { c: { type: 'string', default: 'c' } } }, initialFormData: {} });
+
+      expect(handle.getFormData()).toEqual({ b: 'd', c: 'c' });
+      expect(handle.getStatus()).toEqual({ dirty: true, dirtyFields: { b: true }, submitCount: 0 });
+    });
+  });
+
   it('keeps every item a keystroke did not reach identical to the data the form started from', async () => {
     const schema: RJSFSchema = {
       type: 'object',

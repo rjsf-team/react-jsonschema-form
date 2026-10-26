@@ -393,3 +393,10 @@ export function createUiState() {
 }
 
 export type UiState = ReturnType<typeof createUiState>;
+
+/** `uiState` with no option selected, for the baseline: it was derived when the form showed the options its own data
+ * matched, so the options the user picked since are the edited data's, not the baseline's
+ */
+export function withoutSelections(uiState: UiState): UiState {
+  return { ...uiState, selection: () => undefined };
+}

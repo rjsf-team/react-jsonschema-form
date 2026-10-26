@@ -3,6 +3,7 @@ import type {
   FieldPath,
   FieldPathList,
   FormContextType,
+  FormFieldState,
   GenericObjectType,
   StrictRJSFSchema,
   RJSFSchema,
@@ -48,7 +49,7 @@ import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, FormStatus, IChangeEvent, NestedBooleans } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
-import { createUiState, fieldStateOf, isPathPrefix } from './uiState.ts';
+import { createUiState, fieldStateOf, isPathPrefix, withoutSelections } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
  *
@@ -126,12 +127,14 @@ function markMember(changed: object, baseline: object, key: string | number): un
   return markWhole(isInChanged ? changedMember : baselineMember);
 }
 
-/** `true` at every leaf of `value`, for a value only one side holds */
+/** `true` at every leaf of `value`, for a value only one side holds. An empty object or array is a leaf, so a field
+ * added or removed with one is marked
+ */
 function markWhole(value: unknown): unknown {
-  if (Array.isArray(value)) {
+  if (Array.isArray(value) && value.length > 0) {
     return value.map(markWhole);
   }
-  if (isPlainObject(value)) {
+  if (isPlainObject(value) && Object.keys(value).length > 0) {
     const marks: GenericObjectType = {};
     Object.entries(value).forEach(([key, member]) => setOwn(marks, key, markWhole(member)));
     return marks;
@@ -147,9 +150,23 @@ function asNestedBooleans(marks: unknown): unknown {
   return marks;
 }
 
-/** The form's status. The data shares with the baseline every subtree equal to it, see `shareState()`, so the walk
- * descends only into the objects and arrays whose reference differs, comparing each of their members by reference
- * once; no deep comparison runs
+/** The `dirtyFields` of `formData`. The data shares with the baseline every subtree equal to it, see `shareState()`,
+ * so the walk descends only into the objects and arrays whose reference differs, comparing each of their members by
+ * reference once; no deep comparison runs
+ */
+function dirtyFieldsOf<T>(formData: T | undefined, baseline: T | undefined): NestedBooleans<T> {
+  let marks: unknown = false;
+  if (!Object.is(formData, baseline)) {
+    marks = markChanged(formData, baseline);
+  } else if (Array.isArray(formData)) {
+    marks = [];
+  } else if (isPlainObject(formData)) {
+    marks = {};
+  }
+  return asNestedBooleans<T>(marks);
+}
+
+/** The form's status, whose `dirtyFields` is built on first read, since most events are read without it
  *
  * @param state - The state of the form
  * @returns - The status of the form
@@ -159,16 +176,15 @@ export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContex
   baseline,
   submitCount,
 }: FormState<T, S, F>): FormStatus<T> {
-  const isDirty = !Object.is(formData, baseline);
-  let marks: unknown = false;
-  if (isDirty) {
-    marks = markChanged(formData, baseline);
-  } else if (Array.isArray(formData)) {
-    marks = [];
-  } else if (isPlainObject(formData)) {
-    marks = {};
-  }
-  return { dirty: isDirty, dirtyFields: asNestedBooleans<T>(marks), submitCount };
+  let built: { dirtyFields: NestedBooleans<T> } | undefined;
+  return {
+    dirty: !Object.is(formData, baseline),
+    get dirtyFields() {
+      built ??= { dirtyFields: dirtyFieldsOf(formData, baseline) };
+      return built.dirtyFields;
+    },
+    submitCount,
+  };
 }
 
 /** Converts the full `FormState` into the `IChangeEvent` version by picking out the public values
@@ -183,6 +199,7 @@ export function toIChangeEvent<
   F extends FormContextType = FormContextType,
 >(state: FormState<T, S, F>, status?: IChangeEvent['status']): IChangeEvent<T, S, F> {
   const { schema, uiSchema, schemaUtils, formData, errors, errorSchema } = state;
+  const formStatus = toFormStatus(state);
   return {
     schema,
     uiSchema,
@@ -190,16 +207,91 @@ export function toIChangeEvent<
     formData: toEventFormData(formData),
     errors,
     errorSchema,
-    ...toFormStatus(state),
+    dirty: formStatus.dirty,
+    get dirtyFields() {
+      return formStatus.dirtyFields;
+    },
+    submitCount: formStatus.submitCount,
     ...(status !== undefined && { status }),
   };
 }
 
-/** Shares `next` against `start`, the state it was produced from, so an unchanged member keeps the reference the fields
- * hold, and keeps the rule that makes the form dirty exactly when its data is not its baseline: every subtree of the
- * data equal to its counterpart in the baseline is that counterpart. The data is shared against `start`'s first, then
- * against the baseline, which can only swap a subtree `start` shared for an equal one of the baseline when the baseline
- * moved. A baseline that moved is shared against `start`'s data first, so a reset to the data on screen keeps it
+/** `next`, already shared against `start`, shared against `baseline` as well, descending only where it differs from
+ * `start`: a member `start` holds already shares with the baseline every subtree equal to it, so a subtree the change
+ * did not reach is never compared again, however much of it differs from the baseline. Like `replaceEqualDeep()`, it
+ * returns a value deep-equal to `next`, which the overload states
+ */
+function shareChanged<V>(baseline: unknown, start: unknown, next: V): V;
+function shareChanged(baseline: unknown, start: unknown, next: unknown): unknown {
+  if (Object.is(next, start)) {
+    return next;
+  }
+  if (Array.isArray(next) && Array.isArray(baseline)) {
+    return shareMembers(baseline, start, next, [...next]);
+  }
+  if (isPlainObject(next) && isPlainObject(baseline)) {
+    return shareMembers(baseline, start, next, { ...next });
+  }
+  return replaceEqualDeep(baseline, next);
+}
+
+/** `shareChanged()` for the members of a container, writing a shared member into `copy`, a copy of `next`, and
+ * returning `baseline` when every member is the baseline's
+ */
+function shareMembers(baseline: object, start: unknown, next: object, copy: object): unknown {
+  const keys = Object.keys(next);
+  let isBaseline = keys.length === Object.keys(baseline).length;
+  let isCopied = false;
+  for (const key of keys) {
+    const isInBaseline = Object.hasOwn(baseline, key);
+    const baselineMember: unknown = isInBaseline ? Reflect.get(baseline, key) : undefined;
+    const startMember: unknown =
+      typeof start === 'object' && start !== null && Object.hasOwn(start, key) ? Reflect.get(start, key) : undefined;
+    const member: unknown = Reflect.get(next, key);
+    const shared = shareChanged(baselineMember, startMember, member);
+    isBaseline &&= isInBaseline && Object.is(shared, baselineMember);
+    if (!Object.is(shared, member)) {
+      Reflect.defineProperty(copy, key, { value: shared, enumerable: true, writable: true, configurable: true });
+      isCopied = true;
+    }
+  }
+  if (isBaseline) {
+    return baseline;
+  }
+  return isCopied ? copy : next;
+}
+
+/** The form's data and its baseline */
+export interface DataAndBaseline<T> {
+  formData: T | undefined;
+  baseline: T | undefined;
+}
+
+/** Shares the data and the baseline of `next` against `start`'s, the ones they were produced from, so an unchanged
+ * member keeps the reference the fields hold, and keeps the rule that makes the form dirty exactly when its data is not
+ * its baseline: every subtree of the data equal to its counterpart in the baseline is that counterpart. The data is
+ * shared against `start`'s first, then against the baseline where it changed. A baseline that moved is shared against
+ * `start`'s data first, so a reset to the data on screen keeps it, and the data is then shared against all of it
+ *
+ * @param start - The data and the baseline `next` was produced from
+ * @param next - The data and the baseline produced
+ * @returns - The shared data and baseline
+ */
+export function shareData<T>(start: DataAndBaseline<T>, next: DataAndBaseline<T>): DataAndBaseline<T> {
+  const baseline = Object.is(next.baseline, start.baseline)
+    ? start.baseline
+    : replaceEqualDeep(start.formData, next.baseline);
+  const sharedWithStart = replaceEqualDeep(start.formData, next.formData);
+  if (Object.is(next.formData, next.baseline)) {
+    return { formData: baseline, baseline };
+  }
+  const formData = Object.is(baseline, start.baseline)
+    ? shareChanged(baseline, start.formData, sharedWithStart)
+    : replaceEqualDeep(baseline, sharedWithStart);
+  return { formData, baseline };
+}
+
+/** Shares `next` against `start`, the state it was produced from, see `shareData()`
  *
  * @param start - The state `next` was produced from
  * @param next - The state produced
@@ -212,12 +304,10 @@ export function shareState<T, S extends StrictRJSFSchema, F extends FormContextT
   if (Object.is(next.formData, start.formData) && Object.is(next.baseline, start.baseline)) {
     return replaceEqualDeep(start, next);
   }
-  const baseline = Object.is(next.baseline, start.baseline)
-    ? start.baseline
-    : replaceEqualDeep(start.formData, next.baseline);
-  const formData = Object.is(next.formData, next.baseline)
-    ? baseline
-    : replaceEqualDeep(baseline, replaceEqualDeep(start.formData, next.formData));
+  const { formData, baseline } = shareData(
+    { formData: start.formData, baseline: start.baseline },
+    { formData: next.formData, baseline: next.baseline },
+  );
   const rest = replaceEqualDeep(start, { ...next, formData: start.formData, baseline: start.baseline });
   if (Object.is(formData, start.formData) && Object.is(baseline, start.baseline)) {
     return rest;
@@ -225,25 +315,42 @@ export function shareState<T, S extends StrictRJSFSchema, F extends FormContextT
   return { ...rest, formData, baseline };
 }
 
-/** The data and the baseline once `omit` drops extra data from `formData`. A change to the data the user did not make
- * goes to the baseline in the same step, so the baseline is omitted too, but only when the data lost something:
- * omitted up front, it would make the form dirty while the data still holds the extra keys
+/** The data once `omitData` drops extra data from `formData`, and the baseline that goes with it. A change to the data
+ * the user did not make goes to the baseline in the same step, so the baseline is omitted too, but only when the data
+ * lost something: omitted up front, it would make the form dirty while the data still holds the extra keys. The
+ * baseline is omitted with the options its own data matches, not the ones the user picked since, see
+ * `withoutSelections()`, and only once a caller commits it
  *
  * @param baseline - The baseline before the omit
  * @param formData - The data to omit extra data from
- * @param omit - Drops the extra data from a value of the form's data
- * @returns - The data and the baseline after the omit
+ * @param schemaUtils - The schema utilities to omit with
+ * @param schema - The root schema
+ * @param fieldState - The fields the data shows
+ * @param baselineFieldState - The fields the baseline shows
+ * @returns - The data after the omit, and how to get the baseline after it
  */
-function omitWithBaseline<T>(
+function omitWithBaseline<T, S extends StrictRJSFSchema, F extends FormContextType>(
   baseline: T | undefined,
   formData: T | undefined,
-  omit: (data: T | undefined) => T | undefined,
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  schema: S,
+  fieldState: FormFieldState<S>,
+  baselineFieldState: FormFieldState<S>,
 ): ExtraDataOmission<T> {
-  const omitted = replaceEqualDeep(formData, omit(formData));
+  const omitted = replaceEqualDeep(formData, schemaUtils.omitExtraData(schema, formData, fieldState));
   if (Object.is(omitted, formData)) {
-    return { formData, baseline };
+    return { formData, omitBaseline: () => baseline };
   }
-  return { formData: omitted, baseline: Object.is(baseline, formData) ? omitted : omit(baseline) };
+  return {
+    formData: omitted,
+    omitBaseline: () =>
+      Object.is(baseline, formData) ? omitted : schemaUtils.omitExtraData(schema, baseline, baselineFieldState),
+  };
+}
+
+/** The data and the baseline an omission commits */
+function committedOmission<T>({ formData, omitBaseline }: ExtraDataOmission<T>): DataAndBaseline<T> {
+  return { formData, baseline: omitBaseline() };
 }
 
 /** A field change, applied by `applyChangeToData()` and `applyChangeToErrorsOf()` */
@@ -1196,7 +1303,8 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
 }
 
 /** The baseline after a prop change re-derived the data into `formData`: the baseline put through the same derivation,
- * since the change is not the user's. A form whose data is its baseline takes the derived data itself
+ * since the change is not the user's, with the options the baseline's own data matches, see `withoutSelections()`. A
+ * form whose data is its baseline takes the derived data itself
  *
  * @param current - The state before the prop change
  * @param formData - The data the prop change re-derived
@@ -1218,6 +1326,7 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
   }
   const fromBaseline: FormState<T, S, F> = {
     ...current,
+    uiState: withoutSelections(current.uiState),
     formData: baseline,
     retrievedSchema: resolveRetrievedSchema(current, current.schemaUtils, baseline),
   };
@@ -1395,11 +1504,18 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     }
   }
 
-  let omitted = { formData, baseline: current.baseline };
+  let omitted: DataAndBaseline<T> = { formData, baseline: current.baseline };
   if (omitExtraData === true && liveOmit === 'onChange') {
-    const fieldState = fieldStateOf(context.uiState, context.schemaUtils, heldPathOf(change));
-    omitted = omitWithBaseline(current.baseline, formData, (data) =>
-      context.schemaUtils.omitExtraData(context.schema, data, fieldState),
+    const { schemaUtils, schema, uiState } = context;
+    omitted = committedOmission(
+      omitWithBaseline(
+        current.baseline,
+        formData,
+        schemaUtils,
+        schema,
+        fieldStateOf(uiState, schemaUtils, heldPathOf(change)),
+        fieldStateOf(withoutSelections(uiState), schemaUtils),
+      ),
     );
   }
 
@@ -1507,7 +1623,8 @@ export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextTy
 ): FormState<T, S, F> {
   const { omitExtraData, liveOmit } = props;
   const { customErrors, retrievedSchema } = current;
-  const omitted = omitExtraData === true && liveOmit === 'onBlur' ? omitExtraDataOf(current) : undefined;
+  const omitted =
+    omitExtraData === true && liveOmit === 'onBlur' ? committedOmission(omitExtraDataOf(current)) : undefined;
   const validation = isBlurValidated(props)
     ? runLiveValidation(props, current, (omitted ?? current).formData, customErrors, retrievedSchema)
     : undefined;
@@ -1555,10 +1672,10 @@ export function applyValidation<T, S extends StrictRJSFSchema, F extends FormCon
   return { hasError, next };
 }
 
-/** The data and the baseline after extra data is omitted, see `omitWithBaseline()` */
+/** The data after extra data is omitted, and how to get the baseline after it, see `omitWithBaseline()` */
 export interface ExtraDataOmission<T> {
   formData: T | undefined;
-  baseline: T | undefined;
+  omitBaseline: () => T | undefined;
 }
 
 /** The data and the baseline of `current` without the fields the schema does not describe, see `omitWithBaseline()` */
@@ -1566,9 +1683,13 @@ export function omitExtraDataOf<T, S extends StrictRJSFSchema, F extends FormCon
   current: FormState<T, S, F>,
 ): ExtraDataOmission<T> {
   const { schema, schemaUtils, uiState } = current;
-  const fieldState = fieldStateOf(uiState, schemaUtils);
-  return omitWithBaseline(current.baseline, current.formData, (data) =>
-    schemaUtils.omitExtraData(schema, data, fieldState),
+  return omitWithBaseline(
+    current.baseline,
+    current.formData,
+    schemaUtils,
+    schema,
+    fieldStateOf(uiState, schemaUtils),
+    fieldStateOf(withoutSelections(uiState), schemaUtils),
   );
 }
 
@@ -1576,7 +1697,7 @@ export function omitExtraDataOf<T, S extends StrictRJSFSchema, F extends FormCon
  *
  * @param current - The state at the submission
  * @param props - The current props
- * @param [omitted] - The data and the baseline without extra data, `omitExtraDataOf(current)`, when `omitExtraData`
+ * @param [omitted] - The data without extra data, `omitExtraDataOf(current)`, when `omitExtraData`
  *        asks for it
  * @returns - The next state, sharing every unchanged subtree with `current`
  */
@@ -1587,7 +1708,7 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
 ): FormState<T, S, F> {
   return {
     ...current,
-    ...omitted,
+    ...(omitted && committedOmission(omitted)),
     ...extraErrorsAlone(props.extraErrors),
   };
 }
