@@ -13,12 +13,7 @@ export default function SubmitButton<
   }
   return (
     <div>
-      <Button
-        variant='primary'
-        type='submit'
-        {...submitButtonProps}
-        disabled={props.pending || submitButtonProps?.disabled}
-      >
+      <Button variant='primary' type='submit' {...submitButtonProps}>
         {submitText}
       </Button>
     </div>

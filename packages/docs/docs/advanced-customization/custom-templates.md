@@ -1504,7 +1504,7 @@ The following props are passed to a `SubmitButton`:
 
 - `uiSchema`: The uiSchema object for this field, used to extract the `UISchemaSubmitButtonOptions`.
 - `registry`: The `registry` object.
-- `pending`: Whether a submission is in flight: a promise `onSubmit` returned has yet to settle, or the form is pending in React's form status, as it is while a transition `onSubmit` started runs. Disable the button while it is set, so it can't submit the form a second time meanwhile, and keep any `disabled` the `UISchemaSubmitButtonOptions` ask for. See [Submitting](../usage/submitting.md).
+- `pending`: Whether a submission is in flight: a promise `onSubmit` returned has yet to settle, or the form is pending in React's form status, as it is while a transition `onSubmit` started runs. Meanwhile the form sets `disabled` in the props of the `UISchemaSubmitButtonOptions`, so a button that spreads them is disabled; use `pending` to show the submission, such as with a spinner. See [Submitting](../usage/submitting.md).
 
 ## Custom Templates
 

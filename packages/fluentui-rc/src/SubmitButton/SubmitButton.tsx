@@ -12,7 +12,7 @@ export default function SubmitButton<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ uiSchema, pending }: SubmitButtonProps<T, S, F>) {
+>({ uiSchema }: SubmitButtonProps<T, S, F>) {
   const classes = useStyles();
   const { submitText, norender, props: submitButtonProps } = getSubmitButtonOptions(uiSchema);
   if (norender) {
@@ -20,12 +20,7 @@ export default function SubmitButton<
   }
   return (
     <div className={classes.buttonRow}>
-      <Button
-        appearance='primary'
-        type='submit'
-        {...submitButtonProps}
-        disabled={pending || submitButtonProps?.disabled}
-      >
+      <Button appearance='primary' type='submit' {...submitButtonProps}>
         {submitText}
       </Button>
     </div>
