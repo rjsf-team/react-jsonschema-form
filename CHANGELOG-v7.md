@@ -969,6 +969,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed `getDefaultFormState()` under `constAsDefaults: 'always'` keeping the data keys an object `const` doesn't name inside an object, where it dropped them at the root only, and in an object that takes extra keys through `additionalProperties`, at the root as inside an object
 - Fixed `getDefaultFormState()` under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'` leaving a key undefined in the object data of an `anyOf`/`oneOf` field where the field's `default` has a value for it, as an untyped or object field fills it in, when the option the field opens on takes none of that data
 - Added the optional `pending` prop to `SubmitButtonProps`, set while a promise `onSubmit` returned has yet to settle or the form is pending in React's form status, related to [#504](https://github.com/rjsf-team/react-jsonschema-form/issues/504) ([#5649](https://github.com/rjsf-team/react-jsonschema-form/pull/5649))
+- `replaceEqualDeep(prev, next, unchanged)` takes an optional value `next` was derived from that already shares with `prev`, and keeps a subtree of `next` that is its counterpart in `unchanged` without walking it, which `Form` uses to compare only what an edit to a dirty form reached against its baseline ([#5653](https://github.com/rjsf-team/react-jsonschema-form/pull/5653))
 
 ## @rjsf/validator-ajv8
 

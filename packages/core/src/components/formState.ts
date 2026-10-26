@@ -216,51 +216,6 @@ export function toIChangeEvent<
   };
 }
 
-/** `next`, already shared against `start`, shared against `baseline` as well, descending only where it differs from
- * `start`: a member `start` holds already shares with the baseline every subtree equal to it, so a subtree the change
- * did not reach is never compared again, however much of it differs from the baseline. Like `replaceEqualDeep()`, it
- * returns a value deep-equal to `next`, which the overload states
- */
-function shareChanged<V>(baseline: unknown, start: unknown, next: V): V;
-function shareChanged(baseline: unknown, start: unknown, next: unknown): unknown {
-  if (Object.is(next, start)) {
-    return next;
-  }
-  if (Array.isArray(next) && Array.isArray(baseline)) {
-    return shareMembers(baseline, start, next, [...next]);
-  }
-  if (isPlainObject(next) && isPlainObject(baseline)) {
-    return shareMembers(baseline, start, next, { ...next });
-  }
-  return replaceEqualDeep(baseline, next);
-}
-
-/** `shareChanged()` for the members of a container, writing a shared member into `copy`, a copy of `next`, and
- * returning `baseline` when every member is the baseline's
- */
-function shareMembers(baseline: object, start: unknown, next: object, copy: object): unknown {
-  const keys = Object.keys(next);
-  let isBaseline = keys.length === Object.keys(baseline).length;
-  let isCopied = false;
-  for (const key of keys) {
-    const isInBaseline = Object.hasOwn(baseline, key);
-    const baselineMember: unknown = isInBaseline ? Reflect.get(baseline, key) : undefined;
-    const startMember: unknown =
-      typeof start === 'object' && start !== null && Object.hasOwn(start, key) ? Reflect.get(start, key) : undefined;
-    const member: unknown = Reflect.get(next, key);
-    const shared = shareChanged(baselineMember, startMember, member);
-    isBaseline &&= isInBaseline && Object.is(shared, baselineMember);
-    if (!Object.is(shared, member)) {
-      Reflect.defineProperty(copy, key, { value: shared, enumerable: true, writable: true, configurable: true });
-      isCopied = true;
-    }
-  }
-  if (isBaseline) {
-    return baseline;
-  }
-  return isCopied ? copy : next;
-}
-
 /** The form's data and its baseline */
 export interface DataAndBaseline<T> {
   formData: T | undefined;
@@ -281,12 +236,14 @@ export function shareData<T>(start: DataAndBaseline<T>, next: DataAndBaseline<T>
   const baseline = Object.is(next.baseline, start.baseline)
     ? start.baseline
     : replaceEqualDeep(start.formData, next.baseline);
-  const sharedWithStart = replaceEqualDeep(start.formData, next.formData);
   if (Object.is(next.formData, next.baseline)) {
     return { formData: baseline, baseline };
   }
+  const sharedWithStart = replaceEqualDeep(start.formData, next.formData);
+  // The data `start` holds already shares with an unmoved baseline every subtree equal to it, so only the subtrees
+  // the change reached are compared again, however much of the rest differs from the baseline
   const formData = Object.is(baseline, start.baseline)
-    ? shareChanged(baseline, start.formData, sharedWithStart)
+    ? replaceEqualDeep(baseline, sharedWithStart, start.formData)
     : replaceEqualDeep(baseline, sharedWithStart);
   return { formData, baseline };
 }
