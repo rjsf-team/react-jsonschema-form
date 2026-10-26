@@ -20,7 +20,7 @@ export default function AddButton<
   const { translateString } = registry;
   // Core's array and object templates render it straight into their fieldset, so it aligns itself to the end
   return (
-    <Button {...props} className={cn('mt-2 ml-auto flex w-fit gap-2', className)} variant='outline' type='button'>
+    <Button {...props} className={cn('mt-2 ms-auto flex w-fit gap-2', className)} variant='outline' type='button'>
       <PlusCircle size={16} /> {translateString(TranslatableString.AddItemButton)}
     </Button>
   );

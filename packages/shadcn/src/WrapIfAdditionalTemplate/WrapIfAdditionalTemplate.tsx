@@ -75,7 +75,7 @@ export default function WrapIfAdditionalTemplate<
                 {keyLabel}
               </label>
             )}
-            <div className='pl-0.5'>
+            <div className='pl-0.5 pt-0.5'>
               {propertyNamesEnum ? (
                 <AdditionalPropertyKeySelect<T, S, F>
                   errorAttributes={keyAttributes}

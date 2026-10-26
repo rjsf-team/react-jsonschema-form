@@ -16,7 +16,7 @@ export const SHADCN_CLASS_MAP: ClassMap = {
   arrayFieldset: 'min-w-0',
   arrayItemList: 'mb-2',
   // Top-aligned, so errors or help under the input don't move the toolbox; past a label, down to the input: the label's
-  // `text-sm leading-none` line and the field's `gap-2`
+  // `text-sm leading-none` line, the field's `gap-2` and the `p-0.5` around the theme's inputs
   arrayItem:
     'mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6',
   arrayItemToolbox: 'flex gap-2',
