@@ -429,6 +429,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
             >
               <div
                 class="rjsf-array-item"
+                data-display-label="true"
               >
                 <div
                   class="rjsf-field rjsf-field-string"
@@ -534,6 +535,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               </div>
               <div
                 class="rjsf-array-item"
+                data-display-label="true"
               >
                 <div
                   class="rjsf-field rjsf-field-string"
@@ -1558,6 +1560,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
             >
               <div
                 class="rjsf-array-item"
+                data-display-label="true"
               >
                 <div
                   class="rjsf-field rjsf-field-string"
@@ -1663,6 +1666,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               </div>
               <div
                 class="rjsf-array-item"
+                data-display-label="true"
               >
                 <div
                   class="rjsf-field rjsf-field-string"
@@ -5068,6 +5072,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <div
                 class="rjsf-array-item"
+                data-display-label="true"
               >
                 <div
                   class="rjsf-field rjsf-field-string"
@@ -5610,6 +5615,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             >
               <div
                 class="rjsf-array-item"
+                data-display-label="true"
               >
                 <div
                   class="rjsf-field rjsf-field-string"

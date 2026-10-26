@@ -279,4 +279,27 @@ describe('state attributes', () => {
     expect(manyA).toHaveAttribute('data-disabled', 'true');
     expect(manyB).not.toHaveAttribute('data-disabled');
   });
+
+  it('marks an array item whose field draws a label above it data-display-label, and one with a description data-has-description', () => {
+    const items = { type: 'string', title: 'Item' } as const;
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          described: { type: 'array', items: { ...items, description: 'Note' } },
+          plain: { type: 'array', items },
+          unlabelled: { type: 'array', items },
+        },
+      },
+      uiSchema: { unlabelled: { items: { 'ui:label': false } } },
+      initialFormData: { described: ['x'], plain: ['x'], unlabelled: ['x'] },
+    });
+    const item = (name: string) => node.querySelector(`#root_${name}_0`)?.closest('.rjsf-array-item');
+
+    expect(item('described')).toHaveAttribute('data-display-label', 'true');
+    expect(item('described')).toHaveAttribute('data-has-description', 'true');
+    expect(item('plain')).toHaveAttribute('data-display-label', 'true');
+    expect(item('plain')).not.toHaveAttribute('data-has-description');
+    expect(item('unlabelled')).not.toHaveAttribute('data-display-label');
+  });
 });

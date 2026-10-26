@@ -103,16 +103,12 @@
 
   /* Beside the item's input rather than its label: down one line of the label's font, which this `<div>` inherits too,
      and the label's margin */
-  :where(.rjsf .rjsf-array-item:has(> .rjsf-field > .rjsf-field-label:first-child) > .rjsf-array-item-toolbox) {
+  :where(.rjsf .rjsf-array-item[data-display-label] > .rjsf-array-item-toolbox) {
     margin-block-start: calc(1lh + 0.25rem);
   }
 
   /* A description between them adds a line and its margin, as `rjsf-theme.css` spaces it */
-  :where(
-    .rjsf
-      .rjsf-array-item:has(> .rjsf-field > .rjsf-field-label:first-child + .rjsf-field-description)
-      > .rjsf-array-item-toolbox
-  ) {
+  :where(.rjsf .rjsf-array-item[data-display-label][data-has-description] > .rjsf-array-item-toolbox) {
     margin-block-start: calc(2lh + 0.5rem);
   }
 

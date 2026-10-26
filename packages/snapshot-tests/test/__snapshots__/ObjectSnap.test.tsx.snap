@@ -369,6 +369,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
             >
               <div
                 class="rjsf-array-item"
+                data-display-label="true"
               >
                 <div
                   class="rjsf-field rjsf-field-string"
@@ -474,6 +475,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
               </div>
               <div
                 class="rjsf-array-item"
+                data-display-label="true"
               >
                 <div
                   class="rjsf-field rjsf-field-string"
@@ -901,6 +903,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
             >
               <div
                 class="rjsf-array-item"
+                data-display-label="true"
               >
                 <div
                   class="rjsf-field rjsf-field-string"
@@ -1006,6 +1009,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
               </div>
               <div
                 class="rjsf-array-item"
+                data-display-label="true"
               >
                 <div
                   class="rjsf-field rjsf-field-string"
