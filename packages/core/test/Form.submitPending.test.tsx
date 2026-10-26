@@ -109,6 +109,27 @@ describe('a promise onSubmit returns', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
+  it('still calls an onClick the submit button options set while the promise is pending, and ignores the submit', async () => {
+    const save = deferred();
+    const onSubmit = vi.fn(() => save.promise);
+    const onClick = vi.fn();
+    createFormComponent({
+      schema,
+      uiSchema: { 'ui:submitButtonOptions': { props: { onClick } } },
+      initialFormData: { name: 'a' },
+      onSubmit,
+    });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    await user.click(button);
+
+    expectPending(button);
+    expect(onClick).toHaveBeenCalledTimes(2);
+    expect(onClick).toHaveBeenLastCalledWith(expect.objectContaining({ type: 'click', target: button }));
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
   it('passes pending to a custom SubmitButton template', async () => {
     const save = deferred();
     const seen: (boolean | undefined)[] = [];

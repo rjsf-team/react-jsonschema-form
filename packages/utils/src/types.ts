@@ -5,6 +5,7 @@ import type {
   ComponentType,
   FocusEvent,
   HTMLAttributes,
+  MouseEvent,
   ReactElement,
   ReactNode,
   StyleHTMLAttributes,
@@ -1652,6 +1653,8 @@ export interface UISchemaSubmitButtonOptions {
     disabled?: boolean;
     /** The class name for the submit button */
     className?: string;
+    /** Called for a click on the submit button, also while the form is pending, when the form cancels the click */
+    onClick?: Bivariant<[event: MouseEvent<HTMLElement>]>;
   };
 }
 

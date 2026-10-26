@@ -353,6 +353,27 @@ describe('submitCount', () => {
     expect(onSubmit.mock.lastCall?.[0]).toMatchObject({ submitCount: 5 });
   });
 
+  it('counts a pending click on a submit button whose options set an onClick, which still runs', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    const onClick = vi.fn();
+    const { handle } = mountWithHandle({
+      schema: required,
+      uiSchema: { 'ui:submitButtonOptions': { props: { onClick } } },
+      initialFormData: { name: 'a' },
+      onSubmit,
+    });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    await user.click(button);
+
+    expect(onClick).toHaveBeenCalledTimes(2);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(handle.getStatus().submitCount).toBe(2);
+    await act(async () => save.resolve(undefined));
+  });
+
   it("does not count a submit the browser's constraint validation blocks", async () => {
     const { handle, onSubmit, onError } = mountWithHandle({ schema: required });
 

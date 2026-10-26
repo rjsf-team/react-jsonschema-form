@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode, Ref, SubmitEvent } from 'react';
+import type { ElementType, MouseEvent, ReactNode, Ref, SubmitEvent } from 'react';
 import {
   memo,
   useEffect,
@@ -392,13 +392,13 @@ function submitButtonUiSchema<T, S extends StrictRJSFSchema, F extends FormConte
 
 interface PendingButtonProps {
   'aria-disabled': true;
-  onClick: (event: { preventDefault: () => void }) => void;
+  onClick: (event: MouseEvent<HTMLElement>) => void;
 }
 
 type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormContextType> = SubmitButtonProps<T, S, F> & {
   SubmitButton: TemplatesType<T, S, F>['ButtonTemplates']['SubmitButton'];
   submitting: boolean;
-  pendingProps: PendingButtonProps;
+  cancelClick: PendingButtonProps['onClick'];
 };
 
 /** The submit button, `aria-disabled` and taking no click while the form is pending, through the props its uiSchema
@@ -408,13 +408,26 @@ type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormConte
 function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContextType>({
   SubmitButton,
   submitting,
-  pendingProps,
+  cancelClick,
   uiSchema,
   registry,
 }: PendingSubmitButtonProps<T, S, F>) {
   const pendingUiSchema = useMemo(
-    () => (submitting ? submitButtonUiSchema<T, S, F>(uiSchema, pendingProps) : uiSchema),
-    [submitting, pendingProps, uiSchema],
+    () =>
+      submitting
+        ? submitButtonUiSchema<T, S, F>(uiSchema, {
+            'aria-disabled': true,
+            /** Cancels the click, as a disabled button gets none, so the browser runs no constraint validation, which
+             * would show its message and move focus, for a submit the form ignores. Enter in a field clicks the form's
+             * default button too. The app's own `onClick` still runs
+             */
+            onClick(event) {
+              getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY]?.props?.onClick?.(event);
+              cancelClick(event);
+            },
+          })
+        : uiSchema,
+    [submitting, cancelClick, uiSchema],
   );
   return <SubmitButton uiSchema={pendingUiSchema} registry={registry} pending={submitting} />;
 }
@@ -500,12 +513,6 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   // The element too: a theme's `SubmitButton` may not be memoized, so an element that is kept is what skips it for a keystroke.
   // `children` replace the button, so there is none to build then
   const hasChildren = !!children;
-  // The click is cancelled, as a disabled button gets none, so the browser runs no constraint validation, which would
-  // show its message and move focus, for a submit the form ignores. Enter in a field clicks the form's default button too
-  const pendingProps = useMemo<PendingButtonProps>(
-    () => ({ 'aria-disabled': true, onClick: model.cancelPendingClick }),
-    [model],
-  );
   // An element other than a form has no form status of its own, and `useFormStatus()` would read an enclosing form's
   const StatusSubmitButton =
     typeof FormTag === 'string' && FormTag !== 'form' ? PendingSubmitButton : FormStatusSubmitButton;
@@ -515,12 +522,12 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         <StatusSubmitButton
           SubmitButton={SubmitButton}
           submitting={submitting}
-          pendingProps={pendingProps}
+          cancelClick={model.cancelPendingClick}
           uiSchema={submitUiSchema}
           registry={registry}
         />
       ),
-    [hasChildren, StatusSubmitButton, SubmitButton, submitting, pendingProps, submitUiSchema, registry],
+    [hasChildren, StatusSubmitButton, SubmitButton, submitting, model, submitUiSchema, registry],
   );
 
   /** The errors in the `ErrorList`, unless disabled by `showErrorList` */
