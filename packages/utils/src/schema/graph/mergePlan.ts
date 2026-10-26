@@ -924,10 +924,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const conditions = this.graph
       .subschemas(provider.node.id, ONE_OF_KEY)
       .map(([, option]) => ({ option, condition: dependencyCondition(this.graph, option, key) }));
-    if (conditions.length > 0 && conditions.every(({ condition }) => condition === undefined)) {
-      return this.applyOption(part, ONE_OF_KEY, provider, true);
-    }
     const withoutList = { ...part, schema: withoutKeys(part.schema, ONE_OF_KEY) };
+    if (conditions.length > 0 && conditions.every(({ condition }) => condition === undefined)) {
+      return this.applyOption(withoutList, ONE_OF_KEY, provider, true);
+    }
     const valid = conditions
       .filter(
         ({ option, condition }) =>

@@ -1647,6 +1647,24 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           });
         });
 
+        it("keeps the oneOf the field's own option offers when merging a dependency oneOf none of whose options declares the key", () => {
+          const nested: RJSFSchema[] = [
+            { properties: { m: { type: 'string' } } },
+            { properties: { n: { type: 'number' } } },
+          ];
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            oneOf: [{ properties: { p: { type: 'string' } }, oneOf: nested }],
+            dependencies: { a: { oneOf: [{ properties: { b: { type: 'string' } } }] } },
+          };
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x' })).toEqual({
+            type: 'object',
+            properties: { a: { type: 'string' }, p: { type: 'string' }, b: { type: 'string' } },
+            oneOf: nested,
+          });
+        });
+
         it('applies the keyed option of a oneOf where only some options declare the key', () => {
           // Mock isValid so that the one keyed option's condition holds
           testValidator.setReturnValues({ isValid: [true] });
