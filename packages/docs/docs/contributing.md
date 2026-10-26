@@ -61,7 +61,7 @@ CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the 
 
 A PR that changes anything a user of a published package can notice adds an entry to the changelog: `CHANGELOG-v7.md` on the `v7` branch, `CHANGELOG.md` on `main`.
 Append it as the last bullet under the heading of each package whose users notice the change, in the upcoming release at the top of the file.
-Tests, CI, refactors and docs fixes need no entry, and neither does a fix to a change that isn't released yet: edit that change's entry instead. A maintainer gives such a PR the `no-changelog` label.
+Tests, CI, refactors and docs fixes need no entry, and neither does a fix to a change that isn't released yet: edit that change's entry instead.
 
 Write the entry for someone deciding whether to upgrade, who won't open the PR:
 
@@ -78,10 +78,6 @@ For example, instead of an entry that explains the implementation:
 write what users see:
 
 > Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450))
-
-`pnpm run changelog-check` checks the entries your branch adds, as CI does for every PR: the verb, the links, the breaking marker, and that a change to a published package's `src` adds an entry. It compares with `origin/v7` unless you pass another base, such as `pnpm run changelog-check origin/main`.
-
-Git merges the changelogs with `merge=union` (`.gitattributes`), so a rebase keeps both of two entries appended under the same heading instead of stopping on a conflict. It also keeps both versions of a line two branches edited, so check the rebased changelog for a doubled bullet or release heading.
 
 ## Upgrade guide
 

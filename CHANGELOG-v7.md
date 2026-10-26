@@ -1,7 +1,7 @@
 <!--
 
 Add an entry for each change users can notice, following
-https://rjsf-team.github.io/react-jsonschema-form/docs/contributing#changelog
+https://github.com/rjsf-team/react-jsonschema-form/blob/v7/packages/docs/docs/contributing.md#changelog
 
 Append it as the last bullet under each package it affects, or under "Dev / docs / playground".
 Update the heading of the upcoming version if the change needs a bigger semver bump.
@@ -1034,4 +1034,4 @@ Update the heading of the upcoming version if the change needs a bigger semver b
 - Fixed 58 doc examples that imported `Form` as a named export of `@rjsf/core`, which only has a default export. They now use `import Form from '@rjsf/core'`, and the examples that import `ThemeProps` or `FormProps` from it import them as types, fixing [#5568](https://github.com/rjsf-team/react-jsonschema-form/issues/5568)
 - Documented the `additionalPropertiesWhenAbsent` prop in the `Form` props, the objects page and the utility functions reference, with the `canExpand()` migration in the v7.x upgrade guide, and added an "Absent additionalProperties" setting to the playground's options, [#2137](https://github.com/rjsf-team/react-jsonschema-form/issues/2137)
 - Documented on the objects page that the row of a key the object forbids, through `additionalProperties: false`, `unevaluatedProperties: false` or a `false` pattern, says the key is not allowed, through the `AdditionalPropertyKeyNotAllowed` string, the `newKey` the add button falls back to included, and that its key input is marked invalid and described by the message; documented `getAdditionalKeyAttributes()` and `AdditionalPropertyKeySelect`'s `errorAttributes` prop in the utility-functions reference, and the `keyNotAllowed` prop of `WrapIfAdditionalTemplate` in custom-templates, related to [#4630](https://github.com/rjsf-team/react-jsonschema-form/issues/4630)
-- Add rules for changelog entries and upgrade guide sections to the contributing guide, a `Changelog` CI check for new entries, and `merge=union` for the changelogs ([#5655](https://github.com/rjsf-team/react-jsonschema-form/pull/5655))
+- Add rules for changelog entries and upgrade guide sections to the contributing guide ([#5655](https://github.com/rjsf-team/react-jsonschema-form/pull/5655))
