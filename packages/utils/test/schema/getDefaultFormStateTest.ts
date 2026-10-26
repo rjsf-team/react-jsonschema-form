@@ -6669,6 +6669,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ['false', { type: 'boolean', default: true }, false],
           ["''", { type: 'string', default: 'deeper' }, ''],
           ['null', { type: ['integer', 'null'], default: 1 }, null],
+          [
+            'null on a nullable object',
+            {
+              type: ['object', 'null'],
+              default: { a: 'own' },
+              properties: { a: { type: 'string', default: 'x' } },
+            },
+            null,
+          ],
+          [
+            'null on a nullable object with no default',
+            { type: ['object', 'null'], properties: { a: { type: 'string', default: 'x' } } },
+            null,
+          ],
         ])('keeps an ancestor default of %s over the property default (#5624)', (_name, property, ancestorDefault) => {
           const schema: RJSFSchema = {
             type: 'object',

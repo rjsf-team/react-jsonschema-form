@@ -1114,7 +1114,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
   }
 
-  const foldedType = foldedTypeOf<T, S, F>(view, props, defaults, isWholeValue);
+  const foldedType = foldedTypeOf<T, S, F>(
+    view,
+    props,
+    defaults,
+    isWholeValue,
+    preferParentDefaults && defaults === null,
+  );
   const defaultBasedOnSchemaType = typeDefaults<T, S, F>(context, view, props, defaults, foldedType);
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
@@ -2104,6 +2110,8 @@ type FoldedType = 'whole' | 'object' | 'array' | 'boolean' | 'primitive' | undef
  * @param defaults - The defaults computed for the field so far
  * @param [isWholeValue] - Whether the field is a select over whole object or array values, worked out from its
  *        schema where the caller hasn't already
+ * @param [inheritsNull=false] - Whether `defaults` is an ancestor's `null` that won over the field's own default, which
+ *        is the value the ancestor gives the field, held as a value of any other listed type is
  * @returns - The kind of value the field's defaults are computed as
  */
 function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -2111,6 +2119,7 @@ function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   { uiSchema, rawFormData }: FoldProps<T, S, F>,
   defaults: unknown,
   isWholeValue = isWholeValueSelect<S>(resolveDeclaredConstantOptions<S>(view.schema, () => view)),
+  inheritsNull = false,
 ): FoldedType {
   // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,
   // and an empty object or array would be a value none of its options allow
@@ -2125,8 +2134,8 @@ function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // `getUiRequiredErrorSchema()` leave it: an object held by a `['null', 'array', 'object']` has no array items spread
   // into it, and a `null` held by a `['null', 'object']` is not filled in with the object's defaults. With no value,
   // a default of another listed type is kept the same way, so a `default: 'abc'` on a `['null', 'object', 'string']`
-  // isn't replaced by the object's. A `null` default is left to `computeDefaultBasedOnSchemaTypeAndDefaults()`
-  const value = rawFormData === undefined && defaults !== null ? defaults : rawFormData;
+  // isn't replaced by the object's. A field's own `null` default is left to `computeDefaultBasedOnSchemaTypeAndDefaults()`
+  const value = rawFormData === undefined && (defaults !== null || inheritsNull) ? defaults : rawFormData;
   if (
     Array.isArray(schema.type) &&
     (type === 'object' || type === 'array') &&
