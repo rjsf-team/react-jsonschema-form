@@ -1,11 +1,14 @@
 import { MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
-import { render } from '@testing-library/react';
+import { ariaDescribedByIds } from '@rjsf/utils';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import dayjs from 'dayjs';
 
 import Templates from '../src/templates/index.ts';
 import DateTimeWidget from '../src/widgets/DateTime/DateTimeWidget.tsx';
+import DateWidget from '../src/widgets/DateTime/DateWidget.tsx';
 
 const user = userEvent.setup();
 const schema: RJSFSchema = { type: 'string', format: 'date-time' };
@@ -111,5 +114,233 @@ describe('DateTimeWidget', () => {
       },
     });
     expect(queryByText('Test description')).not.toBeInTheDocument();
+  });
+
+  describe('time picker', () => {
+    test.each(['date-time', 'datetime', 'iso-date-time'])('renders a labelled time group for format=%s', (format) => {
+      renderWidget({ schema: { type: 'string', format } });
+
+      const group = screen.getByRole('group', { name: 'DateTime, Time' });
+      expect(group).toBeInTheDocument();
+      for (const name of ['hour', 'minute', 'second']) {
+        expect(screen.getByRole('spinbutton', { name })).toBeInTheDocument();
+      }
+    });
+
+    test('is not rendered by the DateWidget', () => {
+      render(
+        <MantineProvider>
+          <DateWidget {...makeProps({ schema: { type: 'string', format: 'date' } })} />
+        </MantineProvider>,
+      );
+
+      expect(screen.queryByRole('group', { name: 'DateTime, Time' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('spinbutton', { name: 'hour' })).not.toBeInTheDocument();
+    });
+
+    test('shows the time of the stored value', () => {
+      renderWidget({ value: '2024-01-01T10:30:15', schema: { type: 'string', format: 'iso-date-time' } });
+
+      expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('10');
+      expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('30');
+      expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('15');
+    });
+
+    test('commits the stored date with the picked time for format=iso-date-time', async () => {
+      const onChange = vi.fn();
+      renderWidget({ onChange, value: '2024-01-01T10:30:00', schema: { type: 'string', format: 'iso-date-time' } });
+
+      await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+      await user.keyboard('11');
+
+      expect(onChange).toHaveBeenLastCalledWith('2024-01-01T11:30:00');
+    });
+
+    test('commits the stored date with the picked time, with a timezone offset, for format=date-time', async () => {
+      const onChange = vi.fn();
+      renderWidget({ onChange, value: dayjs('2024-01-01 10:30:00').toISOString() });
+
+      await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+      await user.keyboard('11');
+
+      expect(onChange).toHaveBeenLastCalledWith(dayjs('2024-01-01 11:30:00').toISOString());
+    });
+
+    test('holds a time picked before there is a date without committing it', async () => {
+      const onChange = vi.fn();
+      renderWidget({ onChange, schema: { type: 'string', format: 'iso-date-time' } });
+
+      await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+      await user.keyboard('083015');
+
+      expect(onChange).not.toHaveBeenCalled();
+      expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('08');
+      expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('15');
+    });
+
+    test('describes the hours input by the field ids and marks it invalid when there are errors', () => {
+      renderWidget({
+        options: { description: 'Test description' },
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
+        rawErrors: ['An error'],
+      });
+
+      const hours = screen.getByRole('spinbutton', { name: 'hour' });
+      expect(hours).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
+      expect(hours).toHaveAttribute('aria-invalid', 'true');
+      expect(hours).toHaveAccessibleDescription(/Test description/);
+    });
+
+    test('names the time group without a label', () => {
+      renderWidget({ label: '' });
+
+      expect(screen.getByRole('group', { name: 'Time' })).toBeInTheDocument();
+    });
+
+    test.each([
+      ['disabled', { disabled: true }],
+      ['readonly', { readonly: true }],
+    ])('can not be changed when %s', async (_, props) => {
+      const onChange = vi.fn();
+      renderWidget({
+        onChange,
+        value: '2024-01-01T10:30:00',
+        schema: { type: 'string', format: 'iso-date-time' },
+        ...props,
+      });
+
+      const hours = screen.getByRole('spinbutton', { name: 'hour' });
+      await user.click(hours);
+      await user.keyboard('11');
+
+      expect(hours).toHaveValue('10');
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    test('clearable time does not commit value when cleared', async () => {
+      const onChange = vi.fn();
+      const onClearBtnClick = vi.fn();
+      renderWidget({
+        onChange,
+        value: '2024-01-01T10:30:00',
+        options: {
+          clearable: true,
+          timePickerProps: { clearButtonProps: { 'aria-label': 'clear-btn', onClick: onClearBtnClick } },
+        },
+      });
+
+      const clearButton = screen.getByRole('button', { name: 'clear-btn' });
+      await user.click(clearButton);
+
+      expect(onClearBtnClick).toHaveBeenCalled();
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    describe('editing a segment away', () => {
+      const value = '2024-01-01T10:30:00';
+      const schemaProps = { value, schema: { type: 'string', format: 'iso-date-time' } } as const;
+
+      test('does not commit while a segment is blank', async () => {
+        const onChange = vi.fn();
+        renderWidget({ onChange, ...schemaProps });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('{Backspace}');
+
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      test('restores the committed time when focus leaves with a blank segment', async () => {
+        const onChange = vi.fn();
+        renderWidget({ onChange, ...schemaProps });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('{Backspace}');
+        await user.tab({ shift: true });
+
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('10');
+        expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('30');
+        expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('00');
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      test('keeps the blank segment while focus moves between segments', async () => {
+        renderWidget(schemaProps);
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('{Backspace}');
+        await user.click(screen.getByRole('spinbutton', { name: 'minute' }));
+
+        expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveFocus();
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+      });
+
+      test('restores the held time when there is no date yet', async () => {
+        const onChange = vi.fn();
+        renderWidget({ onChange, schema: schemaProps.schema });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('083015');
+        await user.keyboard('{Backspace}');
+        expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('');
+
+        await user.tab();
+
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('08');
+        expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('30');
+        expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('15');
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      test('clears a partly typed time when there is no date and nothing was held', async () => {
+        const onChange = vi.fn();
+        renderWidget({ onChange, schema: schemaProps.schema });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('08');
+        await user.tab();
+
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+        expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('');
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      test('commits a retyped segment and has nothing left to restore', async () => {
+        const onChange = vi.fn();
+        renderWidget({ onChange, ...schemaProps });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('{Backspace}11');
+
+        expect(onChange).toHaveBeenLastCalledWith('2024-01-01T11:30:00');
+      });
+    });
+
+    test('time input is cleared when date input is cleared', async () => {
+      const onChange = vi.fn();
+      const props = {
+        onChange,
+        value: '2024-01-01T10:30:00',
+        options: { clearable: true, clearButtonProps: { 'aria-label': 'clear-btn' } },
+      };
+
+      const { rerender } = renderWidget(props);
+
+      const clearButton = screen.getByRole('button', { name: 'clear-btn' });
+      await user.click(clearButton);
+
+      expect(onChange).toHaveBeenCalledWith('');
+
+      rerender(
+        <MantineProvider>
+          <DateTimeWidget {...makeProps({ ...props, value: '' })} />
+        </MantineProvider>,
+      );
+
+      expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+      expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('');
+      expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('');
+    });
   });
 });
