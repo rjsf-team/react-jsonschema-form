@@ -65,7 +65,8 @@ export interface FormStatus<T = unknown> {
   readonly touchedFields: NestedBooleans<T>;
   /** How many submits have reached the form, valid or not, since the form mounted or was last reset, including one it
    * ignores while a promise `onSubmit` returned is pending. A submit the browser's constraint validation blocks never
-   * reaches it, so it is not counted unless `noHtml5Validate` is set
+   * reaches it, so it is not counted unless `noHtml5Validate` is set, except while a promise `onSubmit` returned is
+   * pending: the form then ignores the submit before that validation would run, and counts it
    */
   readonly submitCount: number;
 }

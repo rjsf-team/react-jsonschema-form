@@ -306,6 +306,23 @@ describe('dirty', () => {
     });
   });
 
+  it('marks no item at a hole both a sparse array and its baseline have', () => {
+    const sparse = (last: number) => {
+      const items: number[] = new Array(3);
+      items[0] = 1;
+      items[2] = last;
+      return items;
+    };
+    const { handle } = mountWithHandle({
+      schema: { type: 'array', items: { type: 'number' } },
+      initialFormData: sparse(3),
+    });
+
+    act(() => handle.setFieldValue('', sparse(4)));
+
+    expect(handle.getStatus().dirtyFields).toEqual([undefined, undefined, true]);
+  });
+
   describe('switching anyOf/oneOf options', () => {
     function optionSelect(container: HTMLElement) {
       const select = container.querySelector('#root__oneof_select');
@@ -368,6 +385,35 @@ describe('dirty', () => {
       expect(handle.getStatus()).toEqual({
         dirty: true,
         dirtyFields: { b: true },
+        touched: false,
+        touchedFields: {},
+        submitCount: 0,
+      });
+    });
+
+    it('re-derives the baseline reset(saved) seeded with the option shown at the reset', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { note: { type: 'string' } },
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string', default: 'z' } } },
+          { title: 'B', properties: { b: { type: 'string' } } },
+        ],
+      };
+      const { container, handle, rerender } = mountWithHandle({ schema, initialFormData: {} });
+      await user.selectOptions(optionSelect(container), 'B');
+      act(() => handle.reset(handle.getFormData()));
+      await user.type(input(container, 'root_note'), 'x');
+
+      rerender({
+        schema: { ...schema, properties: { ...schema.properties, c: { type: 'string', default: 'c' } } },
+        initialFormData: {},
+      });
+
+      expect(optionSelect(container)).toHaveDisplayValue('B');
+      expect(handle.getStatus()).toEqual({
+        dirty: true,
+        dirtyFields: { note: true },
         touched: false,
         touchedFields: {},
         submitCount: 0,
@@ -451,6 +497,27 @@ describe('submitCount', () => {
     await user.click(button);
 
     expect(onClick).toHaveBeenCalledTimes(2);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(handle.getStatus().submitCount).toBe(2);
+    await act(async () => save.resolve(undefined));
+  });
+
+  it('counts a pending click once when the onClick its options set submits through FormRef.submit()', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    let submitFromClick = () => {};
+    const { handle } = mountWithHandle({
+      schema: required,
+      uiSchema: { 'ui:submitButtonOptions': { props: { onClick: () => submitFromClick() } } },
+      initialFormData: { name: 'a' },
+      onSubmit,
+    });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+    submitFromClick = () => handle.submit();
+
+    await user.click(button);
+
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(handle.getStatus().submitCount).toBe(2);
     await act(async () => save.resolve(undefined));
@@ -563,27 +630,29 @@ describe('reset', () => {
       submitCount: 0,
     });
   });
-  it('keeps the seed it last applied when deriving a new one throws', () => {
-    const guarded: RJSFSchema = {
-      ...schema,
-      if: { properties: { name: { const: 'bad' } }, required: ['name'] },
-      then: { required: ['city'] },
-    };
-    const throwing = new Proxy(validator, {
-      get(target, key, receiver) {
-        if (key !== 'isValid') {
-          const member: unknown = Reflect.get(target, key, receiver);
-          return member;
+  // Deriving a seed whose `name` is `'bad'` throws, through the validator `if` calls
+  const guarded: RJSFSchema = {
+    ...schema,
+    if: { properties: { name: { const: 'bad' } }, required: ['name'] },
+    then: { required: ['city'] },
+  };
+  const throwing = new Proxy(validator, {
+    get(target, key, receiver) {
+      if (key !== 'isValid') {
+        const member: unknown = Reflect.get(target, key, receiver);
+        return member;
+      }
+      return (...args: Parameters<typeof validator.isValid>) => {
+        const formData: unknown = args[1];
+        if (isPlainObject(formData) && formData.name === 'bad') {
+          throw new Error('bad seed');
         }
-        return (...args: Parameters<typeof validator.isValid>) => {
-          const formData: unknown = args[1];
-          if (isPlainObject(formData) && formData.name === 'bad') {
-            throw new Error('bad seed');
-          }
-          return target.isValid(...args);
-        };
-      },
-    });
+        return target.isValid(...args);
+      };
+    },
+  });
+
+  it('keeps the seed it last applied when deriving a new one throws', () => {
     const { handle } = mountWithHandle({ schema: guarded, initialFormData: { name: 'Ada' } }, throwing);
     act(() => handle.reset({ name: 'Alan' }));
 
@@ -593,6 +662,21 @@ describe('reset', () => {
     act(() => handle.reset());
 
     expect(handle.getFormData()).toEqual({ name: 'Alan', city: 'Oslo' });
+  });
+
+  it('keeps a pending submit pending when deriving the seed throws', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    const { handle } = mountWithHandle({ schema: guarded, initialFormData: { name: 'Ada' }, onSubmit }, throwing);
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    expect(() => act(() => handle.reset({ name: 'bad' }))).toThrow('bad seed');
+    await user.click(button);
+
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    await act(async () => save.resolve(undefined));
   });
 });
 

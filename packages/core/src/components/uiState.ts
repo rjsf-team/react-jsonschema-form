@@ -402,9 +402,17 @@ export function createUiState() {
 
 export type UiState = ReturnType<typeof createUiState>;
 
-/** `uiState` with no option selected, for the baseline: it was derived when the form showed the options its own data
- * matched, so the options the user picked since are the edited data's, not the baseline's
+/** `uiState` with no option selected, for the baseline the form mounted with: it was derived when the form showed the
+ * options its own data matched, so the options the user picked since are the edited data's, not the baseline's
  */
 export function withoutSelections(uiState: UiState): UiState {
   return { ...uiState, selection: () => undefined };
+}
+
+/** `uiState` with the options selected now and never the ones picked later, for the baseline `reset()` derives under
+ * the options the form shows at the reset
+ */
+export function withSelectionsAsOf(uiState: UiState): UiState {
+  const { selections } = uiState.save();
+  return { ...uiState, selection: (path, list) => selections.get(path)?.get(list) };
 }

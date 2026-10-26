@@ -7,8 +7,9 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', title: 'Name' } } };
 
 /** Pins that the theme's `SubmitButton` is `aria-disabled` while a promise `onSubmit` returned is pending, and stays
- * enabled so a keyboard user keeps focus on it, that it takes no click meanwhile, and that a `disabled` the uiSchema asks
- * for still applies when nothing is pending
+ * enabled so a keyboard user keeps focus on it, that it takes no click meanwhile though an `onClick` the uiSchema sets
+ * still runs and the click counts as a submit attempt, and that a `disabled` the uiSchema asks for still applies when
+ * nothing is pending
  *
  * @param Form - The theme's `Form` component
  */
@@ -70,6 +71,50 @@ export function submitPendingTests(Form: ComponentType<FormProps>) {
       expect(click.defaultPrevented).toBe(true);
       save.resolve(undefined);
       await waitFor(() => expectIdle(button));
+    });
+
+    test('calls an onClick the uiSchema sets while the promise is pending, and still cancels the click', async () => {
+      const save = Promise.withResolvers<undefined>();
+      const onClick = vi.fn();
+      const onSubmit = vi.fn(async () => save.promise);
+      render(
+        <Form
+          schema={schema}
+          uiSchema={{ 'ui:submitButtonOptions': { props: { onClick } } }}
+          validator={validator}
+          onSubmit={onSubmit}
+        />,
+      );
+      const button = screen.getByRole('button', { name: 'Submit' });
+      act(() => button.click());
+
+      const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+      act(() => {
+        button.dispatchEvent(click);
+      });
+
+      expect(onClick).toHaveBeenCalledTimes(2);
+      expect(onClick).toHaveBeenLastCalledWith(expect.objectContaining({ type: 'click', target: button }));
+      expect(click.defaultPrevented).toBe(true);
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      save.resolve(undefined);
+      await waitFor(() => expectIdle(button));
+    });
+
+    test('counts a click it cancels while the promise is pending as a submit attempt', async () => {
+      const save = Promise.withResolvers<undefined>();
+      const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+      render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />);
+      const button = screen.getByRole('button', { name: 'Submit' });
+      act(() => button.click());
+
+      act(() => button.click());
+      save.resolve(undefined);
+      await waitFor(() => expectIdle(button));
+      act(() => button.click());
+
+      expect(onSubmit).toHaveBeenCalledTimes(2);
+      expect(onSubmit.mock.lastCall?.[0]).toMatchObject({ submitCount: 3 });
     });
 
     test('stays disabled when the uiSchema disables it and nothing is pending', () => {

@@ -539,7 +539,7 @@ Any other value passed after mount is ignored, with a warning in development onl
 <Form key={record.id} schema={schema} validator={validator} initialFormData={record} onChange={save} />
 ```
 
-To change the data in place, keeping the errors and the fields' own state, call [`setFieldValue('', data)`](../advanced-customization/internals.md#change-form-data-programmatically) on the form's ref, which reports the new value through `onChange` like any edit.
+To change the data in place, keeping the errors and the fields' own state, call [`setFieldValue('', data)`](../advanced-customization/internals.md#change-form-data-programmatically) on the form's ref, which reports the new value through `onChange` like any edit, so the form reads dirty. To show the data clean, call [`reset(data)`](../usage/submitting.md#making-the-saved-data-the-baseline) instead, which makes it the baseline too.
 
 Only `undefined` means "not passed". `null` seeds the schema's defaults the way `undefined` does. `false`, `0` and `''` are values.
 
