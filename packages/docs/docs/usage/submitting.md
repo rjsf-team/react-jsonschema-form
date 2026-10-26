@@ -5,7 +5,7 @@ This page covers what happens while that submission is in flight, and how `Form`
 
 ## A pending submission
 
-When `onSubmit` returns a promise, the form ignores another submit until that promise settles, whether it comes from a submit button, from Enter pressed in a field or from `FormRef.submit()`, as TanStack Form does while it is submitting. Meanwhile the submit button gets the `pending` prop, and the form sets `aria-disabled` in the props `ui:submitButtonOptions` give the button, so the submit button of `@rjsf/core`, of every theme and a custom one that spreads those props tells assistive technology it is unavailable. The button isn't `disabled`: the browser moves focus away from a focused button that becomes disabled, so a keyboard user who submitted with it would lose their place.
+When `onSubmit` returns a promise, the form ignores another submit until that promise settles, whether it comes from a submit button, from Enter pressed in a field or from `FormRef.submit()`. That is what TanStack Form's documented `disabled={!canSubmit}` submit button does in your app, built into the form; react-hook-form doesn't block a second submit. Meanwhile the submit button gets the `pending` prop, and the form sets `aria-disabled` in the props `ui:submitButtonOptions` give the button, so the submit button of `@rjsf/core`, of every theme and a custom one that spreads those props tells assistive technology it is unavailable. The button isn't `disabled`: the browser moves focus away from a focused button that becomes disabled, so a keyboard user who submitted with it would lose their place.
 
 ```tsx
 import { useState } from 'react';
