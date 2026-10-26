@@ -9,7 +9,6 @@ import type {
 } from '@rjsf/utils';
 import {
   callWithDeferredThrow,
-  deepEquals,
   deepEqualsUndefinedAsMissing,
   propertyToPath,
   ROOT_FIELD_PATH,
@@ -17,15 +16,13 @@ import {
   fieldPathFromList,
   fieldPathToId,
   fieldPathToList,
-  getByPath,
   partId,
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
-import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { AnnouncedMove, ExtraDataOmission, FieldChange, KeyMove, MoveOutcome } from './formState.ts';
+import type { AnnouncedMove, BlurTouch, ExtraDataOmission, FieldBlur, FieldChange, MoveOutcome } from './formState.ts';
 import {
   applyBlur,
   applyChangeToData,
@@ -39,6 +36,8 @@ import {
   freezeFormData,
   isBlurValidated,
   isLiveValidated,
+  keyMoveOf,
+  moveFateOf,
   omitExtraDataOf,
   seedOf,
   shareState,
@@ -46,9 +45,10 @@ import {
   toFormStatus,
   toIChangeEvent,
   validateFormData,
+  withMarksSettled,
 } from './formState.ts';
 import type { RJSFFormStatus } from './IChangeEvent.ts';
-import { asFieldValue, fieldStateOf } from './uiState.ts';
+import { asFieldValue, fieldStateOf, isPathPrefix } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
 const HELD_SCALARS_LIMIT = 100;
@@ -60,6 +60,17 @@ const HELD_SCALARS_LIMIT = 100;
  */
 type Deliver = (operation: () => void) => void;
 const deliverToCaller: Deliver = (operation) => operation();
+
+/** Whether a render of the `Form` reads a member that differs between `committed` and `shown`, directly or through
+ * `deriveState()`: any but the touched marks, which only `getStatus()` and the events report. A commit that changes
+ * none of them, such as a blur that only touches a field, re-renders nothing. Every other member is compared, so one
+ * added to the state is never missed
+ */
+function isRenderedChange(committed: object, shown: object): boolean {
+  return Object.keys({ ...shown, ...committed }).some(
+    (key) => key !== 'touchedPaths' && Reflect.get(committed, key) !== Reflect.get(shown, key),
+  );
+}
 
 /** Whether `element` takes focus, as a form control or an element with a `tabindex` does. A hidden input, an element
  * the `hidden` attribute hides, a disabled control and an `<a>` with no `href` report a `tabIndex` of 0 all the same,
@@ -124,30 +135,6 @@ function focusableForId(
   );
 }
 
-/** Where the change at `path` moves the selections and expansions `uiState` holds: under the keys of the container the
- * move announced for it moved, where the errors raised there go, or out from under a property the change removes
- *
- * @param move - The key move announced for the change, if any
- * @param newValue - The value the change sets
- * @param path - The path of the change
- * @returns - The container whose keys move and where each goes, or undefined for a change that moves none
- */
-function uiStateMoveOf<T>(
-  move: AnnouncedMove | undefined,
-  newValue: T | undefined,
-  path: FieldPathList,
-): { container: FieldPath; newKeyOf: KeyMove } | undefined {
-  const newKeyOf = move?.newOwnKeyOf ?? move?.newKeyOf;
-  if (move && newKeyOf) {
-    return { container: move.fieldPath, newKeyOf };
-  }
-  if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE && path.length > 0) {
-    const removed = String(path[path.length - 1]);
-    return { container: fieldPathFromList(path.slice(0, -1)), newKeyOf: (key) => (key === removed ? undefined : key) };
-  }
-  return undefined;
-}
-
 /** Whether `value` is a native promise, from this realm or another, such as an iframe's `fetch()`. Only a promise keeps
  * the form pending: another thenable, such as a query builder, may run its request again on each `then()` call
  */
@@ -171,6 +158,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // What operations have made of the form: the store React subscribes to. A render derives what it shows from it and
   // the props, see `deriveState()`, and nothing a render derives is written back
   let published = initial;
+  // The store's state as of its last commit that changed a member the `Form` renders from, which is what React reads,
+  // so a commit that changed none of them returns React the snapshot it already rendered
+  let shown = initial;
   const listeners = new Set<() => void>();
   // What the last commit rendered: its props, the state it showed, and the store's state that state was derived from.
   // Recorded after the commit, so an operation can start from what is on screen
@@ -185,6 +175,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // that carried one
   let announced: AnnouncedMove | undefined;
   let moved: { move: AnnouncedMove; outcome: MoveOutcome } | undefined;
+  // The field whose blur is on its way to the form, what the blur touches and the id the widget reported it with, see
+  // `FormDataAccess.sendBlur()`
+  let blurring: (FieldBlur & { id: string }) | undefined;
   // The form's option selections and cycle expansions, which live as long as the form, see `createUiState()`
   const { uiState } = initial;
   // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
@@ -242,6 +235,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // which nothing renders the count from, so counting an attempt commits and re-renders nothing
   let attempts = 0;
   let attemptsBeforeReset = 0;
+  // How many times `reset()` has run, so a blur whose `onBlur` reset the form touches nothing in the state it left
+  let resets = 0;
   // The status `getStatus()` last handed out, handed out again while the state and the count stand, so repeated reads
   // share the `dirtyFields` it built. Frozen in development, since one reader's mutation would show in every later read
   let lastStatus: { from: FormState<T, S, F>; status: RJSFFormStatus<T> } | undefined;
@@ -301,6 +296,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (committed !== start) {
       published = committed;
       publishedProps = committedProps;
+      if (isRenderedChange(committed, shown)) {
+        shown = committed;
+      }
       hold(committed.formData);
       listeners.forEach((listener) => listener());
     }
@@ -471,8 +469,21 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // Unvalidated, the change still moves its errors with the keys it moved and settles the fields' own errors, which
     // the rewrite then carries through its one validation
     const withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
-    const rewritten = applyChangeToData(withEditErrors, rewrite, props);
-    return { next: applyChangeToErrorsOf(rewritten, edited.formData, rewrite, props, isValidated), edited };
+    let rewrittenData = applyChangeToData(withEditErrors, rewrite, props);
+    // The rewrite moves no key, so the marks the change moved are settled by what the rewrite kept under each key,
+    // before the validation that hides the errors of the fields they don't reveal
+    const move = keyMoveOf(change);
+    if (move) {
+      const at = fieldPathToList(move.container);
+      const fateOf = moveFateOf(
+        getAt(rewrittenData.formData, at),
+        getAt(edited.formData, at),
+        getAt(base.formData, at),
+      );
+      rewrittenData = withMarksSettled(rewrittenData, base, move.container, fateOf);
+    }
+    const rewritten = applyChangeToErrorsOf(rewrittenData, edited.formData, rewrite, props, isValidated);
+    return { next: rewritten, edited };
   };
 
   /** Applies a change to the field at `fieldPath` with `applyEdit()`, commits the result and reports it through
@@ -508,7 +519,17 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const path = fieldPathToList(fieldPath);
     // The selections and expansions under keys the change moves, or under a property it removes, move before it is
     // applied, so the sanitize reads them where the change puts the data; a change the form refuses puts them back
-    const uiMove = uiStateMoveOf(move, newValue, path);
+    const fieldChange: FieldChange<T> = {
+      newValue,
+      fieldPath,
+      newErrorSchema,
+      newKeyOf: move?.newKeyOf,
+      newOwnKeyOf: move?.newOwnKeyOf,
+      dropsOwnErrors: move?.dropsOwnErrors,
+      isAnnouncedMove: move !== undefined,
+      isFieldEdit,
+    };
+    const uiMove = keyMoveOf(fieldChange);
     const containerPath = uiMove && fieldPathToList(uiMove.container);
     deliver(() => {
       const before = containerPath && getAt<unknown>(current().formData, containerPath);
@@ -521,19 +542,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       try {
         const committed = commit(
           settled((base) => {
-            const { next, edited } = applyEdit(
-              base,
-              {
-                newValue,
-                fieldPath,
-                newErrorSchema,
-                newKeyOf: move?.newKeyOf,
-                newOwnKeyOf: move?.newOwnKeyOf,
-                dropsOwnErrors: move?.dropsOwnErrors,
-                isFieldEdit,
-              },
-              props,
-            );
+            const { next, edited } = applyEdit(base, fieldChange, props);
             // `applyEdit()` hands `base` itself back only for an edit `transformChange` refused
             edit = { isRefused: next === base, edited };
             return next;
@@ -558,13 +567,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
           // A rewritten move put the items where the rewrite says, which `ArrayField` reads the same way for its rows
           const kept = getAt<unknown>(committed.formData, containerPath);
           const movedItems = getAt<unknown>(edit.edited.formData, containerPath);
-          uiState.settleMove(uiMove.container, unmoved, (key) => {
-            const held = getByPath(kept, key);
-            if (deepEquals(held, getByPath(movedItems, key))) {
-              return 'moved';
-            }
-            return deepEquals(held, getByPath(before, key)) ? 'unmoved' : 'none';
-          });
+          uiState.settleMove(uiMove.container, unmoved, moveFateOf(kept, movedItems, before));
         }
         props.onChange?.(eventOf(committed), id);
       } catch (error) {
@@ -576,22 +579,25 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     });
   };
 
-  /** What a blurred field does to the form, after the `Form`'s `onBlur`: any live validation and live omit that the
-   * flags ask for on blur, reported through `onChange` when they changed what an `IChangeEvent` carries. Run through
-   * `callWithDeferredThrow()` as a field's change is, since a field may report the blur from an Effect, where a throw
-   * from a validation callback or `onChange` would unmount the form.
+  /** What a blurred field does to the form, after the `Form`'s `onBlur`: the field is touched, and any live validation
+   * and live omit that the flags ask for on blur run, reported through `onChange` when they changed the data or the
+   * errors an `IChangeEvent` carries. A touch alone is not reported; the next event and `getStatus()` carry it. Run
+   * through `callWithDeferredThrow()` as a field's change is, since a field may report the blur from an Effect, where a
+   * throw from a validation callback or `onChange` would unmount the form.
    *
    * @param id - The unique `id` of the field that was blurred
+   * @param [blurred] - The field that was blurred and what its blur touches, when a `SchemaField` reported it
+   * @param dataAtBlur - The form's data when the blur reached it, before the `Form`'s `onBlur` ran
    */
-  const blur = (id: string) => {
+  const blur = (id: string, blurred: FieldBlur | undefined, dataAtBlur: T | undefined) => {
     const props = committedProps;
     const { omitExtraData, liveOmit } = props;
-    if (isDetached || !((omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
+    if (isDetached || !(blurred || (omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
       return;
     }
     const start = current();
-    const committed = commit(settled((base) => applyBlur(base, props)));
-    // Only the `IChangeEvent` members count; the validator's own results are not among them
+    const committed = commit(settled((base) => applyBlur(base, props, blurred && { ...blurred, dataAtBlur })));
+    // Only the `IChangeEvent` members count; the validator's own results and the status are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
       props.onChange?.(eventOf(committed), id);
     }
@@ -761,6 +767,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       // submit pending
       resetSeed = nextReset;
       attemptsBeforeReset = attempts;
+      resets += 1;
       // A promise that never settles would otherwise keep the form ignoring submits until it remounts
       if (pendingSubmit !== undefined) {
         releasePending();
@@ -812,6 +819,29 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     setFormElement: (element: HTMLElement | null) => {
       formElement = element;
     },
+    /** Calls `send` with `fieldPath` as the path of the blur it sends and `touches` as what it touches, unless a field
+     * this one holds has named the same blur already, see `FormDataAccess.sendBlur()`
+     */
+    sendBlur: (id: string, fieldPath: FieldPath, touches: BlurTouch, send: () => void, replaces = false) => {
+      const previous = blurring;
+      if (
+        previous !== undefined &&
+        !replaces &&
+        previous.id === id &&
+        isPathPrefix(fieldPathToList(fieldPath), fieldPathToList(previous.fieldPath))
+      ) {
+        send();
+        return;
+      }
+      // A blur named by a field elsewhere, as one a parent's `onBlur` causes for another field before it sends its
+      // own, is kept for the blur that named it, which reaches the form once this one has
+      blurring = { fieldPath, touches, id };
+      try {
+        send();
+      } finally {
+        blurring = previous;
+      }
+    },
     sendMove: (move: AnnouncedMove, send: () => void) => {
       announced = move;
       try {
@@ -830,7 +860,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     readField: <D>(path: FieldPath) => getAt<D>(current().formData, fieldPathToList(path)),
     readRenderedField: <D>(path: FieldPath) => getAt<D>(rendered.formData, fieldPathToList(path)),
     uiState,
-    getSnapshot: () => published,
+    getSnapshot: () => shown,
     subscribe: (listener: () => void) => {
       listeners.add(listener);
       return () => {
@@ -859,9 +889,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       rendered = derived;
       renderedFrom = from;
       derivedCache = undefined;
-      // Only a commit of the store's latest state: an operation made since the render began has left data the selections
-      // already hold for, which a render of the data before it would release
-      if (from === published) {
+      // Only a commit of the store's latest snapshot: an operation made since the render began has left data the
+      // selections already hold for, which a render of the data before it would release
+      if (from === shown) {
         uiState.rendered((at) => getAt(derived.formData, at));
       }
     },
@@ -936,9 +966,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       const props = committedProps;
+      const blurred = blurring;
+      // Taken by this blur, so one that `onBlur` causes names its own field
+      blurring = undefined;
+      const dataAtBlur = blurred && current().formData;
+      const resetsAtBlur = resets;
       // Before the blur reads the state, so it validates an edit `onBlur` makes instead of reverting it
       callWithDeferredThrow(() => props.onBlur?.(id, data));
-      callWithDeferredThrow(() => blur(id));
+      callWithDeferredThrow(() => blur(id, resets === resetsAtBlur ? blurred : undefined, dataAtBlur));
     },
     handleFocus: (id: string, data: unknown) => {
       if (isDetached) {

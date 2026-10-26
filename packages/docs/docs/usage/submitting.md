@@ -1,7 +1,7 @@
 # Submitting
 
 When the form is submitted and its data are valid, `Form` calls your [`onSubmit`](../api-reference/form-props.md#onsubmit) with the validated data.
-This page covers what happens while that submission is in flight, how `Form` fits React's form APIs, `useActionState` and `useFormStatus`, and how to tell whether the form holds changes that haven't been saved.
+This page covers what happens while that submission is in flight, how `Form` fits React's form APIs, `useActionState` and `useFormStatus`, how to tell whether the form holds changes that haven't been saved, and which fields the user has touched.
 
 ## A pending submission
 
@@ -213,7 +213,7 @@ Changes the user didn't make leave the form clean. When a new `schema` prop fill
 
 ### Making the saved data the baseline
 
-After a save, call `reset(saved)` on the form's ref with the data you saved. That data, with the schema's defaults filled in as on mount, becomes the baseline and the form's data, and the form clears its errors and its submit count, without remounting. `reset()` with no argument goes back to the data the last `reset(saved)` passed, or to the props' seed if there was none.
+After a save, call `reset(saved)` on the form's ref with the data you saved. That data, with the schema's defaults filled in as on mount, becomes the baseline and the form's data, and the form clears its errors, its touched fields and its submit count, without remounting. `reset()` with no argument goes back to the data the last `reset(saved)` passed, or to the props' seed if there was none.
 
 That makes `saved` the seed for good, as `reset(values)` replaces the default values in react-hook-form and TanStack Form. `reset(undefined)` is the same call as `reset()`. To start on another record, pass it: `reset(record)`, or `reset({})` for a blank form whose data is an object, which fills in the schema's defaults as `initialFormData={{}}` would on mount. To go back to the props' seed, such as after `initialFormData` changes to another record, or to a blank form whose data isn't an object, remount the form under a `key`.
 
@@ -318,3 +318,14 @@ function PersonForm({ person }: { person: Person }) {
   );
 }
 ```
+
+## Touched fields
+
+A field is touched once its widget reports a blur, the same blur [`liveValidate="onBlur"`](../api-reference/form-props.md#livevalidate) validates on. Every `onChange` and `onSubmit` event, and `getStatus()`, report:
+
+- `touched`: whether any field has been touched since the form mounted or was last reset.
+- `touchedFields`: which fields, nested like the data, with `true` at each touched field, for example `{ address: { street: true } }`. For an array it holds an entry for each item, `undefined` where the item holds no touched field. A widget that handles a whole array or object, such as checkboxes for an array of enum values, touches every item or member it holds at the blur, so `touchedFields` holds `true` at each of them. One that holds nothing, empty or not yet given a value, has nothing to mark: tabbing through a checkbox group with nothing checked leaves the form untouched, and it stays untouched when `setFieldValue()` fills it later, until it is blurred again. A blurred text field is touched whether or not it holds a value. The selector of an `anyOf` or `oneOf` field is no field of the data, so blurring it touches nothing. A layout grid's discriminator selector is the exception: it writes the property the options are discriminated on, so blurring it touches that property. Under [`liveErrors="field"`](../api-reference/form-props.md#liveerrors) with `liveValidate="onBlur"`, its errors are revealed on that blur all the same. A touched field stays with its array item when the item is moved, and goes when the item is removed, or when its key is dropped from the data, as `setFieldValue()` writing a whole object without it does; the key starts untouched if it comes back. `touched` is `true` exactly when `touchedFields` holds a `true`.
+
+A submit doesn't touch any field; read `submitCount` to tell whether one was attempted. A blur that only touches a field fires no `onChange`: the next event carries it, and `getStatus()` reads it right away. `reset()` clears the touched fields.
+
+To show a field's errors only once the user has reached it, use [`liveErrors="field"`](../api-reference/form-props.md#liveerrors) rather than filtering errors by `touchedFields` yourself.

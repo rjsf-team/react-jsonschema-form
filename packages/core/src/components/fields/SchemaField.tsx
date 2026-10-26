@@ -58,6 +58,7 @@ import {
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
+import useSendBlur from '../../hooks/useSendBlur.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
@@ -829,6 +830,11 @@ function SchemaFieldRender<
     fieldSchema,
   } = useSchemaFieldPlan<T, S, F>(props);
   const hasOptions = xxxOfOptions !== undefined;
+  // Read off the schema rather than the value, so an array or object holding nothing yet is still one
+  const fieldType = getSchemaType<S>(fieldSchema);
+  const holdsContainer = fieldType === 'array' || fieldType === 'object';
+  const handleBlur = useSendBlur(fieldPath, props.onBlur, holdsContainer ? 'leaves' : 'field');
+  const handleSelectorBlur = useSendBlur(fieldPath, props.onBlur, 'nothing');
   const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
 
   const rendersNamedField = fieldToRender?.rendersNamedField === true;
@@ -1002,6 +1008,7 @@ function SchemaFieldRender<
     <FieldComponent
       {...props}
       onChange={handleFieldComponentChange}
+      onBlur={handleBlur}
       id={fieldComponentId}
       schema={fieldSchema}
       uiSchema={fieldUiSchema}
@@ -1121,7 +1128,7 @@ function SchemaFieldRender<
                       formData={formData}
                       fieldPath={fieldPath}
                       id={fieldId}
-                      onBlur={props.onBlur}
+                      onBlur={handleSelectorBlur}
                       onChange={handleOptionFieldChange}
                       onFocus={props.onFocus}
                       options={xxxOfOptions}

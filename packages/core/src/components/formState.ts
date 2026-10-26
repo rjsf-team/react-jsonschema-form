@@ -13,9 +13,11 @@ import type {
 } from '@rjsf/utils';
 import {
   getByPath,
+  hasByPath,
   setByPath,
   propertyToPath,
   toPath,
+  toFieldPath,
   unsetByPath,
   createSchemaUtils,
   deepEquals,
@@ -36,6 +38,7 @@ import {
   UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
   validationDataMerge,
+  fieldPathFromList,
   ERRORS_KEY,
   SCHEMA_KEY,
   ANY_OF_KEY,
@@ -54,6 +57,8 @@ import {
   createUiState,
   fieldStateOf,
   isPathPrefix,
+  movedPaths,
+  settledEntries,
   withoutSelections,
   withSelectionsAsOf,
   withSelectionsHeldFor,
@@ -155,12 +160,62 @@ function markWhole(value: unknown): unknown {
   return true;
 }
 
-/** The marks `markChanged()` builds, as the `NestedBooleans` of the form's data. The overload is the one trust point
- * that marks built by walking the form's data are shaped like it
+/** The marks `markChanged()` and `markPath()` build, as the `NestedBooleans` of the form's data. The overload is the
+ * one trust point that marks built by walking the form's data are shaped like it
  */
 function asNestedBooleans<T>(marks: unknown): NestedBooleans<T>;
 function asNestedBooleans(marks: unknown): unknown {
   return marks;
+}
+
+/** The marks of data that holds none: an empty array or object, or `false` */
+function noMarks(formData: unknown): unknown {
+  if (Array.isArray(formData)) {
+    return [];
+  }
+  return isPlainObject(formData) ? {} : false;
+}
+
+/** `marks` with the field at `path` of `data` marked touched, `true` whether or not it holds a value. An object the
+ * data does not hold yet, as one whose fields were blurred but never filled in, is marked as if it were there; a key a
+ * change dropped without an announced move is no longer touched, see `withoutDroppedPaths()`. An array item that is not
+ * there, or a path through a value that holds no fields, marks nothing. A field marked whole stays `true` whatever is
+ * marked inside it, in whichever order the paths are marked. Writes into the containers of `marks`, which the caller
+ * built
+ *
+ * @returns - The marks with the field marked, or undefined when the path marks nothing
+ */
+function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
+  if (path.length === 0 || marks === true) {
+    return true;
+  }
+  const [key, ...rest] = path;
+  if (Array.isArray(data) ? !hasByPath(data, key) : data !== undefined && !isPlainObject(data)) {
+    return undefined;
+  }
+  let container: GenericObjectType = isPlainObject(marks) ? marks : {};
+  if (Array.isArray(data)) {
+    container = Array.isArray(marks) ? marks : Array.from({ length: data.length });
+  }
+  const marked = markPath(getByPath(container, key), getByPath(data, key), rest);
+  if (marked === undefined) {
+    return undefined;
+  }
+  setOwn(container, key, marked);
+  return container;
+}
+
+/** The paths of the leaves `value`, the value at `fieldPath`, holds: `fieldPath` itself for a value that is no array or
+ * object, and none for an empty array or object or for no value
+ */
+function leafPathsOf(value: unknown, fieldPath: FieldPath): FieldPath[] {
+  if (Array.isArray(value)) {
+    return value.flatMap((item, index) => leafPathsOf(item, toFieldPath(index, fieldPath)));
+  }
+  if (isPlainObject(value)) {
+    return Object.entries(value).flatMap(([key, member]) => leafPathsOf(member, toFieldPath(key, fieldPath)));
+  }
+  return value === undefined ? [] : [fieldPath];
 }
 
 /** The `dirtyFields` of `formData`. The data shares with the baseline every subtree equal to it, see `shareState()`,
@@ -168,26 +223,48 @@ function asNestedBooleans(marks: unknown): unknown {
  * reference once; no deep comparison runs
  */
 function dirtyFieldsOf<T>(formData: T | undefined, baseline: T | undefined): NestedBooleans<T> {
-  let marks: unknown = false;
-  if (!Object.is(formData, baseline)) {
-    marks = markChanged(formData, baseline);
-  } else if (Array.isArray(formData)) {
-    marks = [];
-  } else if (isPlainObject(formData)) {
-    marks = {};
-  }
-  return asNestedBooleans<T>(marks);
+  return asNestedBooleans<T>(Object.is(formData, baseline) ? noMarks(formData) : markChanged(formData, baseline));
 }
 
-/** The form's status, whose `dirtyFields` is built on first read, since most events are read without it. Frozen in
- * development as it is built, since `getStatus()` hands the same marks to every reader
+/** The touched marks of `formData`, or undefined when nothing touched marks a field. The touched fields cost what was
+ * touched
+ */
+function touchedMarksOf(formData: unknown, touchedPaths: TouchedPaths): unknown {
+  let marks: unknown;
+  touchedPaths.forEach((fieldPath) => {
+    marks = markPath(marks, formData, fieldPathToList(fieldPath)) ?? marks;
+  });
+  return marks;
+}
+
+/** The form's status, whose `dirtyFields`, `touched` and `touchedFields` are built on first read, since most events are
+ * read without them. The marks are frozen in development as they are built, since `getStatus()` hands the same marks
+ * to every reader
  *
- * @param state - The data and the baseline of the form
+ * @param state - The state of the form
  * @param submitCount - How many submits have reached the form since it mounted or was last reset
  * @returns - The status of the form
  */
-export function toFormStatus<T>({ formData, baseline }: DataAndBaseline<T>, submitCount: number): RJSFFormStatus<T> {
+export function toFormStatus<T>(
+  { formData, baseline, touchedPaths }: DataAndBaseline<T> & { touchedPaths: TouchedPaths },
+  submitCount: number,
+): RJSFFormStatus<T> {
   let dirtyFields: NestedBooleans<T> | undefined;
+  let touched = false;
+  let touchedFields: NestedBooleans<T> | undefined;
+  const buildTouched = () => {
+    if (touchedFields === undefined) {
+      const marks = touchedMarksOf(formData, touchedPaths);
+      // Read off the marks rather than the paths, so a touched path that marks nothing, such as an item path the data
+      // no longer holds, cannot report a touch `touchedFields` does not show
+      touched = marks !== undefined;
+      touchedFields = asNestedBooleans<T>(marks ?? noMarks(formData));
+      if (isDevelopment) {
+        freezeFormData(touchedFields);
+      }
+    }
+    return touchedFields;
+  };
   return {
     dirty: !Object.is(formData, baseline),
     get dirtyFields() {
@@ -199,8 +276,295 @@ export function toFormStatus<T>({ formData, baseline }: DataAndBaseline<T>, subm
       }
       return dirtyFields;
     },
+    get touched() {
+      buildTouched();
+      return touched;
+    },
+    get touchedFields() {
+      return buildTouched();
+    },
     submitCount,
   };
+}
+
+/** The fields whose widgets reported a blur, each holding a value of its own. A widget that handles a whole array or
+ * object touches the leaves it holds at the blur
+ */
+export type TouchedPaths = ReadonlySet<FieldPath>;
+
+/** Where `liveValidate`'s trigger fired, for `liveErrors: 'field'`: `fields`, the fields that fired, whose errors show
+ * along with those of every array and object holding them, and `containers`, the arrays and objects whose keys a move
+ * announced moved, or whose option selector was blurred, whose own errors show, along with those of the containers
+ * holding them, but not the errors of the fields inside them. `all` is set once a validation the form was asked for,
+ * `validateForm()` or a submit, showed every error
+ */
+export interface RevealedPaths {
+  readonly fields: ReadonlySet<FieldPath>;
+  readonly containers: ReadonlySet<FieldPath>;
+  readonly all: boolean;
+}
+
+/** What a blur reported for the field at a path touches: `'field'`, the field itself; `'leaves'`, each leaf of an array
+ * or object a widget handles whole; `'nothing'`, for a blur of what is no field of the data, such as an option selector
+ * or a layout's own component, which only reveals the container's own errors as an option switch does
+ */
+export type BlurTouch = 'field' | 'leaves' | 'nothing';
+
+/** A blur on its way to the form, from the innermost `SchemaField` above the widget that reported it */
+export interface FieldBlur {
+  fieldPath: FieldPath;
+  touches: BlurTouch;
+}
+
+/** A blur and the form's data when it reached the form */
+export interface BlurAtData<T> extends FieldBlur {
+  dataAtBlur: T | undefined;
+}
+
+const NO_PATHS: ReadonlySet<FieldPath> = new Set();
+
+const NOTHING_REVEALED: RevealedPaths = { fields: NO_PATHS, containers: NO_PATHS, all: false };
+
+/** Whether a change from `previous` to `next` dropped the key at `fieldPath` or one above it, see
+ * `withoutDroppedPaths()`
+ */
+function isPathDropped(fieldPath: FieldPath, previous: unknown, next: unknown): boolean {
+  let before = previous;
+  let after = next;
+  for (const key of fieldPathToList(fieldPath)) {
+    if (Object.is(before, after) || !hasByPath(before, key)) {
+      return false;
+    }
+    if (!hasByPath(after, key)) {
+      return true;
+    }
+    before = getByPath(before, key);
+    after = getByPath(after, key);
+  }
+  return false;
+}
+
+/** `paths` without those under a key `previous` held that `next` does not: a change that dropped a key without
+ * announcing a move, as `setFieldValue()` writing over a whole object does, leaves no field there to keep a mark for,
+ * so a key added again later starts untouched. A field the data never held a value for, as one blurred while empty, is
+ * kept. Costs what the paths hold, and is skipped while the data is unchanged
+ *
+ * @param paths - The paths to prune
+ * @param previous - The data before the change
+ * @param next - The data after it, with any keys it announced moving moved already
+ * @returns - The paths still held, `paths` itself when none was dropped
+ */
+function withoutDroppedPaths(paths: ReadonlySet<FieldPath>, previous: unknown, next: unknown): ReadonlySet<FieldPath> {
+  if (paths.size === 0 || Object.is(previous, next)) {
+    return paths;
+  }
+  const kept = [...paths].filter((fieldPath) => !isPathDropped(fieldPath, previous, next));
+  return kept.length === paths.size ? paths : new Set(kept);
+}
+
+/** `paths` with `added` in it, `paths` itself when it holds them already */
+function withPaths(paths: ReadonlySet<FieldPath>, ...added: FieldPath[]): ReadonlySet<FieldPath> {
+  return added.every((path) => paths.has(path)) ? paths : new Set([...paths, ...added]);
+}
+
+/** The array or object whose keys a change moves, and where each goes */
+export interface ContainerKeyMove {
+  container: FieldPath;
+  newKeyOf: KeyMove;
+}
+
+/** `paths` once the keys of the container `move` names moved, `paths` itself when none of them moved */
+function withPathsMoved(paths: ReadonlySet<FieldPath>, move: ContainerKeyMove | undefined): ReadonlySet<FieldPath> {
+  if (!move || paths.size === 0) {
+    return paths;
+  }
+  return sameMembersOr(paths, movedPaths(paths, fieldPathToList(move.container), move.newKeyOf));
+}
+
+/** `paths` itself when `next` holds the same paths, so a set whose members did not change keeps its reference, and a
+ * set of `next` otherwise
+ */
+function sameMembersOr(paths: ReadonlySet<FieldPath>, next: Iterable<FieldPath>): ReadonlySet<FieldPath> {
+  const nextPaths = new Set(next);
+  return nextPaths.size === paths.size && [...nextPaths].every((path) => paths.has(path)) ? paths : nextPaths;
+}
+
+/** `revealed` with `fields` and `containers`, `revealed` itself when both are its own */
+function withRevealed(
+  revealed: RevealedPaths,
+  fields: ReadonlySet<FieldPath>,
+  containers: ReadonlySet<FieldPath>,
+): RevealedPaths {
+  return fields === revealed.fields && containers === revealed.containers
+    ? revealed
+    : { ...revealed, fields, containers };
+}
+
+/** Where the change at `fieldPath` moves what the form keeps by path of the fields under a container, as the option
+ * selections: under the keys of the container the move announced for it moved, where the fields' own errors go, or out
+ * from under a property the change removes
+ *
+ * @param change - The change, with the key move announced for it, if any
+ * @returns - The container whose keys move and where each goes, or undefined for a change that moves none
+ */
+export function keyMoveOf<T>({
+  fieldPath,
+  newValue,
+  newKeyOf,
+  newOwnKeyOf,
+}: Pick<FieldChange<T>, 'fieldPath' | 'newValue' | 'newKeyOf' | 'newOwnKeyOf'>): ContainerKeyMove | undefined {
+  const ownKeyOf = newOwnKeyOf ?? newKeyOf;
+  if (ownKeyOf) {
+    return { container: fieldPath, newKeyOf: ownKeyOf };
+  }
+  if (newValue !== ADDITIONAL_PROPERTY_KEY_REMOVE) {
+    return undefined;
+  }
+  const path = fieldPathToList(fieldPath);
+  if (path.length > 0) {
+    const removed = String(path[path.length - 1]);
+    return { container: fieldPathFromList(path.slice(0, -1)), newKeyOf: (key) => (key === removed ? undefined : key) };
+  }
+  return undefined;
+}
+
+/** What a move `transformChange` rewrote left under a key of the container it moved: what the move put there,
+ * `'moved'`, what was there before it, `'unmoved'`, or neither, `'none'`
+ */
+export type MoveFate = 'moved' | 'unmoved' | 'none';
+
+/** The fate of each key of a container a rewritten move moved, see `MoveFate`, from what the form `kept` there, what
+ * the move alone left, `moved`, and what was there `before`. Each side's member is shared against `kept`'s, so an equal
+ * copy compares by reference
+ */
+export function moveFateOf(kept: unknown, moved: unknown, before: unknown): (key: string) => MoveFate {
+  // Compared only for the keys asked about, the ones that hold marks or selections, not across the whole container
+  const isKeptFrom = (side: unknown, key: string) => {
+    const member = getByPath(side, key);
+    return Object.is(replaceEqualDeep(member, getByPath(kept, key)), member);
+  };
+  return (key) => {
+    if (isKeptFrom(moved, key)) {
+      return 'moved';
+    }
+    return isKeptFrom(before, key) ? 'unmoved' : 'none';
+  };
+}
+
+/** `state` with the touched and revealed paths under the keys of `container` settled after a move `transformChange`
+ * rewrote, as `fateOf` says of each key: a path under a key holding what the move put there stays where the move put
+ * it, one under a key holding what it held before the move comes back from `unmoved`, the marks before the move, and
+ * any other is dropped
+ */
+export function withMarksSettled<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  state: FormState<T, S, F>,
+  unmoved: Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'>,
+  container: FieldPath,
+  fateOf: (key: string) => MoveFate,
+): FormState<T, S, F> {
+  const settle = (moved: ReadonlySet<FieldPath>, before: ReadonlySet<FieldPath>) =>
+    sameMembersOr(
+      moved,
+      settledEntries(moved, before, (path) => path, container, fateOf),
+    );
+  const { revealed } = state;
+  return {
+    ...state,
+    touchedPaths: settle(state.touchedPaths, unmoved.touchedPaths),
+    revealed: withRevealed(
+      revealed,
+      settle(revealed.fields, unmoved.revealed.fields),
+      settle(revealed.containers, unmoved.revealed.containers),
+    ),
+  };
+}
+
+/** Whether `liveErrors: 'field'` decides which errors live validation shows: only with `liveValidate` */
+function isRevealedByField<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>) {
+  return props.liveErrors === 'field' && (isLiveValidated(props) || isBlurValidated(props));
+}
+
+/** The touched fields and the revealed ones once the data went from `current`'s to `formData`: both follow the keys
+ * `move` moved, and lose those dropped without a move, see `withoutDroppedPaths()`
+ */
+function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  formData: T | undefined,
+  move?: ContainerKeyMove,
+): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
+  const { touchedPaths, revealed } = current;
+  if (touchedPaths.size === 0 && revealed.fields.size === 0 && revealed.containers.size === 0) {
+    return { touchedPaths, revealed };
+  }
+  // The moved paths are checked against the earlier data with the same keys moved, so a path a move re-keyed is checked
+  // against the value that moved with it
+  const previous = move
+    ? withKeysMoved(current.formData, formData, fieldPathToList(move.container), move.newKeyOf)
+    : current.formData;
+  const follow = (paths: ReadonlySet<FieldPath>) =>
+    withoutDroppedPaths(withPathsMoved(paths, move), previous, formData);
+  return {
+    touchedPaths: follow(touchedPaths),
+    revealed: withRevealed(revealed, follow(revealed.fields), follow(revealed.containers)),
+  };
+}
+
+/** The touched fields and the revealed ones after `change`, which left `formData`: both follow the keys it moved, and
+ * lose those it dropped without a move, see `withoutDroppedPaths()`. Under `liveErrors: 'field'`, a change that moved
+ * keys, or that a field announced as a move, as an added property is, reveals the container's own errors, and a
+ * field's edit under `liveValidate: 'onChange'` reveals the field's. A root write standing for an edit reveals nothing
+ * more: the edit revealed what it reached
+ */
+function marksAfterChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  change: FieldChange<T>,
+  formData: T | undefined,
+  props: FormProps<T, S, F>,
+): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
+  // The marks belong to the data, so they go where the data went, as the validator's errors do, not where the fields'
+  // own errors go: a field both options of a switch declare keeps its value, and its marks with it
+  const move = keyMoveOf({ ...change, newOwnKeyOf: undefined });
+  const followed = marksFollowingData(current, formData, move);
+  let { revealed } = followed;
+  if (isRevealedByField(props) && !change.editedPath) {
+    const container = move?.container ?? (change.isAnnouncedMove ? change.fieldPath : undefined);
+    if (container !== undefined) {
+      revealed = { ...revealed, containers: withPaths(revealed.containers, container) };
+    } else if (change.isFieldEdit && isLiveValidated(props)) {
+      revealed = { ...revealed, fields: withPaths(revealed.fields, change.fieldPath) };
+    }
+  }
+  return { ...followed, revealed };
+}
+
+/** Whether `liveErrors: 'field'` hides the errors at a path in `state`, or undefined when it hides none: a field's
+ * errors are hidden until it or a field inside it fired, or a field above it did, and an array's or object's own until
+ * a move fired it or a container inside it. A submit attempt or `validateForm()` reveals every error
+ */
+function hiddenErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  props: FormProps<T, S, F>,
+  { revealed }: Pick<FormState<T, S, F>, 'revealed'>,
+): ((path: FieldPathList) => boolean) | undefined {
+  if (!isRevealedByField(props) || revealed.all) {
+    return undefined;
+  }
+  return (path) =>
+    !parsedPathsOf(revealed.fields).some((field) => isPathPrefix(path, field) || isPathPrefix(field, path)) &&
+    !parsedPathsOf(revealed.containers).some((container) => isPathPrefix(path, container));
+}
+
+/** The paths of each set of revealed paths, parsed once: a set is never changed once made, and a pass whose validation
+ * holds no error parses nothing
+ */
+const parsedPaths = new WeakMap<ReadonlySet<FieldPath>, FieldPathList[]>();
+
+function parsedPathsOf(paths: ReadonlySet<FieldPath>): FieldPathList[] {
+  let parsed = parsedPaths.get(paths);
+  if (!parsed) {
+    parsed = [...paths].map(fieldPathToList);
+    parsedPaths.set(paths, parsed);
+  }
+  return parsed;
 }
 
 /** Converts the full `FormState` into the `IChangeEvent` version by picking out the public values
@@ -216,7 +580,7 @@ export function toIChangeEvent<
   F extends FormContextType = FormContextType,
 >(state: FormState<T, S, F>, submitCount: number, status?: IChangeEvent['status']): IChangeEvent<T, S, F> {
   const { schema, uiSchema, schemaUtils, formData, errors, errorSchema } = state;
-  // Assigned onto the status, so its `dirtyFields` getter stays lazy
+  // Assigned onto the status, so its getters stay lazy
   return Object.assign(toFormStatus(state, submitCount), {
     schema,
     uiSchema,
@@ -279,6 +643,16 @@ function committedOmission<T>({ formData, omitBaseline }: ExtraDataOmission<T>):
   return { formData, baseline: omitBaseline() };
 }
 
+/** `current` with `omission` committed: the touched and revealed fields lose the keys it dropped, as they do for every
+ * other change to the data
+ */
+function withOmission<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  omission: ExtraDataOmission<T>,
+): FormState<T, S, F> {
+  return { ...current, ...committedOmission(omission), ...marksFollowingData(current, omission.formData) };
+}
+
 /** A field change, applied by `applyChangeToData()` and `applyChangeToErrorsOf()` */
 export interface FieldChange<T> {
   /** The `FieldPath` into the formData/errorSchema at which the `newValue`/`newErrorSchema` will be set */
@@ -297,6 +671,10 @@ export interface FieldChange<T> {
   newOwnKeyOf?: KeyMove;
   /** For a change that moved keys, whether the errors raised at `fieldPath` itself go too; see `AnnouncedMove` */
   dropsOwnErrors?: boolean;
+  /** Whether a field announced the change as a move, as an added property is though it moves no key, so it reaches the
+   * array or object at `fieldPath` rather than the fields inside it
+   */
+  isAnnouncedMove?: boolean;
   /** Whether the fields' own errors stay as they are: a change no field made, such as the data a `transformChange`
    * writes over an edit, says nothing of what any field raised
    */
@@ -479,16 +857,21 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
  * @param schemaValidation - The `ValidationData` object into which additional errors are merged
  * @param [extraErrors] - The extra errors from the props
  * @param [customErrors] - The customErrors from custom components
- * @return - The `extraErrors` and `customErrors` merged into the `schemaValidation`
+ * @param [isHidden] - Whether `liveErrors: 'field'` hides the validator's errors at a path, see `hiddenErrorsOf()`
+ * @return - The `extraErrors` and `customErrors` merged into the shown `schemaValidation`
  */
 function mergeErrors<T>(
   schemaValidation: ValidationData<T>,
   extraErrors?: ErrorSchema<T>,
   customErrors?: ErrorSchema<T>,
+  isHidden?: (path: FieldPathList) => boolean,
 ): ValidationData<T> {
+  // A result holding no errors has none to hide, so a valid form skips the walk
+  const shown =
+    isHidden && schemaValidation.errors.length > 0 ? withoutErrors(schemaValidation, isHidden) : schemaValidation;
   // With `preventDuplicates`, a message a field already carries is shown on it once and listed once, the raised errors
   // after the validator's and `extraErrors`
-  const withExtra = validationDataMerge(schemaValidation, extraErrors, true);
+  const withExtra = validationDataMerge(shown, extraErrors, true);
   const { errors, errorSchema } = validationDataMerge(withExtra, customErrors, true);
   return { errors, errorSchema };
 }
@@ -582,6 +965,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
  *          that true, since the fields it drops are by definition not in the schema that selects the branch; a prop
  *          change does not, which is why the derivation passes it only when nothing that resolves it changed.
  * @param [heldPath] - The path whose field and the fields above it keep the options they show, see `heldPathOf()`
+ * @param [isHidden] - Whether `liveErrors: 'field'` hides the validator's errors at a path, see `hiddenErrorsOf()`
  * @returns - An object containing `errorSchema`, `errors`, `schemaValidationErrors` and `schemaValidationErrorSchema`
  */
 function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -591,10 +975,11 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
   customErrors?: ErrorSchema<T>,
   retrievedSchema?: S,
   heldPath?: FieldPathList,
+  isHidden?: (path: FieldPathList) => boolean,
 ) {
   const schemaValidation = validateFormData(props, context, formData, retrievedSchema, heldPath);
   const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = schemaValidation;
-  const mergedErrors = mergeErrors(schemaValidation, props.extraErrors, customErrors);
+  const mergedErrors = mergeErrors(schemaValidation, props.extraErrors, customErrors, isHidden);
   return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
 }
 
@@ -799,6 +1184,7 @@ function ownErrorsAfterChange<T, S extends StrictRJSFSchema, F extends FormConte
  * @param extraErrors - The `extraErrors` prop, which the displayed errors carry
  * @param getDataChange - Returns what the change replaced in the data, see `dataChange()`; called only when there are
  * validator errors to clear
+ * @param [isHidden] - Whether `liveErrors: 'field'` hides the validator's errors at a path, see `hiddenErrorsOf()`
  * @returns - The error members of the state after the change, `current`'s own when the change left them as they were
  */
 function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -806,6 +1192,7 @@ function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContex
   change: FieldChange<T>,
   extraErrors: ErrorSchema<T> | undefined,
   getDataChange: () => DataChange,
+  isHidden?: (path: FieldPathList) => boolean,
 ): ChangedErrorState<T> {
   const { fieldPath, newKeyOf } = change;
   const customErrors = ownErrorsAfterChange(current, change);
@@ -833,7 +1220,7 @@ function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContex
     validation = withoutErrors(validation, (pathOfError) => isPathPrefix(path, pathOfError));
   }
   return {
-    ...mergeErrors(validation, extraErrors, customErrors),
+    ...mergeErrors(validation, extraErrors, customErrors, isHidden),
     schemaValidationErrors: validation.errors,
     schemaValidationErrorSchema: validation.errorSchema,
     customErrors,
@@ -1013,6 +1400,10 @@ interface ErrorOptions<S> {
    * to clear the changed fields' errors
    */
   getDataChange?: () => DataChange;
+  /** The fields revealed once the pass's data settled, which decide the errors `liveErrors: 'field'` hides; the
+   * committed ones when the pass leaves them as they are
+   */
+  revealed?: RevealedPaths;
 }
 
 /** What differs between two values of the form's data */
@@ -1123,8 +1514,10 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
   options: ErrorOptions<S>,
 ): ErrorState<T> {
   const { isSchemaChanged = false, mustValidate, validationSchema, getDataChange = () => UNCHANGED } = options;
+  const revealed = options.revealed ?? current?.revealed ?? NOTHING_REVEALED;
+  const isHidden = hiddenErrorsOf(props, { revealed });
   if (mustValidate) {
-    return runLiveValidation(props, context, formData, current?.customErrors, validationSchema);
+    return runLiveValidation(props, context, formData, current?.customErrors, validationSchema, undefined, isHidden);
   }
   // oxlint-disable-next-line typescript/no-deprecated
   const isErrorStateDropped = props.noValidate || isSchemaChanged;
@@ -1138,7 +1531,7 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
         getDataChange(),
       );
   return {
-    ...mergeErrors(validation, props.extraErrors, current?.customErrors),
+    ...mergeErrors(validation, props.extraErrors, current?.customErrors, isHidden),
     schemaValidationErrors: validation.errors,
     schemaValidationErrorSchema: validation.errorSchema,
   };
@@ -1211,8 +1604,12 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // Construction validates nothing: the errors of a seed the user has not touched are not shown until they are earned
   const isDataChanged = current !== undefined && formData !== current.formData;
   const isDataPassed = current ? current.isDataPassed : inputFormData !== undefined;
+  const marks = current
+    ? marksFollowingData(current, formData)
+    : { touchedPaths: NO_PATHS, revealed: NOTHING_REVEALED };
   const errors = reconcileErrors(current, props, context, formData, {
     isSchemaChanged,
+    revealed: marks.revealed,
     mustValidate: mustLiveValidate(props, isDataPassed, isDataChanged || isValidationPropChanged),
     validationSchema: areSchemaUtilsReused ? context.retrievedSchema : undefined,
     // Without a validation pass, the errors of the fields the data changed at describe values that are gone. The
@@ -1225,6 +1622,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     formData,
     baseline,
     baselineUiState: current?.baselineUiState ?? withoutSelections(context.uiState),
+    ...marks,
     isDataPassed,
     ...errors,
     initialDefaultsGenerated: true,
@@ -1275,10 +1673,10 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
 }
 
 /** Freezes plain objects and arrays in `data`, and nothing else: a `File`, a `Date` or a class instance is left
- * alone. Development only, and only ever applied to form data and the `dirtyFields` built from it: the form data a
- * consumer receives shares subtrees with the value the change was applied to, the `formData` the consumer passed
- * included, so a mutation of it corrupts the consumer's state silently. Frozen, it throws where the mutation happens
- * instead.
+ * alone. Development only, and only ever applied to form data and the `dirtyFields` and `touchedFields` built from it:
+ * the form data a consumer receives shares subtrees with the value the change was applied to, the `formData` the
+ * consumer passed included, so a mutation of it corrupts the consumer's state silently. Frozen, it throws where the
+ * mutation happens instead.
  *
  * @param data - The form data to freeze
  */
@@ -1455,6 +1853,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     ...current,
     ...context,
     ...omitted,
+    ...marksAfterChange(current, change, omitted.formData, props),
     // An edit is data the user made, whose errors they have earned, so a prop change live-validates it from now on
     isDataPassed: true,
   };
@@ -1479,12 +1878,21 @@ export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends F
   isValidated: boolean,
 ): FormState<T, S, F> {
   const { formData } = changed;
+  const isHidden = hiddenErrorsOf(props, changed);
   if (isValidated) {
     // The validation replaces the validator's result whole, so only the fields' own errors are carried through
     const customErrors = ownErrorsAfterChange(changed, change);
     return {
       ...changed,
-      ...runLiveValidation(props, changed, formData, customErrors, changed.retrievedSchema, heldPathOf(change)),
+      ...runLiveValidation(
+        props,
+        changed,
+        formData,
+        customErrors,
+        changed.retrievedSchema,
+        heldPathOf(change),
+        isHidden,
+      ),
       customErrors,
     };
   }
@@ -1498,7 +1906,7 @@ export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends F
         ? withKeysMoved(previousFormData, formData, fieldPathToList(change.fieldPath), newKeyOf)
         : previousFormData,
     );
-  return { ...changed, ...applyChangeToErrors(changed, change, props.extraErrors, getDataChange) };
+  return { ...changed, ...applyChangeToErrors(changed, change, props.extraErrors, getDataChange, isHidden) };
 }
 
 /** The error members of a state with `extraErrors` as the only errors on display, as a reset or a valid submission
@@ -1513,8 +1921,8 @@ function extraErrorsAlone<T>(extraErrors: ErrorSchema<T> | undefined): ErrorStat
 
 /** The state after `reset()`: the data is re-derived from the seed the way an initial render does it and becomes the
  * baseline, every error the form holds, including the custom ones fields raised, is cleared, which leaves
- * `extraErrors` as the only errors on display, and the render context the derivation resolved with is committed
- * alongside the data.
+ * `extraErrors` as the only errors on display, the touched fields and the revealed ones start again, and the render
+ * context the derivation resolved with is committed alongside the data.
  *
  * @param current - The state being reset
  * @param props - The current props
@@ -1533,6 +1941,8 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     formData,
     baseline: formData,
     baselineUiState: withSelectionsAsOf(context.uiState, (at) => getAt(formData, at)),
+    touchedPaths: NO_PATHS,
+    revealed: NOTHING_REVEALED,
     isDataPassed: seed !== undefined,
     ...extraErrorsAlone(props.extraErrors),
     // The reset pass has generated the initial defaults, so the next unrelated recompute is not an initial pass and
@@ -1542,25 +1952,67 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
   };
 }
 
-/** The state after a field is blurred: the data with extra data omitted when `liveOmit` is `'onBlur'`, validated when
- * `liveValidate` is. `current` itself when neither applies.
+/** `current` with the blur `blurred` touching what it touches, see `BlurTouch`, and revealing it when `liveErrors` is
+ * `'field'` and `liveValidate` is `'onBlur'`: a field's errors, or for a blur that touches nothing, the container's
+ * own errors. A field a change dropped since the blur reached the form, such as one the `Form`'s `onBlur` writes over,
+ * is neither touched nor revealed, as a change drops the marks of the keys it drops, see `withoutDroppedPaths()`
+ */
+function markBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  props: FormProps<T, S, F>,
+  { fieldPath, touches, dataAtBlur }: BlurAtData<T>,
+): FormState<T, S, F> {
+  const { touchedPaths, revealed } = current;
+  const isRevealed = props.liveErrors === 'field' && isBlurValidated(props);
+  if (isPathDropped(fieldPath, dataAtBlur, current.formData)) {
+    return current;
+  }
+  if (touches === 'nothing') {
+    return isRevealed
+      ? { ...current, revealed: { ...revealed, containers: withPaths(revealed.containers, fieldPath) } }
+      : current;
+  }
+  const touched =
+    touches === 'leaves' ? leafPathsOf(getAt(current.formData, fieldPathToList(fieldPath)), fieldPath) : [fieldPath];
+  return {
+    ...current,
+    touchedPaths: withPaths(touchedPaths, ...touched),
+    revealed: isRevealed ? { ...revealed, fields: withPaths(revealed.fields, fieldPath) } : revealed,
+  };
+}
+
+/** The state after a field is blurred: the field touched, and revealed when `liveErrors` is `'field'` and
+ * `liveValidate` is `'onBlur'`, see `markBlur()`, the data with extra data omitted when `liveOmit` is `'onBlur'`,
+ * validated when `liveValidate` is.
  *
  * @param current - The state at the blur
  * @param props - The current props
+ * @param [blurred] - The field blurred, what its blur touches and the form's data when the blur reached it, when a
+ *        `SchemaField` reported it
  * @returns - The next state, sharing every unchanged subtree with `current`
  */
 export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
+  blurred?: BlurAtData<T>,
 ): FormState<T, S, F> {
   const { omitExtraData, liveOmit } = props;
   const { customErrors, retrievedSchema } = current;
+  const marked = blurred ? markBlur(current, props, blurred) : current;
   const omitted =
-    omitExtraData === true && liveOmit === 'onBlur' ? committedOmission(omitExtraDataOf(current)) : undefined;
+    omitExtraData === true && liveOmit === 'onBlur' ? withOmission(marked, omitExtraDataOf(current)) : marked;
   const validation = isBlurValidated(props)
-    ? runLiveValidation(props, current, (omitted ?? current).formData, customErrors, retrievedSchema)
+    ? runLiveValidation(
+        props,
+        current,
+        omitted.formData,
+        customErrors,
+        retrievedSchema,
+        undefined,
+        hiddenErrorsOf(props, omitted),
+      )
     : undefined;
-  return { ...current, ...omitted, ...validation };
+  return { ...omitted, ...validation };
 }
 
 /** Validates `formData` for a submission or `validateForm()`: whether the errors block, the merged errors to report,
@@ -1579,18 +2031,20 @@ export function applyValidation<T, S extends StrictRJSFSchema, F extends FormCon
   const { extraErrors, extraErrorsAreWarnings } = props;
   const { errors: prevErrors, customErrors } = current;
   const schemaValidation = validateFormData(props, current, formData);
-  // Always merge extraErrors/customErrors so they remain visible in state regardless of extraErrorsAreWarnings.
+  // Always merge extraErrors/customErrors so they remain visible in state regardless of extraErrorsAreWarnings. A
+  // validation the form was asked for shows every error, so `liveErrors: 'field'` reveals them all from now on
   const { errors, errorSchema } = mergeErrors(schemaValidation, extraErrors, customErrors);
+  const start = withEveryErrorRevealed(current);
   // extraErrors also block unless extraErrorsAreWarnings is set, in which case they are informational only.
   const hasBlockingExtraErrors = !extraErrorsAreWarnings && !!extraErrors && toErrorList(extraErrors).length > 0;
   // customErrors are raised imperatively by field/widget components (via onChange's errorSchema argument) and,
   // like schema errors, always block regardless of extraErrorsAreWarnings.
   const hasCustomErrors = !!customErrors && toErrorList(customErrors).length > 0;
   const hasError = schemaValidation.errors.length > 0 || hasBlockingExtraErrors || hasCustomErrors;
-  let next = current;
+  let next = start;
   if (hasError) {
     next = {
-      ...current,
+      ...start,
       errors,
       errorSchema,
       schemaValidationErrors: schemaValidation.errors,
@@ -1599,7 +2053,7 @@ export function applyValidation<T, S extends StrictRJSFSchema, F extends FormCon
   } else if (errors.length > 0 || prevErrors.length > 0) {
     // Either non-blocking `extraErrors` are on display without `onError` firing, or the errors that were on display
     // are gone; the validator's own results are empty for both
-    next = { ...current, errors, errorSchema, schemaValidationErrors: [], schemaValidationErrorSchema: {} };
+    next = { ...start, errors, errorSchema, schemaValidationErrors: [], schemaValidationErrorSchema: {} };
   }
   return { hasError, next };
 }
@@ -1644,6 +2098,15 @@ export function omitExtraDataOf<T, S extends StrictRJSFSchema, F extends FormCon
   };
 }
 
+/** `current` with every error revealed to `liveErrors: 'field'`, as a submit attempt or `validateForm()` leaves it,
+ * whatever `liveErrors` is now, so a later switch to `'field'` still shows them
+ */
+function withEveryErrorRevealed<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+): FormState<T, S, F> {
+  return current.revealed.all ? current : { ...current, revealed: { ...current.revealed, all: true } };
+}
+
 /** The state after a valid submission: the submitted data, with `extraErrors` as the only errors on display
  *
  * @param current - The state at the submission
@@ -1657,9 +2120,9 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   props: FormProps<T, S, F>,
   omitted?: ExtraDataOmission<T>,
 ): FormState<T, S, F> {
+  const revealed = withEveryErrorRevealed(current);
   return {
-    ...current,
-    ...(omitted && committedOmission(omitted)),
+    ...(omitted ? withOmission(revealed, omitted) : revealed),
     ...extraErrorsAlone(props.extraErrors),
   };
 }

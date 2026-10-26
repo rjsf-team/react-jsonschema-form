@@ -1058,6 +1058,8 @@ it('onChange and onSubmit events carry only the public IChangeEvent members', as
     'schema',
     'schemaUtils',
     'submitCount',
+    'touched',
+    'touchedFields',
     'uiSchema',
   ];
   expect(Object.keys(onChange.mock.lastCall?.[0] ?? {}).sort()).toEqual(members);

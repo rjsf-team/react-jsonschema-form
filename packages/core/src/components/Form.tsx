@@ -38,6 +38,7 @@ import NamedFieldContext from './fields/NamedFieldContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
+import type { RevealedPaths, TouchedPaths } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState, UiStateReader } from './uiState.ts';
@@ -204,6 +205,16 @@ export interface FormProps<
    * live validation will be performed when a field that was updated is blurred (as a performance optimization).
    */
   liveValidate?: 'onChange' | 'onBlur';
+  /** Which errors live validation shows. `'all'`, the default, shows every error. `'field'` shows a field's errors only
+   * once `liveValidate`'s trigger fired for it, the user changing it under `'onChange'` or blurring it under
+   * `'onBlur'`, and every error once a submit was attempted or `FormRef.validateForm()` ran, until `reset()`. An
+   * array's or object's own errors show once it or a field inside it fired, and adding, removing or moving an array's
+   * items, adding, renaming or removing an object's properties, or, under `'onBlur'`, blurring its option selector,
+   * fires the array or object. `extraErrors`, and the errors fields raise themselves,
+   * always show; `customValidate`'s show as the schema's do. `onChange` carries the errors shown, while `onError` sees
+   * every error. Without `liveValidate` it changes nothing.
+   */
+  liveErrors?: 'all' | 'field';
   /** Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
    * to `true` and the form's data is updated by the user.
    *
@@ -298,6 +309,12 @@ export interface FormState<
    * is dirty exactly when `formData` is not this
    */
   baseline?: T;
+  /** The paths of the fields whose widgets reported a blur since the form mounted or was last reset, moved with the
+   * keys the form moved
+   */
+  touchedPaths: TouchedPaths;
+  /** Where `liveValidate`'s trigger fired, which decides the errors `liveErrors: 'field'` shows */
+  revealed: RevealedPaths;
   /** The option selections the baseline is derived under, whenever a prop change or an omission derives it again: none
    * for the baseline the form mounted with, and those shown at the last `reset()` for the one it seeded
    */
@@ -471,8 +488,9 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   });
   const { model } = cache;
   const { setFormElement } = model;
-  // Renders the form after each operation that changed its state. The server snapshot is the store's own: the render
-  // that reads it is the one that created the model, so nothing has been committed to it yet
+  // Renders the form after each operation that changed what it renders from, see `RENDERED_MEMBERS`. The server
+  // snapshot is the store's own: the render that reads it is the one that created the model, so nothing has been
+  // committed to it yet
   const published = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
   // With no operation since the cached derivation, that derivation is the latest state
   const base = published === cache.published ? cache.state : published;

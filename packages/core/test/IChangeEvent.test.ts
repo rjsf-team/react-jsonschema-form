@@ -35,9 +35,13 @@ describe('IChangeEvent', () => {
     expectTypeOf<EventFormData<{ name: string } | undefined>>().toEqualTypeOf<{ name: string } | undefined>();
   });
 
-  it('carries the form status, with dirtyFields nested like the data', () => {
+  it('carries the form status, with dirtyFields and touchedFields nested like the data', () => {
     expectTypeOf<Pick<IChangeEvent, keyof RJSFFormStatus>>().toEqualTypeOf<RJSFFormStatus>();
     expectTypeOf<IChangeEvent['dirty']>().toEqualTypeOf<boolean>();
+    expectTypeOf<IChangeEvent['touched']>().toEqualTypeOf<boolean>();
+    expectTypeOf<IChangeEvent<{ name: string; tags: string[] }>['touchedFields']>().toEqualTypeOf<
+      NestedBooleans<{ name: string; tags: string[] }>
+    >();
     expectTypeOf<IChangeEvent['submitCount']>().toEqualTypeOf<number>();
     expectTypeOf<
       IChangeEvent<{ name: string; tags: string[]; address: { city?: string } }>['dirtyFields']
