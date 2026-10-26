@@ -32,7 +32,7 @@ Check what `@rjsf/utils` already shares before writing theme logic, e.g. `enumOp
 
 ## Changelog and upgrade guide
 
-- Follow `## Changelog` and `## Upgrade guide` in `packages/docs/docs/contributing.md`. An entry says what users notice, starting with Add/Change/Deprecate/Fix/Remove; the reasoning, mechanism and edge cases go in the PR description, however much of it there is. A fix to an unreleased change edits that change's entry instead of adding one.
+- Follow `## Changelog` and `## Upgrade guide` in `packages/docs/docs/contributing.md`.
 - Append an entry as the last bullet under each relevant package's heading (e.g. `## @rjsf/daisyui`) — after the existing bullets, not inserted above or among them.
 
 ## Testing

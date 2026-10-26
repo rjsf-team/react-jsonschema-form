@@ -68,7 +68,7 @@ Write the entry for someone deciding whether to upgrade, who won't open the PR:
 - Start with `Add`, `Change`, `Deprecate`, `Fix` or `Remove`, and name the component, prop or export a user meets, in backticks.
 - Say what users notice, not how the code does it. A fix names what went wrong for them: "Fix `ArrayField` dropping the last item's errors when an item is removed".
 - Leave the reasoning, the alternatives and the edge cases to the PR description, and end the entry with a link to the PR and to the issue it fixes.
-- Start a breaking change with `**BREAKING CHANGE:**`, say what now happens, and link the [upgrade guide](#upgrade-guide) section that says what to change. A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower type.
+- Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and link the [upgrade guide](#upgrade-guide) section that says what to change. A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower type.
 - Aim for a sentence or two, about 200 characters. If it can't be both short and clear, keep it clear.
 
 For example, instead of an entry that explains the implementation:
@@ -77,7 +77,7 @@ For example, instead of an entry that explains the implementation:
 
 write what users see:
 
-> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450))
+> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450), fixing [#5516](https://github.com/rjsf-team/react-jsonschema-form/issues/5516))
 
 ## Upgrade guide
 
@@ -183,7 +183,13 @@ If you make changes to those libraries, you will have to maintain that coverage,
 
 ## Releasing
 
-First, turn the upcoming release's section of the changelog into release notes, so that the commit you tag carries them: date its heading, start it with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
+First, turn the upcoming release's section of the changelog into release notes, so that the commit you tag carries them: date its heading, as in `# 7.0.0 (2026-11-01)`, start it with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
+
+Until 7.0.0 ships, its section is in `CHANGELOG-v7.md` on the `v7` branch, and `CHANGELOG.md` holds only 6.x releases. When `v7` is merged into `main` for 7.0.0:
+
+- Move the `# 7.0.0` section of `CHANGELOG-v7.md` to the top of `CHANGELOG.md`, and delete `CHANGELOG-v7.md`.
+- Point the `blob/v7` links in the `CHANGELOG.md` header comment and in `PULL_REQUEST_TEMPLATE.md` at `main`.
+- Remove the `CHANGELOG-v7.md` mentions from `PULL_REQUEST_TEMPLATE.md` and from the [Changelog](#changelog) section above.
 
 To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
 For instance if you are about to create the new `6.100.10` branch, then you would run the following commands:
