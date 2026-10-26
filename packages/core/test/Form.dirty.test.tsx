@@ -438,7 +438,8 @@ describe('reset', () => {
     const throwing = new Proxy(validator, {
       get(target, key, receiver) {
         if (key !== 'isValid') {
-          return Reflect.get(target, key, receiver);
+          const member: unknown = Reflect.get(target, key, receiver);
+          return member;
         }
         return (...args: Parameters<typeof validator.isValid>) => {
           const formData: unknown = args[1];
