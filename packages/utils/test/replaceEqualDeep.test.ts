@@ -192,4 +192,28 @@ describe('replaceEqualDeep()', () => {
     expect(replaceEqualDeep([1], { 0: 1 })).toEqual({ 0: 1 });
     expect(replaceEqualDeep({ 0: 1 }, [1])).toEqual([1]);
   });
+
+  it('keeps a subtree of next that is its counterpart in unchanged without walking it', () => {
+    let reads = 0;
+    const kept = new Proxy(
+      { name: 'Rome' },
+      {
+        ownKeys(target) {
+          reads += 1;
+          return Reflect.ownKeys(target);
+        },
+      },
+    );
+    const prev = { rows: [{ name: 'Oslo' }, { name: 'Oslo' }], note: 'a' };
+    const unchanged = { rows: [kept, prev.rows[1]], note: 'b' };
+    const next = { rows: [kept, { name: 'Oslo' }], note: 'a' };
+
+    const result = replaceEqualDeep(prev, next, unchanged);
+
+    expect(reads).toBe(0);
+    expect(result.rows[0]).toBe(kept);
+    expect(result.rows[1]).toBe(prev.rows[1]);
+    expect(result.note).toBe('a');
+    expect(replaceEqualDeep(prev, { ...prev }, 'not a container')).toBe(prev);
+  });
 });
