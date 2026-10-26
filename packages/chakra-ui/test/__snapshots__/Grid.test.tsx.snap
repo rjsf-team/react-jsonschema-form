@@ -1250,14 +1250,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-0"
-                              id="checkbox:root_person_race-0"
+                              for="root_person_race__0"
+                              id="checkbox:root_person_race__0"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-0:label"
-                                id="root_person_race-0"
+                                aria-labelledby="checkbox:root_person_race__0:label"
+                                id="root_person_race__0"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -1270,7 +1270,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-0:control"
+                                id="checkbox:root_person_race__0:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -1284,7 +1284,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-0:label"
+                                id="checkbox:root_person_race__0:label"
                               >
                                 <p>
                                   American Indian / Alaska Native
@@ -1297,14 +1297,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-1"
-                              id="checkbox:root_person_race-1"
+                              for="root_person_race__1"
+                              id="checkbox:root_person_race__1"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-1:label"
-                                id="root_person_race-1"
+                                aria-labelledby="checkbox:root_person_race__1:label"
+                                id="root_person_race__1"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -1317,7 +1317,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-1:control"
+                                id="checkbox:root_person_race__1:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -1331,7 +1331,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-1:label"
+                                id="checkbox:root_person_race__1:label"
                               >
                                 <p>
                                   Asian
@@ -1344,14 +1344,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-2"
-                              id="checkbox:root_person_race-2"
+                              for="root_person_race__2"
+                              id="checkbox:root_person_race__2"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-2:label"
-                                id="root_person_race-2"
+                                aria-labelledby="checkbox:root_person_race__2:label"
+                                id="root_person_race__2"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -1364,7 +1364,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-2:control"
+                                id="checkbox:root_person_race__2:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -1378,7 +1378,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-2:label"
+                                id="checkbox:root_person_race__2:label"
                               >
                                 <p>
                                   Black / African American
@@ -1391,14 +1391,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-3"
-                              id="checkbox:root_person_race-3"
+                              for="root_person_race__3"
+                              id="checkbox:root_person_race__3"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-3:label"
-                                id="root_person_race-3"
+                                aria-labelledby="checkbox:root_person_race__3:label"
+                                id="root_person_race__3"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -1411,7 +1411,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-3:control"
+                                id="checkbox:root_person_race__3:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -1425,7 +1425,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-3:label"
+                                id="checkbox:root_person_race__3:label"
                               >
                                 <p>
                                   Native Hawaiian / Other Pacific Islander
@@ -1438,14 +1438,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-4"
-                              id="checkbox:root_person_race-4"
+                              for="root_person_race__4"
+                              id="checkbox:root_person_race__4"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-4:label"
-                                id="root_person_race-4"
+                                aria-labelledby="checkbox:root_person_race__4:label"
+                                id="root_person_race__4"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -1458,7 +1458,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-4:control"
+                                id="checkbox:root_person_race__4:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -1472,7 +1472,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-4:label"
+                                id="checkbox:root_person_race__4:label"
                               >
                                 <p>
                                   White
@@ -3879,14 +3879,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="checked"
                                   dir="ltr"
-                                  for="root_employment-0"
+                                  for="root_employment__0"
                                   id="radio-group:_r_40_:radio:0"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_40_:radio:label:0"
                                     checked=""
                                     data-ownedby="root_employment"
-                                    id="root_employment-0"
+                                    id="root_employment__0"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -3929,13 +3929,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="root_employment-1"
+                                  for="root_employment__1"
                                   id="radio-group:_r_40_:radio:1"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_40_:radio:label:1"
                                     data-ownedby="root_employment"
-                                    id="root_employment-1"
+                                    id="root_employment__1"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -3973,13 +3973,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="root_employment-2"
+                                  for="root_employment__2"
                                   id="radio-group:_r_40_:radio:2"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_40_:radio:label:2"
                                     data-ownedby="root_employment"
-                                    id="root_employment-2"
+                                    id="root_employment__2"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -7543,14 +7543,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-0"
-                              id="checkbox:root_person_race-0"
+                              for="root_person_race__0"
+                              id="checkbox:root_person_race__0"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-0:label"
-                                id="root_person_race-0"
+                                aria-labelledby="checkbox:root_person_race__0:label"
+                                id="root_person_race__0"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -7563,7 +7563,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-0:control"
+                                id="checkbox:root_person_race__0:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -7577,7 +7577,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-0:label"
+                                id="checkbox:root_person_race__0:label"
                               >
                                 <p>
                                   American Indian / Alaska Native
@@ -7590,14 +7590,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-1"
-                              id="checkbox:root_person_race-1"
+                              for="root_person_race__1"
+                              id="checkbox:root_person_race__1"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-1:label"
-                                id="root_person_race-1"
+                                aria-labelledby="checkbox:root_person_race__1:label"
+                                id="root_person_race__1"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -7610,7 +7610,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-1:control"
+                                id="checkbox:root_person_race__1:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -7624,7 +7624,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-1:label"
+                                id="checkbox:root_person_race__1:label"
                               >
                                 <p>
                                   Asian
@@ -7637,14 +7637,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-2"
-                              id="checkbox:root_person_race-2"
+                              for="root_person_race__2"
+                              id="checkbox:root_person_race__2"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-2:label"
-                                id="root_person_race-2"
+                                aria-labelledby="checkbox:root_person_race__2:label"
+                                id="root_person_race__2"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -7657,7 +7657,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-2:control"
+                                id="checkbox:root_person_race__2:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -7671,7 +7671,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-2:label"
+                                id="checkbox:root_person_race__2:label"
                               >
                                 <p>
                                   Black / African American
@@ -7684,14 +7684,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-3"
-                              id="checkbox:root_person_race-3"
+                              for="root_person_race__3"
+                              id="checkbox:root_person_race__3"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-3:label"
-                                id="root_person_race-3"
+                                aria-labelledby="checkbox:root_person_race__3:label"
+                                id="root_person_race__3"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -7704,7 +7704,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-3:control"
+                                id="checkbox:root_person_race__3:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -7718,7 +7718,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-3:label"
+                                id="checkbox:root_person_race__3:label"
                               >
                                 <p>
                                   Native Hawaiian / Other Pacific Islander
@@ -7731,14 +7731,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-4"
-                              id="checkbox:root_person_race-4"
+                              for="root_person_race__4"
+                              id="checkbox:root_person_race__4"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-4:label"
-                                id="root_person_race-4"
+                                aria-labelledby="checkbox:root_person_race__4:label"
+                                id="root_person_race__4"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -7751,7 +7751,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-4:control"
+                                id="checkbox:root_person_race__4:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -7765,7 +7765,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-4:label"
+                                id="checkbox:root_person_race__4:label"
                               >
                                 <p>
                                   White
@@ -10172,13 +10172,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="root_employment-0"
+                                  for="root_employment__0"
                                   id="radio-group:_r_5a_:radio:0"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_5a_:radio:label:0"
                                     data-ownedby="root_employment"
-                                    id="root_employment-0"
+                                    id="root_employment__0"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -10216,14 +10216,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="checked"
                                   dir="ltr"
-                                  for="root_employment-1"
+                                  for="root_employment__1"
                                   id="radio-group:_r_5a_:radio:1"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_5a_:radio:label:1"
                                     checked=""
                                     data-ownedby="root_employment"
-                                    id="root_employment-1"
+                                    id="root_employment__1"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -10266,13 +10266,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="root_employment-2"
+                                  for="root_employment__2"
                                   id="radio-group:_r_5a_:radio:2"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_5a_:radio:label:2"
                                     data-ownedby="root_employment"
-                                    id="root_employment-2"
+                                    id="root_employment__2"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -13927,14 +13927,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-0"
-                              id="checkbox:root_person_race-0"
+                              for="root_person_race__0"
+                              id="checkbox:root_person_race__0"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-0:label"
-                                id="root_person_race-0"
+                                aria-labelledby="checkbox:root_person_race__0:label"
+                                id="root_person_race__0"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -13947,7 +13947,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-0:control"
+                                id="checkbox:root_person_race__0:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -13961,7 +13961,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-0:label"
+                                id="checkbox:root_person_race__0:label"
                               >
                                 <p>
                                   American Indian / Alaska Native
@@ -13974,14 +13974,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-1"
-                              id="checkbox:root_person_race-1"
+                              for="root_person_race__1"
+                              id="checkbox:root_person_race__1"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-1:label"
-                                id="root_person_race-1"
+                                aria-labelledby="checkbox:root_person_race__1:label"
+                                id="root_person_race__1"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -13994,7 +13994,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-1:control"
+                                id="checkbox:root_person_race__1:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -14008,7 +14008,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-1:label"
+                                id="checkbox:root_person_race__1:label"
                               >
                                 <p>
                                   Asian
@@ -14021,14 +14021,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-2"
-                              id="checkbox:root_person_race-2"
+                              for="root_person_race__2"
+                              id="checkbox:root_person_race__2"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-2:label"
-                                id="root_person_race-2"
+                                aria-labelledby="checkbox:root_person_race__2:label"
+                                id="root_person_race__2"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -14041,7 +14041,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-2:control"
+                                id="checkbox:root_person_race__2:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -14055,7 +14055,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-2:label"
+                                id="checkbox:root_person_race__2:label"
                               >
                                 <p>
                                   Black / African American
@@ -14068,14 +14068,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-3"
-                              id="checkbox:root_person_race-3"
+                              for="root_person_race__3"
+                              id="checkbox:root_person_race__3"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-3:label"
-                                id="root_person_race-3"
+                                aria-labelledby="checkbox:root_person_race__3:label"
+                                id="root_person_race__3"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -14088,7 +14088,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-3:control"
+                                id="checkbox:root_person_race__3:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -14102,7 +14102,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-3:label"
+                                id="checkbox:root_person_race__3:label"
                               >
                                 <p>
                                   Native Hawaiian / Other Pacific Islander
@@ -14115,14 +14115,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-4"
-                              id="checkbox:root_person_race-4"
+                              for="root_person_race__4"
+                              id="checkbox:root_person_race__4"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-4:label"
-                                id="root_person_race-4"
+                                aria-labelledby="checkbox:root_person_race__4:label"
+                                id="root_person_race__4"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -14135,7 +14135,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-4:control"
+                                id="checkbox:root_person_race__4:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -14149,7 +14149,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-4:label"
+                                id="checkbox:root_person_race__4:label"
                               >
                                 <p>
                                   White
@@ -16556,13 +16556,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="root_employment-0"
+                                  for="root_employment__0"
                                   id="radio-group:_r_6m_:radio:0"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_6m_:radio:label:0"
                                     data-ownedby="root_employment"
-                                    id="root_employment-0"
+                                    id="root_employment__0"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -16600,13 +16600,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="root_employment-1"
+                                  for="root_employment__1"
                                   id="radio-group:_r_6m_:radio:1"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_6m_:radio:label:1"
                                     data-ownedby="root_employment"
-                                    id="root_employment-1"
+                                    id="root_employment__1"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -16644,14 +16644,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="checked"
                                   dir="ltr"
-                                  for="root_employment-2"
+                                  for="root_employment__2"
                                   id="radio-group:_r_6m_:radio:2"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_6m_:radio:label:2"
                                     checked=""
                                     data-ownedby="root_employment"
-                                    id="root_employment-2"
+                                    id="root_employment__2"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -18021,14 +18021,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-0"
-                              id="checkbox:root_person_race-0"
+                              for="root_person_race__0"
+                              id="checkbox:root_person_race__0"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-0:label"
-                                id="root_person_race-0"
+                                aria-labelledby="checkbox:root_person_race__0:label"
+                                id="root_person_race__0"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -18041,7 +18041,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-0:control"
+                                id="checkbox:root_person_race__0:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -18055,7 +18055,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-0:label"
+                                id="checkbox:root_person_race__0:label"
                               >
                                 <p>
                                   American Indian / Alaska Native
@@ -18068,14 +18068,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-1"
-                              id="checkbox:root_person_race-1"
+                              for="root_person_race__1"
+                              id="checkbox:root_person_race__1"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-1:label"
-                                id="root_person_race-1"
+                                aria-labelledby="checkbox:root_person_race__1:label"
+                                id="root_person_race__1"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -18088,7 +18088,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-1:control"
+                                id="checkbox:root_person_race__1:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -18102,7 +18102,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-1:label"
+                                id="checkbox:root_person_race__1:label"
                               >
                                 <p>
                                   Asian
@@ -18115,14 +18115,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-2"
-                              id="checkbox:root_person_race-2"
+                              for="root_person_race__2"
+                              id="checkbox:root_person_race__2"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-2:label"
-                                id="root_person_race-2"
+                                aria-labelledby="checkbox:root_person_race__2:label"
+                                id="root_person_race__2"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -18135,7 +18135,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-2:control"
+                                id="checkbox:root_person_race__2:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -18149,7 +18149,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-2:label"
+                                id="checkbox:root_person_race__2:label"
                               >
                                 <p>
                                   Black / African American
@@ -18162,14 +18162,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-3"
-                              id="checkbox:root_person_race-3"
+                              for="root_person_race__3"
+                              id="checkbox:root_person_race__3"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-3:label"
-                                id="root_person_race-3"
+                                aria-labelledby="checkbox:root_person_race__3:label"
+                                id="root_person_race__3"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -18182,7 +18182,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-3:control"
+                                id="checkbox:root_person_race__3:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -18196,7 +18196,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-3:label"
+                                id="checkbox:root_person_race__3:label"
                               >
                                 <p>
                                   Native Hawaiian / Other Pacific Islander
@@ -18209,14 +18209,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              for="root_person_race-4"
-                              id="checkbox:root_person_race-4"
+                              for="root_person_race__4"
+                              id="checkbox:root_person_race__4"
                             >
                               <input
                                 aria-describedby="root_person_race__description"
                                 aria-invalid="false"
-                                aria-labelledby="checkbox:root_person_race-4:label"
-                                id="root_person_race-4"
+                                aria-labelledby="checkbox:root_person_race__4:label"
+                                id="root_person_race__4"
                                 name="root_person_race"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -18229,7 +18229,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-4:control"
+                                id="checkbox:root_person_race__4:control"
                               >
                                 <svg
                                   class="emotion-46"
@@ -18243,7 +18243,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="checkbox"
                                 data-state="unchecked"
                                 dir="ltr"
-                                id="checkbox:root_person_race-4:label"
+                                id="checkbox:root_person_race__4:label"
                               >
                                 <p>
                                   White
@@ -20650,14 +20650,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="checked"
                                   dir="ltr"
-                                  for="root_employment-0"
+                                  for="root_employment__0"
                                   id="radio-group:_r_2m_:radio:0"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_2m_:radio:label:0"
                                     checked=""
                                     data-ownedby="root_employment"
-                                    id="root_employment-0"
+                                    id="root_employment__0"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -20700,13 +20700,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="root_employment-1"
+                                  for="root_employment__1"
                                   id="radio-group:_r_2m_:radio:1"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_2m_:radio:label:1"
                                     data-ownedby="root_employment"
-                                    id="root_employment-1"
+                                    id="root_employment__1"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -20744,13 +20744,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   data-ssr=""
                                   data-state="unchecked"
                                   dir="ltr"
-                                  for="root_employment-2"
+                                  for="root_employment__2"
                                   id="radio-group:_r_2m_:radio:2"
                                 >
                                   <input
                                     aria-labelledby="radio-group:_r_2m_:radio:label:2"
                                     data-ownedby="root_employment"
-                                    id="root_employment-2"
+                                    id="root_employment__2"
                                     name="root_employment"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     type="radio"
@@ -24164,14 +24164,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_person_race-0"
-                            id="checkbox:root_person_race-0"
+                            for="root_person_race__0"
+                            id="checkbox:root_person_race__0"
                           >
                             <input
                               aria-describedby="root_person_race__description"
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_person_race-0:label"
-                              id="root_person_race-0"
+                              aria-labelledby="checkbox:root_person_race__0:label"
+                              id="root_person_race__0"
                               name="root_person_race"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -24184,7 +24184,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-0:control"
+                              id="checkbox:root_person_race__0:control"
                             >
                               <svg
                                 class="emotion-42"
@@ -24198,7 +24198,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-0:label"
+                              id="checkbox:root_person_race__0:label"
                             >
                               <p>
                                 American Indian / Alaska Native
@@ -24211,14 +24211,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_person_race-1"
-                            id="checkbox:root_person_race-1"
+                            for="root_person_race__1"
+                            id="checkbox:root_person_race__1"
                           >
                             <input
                               aria-describedby="root_person_race__description"
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_person_race-1:label"
-                              id="root_person_race-1"
+                              aria-labelledby="checkbox:root_person_race__1:label"
+                              id="root_person_race__1"
                               name="root_person_race"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -24231,7 +24231,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-1:control"
+                              id="checkbox:root_person_race__1:control"
                             >
                               <svg
                                 class="emotion-42"
@@ -24245,7 +24245,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-1:label"
+                              id="checkbox:root_person_race__1:label"
                             >
                               <p>
                                 Asian
@@ -24258,14 +24258,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_person_race-2"
-                            id="checkbox:root_person_race-2"
+                            for="root_person_race__2"
+                            id="checkbox:root_person_race__2"
                           >
                             <input
                               aria-describedby="root_person_race__description"
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_person_race-2:label"
-                              id="root_person_race-2"
+                              aria-labelledby="checkbox:root_person_race__2:label"
+                              id="root_person_race__2"
                               name="root_person_race"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -24278,7 +24278,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-2:control"
+                              id="checkbox:root_person_race__2:control"
                             >
                               <svg
                                 class="emotion-42"
@@ -24292,7 +24292,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-2:label"
+                              id="checkbox:root_person_race__2:label"
                             >
                               <p>
                                 Black / African American
@@ -24305,14 +24305,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_person_race-3"
-                            id="checkbox:root_person_race-3"
+                            for="root_person_race__3"
+                            id="checkbox:root_person_race__3"
                           >
                             <input
                               aria-describedby="root_person_race__description"
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_person_race-3:label"
-                              id="root_person_race-3"
+                              aria-labelledby="checkbox:root_person_race__3:label"
+                              id="root_person_race__3"
                               name="root_person_race"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -24325,7 +24325,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-3:control"
+                              id="checkbox:root_person_race__3:control"
                             >
                               <svg
                                 class="emotion-42"
@@ -24339,7 +24339,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-3:label"
+                              id="checkbox:root_person_race__3:label"
                             >
                               <p>
                                 Native Hawaiian / Other Pacific Islander
@@ -24352,14 +24352,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_person_race-4"
-                            id="checkbox:root_person_race-4"
+                            for="root_person_race__4"
+                            id="checkbox:root_person_race__4"
                           >
                             <input
                               aria-describedby="root_person_race__description"
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_person_race-4:label"
-                              id="root_person_race-4"
+                              aria-labelledby="checkbox:root_person_race__4:label"
+                              id="root_person_race__4"
                               name="root_person_race"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -24372,7 +24372,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-4:control"
+                              id="checkbox:root_person_race__4:control"
                             >
                               <svg
                                 class="emotion-42"
@@ -24386,7 +24386,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-4:label"
+                              id="checkbox:root_person_race__4:label"
                             >
                               <p>
                                 White
@@ -27769,14 +27769,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_person_race-0"
-                            id="checkbox:root_person_race-0"
+                            for="root_person_race__0"
+                            id="checkbox:root_person_race__0"
                           >
                             <input
                               aria-describedby="root_person_race__description"
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_person_race-0:label"
-                              id="root_person_race-0"
+                              aria-labelledby="checkbox:root_person_race__0:label"
+                              id="root_person_race__0"
                               name="root_person_race"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -27789,7 +27789,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-0:control"
+                              id="checkbox:root_person_race__0:control"
                             >
                               <svg
                                 class="emotion-42"
@@ -27803,7 +27803,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-0:label"
+                              id="checkbox:root_person_race__0:label"
                             >
                               <p>
                                 American Indian / Alaska Native
@@ -27816,14 +27816,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_person_race-1"
-                            id="checkbox:root_person_race-1"
+                            for="root_person_race__1"
+                            id="checkbox:root_person_race__1"
                           >
                             <input
                               aria-describedby="root_person_race__description"
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_person_race-1:label"
-                              id="root_person_race-1"
+                              aria-labelledby="checkbox:root_person_race__1:label"
+                              id="root_person_race__1"
                               name="root_person_race"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -27836,7 +27836,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-1:control"
+                              id="checkbox:root_person_race__1:control"
                             >
                               <svg
                                 class="emotion-42"
@@ -27850,7 +27850,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-1:label"
+                              id="checkbox:root_person_race__1:label"
                             >
                               <p>
                                 Asian
@@ -27863,14 +27863,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_person_race-2"
-                            id="checkbox:root_person_race-2"
+                            for="root_person_race__2"
+                            id="checkbox:root_person_race__2"
                           >
                             <input
                               aria-describedby="root_person_race__description"
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_person_race-2:label"
-                              id="root_person_race-2"
+                              aria-labelledby="checkbox:root_person_race__2:label"
+                              id="root_person_race__2"
                               name="root_person_race"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -27883,7 +27883,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-2:control"
+                              id="checkbox:root_person_race__2:control"
                             >
                               <svg
                                 class="emotion-42"
@@ -27897,7 +27897,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-2:label"
+                              id="checkbox:root_person_race__2:label"
                             >
                               <p>
                                 Black / African American
@@ -27910,14 +27910,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_person_race-3"
-                            id="checkbox:root_person_race-3"
+                            for="root_person_race__3"
+                            id="checkbox:root_person_race__3"
                           >
                             <input
                               aria-describedby="root_person_race__description"
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_person_race-3:label"
-                              id="root_person_race-3"
+                              aria-labelledby="checkbox:root_person_race__3:label"
+                              id="root_person_race__3"
                               name="root_person_race"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -27930,7 +27930,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-3:control"
+                              id="checkbox:root_person_race__3:control"
                             >
                               <svg
                                 class="emotion-42"
@@ -27944,7 +27944,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-3:label"
+                              id="checkbox:root_person_race__3:label"
                             >
                               <p>
                                 Native Hawaiian / Other Pacific Islander
@@ -27957,14 +27957,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="root_person_race-4"
-                            id="checkbox:root_person_race-4"
+                            for="root_person_race__4"
+                            id="checkbox:root_person_race__4"
                           >
                             <input
                               aria-describedby="root_person_race__description"
                               aria-invalid="false"
-                              aria-labelledby="checkbox:root_person_race-4:label"
-                              id="root_person_race-4"
+                              aria-labelledby="checkbox:root_person_race__4:label"
+                              id="root_person_race__4"
                               name="root_person_race"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -27977,7 +27977,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-4:control"
+                              id="checkbox:root_person_race__4:control"
                             >
                               <svg
                                 class="emotion-42"
@@ -27991,7 +27991,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               data-scope="checkbox"
                               data-state="unchecked"
                               dir="ltr"
-                              id="checkbox:root_person_race-4:label"
+                              id="checkbox:root_person_race__4:label"
                             >
                               <p>
                                 White

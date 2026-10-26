@@ -206,7 +206,7 @@ describe('ui:required enforcement', () => {
       await submitForm(node, user, true);
       expect(onSubmit).toHaveBeenCalledTimes(1);
 
-      await user.click(elementOf(node, '#root_child-button'));
+      await user.click(elementOf(node, '#root_child__expand'));
       await submitForm(node, user, true);
 
       expect(onSubmit).toHaveBeenCalledTimes(1);

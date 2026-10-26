@@ -1,6 +1,7 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
   getAdditionalKeyAttributes,
@@ -52,7 +53,7 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const keyId = `${id}-key`;
+  const keyId = additionalKeyId(id);
   const margin = hasKeyLabel ? 12 + descMargin : 0;
   const padding = hasKeyLabel ? 4 + descPadding : 1;
 
