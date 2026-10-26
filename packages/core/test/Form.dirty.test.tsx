@@ -354,6 +354,25 @@ describe('dirty', () => {
   });
 });
 
+describe('getStatus', () => {
+  it('hands back the same status, dirtyFields included, until the data or the submit count changes', async () => {
+    const { container, handle } = mountWithHandle({ schema: person, noHtml5Validate: true });
+    const clean = handle.getStatus();
+    expect(handle.getStatus()).toBe(clean);
+
+    await user.type(input(container, 'root_name'), 'x');
+    const edited = handle.getStatus();
+    expect(edited).not.toBe(clean);
+    expect(edited.dirtyFields).toBe(edited.dirtyFields);
+    expect(handle.getStatus()).toBe(edited);
+    expect(handle.getStatus().dirtyFields).toBe(edited.dirtyFields);
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    expect(handle.getStatus()).not.toBe(edited);
+    expect(handle.getStatus().submitCount).toBe(1);
+  });
+});
+
 describe('submitCount', () => {
   const required: RJSFSchema = { type: 'object', required: ['name'], properties: { name: { type: 'string' } } };
 

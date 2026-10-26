@@ -1508,7 +1508,7 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     ...context,
     formData,
     baseline: formData,
-    baselineUiState: withSelectionsAsOf(context.uiState),
+    baselineUiState: withSelectionsAsOf(context.uiState, (at) => getAt(formData, at)),
     isDataPassed: seed !== undefined,
     ...extraErrorsAlone(props.extraErrors),
     // The reset pass has generated the initial defaults, so the next unrelated recompute is not an initial pass and
