@@ -1220,6 +1220,7 @@ The following props are passed to each `TitleFieldTemplate`:
 - `uiSchema`: The uiSchema object for the field.
 - `required`: A boolean value stating if the field is required
 - `registry`: The `registry` object.
+- `outsideFieldset`: Set where the title heads no `<fieldset>`, such as a layout grid's header, so a template that renders a `<legend>` renders an element valid there instead, as `@rjsf/core`'s renders a `<div class="rjsf-title">`.
 
 ## UnsupportedFieldTemplate
 

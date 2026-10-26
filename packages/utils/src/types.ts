@@ -1312,6 +1312,10 @@ export type TitleFieldProps<
   required?: boolean;
   /** Add optional data control */
   optionalDataControl?: ReactNode;
+  /** Set where the title is rendered anywhere but as a `<fieldset>`'s first child, such as a layout grid's header, so
+   * a template that renders a `<legend>` renders an element valid there instead
+   */
+  outsideFieldset?: boolean;
 };
 
 /** The properties that are passed to a `DescriptionFieldTemplate` implementation */

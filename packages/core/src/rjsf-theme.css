@@ -10,7 +10,7 @@
     --rjsf-surface: light-dark(#fff, #1e1e1e);
   }
 
-  :where(.rjsf legend) {
+  :where(.rjsf legend, .rjsf .rjsf-title) {
     font-size: 1.25rem;
   }
 

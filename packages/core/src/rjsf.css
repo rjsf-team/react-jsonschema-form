@@ -17,7 +17,7 @@
   }
 
   /* Full width, as a legend otherwise sizes to its content, so the optional-data button's auto margin has room */
-  :where(.rjsf legend) {
+  :where(.rjsf legend, .rjsf .rjsf-title) {
     display: flex;
     align-items: center;
     inline-size: 100%;
