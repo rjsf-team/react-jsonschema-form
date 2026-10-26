@@ -458,6 +458,53 @@ describe('dirty', () => {
         submitCount: 0,
       });
     });
+
+    it.each<[string, RJSFSchema[]]>([
+      [
+        'reorders the options',
+        [
+          { title: 'B', properties: { b: { type: 'string' }, c: { type: 'string', default: 'c' } } },
+          { title: 'A', properties: { a: { type: 'string' } } },
+        ],
+      ],
+      [
+        'adds an option the data matches ahead of the one it shows',
+        [
+          { title: 'C', properties: { b: { type: 'string' }, c: { type: 'string', default: 'c' } } },
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string' } } },
+        ],
+      ],
+    ])(
+      'keeps a field whose edit was undone clean when a schema prop change %s while another field is dirty',
+      async (_change, nextOptions) => {
+        const schemaOf = (oneOf: RJSFSchema[]): RJSFSchema => ({
+          type: 'object',
+          properties: { note: { type: 'string' }, x: { type: 'object', oneOf } },
+        });
+        const seed = { x: { b: '1' } };
+        const { container, handle, rerender } = mountWithHandle({
+          schema: schemaOf([
+            { title: 'A', properties: { a: { type: 'string' } } },
+            { title: 'B', properties: { b: { type: 'string' } } },
+          ]),
+          initialFormData: seed,
+        });
+        await user.type(input(container, 'root_x_b'), '2{Backspace}');
+        expect(handle.getStatus().dirty).toBe(false);
+        await user.type(input(container, 'root_note'), 'n');
+
+        rerender({ schema: schemaOf(nextOptions), initialFormData: seed });
+
+        expect(handle.getStatus()).toEqual({
+          dirty: true,
+          dirtyFields: { note: true },
+          touched: false,
+          touchedFields: {},
+          submitCount: 0,
+        });
+      },
+    );
   });
 
   it('keeps every item a keystroke did not reach identical to the data the form started from', async () => {
@@ -482,7 +529,7 @@ describe('dirty', () => {
 });
 
 describe('getStatus', () => {
-  it('hands back the same status, dirtyFields included, until the data or the submit count changes', async () => {
+  it("hands back the same status, dirtyFields included, until the form's state changes", async () => {
     const { container, handle } = mountWithHandle({ schema: person, noHtml5Validate: true });
     const clean = handle.getStatus();
     expect(handle.getStatus()).toBe(clean);

@@ -61,6 +61,7 @@ import {
   settledEntries,
   withoutSelections,
   withSelectionsAsOf,
+  withSelectionsHeldFor,
 } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
@@ -1629,8 +1630,9 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
 }
 
 /** The baseline after a prop change re-derived the data into `formData`: the baseline put through the same derivation,
- * since the change is not the user's, under the options the baseline was derived with, see `baselineUiState`. A form
- * whose data is its baseline takes the derived data itself
+ * since the change is not the user's, under the options the baseline was derived with, see `baselineUiState`, except
+ * at a field whose selection holds for the baseline's data there, see `withSelectionsHeldFor()`. A form whose data is
+ * its baseline takes the derived data itself
  *
  * @param current - The state before the prop change
  * @param formData - The data the prop change re-derived
@@ -1658,8 +1660,16 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
       ? resolveRetrievedSchema(current, current.schemaUtils, baseline)
       : current.retrievedSchema,
   };
-  return settleFormData(fromBaseline, baseline, { ...options, uiState: current.baselineUiState }, props, schemaUtils)
-    .formData;
+  return settleFormData(
+    fromBaseline,
+    baseline,
+    {
+      ...options,
+      uiState: withSelectionsHeldFor(current.uiState, current.baselineUiState, (at) => getAt(baseline, at)),
+    },
+    props,
+    schemaUtils,
+  ).formData;
 }
 
 /** Freezes plain objects and arrays in `data`, and nothing else: a `File`, a `Date` or a class instance is left

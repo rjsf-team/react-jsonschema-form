@@ -420,6 +420,31 @@ export function withoutSelections(uiState: UiState): UiStateReader {
   return { selection: () => undefined, isExpanded: uiState.isExpanded };
 }
 
+/** `baselineUiState` with the selections of `uiState` that hold for the baseline's data at their field in place of its
+ * own, for re-deriving the baseline: where the data the form shows is the baseline's, the baseline takes the option the
+ * form shows it under, as the baseline of a clean form does
+ *
+ * @param uiState - The form's option selections and cycle expansions
+ * @param baselineUiState - The selections the baseline was derived under
+ * @param dataAt - The baseline's data at a field's path
+ * @returns - The selections to re-derive the baseline under
+ */
+export function withSelectionsHeldFor(
+  uiState: UiState,
+  baselineUiState: UiStateReader,
+  dataAt: (path: FieldPathList) => unknown,
+): UiStateReader {
+  return {
+    selection: (path, list) => {
+      const selection = uiState.selection(path, list);
+      return selection && isHeldFor(selection, dataAt(fieldPathToList(path)))
+        ? selection
+        : baselineUiState.selection(path, list);
+    },
+    isExpanded: baselineUiState.isExpanded,
+  };
+}
+
 /** `uiState` with the options selected now and never the ones picked later, for the baseline `reset()` derives under
  * the options the form shows at the reset. Each holds for the reset's data, as once the form renders it, so the snapshot
  * keeps none of the data from before the reset
