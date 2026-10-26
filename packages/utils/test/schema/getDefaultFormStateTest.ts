@@ -5267,6 +5267,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).toEqual(expected);
         },
       );
+      it.each<[string, RJSFSchema]>([
+        ['an object enum', { type: 'object', enum: [{ a: 1 }, { a: 2 }] }],
+        ['object constants', { type: 'object', oneOf: [{ const: { a: 1 } }, { const: { a: 2 } }] }],
+        ['a string enum of objects', { type: 'string', enum: [{ a: 1 }, { a: 2 }] }],
+      ])(
+        'leaves out object form data that none of the constants of a nested select with no default is, over %s (#5522)',
+        (_, select) => {
+          const schema: RJSFSchema = { type: 'object', properties: { p: select } };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { p: { a: 3 } } })).toEqual({});
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { p: { a: 3 } }, initialDefaultsGenerated: true },
+            ),
+          ).toEqual({});
+        },
+      );
       it('should not spread a primitive form data value into an object default', () => {
         const schema: RJSFSchema = { type: 'string', enum: ['a', 'b'], default: { a: 1 } };
         expect(getDefaultFormState({ validator: testValidator }, { schema, formData: 'zz' })).toEqual({ a: 1 });
