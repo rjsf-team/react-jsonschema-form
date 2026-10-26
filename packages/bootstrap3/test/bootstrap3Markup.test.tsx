@@ -1,10 +1,10 @@
-import { generateTemplates as coreTemplates } from '@rjsf/core';
+import { generateTemplates as coreTemplates, withTheme } from '@rjsf/core';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import Form, { generateTemplates } from '../src/index.ts';
+import Form, { generateClassMap, generateTemplates, generateTheme } from '../src/index.ts';
 
 const user = userEvent.setup();
 
@@ -145,5 +145,18 @@ describe('Bootstrap 3 markup', () => {
         expect(button, name).not.toBe(coreButton);
       }
     }
+  });
+
+  it('hands a Form put together from its templates the class map generateTheme() carries, a fresh copy each call', () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
+    expect(generateClassMap()).toEqual(generateTheme().classMap);
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
+    expect(generateClassMap()).not.toBe(generateClassMap());
+
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
+    const Composed = withTheme({ templates: generateTemplates(), classMap: generateClassMap() });
+    const { container } = render(<Composed schema={{ type: 'string', title: 'Name' }} validator={validator} />);
+    expect(container.querySelector('#root')).toHaveClass('form-control');
+    expect(container.querySelector('label[for="root"]')).toHaveClass('control-label');
   });
 });

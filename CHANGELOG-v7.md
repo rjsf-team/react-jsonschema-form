@@ -57,6 +57,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 ## @rjsf/bootstrap3
 
 - New package, deprecated from the start and removed in v8: the Bootstrap 3 theme `@rjsf/core` rendered through v6, as a class map and the four templates whose markup is Bootstrap 3's (the `IconButton` family, `ArrayFieldItemTemplate`, `WrapIfAdditionalTemplate` and `TitleField`) over core's components. Its output is core's today, byte for byte, and stays Bootstrap 3 once core renders unstyled markup ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
+- `generateClassMap()` returns the theme's class map, for a `Form` put together from `generateTemplates()` rather than the `Theme`, which renders `@rjsf/core`'s components without the Bootstrap 3 classes without it ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 
 ## @rjsf/chakra-ui
 

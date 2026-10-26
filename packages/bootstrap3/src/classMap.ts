@@ -1,7 +1,7 @@
-import type { MergedClassMap } from '@rjsf/utils';
+import type { ClassMap, MergedClassMap } from '@rjsf/utils';
 
 /** The Bootstrap 3 class names for every element `@rjsf/core` renders */
-export const BOOTSTRAP3_CLASS_MAP: MergedClassMap = {
+const BOOTSTRAP3_CLASS_MAP: MergedClassMap = {
   input: 'form-control',
   select: 'form-control',
   textarea: 'form-control',
@@ -44,3 +44,12 @@ export const BOOTSTRAP3_CLASS_MAP: MergedClassMap = {
   optionalDataRemoveButton: 'btn-sm',
   submitButton: 'btn btn-info',
 };
+
+/** The theme's class map, a fresh copy on every call, for a `Form` put together from `generateTemplates()` rather than
+ * `generateTheme()`, which passes it as its `classMap`
+ *
+ * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
+ */
+export function generateClassMap(): ClassMap {
+  return { ...BOOTSTRAP3_CLASS_MAP };
+}

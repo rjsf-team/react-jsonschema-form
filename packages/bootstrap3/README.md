@@ -70,6 +70,8 @@ import { Theme as Bootstrap3Theme } from '@rjsf/bootstrap3';
 const Form = withTheme(Bootstrap3Theme);
 ```
 
+A `Form` put together from the theme's `generateTemplates()` rather than its `Theme` passes `classMap={generateClassMap()}` too, or `@rjsf/core`'s components render without the Bootstrap 3 classes.
+
 Import from the package itself; it publishes no deep `@rjsf/bootstrap3/lib/*` paths.
 
 ## Contributing
