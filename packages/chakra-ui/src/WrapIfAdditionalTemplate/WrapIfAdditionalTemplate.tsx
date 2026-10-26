@@ -2,6 +2,7 @@ import { Grid, GridItem, Input } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
   getAdditionalKeyAttributes,
@@ -42,6 +43,7 @@ export default function WrapIfAdditionalTemplate<
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
+  const keyId = additionalKeyId(id);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const hasDescription = !!rawDescription;
   const margin = hasDescription ? 58 : 22;
@@ -55,7 +57,7 @@ export default function WrapIfAdditionalTemplate<
 
   return (
     <Grid
-      key={`${id}-key`}
+      key={keyId}
       templateColumns='repeat(11, 1fr)'
       className={classNames}
       style={style}
@@ -66,7 +68,7 @@ export default function WrapIfAdditionalTemplate<
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
             errorAttributes={keyAttributes}
-            id={`${id}-key`}
+            id={keyId}
             label={keyLabel}
             hideLabel={!hasKeyLabel}
             value={keyName}
@@ -78,13 +80,13 @@ export default function WrapIfAdditionalTemplate<
             registry={registry}
           />
         ) : (
-          <Field required={required} label={hasKeyLabel ? keyLabel : undefined} id={`${id}-key`}>
+          <Field required={required} label={hasKeyLabel ? keyLabel : undefined} id={keyId}>
             <Input
               key={keyName}
               defaultValue={keyName}
               disabled={disabled || readonly}
-              id={`${id}-key`}
-              name={`${id}-key`}
+              id={keyId}
+              name={keyId}
               onBlur={!readonly ? onKeyRenameBlur : undefined}
               type='text'
               mb={1}

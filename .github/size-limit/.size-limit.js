@@ -20,7 +20,7 @@ const PACKAGES = {
     canaries: [{ label: 'Form', import: 'Form', limit: '40 kB' }],
   },
   '@rjsf/utils': {
-    installed: '48 kB',
+    installed: '49 kB',
     own: '43 kB',
     canaries: [{ label: 'getUiOptions', import: '{ getUiOptions }', limit: '1 kB' }],
   },

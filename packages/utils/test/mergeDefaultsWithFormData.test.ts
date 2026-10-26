@@ -422,5 +422,26 @@ describe('mergeDefaultsWithFormData()', () => {
     ])('should keep nested object formData over a nested %s default', (_, defaults) => {
       expect(mergeDefaultsWithFormData<any>(defaults, { a: { x: 1 } }, true, false, true)).toEqual({ a: { x: 1 } });
     });
+
+    it.each([
+      ['one level down', { a: { b: 'd' } }, { a: { b: 'f' } }],
+      ['two levels down', { a: { c: { b: 'd' } } }, { a: { c: { b: 'f' } } }],
+      ['beside an object child', { a: { b: 'd', n: { z: 1 } } }, { a: { b: 'f' } }],
+    ])('should override a scalar %s as it does at the top (#5523)', (_, defaults, formData) => {
+      expect(mergeDefaultsWithFormData<object>(defaults, formData, true, false, true)).toEqual(defaults);
+    });
+  });
+
+  it.each([
+    ['one level down', { a: { x: 1 } }, { a: { x: undefined } }],
+    ['two levels down', { a: { b: { x: 1 } } }, { a: { b: { x: undefined } } }],
+  ])('should apply defaultSupercedesUndefined %s as it does at the top (#5523)', (_, defaults, formData) => {
+    expect(mergeDefaultsWithFormData<object>(defaults, formData, false, true)).toEqual(defaults);
+  });
+
+  it('should keep a nested undefined over its default when defaultSupercedesUndefined is off (#5523)', () => {
+    const merged = mergeDefaultsWithFormData<object>({ a: { x: 1 } }, { a: { x: undefined } });
+    expect(merged).toEqual({ a: {} });
+    expect(merged).toHaveProperty('a.x', undefined);
   });
 });

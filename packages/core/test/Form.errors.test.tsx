@@ -8,7 +8,7 @@ import type {
   RJSFValidationError,
   WidgetProps,
 } from '@rjsf/utils';
-import { noop, toFieldPath } from '@rjsf/utils';
+import { noop, partId, toFieldPath } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -581,11 +581,11 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(screen.getAllByRole('combobox')[0]).toHaveFocus();
       });
 
-      it('passes over an unfocusable input whose id starts with the field id for a focusable one after it', async () => {
+      it('passes over an unfocusable input whose id is a part of the field id for a focusable one after it', async () => {
         const ChoiceWidget = ({ id }: WidgetProps) => (
           <div>
-            <input type='hidden' id={`${id}-value`} value='' />
-            <button type='button' id={`${id}-0`}>
+            <input type='hidden' id={partId(id, 'value')} value='' />
+            <button type='button' id={partId(id, '0')}>
               Choose
             </button>
           </div>
@@ -624,6 +624,24 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           expect(node.querySelector('#root_nameSuffix')).not.toHaveFocus();
         },
       );
+
+      it('leaves focus off a sibling whose id starts with the id of a field rendering no element with its id', async () => {
+        const TextOnlyWidget = () => <span>No control</span>;
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            required: ['when'],
+            properties: { when_year: { type: 'string' }, when: { type: 'string' } },
+          },
+          uiSchema: { when: { 'ui:widget': 'TextOnlyWidget' } },
+          widgets: { TextOnlyWidget },
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(node.querySelector('#root_when_year')).not.toHaveFocus();
+      });
 
       it('focuses the field in a DOM with no CSS namespace', async () => {
         vi.stubGlobal('CSS', undefined);
@@ -2079,7 +2097,7 @@ describe('the errors a field raises for the items of an array', () => {
     });
 
     await user.click(screen.getByRole('button', { name: 'Raise' }));
-    const keyInput = elementOf(node, '#root_obj_a-key');
+    const keyInput = elementOf(node, '#root_obj_a__key');
     await user.clear(keyInput);
     await user.type(keyInput, 'c');
     await user.tab();
@@ -2102,7 +2120,7 @@ describe('the errors a field raises for the items of an array', () => {
     });
 
     await submitForm(node, user);
-    const keyInput = elementOf(node, '#root_obj_a-key');
+    const keyInput = elementOf(node, '#root_obj_a__key');
     await user.clear(keyInput);
     await user.type(keyInput, 'c');
     await user.tab();

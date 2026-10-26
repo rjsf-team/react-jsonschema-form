@@ -17,6 +17,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
@@ -58,7 +59,7 @@ describe('chakra-ui AltDateWidget', () => {
       />,
     );
 
-    expect(container.querySelector('[id="select:root_hour"]')).toBeInTheDocument();
+    expect(container.querySelector('[id="select:root__hour"]')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Now' }));
     expect(onChange.mock.lastCall?.[0].formData).toMatch(/T\d{2}:\d{2}:\d{2}/);
   });
@@ -214,7 +215,7 @@ describe('chakra-ui SelectWidget', () => {
       />,
     );
 
-    const radioGroup = container.querySelector('#root_pick__anyof_select-0')!.closest('[role="radiogroup"]');
+    const radioGroup = elementOf(container, '#root_pick__anyof_select__0').closest('[role="radiogroup"]');
     expect(radioGroup).toHaveAccessibleName('Pick');
     expect(radioGroup).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
     expectReferencesResolve(container);
@@ -243,7 +244,7 @@ describe('chakra-ui SelectWidget', () => {
       />,
     );
 
-    const title = document.getElementById('root_pet_XxxOf__title');
+    const title = document.getElementById('root_pet__XxxOf__title');
     expect(title?.closest('h5')?.parentElement?.querySelector('button')).toBeInTheDocument();
     expect(title?.querySelector('button')).toBeNull();
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
@@ -271,7 +272,7 @@ describe('chakra-ui SelectWidget', () => {
       />,
     );
 
-    const title = document.getElementById('root_pet_XxxOf__title');
+    const title = document.getElementById('root_pet__XxxOf__title');
     expect(title).toHaveTextContent(/^Pet$/);
     expect(title?.closest('h5')).toHaveTextContent('Pet*');
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
@@ -518,7 +519,7 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     ['number input', { type: 'number' }, { 'ui:widget': 'updown' }, 'spinbutton', 'root_x'],
     ['slider', { type: 'number' }, { 'ui:widget': 'range' }, 'slider', 'root_x'],
     // Focus goes to the first radio, which carries its option's id, as core's does
-    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup', 'root_x-0'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup', 'root_x__0'],
     ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox', 'root_x'],
     [
       'native select',
@@ -601,8 +602,8 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     );
 
     expect(container.querySelector('#root_x')).toHaveAccessibleName('X');
-    expect(screen.getByRole('checkbox', { name: 'a' })).toHaveAttribute('id', 'root_x-0');
-    expect(screen.getByRole('checkbox', { name: 'b' })).toHaveAttribute('id', 'root_x-1');
+    expect(screen.getByRole('checkbox', { name: 'a' })).toHaveAttribute('id', 'root_x__0');
+    expect(screen.getByRole('checkbox', { name: 'b' })).toHaveAttribute('id', 'root_x__1');
 
     await user.click(screen.getByRole('button', { name: 'Submit' }));
 
@@ -652,7 +653,7 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
       />,
     );
 
-    expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo-key');
+    expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo__key');
   });
 });
 
@@ -1245,7 +1246,7 @@ describe('chakra-ui WrapIfAdditionalTemplate', () => {
       />,
     );
 
-    expect(container.querySelector('#root_foo-key')).toHaveAccessibleName('foo Key');
+    expect(container.querySelector('#root_foo__key')).toHaveAccessibleName('foo Key');
     expect(screen.queryByText('foo Key')).toBeNull();
   });
 });
