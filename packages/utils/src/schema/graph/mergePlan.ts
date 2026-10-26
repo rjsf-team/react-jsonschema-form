@@ -25,7 +25,7 @@ import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
-import { dependencyCondition, targetOf } from './validationTargets.ts';
+import { declaredProperties, dependencyCondition, targetOf } from './validationTargets.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -961,7 +961,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     let next = withoutList(part, ANY_OF_KEY, anyOf !== undefined);
     next = withoutList(next, ONE_OF_KEY, oneOf !== undefined);
     if (anyOf !== undefined) {
-      const keyed = dependencyCondition(this.graph, anyOf.id, key) !== undefined;
+      const keyed = declaredProperties(this.graph, anyOf.id, key).length > 0;
       next = mergeBranch(next, keyed ? withoutProperty(anyOf.option, key) : anyOf.option, 'o', anyOf.id);
     }
     return oneOf === undefined ? next : mergeBranch(next, oneOf.option, 'o', oneOf.id);
@@ -970,7 +970,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private declaresNoKey(oneOf: Provider<S>, key: string): boolean {
     const options = this.graph.subschemas(oneOf.node.id, ONE_OF_KEY);
     return (
-      options.length > 0 && options.every(([, option]) => dependencyCondition(this.graph, option, key) === undefined)
+      options.length > 0 && options.every(([, option]) => declaredProperties(this.graph, option, key).length === 0)
     );
   }
 
