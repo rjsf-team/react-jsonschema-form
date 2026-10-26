@@ -27,6 +27,25 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expect(node.querySelectorAll('input[type=text]')).toHaveLength(1);
     });
 
+    it('should merge the properties beside a $ref into the referenced ones, defaults included (#3335)', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        $defs: { selector: { type: 'object', properties: { title_path: { type: 'string' } } } },
+        properties: {
+          playlist: { $ref: '#/$defs/selector', properties: { title_path: { default: 'head title' } } },
+        },
+      };
+
+      const { node, onSubmit } = createFormComponent({ schema });
+      const titlePath = elementOf(node, 'input#root_playlist_title_path');
+      expect(titlePath).toHaveValue('head title');
+
+      await user.type(titlePath, ' 2');
+      await submitForm(node, user);
+
+      expectToHaveBeenCalledWithFormData(onSubmit, { playlist: { title_path: 'head title 2' } }, true);
+    });
+
     it('should handle multiple schema definition references', () => {
       const schema: RJSFSchema = {
         definitions: {
