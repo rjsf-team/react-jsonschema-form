@@ -1,7 +1,7 @@
 import validator from '@rjsf/validator-ajv8';
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { mockIntersectionObserver, mockResizeObserver } from 'jsdom-testing-mocks';
+import { mockIntersectionObserver } from 'jsdom-testing-mocks';
 
 import Form from '../src/index.ts';
 import DateTimeWidget from '../src/widgets/DateTimeWidget/DateTimeWidget.tsx';
@@ -11,7 +11,6 @@ import stubViewport from './helpers/stubViewport.ts';
 
 const user = userEvent.setup();
 const intersectionObserver = mockIntersectionObserver();
-const resizeObserver = mockResizeObserver();
 
 /** Opens the picker from its trigger, the one button that opens a popup — the calendar renders more */
 async function openPicker(container: HTMLElement) {
@@ -375,7 +374,8 @@ describe('DateTimeWidget', () => {
       return heightSpy;
     }
 
-    const popup = () => screen.getByText('Done').closest<HTMLElement>('.date-picker-popup')!;
+    // Taken to be hidden, as jsdom's own stylesheet hides a popover that the stubbed `showPopover()` doesn't show
+    const popup = () => screen.getByRole('dialog', { hidden: true });
 
     test('below its trigger, inside the right edge of the viewport by its own width', async () => {
       // 40px short of the right edge of the 1024px-wide viewport, with the popup 400px wide, as `max-w-xs` makes it
@@ -429,8 +429,7 @@ describe('DateTimeWidget', () => {
 
       // A month with one more week grows it a row, which moves no trigger and fires no scroll
       height.mockReturnValue(532);
-      resizeObserver.mockElementSize(popup(), { borderBoxSize: { inlineSize: 320, blockSize: 532 } });
-      resizeObserver.resize(popup());
+      await new Promise(requestAnimationFrame);
 
       expect(popup()).toHaveStyle({ top: '143px' });
     });
@@ -457,6 +456,27 @@ describe('DateTimeWidget', () => {
 
       expect(popup()).toHaveAttribute('popover', 'manual');
       expect(vi.mocked(HTMLElement.prototype.showPopover).mock.contexts).toEqual([popup()]);
+      // Undoing the browser's popover padding and centering, which a page without Tailwind's preflight keeps
+      expect(popup()).toHaveStyle({ marginTop: '0px', marginLeft: '0px', paddingTop: '0px', paddingLeft: '0px' });
+    });
+
+    test("in the top layer where a polyfill's `showPopover()` comes without the `:popover-open` selector", async () => {
+      const { matches } = Element.prototype;
+      const spy = vi.spyOn(Element.prototype, 'matches').mockImplementation(function polyfilled(
+        this: Element,
+        selectors: string,
+      ) {
+        if (selectors.includes(':popover-open')) {
+          throw new DOMException(`'${selectors}' is not a valid selector`, 'SyntaxError');
+        }
+        return matches.call(this, selectors);
+      });
+      onTestFinished(() => spy.mockRestore());
+      const trigger = renderAt({ top: 30, left: 10 });
+
+      await user.click(trigger);
+
+      expect(vi.mocked(HTMLElement.prototype.showPopover).mock.contexts).toEqual([popup()]);
     });
 
     test("in the field's flow just below its trigger, unplaced, where the browser has no popovers", async () => {
@@ -467,7 +487,9 @@ describe('DateTimeWidget', () => {
 
       // Where a transformed ancestor, as daisyUI's modal box is, lays it out and its scroll reaches it, rather than
       // fixed against that ancestor at viewport coordinates it would scale, and clip out of the scroll's reach
-      expect(popup()).toHaveStyle({ position: 'absolute', marginTop: '5px' });
+      // Positioned against the field's wrapper, and stacked under app chrome as the popup in the flow always was
+      expect(popup()).toHaveStyle({ position: 'absolute', marginTop: '5px', zIndex: '100' });
+      expect(trigger.closest('.form-control')).toHaveClass('relative');
       expect(popup().style.top).toBe('');
       expect(popup()).not.toHaveAttribute('popover');
       expect(trigger.getBoundingClientRect).not.toHaveBeenCalled();
@@ -482,6 +504,21 @@ describe('DateTimeWidget', () => {
 
       intersectionObserver.enterNode(trigger);
       expect(popup()).not.toHaveStyle({ visibility: 'hidden' });
+    });
+
+    test('giving the focus back to its trigger when it hides holding it, so the focus never falls to the body', async () => {
+      const trigger = renderAt({ top: 30, left: 10 });
+      await user.click(trigger);
+      await user.keyboard('{ArrowDown}');
+      expect(popup()).toContainElement(document.activeElement as HTMLElement);
+
+      act(() => intersectionObserver.leaveNode(trigger));
+      expect(popup()).toHaveStyle({ visibility: 'hidden' });
+      expect(trigger).toHaveFocus();
+
+      act(() => intersectionObserver.enterNode(trigger));
+      expect(popup()).not.toHaveStyle({ visibility: 'hidden' });
+      expect(trigger).toHaveFocus();
     });
   });
 

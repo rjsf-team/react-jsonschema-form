@@ -179,28 +179,38 @@ interface DatePickerPopupProps {
  * `position` and `z-index` are inline rather than classes: the `top` and `left` `useDatePicker()` writes are viewport
  * coordinates, which place only a fixed popup, and a consumer whose Tailwind build doesn't scan this package gets none
  * of its classes. A browser without popovers has `useDatePicker()` put it back in the field's flow instead. The
- * `right`, `bottom` and `color` undo the browser's own popover styles, which pin a popover to all four edges of the
- * viewport and recolor its text. It scrolls within the height `useDatePicker()` gives it, so a viewport shorter than
- * the popup still reaches its Done button
+ * `right`, `bottom`, `margin`, `padding` and `color` undo the browser's own popover styles, which pin a popover to all
+ * four edges of the viewport, pad it and recolor its text, where no Tailwind preflight resets them. It scrolls within
+ * the height `useDatePicker()` gives it, so a viewport shorter than the popup still reaches its Done button
  *
  * @param props - The popup's id and name, the ref to attach, the Done handler and its label, and its contents
  */
 export function DatePickerPopup({ id, name, containerRef, translateString, onDone, children }: DatePickerPopupProps) {
   return (
+    // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- its click handler is no interaction: it only keeps a press inside the popup from the handlers around the field
     <div
       ref={containerRef}
-      role='presentation'
+      id={id}
+      role='dialog'
+      aria-label={name}
       className='date-picker-popup w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
-      style={{ position: 'fixed', right: 'auto', bottom: 'auto', zIndex: 99999, overflowY: 'auto', color: 'inherit' }}
+      style={{
+        position: 'fixed',
+        right: 'auto',
+        bottom: 'auto',
+        margin: 0,
+        padding: 0,
+        zIndex: 99999,
+        overflowY: 'auto',
+        color: 'inherit',
+      }}
       onClick={(e) => e.stopPropagation()}
     >
-      <div id={id} role='dialog' aria-label={name}>
-        {children}
-        <div className='p-3 flex justify-end border-t border-base-300'>
-          <button type='button' className='btn btn-sm btn-primary' onClick={onDone}>
-            {translateString(TranslatableString.DoneLabel)}
-          </button>
-        </div>
+      {children}
+      <div className='p-3 flex justify-end border-t border-base-300'>
+        <button type='button' className='btn btn-sm btn-primary' onClick={onDone}>
+          {translateString(TranslatableString.DoneLabel)}
+        </button>
       </div>
     </div>
   );

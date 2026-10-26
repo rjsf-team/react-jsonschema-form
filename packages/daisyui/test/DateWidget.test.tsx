@@ -1,6 +1,6 @@
 import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -672,27 +672,20 @@ describe('DateWidget', () => {
       expect(topAtDayFocus).toBe('5px');
     });
 
-    test('follows the trigger when an element around the field scrolls, measuring it once a frame', async () => {
-      render(
-        <div data-testid='panel'>
-          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />
-        </div>,
-      );
+    test('follows the trigger once a frame, however it moved, with no scroll or resize to say so', async () => {
+      render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />);
       const trigger = screen.getByRole('combobox');
       let bottom = 50;
       const measure = vi.spyOn(trigger, 'getBoundingClientRect').mockImplementation(() => triggerRect(bottom));
       await user.click(trigger);
-      const popup = screen.getByText('Done').closest<HTMLElement>('.date-picker-popup');
+      // Taken to be hidden, as jsdom's own stylesheet hides a popover that the stubbed `showPopover()` doesn't show
+      const popup = screen.getByRole('dialog', { hidden: true });
       expect(popup).toHaveStyle({ top: '55px' });
       measure.mockClear();
 
+      // As a scroll of a panel around the field moves it, or an error list appearing above the field, which fires no
+      // event at all
       bottom = 10;
-      // user-event has no scrolling. A browser dispatches a scroll at the element that scrolled, without bubbling, as
-      // `fireEvent.scroll` does, and a trackpad dispatches several of them a frame
-      const panel = screen.getByTestId('panel');
-      fireEvent.scroll(panel);
-      fireEvent.scroll(panel);
-      fireEvent.scroll(panel);
       await new Promise(requestAnimationFrame);
 
       expect(popup).toHaveStyle({ top: '15px' });

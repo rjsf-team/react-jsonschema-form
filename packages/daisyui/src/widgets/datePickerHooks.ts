@@ -382,10 +382,12 @@ export function useDatePicker<V>({
   // there, or else as low as it fits whole, and moved left where it would run off the right of the viewport. It is
   // in the top layer, so a scrolling panel or dialog around the field doesn't clip it, which leaves it to follow the
   // trigger itself, and a scroll of the page can't bring into view a part of it that runs off the bottom. A layout
-  // Effect, so the popup each opening mounts is shown and in place before the browser first paints it; it then follows
-  // the trigger on resize and scroll, once a frame however many events the frame brings, since measuring the trigger
-  // forces a layout, and is placed again when its own size changes, as a month with another number of weeks changes
-  // it. A scroll of an element around the field doesn't bubble, so it reaches the window only in the capture phase
+  // Effect, so the popup each opening mounts is shown and in place before the browser first paints it; it then measures
+  // the trigger and itself again once a frame while it is open. That notices every way the trigger can move, a scroll
+  // of the page or of a panel around the field, a resize, or content above the field growing, as an error list or an
+  // image that loads does, and every change to its own size, as a month with another number of weeks makes. Measured
+  // in the frame's own callback, the layout read is the one the browser computes for that frame anyway, and writing a
+  // style the popup already has invalidates nothing, so a frame in which nothing moved costs no layout of its own
   useLayoutEffect(() => {
     const popup = containerRef.current;
     const trigger = triggerRef.current;
@@ -393,22 +395,28 @@ export function useDatePicker<V>({
       return () => {};
     }
     // Without popovers, as before Safari 17 and Chrome 114, and in jsdom, which hides a popover it can't show, the popup
-    // stays in the field's flow just below its trigger, scrolling with it and clipped by what clips it. Fixed there, a
-    // transformed ancestor such as daisyUI's modal box would still be what places, scales and clips it, and a part of
-    // it the box clips would be out of reach of the box's scroll
+    // stays in the field's flow just below its trigger, positioned against the field's wrapper and stacked under app
+    // chrome as `DateTimeWidget`'s was, scrolling with it and clipped by what clips it. Fixed there, a transformed
+    // ancestor such as daisyUI's modal box would still be what places, scales and clips it, and a part of it the box
+    // clips would be out of reach of the box's scroll
     if (typeof popup.showPopover !== 'function') {
       popup.style.position = 'absolute';
       popup.style.marginTop = '5px';
+      popup.style.zIndex = '100';
       return () => {};
     }
-    // A Strict Mode remount runs this again on a popup still showing
-    if (!popup.matches(':popover-open')) {
+    // A Strict Mode remount runs this again on a popup still showing. Told by the attribute this sets just before
+    // showing it rather than by `:popover-open`, which a polyfill's `showPopover()` can come without: `matches()`
+    // throws for a selector the browser doesn't know
+    if (!popup.hasAttribute('popover')) {
       popup.setAttribute('popover', 'manual');
       popup.showPopover();
     }
     // The trigger is measured against the viewport of the window the form is in, so that is the one to keep inside
-    // of. The root element's client box is that viewport less its scrollbars
-    const viewport = documentOf(trigger).documentElement;
+    // of. The scrolling element's client box is that viewport less its scrollbars: the root element's, or in a
+    // quirks-mode document, where the root's is the whole page, the body's
+    const doc = documentOf(trigger);
+    const viewport = doc.scrollingElement ?? doc.documentElement;
     const win = windowOf(trigger);
     const place = () => {
       // Not `100vh`, which takes in a horizontal scrollbar along the bottom of the viewport
@@ -429,33 +437,29 @@ export function useDatePicker<V>({
     place();
     let frame = 0;
     const follow = () => {
-      if (!frame) {
-        frame = win.requestAnimationFrame(() => {
-          frame = 0;
-          place();
-        });
-      }
+      place();
+      frame = win.requestAnimationFrame(follow);
     };
-    win.addEventListener('resize', follow);
-    win.addEventListener('scroll', follow, { capture: true, passive: true });
-    // Neither observer exists outside a browser, such as in a consumer's jsdom tests
-    const resizes = 'ResizeObserver' in win ? new win.ResizeObserver(place) : undefined;
-    resizes?.observe(popup);
+    frame = win.requestAnimationFrame(follow);
     // A scrolling panel clips the trigger but not the fixed popup, which is hidden while none of the trigger shows
-    // rather than left floating over whatever is at its place
+    // rather than left floating over whatever is at its place. Hidden, it can't hold the focus, which would fall to
+    // the document body and leave Tab to start the page over, so the focus goes back to the trigger first, without
+    // scrolling it back into the view the user scrolled it out of. The observer doesn't exist outside a browser, such
+    // as in a consumer's jsdom tests
     const sight =
       'IntersectionObserver' in win
         ? new win.IntersectionObserver((entries) => {
-            popup.style.visibility = entries[entries.length - 1].isIntersecting ? '' : 'hidden';
+            const isInSight = entries[entries.length - 1].isIntersecting;
+            if (!isInSight && popup.contains(documentOf(popup).activeElement)) {
+              trigger.focus({ preventScroll: true });
+            }
+            popup.style.visibility = isInSight ? '' : 'hidden';
           })
         : undefined;
     sight?.observe(trigger);
     return () => {
       win.cancelAnimationFrame(frame);
-      resizes?.disconnect();
       sight?.disconnect();
-      win.removeEventListener('resize', follow);
-      win.removeEventListener('scroll', follow, { capture: true });
     };
   }, [isOpen]);
 
