@@ -15,6 +15,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import Form, { Theme, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
@@ -77,8 +78,8 @@ describe('a pure anyOf union', () => {
     };
     const { container } = render(<Form schema={schema} validator={validator} />);
 
-    expect(container.querySelector('#root__anyof_select-label')).toHaveTextContent('Pet');
-    expect(container.querySelector('#root_XxxOf__title')).not.toBeInTheDocument();
+    expect(container.querySelector('#root__anyof_select__inputLabel')).toHaveTextContent('Pet');
+    expect(container.querySelector('#root__XxxOf__title')).not.toBeInTheDocument();
     expect(container.querySelector('#root__title')).toHaveTextContent('Dog');
   });
 
@@ -95,7 +96,7 @@ describe('a pure anyOf union', () => {
     const { container } = render(<Form schema={schema} validator={validator} />);
 
     expect(screen.getAllByText('Pet')).toHaveLength(1);
-    expect(container.querySelector('#root__anyof_select-label')).not.toBeInTheDocument();
+    expect(container.querySelector('#root__anyof_select__inputLabel')).not.toBeInTheDocument();
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
   });
 
@@ -118,7 +119,7 @@ describe('a pure anyOf union', () => {
     );
 
     expect(screen.getAllByText('Foo')).toHaveLength(1);
-    expect(container.querySelector('#root_foo__anyof_select-label')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_foo__anyof_select__inputLabel')).not.toBeInTheDocument();
   });
 });
 
@@ -140,7 +141,7 @@ describe("a titled anyOf field's option selector", () => {
       <Form schema={schema} uiSchema={{ pick: { 'ui:widget': 'radio' } }} validator={validator} />,
     );
 
-    const radioGroup = container.querySelector('#root_pick__anyof_select-0')!.closest('[role="radiogroup"]');
+    const radioGroup = elementOf(container, '#root_pick__anyof_select__0').closest('[role="radiogroup"]');
     expect(radioGroup).toHaveAccessibleName('Pick');
     expect(radioGroup).toHaveAttribute('aria-labelledby', fieldLabelId('root_pick'));
     expectReferencesResolve(container);
@@ -277,13 +278,13 @@ describe("mui widgets are named by their label and carry the field's id on the e
     ['number input', { type: 'number' }, { 'ui:widget': 'updown' }, 'spinbutton', 'root_x'],
     ['slider', { type: 'number' }, { 'ui:widget': 'range' }, 'slider', 'root_x'],
     // The group's wrapper carries the field's id but isn't focusable, so focus goes to its first radio, as core's does
-    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup', 'root_x-0'],
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup', 'root_x__0'],
     [
       'checkboxes group',
       { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
       { 'ui:widget': 'checkboxes' },
       'group',
-      'root_x-0',
+      'root_x__0',
     ],
     ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox', 'root_x'],
   ];
@@ -497,7 +498,7 @@ describe("mui widgets are named by their label and carry the field's id on the e
       />,
     );
 
-    expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo-key');
+    expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo__key');
     expectReferencesResolve(container);
   });
 
@@ -511,7 +512,7 @@ describe("mui widgets are named by their label and carry the field's id on the e
       />,
     );
 
-    expect(document.getElementById('root_foo-key')).toHaveAccessibleName('foo Key');
+    expect(document.getElementById('root_foo__key')).toHaveAccessibleName('foo Key');
   });
 
   test("keeps the field's id on the slider's root for a range of several values, whose every thumb takes its input slot", () => {

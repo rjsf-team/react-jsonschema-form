@@ -220,7 +220,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       name="root_person_race"
                       type="checkbox"
                       value="0"
@@ -231,7 +231,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-0"
+                      for="root_person_race__0"
                     >
                       American Indian / Alaska Native
                     </label>
@@ -242,7 +242,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       name="root_person_race"
                       type="checkbox"
                       value="1"
@@ -253,7 +253,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-1"
+                      for="root_person_race__1"
                     >
                       Asian
                     </label>
@@ -264,7 +264,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       name="root_person_race"
                       type="checkbox"
                       value="2"
@@ -275,7 +275,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-2"
+                      for="root_person_race__2"
                     >
                       Black / African American
                     </label>
@@ -286,7 +286,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       name="root_person_race"
                       type="checkbox"
                       value="3"
@@ -297,7 +297,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-3"
+                      for="root_person_race__3"
                     >
                       Native Hawaiian / Other Pacific Islander
                     </label>
@@ -308,7 +308,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       name="root_person_race"
                       type="checkbox"
                       value="4"
@@ -319,7 +319,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-4"
+                      for="root_person_race__4"
                     >
                       White
                     </label>
@@ -614,7 +614,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         checked=""
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-0"
+                        id="root_employment__0"
                         name="root_employment"
                         type="radio"
                         value="0"
@@ -625,7 +625,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-0"
+                        for="root_employment__0"
                       >
                         Company
                       </label>
@@ -635,7 +635,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <input
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-1"
+                        id="root_employment__1"
                         name="root_employment"
                         type="radio"
                         value="1"
@@ -646,7 +646,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-1"
+                        for="root_employment__1"
                       >
                         Education
                       </label>
@@ -656,7 +656,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <input
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-2"
+                        id="root_employment__2"
                         name="root_employment"
                         type="radio"
                         value="2"
@@ -667,7 +667,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-2"
+                        for="root_employment__2"
                       >
                         Other
                       </label>
@@ -1099,7 +1099,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       name="root_person_race"
                       type="checkbox"
                       value="0"
@@ -1110,7 +1110,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-0"
+                      for="root_person_race__0"
                     >
                       American Indian / Alaska Native
                     </label>
@@ -1121,7 +1121,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       name="root_person_race"
                       type="checkbox"
                       value="1"
@@ -1132,7 +1132,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-1"
+                      for="root_person_race__1"
                     >
                       Asian
                     </label>
@@ -1143,7 +1143,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       name="root_person_race"
                       type="checkbox"
                       value="2"
@@ -1154,7 +1154,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-2"
+                      for="root_person_race__2"
                     >
                       Black / African American
                     </label>
@@ -1165,7 +1165,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       name="root_person_race"
                       type="checkbox"
                       value="3"
@@ -1176,7 +1176,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-3"
+                      for="root_person_race__3"
                     >
                       Native Hawaiian / Other Pacific Islander
                     </label>
@@ -1187,7 +1187,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       name="root_person_race"
                       type="checkbox"
                       value="4"
@@ -1198,7 +1198,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-4"
+                      for="root_person_race__4"
                     >
                       White
                     </label>
@@ -1492,7 +1492,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <input
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-0"
+                        id="root_employment__0"
                         name="root_employment"
                         type="radio"
                         value="0"
@@ -1503,7 +1503,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-0"
+                        for="root_employment__0"
                       >
                         Company
                       </label>
@@ -1514,7 +1514,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         checked=""
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-1"
+                        id="root_employment__1"
                         name="root_employment"
                         type="radio"
                         value="1"
@@ -1525,7 +1525,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-1"
+                        for="root_employment__1"
                       >
                         Education
                       </label>
@@ -1535,7 +1535,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <input
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-2"
+                        id="root_employment__2"
                         name="root_employment"
                         type="radio"
                         value="2"
@@ -1546,7 +1546,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-2"
+                        for="root_employment__2"
                       >
                         Other
                       </label>
@@ -2006,7 +2006,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       name="root_person_race"
                       type="checkbox"
                       value="0"
@@ -2017,7 +2017,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-0"
+                      for="root_person_race__0"
                     >
                       American Indian / Alaska Native
                     </label>
@@ -2028,7 +2028,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       name="root_person_race"
                       type="checkbox"
                       value="1"
@@ -2039,7 +2039,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-1"
+                      for="root_person_race__1"
                     >
                       Asian
                     </label>
@@ -2050,7 +2050,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       name="root_person_race"
                       type="checkbox"
                       value="2"
@@ -2061,7 +2061,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-2"
+                      for="root_person_race__2"
                     >
                       Black / African American
                     </label>
@@ -2072,7 +2072,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       name="root_person_race"
                       type="checkbox"
                       value="3"
@@ -2083,7 +2083,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-3"
+                      for="root_person_race__3"
                     >
                       Native Hawaiian / Other Pacific Islander
                     </label>
@@ -2094,7 +2094,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       name="root_person_race"
                       type="checkbox"
                       value="4"
@@ -2105,7 +2105,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-4"
+                      for="root_person_race__4"
                     >
                       White
                     </label>
@@ -2399,7 +2399,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <input
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-0"
+                        id="root_employment__0"
                         name="root_employment"
                         type="radio"
                         value="0"
@@ -2410,7 +2410,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-0"
+                        for="root_employment__0"
                       >
                         Company
                       </label>
@@ -2420,7 +2420,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <input
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-1"
+                        id="root_employment__1"
                         name="root_employment"
                         type="radio"
                         value="1"
@@ -2431,7 +2431,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-1"
+                        for="root_employment__1"
                       >
                         Education
                       </label>
@@ -2442,7 +2442,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         checked=""
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-2"
+                        id="root_employment__2"
                         name="root_employment"
                         type="radio"
                         value="2"
@@ -2453,7 +2453,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-2"
+                        for="root_employment__2"
                       >
                         Other
                       </label>
@@ -2734,7 +2734,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       name="root_person_race"
                       type="checkbox"
                       value="0"
@@ -2745,7 +2745,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-0"
+                      for="root_person_race__0"
                     >
                       American Indian / Alaska Native
                     </label>
@@ -2756,7 +2756,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       name="root_person_race"
                       type="checkbox"
                       value="1"
@@ -2767,7 +2767,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-1"
+                      for="root_person_race__1"
                     >
                       Asian
                     </label>
@@ -2778,7 +2778,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       name="root_person_race"
                       type="checkbox"
                       value="2"
@@ -2789,7 +2789,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-2"
+                      for="root_person_race__2"
                     >
                       Black / African American
                     </label>
@@ -2800,7 +2800,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       name="root_person_race"
                       type="checkbox"
                       value="3"
@@ -2811,7 +2811,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-3"
+                      for="root_person_race__3"
                     >
                       Native Hawaiian / Other Pacific Islander
                     </label>
@@ -2822,7 +2822,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       name="root_person_race"
                       type="checkbox"
                       value="4"
@@ -2833,7 +2833,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-4"
+                      for="root_person_race__4"
                     >
                       White
                     </label>
@@ -3128,7 +3128,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         checked=""
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-0"
+                        id="root_employment__0"
                         name="root_employment"
                         type="radio"
                         value="0"
@@ -3139,7 +3139,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-0"
+                        for="root_employment__0"
                       >
                         Company
                       </label>
@@ -3149,7 +3149,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <input
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-1"
+                        id="root_employment__1"
                         name="root_employment"
                         type="radio"
                         value="1"
@@ -3160,7 +3160,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-1"
+                        for="root_employment__1"
                       >
                         Education
                       </label>
@@ -3170,7 +3170,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <input
                         class="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                        id="root_employment-2"
+                        id="root_employment__2"
                         name="root_employment"
                         type="radio"
                         value="2"
@@ -3181,7 +3181,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                       <label
                         class="fui-Label fui-Radio__label ___pfgtpr0_5m9p670 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                        for="root_employment-2"
+                        for="root_employment__2"
                       >
                         Other
                       </label>
@@ -3613,7 +3613,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       name="root_person_race"
                       type="checkbox"
                       value="0"
@@ -3624,7 +3624,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-0"
+                      for="root_person_race__0"
                     >
                       American Indian / Alaska Native
                     </label>
@@ -3635,7 +3635,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       name="root_person_race"
                       type="checkbox"
                       value="1"
@@ -3646,7 +3646,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-1"
+                      for="root_person_race__1"
                     >
                       Asian
                     </label>
@@ -3657,7 +3657,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       name="root_person_race"
                       type="checkbox"
                       value="2"
@@ -3668,7 +3668,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-2"
+                      for="root_person_race__2"
                     >
                       Black / African American
                     </label>
@@ -3679,7 +3679,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       name="root_person_race"
                       type="checkbox"
                       value="3"
@@ -3690,7 +3690,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-3"
+                      for="root_person_race__3"
                     >
                       Native Hawaiian / Other Pacific Islander
                     </label>
@@ -3701,7 +3701,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       name="root_person_race"
                       type="checkbox"
                       value="4"
@@ -3712,7 +3712,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-4"
+                      for="root_person_race__4"
                     >
                       White
                     </label>
@@ -4163,7 +4163,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       name="root_person_race"
                       type="checkbox"
                       value="0"
@@ -4174,7 +4174,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-0"
+                      for="root_person_race__0"
                     >
                       American Indian / Alaska Native
                     </label>
@@ -4185,7 +4185,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       name="root_person_race"
                       type="checkbox"
                       value="1"
@@ -4196,7 +4196,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-1"
+                      for="root_person_race__1"
                     >
                       Asian
                     </label>
@@ -4207,7 +4207,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       name="root_person_race"
                       type="checkbox"
                       value="2"
@@ -4218,7 +4218,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-2"
+                      for="root_person_race__2"
                     >
                       Black / African American
                     </label>
@@ -4229,7 +4229,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       name="root_person_race"
                       type="checkbox"
                       value="3"
@@ -4240,7 +4240,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-3"
+                      for="root_person_race__3"
                     >
                       Native Hawaiian / Other Pacific Islander
                     </label>
@@ -4251,7 +4251,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     <input
                       aria-describedby="root_person_race__description"
                       class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       name="root_person_race"
                       type="checkbox"
                       value="4"
@@ -4262,7 +4262,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     />
                     <label
                       class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_person_race-4"
+                      for="root_person_race__4"
                     >
                       White
                     </label>

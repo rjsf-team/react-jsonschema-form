@@ -1,4 +1,4 @@
-import { ROOT_FIELD_PATH, fieldPathToList, toFieldPath } from '@rjsf/utils';
+import { ROOT_FIELD_PATH, fieldPathToList, idSegment, toFieldPath } from '@rjsf/utils';
 import type { FieldPath, GlobalFormOptions } from '@rjsf/utils';
 
 /** Names a field for a warning logged through `logOnce()`, which dedupes on the message text, so a message naming one
@@ -51,7 +51,9 @@ export function entryLabelForLog(
     return collapsedKeys?.includes(index) ? '{}' : undefined;
   };
   const { idPrefix, idSeparator } = globalFormOptions;
-  const id = [idPrefix, ...segments.map((segment, index) => marker(index, segment) ?? segment)].join(idSeparator);
+  const id = [idPrefix, ...segments.map((segment, index) => marker(index, segment) ?? idSegment(String(segment)))].join(
+    idSeparator,
+  );
   const path = segments.reduce<string>((entryPath, segment, index) => {
     const collapsed = marker(index, segment);
     return collapsed ? `${entryPath}${collapsed}` : toFieldPath(segment, entryPath as FieldPath);

@@ -7,6 +7,8 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { duplicateIds } from '../../../testing/duplicateIds.ts';
+import { elementOf } from '../../../testing/elementOf.ts';
 import Form from '../src/index.ts';
 import { errorLines, renderErrors } from '../src/utils.tsx';
 import WrappedForm from './WrappedForm.tsx';
@@ -307,7 +309,7 @@ describe('aria-describedby', () => {
     },
   );
 
-  test('an input leaves the label id Mantine puts in the InputWrapper context unchanged', () => {
+  test('an input puts its label part id in the InputWrapper context', () => {
     function LabelIdProbe({ children }: { children: ReactNode }) {
       return <div data-label-id={use(InputWrapperContext)?.labelId}>{children}</div>;
     }
@@ -316,7 +318,42 @@ describe('aria-describedby', () => {
       { 'ui:options': { inputContainer: (children: ReactNode) => <LabelIdProbe>{children}</LabelIdProbe> } },
     );
 
-    expect(container.querySelector('[data-label-id]')).toHaveAttribute('data-label-id', 'root-label');
+    expect(container.querySelector('[data-label-id]')).toHaveAttribute('data-label-id', 'root__wrapperLabel');
+  });
+
+  test('gives an input its label and description ids as parts, so a sibling property named after them is not doubled', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            x: { type: 'string', title: 'X', description: 'About x' },
+            'x-label': { type: 'string' },
+            'x-description': { type: 'string' },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(duplicateIds(container)).toEqual([]);
+    expect(container.querySelector('[id="root_x__wrapperLabel"]')).toHaveTextContent('X');
+    expect(container.querySelector('[id="root_x__wrapperDescription"]')).toHaveTextContent('About x');
+  });
+
+  test('keeps the label and description ids a form author gives an input', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'string', title: 'X', description: 'About x' } } }}
+        uiSchema={{
+          x: { 'ui:options': { labelProps: { id: 'my-label' }, descriptionProps: { id: 'my-description' } } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(elementOf(container, '#my-label')).toHaveTextContent('X');
+    expect(elementOf(container, '#my-description')).toHaveTextContent('About x');
   });
 
   test.each([
@@ -369,15 +406,15 @@ describe('aria-describedby', () => {
 
   describe('a success message Mantine renders', () => {
     test.each([
-      ['its default id', {}, 'root-success'],
+      ['its default id', {}, 'root__success'],
       ['a successProps id', { successProps: { id: 'custom-success' } }, 'custom-success'],
       [
         'a wrapperProps.successProps id',
         { wrapperProps: { successProps: { id: 'wrapped-success' } } },
         'wrapped-success',
       ],
-      ['the default id for an empty successProps id', { successProps: { id: '' } }, 'root-success'],
-      ['the default id despite a wrapperProps id', { wrapperProps: { id: 'wrapped' } }, 'root-success'],
+      ['the default id for an empty successProps id', { successProps: { id: '' } }, 'root__success'],
+      ['the default id despite a wrapperProps id', { wrapperProps: { id: 'wrapped' } }, 'root__success'],
     ])('still describes the input, by %s', (_, uiOptions, successId) => {
       const { container } = renderThemed(
         {},
@@ -406,13 +443,13 @@ describe('aria-describedby', () => {
         'ui:options': { success: 'Looks good', wrapperProps: { id: 'wrapped' } },
       });
 
-      expect(container.querySelector('[id="root-success"]')).toHaveTextContent('Looks good');
-      expect(describedByValues(container)).toEqual([`${descriptionId('root')} root-success`]);
+      expect(container.querySelector('[id="root__success"]')).toHaveTextContent('Looks good');
+      expect(describedByValues(container)).toEqual([`${descriptionId('root')} root__success`]);
     });
 
     test.each([
-      ['the theme InputWrapper', { InputWrapper: { defaultProps: { success: 'Looks good' } } }, 'root-success'],
-      ['the theme Input', { Input: { defaultProps: { success: 'Looks good' } } }, 'root-success'],
+      ['the theme InputWrapper', { InputWrapper: { defaultProps: { success: 'Looks good' } } }, 'root__success'],
+      ['the theme Input', { Input: { defaultProps: { success: 'Looks good' } } }, 'root__success'],
       [
         'a theme successProps id',
         { InputWrapper: { defaultProps: { success: 'Looks good', successProps: { id: 'shared' } } } },
@@ -444,7 +481,7 @@ describe('aria-describedby', () => {
 
       expect(screen.getByRole(groupRole)).not.toHaveAttribute('aria-describedby');
       for (const option of screen.getAllByRole(optionRole)) {
-        expect(option).toHaveAttribute('aria-describedby', `${descriptionId('root')} root-success`);
+        expect(option).toHaveAttribute('aria-describedby', `${descriptionId('root')} root__success`);
       }
     });
 
@@ -1053,7 +1090,7 @@ describe('aria-describedby', () => {
       <WrappedForm schema={pick} uiSchema={{ pick: { 'ui:widget': 'radio' } }} validator={validator} />,
     );
 
-    const firstOption = container.querySelector('#root_pick__anyof_select-0')!;
+    const firstOption = elementOf(container, '#root_pick__anyof_select__0');
     expect(firstOption.closest('[role="radiogroup"]')).toHaveAccessibleName('Pick');
     expectReferencesResolve(container);
   });

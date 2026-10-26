@@ -334,7 +334,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_customField-key"
+                      for="root_customField__key"
                     >
                       customField Key
                     </label>
@@ -344,8 +344,8 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_customField-key"
-                        name="root_customField-key"
+                        id="root_customField__key"
+                        name="root_customField__key"
                         type="text"
                         value="customField"
                       />
@@ -2083,7 +2083,7 @@ exports[`object fields > additionalProperties 1`] = `
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo Key
                     </label>
@@ -2093,8 +2093,8 @@ exports[`object fields > additionalProperties 1`] = `
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
+                        id="root_foo__key"
+                        name="root_foo__key"
                         type="text"
                         value="foo"
                       />
@@ -2272,7 +2272,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo Key
                     </label>
@@ -2300,7 +2300,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                            id="root_foo-key"
+                            id="root_foo__key"
                             role="combobox"
                             type="button"
                           >
@@ -2529,7 +2529,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo Key
                     </label>
@@ -2539,8 +2539,8 @@ exports[`object fields > additionalProperties, array type 1`] = `
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
+                        id="root_foo__key"
+                        name="root_foo__key"
                         type="text"
                         value="foo"
                       />
@@ -2769,7 +2769,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo Key
                     </label>
@@ -2779,8 +2779,8 @@ exports[`object fields > additionalProperties, description 1`] = `
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
+                        id="root_foo__key"
+                        name="root_foo__key"
                         type="text"
                         value="foo"
                       />
@@ -2980,7 +2980,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo Key
                     </label>
@@ -2990,8 +2990,8 @@ exports[`object fields > additionalProperties, label off 1`] = `
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
+                        id="root_foo__key"
+                        name="root_foo__key"
                         type="text"
                         value="foo"
                       />
@@ -3169,7 +3169,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo Key
                     </label>
@@ -3179,8 +3179,8 @@ exports[`object fields > additionalProperties, object type 1`] = `
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
+                        id="root_foo__key"
+                        name="root_foo__key"
                         type="text"
                         value="foo"
                       />
@@ -3397,7 +3397,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo Key
                     </label>
@@ -3425,7 +3425,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                            id="root_foo-key"
+                            id="root_foo__key"
                             role="combobox"
                             type="button"
                           >
@@ -3632,7 +3632,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo (deprecated) Key
                     </label>
@@ -3660,7 +3660,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                            id="root_foo-key"
+                            id="root_foo__key"
                             role="combobox"
                             type="button"
                           >
@@ -3978,7 +3978,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_abc-key"
+                      for="root_abc__key"
                     >
                       abc Key
                     </label>
@@ -3988,8 +3988,8 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_abc-key"
-                        name="root_abc-key"
+                        id="root_abc__key"
+                        name="root_abc__key"
                         type="text"
                         value="abc"
                       />
@@ -4096,7 +4096,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_a-key"
+                      for="root_a__key"
                     >
                       a Key
                     </label>
@@ -4108,8 +4108,8 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                         aria-invalid="true"
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_a-key"
-                        name="root_a-key"
+                        id="root_a__key"
+                        name="root_a__key"
                         type="text"
                         value="a"
                       />
@@ -4122,25 +4122,31 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                   <div
                     class="flex flex-col gap-2"
                   >
-                    <div
-                      class="my-1 flex flex-col gap-0.5"
+                    <fieldset
+                      aria-labelledby="root_a__title"
+                      class="rjsf-own-title-group"
+                      style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                     >
-                      <h5>
-                        <span
-                          id="root_a__title"
-                        >
-                          a
-                        </span>
-                      </h5>
                       <div
-                        class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-                        data-orientation="horizontal"
-                        data-slot="separator"
-                        dir="horizontal"
-                        role="none"
-                        style="height: 1px;"
-                      />
-                    </div>
+                        class="my-1 flex flex-col gap-0.5"
+                      >
+                        <h5>
+                          <span
+                            id="root_a__title"
+                          >
+                            a
+                          </span>
+                        </h5>
+                        <div
+                          class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
+                          data-orientation="horizontal"
+                          data-slot="separator"
+                          dir="horizontal"
+                          role="none"
+                          style="height: 1px;"
+                        />
+                      </div>
+                    </fieldset>
                     <div
                       class="flex flex-col gap-1"
                       id="root_a__error"
@@ -4461,7 +4467,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_additionalProperty-key"
+                      for="root_additionalProperty__key"
                     >
                       additionalProperty Key
                     </label>
@@ -4471,8 +4477,8 @@ exports[`object fields > show add button and fields if additionalProperties is t
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_additionalProperty-key"
-                        name="root_additionalProperty-key"
+                        id="root_additionalProperty__key"
+                        name="root_additionalProperty__key"
                         type="text"
                         value="additionalProperty"
                       />
@@ -4677,7 +4683,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo Key
                     </label>
@@ -4687,8 +4693,8 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
+                        id="root_foo__key"
+                        name="root_foo__key"
                         type="text"
                         value="foo"
                       />
@@ -5057,7 +5063,7 @@ exports[`object fields > with title and description > show add button and fields
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_additionalProperty-key"
+                      for="root_additionalProperty__key"
                     >
                       additionalProperty Key
                     </label>
@@ -5067,8 +5073,8 @@ exports[`object fields > with title and description > show add button and fields
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_additionalProperty-key"
-                        name="root_additionalProperty-key"
+                        id="root_additionalProperty__key"
+                        name="root_additionalProperty__key"
                         type="text"
                         value="additionalProperty"
                       />
@@ -5273,7 +5279,7 @@ exports[`object fields > with title and description from both > additionalProper
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo Key
                     </label>
@@ -5283,8 +5289,8 @@ exports[`object fields > with title and description from both > additionalProper
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
+                        id="root_foo__key"
+                        name="root_foo__key"
                         type="text"
                         value="foo"
                       />
@@ -5653,7 +5659,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_foo-key"
+                      for="root_foo__key"
                     >
                       foo Key
                     </label>
@@ -5663,8 +5669,8 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
+                        id="root_foo__key"
+                        name="root_foo__key"
                         type="text"
                         value="foo"
                       />
@@ -6033,7 +6039,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                   >
                     <label
                       class="text-sm font-medium text-muted-foreground leading-none"
-                      for="root_additionalProperty-key"
+                      for="root_additionalProperty__key"
                     >
                       additionalProperty Key
                     </label>
@@ -6043,8 +6049,8 @@ exports[`object fields > with title and description from uiSchema > show add but
                       <input
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_additionalProperty-key"
-                        name="root_additionalProperty-key"
+                        id="root_additionalProperty__key"
+                        name="root_additionalProperty__key"
                         type="text"
                         value="additionalProperty"
                       />
@@ -6227,8 +6233,8 @@ exports[`object fields > with title and description with global label off > addi
                         aria-label="foo Key"
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_foo-key"
-                        name="root_foo-key"
+                        id="root_foo__key"
+                        name="root_foo__key"
                         type="text"
                         value="foo"
                       />
@@ -6495,8 +6501,8 @@ exports[`object fields > with title and description with global label off > show
                         aria-label="additionalProperty Key"
                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
                         data-slot="input"
-                        id="root_additionalProperty-key"
-                        name="root_additionalProperty-key"
+                        id="root_additionalProperty__key"
+                        name="root_additionalProperty__key"
                         type="text"
                         value="additionalProperty"
                       />

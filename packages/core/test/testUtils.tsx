@@ -10,6 +10,7 @@ import type { FormRef, FormProps, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
 
 export { setupConsoleErrorSuppression, setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
+export { elementOf } from '../../../testing/elementOf.ts';
 
 export type NoValFormProps = Omit<FormProps, 'validator'>;
 
@@ -24,15 +25,6 @@ export function handleOf<T>(ref: RefObject<FormRef<T> | null>): FormRef<T> {
     throw new Error('The form has not installed its handle on the ref');
   }
   return ref.current;
-}
-
-/** The first element `selector` matches in `container`, failing the test when there is none */
-export function elementOf(container: ParentNode, selector: string) {
-  const element = container.querySelector(selector);
-  if (!element) {
-    throw new Error(`Nothing matches ${selector}`);
-  }
-  return element;
 }
 
 export function input(container: ParentNode, id: string) {

@@ -56,7 +56,7 @@ describe('RangeWidget', () => {
   ])('renders a success message from the %s and describes the thumb by it', (_, options) => {
     const { container } = renderWidget({ options });
 
-    expect(container.querySelector('[id="root-success"]')).toHaveTextContent('Looks good');
+    expect(container.querySelector('[id="root__success"]')).toHaveTextContent('Looks good');
     expect(screen.getByRole('slider')).toHaveAccessibleDescription(/Looks good/);
   });
 
@@ -80,7 +80,7 @@ describe('RangeWidget', () => {
     // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
     const { container } = renderWidget({ options: { success: 'Looks good' }, rawErrors: ['An error'] });
 
-    expect(container.querySelector('[id="root-success"]')).not.toBeInTheDocument();
+    expect(container.querySelector('[id="root__success"]')).not.toBeInTheDocument();
     expect(screen.getByRole('slider')).toHaveAccessibleDescription(/An error/);
   });
 });
