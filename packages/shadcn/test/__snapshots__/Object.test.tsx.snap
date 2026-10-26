@@ -44,7 +44,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name"
               >
                 <span
@@ -99,7 +99,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_person_address_street"
                   >
                     <span
@@ -126,7 +126,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_person_address_city"
                   >
                     <span
@@ -153,7 +153,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_person_address_country"
                   >
                     <span
@@ -211,7 +211,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_name"
           >
             <span
@@ -267,7 +267,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_customField"
             >
               <span
@@ -403,7 +403,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_name"
           >
             <span
@@ -430,7 +430,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-number"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_age"
           >
             <span
@@ -549,13 +549,13 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_tags_0"
                   >
                     <span
@@ -678,13 +678,13 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_tags_1"
                   >
                     <span
@@ -873,7 +873,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_firstName"
           >
             <span
@@ -900,7 +900,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_lastName"
           >
             <span
@@ -927,7 +927,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-number"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_age"
           >
             <span
@@ -1012,7 +1012,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name"
               >
                 <span
@@ -1067,7 +1067,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_person_address_street"
                   >
                     <span
@@ -1094,7 +1094,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_person_address_city"
                   >
                     <span
@@ -1152,7 +1152,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_name"
           >
             <span
@@ -1179,7 +1179,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
           class="flex flex-col gap-2 rjsf-field rjsf-field-number"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_count"
           >
             <span
@@ -1237,13 +1237,13 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_items_0"
                   >
                     <span
@@ -1366,13 +1366,13 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_items_1"
                   >
                     <span
@@ -1561,7 +1561,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_firstName"
           >
             <span
@@ -1588,7 +1588,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_lastName"
           >
             <span
@@ -1615,7 +1615,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-number"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_age"
           >
             <span
@@ -1701,7 +1701,7 @@ exports[`object fields > additionalProperties 1`] = `
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_foo"
             >
               <span
@@ -1849,6 +1849,12 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 foo Key
               </label>
               <div
+                aria-hidden="true"
+                class="invisible text-sm"
+              >
+                A description
+              </div>
+              <div
                 class="pl-0.5 pt-0.5"
               >
                 <div
@@ -1912,7 +1918,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_foo"
             >
               <span
@@ -2271,6 +2277,12 @@ exports[`object fields > additionalProperties, description 1`] = `
                 foo Key
               </label>
               <div
+                aria-hidden="true"
+                class="invisible text-sm"
+              >
+                item description
+              </div>
+              <div
                 class="pl-0.5 pt-0.5"
               >
                 <input
@@ -2288,7 +2300,7 @@ exports[`object fields > additionalProperties, description 1`] = `
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_foo"
             >
               <span
@@ -2460,7 +2472,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_foo"
             >
               <span
@@ -2653,7 +2665,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 class="flex flex-col gap-2 rjsf-field rjsf-field-string"
               >
                 <label
-                  class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                  class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                   for="root_foo_foo"
                 >
                   <span
@@ -2866,7 +2878,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_foo"
             >
               <span
@@ -3077,7 +3089,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_foo"
             >
               <span
@@ -3213,7 +3225,7 @@ exports[`object fields > object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_a"
           >
             <span
@@ -3240,7 +3252,7 @@ exports[`object fields > object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-number"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_b"
           >
             <span
@@ -3326,7 +3338,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_abc"
             >
               <span
@@ -3465,7 +3477,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                 id="root_a__error"
               >
                 <li
-                  class="rjsf-error text-xs font-medium text-destructive mb-1"
+                  class="rjsf-error text-xs font-medium text-destructive"
                 >
                   The key "a" is not allowed here
                 </li>
@@ -3578,7 +3590,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
       >
         <span
           id="root__label"
@@ -3680,7 +3692,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_bark"
               >
                 <span
@@ -3765,7 +3777,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_additionalProperty"
             >
               <span
@@ -3957,7 +3969,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_foo"
             >
               <span
@@ -4120,7 +4132,7 @@ exports[`object fields > with title and description > object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_a"
           >
             <span
@@ -4154,7 +4166,7 @@ exports[`object fields > with title and description > object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-number"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_b"
           >
             <span
@@ -4274,7 +4286,7 @@ exports[`object fields > with title and description > show add button and fields
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_additionalProperty"
             >
               <span
@@ -4466,7 +4478,7 @@ exports[`object fields > with title and description from both > additionalProper
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_foo"
             >
               <span
@@ -4629,7 +4641,7 @@ exports[`object fields > with title and description from both > object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_a"
           >
             <span
@@ -4663,7 +4675,7 @@ exports[`object fields > with title and description from both > object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-number"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_b"
           >
             <span
@@ -4783,7 +4795,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_foo"
             >
               <span
@@ -4946,7 +4958,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_a"
           >
             <span
@@ -4980,7 +4992,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
           class="flex flex-col gap-2 rjsf-field rjsf-field-number"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_b"
           >
             <span
@@ -5100,7 +5112,7 @@ exports[`object fields > with title and description from uiSchema > show add but
             class="grid gap-2 col-span-6 row-span-2 pr-0.5"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_additionalProperty"
             >
               <span

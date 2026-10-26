@@ -114,7 +114,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -149,7 +149,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_tasks_0_title"
                       >
                         <span
@@ -305,7 +305,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -340,7 +340,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_tasks_1_title"
                       >
                         <span
@@ -614,13 +614,13 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_tags_0"
                   >
                     <span
@@ -743,13 +743,13 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_tags_1"
                   >
                     <span
@@ -938,7 +938,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
           >
             <span
               id="root_choices__label"
@@ -1100,7 +1100,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_firstName"
               >
                 <span
@@ -1127,7 +1127,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_lastName"
               >
                 <span
@@ -1182,7 +1182,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_person_address_street"
                   >
                     <span
@@ -1209,7 +1209,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_person_address_city"
                   >
                     <span
@@ -1267,7 +1267,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
           >
             <span
               id="root_option__label"
@@ -1389,7 +1389,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_color"
           >
             <span
@@ -1484,7 +1484,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_firstName"
           >
             <span
@@ -1511,7 +1511,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-number"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_age"
           >
             <span
@@ -1605,7 +1605,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_description"
           >
             <span
@@ -1686,7 +1686,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -1721,7 +1721,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_tasks_0_title"
                       >
                         <span
@@ -1877,7 +1877,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -1912,7 +1912,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_tasks_1_title"
                       >
                         <span
@@ -2186,13 +2186,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_tags_0"
                   >
                     <span
@@ -2315,13 +2315,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_tags_1"
                   >
                     <span
@@ -2538,7 +2538,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_firstName"
               >
                 <span
@@ -2565,7 +2565,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_lastName"
               >
                 <span
@@ -2620,7 +2620,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_person_address_street"
                   >
                     <span
@@ -2647,7 +2647,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_person_address_city"
                   >
                     <span
@@ -2705,7 +2705,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_color"
           >
             <span
@@ -2800,7 +2800,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_firstName"
           >
             <span
@@ -2827,7 +2827,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-number"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_age"
           >
             <span
@@ -3051,7 +3051,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-undefined"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_region"
           >
             <span
@@ -4115,7 +4115,7 @@ exports[`single fields > checkboxes field 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
       >
         <span
           id="root__label"
@@ -4269,7 +4269,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
       >
         <span
           id="root__label"
@@ -4433,7 +4433,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
       >
         <span
           id="root__label"
@@ -4574,7 +4574,7 @@ exports[`single fields > field with description 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_my-field"
           >
             <span
@@ -4635,7 +4635,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_my-field"
           >
             <span
@@ -4696,7 +4696,7 @@ exports[`single fields > field with markdown description 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_my-field"
           >
             <span
@@ -4763,7 +4763,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_my-field"
           >
             <span
@@ -5028,7 +5028,7 @@ exports[`single fields > help and error display 1`] = `
           id="root__error"
         >
           <li
-            class="rjsf-error text-xs font-medium text-destructive mb-1"
+            class="rjsf-error text-xs font-medium text-destructive"
           >
             an error
           </li>
@@ -5289,7 +5289,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_nestedObjectOptional_test"
               >
                 <span
@@ -5344,7 +5344,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_nestedObjectOptional_deepObjectOptional_deepTest"
                   >
                     <span
@@ -5402,7 +5402,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_nestedObjectOptional_deepObject_deepTest"
                   >
                     <span
@@ -5727,7 +5727,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_nestedObject_test"
               >
                 <span
@@ -5823,7 +5823,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-undefined"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
           >
             <span
               id="root_optionalObjectWithOneofs__label"
@@ -5904,7 +5904,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_optionalObjectWithOneofs_name"
                   >
                     <span
@@ -5936,7 +5936,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-undefined"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
           >
             <span
               id="root_optionalArrayWithAnyofs__label"
@@ -6133,7 +6133,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_nestedObjectOptional_test"
               >
                 <span
@@ -6189,7 +6189,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_nestedObjectOptional_deepObjectOptional_deepTest"
                   >
                     <span
@@ -6248,7 +6248,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_nestedObjectOptional_deepObject_deepTest"
                   >
                     <span
@@ -6578,7 +6578,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_nestedObject_test"
               >
                 <span
@@ -6676,7 +6676,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-undefined"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
           >
             <span
               id="root_optionalObjectWithOneofs__label"
@@ -6758,7 +6758,7 @@ exports[`single fields > optional data controls > does not show optional control
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_optionalObjectWithOneofs_name"
                   >
                     <span
@@ -6790,7 +6790,7 @@ exports[`single fields > optional data controls > does not show optional control
           class="flex flex-col gap-2 rjsf-field rjsf-field-undefined"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
           >
             <span
               id="root_optionalArrayWithAnyofs__label"
@@ -7026,7 +7026,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_nestedObjectOptional_test"
               >
                 <span
@@ -7145,7 +7145,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_nestedObjectOptional_deepObject_deepTest"
                   >
                     <span
@@ -7440,13 +7440,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_nestedArrayOptional_0"
                   >
                     <span
@@ -7586,7 +7586,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_nestedObject_test"
               >
                 <span
@@ -7903,7 +7903,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_nestedObjectOptional_test"
               >
                 <span
@@ -7995,7 +7995,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_nestedObjectOptional_deepObject_deepTest"
                   >
                     <span
@@ -8228,13 +8228,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_nestedArrayOptional_0"
                   >
                     <span
@@ -8377,7 +8377,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_nestedObject_test"
               >
                 <span
@@ -8770,7 +8770,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_nestedObject_test"
               >
                 <span
@@ -9161,7 +9161,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_nestedObject_test"
               >
                 <span
@@ -9507,7 +9507,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
       class="flex flex-col gap-2 rjsf-field rjsf-field-boolean"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
       >
         <span
           id="root__label"
@@ -11074,7 +11074,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
       class="flex flex-col gap-2 rjsf-field rjsf-field-boolean"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
         for="root"
       >
         <span
@@ -11485,7 +11485,7 @@ exports[`single fields > string field > field with markdown help and description
       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
         for="root"
       >
         <span
@@ -11563,7 +11563,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
         for="root"
       >
         <span
@@ -11632,7 +11632,7 @@ exports[`single fields > string field > field with markdown help text without a 
       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
         for="root"
       >
         <span
@@ -11832,7 +11832,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
         for="root"
       >
         <span
@@ -12091,7 +12091,7 @@ exports[`single fields > title field 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_title"
           >
             <span
@@ -12284,7 +12284,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
           class="flex flex-col gap-2 rjsf-field rjsf-field-boolean"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_answer"
           >
             <span

@@ -79,7 +79,7 @@ exports[`array fields > array icons 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -226,7 +226,7 @@ exports[`array fields > array icons 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -503,7 +503,7 @@ exports[`array fields > empty errors array 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_name"
           >
             <span
@@ -557,7 +557,7 @@ exports[`array fields > fixed array 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -579,7 +579,7 @@ exports[`array fields > fixed array 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-number"
@@ -686,7 +686,7 @@ exports[`array fields > has errors 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string rjsf-field-error"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             data-invalid="true"
             for="root_name"
           >
@@ -717,7 +717,7 @@ exports[`array fields > has errors 1`] = `
               id="root_name__error"
             >
               <li
-                class="rjsf-error text-xs font-medium text-destructive mb-1"
+                class="rjsf-error text-xs font-medium text-destructive"
               >
                 Bad input
               </li>
@@ -755,7 +755,7 @@ exports[`array fields > no errors 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <label
-            class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+            class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             for="root_name"
           >
             <span
@@ -809,7 +809,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -822,7 +822,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_0_name"
                   >
                     <span
@@ -849,7 +849,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-number"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_0_value"
                   >
                     <span
@@ -971,7 +971,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -984,7 +984,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_1_name"
                   >
                     <span
@@ -1011,7 +1011,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-number"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_1_value"
                   >
                     <span
@@ -1197,7 +1197,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -1311,7 +1311,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -1555,7 +1555,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -1577,7 +1577,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-number"
@@ -1602,7 +1602,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-boolean"
@@ -1696,7 +1696,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
@@ -1709,7 +1709,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   class="rjsf-array-item-list mb-2"
                 >
                   <div
-                    class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                    class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
                   >
                     <div
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -1823,7 +1823,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                     </div>
                   </div>
                   <div
-                    class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                    class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
                   >
                     <div
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -2066,7 +2066,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
@@ -2079,7 +2079,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   class="rjsf-array-item-list mb-2"
                 >
                   <div
-                    class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                    class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
                   >
                     <div
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -2193,7 +2193,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                     </div>
                   </div>
                   <div
-                    class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+                    class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
                   >
                     <div
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -2500,7 +2500,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -2513,7 +2513,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_0_name"
                   >
                     <span
@@ -2540,7 +2540,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-number"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_0_value"
                   >
                     <span
@@ -2662,7 +2662,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -2675,7 +2675,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_1_name"
                   >
                     <span
@@ -2702,7 +2702,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-number"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_1_value"
                   >
                     <span
@@ -2888,7 +2888,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -3002,7 +3002,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -3180,7 +3180,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -3193,7 +3193,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_0_name"
                   >
                     <span
@@ -3345,7 +3345,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -3358,7 +3358,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                 >
                   <label
-                    class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                    class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                     for="root_1_name"
                   >
                     <span
@@ -3691,13 +3691,13 @@ exports[`with title and description > array icons 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_0"
               >
                 <span
@@ -3860,13 +3860,13 @@ exports[`with title and description > array icons 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_1"
               >
                 <span
@@ -4086,7 +4086,7 @@ exports[`with title and description > checkboxes 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
         for="root"
       >
         <span
@@ -4203,13 +4203,13 @@ exports[`with title and description > fixed array 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_0"
               >
                 <span
@@ -4247,13 +4247,13 @@ exports[`with title and description > fixed array 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-number"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_1"
               >
                 <span
@@ -4442,13 +4442,13 @@ exports[`with title and description from both > array icons 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_0"
               >
                 <span
@@ -4611,13 +4611,13 @@ exports[`with title and description from both > array icons 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_1"
               >
                 <span
@@ -4837,7 +4837,7 @@ exports[`with title and description from both > checkboxes 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
         for="root"
       >
         <span
@@ -4954,13 +4954,13 @@ exports[`with title and description from both > fixed array 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_0"
               >
                 <span
@@ -4998,13 +4998,13 @@ exports[`with title and description from both > fixed array 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-number"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_1"
               >
                 <span
@@ -5193,13 +5193,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_0"
               >
                 <span
@@ -5362,13 +5362,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_1"
               >
                 <span
@@ -5588,7 +5588,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-array"
     >
       <label
-        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
         for="root"
       >
         <span
@@ -5705,13 +5705,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_0"
               >
                 <span
@@ -5749,13 +5749,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-number"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_1"
               >
                 <span
@@ -5890,7 +5890,7 @@ exports[`with title and description with global label off > array icons 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -6038,7 +6038,7 @@ exports[`with title and description with global label off > array icons 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -6316,7 +6316,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
           class="rjsf-array-item-list mb-2"
         >
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -6339,7 +6339,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
             </div>
           </div>
           <div
-            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6"
+            class="rjsf-array-item mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
           >
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-number"

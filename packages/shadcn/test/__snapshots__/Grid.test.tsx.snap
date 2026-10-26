@@ -20,7 +20,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
-              <legend
+              <div
                 class="my-1 flex w-full items-center"
               >
                 <h5
@@ -32,7 +32,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     Person Info
                   </span>
                 </h5>
-              </legend>
+              </div>
               <div
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
@@ -54,7 +54,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_first"
               >
                 <span
@@ -91,7 +91,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_middle"
               >
                 <span
@@ -122,7 +122,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_last"
               >
                 <span
@@ -163,7 +163,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_birth_date"
               >
                 <span
@@ -200,7 +200,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               >
                 <span
                   id="root_person_race__label"
@@ -398,7 +398,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_line_1"
                     >
                       <span
@@ -435,7 +435,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_line_2"
                     >
                       <span
@@ -466,7 +466,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_city"
                     >
                       <span
@@ -506,7 +506,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_person_address_state"
                       >
                         <span
@@ -584,7 +584,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_person_address_postal_code"
                       >
                         <span
@@ -625,7 +625,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-undefined"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               >
                 <span
                   id="root_employment__label"
@@ -783,7 +783,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_business"
               >
                 <span
@@ -820,7 +820,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_title"
               >
                 <span
@@ -851,7 +851,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_location_city"
               >
                 <span
@@ -888,7 +888,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_location_state"
               >
                 <span
@@ -995,7 +995,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
-              <legend
+              <div
                 class="my-1 flex w-full items-center"
               >
                 <h5
@@ -1007,7 +1007,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     Person Info
                   </span>
                 </h5>
-              </legend>
+              </div>
               <div
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
@@ -1029,7 +1029,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_first"
               >
                 <span
@@ -1066,7 +1066,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_middle"
               >
                 <span
@@ -1097,7 +1097,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_last"
               >
                 <span
@@ -1138,7 +1138,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_birth_date"
               >
                 <span
@@ -1175,7 +1175,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               >
                 <span
                   id="root_person_race__label"
@@ -1373,7 +1373,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_line_1"
                     >
                       <span
@@ -1410,7 +1410,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_line_2"
                     >
                       <span
@@ -1441,7 +1441,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_city"
                     >
                       <span
@@ -1481,7 +1481,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_person_address_state"
                       >
                         <span
@@ -1559,7 +1559,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_person_address_postal_code"
                       >
                         <span
@@ -1600,7 +1600,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-undefined"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               >
                 <span
                   id="root_employment__label"
@@ -1758,7 +1758,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_district"
               >
                 <span
@@ -1789,7 +1789,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_school"
               >
                 <span
@@ -1826,7 +1826,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_title"
               >
                 <span
@@ -1857,7 +1857,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_location_city"
               >
                 <span
@@ -1894,7 +1894,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_location_state"
               >
                 <span
@@ -2001,7 +2001,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
-              <legend
+              <div
                 class="my-1 flex w-full items-center"
               >
                 <h5
@@ -2013,7 +2013,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     Person Info
                   </span>
                 </h5>
-              </legend>
+              </div>
               <div
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
@@ -2035,7 +2035,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_first"
               >
                 <span
@@ -2072,7 +2072,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_middle"
               >
                 <span
@@ -2103,7 +2103,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_last"
               >
                 <span
@@ -2144,7 +2144,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_birth_date"
               >
                 <span
@@ -2181,7 +2181,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               >
                 <span
                   id="root_person_race__label"
@@ -2379,7 +2379,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_line_1"
                     >
                       <span
@@ -2416,7 +2416,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_line_2"
                     >
                       <span
@@ -2447,7 +2447,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_city"
                     >
                       <span
@@ -2487,7 +2487,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_person_address_state"
                       >
                         <span
@@ -2565,7 +2565,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_person_address_postal_code"
                       >
                         <span
@@ -2606,7 +2606,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-undefined"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               >
                 <span
                   id="root_employment__label"
@@ -2764,7 +2764,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_description"
               >
                 <span
@@ -2829,7 +2829,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
-              <legend
+              <div
                 class="my-1 flex w-full items-center"
               >
                 <h5
@@ -2841,7 +2841,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     Person Info
                   </span>
                 </h5>
-              </legend>
+              </div>
               <div
                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
                 data-orientation="horizontal"
@@ -2863,7 +2863,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_first"
               >
                 <span
@@ -2900,7 +2900,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_middle"
               >
                 <span
@@ -2931,7 +2931,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_name_last"
               >
                 <span
@@ -2972,7 +2972,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_person_birth_date"
               >
                 <span
@@ -3009,7 +3009,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-array"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               >
                 <span
                   id="root_person_race__label"
@@ -3207,7 +3207,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_line_1"
                     >
                       <span
@@ -3244,7 +3244,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_line_2"
                     >
                       <span
@@ -3275,7 +3275,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                   >
                     <label
-                      class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                      class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                       for="root_person_address_city"
                     >
                       <span
@@ -3315,7 +3315,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_person_address_state"
                       >
                         <span
@@ -3393,7 +3393,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="flex flex-col gap-2 rjsf-field rjsf-field-string"
                     >
                       <label
-                        class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                        class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                         for="root_person_address_postal_code"
                       >
                         <span
@@ -3434,7 +3434,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-undefined"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               >
                 <span
                   id="root_employment__label"
@@ -3592,7 +3592,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_business"
               >
                 <span
@@ -3629,7 +3629,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_title"
               >
                 <span
@@ -3660,7 +3660,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_location_city"
               >
                 <span
@@ -3697,7 +3697,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
               class="flex flex-col gap-2 rjsf-field rjsf-field-string"
             >
               <label
-                class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+                class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
                 for="root_employment_location_state"
               >
                 <span
@@ -3801,7 +3801,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-object"
           >
-            <legend
+            <div
               class="my-1 flex w-full items-center"
             >
               <h5
@@ -3813,7 +3813,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   Person Info
                 </span>
               </h5>
-            </legend>
+            </div>
             <div
               class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
               data-orientation="horizontal"
@@ -3831,7 +3831,7 @@ exports[`Three even column grid > renders person and address in three columns, n
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_name_first"
             >
               <span
@@ -3868,7 +3868,7 @@ exports[`Three even column grid > renders person and address in three columns, n
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_name_middle"
             >
               <span
@@ -3899,7 +3899,7 @@ exports[`Three even column grid > renders person and address in three columns, n
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_name_last"
             >
               <span
@@ -3936,7 +3936,7 @@ exports[`Three even column grid > renders person and address in three columns, n
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_birth_date"
             >
               <span
@@ -3973,7 +3973,7 @@ exports[`Three even column grid > renders person and address in three columns, n
             class="flex flex-col gap-2 rjsf-field rjsf-field-array"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             >
               <span
                 id="root_person_race__label"
@@ -4158,7 +4158,7 @@ exports[`Three even column grid > renders person and address in three columns, n
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_address_line_1"
             >
               <span
@@ -4195,7 +4195,7 @@ exports[`Three even column grid > renders person and address in three columns, n
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_address_line_2"
             >
               <span
@@ -4226,7 +4226,7 @@ exports[`Three even column grid > renders person and address in three columns, n
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_address_city"
             >
               <span
@@ -4263,7 +4263,7 @@ exports[`Three even column grid > renders person and address in three columns, n
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_address_state"
             >
               <span
@@ -4369,7 +4369,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-object"
           >
-            <legend
+            <div
               class="my-1 flex w-full items-center"
             >
               <h5
@@ -4381,7 +4381,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   Person Info
                 </span>
               </h5>
-            </legend>
+            </div>
             <div
               class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
               data-orientation="horizontal"
@@ -4399,7 +4399,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_name_first"
             >
               <span
@@ -4436,7 +4436,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_name_middle"
             >
               <span
@@ -4467,7 +4467,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_name_first"
             >
               <span
@@ -4504,7 +4504,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_birth_date"
             >
               <span
@@ -4541,7 +4541,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
             class="flex flex-col gap-2 rjsf-field rjsf-field-array"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
             >
               <span
                 id="root_person_race__label"
@@ -4726,7 +4726,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_address_line_1"
             >
               <span
@@ -4763,7 +4763,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_address_line_2"
             >
               <span
@@ -4794,7 +4794,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_address_city"
             >
               <span
@@ -4831,7 +4831,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
           >
             <label
-              class="rjsf-field-label text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-invalid:text-destructive"
+              class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
               for="root_person_address_state"
             >
               <span
