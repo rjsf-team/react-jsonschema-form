@@ -276,9 +276,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -297,9 +295,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -318,9 +314,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -339,9 +333,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -360,9 +352,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -1503,7 +1493,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     role="radiogroup"
                   >
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -1520,7 +1510,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -1536,7 +1526,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -1561,7 +1551,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -1847,9 +1837,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -1868,9 +1856,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -1889,9 +1875,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -1910,9 +1894,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -1931,9 +1913,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -3074,7 +3054,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     role="radiogroup"
                   >
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -3090,7 +3070,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -3107,7 +3087,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -3132,7 +3112,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3418,9 +3398,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -3439,9 +3417,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -3460,9 +3436,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -3481,9 +3455,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -3502,9 +3474,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -4645,7 +4615,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     role="radiogroup"
                   >
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -4661,7 +4631,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -4677,7 +4647,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -4703,7 +4673,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4989,9 +4959,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -5010,9 +4978,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -5031,9 +4997,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -5052,9 +5016,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -5073,9 +5035,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             aria-describedby="root_person_race__description"
@@ -6216,7 +6176,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     role="radiogroup"
                   >
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -6233,7 +6193,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -6249,7 +6209,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </span>
                     </label>
                     <label
-                      class="rjsf-radio-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+                      class="rjsf-radio-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
                       <span>
                         <input
@@ -6274,7 +6234,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -6549,9 +6509,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <div
                     class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                   >
-                    <label
-                      class="flex items-center"
-                    >
+                    <label>
                       <span>
                         <input
                           aria-describedby="root_person_race__description"
@@ -6570,9 +6528,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <div
                     class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                   >
-                    <label
-                      class="flex items-center"
-                    >
+                    <label>
                       <span>
                         <input
                           aria-describedby="root_person_race__description"
@@ -6591,9 +6547,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <div
                     class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                   >
-                    <label
-                      class="flex items-center"
-                    >
+                    <label>
                       <span>
                         <input
                           aria-describedby="root_person_race__description"
@@ -6612,9 +6566,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <div
                     class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                   >
-                    <label
-                      class="flex items-center"
-                    >
+                    <label>
                       <span>
                         <input
                           aria-describedby="root_person_race__description"
@@ -6633,9 +6585,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <div
                     class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                   >
-                    <label
-                      class="flex items-center"
-                    >
+                    <label>
                       <span>
                         <input
                           aria-describedby="root_person_race__description"
@@ -7697,7 +7647,7 @@ exports[`Three even column grid > renders person and address in three columns, n
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -7972,9 +7922,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <div
                     class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                   >
-                    <label
-                      class="flex items-center"
-                    >
+                    <label>
                       <span>
                         <input
                           aria-describedby="root_person_race__description"
@@ -7993,9 +7941,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <div
                     class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                   >
-                    <label
-                      class="flex items-center"
-                    >
+                    <label>
                       <span>
                         <input
                           aria-describedby="root_person_race__description"
@@ -8014,9 +7960,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <div
                     class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                   >
-                    <label
-                      class="flex items-center"
-                    >
+                    <label>
                       <span>
                         <input
                           aria-describedby="root_person_race__description"
@@ -8035,9 +7979,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <div
                     class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                   >
-                    <label
-                      class="flex items-center"
-                    >
+                    <label>
                       <span>
                         <input
                           aria-describedby="root_person_race__description"
@@ -8056,9 +7998,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <div
                     class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                   >
-                    <label
-                      class="flex items-center"
-                    >
+                    <label>
                       <span>
                         <input
                           aria-describedby="root_person_race__description"
@@ -9120,7 +9060,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit

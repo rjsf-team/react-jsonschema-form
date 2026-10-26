@@ -38,13 +38,12 @@ export interface DaisyGlobalUiOptionsKeys {
 }
 
 /** The option names a user's extension may not reuse: RJSF's, the theme's own, and the ones its widgets read that
- * RJSF doesn't reserve, since every field hands its widget the extension keys a form declares. `BaseInputTemplate`
- * reads `multiple`, and `RatingWidget` reads `color`, `size` and `colorGradient`
+ * RJSF doesn't reserve, since every field hands its widget the extension keys a form declares. `RatingWidget` reads
+ * `color`, `size` and `colorGradient`
  */
 type DaisyReservedUiOptionName =
   | ReservedUiOptionName
   | keyof DaisyGlobalUiOptionsKeys
-  | 'multiple'
   | 'color'
   | 'size'
   | 'colorGradient';

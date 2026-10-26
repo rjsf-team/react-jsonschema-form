@@ -640,8 +640,6 @@ describe('FieldTemplate', () => {
 
     test('rejects a user extension of the global options reusing an option name the widgets read', () => {
       expectTypeOf<DaisyGlobalUISchemaOptions<{ myKey?: string }>>().not.toBeNever();
-      // @ts-expect-error `BaseInputTemplate` reads `multiple`
-      expectTypeOf<DaisyGlobalUISchemaOptions<{ multiple?: boolean }>>().not.toBeNever();
       // @ts-expect-error `RatingWidget` reads `size`
       expectTypeOf<DaisyGlobalUISchemaOptions<{ size?: string }>>().not.toBeNever();
     });

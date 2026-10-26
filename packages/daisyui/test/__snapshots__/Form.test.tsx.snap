@@ -52,7 +52,7 @@ exports[`format iso-date-time 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -88,7 +88,7 @@ exports[`format iso-time 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -558,7 +558,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -887,7 +887,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -945,9 +945,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             class="checkbox mr-2"
@@ -965,9 +963,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             class="checkbox mr-2"
@@ -985,9 +981,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     <div
                       class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             class="checkbox mr-2"
@@ -1012,7 +1006,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -1253,7 +1247,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -1311,9 +1305,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     <div
                       class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             class="radio mr-2"
@@ -1331,9 +1323,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     <div
                       class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
                     >
-                      <label
-                        class="flex items-center"
-                      >
+                      <label>
                         <span>
                           <input
                             class="radio mr-2"
@@ -1358,7 +1348,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -1499,7 +1489,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -1638,7 +1628,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -1703,7 +1693,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -2173,7 +2163,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -2502,7 +2492,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -2743,7 +2733,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -2884,7 +2874,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3023,7 +3013,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3052,9 +3042,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
           <div
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="radio mr-2"
@@ -3072,9 +3060,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
           <div
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   checked=""
@@ -3095,7 +3081,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3303,7 +3289,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3380,7 +3366,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3487,7 +3473,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3594,7 +3580,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3686,7 +3672,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3778,7 +3764,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3870,7 +3856,7 @@ exports[`select widget with options sharing a String() in the realValue format (
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3990,7 +3976,7 @@ exports[`single fields > Cyclic schema 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4025,7 +4011,7 @@ exports[`single fields > checkbox field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4080,7 +4066,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4128,7 +4114,7 @@ exports[`single fields > checkbox field with label 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4183,7 +4169,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4246,7 +4232,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4289,9 +4275,7 @@ exports[`single fields > checkboxes field 1`] = `
           <div
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="checkbox mr-2"
@@ -4309,9 +4293,7 @@ exports[`single fields > checkboxes field 1`] = `
           <div
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="checkbox mr-2"
@@ -4329,9 +4311,7 @@ exports[`single fields > checkboxes field 1`] = `
           <div
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="checkbox mr-2"
@@ -4349,9 +4329,7 @@ exports[`single fields > checkboxes field 1`] = `
           <div
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="checkbox mr-2"
@@ -4371,7 +4349,7 @@ exports[`single fields > checkboxes field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4412,7 +4390,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           role="group"
         >
           <label
-            class="rjsf-checkbox-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+            class="rjsf-checkbox-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
             <span>
               <input
@@ -4430,7 +4408,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             </span>
           </label>
           <label
-            class="rjsf-checkbox-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+            class="rjsf-checkbox-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
             <span>
               <input
@@ -4447,7 +4425,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             </span>
           </label>
           <label
-            class="rjsf-checkbox-inline inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
+            class="rjsf-checkbox-inline mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
             <span>
               <input
@@ -4480,7 +4458,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4523,9 +4501,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           <div
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   aria-describedby="root__description"
@@ -4544,9 +4520,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           <div
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   aria-describedby="root__description"
@@ -4565,9 +4539,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           <div
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   aria-describedby="root__description"
@@ -4594,7 +4566,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4668,7 +4640,7 @@ exports[`single fields > field with description 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4742,7 +4714,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4822,7 +4794,7 @@ exports[`single fields > field with markdown description 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4896,7 +4868,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4929,7 +4901,7 @@ exports[`single fields > format color 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4991,7 +4963,7 @@ exports[`single fields > format date 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5053,7 +5025,7 @@ exports[`single fields > format datetime 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5089,7 +5061,7 @@ exports[`single fields > format time 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5161,7 +5133,7 @@ exports[`single fields > help and error display 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5204,7 +5176,7 @@ exports[`single fields > hidden field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5237,7 +5209,7 @@ exports[`single fields > hidden label 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5261,7 +5233,7 @@ exports[`single fields > null field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5297,7 +5269,7 @@ exports[`single fields > number field 0 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5333,7 +5305,7 @@ exports[`single fields > number field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -6340,7 +6312,7 @@ exports[`single fields > optional data controls > does not show optional control
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -7365,7 +7337,7 @@ exports[`single fields > optional data controls > does not show optional control
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -8322,7 +8294,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -9112,7 +9084,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -9596,7 +9568,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -9982,7 +9954,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         disabled=""
         type="submit"
       >
@@ -10016,7 +9988,7 @@ exports[`single fields > password field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -10045,9 +10017,7 @@ exports[`single fields > radio field 1`] = `
           <div
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="radio mr-2"
@@ -10065,9 +10035,7 @@ exports[`single fields > radio field 1`] = `
           <div
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="radio mr-2"
@@ -10087,7 +10055,7 @@ exports[`single fields > radio field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -10130,9 +10098,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
           <div
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   aria-describedby="root__description"
@@ -10151,9 +10117,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
           <div
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   aria-describedby="root__description"
@@ -10180,7 +10144,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -10248,7 +10212,7 @@ exports[`single fields > required checkbox field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -10317,7 +10281,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -10371,7 +10335,7 @@ exports[`single fields > schema examples 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -10422,7 +10386,7 @@ exports[`single fields > schema examples with mixed types (string examples and n
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -10515,7 +10479,7 @@ exports[`single fields > select field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -10667,7 +10631,7 @@ exports[`single fields > select field multiple choice 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -10821,7 +10785,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -10850,9 +10814,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           <div
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="checkbox mr-2"
@@ -10871,9 +10833,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
             data-disabled="true"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="checkbox mr-2"
@@ -10892,9 +10852,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           <div
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="checkbox mr-2"
@@ -10912,9 +10870,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           <div
             class="rjsf-checkbox mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="checkbox mr-2"
@@ -10934,7 +10890,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -11087,7 +11043,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -11217,7 +11173,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -11312,7 +11268,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -11341,9 +11297,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
           <div
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="radio mr-2"
@@ -11362,9 +11316,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
             data-disabled="true"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="radio mr-2"
@@ -11385,7 +11337,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -11416,9 +11368,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
             data-disabled="true"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="radio mr-2"
@@ -11438,9 +11388,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
             data-disabled="true"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="radio mr-2"
@@ -11461,7 +11409,7 @@ exports[`single fields > select field single choice form disabled using radio wi
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         disabled=""
         type="submit"
       >
@@ -11554,7 +11502,7 @@ exports[`single fields > select field single choice formData 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -11707,7 +11655,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -11862,7 +11810,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -11893,9 +11841,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
             data-disabled="true"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="radio mr-2"
@@ -11915,9 +11861,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             class="rjsf-radio mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50"
             data-disabled="true"
           >
-            <label
-              class="flex items-center"
-            >
+            <label>
               <span>
                 <input
                   class="radio mr-2"
@@ -11938,7 +11882,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12051,7 +11995,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12150,7 +12094,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12242,7 +12186,7 @@ exports[`single fields > select widget with selected oneOf option description an
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12347,7 +12291,7 @@ exports[`single fields > select widget with selected oneOf option description be
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12391,7 +12335,7 @@ exports[`single fields > slider field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12471,7 +12415,7 @@ exports[`single fields > string field > field with markdown help and description
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12542,7 +12486,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12602,7 +12546,7 @@ exports[`single fields > string field > field with markdown help text without a 
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12637,7 +12581,7 @@ exports[`single fields > string field > format data-url 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12670,7 +12614,7 @@ exports[`single fields > string field > format email 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12703,7 +12647,7 @@ exports[`single fields > string field > format uri 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12736,7 +12680,7 @@ exports[`single fields > string field > regular 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12802,7 +12746,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12836,7 +12780,7 @@ exports[`single fields > string field > string field with allowClearTextInputs a
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12891,7 +12835,7 @@ exports[`single fields > string field > string field with allowClearTextInputs a
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12924,7 +12868,7 @@ exports[`single fields > string field > string field with placeholder 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -12955,7 +12899,7 @@ exports[`single fields > textarea field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -13038,7 +12982,7 @@ exports[`single fields > title field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -13073,7 +13017,7 @@ exports[`single fields > unsupported field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -13107,7 +13051,7 @@ exports[`single fields > up/down field 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -13140,7 +13084,7 @@ exports[`single fields > using custom tagName 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -13174,7 +13118,7 @@ exports[`string field with autocapitalize 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -13299,7 +13243,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit

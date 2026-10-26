@@ -8,15 +8,11 @@ export const DAISYUI_CLASS_MAP: ClassMap = {
   rangeInput: 'range',
   rangeWrapper: 'flex items-center gap-4',
   checkboxWrapper: 'mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50',
-  checkboxLabel: 'flex items-center',
   checkboxInput: 'checkbox mr-2',
-  checkboxInlineLabel:
-    'inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50',
+  checkboxInlineLabel: 'mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50',
   radioWrapper: 'mt-1 w-fit cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50',
-  radioLabel: 'flex items-center',
   radioInput: 'radio mr-2',
-  radioInlineLabel:
-    'inline-flex items-center mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50',
+  radioInlineLabel: 'mr-4 cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-50',
   altDateList: 'flex flex-wrap items-center gap-2',
   altDateNowButton: 'btn btn-sm btn-primary',
   altDateClearButton: 'btn btn-sm btn-secondary',
@@ -32,7 +28,7 @@ export const DAISYUI_CLASS_MAP: ClassMap = {
   multiSchemaSelector: 'mb-4',
   cyclicSchemaMessage: 'alert alert-warning mt-4 mb-2',
   cyclicSchemaExpandButton: 'btn btn-sm btn-warning',
-  submitButton: 'btn btn-primary btn-primary-content',
+  submitButton: 'btn btn-primary',
   iconButton: 'btn btn-sm',
   buttonIcon: 'h-5 w-5',
 };

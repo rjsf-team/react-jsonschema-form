@@ -13,7 +13,7 @@ import {
  *
  * This DaisyUI implementation:
  * - Renders the entire array in a rounded container with base-200 background
- * - Uses custom ArrayFieldTitleTemplate and ArrayFieldDescriptionTemplate
+ * - Uses the theme's ArrayFieldTitleTemplate, and core's ArrayFieldDescriptionTemplate styled by the class map
  * - Displays an info alert when the array is empty
  * - Renders each array item using the registry's ArrayFieldItemTemplate, which is core's styled by the class map
  * - Positions the add button at the bottom right using flexbox

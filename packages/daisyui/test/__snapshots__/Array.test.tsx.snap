@@ -59,7 +59,7 @@ exports[`array fields > array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -367,7 +367,7 @@ exports[`array fields > array icons 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -497,7 +497,7 @@ exports[`array fields > checkboxes 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -564,7 +564,7 @@ exports[`array fields > empty errors array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -646,7 +646,7 @@ exports[`array fields > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -745,7 +745,7 @@ exports[`array fields > has errors 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -812,7 +812,7 @@ exports[`array fields > no errors 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -1214,7 +1214,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -1476,7 +1476,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -1606,7 +1606,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -1711,7 +1711,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -2429,7 +2429,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -2831,7 +2831,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3093,7 +3093,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3467,7 +3467,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3551,7 +3551,7 @@ exports[`with title and description > array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -3926,7 +3926,7 @@ exports[`with title and description > array icons 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4076,7 +4076,7 @@ exports[`with title and description > checkboxes 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4225,7 +4225,7 @@ exports[`with title and description > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4309,7 +4309,7 @@ exports[`with title and description from both > array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4684,7 +4684,7 @@ exports[`with title and description from both > array icons 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4834,7 +4834,7 @@ exports[`with title and description from both > checkboxes 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -4983,7 +4983,7 @@ exports[`with title and description from both > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5067,7 +5067,7 @@ exports[`with title and description from uiSchema > array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5442,7 +5442,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5592,7 +5592,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5741,7 +5741,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -5810,7 +5810,7 @@ exports[`with title and description with global label off > array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -6120,7 +6120,7 @@ exports[`with title and description with global label off > array icons 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -6250,7 +6250,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
@@ -6334,7 +6334,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
     </div>
     <div>
       <button
-        class="rjsf-submit-button btn btn-primary btn-primary-content"
+        class="rjsf-submit-button btn btn-primary"
         type="submit"
       >
         Submit
