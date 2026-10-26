@@ -317,6 +317,75 @@ describe('a promise onSubmit returns', () => {
     await waitFor(() => expectIdle(screen.getByRole('button', { name: 'Submit' })));
   });
 
+  it('takes a submit again after FormRef.reset(), and keeps the later submit pending when the earlier promise settles', async () => {
+    const hung = deferred();
+    const save = deferred();
+    const onSubmit = vi.fn().mockReturnValueOnce(hung.promise).mockReturnValueOnce(save.promise);
+    const ref = createFormRef();
+    createFormComponent({ ref, schema, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    act(() => handleOf(ref).reset());
+
+    expectIdle(button);
+    await user.click(button);
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    expectPending(button);
+    await act(async () => hung.resolve(undefined));
+    expectPending(button);
+    await user.click(button);
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    save.resolve(undefined);
+    await waitFor(() => expectIdle(button));
+  });
+
+  it('ignores a FormRef.submit() that onSubmit makes before it returns its promise', async () => {
+    const save = deferred();
+    const ref = createFormRef();
+    const onSubmit = vi
+      .fn()
+      .mockImplementationOnce(() => {
+        handleOf(ref).submit();
+        return save.promise;
+      })
+      .mockReturnValue(undefined);
+    createFormComponent({ ref, schema, initialFormData: { name: 'a' }, onSubmit });
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('runs no constraint validation for a submit it ignores, from the submit button, Enter or FormRef.submit()', async () => {
+    const save = deferred();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    const ref = createFormRef();
+    createFormComponent({
+      ref,
+      schema: { ...schema, required: ['name'] },
+      initialFormData: { name: 'a' },
+      onSubmit,
+    });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    const input = screen.getByRole('textbox', { name: /Name/ });
+    const onInvalid = vi.fn();
+    input.addEventListener('invalid', onInvalid);
+    await user.click(button);
+    await user.clear(input);
+
+    await user.click(button);
+    await user.type(input, '{Enter}');
+    act(() => handleOf(ref).submit());
+
+    expect(onInvalid).not.toHaveBeenCalled();
+    save.resolve(undefined);
+    await waitFor(() => expectIdle(button));
+    await user.click(button);
+    expect(onInvalid).toHaveBeenCalledTimes(1);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
   describe('that rejects', () => {
     const unhandled: unknown[] = [];
     const recordUnhandled = (reason: unknown) => {
@@ -369,6 +438,38 @@ describe('a promise onSubmit returns', () => {
 });
 
 describe('a useActionState dispatch started from onSubmit', () => {
+  it('takes no click on the default submit button while the action runs', async () => {
+    const save = deferred();
+    const onSubmit = vi.fn();
+    function Parent() {
+      const [, dispatch] = useActionState(async (previous: number) => {
+        await save.promise;
+        return previous + 1;
+      }, 0);
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          initialFormData={{ name: 'a' }}
+          onSubmit={() => {
+            onSubmit();
+            startTransition(() => dispatch());
+          }}
+        />
+      );
+    }
+    render(<Parent />);
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    await user.click(button);
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expectPending(button);
+    save.resolve(undefined);
+    await waitFor(() => expectIdle(button));
+  });
+
   it('receives the validated data, keeps the form pending while it runs and leaves the inputs as they are', async () => {
     const save = deferred();
     const received: Person[] = [];

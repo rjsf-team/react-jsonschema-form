@@ -23,7 +23,8 @@ export interface FormRef<T = unknown> {
    * to show, the inputs describe data the form no longer holds, so schema validation alone checks the value. An
    * element another `tagName` renders has no `requestSubmit()`, so it gets a submit event dispatched to it, which skips
    * the browser's constraint validation as well. An error `onSubmit`, `onError` or a validation callback throws comes
-   * out of this call, as it does from the other methods.
+   * out of this call, as it does from the other methods. While a promise `onSubmit` returned is pending, it only
+   * counts the submit in the status's `submitCount`.
    */
   submit(): void;
   /** Reads the form's status: whether its latest stored value differs from the baseline, where, and how many submits
@@ -37,7 +38,8 @@ export interface FormRef<T = unknown> {
    * the form is clean against. Pass the data a save stored, from the handler or action that saved it, so the form is
    * clean again without remounting. `seed` replaces the props' seed for every later `reset()`. Called with nothing, it
    * seeds the form from the data the last `reset(seed)` passed, or else from the props' `formData`, or else
-   * `initialFormData`.
+   * `initialFormData`. It also ends a pending submit, so the form takes a submit again even if the promise `onSubmit`
+   * returned never settles.
    */
   reset(seed?: T): void;
   /** Sets the value of the field at `fieldPath`, either a dotted path or a `FieldPathList`. Use `''` or `[]` for the
