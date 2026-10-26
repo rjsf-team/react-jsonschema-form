@@ -367,8 +367,26 @@ function withPathsMoved(paths: ReadonlySet<FieldPath>, move: ContainerKeyMove | 
   if (!move || paths.size === 0) {
     return paths;
   }
-  const moved = movedPaths(paths, fieldPathToList(move.container), move.newKeyOf);
-  return moved.size === paths.size && [...moved].every((path) => paths.has(path)) ? paths : moved;
+  return sameMembersOr(paths, movedPaths(paths, fieldPathToList(move.container), move.newKeyOf));
+}
+
+/** `paths` itself when `next` holds the same paths, so a set whose members did not change keeps its reference, and a
+ * set of `next` otherwise
+ */
+function sameMembersOr(paths: ReadonlySet<FieldPath>, next: Iterable<FieldPath>): ReadonlySet<FieldPath> {
+  const nextPaths = new Set(next);
+  return nextPaths.size === paths.size && [...nextPaths].every((path) => paths.has(path)) ? paths : nextPaths;
+}
+
+/** `revealed` with `fields` and `containers`, `revealed` itself when both are its own */
+function withRevealed(
+  revealed: RevealedPaths,
+  fields: ReadonlySet<FieldPath>,
+  containers: ReadonlySet<FieldPath>,
+): RevealedPaths {
+  return fields === revealed.fields && containers === revealed.containers
+    ? revealed
+    : { ...revealed, fields, containers };
 }
 
 /** Where the change at `fieldPath` moves what the form keeps by path of the fields under a container, as the option
@@ -405,17 +423,20 @@ export function keyMoveOf<T>({
 export type MoveFate = 'moved' | 'unmoved' | 'none';
 
 /** The fate of each key of a container a rewritten move moved, see `MoveFate`, from what the form `kept` there, what
- * the move alone left, `moved`, and what was there `before`. Each side is shared against `kept` first, so an equal copy
- * compares by reference
+ * the move alone left, `moved`, and what was there `before`. Each side's member is shared against `kept`'s, so an equal
+ * copy compares by reference
  */
 export function moveFateOf(kept: unknown, moved: unknown, before: unknown): (key: string) => MoveFate {
-  const asMoved = replaceEqualDeep(moved, kept);
-  const asBefore = replaceEqualDeep(before, kept);
+  // Compared only for the keys asked about, the ones that hold marks or selections, not across the whole container
+  const isKeptFrom = (side: unknown, key: string) => {
+    const member = getByPath(side, key);
+    return Object.is(replaceEqualDeep(member, getByPath(kept, key)), member);
+  };
   return (key) => {
-    if (Object.is(getByPath(asMoved, key), getByPath(moved, key))) {
+    if (isKeptFrom(moved, key)) {
       return 'moved';
     }
-    return Object.is(getByPath(asBefore, key), getByPath(before, key)) ? 'unmoved' : 'none';
+    return isKeptFrom(before, key) ? 'unmoved' : 'none';
   };
 }
 
@@ -430,18 +451,20 @@ export function withMarksSettled<T, S extends StrictRJSFSchema, F extends FormCo
   container: FieldPath,
   fateOf: (key: string) => MoveFate,
 ): FormState<T, S, F> {
-  const settle = (moved: ReadonlySet<FieldPath>, before: ReadonlySet<FieldPath>) => {
-    const settled = settledEntries(moved, before, (path) => path, container, fateOf);
-    return settled.length === moved.size && settled.every((path) => moved.has(path)) ? moved : new Set(settled);
-  };
+  const settle = (moved: ReadonlySet<FieldPath>, before: ReadonlySet<FieldPath>) =>
+    sameMembersOr(
+      moved,
+      settledEntries(moved, before, (path) => path, container, fateOf),
+    );
   const { revealed } = state;
-  const fields = settle(revealed.fields, unmoved.revealed.fields);
-  const containers = settle(revealed.containers, unmoved.revealed.containers);
   return {
     ...state,
     touchedPaths: settle(state.touchedPaths, unmoved.touchedPaths),
-    revealed:
-      fields === revealed.fields && containers === revealed.containers ? revealed : { ...revealed, fields, containers },
+    revealed: withRevealed(
+      revealed,
+      settle(revealed.fields, unmoved.revealed.fields),
+      settle(revealed.containers, unmoved.revealed.containers),
+    ),
   };
 }
 
@@ -469,12 +492,9 @@ function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContext
     : current.formData;
   const follow = (paths: ReadonlySet<FieldPath>) =>
     withoutDroppedPaths(withPathsMoved(paths, move), previous, formData);
-  const fields = follow(revealed.fields);
-  const containers = follow(revealed.containers);
   return {
     touchedPaths: follow(touchedPaths),
-    revealed:
-      fields === revealed.fields && containers === revealed.containers ? revealed : { ...revealed, fields, containers },
+    revealed: withRevealed(revealed, follow(revealed.fields), follow(revealed.containers)),
   };
 }
 
@@ -517,18 +537,23 @@ function hiddenErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType
   if (!isRevealedByField(props) || revealed.all) {
     return undefined;
   }
-  // Parsed on the first error checked, so a pass whose validation holds none parses nothing
-  let parsed: { fields: FieldPathList[]; containers: FieldPathList[] } | undefined;
-  return (path) => {
-    parsed ??= {
-      fields: [...revealed.fields].map(fieldPathToList),
-      containers: [...revealed.containers].map(fieldPathToList),
-    };
-    return (
-      !parsed.fields.some((field) => isPathPrefix(path, field) || isPathPrefix(field, path)) &&
-      !parsed.containers.some((container) => isPathPrefix(path, container))
-    );
-  };
+  return (path) =>
+    !parsedPathsOf(revealed.fields).some((field) => isPathPrefix(path, field) || isPathPrefix(field, path)) &&
+    !parsedPathsOf(revealed.containers).some((container) => isPathPrefix(path, container));
+}
+
+/** The paths of each set of revealed paths, parsed once: a set is never changed once made, and a pass whose validation
+ * holds no error parses nothing
+ */
+const parsedPaths = new WeakMap<ReadonlySet<FieldPath>, FieldPathList[]>();
+
+function parsedPathsOf(paths: ReadonlySet<FieldPath>): FieldPathList[] {
+  let parsed = parsedPaths.get(paths);
+  if (!parsed) {
+    parsed = [...paths].map(fieldPathToList);
+    parsedPaths.set(paths, parsed);
+  }
+  return parsed;
 }
 
 /** Converts the full `FormState` into the `IChangeEvent` version by picking out the public values

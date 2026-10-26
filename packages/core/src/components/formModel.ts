@@ -61,32 +61,16 @@ const HELD_SCALARS_LIMIT = 100;
 type Deliver = (operation: () => void) => void;
 const deliverToCaller: Deliver = (operation) => operation();
 
-/** The members of the state a render of the `Form` reads, directly or through `deriveState()`: all but the touched
- * marks, which only `getStatus()` and the events report. A commit that changes none of them, such as a blur that only
- * touches a field, re-renders nothing
+/** Whether a render of the `Form` reads a member that differs between `committed` and `shown`, directly or through
+ * `deriveState()`: any but the touched marks, which only `getStatus()` and the events report. A commit that changes
+ * none of them, such as a blur that only touches a field, re-renders nothing. Every other member is compared, so one
+ * added to the state is never missed
  */
-const RENDERED_MEMBERS: Exclude<keyof FormState, 'touchedPaths'>[] = [
-  'schema',
-  'uiSchema',
-  'schemaUtils',
-  'formData',
-  'baseline',
-  'revealed',
-  'baselineUiState',
-  'isDataPassed',
-  'errors',
-  'errorSchema',
-  'schemaValidationErrors',
-  'schemaValidationErrorSchema',
-  'customErrors',
-  'retrievedSchema',
-  'uiState',
-  'initialDefaultsGenerated',
-  'registry',
-  'validationProps',
-  'defaultsBehavior',
-  'allowsAbsentAdditionalProperties',
-];
+function isRenderedChange(committed: object, shown: object): boolean {
+  return Object.keys({ ...shown, ...committed }).some(
+    (key) => key !== 'touchedPaths' && Reflect.get(committed, key) !== Reflect.get(shown, key),
+  );
+}
 
 /** Whether `element` takes focus, as a form control or an element with a `tabindex` does. A hidden input, an element
  * the `hidden` attribute hides, a disabled control and an `<a>` with no `href` report a `tabIndex` of 0 all the same,
@@ -312,7 +296,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (committed !== start) {
       published = committed;
       publishedProps = committedProps;
-      if (RENDERED_MEMBERS.some((key) => committed[key] !== shown[key])) {
+      if (isRenderedChange(committed, shown)) {
         shown = committed;
       }
       hold(committed.formData);
