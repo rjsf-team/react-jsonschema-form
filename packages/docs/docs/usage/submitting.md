@@ -5,7 +5,7 @@ This page covers what happens while that submission is in flight, how `Form` fit
 
 ## A pending submission
 
-When `onSubmit` returns a promise, the form ignores another submit until that promise settles, whether it comes from a submit button, from Enter pressed in a field or from `FormRef.submit()`, as TanStack Form does while it is submitting. Meanwhile the submit button gets the `pending` prop, and the form sets `aria-disabled` in the props `ui:submitButtonOptions` give the button, so the submit button of `@rjsf/core`, of every theme and a custom one that spreads those props tells assistive technology it is unavailable. The button isn't `disabled`: the browser moves focus away from a focused button that becomes disabled, so a keyboard user who submitted with it would lose their place.
+When `onSubmit` returns a promise, the form ignores another submit until that promise settles, whether it comes from a submit button, from Enter pressed in a field or from `FormRef.submit()`. That is what TanStack Form's documented `disabled={!canSubmit}` submit button does in your app, built into the form; react-hook-form doesn't block a second submit. Meanwhile the submit button gets the `pending` prop, and the form sets `aria-disabled` in the props `ui:submitButtonOptions` give the button, so the submit button of `@rjsf/core`, of every theme and a custom one that spreads those props tells assistive technology it is unavailable. The button isn't `disabled`: the browser moves focus away from a focused button that becomes disabled, so a keyboard user who submitted with it would lose their place.
 
 ```tsx
 import { useState } from 'react';
@@ -74,7 +74,7 @@ function PersonForm() {
     if (!response.ok) {
       return { errors: await response.json() };
     }
-    formRef.current?.reset(person);
+    markSaved(formRef.current, person);
     return {};
   }, {});
   return (
@@ -93,11 +93,13 @@ function PersonForm() {
 }
 ```
 
+`markSaved()` makes the saved data the baseline and keeps any edit made while the save ran, see [Making the saved data the baseline](#making-the-saved-data-the-baseline).
+
 - **The action gets the validated, typed data**, not the DOM's `FormData`. `Form` can't infer the data's type from the schema, so `<Form<Person>>` gives `formData` the type the action takes. `FormData` would turn numbers and booleans into strings, hold some widgets' encoded option values instead of the values themselves, and miss the values of widgets that don't render native form controls.
 - **The form is pending while the action runs**, so the submit button gets `pending` and `aria-disabled`, and `useFormStatus().pending` is `true` inside the form. `isPending` tells the component that owns the action the same.
 - **Check `isPending` before dispatching again.** `onSubmit` returns no promise here, so the form doesn't know the action is running and doesn't ignore a second submit. `useActionState` would queue a second dispatch and run the action again once the first finishes.
 - **The form keeps showing its data.** React resets a `<form>` after an action passed to its `action` prop succeeds, but `Form` handles its own submit, so nothing is reset.
-- **The saved data becomes the form's baseline.** The action calls `reset(person)` once the save succeeds, so the form is clean again. See [Unsaved changes](#unsaved-changes).
+- **The saved data becomes the form's baseline.** The action calls `markSaved()` once the save succeeds, so the form is clean again unless the user kept editing during the save. See [Unsaved changes](#unsaved-changes).
 - **The form has to render a `<form>`.** With a [`tagName`](../api-reference/form-props.md#tagname) such as `'div'`, a submit through `FormRef.submit()` that starts a transition makes React throw, since React builds a `FormData` from the element the submit event reaches, and the submit button doesn't read `useFormStatus()`, which would read an enclosing form's.
 - **Don't pass the action to `Form`'s `action` prop.** That prop is the HTML attribute: `Form` prevents the browser's own submit, so React never calls a function passed there.
 
@@ -179,7 +181,7 @@ The form compares its data with a baseline: the data it was last seeded with, on
 
   Clearing a field stores `undefined`, which is not the same as the field being absent or holding `''`. So a field the seed left out, or seeded with `''`, stays dirty once it is typed into and cleared, as it does in react-hook-form. For a field seeded with `''`, set [`ui:emptyValue`](../api-reference/uiSchema.md#emptyvalue) to `''` on that field to have clearing store `''`, which makes the form clean again. A field the seed left out has no such fix: seed it with `''` and set `ui:emptyValue` if it matters.
 
-- `dirtyFields`: where it differs, nested like the data, with `true` at each field that changed, for example `{ address: { city: true } }`. For an array it holds an entry for each item, `undefined` where the item is unchanged.
+- `dirtyFields`: where it differs, nested like the data, with `true` at each field that changed, for example `{ address: { city: true } }`. For an array it holds an entry for each item, `undefined` where the item is unchanged. An object or array field added, removed or replaced whole, such as one cleared from `{}` to nothing, can hold `true` itself, so check that a member is an object before reading into it.
 - `submitCount`: how many submits have reached the form since it mounted or was last reset, valid or not, including one the form [ignores while a save is pending](#a-pending-submission), as TanStack Form counts every submit attempt. The browser's own constraint validation, such as for a `required` input left empty, blocks a submit before it reaches the form, so such a submit isn't counted unless you set [`noHtml5Validate`](../api-reference/form-props.md#nohtml5validate).
 
 Changes the user didn't make leave the form clean. When a new `schema` prop fills in a default, or `omitExtraData` with `liveOmit` drops data the schema doesn't describe, the baseline changes with the data. A prop change calls no `onChange`, so the status it leaves, which can turn a dirty form clean, is read with `getStatus()` after passing the new props. A change that follows from the user's own edit does count: when changing one field makes a conditional schema drop another field's value, both fields are dirty.
@@ -187,6 +189,21 @@ Changes the user didn't make leave the form clean. When a new `schema` prop fill
 ### Making the saved data the baseline
 
 After a save, call `reset(saved)` on the form's ref with the data you saved. That data becomes the baseline and the form's data, and the form clears its errors, its touched fields and its submit count, without remounting. `reset()` with no argument goes back to the data the last `reset(saved)` passed, or to the props' seed if there was none.
+
+The fields stay editable while a save is pending, so the user may change the data after submitting it. `reset(saved)` alone would replace those edits with the saved data. `getFormData()` returns the very object `onSubmit` was given until an edit replaces it, so compare the two by reference, and apply the newer data again as an edit on top of the saved baseline:
+
+```tsx
+function markSaved<T>(form: FormRef<T> | null, saved: T) {
+  if (!form) {
+    return;
+  }
+  const edited = form.getFormData();
+  form.reset(saved);
+  if (edited !== saved) {
+    form.setFieldValue('', edited);
+  }
+}
+```
 
 Call it in the handler or action that saves, once the save succeeds, as the [`useActionState` example](#with-useactionstate) does, rather than in an Effect that watches for the save to finish. The save is what causes the reset, so it belongs where the save happens; see [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect).
 
@@ -217,7 +234,7 @@ function EditPersonDialog({ person, onClose }: { person: Person; onClose: () => 
         initialFormData={person}
         onSubmit={async ({ formData }) => {
           await save(formData);
-          formRef.current?.reset(formData);
+          markSaved(formRef.current, formData);
         }}
       />
       <button type='button' onClick={close}>
@@ -230,7 +247,7 @@ function EditPersonDialog({ person, onClose }: { person: Person; onClose: () => 
 
 ### Disabling submit when nothing changed
 
-To render from `dirty`, keep it in state from `onChange`. `onChange` fires for every edit and for the `reset(saved)` after a save, so the state follows the user's changes. A prop change, such as a new `schema` filling in a default, updates the status without calling `onChange`; if your form's props change while it is shown, read `getStatus().dirty` after passing them as well. A field typed into and cleared counts as changed, see `dirty` above, so the button stays enabled after that. Disable the default submit button through [`ui:submitButtonOptions`](../api-reference/uiSchema.md#submitbuttonoptions). While a save is pending, the form also marks the button `aria-disabled` and ignores another submit, whatever `disabled` you pass, see [A pending submission](#a-pending-submission):
+To render from `dirty`, keep it in state from `onChange`. `onChange` fires for every edit and for the reset after a save, so the state follows the user's changes. A prop change, such as a new `schema` filling in a default, updates the status without calling `onChange`; if your form's props change while it is shown, read `getStatus().dirty` after passing them as well. A field typed into and cleared counts as changed, see `dirty` above, so the button stays enabled after that. Disable the default submit button through [`ui:submitButtonOptions`](../api-reference/uiSchema.md#submitbuttonoptions). While a save is pending, the form also marks the button `aria-disabled` and ignores another submit, whatever `disabled` you pass, see [A pending submission](#a-pending-submission):
 
 ```tsx
 function PersonForm({ person }: { person: Person }) {
@@ -247,7 +264,7 @@ function PersonForm({ person }: { person: Person }) {
       onChange={({ dirty }) => setIsDirty(dirty)}
       onSubmit={async ({ formData }) => {
         await save(formData);
-        formRef.current?.reset(formData);
+        markSaved(formRef.current, formData);
       }}
     />
   );

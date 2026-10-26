@@ -45,7 +45,11 @@ describe('IChangeEvent', () => {
     expectTypeOf<IChangeEvent['submitCount']>().toEqualTypeOf<number>();
     expectTypeOf<
       IChangeEvent<{ name: string; tags: string[]; address: { city?: string } }>['dirtyFields']
-    >().toEqualTypeOf<{ name?: boolean; tags?: (boolean | undefined)[]; address?: { city?: boolean } }>();
+    >().toEqualTypeOf<{
+      name?: boolean;
+      tags?: boolean | (boolean | undefined)[];
+      address?: boolean | { city?: boolean };
+    }>();
     expectTypeOf<NestedBooleans<string>>().toEqualTypeOf<boolean>();
     expectTypeOf<NestedBooleans<{ when: Date }>>().toEqualTypeOf<{ when?: boolean }>();
     expectTypeOf<NestedBooleans<{ photo: File; scan?: Blob }>>().toEqualTypeOf<{ photo?: boolean; scan?: boolean }>();

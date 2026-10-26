@@ -667,12 +667,12 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         warnDroppedCall('reset');
         return;
       }
-      if (seed !== undefined) {
-        resetSeed = { seed };
-      }
       const props = committedProps;
-      const nextSeed = resetSeed ? resetSeed.seed : seedOf(props);
+      const nextReset = seed !== undefined ? { seed } : resetSeed;
+      const nextSeed = nextReset ? nextReset.seed : seedOf(props);
       const committed = commit(settled((base) => applyReset(base, props, nextSeed)));
+      // Kept only once it derives, so a seed that throws isn't replayed by every later `reset()`
+      resetSeed = nextReset;
       props.onChange?.(toIChangeEvent(committed));
     },
 

@@ -71,4 +71,26 @@ describe('shareData()', () => {
 
     expect(shared.formData).toBe(baseline);
   });
+
+  it('keeps a null prototype and symbol-keyed members of the data where a change reached', () => {
+    const marker = Symbol('marker');
+    const baseline = { name: 'Ada', address: { city: 'Oslo' } };
+    const start = { name: 'Ada', address: { city: 'Rome' } };
+    const next = { name: 'Al', address: { city: 'Oslo' } };
+    Object.setPrototypeOf(next, null);
+
+    const shared = shareData({ formData: start, baseline }, { formData: next, baseline });
+
+    expect(Object.getPrototypeOf(shared.formData)).toBeNull();
+    expect(shared.formData).toEqual({ name: 'Al', address: baseline.address });
+    expect(shared.formData?.address).toBe(baseline.address);
+
+    const unmarked = { name: 'Ada' };
+    const marked = shareData(
+      { formData: { name: 'Al' }, baseline: unmarked },
+      { formData: { name: 'Ada', [marker]: true }, baseline: unmarked },
+    );
+
+    expect(Reflect.get(Object(marked.formData), marker)).toBe(true);
+  });
 });
