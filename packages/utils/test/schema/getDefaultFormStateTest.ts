@@ -9590,6 +9590,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           );
 
+        it('is left out with the null schema it holds when its oneOf options name no type', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              opt: {
+                type: 'object',
+                properties: { s: { type: 'string' }, n: { type: 'null' } },
+                oneOf: [{ required: ['s'] }, { required: ['n'] }],
+              },
+            },
+          };
+          expect(collapsedDefaultsOf(schema)).toEqual({});
+        });
+
         it('is left out with the null schema it holds, as it would be without one', () => {
           const schema: RJSFSchema = {
             type: 'object',
