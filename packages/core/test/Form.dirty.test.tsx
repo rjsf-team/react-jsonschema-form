@@ -333,6 +333,23 @@ describe('submitCount', () => {
     expect(handle.getStatus().submitCount).toBe(3);
   });
 
+  it('counts a submit the form ignores while a promise onSubmit returned is pending, as TanStack Form does', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    const { handle } = mountWithHandle({ schema: required, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    await user.click(button);
+    act(() => handle.submit());
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(handle.getStatus().submitCount).toBe(3);
+    await act(async () => save.resolve(undefined));
+    await user.click(button);
+    expect(onSubmit.mock.lastCall?.[0]).toMatchObject({ submitCount: 4 });
+  });
+
   it("does not count a submit the browser's constraint validation blocks", async () => {
     const { handle, onSubmit, onError } = mountWithHandle({ schema: required });
 

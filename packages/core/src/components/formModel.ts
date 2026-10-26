@@ -567,7 +567,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   };
 
   /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it, and returns what
-   * `onSubmit` returned. While `isSubmitting`, it only keeps the event from submitting the page
+   * `onSubmit` returned. While `isSubmitting`, it only counts the submit, as TanStack Form counts every attempt, and keeps
+   * the event from submitting the page
    */
   const submitFromEvent = (event: SubmitEvent<HTMLFormElement>, isSubmitting: boolean): unknown => {
     event.preventDefault();
@@ -577,12 +578,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
     // A detached form drops a submit event that still reaches it, such as one from a `<button form>` outside the
     // `<Activity>` that hides it, as it drops `submit()`
-    if (isSubmitting || isDetached || event.target !== event.currentTarget) {
+    if (isDetached || event.target !== event.currentTarget) {
+      return undefined;
+    }
+    const attempted = current();
+    commit({ ...attempted, submitCount: attempted.submitCount + 1 });
+    if (isSubmitting) {
       return undefined;
     }
     const props = committedProps;
-    const attempted = current();
-    commit({ ...attempted, submitCount: attempted.submitCount + 1 });
     // oxlint-disable-next-line typescript/no-deprecated
     const { noValidate } = props;
     // One omission serves the validation and the commit; it is taken again only for data a nested operation changed
