@@ -54,7 +54,7 @@ the key names the parent schema's [`propertyNames.enum`](../json-schema/objects.
 A theme's `WrapIfAdditionalTemplate` renders it in place of its free-text key input whenever the `propertyNamesEnum`
 prop it is given is defined, so each theme only has to choose where the dropdown goes.
 The key has no description, help or errors of its own, so the `SelectWidget` is given a plan of its own that describes
-it by none, leaves it named by the key's label its template draws beside it where `labelledByTemplate` says so, draws
+it by none but the errors its row shows, given as `errorAttributes`, leaves it named by the key's label its template draws beside it where `labelledByTemplate` says so, draws
 that label where `hideLabel` leaves it to the select, or else names the select by that label's text through
 `aria-label`.
 
@@ -68,6 +68,7 @@ that label where `hideLabel` leaves it to the select, or else names the select b
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
 - [className]: string - Optional class name given to the rendered widget, for a theme that styles the key control itself
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
+- [errorAttributes]: Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'> - Optional attributes the errors its row shows give the key, from [getAdditionalKeyAttributes()](#getadditionalkeyattributes)
 - [hideLabel]: boolean - Optional flag, if true, the widget renders no label of its own, for themes that render one themselves
 - [labelledByTemplate]: boolean - Optional flag, if true, the template draws the key's label beside the widget, with a `for` naming its `id`, so the widget is given no `aria-label` over it
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
@@ -811,6 +812,22 @@ This is the order a widget's UI library needs when it manages its own selection 
 #### Returns
 
 - IndexedEnumOptionType&lt;S>[]: The options in `groupedOptions`, flattened to a single list
+
+### getAdditionalKeyAttributes&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getadditionalkeyattributes}
+
+Gets the attributes a `WrapIfAdditionalTemplate` gives the key input of an `additionalProperties` entry while `keyNotAllowed` says the object forbids its key and its row shows errors: `aria-invalid`, and `aria-describedby` naming the row's errors.
+The key is the one control the row of a key the object forbids has, so the message that it is not allowed describes it.
+An allowed key's input stays unmarked while its row shows errors about its value.
+The row shows errors while its `hasErrors` is set.
+A custom `WrapIfAdditionalTemplate` spreads the result onto its free-text key input and passes it to `AdditionalPropertyKeySelect` as `errorAttributes`.
+
+#### Parameters
+
+- props: Pick&lt;WrapIfAdditionalTemplateProps&lt;T, S, F>, 'id' | 'keyNotAllowed' | 'hasErrors' | 'presentation'> - The `id`, `keyNotAllowed`, `hasErrors` and `presentation` of the `WrapIfAdditionalTemplate`
+
+#### Returns
+
+- Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'>: The `aria-describedby` and `aria-invalid`, or neither when the key is allowed or the row shows no errors
 
 ### getAdditionalPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

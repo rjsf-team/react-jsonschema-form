@@ -783,6 +783,7 @@ function SchemaFieldRender<
     onKeyRenameBlur,
     onRemoveProperty,
     propertyNamesEnum,
+    keyNotAllowed,
     required = false,
     registry,
   } = props;
@@ -1057,6 +1058,7 @@ function SchemaFieldRender<
     onKeyRenameBlur,
     onRemoveProperty,
     propertyNamesEnum,
+    keyNotAllowed,
     required: effectiveRequired,
     disabled,
     readonly,

@@ -825,6 +825,7 @@ function LayoutGridFieldComponent<
       onKeyRenameBlur: _onKeyRenameBlur,
       onRemoveProperty: _onRemoveProperty,
       propertyNamesEnum: _propertyNamesEnum,
+      keyNotAllowed: _keyNotAllowed,
       ...cellProps
     } = otherProps;
 

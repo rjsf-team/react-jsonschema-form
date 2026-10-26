@@ -34,6 +34,10 @@ export interface NestedControlInputs {
   required?: boolean;
   /** The plan of the field the control sits in, if it has one */
   field?: FieldPresentation;
+  /** The `aria-describedby` and `aria-invalid` the control takes from the errors around it. Defaults to those of
+   * `field`'s control
+   */
+  attributes?: Pick<ControlAttributes, 'aria-describedby' | 'aria-invalid'>;
 }
 
 /** Gets the plan of a control a widget or template renders inside its field under an id of its own, such as each date
@@ -49,7 +53,15 @@ export interface NestedControlInputs {
  * @returns - The control's plan
  */
 export default function getNestedControlPresentation(inputs: NestedControlInputs): FieldPresentation {
-  const { id, label, showLabel = false, labelledByTemplate = false, required, field } = inputs;
+  const {
+    id,
+    label,
+    showLabel = false,
+    labelledByTemplate = false,
+    required,
+    field,
+    attributes = field?.control?.attributes,
+  } = inputs;
   const plan = resolveFieldPresentation({
     id,
     declaration: labelledByTemplate ? TEMPLATE_LABELLED_DECLARATION : NESTED_DECLARATION,
@@ -57,15 +69,18 @@ export default function getNestedControlPresentation(inputs: NestedControlInputs
     showLabel: showLabel || labelledByTemplate,
     required,
   });
-  const fieldAttributes = field?.control?.attributes;
-  if (!fieldAttributes) {
+  if (!attributes) {
     return plan;
   }
-  const { 'aria-describedby': describedBy, 'aria-invalid': invalid } = fieldAttributes;
-  const attributes: ControlAttributes = {
+  const { 'aria-describedby': describedBy, 'aria-invalid': invalid } = attributes;
+  const controlAttributes: ControlAttributes = {
     ...plan.control?.attributes,
     ...(describedBy && { 'aria-describedby': describedBy }),
     ...(invalid && { 'aria-invalid': invalid }),
   };
-  return { ...plan, describedBy: field.describedBy, control: { id, attributes } };
+  return {
+    ...plan,
+    describedBy: field?.describedBy ?? (describedBy ? describedBy.split(' ') : plan.describedBy),
+    control: { id, attributes: controlAttributes },
+  };
 }
