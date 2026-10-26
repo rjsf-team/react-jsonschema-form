@@ -867,6 +867,20 @@ Derives the HTML `name` for `fieldPath` using the `nameGenerator` in `globalForm
 
 - string | undefined: The name for the field, or undefined when no `nameGenerator` is configured or `fieldPath` is the root
 
+### fieldShowsOwnErrors&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#fieldshowsownerrors}
+
+Whether the field a widget renders shows errors of its own, for the error state of the label and description the widget draws for it: its plan's `errors.own`, the field's own errors as its `ui:hideError` leaves them, whoever draws them, as `SchemaField` marks the field's wrapper.
+Unlike [hasWidgetErrors()](#haswidgeterrors), the control's state, it is off beneath an `anyOf`/`oneOf` option that hides its errors while the field above shows them.
+For a widget rendered without a plan, the two agree, so it falls back to `hasWidgetErrors()`.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'rawErrors' | 'hideError' | 'presentation'> - The widget's `rawErrors`, `hideError` and `presentation`
+
+#### Returns
+
+- boolean: True when the field shows errors of its own
+
 ### findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 **Deprecated.** Kept for callers written against 6.x; resolve a `$ref` as the form does with `schemaUtils.retrieveSchema({ $ref })` instead.

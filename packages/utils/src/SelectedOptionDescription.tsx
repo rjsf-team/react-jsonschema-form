@@ -1,6 +1,6 @@
+import fieldShowsOwnErrors from './fieldShowsOwnErrors.ts';
 import getSelectedOptionDescription from './getSelectedOptionDescription.ts';
 import getTemplates from './getTemplates.ts';
-import hasWidgetErrors from './hasWidgetErrors.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
 export type SelectedOptionDescriptionProps<
@@ -25,14 +25,13 @@ export default function SelectedOptionDescription<
     return null;
   }
 
-  const { options, registry, uiSchema, presentation } = props;
+  const { options, registry, uiSchema } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   return (
     <DescriptionFieldTemplate
       id={selected.id}
       description={selected.description}
-      // The field's own error state, as the field's other parts have it, rather than its control's
-      hasErrors={presentation ? presentation.errors.own : hasWidgetErrors<T, S, F>(props)}
+      hasErrors={fieldShowsOwnErrors<T, S, F>(props)}
       schema={selected.schema}
       uiSchema={uiSchema}
       registry={registry}
