@@ -162,6 +162,7 @@ export default function SelectWidget<
         showSearch={{ filterOption }}
         {...widgetAriaProps(props)}
         aria-required={required || undefined}
+        aria-readonly={control.ariaReadonly}
         options={selectOptions}
       />
       {/* antd's `Select` renders no native control, so the value a native submit or `FormData` reads is carried by

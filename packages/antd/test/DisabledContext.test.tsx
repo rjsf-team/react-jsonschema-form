@@ -1,9 +1,12 @@
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { ConfigProvider } from 'antd';
 
 import Form from '../src/index.ts';
+
+const user = userEvent.setup();
 
 const schema: RJSFSchema = {
   type: 'object',
@@ -15,6 +18,7 @@ const schema: RJSFSchema = {
     select: { type: 'string', title: 'Select', enum: ['a', 'b'] },
     checkbox: { type: 'boolean', title: 'Checkbox' },
     range: { type: 'number', title: 'Range', minimum: 0, maximum: 10 },
+    rating: { type: 'integer', title: 'Rating' },
     date: { type: 'string', format: 'date', title: 'Date' },
     altDate: { type: 'string', format: 'date', title: 'Alt date' },
     list: { type: 'array', title: 'List', items: { type: 'string' } },
@@ -26,6 +30,7 @@ const uiSchema: UiSchema = {
   password: { 'ui:widget': 'password' },
   textarea: { 'ui:widget': 'textarea' },
   range: { 'ui:widget': 'range' },
+  rating: { 'ui:widget': 'RatingWidget' },
   altDate: { 'ui:widget': 'alt-date' },
 };
 
@@ -35,7 +40,7 @@ function renderForm(componentDisabled: boolean) {
       <Form
         schema={schema}
         uiSchema={uiSchema}
-        initialFormData={{ select: 'a', range: 4, list: ['x'], extra: { key: 'value' } }}
+        initialFormData={{ select: 'a', range: 4, rating: 2, list: ['x'], extra: { key: 'value' } }}
         validator={validator}
       />
     </ConfigProvider>,
@@ -66,13 +71,27 @@ describe('antd DisabledContext', () => {
     }
   });
 
-  it('posts nothing from the hidden select and range inputs under the context, as for a disabled native control', () => {
+  it('posts nothing from the hidden select, range and rating inputs under the context, as for a disabled native control', () => {
     const form = renderForm(true).querySelector('form');
 
     expect(form).not.toBeNull();
     const posted = form ? new FormData(form) : undefined;
     expect(posted?.getAll('root_select')).toEqual([]);
     expect(posted?.getAll('root_range')).toEqual([]);
+    expect(posted?.getAll('root_rating')).toEqual([]);
+  });
+
+  it('takes the rating out of the tab order and ignores a click on a star under the context', async () => {
+    renderForm(true);
+
+    const stars = screen.getAllByRole('radio', { name: /star/ });
+    expect(stars.length).toBeGreaterThan(0);
+    for (const star of stars) {
+      expect(star).toHaveAttribute('tabindex', '-1');
+    }
+    await user.click(screen.getByRole('radio', { name: '4 stars' }));
+    expect(screen.getByRole('radio', { name: '2 stars' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByRole('radio', { name: '4 stars' })).toHaveAttribute('aria-checked', 'false');
   });
 
   it('leaves the same fields enabled without the context', () => {
@@ -81,5 +100,6 @@ describe('antd DisabledContext', () => {
     expect(container.querySelector('#root_text')).toBeEnabled();
     expect(container.querySelector('#root_number')).toBeEnabled();
     expect(container.querySelector('#root_checkbox')).toBeEnabled();
+    expect(screen.getByRole('radio', { name: '2 stars' })).toHaveAttribute('tabindex', '0');
   });
 });

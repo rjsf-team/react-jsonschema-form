@@ -353,3 +353,33 @@ describe('a read-only RadioWidget the form leaves enabled', () => {
     expect(screen.getByRole('radiogroup', { name: 'C' })).not.toHaveAttribute('aria-readonly');
   });
 });
+
+describe('a read-only SelectWidget the form leaves enabled', () => {
+  it('is announced as read-only', () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { c: { type: 'string', enum: ['a', 'b'], title: 'C' } } }}
+        uiSchema={{ c: { 'ui:readonly': true } }}
+        formContext={{ readonlyAsDisabled: false }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'C' })).toHaveAttribute('aria-readonly', 'true');
+  });
+
+  it.each<[string, UiSchema]>([
+    ['while it is editable', {}],
+    ['once readonlyAsDisabled disables it', { 'ui:readonly': true }],
+  ])('is not marked read-only %s', (_, uiSchema) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { c: { type: 'string', enum: ['a', 'b'], title: 'C' } } }}
+        uiSchema={{ c: uiSchema }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'C' })).not.toHaveAttribute('aria-readonly');
+  });
+});

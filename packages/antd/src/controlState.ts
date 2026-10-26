@@ -20,8 +20,8 @@ export interface ControlState {
    * the submit of a field its user can't answer
    */
   toggleRequired: true | undefined;
-  /** `true` for a read-only field the form leaves enabled, for a control whose role has no read-only state of its own
-   * to announce, such as a radio group or a checkbox
+  /** `true` for a read-only field the form leaves enabled, for a control with no native read-only state to announce,
+   * such as a radio group, a checkbox or antd's select
    */
   ariaReadonly: true | undefined;
 }

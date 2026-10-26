@@ -9,6 +9,7 @@ import DateWidget from './DateWidget/index.tsx';
 import PasswordWidget from './PasswordWidget/index.tsx';
 import RadioWidget from './RadioWidget/index.tsx';
 import RangeWidget from './RangeWidget/index.tsx';
+import RatingWidget from './RatingWidget/index.tsx';
 import SelectWidget from './SelectWidget/index.tsx';
 import TextareaWidget from './TextareaWidget/index.tsx';
 
@@ -23,6 +24,7 @@ export function createWidgets() {
     PasswordWidget,
     RadioWidget,
     RangeWidget,
+    RatingWidget,
     SelectWidget,
     TextareaWidget,
   };
