@@ -336,16 +336,6 @@ function mergeBranch<S extends StrictRJSFSchema>(
   return mergeOver(part, scopedPart(branch, `${kind}${node}`));
 }
 
-/** A dependency `oneOf` option with the schema its `properties[key]` is matched on, if it declares one */
-interface OptionCondition<S extends StrictRJSFSchema> {
-  option: NodeId;
-  condition: S | undefined;
-}
-
-function declaresNoKey<S extends StrictRJSFSchema>(conditions: readonly OptionCondition<S>[]): boolean {
-  return conditions.length > 0 && conditions.every(({ condition }) => condition === undefined);
-}
-
 /** Returns the chosen branch of a dependency less its `properties[key]`, the property it was chosen by */
 function withoutProperty<S extends StrictRJSFSchema>(chosen: Part<S>, key: string): Part<S> {
   const properties = { ...chosen.schema.properties };
@@ -950,15 +940,16 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const oneOf = keywords.get(ONE_OF_KEY);
     const withoutLists = { ...part, schema: withoutKeys(part.schema, ANY_OF_KEY, ONE_OF_KEY) };
     const withAnyOf = this.applyOption(withoutLists, ANY_OF_KEY, keywords.get(ANY_OF_KEY), true, key);
-    return oneOf !== undefined && declaresNoKey(this.optionConditions(oneOf, key))
+    return oneOf !== undefined && this.declaresNoKey(oneOf, key)
       ? this.applyOption(withAnyOf, ONE_OF_KEY, oneOf, true)
       : withAnyOf;
   }
 
-  private optionConditions(provider: Provider<S>, key: string): OptionCondition<S>[] {
-    return this.graph
-      .subschemas(provider.node.id, ONE_OF_KEY)
-      .map(([, option]) => ({ option, condition: dependencyCondition(this.graph, option, key) }));
+  private declaresNoKey(oneOf: Provider<S>, key: string): boolean {
+    const options = this.graph.subschemas(oneOf.node.id, ONE_OF_KEY);
+    return (
+      options.length > 0 && options.every(([, option]) => dependencyCondition(this.graph, option, key) === undefined)
+    );
   }
 
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;
@@ -969,16 +960,16 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (provider === undefined) {
       return part;
     }
-    const conditions = this.optionConditions(provider, key);
-    if (declaresNoKey(conditions)) {
+    if (this.declaresNoKey(provider, key)) {
       return part;
     }
-    const valid = conditions
-      .filter(
-        ({ option, condition }) =>
-          condition !== undefined && this.holds(`dependency:${option}:${key}`, condition, this.depData),
-      )
-      .map(({ option }) => option);
+    const valid = this.graph
+      .subschemas(provider.node.id, ONE_OF_KEY)
+      .map(([, option]) => option)
+      .filter((option) => {
+        const condition = dependencyCondition(this.graph, option, key);
+        return condition !== undefined && this.holds(`dependency:${option}:${key}`, condition, this.depData);
+      });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
       return part;
