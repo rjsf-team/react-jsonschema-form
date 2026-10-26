@@ -2222,7 +2222,6 @@ exports[`object fields > patternProperties, a key additionalProperties false for
               <input
                 class="form-control"
                 id="root_abc"
-                label="abc"
                 name="root_abc"
                 placeholder=""
                 type="text"
@@ -2278,13 +2277,18 @@ exports[`object fields > patternProperties, a key additionalProperties false for
             <div
               class="form-additional form-group col-xs-5"
             >
-              <legend>
-                <span
-                  id="root_a__title"
-                >
-                  a
-                </span>
-              </legend>
+              <fieldset
+                aria-labelledby="root_a__title"
+                style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
+              >
+                <legend>
+                  <span
+                    id="root_a__title"
+                  >
+                    a
+                  </span>
+                </legend>
+              </fieldset>
               <div>
                 <ul
                   class="error-detail bs-callout bs-callout-info"

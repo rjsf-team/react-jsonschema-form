@@ -5517,17 +5517,22 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                     <div
                       class="m_96bdd299 mantine-Grid-col form-additional __m__-_r_9h_"
                     >
-                      <h3
-                        class="m_8a5d1357 mantine-Title-root"
-                        data-order="3"
-                        style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
+                      <fieldset
+                        aria-labelledby="root_a__title"
+                        style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                       >
-                        <span
-                          id="root_a__title"
+                        <h3
+                          class="m_8a5d1357 mantine-Title-root"
+                          data-order="3"
+                          style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                         >
-                          a
-                        </span>
-                      </h3>
+                          <span
+                            id="root_a__title"
+                          >
+                            a
+                          </span>
+                        </h3>
+                      </fieldset>
                       <div
                         class="m_8f816625 mantine-InputWrapper-error"
                         id="root_a__error"

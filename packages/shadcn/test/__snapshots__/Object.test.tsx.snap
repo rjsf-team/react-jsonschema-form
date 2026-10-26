@@ -4122,25 +4122,30 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                   <div
                     class="flex flex-col gap-2"
                   >
-                    <div
-                      class="my-1 flex flex-col gap-0.5"
+                    <fieldset
+                      aria-labelledby="root_a__title"
+                      style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                     >
-                      <h5>
-                        <span
-                          id="root_a__title"
-                        >
-                          a
-                        </span>
-                      </h5>
                       <div
-                        class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-                        data-orientation="horizontal"
-                        data-slot="separator"
-                        dir="horizontal"
-                        role="none"
-                        style="height: 1px;"
-                      />
-                    </div>
+                        class="my-1 flex flex-col gap-0.5"
+                      >
+                        <h5>
+                          <span
+                            id="root_a__title"
+                          >
+                            a
+                          </span>
+                        </h5>
+                        <div
+                          class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
+                          data-orientation="horizontal"
+                          data-slot="separator"
+                          dir="horizontal"
+                          role="none"
+                          style="height: 1px;"
+                        />
+                      </div>
+                    </fieldset>
                     <div
                       class="flex flex-col gap-1"
                       id="root_a__error"

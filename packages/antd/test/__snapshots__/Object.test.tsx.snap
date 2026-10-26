@@ -5916,21 +5916,26 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                                     <div
                                       class="ant-form-item-control-input-content"
                                     >
-                                      <label
-                                        class=""
-                                        title="a"
+                                      <fieldset
+                                        aria-labelledby="root_a__title"
+                                        style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                                       >
-                                        <span
-                                          id="root_a__title"
+                                        <label
+                                          class=""
+                                          title="a"
                                         >
-                                          a
-                                        </span>
-                                      </label>
-                                      <div
-                                        class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
-                                        role="separator"
-                                        style="margin-block: 1px;"
-                                      />
+                                          <span
+                                            id="root_a__title"
+                                          >
+                                            a
+                                          </span>
+                                        </label>
+                                        <div
+                                          class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
+                                          role="separator"
+                                          style="margin-block: 1px;"
+                                        />
+                                      </fieldset>
                                     </div>
                                   </div>
                                   <div
