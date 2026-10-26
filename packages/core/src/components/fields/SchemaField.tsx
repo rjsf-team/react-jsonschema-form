@@ -56,12 +56,13 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
+import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import {
   getDeprecatedTemplateProps,
   getFieldErrorProps,
@@ -75,6 +76,8 @@ import NamedFieldContext from './NamedFieldContext.ts';
 import type { NamedFieldPath } from './NamedFieldContext.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
+import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
+import useAdditionalDepths from './useAdditionalDepths.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
 /** The map of component type to FieldName */
@@ -912,6 +915,25 @@ function SchemaFieldRender<
     [framedAbove, ownErrors, errorSchema],
   );
 
+  const entryAbove = use(TemplateWarnEntryContext);
+  // An additional property's own key, and the keys above a field nested beneath one, collapse like array indexes:
+  // every extra key renders the one entry, so a mistake in it warns once rather than once per key
+  const additionalDepths = useAdditionalDepths(schema, fieldPath);
+  // Names the uiSchema entry rather than the field in a template-override warning, so an `items` or
+  // `additionalProperties` mistake warns once, not once per row or extra key. Rendered as a shown `anyOf`/`oneOf`
+  // option, the field renders at the option field's own path, so it takes the option entry's label rather than name
+  // the entry above itself. Memoized, since it is provided to everything below
+  const templateEntry = useMemo(
+    () => ({
+      fieldPath,
+      label:
+        entryAbove?.fieldPath === fieldPath
+          ? entryAbove.label
+          : () => entryLabelForLog(fieldPath, registry.globalFormOptions, additionalDepths),
+    }),
+    [entryAbove, fieldPath, registry.globalFormOptions, additionalDepths],
+  );
+
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
@@ -926,6 +948,7 @@ function SchemaFieldRender<
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
+    templateEntry.label,
   );
 
   // A field the options give way to renders the choice between them, so with no options it has nothing to choose, which
@@ -1078,38 +1101,42 @@ function SchemaFieldRender<
   // The named-field context is provided whether or not a field is named here, since adding or removing a provider would
   // remount everything below it
   return withUiState(
-    <FieldTemplate {...fieldProps}>
-      <>
-        {field}
-        {XxxOfField && (
-          <NamedFieldContext value={ownNamedFieldPath}>
-            <ShownOptionContext value={shownOption}>
-              <PresentationContext value={optionsBelow}>
-                <XxxOfField
-                  name={name}
-                  disabled={disabled}
-                  readonly={readonly}
-                  hideError={hideError}
-                  errorSchema={optionsErrorSchema}
-                  formData={formData}
-                  fieldPath={fieldPath}
-                  id={fieldId}
-                  onBlur={props.onBlur}
-                  onChange={handleOptionFieldChange}
-                  onFocus={props.onFocus}
-                  options={xxxOfOptions}
-                  registry={registry}
-                  required={effectiveRequired}
-                  schema={schema}
-                  uiSchema={uiSchema}
-                  presentation={optionsPresentation}
-                />
-              </PresentationContext>
-            </ShownOptionContext>
-          </NamedFieldContext>
-        )}
-      </>
-    </FieldTemplate>,
+    <TemplateWarnEntryContext value={templateEntry}>
+      <AdditionalPropertyDepthsContext value={additionalDepths}>
+        <FieldTemplate {...fieldProps}>
+          <>
+            {field}
+            {XxxOfField && (
+              <NamedFieldContext value={ownNamedFieldPath}>
+                <ShownOptionContext value={shownOption}>
+                  <PresentationContext value={optionsBelow}>
+                    <XxxOfField
+                      name={name}
+                      disabled={disabled}
+                      readonly={readonly}
+                      hideError={hideError}
+                      errorSchema={optionsErrorSchema}
+                      formData={formData}
+                      fieldPath={fieldPath}
+                      id={fieldId}
+                      onBlur={props.onBlur}
+                      onChange={handleOptionFieldChange}
+                      onFocus={props.onFocus}
+                      options={xxxOfOptions}
+                      registry={registry}
+                      required={effectiveRequired}
+                      schema={schema}
+                      uiSchema={uiSchema}
+                      presentation={optionsPresentation}
+                    />
+                  </PresentationContext>
+                </ShownOptionContext>
+              </NamedFieldContext>
+            )}
+          </>
+        </FieldTemplate>
+      </AdditionalPropertyDepthsContext>
+    </TemplateWarnEntryContext>,
   );
 }
 

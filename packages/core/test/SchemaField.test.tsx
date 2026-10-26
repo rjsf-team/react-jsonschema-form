@@ -1,6 +1,7 @@
 import { Suspense, forwardRef, lazy, memo } from 'react';
 import type {
   ArrayFieldItemTemplateProps,
+  CyclicSchemaExpandProps,
   ErrorSchema,
   Field,
   FieldProps,
@@ -2322,6 +2323,280 @@ describe('SchemaField', () => {
       // One level per click, as for a recursion through a `then` or an `allOf`
       expect(node.querySelector('#root_child_child-button')).toBeNull();
       expect(node.querySelector('#root_child_child_child-button')).toHaveTextContent('Expand Cycle');
+    });
+
+    describe('a ui:CyclicSchemaExpandTemplate override', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      it('renders a custom one for the cyclic field, without warning', () => {
+        function CustomExpand(props: CyclicSchemaExpandProps) {
+          return (
+            <button type='button' id={`${props.id}-button`} onClick={() => props.onExpand(props.id)}>
+              Grow
+            </button>
+          );
+        }
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { child: { child: { 'ui:CyclicSchemaExpandTemplate': CustomExpand } } },
+        });
+
+        expect(node.querySelector('#root_child_child-button')).toHaveTextContent('Grow');
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
+
+      it('warns once for an invalid one, naming the cyclic field, and renders the default', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            child: { child: { 'ui:CyclicSchemaExpandTemplate': <div /> } },
+          },
+        });
+
+        expect(node.querySelector('#root_child_child-button')).toHaveTextContent('Expand Cycle');
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'CyclicSchemaExpandTemplate (ui:CyclicSchemaExpandTemplate or ui:options) for "root_child_child" ' +
+            '(child.child) is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so ' +
+            'it is ignored.',
+        );
+      });
+    });
+
+    describe('template-override warnings from SchemaField', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      it('warns once for an invalid ui:FieldTemplate, naming the field, and renders the default', () => {
+        createFormComponent({
+          schema: { type: 'object', properties: { val: { type: 'string' } } },
+          uiSchema: { val: { 'ui:FieldTemplate': <div /> } },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_val" (val) is a React element rather than a ' +
+            'component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
+
+      it('warns once for an invalid override in an items entry, not once per item', () => {
+        createFormComponent({
+          schema: { type: 'object', properties: { arr: { type: 'array', items: { type: 'string' } } } },
+          uiSchema: { arr: { items: { 'ui:FieldTemplate': <div /> } } },
+          initialFormData: { arr: ['one', 'two', 'three'] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_arr_[]" (arr[]) is a React element rather than ' +
+            'a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
+
+      it('warns for an object entry and its shown anyOf option entry apart, naming the option entry', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            anyOf: [
+              { type: 'object', properties: { b: { type: 'string' } } },
+              { type: 'object', properties: { c: { type: 'string' } } },
+            ],
+          },
+          uiSchema: {
+            'ui:FieldTemplate': 'Typo' as unknown as UiSchema['ui:FieldTemplate'],
+            anyOf: [{ 'ui:FieldTemplate': 'Typo' as unknown as UiSchema['ui:FieldTemplate'] }],
+          },
+          initialFormData: { b: 'x' },
+        });
+
+        // The two entries render at the one fieldPath, so their warnings would read alike - and `logOnce()` would
+        // drop the option entry's - if the option's entry were not named
+        expect(consoleWarnSuppression.consoleSpy.mock.calls).toEqual([
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for "root" names no registered template (\'Typo\'), so it is ignored.',
+          ],
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root" names no ' +
+              "registered template ('Typo'), so it is ignored.",
+          ],
+        ]);
+      });
+
+      it('names the option entry when only the option entry is invalid', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            anyOf: [
+              { type: 'object', properties: { b: { type: 'string' } } },
+              { type: 'object', properties: { c: { type: 'string' } } },
+            ],
+          },
+          uiSchema: {
+            anyOf: [{ 'ui:FieldTemplate': 'Typo' as unknown as UiSchema['ui:FieldTemplate'] }],
+          },
+          initialFormData: { b: 'x' },
+        });
+
+        // The option's own SchemaField names the option entry, so the one warning points at the entry holding the
+        // mistake and none blames the field's own entry, which has no override
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root" names no ' +
+            "registered template ('Typo'), so it is ignored.",
+        );
+      });
+
+      it('names each entry apart when the object entry and the option entry carry different invalid overrides', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            anyOf: [
+              { type: 'object', properties: { b: { type: 'string' } } },
+              { type: 'object', properties: { c: { type: 'string' } } },
+            ],
+          },
+          uiSchema: {
+            'ui:FieldTemplate': 'Parent' as unknown as UiSchema['ui:FieldTemplate'],
+            anyOf: [{ 'ui:FieldTemplate': 'Option' as unknown as UiSchema['ui:FieldTemplate'] }],
+          },
+          initialFormData: { b: 'x' },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy.mock.calls).toEqual([
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for "root" names no registered template (\'Parent\'), so it is ignored.',
+          ],
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root" names no ' +
+              "registered template ('Option'), so it is ignored.",
+          ],
+        ]);
+      });
+
+      it('names an option entry nested in another option entry by both', () => {
+        createFormComponent({
+          schema: { anyOf: [{ anyOf: [{ type: 'string' }, { type: 'number' }] }, { type: 'boolean' }] },
+          uiSchema: {
+            anyOf: [
+              {
+                'ui:FieldTemplate': 'Outer' as unknown as UiSchema['ui:FieldTemplate'],
+                anyOf: [{ 'ui:FieldTemplate': 'Inner' as unknown as UiSchema['ui:FieldTemplate'] }],
+              },
+            ],
+          },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy.mock.calls).toEqual([
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root" names no ' +
+              "registered template ('Outer'), so it is ignored.",
+          ],
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of the uiSchema.anyOf[0] ' +
+              'entry of "root" names no registered template (\'Inner\'), so it is ignored.',
+          ],
+        ]);
+      });
+
+      it('warns once for an invalid override in an additionalProperties entry, not once per extra key', () => {
+        createFormComponent({
+          schema: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: { type: 'string' } },
+          uiSchema: {
+            additionalProperties: { 'ui:FieldTemplate': (<div />) as unknown as UiSchema['ui:FieldTemplate'] },
+          },
+          initialFormData: { k1: 'x', k2: 'y', k3: 'z' },
+        });
+
+        // Every extra key renders the one `additionalProperties` entry, so like an `items` entry its key collapses
+        // and the entry warns once
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_{}" ({}) is a React element rather than a ' +
+            'component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
+
+      it('warns once for an entry nested beneath an additionalProperties entry, not once per extra key', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            additionalProperties: { type: 'object', properties: { foo: { type: 'string' } } },
+          },
+          uiSchema: {
+            additionalProperties: { foo: { 'ui:FieldTemplate': (<div />) as unknown as UiSchema['ui:FieldTemplate'] } },
+          },
+          initialFormData: { k1: { foo: 'a' }, k2: { foo: 'b' }, k3: { foo: 'c' } },
+        });
+
+        // The `foo` entry is shared by every extra key's object, so the key collapses above it too
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_{}_foo" ({}.foo) is a React element rather than ' +
+            'a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
+
+      it('warns once for an items entry nested beneath an additionalProperties entry, not once per extra key', () => {
+        createFormComponent({
+          schema: { type: 'object', additionalProperties: { type: 'array', items: { type: 'string' } } },
+          uiSchema: {
+            additionalProperties: {
+              items: { 'ui:FieldTemplate': (<div />) as unknown as UiSchema['ui:FieldTemplate'] },
+            },
+          },
+          initialFormData: { k1: ['a'], k2: ['b'] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_{}_[]" ({}[]) is a React element rather than a ' +
+            'component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
+
+      it('warns once for an additionalProperties entry nested beneath an items entry, not once per row or key', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { arr: { type: 'array', items: { type: 'object', additionalProperties: { type: 'string' } } } },
+          },
+          uiSchema: {
+            arr: {
+              items: {
+                additionalProperties: { 'ui:FieldTemplate': (<div />) as unknown as UiSchema['ui:FieldTemplate'] },
+              },
+            },
+          },
+          initialFormData: { arr: [{ k1: 'a' }, { k2: 'b' }] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_arr_[]_{}" (arr[]{}) is a React element rather ' +
+            'than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
+
+      it('warns once for an option entry beneath an additionalProperties entry, naming the option entry', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            additionalProperties: {
+              type: 'object',
+              anyOf: [
+                { type: 'object', properties: { b: { type: 'string' } } },
+                { type: 'object', properties: { c: { type: 'string' } } },
+              ],
+            },
+          },
+          uiSchema: {
+            additionalProperties: {
+              anyOf: [{ 'ui:FieldTemplate': 'Typo' as unknown as UiSchema['ui:FieldTemplate'] }],
+            },
+          },
+          initialFormData: { k1: { b: 'x' }, k2: { b: 'y' } },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root_{}" ({}) names no ' +
+            "registered template ('Typo'), so it is ignored.",
+        );
+      });
     });
 
     describe('recursive definitions', () => {
