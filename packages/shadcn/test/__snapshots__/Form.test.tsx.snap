@@ -112,7 +112,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -301,7 +301,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -606,7 +606,8 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
+                data-display-label="true"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -735,7 +736,8 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
+                data-display-label="true"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -1672,7 +1674,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -1861,7 +1863,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -2166,7 +2168,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
+                data-display-label="true"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -2295,7 +2298,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
+                data-display-label="true"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -7356,7 +7360,8 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
+                data-display-label="true"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -8120,7 +8125,8 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
+                data-display-label="true"
               >
                 <div
                   class="flex flex-col gap-2 rjsf-field rjsf-field-string"

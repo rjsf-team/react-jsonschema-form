@@ -16,13 +16,13 @@ const SHADCN_CLASS_MAP: ClassMap = {
   multiSchemaSelector: 'mb-4',
   arrayFieldset: 'min-w-0',
   arrayItemList: 'mb-2',
-  // One column unless there is a toolbox, as the gap before an empty one would narrow the field. Top-aligned, so errors or
-  // help under the input don't move the toolbox; past a label, down to the input: the label's `text-sm leading-none`
-  // line, the field's `gap-2` and the `p-0.5` around the theme's inputs, and past a description between them, its
-  // `text-sm` line and another `gap-2`. Each offset assumes a one-line label and description, so a wrapping one sits the
-  // toolbox high
+  // One column unless there is a toolbox, as the gap before an empty one would narrow the field. Top-aligned, so errors
+  // or help under the input don't move the toolbox; past a label, which core marks the item `data-display-label` for,
+  // down to the input: the label's `text-sm leading-none` line, the field's `gap-2` and the `p-0.5` around the theme's
+  // inputs, and past a description between them (`data-has-description`), its `text-sm` line and another `gap-2`. Each
+  // offset assumes a one-line label and description, so a wrapping one sits the toolbox high
   arrayItem:
-    'mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&:has(>.rjsf-field>.rjsf-field-label:first-child)>.rjsf-array-item-toolbox]:mt-6 [&:has(>.rjsf-field>.rjsf-field-label:first-child+.rjsf-field-description)>.rjsf-array-item-toolbox]:mt-13',
+    'mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13',
   arrayItemToolbox: 'flex gap-2',
   objectFieldset: 'flex min-w-0 flex-col gap-2',
   // Core's `AltDateWidget`, which the theme renders: its parts in one wrapping row, each select a steady width
