@@ -137,8 +137,8 @@ describe('AltDateWidget', () => {
     expect(getAllByRole('combobox')[0]).toHaveFocus();
     await user.tab();
 
-    expect(onFocus).toHaveBeenCalledWith('root_year', undefined);
-    expect(onBlur).toHaveBeenCalledWith('root_year', undefined);
+    expect(onFocus).toHaveBeenCalledWith('root__year', undefined);
+    expect(onBlur).toHaveBeenCalledWith('root__year', undefined);
   });
 
   test.each([true, false])('marks each part required when the field required is %s', (required) => {
@@ -166,14 +166,14 @@ describe('AltDateWidget', () => {
     expect(getAllByRole('combobox')[1]).toHaveFocus();
     await user.tab();
 
-    expect(onFocus).toHaveBeenCalledWith('root_month', 1);
-    expect(onBlur).toHaveBeenCalledWith('root_month', 1);
+    expect(onFocus).toHaveBeenCalledWith('root__month', 1);
+    expect(onBlur).toHaveBeenCalledWith('root__month', 1);
   });
 
   test('renders a success option once, for the field, and describes each part by it', () => {
     const { container, getAllByRole } = renderWidget({ options: { success: 'Looks good' } });
 
-    expect(container.querySelectorAll('[id="root-success"]')).toHaveLength(1);
+    expect(container.querySelectorAll('[id="root__success"]')).toHaveLength(1);
     for (const part of getAllByRole('combobox')) {
       expect(part).toHaveAccessibleDescription(/Looks good/);
     }

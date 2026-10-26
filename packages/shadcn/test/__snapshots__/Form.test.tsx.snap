@@ -1125,7 +1125,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_choices-0"
+                        id="root_choices__0"
                         role="checkbox"
                         type="button"
                         value="0"
@@ -1141,7 +1141,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_choices-0"
+                        for="root_choices__0"
                       >
                         foo
                       </label>
@@ -1154,7 +1154,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_choices-1"
+                        id="root_choices__1"
                         role="checkbox"
                         type="button"
                         value="1"
@@ -1170,7 +1170,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_choices-1"
+                        for="root_choices__1"
                       >
                         bar
                       </label>
@@ -1183,7 +1183,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
-                        id="root_choices-2"
+                        id="root_choices__2"
                         role="checkbox"
                         type="button"
                         value="2"
@@ -1199,7 +1199,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
-                        for="root_choices-2"
+                        for="root_choices__2"
                       >
                         baz
                       </label>
@@ -1550,7 +1550,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="unchecked"
-                          id="root_option-0"
+                          id="root_option__0"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -1567,7 +1567,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_option-0"
+                          for="root_option__0"
                         >
                           foo
                         </label>
@@ -1582,7 +1582,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                           data-radix-collection-item=""
                           data-slot="radio-group-item"
                           data-state="unchecked"
-                          id="root_option-1"
+                          id="root_option__1"
                           role="radio"
                           tabindex="-1"
                           type="button"
@@ -1599,7 +1599,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         <label
                           class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                           data-slot="label"
-                          for="root_option-1"
+                          for="root_option__1"
                         >
                           bar
                         </label>
@@ -3532,7 +3532,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                 data-radix-collection-item=""
                 data-slot="radio-group-item"
                 data-state="unchecked"
-                id="root-0"
+                id="root__0"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -3549,7 +3549,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-0"
+                for="root__0"
               >
                 Number
               </label>
@@ -3564,7 +3564,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                 data-radix-collection-item=""
                 data-slot="radio-group-item"
                 data-state="checked"
-                id="root-1"
+                id="root__1"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -3608,7 +3608,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-1"
+                for="root__1"
               >
                 String
               </label>
@@ -4435,7 +4435,7 @@ exports[`single fields > Cyclic schema 1`] = `
                           <button
                             class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 my-1"
                             data-slot="button"
-                            id="root_child_child-button"
+                            id="root_child_child__expand"
                             type="button"
                           >
                             Expand Cycle
@@ -4826,7 +4826,7 @@ exports[`single fields > checkboxes field 1`] = `
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-0"
+              id="root__0"
               role="checkbox"
               type="button"
               value="0"
@@ -4842,7 +4842,7 @@ exports[`single fields > checkboxes field 1`] = `
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-0"
+              for="root__0"
             >
               foo
             </label>
@@ -4855,7 +4855,7 @@ exports[`single fields > checkboxes field 1`] = `
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-1"
+              id="root__1"
               role="checkbox"
               type="button"
               value="1"
@@ -4871,7 +4871,7 @@ exports[`single fields > checkboxes field 1`] = `
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-1"
+              for="root__1"
             >
               bar
             </label>
@@ -4884,7 +4884,7 @@ exports[`single fields > checkboxes field 1`] = `
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-2"
+              id="root__2"
               role="checkbox"
               type="button"
               value="2"
@@ -4900,7 +4900,7 @@ exports[`single fields > checkboxes field 1`] = `
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-2"
+              for="root__2"
             >
               fuzz
             </label>
@@ -4913,7 +4913,7 @@ exports[`single fields > checkboxes field 1`] = `
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-3"
+              id="root__3"
               role="checkbox"
               type="button"
               value="3"
@@ -4929,7 +4929,7 @@ exports[`single fields > checkboxes field 1`] = `
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-3"
+              for="root__3"
             >
               qux
             </label>
@@ -4985,7 +4985,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="checked"
-              id="root-0"
+              id="root__0"
               role="checkbox"
               type="button"
               value="0"
@@ -5025,7 +5025,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-0"
+              for="root__0"
             >
               option1
             </label>
@@ -5039,7 +5039,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-1"
+              id="root__1"
               role="checkbox"
               type="button"
               value="1"
@@ -5055,7 +5055,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-1"
+              for="root__1"
             >
               option2
             </label>
@@ -5069,7 +5069,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-2"
+              id="root__2"
               role="checkbox"
               type="button"
               value="2"
@@ -5085,7 +5085,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-2"
+              for="root__2"
             >
               option3
             </label>
@@ -5159,7 +5159,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-0"
+              id="root__0"
               role="checkbox"
               type="button"
               value="0"
@@ -5175,7 +5175,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-0"
+              for="root__0"
             >
               red
             </label>
@@ -5189,7 +5189,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-1"
+              id="root__1"
               role="checkbox"
               type="button"
               value="1"
@@ -5205,7 +5205,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-1"
+              for="root__1"
             >
               green
             </label>
@@ -5219,7 +5219,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-2"
+              id="root__2"
               role="checkbox"
               type="button"
               value="2"
@@ -5235,7 +5235,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-2"
+              for="root__2"
             >
               blue
             </label>
@@ -11573,7 +11573,7 @@ exports[`single fields > radio field 1`] = `
                 data-radix-collection-item=""
                 data-slot="radio-group-item"
                 data-state="unchecked"
-                id="root-0"
+                id="root__0"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -11590,7 +11590,7 @@ exports[`single fields > radio field 1`] = `
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-0"
+                for="root__0"
               >
                 Yes
               </label>
@@ -11605,7 +11605,7 @@ exports[`single fields > radio field 1`] = `
                 data-radix-collection-item=""
                 data-slot="radio-group-item"
                 data-state="unchecked"
-                id="root-1"
+                id="root__1"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -11622,7 +11622,7 @@ exports[`single fields > radio field 1`] = `
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-1"
+                for="root__1"
               >
                 No
               </label>
@@ -11691,7 +11691,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                 data-radix-collection-item=""
                 data-slot="radio-group-item"
                 data-state="unchecked"
-                id="root-0"
+                id="root__0"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -11708,7 +11708,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-0"
+                for="root__0"
               >
                 Yes
               </label>
@@ -11724,7 +11724,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                 data-radix-collection-item=""
                 data-slot="radio-group-item"
                 data-state="unchecked"
-                id="root-1"
+                id="root__1"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -11741,7 +11741,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-1"
+                for="root__1"
               >
                 No
               </label>
@@ -12319,7 +12319,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-0"
+              id="root__0"
               role="checkbox"
               type="button"
               value="0"
@@ -12335,7 +12335,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-0"
+              for="root__0"
             >
               foo
             </label>
@@ -12350,7 +12350,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               data-slot="checkbox"
               data-state="unchecked"
               disabled=""
-              id="root-1"
+              id="root__1"
               role="checkbox"
               type="button"
               value="1"
@@ -12367,7 +12367,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-1"
+              for="root__1"
             >
               bar
             </label>
@@ -12380,7 +12380,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-2"
+              id="root__2"
               role="checkbox"
               type="button"
               value="2"
@@ -12396,7 +12396,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-2"
+              for="root__2"
             >
               fuzz
             </label>
@@ -12409,7 +12409,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
-              id="root-3"
+              id="root__3"
               role="checkbox"
               type="button"
               value="3"
@@ -12425,7 +12425,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             <label
               class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
-              for="root-3"
+              for="root__3"
             >
               qux
             </label>
@@ -12765,7 +12765,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                 data-radix-collection-item=""
                 data-slot="radio-group-item"
                 data-state="unchecked"
-                id="root-0"
+                id="root__0"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -12782,7 +12782,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-0"
+                for="root__0"
               >
                 foo
               </label>
@@ -12799,7 +12799,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                 data-slot="radio-group-item"
                 data-state="unchecked"
                 disabled=""
-                id="root-1"
+                id="root__1"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -12817,7 +12817,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-1"
+                for="root__1"
               >
                 bar
               </label>
@@ -12878,7 +12878,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                 data-slot="radio-group-item"
                 data-state="unchecked"
                 disabled=""
-                id="root-0"
+                id="root__0"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -12896,7 +12896,7 @@ exports[`single fields > select field single choice form disabled using radio wi
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-0"
+                for="root__0"
               >
                 foo
               </label>
@@ -12913,7 +12913,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                 data-slot="radio-group-item"
                 data-state="unchecked"
                 disabled=""
-                id="root-1"
+                id="root__1"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -12931,7 +12931,7 @@ exports[`single fields > select field single choice form disabled using radio wi
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-1"
+                for="root__1"
               >
                 bar
               </label>
@@ -13236,7 +13236,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                 data-slot="radio-group-item"
                 data-state="unchecked"
                 disabled=""
-                id="root-0"
+                id="root__0"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -13254,7 +13254,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-0"
+                for="root__0"
               >
                 foo
               </label>
@@ -13271,7 +13271,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                 data-slot="radio-group-item"
                 data-state="unchecked"
                 disabled=""
-                id="root-1"
+                id="root__1"
                 role="radio"
                 tabindex="-1"
                 type="button"
@@ -13289,7 +13289,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
               <label
                 class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                 data-slot="label"
-                for="root-1"
+                for="root__1"
               >
                 bar
               </label>

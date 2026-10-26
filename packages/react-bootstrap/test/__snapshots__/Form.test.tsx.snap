@@ -898,14 +898,14 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     >
                       <input
                         class="form-check-input"
-                        id="root_choices-0"
+                        id="root_choices__0"
                         name="root[choices][]"
                         type="checkbox"
                         value="0"
                       />
                       <label
                         class="form-check-label"
-                        for="root_choices-0"
+                        for="root_choices__0"
                         title=""
                       >
                         foo
@@ -916,14 +916,14 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     >
                       <input
                         class="form-check-input"
-                        id="root_choices-1"
+                        id="root_choices__1"
                         name="root[choices][]"
                         type="checkbox"
                         value="1"
                       />
                       <label
                         class="form-check-label"
-                        for="root_choices-1"
+                        for="root_choices__1"
                         title=""
                       >
                         bar
@@ -934,14 +934,14 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     >
                       <input
                         class="form-check-input"
-                        id="root_choices-2"
+                        id="root_choices__2"
                         name="root[choices][]"
                         type="checkbox"
                         value="2"
                       />
                       <label
                         class="form-check-label"
-                        for="root_choices-2"
+                        for="root_choices__2"
                         title=""
                       >
                         baz
@@ -1244,14 +1244,14 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     >
                       <input
                         class="form-check-input"
-                        id="root_option-0"
+                        id="root_option__0"
                         name="root[option]"
                         type="radio"
                         value="0"
                       />
                       <label
                         class="form-check-label"
-                        for="root_option-0"
+                        for="root_option__0"
                         title=""
                       >
                         foo
@@ -1262,14 +1262,14 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     >
                       <input
                         class="form-check-input"
-                        id="root_option-1"
+                        id="root_option__1"
                         name="root[option]"
                         type="radio"
                         value="1"
                       />
                       <label
                         class="form-check-label"
-                        for="root_option-1"
+                        for="root_option__1"
                         title=""
                       >
                         bar
@@ -2828,14 +2828,14 @@ exports[`radio widget with options sharing a String() in the realValue format (#
           >
             <input
               class="form-check-input"
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="__rjsf_index:0"
             />
             <label
               class="form-check-label"
-              for="root-0"
+              for="root__0"
               title=""
             >
               Number
@@ -2847,14 +2847,14 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             <input
               checked=""
               class="form-check-input"
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="__rjsf_index:1"
             />
             <label
               class="form-check-label"
-              for="root-1"
+              for="root__1"
               title=""
             >
               String
@@ -3332,7 +3332,7 @@ exports[`single fields > Cyclic schema 1`] = `
                           </div>
                           <button
                             class="btn btn-warning btn-sm"
-                            id="root_child_child-button"
+                            id="root_child_child__expand"
                             type="button"
                           >
                             Expand Cycle
@@ -3636,14 +3636,14 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <input
               class="form-check-input"
-              id="root-0"
+              id="root__0"
               name="root"
               type="checkbox"
               value="0"
             />
             <label
               class="form-check-label"
-              for="root-0"
+              for="root__0"
               title=""
             >
               foo
@@ -3654,14 +3654,14 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <input
               class="form-check-input"
-              id="root-1"
+              id="root__1"
               name="root"
               type="checkbox"
               value="1"
             />
             <label
               class="form-check-label"
-              for="root-1"
+              for="root__1"
               title=""
             >
               bar
@@ -3672,14 +3672,14 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <input
               class="form-check-input"
-              id="root-2"
+              id="root__2"
               name="root"
               type="checkbox"
               value="2"
             />
             <label
               class="form-check-label"
-              for="root-2"
+              for="root__2"
               title=""
             >
               fuzz
@@ -3690,14 +3690,14 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <input
               class="form-check-input"
-              id="root-3"
+              id="root__3"
               name="root"
               type="checkbox"
               value="3"
             />
             <label
               class="form-check-label"
-              for="root-3"
+              for="root__3"
               title=""
             >
               qux
@@ -3748,14 +3748,14 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               aria-describedby="root__description root__help"
               checked=""
               class="form-check-input"
-              id="root-0"
+              id="root__0"
               name="root"
               type="checkbox"
               value="0"
             />
             <label
               class="form-check-label"
-              for="root-0"
+              for="root__0"
               title=""
             >
               option1
@@ -3767,14 +3767,14 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             <input
               aria-describedby="root__description root__help"
               class="form-check-input"
-              id="root-1"
+              id="root__1"
               name="root"
               type="checkbox"
               value="1"
             />
             <label
               class="form-check-label"
-              for="root-1"
+              for="root__1"
               title=""
             >
               option2
@@ -3786,14 +3786,14 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
             <input
               aria-describedby="root__description root__help"
               class="form-check-input"
-              id="root-2"
+              id="root__2"
               name="root"
               type="checkbox"
               value="2"
             />
             <label
               class="form-check-label"
-              for="root-2"
+              for="root__2"
               title=""
             >
               option3
@@ -3861,14 +3861,14 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <input
               aria-describedby="root__description"
               class="form-check-input"
-              id="root-0"
+              id="root__0"
               name="root"
               type="checkbox"
               value="0"
             />
             <label
               class="form-check-label"
-              for="root-0"
+              for="root__0"
               title=""
             >
               red
@@ -3880,14 +3880,14 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <input
               aria-describedby="root__description"
               class="form-check-input"
-              id="root-1"
+              id="root__1"
               name="root"
               type="checkbox"
               value="1"
             />
             <label
               class="form-check-label"
-              for="root-1"
+              for="root__1"
               title=""
             >
               green
@@ -3899,14 +3899,14 @@ exports[`single fields > checkboxes widget with required field 1`] = `
             <input
               aria-describedby="root__description"
               class="form-check-input"
-              id="root-2"
+              id="root__2"
               name="root"
               type="checkbox"
               value="2"
             />
             <label
               class="form-check-label"
-              for="root-2"
+              for="root__2"
               title=""
             >
               blue
@@ -9622,14 +9622,14 @@ exports[`single fields > radio field 1`] = `
           >
             <input
               class="form-check-input"
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="0"
             />
             <label
               class="form-check-label"
-              for="root-0"
+              for="root__0"
               title=""
             >
               Yes
@@ -9640,14 +9640,14 @@ exports[`single fields > radio field 1`] = `
           >
             <input
               class="form-check-input"
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="1"
             />
             <label
               class="form-check-label"
-              for="root-1"
+              for="root__1"
               title=""
             >
               No
@@ -9698,14 +9698,14 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             <input
               aria-describedby="root__description"
               class="form-check-input"
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="0"
             />
             <label
               class="form-check-label"
-              for="root-0"
+              for="root__0"
               title=""
             >
               Yes
@@ -9717,14 +9717,14 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             <input
               aria-describedby="root__description"
               class="form-check-input"
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="1"
             />
             <label
               class="form-check-label"
-              for="root-1"
+              for="root__1"
               title=""
             >
               No
@@ -10148,14 +10148,14 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           >
             <input
               class="form-check-input"
-              id="root-0"
+              id="root__0"
               name="root"
               type="checkbox"
               value="0"
             />
             <label
               class="form-check-label"
-              for="root-0"
+              for="root__0"
               title=""
             >
               foo
@@ -10167,14 +10167,14 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             <input
               class="form-check-input"
               disabled=""
-              id="root-1"
+              id="root__1"
               name="root"
               type="checkbox"
               value="1"
             />
             <label
               class="form-check-label"
-              for="root-1"
+              for="root__1"
               title=""
             >
               bar
@@ -10185,14 +10185,14 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           >
             <input
               class="form-check-input"
-              id="root-2"
+              id="root__2"
               name="root"
               type="checkbox"
               value="2"
             />
             <label
               class="form-check-label"
-              for="root-2"
+              for="root__2"
               title=""
             >
               fuzz
@@ -10203,14 +10203,14 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           >
             <input
               class="form-check-input"
-              id="root-3"
+              id="root__3"
               name="root"
               type="checkbox"
               value="3"
             />
             <label
               class="form-check-label"
-              for="root-3"
+              for="root__3"
               title=""
             >
               qux
@@ -10388,14 +10388,14 @@ exports[`single fields > select field single choice enumDisabled using radio wid
           >
             <input
               class="form-check-input"
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="0"
             />
             <label
               class="form-check-label"
-              for="root-0"
+              for="root__0"
               title=""
             >
               foo
@@ -10407,14 +10407,14 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             <input
               class="form-check-input"
               disabled=""
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="1"
             />
             <label
               class="form-check-label"
-              for="root-1"
+              for="root__1"
               title=""
             >
               bar
@@ -10455,14 +10455,14 @@ exports[`single fields > select field single choice form disabled using radio wi
             <input
               class="form-check-input"
               disabled=""
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="0"
             />
             <label
               class="form-check-label"
-              for="root-0"
+              for="root__0"
               title=""
             >
               foo
@@ -10474,14 +10474,14 @@ exports[`single fields > select field single choice form disabled using radio wi
             <input
               class="form-check-input"
               disabled=""
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="1"
             />
             <label
               class="form-check-label"
-              for="root-1"
+              for="root__1"
               title=""
             >
               bar
@@ -10686,14 +10686,14 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             <input
               class="form-check-input"
               disabled=""
-              id="root-0"
+              id="root__0"
               name="root"
               type="radio"
               value="0"
             />
             <label
               class="form-check-label"
-              for="root-0"
+              for="root__0"
               title=""
             >
               foo
@@ -10705,14 +10705,14 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             <input
               class="form-check-input"
               disabled=""
-              id="root-1"
+              id="root__1"
               name="root"
               type="radio"
               value="1"
             />
             <label
               class="form-check-label"
-              for="root-1"
+              for="root__1"
               title=""
             >
               bar

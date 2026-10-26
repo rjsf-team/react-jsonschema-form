@@ -1,7 +1,9 @@
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
+import { duplicateIds } from '../../../testing/duplicateIds.ts';
+import { elementOf } from '../../../testing/elementOf.ts';
 import type { BaseInputTemplateMuiProps } from '../src/BaseInputTemplate/BaseInputTemplate.tsx';
 import type { UiSchema as MuiUiSchema } from '../src/index.ts';
 import Form from '../src/index.ts';
@@ -270,7 +272,97 @@ describe('MUI Theme-Specific Props', () => {
     expect(screen.getByRole(role)).toHaveAccessibleDescription('About foo A hint');
   });
 
-  // MUI builds the helper text's id from the `TextField`'s id, which an `id` in `ui:options.mui` replaces
+  it.each<[string, RJSFSchema, string]>([
+    ['text input', { type: 'string' }, 'textbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox'],
+  ])("should give MUI's helper text of a %s an id no sibling field's id can spell", (_, foo, role) => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo, 'foo-helper-text': { type: 'string' } } };
+    const uiSchema: UiSchema = { foo: { 'ui:options': { mui: { helperText: 'A hint' } } } };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(duplicateIds(container)).toEqual([]);
+    expect(screen.getAllByRole(role)[0]).toHaveAccessibleDescription('A hint');
+  });
+
+  it.each<[string, RJSFSchema, string]>([
+    ['text input', { type: 'string' }, 'textbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox'],
+  ])("should give MUI's label of a %s an id no sibling field's id can spell", (_, foo, role) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { foo: { ...foo, title: 'Foo' }, 'foo-label': { type: 'string' } },
+    };
+
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    expect(duplicateIds(container)).toEqual([]);
+    expect(screen.getAllByRole(role)[0]).toHaveAccessibleName('Foo');
+  });
+
+  it.each<[string, RJSFSchema, string, string]>([
+    ['text input', { type: 'string' }, 'textbox', 'slotProps'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox', 'rjsfSlotProps'],
+  ])("should keep the id a form author gives a %s's label", (_, foo, role, slots) => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { ...foo, title: 'Foo' } } };
+    const uiSchema: UiSchema = { foo: { 'ui:options': { mui: { [slots]: { inputLabel: { id: 'my-label' } } } } } };
+
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(elementOf(container, '#my-label')).toHaveTextContent('Foo');
+    expect(screen.getByRole(role)).toHaveAccessibleName('Foo');
+  });
+
+  // A select takes its slots from `rjsfSlotProps`, a text input from `slotProps`
+  it.each<[string, RJSFSchema, string, string]>([
+    ['text input', { type: 'string' }, 'textbox', 'slotProps'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox', 'rjsfSlotProps'],
+  ])("should keep the formHelperText slot props a form author gives a %s's helper text", (_, foo, role, slots) => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo } };
+    const uiSchema: UiSchema = {
+      foo: { 'ui:options': { mui: { helperText: 'A hint', [slots]: { formHelperText: { className: 'hint' } } } } },
+    };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByText('A hint')).toHaveClass('hint');
+    expect(screen.getByRole(role)).toHaveAccessibleDescription('A hint');
+  });
+
+  // The control's `aria-describedby` names the helper text by the id the widget gives it, so an author's `id` can't
+  // replace it
+  it.each<[string, RJSFSchema, string, string]>([
+    ['text input', { type: 'string' }, 'textbox', 'slotProps'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox', 'rjsfSlotProps'],
+  ])(
+    'should describe a %s by its helper text when a form author gives the helper text an id',
+    (_, foo, role, slots) => {
+      const schema: RJSFSchema = { type: 'object', properties: { foo } };
+      const uiSchema: UiSchema = {
+        foo: { 'ui:options': { mui: { helperText: 'A hint', [slots]: { formHelperText: { id: 'my-hint' } } } } },
+      };
+
+      render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+      expect(screen.getByRole(role)).toHaveAccessibleDescription('A hint');
+    },
+  );
+
+  it("should keep the formHelperText slot props a custom widget gives BaseInputTemplate as MUI's (ownerState) => props", () => {
+    function HintedWidget(props: WidgetProps) {
+      const { BaseInputTemplate } = props.registry.templates;
+      return <BaseInputTemplate {...props} slotProps={{ formHelperText: () => ({ className: 'hint' }) }} />;
+    }
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const uiSchema: UiSchema = { foo: { 'ui:widget': HintedWidget, 'ui:options': { mui: { helperText: 'A hint' } } } };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByText('A hint')).toHaveClass('hint');
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('A hint');
+  });
+
+  // The helper text's id is built from the `TextField`'s id, which an `id` in `ui:options.mui` replaces
   it.each<[string, RJSFSchema, string]>([
     ['text input', { type: 'string' }, 'textbox'],
     ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox'],

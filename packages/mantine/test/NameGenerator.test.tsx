@@ -55,8 +55,8 @@ test.each([
   );
 
   expect(Array.from(container.querySelectorAll('[name^="root_day"]'), (el) => el.getAttribute('name'))).toEqual([
-    'root_day_year',
-    'root_day_month',
-    'root_day_day',
+    'root_day__year',
+    'root_day__month',
+    'root_day__day',
   ]);
 });

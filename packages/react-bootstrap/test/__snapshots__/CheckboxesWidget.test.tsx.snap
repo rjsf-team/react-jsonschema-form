@@ -13,14 +13,14 @@ exports[`CheckboxesWidget > inline 1`] = `
         aria-describedby="_id__error _id__description _id__help"
         class="form-check-input"
         disabled=""
-        id="_id-0"
+        id="_id__0"
         name="_id"
         type="checkbox"
         value="0"
       />
       <label
         class="form-check-label"
-        for="_id-0"
+        for="_id__0"
         title=""
       >
         A
@@ -43,14 +43,14 @@ exports[`CheckboxesWidget > simple 1`] = `
         aria-describedby="_id__error _id__description _id__help"
         class="form-check-input"
         disabled=""
-        id="_id-0"
+        id="_id__0"
         name="_id"
         type="checkbox"
         value="0"
       />
       <label
         class="form-check-label"
-        for="_id-0"
+        for="_id__0"
         title=""
       >
         A

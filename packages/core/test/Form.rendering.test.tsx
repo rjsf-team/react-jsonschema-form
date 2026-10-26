@@ -10,6 +10,7 @@ import type { NoValFormProps } from './testUtils.tsx';
 import {
   createComponent,
   createFormRef,
+  elementOf,
   handleOf,
   createFormComponent as createDirectFormComponent,
   expectToHaveBeenCalledWithFormData,
@@ -283,7 +284,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector<HTMLInputElement>('input[inputmode=numeric]')).toBeInTheDocument();
       expectToHaveBeenCalledWithFormData(onChange, { aKey: 42 }, 'root_aKey');
       // The key of the additional property is still editable alongside the type selector
-      expect(node.querySelector<HTMLInputElement>('#root_aKey-key')).toHaveAttribute('value', 'aKey');
+      expect(node.querySelector<HTMLInputElement>('#root_aKey__key')).toHaveAttribute('value', 'aKey');
     });
 
     it('keeps the rest of the schema when rendering the chosen type', async () => {
@@ -328,7 +329,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(Array.from(valueSelect.options).map((o) => o.textContent)).toEqual(['', 'a', '1']);
       // The enum already pins the value, so there is no type to choose: switching to `number` would cast the `'a'`
       // the user picked into a value the schema rejects
-      expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_multi__internalTypeSelector')).not.toBeInTheDocument();
     });
 
     it('offers no type selector for a union pinned by a const', () => {
@@ -340,7 +341,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_multi__internalTypeSelector')).not.toBeInTheDocument();
     });
 
     it('reconciles the selected type when the schema stops allowing it', async () => {
@@ -371,7 +372,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The branch switch replaces the types on offer, so the `string` selection gives way rather than leaving the
       // selector reading `boolean` while a text input renders below it
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual(['boolean', 'array']);
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('boolean');
       expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'checkbox');
@@ -414,12 +415,12 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The type selector wraps the option selector rather than replacing it, so the shared property, the oneOf
       // selector and the selected option's own property all still render for `object`, the first type
-      expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi__internalTypeSelector')).toBeInTheDocument();
       expect(node.querySelector('#root_multi_shared')).toBeInTheDocument();
       expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
       expect(node.querySelector('#root_multi_a')).toBeInTheDocument();
 
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_multi__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         typeSelect,
         Array.from(typeSelect.options).find((o) => o.textContent === 'string')!,
@@ -447,7 +448,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       // Without the opt-in UI the first type still wins and the others stay unreachable, exactly as in v6
-      expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_multi__internalTypeSelector')).not.toBeInTheDocument();
       expect(node.querySelector('#root_multi_shared')).toBeInTheDocument();
       expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
       expect(node.querySelector('#root_multi_a')).toBeInTheDocument();
@@ -468,7 +469,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // The option is rendered for `string`, the type the selector is on, so the value is the text that was typed
       expectToHaveBeenCalledWithFormData(onChange, { multi: '42' }, 'root_multi');
 
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_multi__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         typeSelect,
         Array.from(typeSelect.options).find((o) => o.textContent === 'number')!,
@@ -491,7 +492,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi__internalTypeSelector')).toBeInTheDocument();
       expect(node.querySelector('#root_multi__anyof_select')).toBeInTheDocument();
     });
 
@@ -508,7 +509,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // Options that are all constants pin the value the way an `enum` does, so switching type would only cast a
       // value the user picked into one the schema rejects
-      expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_multi__internalTypeSelector')).not.toBeInTheDocument();
       expect(node.querySelector<HTMLSelectElement>('#root_multi')!.tagName).toBe('SELECT');
     });
 
@@ -532,7 +533,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // value field and render it a second time alongside the option's own
       expect(node.querySelectorAll('#root_multi_a')).toHaveLength(1);
       // ...under a key input and a remove button that would rename or delete a property the schema describes
-      expect(node.querySelector('#root_multi_a-key')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_multi_a__key')).not.toBeInTheDocument();
       expect(node.querySelector('#root_multi_a__remove')).not.toBeInTheDocument();
       expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeInTheDocument();
     });
@@ -547,7 +548,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // The keyword says what the object takes as much as `additionalProperties` would, and the `true` written in for
       // a schema that says nothing would take precedence over it, offering an add button for keys it forbids
       expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeInTheDocument();
-      expect(node.querySelector('#root_a-key')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_a__key')).not.toBeInTheDocument();
     });
 
     it('drops the option selector when a composed union is pinned to null', async () => {
@@ -563,7 +564,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       expect(node.querySelector('#root_multi__oneof_select')).toBeInTheDocument();
 
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_multi__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         typeSelect,
         Array.from(typeSelect.options).find((o) => o.textContent === 'null')!,
@@ -572,7 +573,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // A `null` is the whole of the value, so an option has nothing left to say about it: the selector would stand
       // over a field that renders nothing and change nothing below it
       expect(node.querySelector('#root_multi__oneof_select')).not.toBeInTheDocument();
-      expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi__internalTypeSelector')).toBeInTheDocument();
     });
 
     it('labels the value field once for the control it shares with the field around it', () => {
@@ -633,7 +634,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       await user.clear(node.querySelector<HTMLInputElement>('#root_aKey')!);
-      const select = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
+      const select = elementOf(node, '#root_aKey__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'boolean')!,
@@ -643,7 +644,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // `string` the selector has to go back to and so put every other type out of reach of a cleared value
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('boolean');
       expect(node.querySelector<HTMLInputElement>('input[type=checkbox]')).toBeInTheDocument();
-      expect(node.querySelector<HTMLInputElement>('#root_aKey-key')).toHaveAttribute('value', 'aKey');
+      expect(node.querySelector<HTMLInputElement>('#root_aKey__key')).toHaveAttribute('value', 'aKey');
     });
 
     it('renders the title and description of a union whose field renders no label of its own', () => {
@@ -706,7 +707,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // Only an additional property stores a cleared value as the empty string; anywhere else it is a `string` like
       // any other, so the selector must follow it rather than leave the array UI standing over string data
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
     });
 
@@ -724,7 +725,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // An `object` selection starts out as the empty object of its own rather than the empty string a cleared value
       // is stored as, so this one arrived from outside the field and is `string` data the selector has to follow
-      const select = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
+      const select = elementOf(node, '#root_aKey__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
     });
 
@@ -739,7 +740,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // A control written for this schema handles the union itself, so wrapping it in a selector that pins the type
       // and casts the value on every switch would take away what it was written to do
       expect(node.querySelector('#own-widget')).toBeInTheDocument();
-      expect(node.querySelector('#root_multi___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_multi__internalTypeSelector')).not.toBeInTheDocument();
     });
 
     it('still offers a type selector for an unconstrained additional property given a widget as a component', () => {
@@ -752,7 +753,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The schema lists no types for such a control to handle — the stub's type came from the data — so the
       // selector stands and the widget renders within it, the way it does for an unrecognized `type`
-      expect(node.querySelector('#root_aKey___internal_type_selector')).toBeInTheDocument();
+      expect(node.querySelector('#root_aKey__internalTypeSelector')).toBeInTheDocument();
       expect(node.querySelector('#own-widget')).toBeInTheDocument();
     });
 
@@ -769,7 +770,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
         // Asserted first so that a selector gone missing fails here rather than passing the label check below, which a
         // field rendered without one satisfies just as well
-        expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
+        expect(node.querySelector('#root_multi__internalTypeSelector')).toBeInTheDocument();
         // The selector is a control within the field, so the option that turns the field's label off turns its own off
         expect(Array.from(node.querySelectorAll('label')).map((aLabel) => aLabel.textContent)).toEqual([]);
       },
@@ -783,9 +784,9 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { multi: 'a string' },
       });
 
-      expect(node.querySelector('#root_multi___internal_type_selector')).toBeInTheDocument();
+      expect(node.querySelector('#root_multi__internalTypeSelector')).toBeInTheDocument();
       // The selector's label follows the field's, which its own `ui:label` shows past the global one
-      expect(node.querySelector('label[for="root_multi___internal_type_selector"]')).toBeInTheDocument();
+      expect(node.querySelector('label[for="root_multi__internalTypeSelector"]')).toBeInTheDocument();
       expect(node.querySelector('label[for="root_multi"]')).toBeInTheDocument();
     });
 
@@ -797,7 +798,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       // The schema constrains the value even though it names no type, so every type is not on offer for it
-      expect(node.querySelector('#root_aKey___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_aKey__internalTypeSelector')).not.toBeInTheDocument();
       // The constraint the selector was withheld for is the one the value field enforces
       const valueSelect = node.querySelector<HTMLSelectElement>('#root_aKey')!;
       expect(valueSelect.tagName).toBe('SELECT');
@@ -812,7 +813,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       // A title says nothing about the value, so the property is as free as `additionalProperties: true` leaves it
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_aKey__internalTypeSelector', HTMLSelectElement);
       expect(typeSelect).toBeInTheDocument();
       expect(Array.from(typeSelect.options)).toHaveLength(JSON_SCHEMA_TYPES.length);
     });
@@ -825,7 +826,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       // `readOnly` is no constraint on the type, so every type is on offer, but changing it would change the value
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_aKey__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options)).toHaveLength(JSON_SCHEMA_TYPES.length);
       expect(typeSelect).toBeDisabled();
     });
@@ -840,7 +841,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       expect(node.querySelector('#root_multi')!.tagName).toBe('TEXTAREA');
 
-      const select = () => node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
+      const select = () => elementOf(node, '#root_multi__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select(),
         Array.from(select().options).find((o) => o.textContent === 'boolean')!,
@@ -868,7 +869,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual(['null', 'string', 'number']);
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
       expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'text');
@@ -892,7 +893,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The defaults follow the `textarea` to the `string` type and seed no `false`, so a `boolean` selection would show
       // an unchecked box holding no value
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
       expect(node.querySelector('#root_val')!.tagName).toBe('TEXTAREA');
     });
@@ -906,7 +907,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
       expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
     });
@@ -920,7 +921,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
       for (const [{ formData }] of onChange.mock.calls) {
         expect(formData).not.toHaveProperty('val');
@@ -935,7 +936,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
     });
 
@@ -954,7 +955,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           useFallbackUiForUnsupportedType: true,
         });
 
-        const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+        const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
         expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('number');
         expect(node.querySelector('#root_val')).toHaveAttribute('type', 'range');
       },
@@ -969,7 +970,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
       expect(node.querySelector('#root_val')?.tagName).toBe('TEXTAREA');
     });
@@ -986,7 +987,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      await user.selectOptions(node.querySelector('#root_val___internal_type_selector')!, 'array');
+      await user.selectOptions(elementOf(node, '#root_val__internalTypeSelector'), 'array');
 
       expect(node.querySelector('#root_val')).toHaveClass('rjsf-field-array');
     });
@@ -1002,7 +1003,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('array');
       expect(node.querySelector('#root_val')).toHaveClass('rjsf-field-array');
     });
@@ -1014,7 +1015,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('number');
       expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
     });
@@ -1063,7 +1064,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({ ...props, ref });
 
       const selected = () =>
-        Array.from(node.querySelectorAll<HTMLOptionElement>('#root_aKey___internal_type_selector option')).find(
+        Array.from(node.querySelectorAll<HTMLOptionElement>('#root_aKey__internalTypeSelector option')).find(
           (o) => o.selected,
         );
       expect(selected()).toHaveTextContent('string');
@@ -1089,7 +1090,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({ ...props, ref });
 
       const selected = () =>
-        Array.from(node.querySelectorAll<HTMLOptionElement>('#root_val___internal_type_selector option')).find(
+        Array.from(node.querySelectorAll<HTMLOptionElement>('#root_val__internalTypeSelector option')).find(
           (o) => o.selected,
         );
       expect(selected()).toHaveTextContent('object');
@@ -1111,7 +1112,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { val: 'not a number' },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'number')!,
@@ -1130,7 +1131,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { val: '4' },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'integer')!,
@@ -1147,7 +1148,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { val: -2.5 },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'integer')!,
@@ -1165,7 +1166,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { val: 'text' },
       });
 
-      const select = () => node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = () => elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select(),
         Array.from(select().options).find((o) => o.textContent === 'number')!,
@@ -1185,7 +1186,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { val: false },
       });
 
-      const select = () => node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = () => elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select(),
         Array.from(select().options).find((o) => o.textContent === 'string')!,
@@ -1208,14 +1209,14 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { val: 'text' },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'number')!,
       );
 
       // Remounting the selector on every form data change would drop the keyboard focus of the user changing types
-      expect(document.activeElement).toBe(node.querySelector('#root_val___internal_type_selector'));
+      expect(document.activeElement).toBe(node.querySelector('#root_val__internalTypeSelector'));
     });
 
     it('keeps an unconstrained additional property when its type is switched to null', async () => {
@@ -1233,7 +1234,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // `null` is a value the property is allowed to hold, so it survives `omitExtraData` and the key stays editable
       expectToHaveBeenCalledWithFormData(onChange, { aKey: null }, 'root_aKey');
-      expect(node.querySelector<HTMLInputElement>('#root_aKey-key')).toHaveAttribute('value', 'aKey');
+      expect(node.querySelector<HTMLInputElement>('#root_aKey__key')).toHaveAttribute('value', 'aKey');
       expect(
         Array.from(node.querySelectorAll<HTMLOptionElement>('select option')).find((o) => o.selected),
       ).toHaveTextContent('null');
@@ -1267,7 +1268,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The unrecognized name is what sends the field to the fallback UI, which must not then offer types the schema
       // does not allow
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual(['string', 'number']);
     });
 
@@ -1281,7 +1282,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent({ ...props, ref });
 
       const selected = () =>
-        Array.from(node.querySelectorAll<HTMLOptionElement>('#root_aKey___internal_type_selector option')).find(
+        Array.from(node.querySelectorAll<HTMLOptionElement>('#root_aKey__internalTypeSelector option')).find(
           (o) => o.selected,
         );
       expect(selected()).toHaveTextContent('string');
@@ -1306,7 +1307,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       expect(node.querySelector('#root_multi')!.tagName).toBe('TEXTAREA');
 
-      const select = node.querySelector<HTMLSelectElement>('#root_multi___internal_type_selector')!;
+      const select = elementOf(node, '#root_multi__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'boolean')!,
@@ -1328,7 +1329,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'boolean')!,
@@ -1353,7 +1354,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The selector always has a type chosen, so requiring it says nothing, while its marker reads as a second
       // required field within the one the outer label already marks
-      expect(node.querySelector('#root_val___internal_type_selector')).not.toBeRequired();
+      expect(node.querySelector('#root_val__internalTypeSelector')).not.toBeRequired();
       expect(node.querySelector('#root_val')).toBeRequired();
     });
 
@@ -1382,7 +1383,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { val: {} },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'boolean')!,
@@ -1420,7 +1421,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       await user.clear(node.querySelector<HTMLInputElement>('#root_val')!);
 
       // The `null` is how this input reports being empty, not a switch to the `null` type
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
       expect(node.querySelector<HTMLInputElement>('#root_val')).toHaveAttribute('type', 'text');
     });
@@ -1432,7 +1433,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { val: ' False ' },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'boolean')!,
@@ -1451,7 +1452,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { val: value },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'number')!,
@@ -1476,7 +1477,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       await user.click(node.querySelector('button[type=submit]')!);
       expect(node.querySelector('#root_val_nested__error')).toBeInTheDocument();
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'string')!,
@@ -1499,7 +1500,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { val: '   ' },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'boolean')!,
@@ -1522,7 +1523,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         initialFormData: { other: 'x' },
       });
 
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       await user.selectOptions(
         select,
         Array.from(select.options).find((o) => o.textContent === 'number')!,
@@ -1587,7 +1588,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // `null` is a type this schema really does allow, so the unrecognized name alongside it does not make the
       // property free to hold anything: offering every type would put data the schema rejects within a click. It is
       // the only type left, so there is nothing to choose between and the value field renders without a selector
-      expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val__internalTypeSelector')).not.toBeInTheDocument();
       expect(node.querySelector('.rjsf-field-null')).toBeInTheDocument();
     });
 
@@ -1603,7 +1604,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           useFallbackUiForUnsupportedType: true,
           initialFormData: { val: text },
         });
-        const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+        const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
 
         await user.selectOptions(
           select,
@@ -1632,7 +1633,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The value a cleared input reports is the one `ui:emptyValue` names, so reading it as a switch to its own type
       // would swap the input out from under a user who had only emptied it
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
     });
 
@@ -1652,7 +1653,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // An `object` field renders no widget for a `ui:emptyValue` to belong to, so this `0` is not one of its inputs
       // reporting itself cleared: it is `number` data that arrived from outside and the selector has to follow
-      const select = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('number');
     });
 
@@ -1690,7 +1691,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The option selector is already the choice a type selector would offer, and an option naming a type of its own
       // overrides the one the fallback UI would pin, so the options are what supplies the types here
-      expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val__internalTypeSelector')).not.toBeInTheDocument();
       expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
       expect(node.querySelector('.rjsf-field-string')).toBeInTheDocument();
       expect(node.querySelector('.rjsf-field-number')).not.toBeInTheDocument();
@@ -1711,7 +1712,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val__internalTypeSelector')).not.toBeInTheDocument();
       expect(node.querySelector('#root_val__oneof_select')).toBeInTheDocument();
       expect(node.querySelector('.rjsf-field-string')).toBeInTheDocument();
       expect(node.querySelector('.rjsf-field-number')).not.toBeInTheDocument();
@@ -1728,7 +1729,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // An `anyOf` standing in for a type is ordinary usage, so the opt-in must not wrap every one of them in a
       // selector of all seven JSON Schema types that the options are already there to choose between
-      expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val__internalTypeSelector')).not.toBeInTheDocument();
       expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
       expect(node.querySelector('.rjsf-field-string')).toBeInTheDocument();
       expect(node.querySelector('.rjsf-field-number')).not.toBeInTheDocument();
@@ -1747,7 +1748,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // `ui:fieldReplacesAnyOrOneOf` asks the options to give way to the field named alongside it, and a name no field
       // is registered under names nothing for them to give way to, so they render and supply the types themselves
       expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
-      expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val__internalTypeSelector')).not.toBeInTheDocument();
       expect(node.querySelector('.rjsf-field-string')).toBeInTheDocument();
     });
 
@@ -1766,7 +1767,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // The value field renders for the schema the selector pins a type on, so a `ui:field` naming this field routes
       // back to it, and every one of those renders another selector around another value field without end
-      expect(node.querySelectorAll('[id$="___internal_type_selector"]')).toHaveLength(1);
+      expect(node.querySelectorAll('[id$="__internalTypeSelector"]')).toHaveLength(1);
       expect(node.querySelectorAll('[id$="__anyof_select"]')).toHaveLength(1);
       expect(node.querySelector('#root_val')).toBeInTheDocument();
     });
@@ -1785,7 +1786,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // The options supply no type, so each one is left with the unrecognized one the parent propagates and gets the
       // selector for it, rather than the parent getting one that every option would then be rendered within
       const optionSelect = node.querySelector('#root_val__anyof_select')!;
-      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(optionSelect).toBeInTheDocument();
       expect(typeSelect).toBeInTheDocument();
       expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual([...JSON_SCHEMA_TYPES]);
@@ -1812,7 +1813,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         // A `$id` naming the field reaches it whatever the opt-in says, and neither state may cost the schema its
         // options: without the opt-in the field renders the unsupported field template, which renders nothing of them,
         // and with it the one type the schema names is nothing to choose between, so no selector stands over them
-        expect(node.querySelectorAll('[id$="___internal_type_selector"]')).toHaveLength(0);
+        expect(node.querySelectorAll('[id$="__internalTypeSelector"]')).toHaveLength(0);
         expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
         expect(node.querySelector('#root')).toBeInTheDocument();
         expect(node.querySelectorAll('.unsupported-field')).toHaveLength(0);
@@ -1834,7 +1835,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         // A value pinned by an `enum` is one of the types those values have whichever type is chosen, so offering the
         // rest would offer types the schema rejects and cast the pinned value into one of them. A schema that names an
         // unrecognized type pins nothing, so it is still free to hold anything
-        const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+        const typeSelect = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
         expect(Array.from(typeSelect.options).map((o) => o.textContent)).toEqual(types);
       },
     );
@@ -1855,7 +1856,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         // Naming this field for a schema that allows one type asks for a selector with nothing to choose between, and
         // nothing but the field for that type is left to render. A schema naming one type only ever arrives here by
         // being named for, since the type it names is otherwise rendered by the field for it
-        expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+        expect(node.querySelector('#root_val__internalTypeSelector')).not.toBeInTheDocument();
         expect(node.querySelector(fieldClass)).toBeInTheDocument();
       },
     );
@@ -1935,7 +1936,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         // names none, so a type selector here would leave the screen as it was while casting the value on every switch.
         // Which of the several ways the field was reached by cannot change that, since the reason is the schema's own:
         // it names no type for a selector to offer one of, and its options are the only thing that says what it holds
-        expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+        expect(node.querySelector('#root_val__internalTypeSelector')).not.toBeInTheDocument();
         expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
         expect(node.querySelector('.rjsf-field-string')).toBeInTheDocument();
       },
@@ -1965,7 +1966,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         // `ui:field` names the fallback UI, which renders the options within its own value field, so reading the name
         // left it standing beside an option selector rendering them a second time
         expect(node.querySelectorAll('[id$="__anyof_select"]')).toHaveLength(1);
-        expect(node.querySelector('#root_val___internal_type_selector')).not.toBeInTheDocument();
+        expect(node.querySelector('#root_val__internalTypeSelector')).not.toBeInTheDocument();
         expect(node.querySelector('.rjsf-field-string')).toBeInTheDocument();
       },
     );
@@ -1992,7 +1993,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
         // `properties` implies `object`, which is the one type the schema allows, so there is no type to choose and the
         // options supply no other. The schema's own property renders beside them, as it does with nothing naming a field
-        expect(node.querySelector('#root_val___internal_type_selector')).toBeNull();
+        expect(node.querySelector('#root_val__internalTypeSelector')).toBeNull();
         expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
         expect(node.querySelector('#root_val_own')).toBeInTheDocument();
         // The option's own property renders too: a `ui:field` the options are rendered in place of does not reach them,
@@ -2010,7 +2011,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
       });
 
-      expect(node.querySelector('#root_val___internal_type_selector')).toBeNull();
+      expect(node.querySelector('#root_val__internalTypeSelector')).toBeNull();
       expect(node.querySelector('#root_val_own')).toBeInTheDocument();
     });
 
@@ -2110,7 +2111,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // `getValueSchema()` drops the options once `null` is the type in effect, since a `null` is the whole of the
       // value and no option can describe it. With `null` the only type the schema allows there is no selector to
       // choose another, so the fallback UI cannot be the one that renders them and does not claim to be
-      expect(node.querySelector('#root_val___internal_type_selector')).toBeNull();
+      expect(node.querySelector('#root_val__internalTypeSelector')).toBeNull();
       expect(node.querySelector('#root_val__anyof_select')).toBeInTheDocument();
     });
 
