@@ -458,8 +458,15 @@ describe('DateTimeWidget', () => {
 
       expect(popup()).toHaveAttribute('popover', 'manual');
       expect(vi.mocked(HTMLElement.prototype.showPopover).mock.contexts).toEqual([popup()]);
-      // Undoing the browser's popover padding and centering, which a page without Tailwind's preflight keeps
-      expect(popup()).toHaveStyle({ marginTop: '0px', marginLeft: '0px', paddingTop: '0px', paddingLeft: '0px' });
+      // Undoing the browser's popover padding and centering, which a page without Tailwind's preflight keeps, and
+      // keeping its border inside the width and height fitted to the viewport, which preflight's `box-sizing` does
+      expect(popup()).toHaveStyle({
+        marginTop: '0px',
+        marginLeft: '0px',
+        paddingTop: '0px',
+        paddingLeft: '0px',
+        boxSizing: 'border-box',
+      });
     });
 
     test("in the top layer where a polyfill's `showPopover()` comes without the `:popover-open` selector", async () => {

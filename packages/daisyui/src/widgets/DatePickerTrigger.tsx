@@ -180,8 +180,9 @@ interface DatePickerPopupProps {
  * coordinates, which place only a fixed popup, and a consumer whose Tailwind build doesn't scan this package gets none
  * of its classes. A browser without popovers has `useDatePicker()` put it back in the field's flow instead. The
  * `right`, `bottom`, `margin`, `padding` and `color` undo the browser's own popover styles, which pin a popover to all
- * four edges of the viewport, pad it and recolor its text, where no Tailwind preflight resets them. It scrolls within
- * the height `useDatePicker()` gives it, so a viewport shorter than the popup still reaches its Done button
+ * four edges of the viewport, pad it and recolor its text, where no Tailwind preflight resets them. Its `box-sizing`,
+ * also left to preflight otherwise, keeps its border inside the width and the height cap that `useDatePicker()` fits
+ * to the viewport. It scrolls within that height, so a viewport shorter than the popup still reaches its Done button
  *
  * @param props - The popup's id and name, the ref to attach, the Done handler and its label, and its contents
  */
@@ -200,6 +201,7 @@ export function DatePickerPopup({ id, name, containerRef, translateString, onDon
         bottom: 'auto',
         margin: 0,
         padding: 0,
+        boxSizing: 'border-box',
         zIndex: 99999,
         overflowY: 'auto',
         color: 'inherit',
