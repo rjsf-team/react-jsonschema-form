@@ -16,13 +16,23 @@ function documentOf(element: Element | null) {
   return element?.ownerDocument ?? document;
 }
 
-/** Whether the focus is on an element, going by the document that element is in.
+/** The element holding the focus, going by the root `element` is in: the shadow root of a form rendered in one, whose
+ * document's `activeElement` is the shadow host rather than anything inside it.
+ *
+ * @param element - An element of the form
+ * @returns - The focused element in that root, or `null` for an element that is in no document yet
+ */
+function activeElementOf(element: Element) {
+  return (element.getRootNode() as Partial<DocumentOrShadowRoot>).activeElement ?? null;
+}
+
+/** Whether the focus is on an element, going by the root that element is in.
  *
  * @param element - The element to look for the focus on
  * @returns - Whether `element` holds the focus
  */
 function hasFocus(element: Element | null) {
-  return element !== null && documentOf(element).activeElement === element;
+  return element !== null && activeElementOf(element) === element;
 }
 
 /** The window of the document above, which is the only way to a viewport and to the events that belong to one.
@@ -308,7 +318,7 @@ export function useDatePicker<V>({
     // and focus would fall to the document body, losing a keyboard user their place in the form. It moves before the
     // blur is reported, so whatever takes it afterwards keeps it, as the consumer's `onBlur` can
     const popup = containerRef.current;
-    if (popup?.contains(documentOf(popup).activeElement)) {
+    if (popup?.contains(activeElementOf(popup))) {
       triggerRef.current?.focus();
     }
     pendingClose.current = { reportBlur, isPressElsewhere: false };
@@ -413,10 +423,11 @@ export function useDatePicker<V>({
       popup.showPopover();
     }
     // The trigger is measured against the viewport of the window the form is in, so that is the one to keep inside
-    // of. The scrolling element's client box is that viewport less its scrollbars: the root element's, or in a
-    // quirks-mode document, where the root's is the whole page, the body's
+    // of. Its client box less its scrollbars is the root element's, or in a quirks-mode document, where the root's is the
+    // whole page, the body's. Told by `compatMode` rather than `scrollingElement`, which is null in a quirks-mode
+    // document whose body scrolls
     const doc = documentOf(trigger);
-    const viewport = doc.scrollingElement ?? doc.documentElement;
+    const viewport = doc.compatMode === 'BackCompat' ? doc.body : doc.documentElement;
     const win = windowOf(trigger);
     const place = () => {
       // Not `100vh`, which takes in a horizontal scrollbar along the bottom of the viewport
@@ -450,7 +461,7 @@ export function useDatePicker<V>({
       'IntersectionObserver' in win
         ? new win.IntersectionObserver((entries) => {
             const isInSight = entries[entries.length - 1].isIntersecting;
-            if (!isInSight && popup.contains(documentOf(popup).activeElement)) {
+            if (!isInSight && popup.contains(activeElementOf(popup))) {
               trigger.focus({ preventScroll: true });
             }
             popup.style.visibility = isInSight ? '' : 'hidden';

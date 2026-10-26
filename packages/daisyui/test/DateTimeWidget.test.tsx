@@ -339,13 +339,15 @@ describe('DateTimeWidget', () => {
     /** Renders the widget with its trigger put by hand where jsdom, laying nothing out, leaves it an empty box
      *
      * @param rect - Where the trigger is in the viewport
+     * @param [into] - The element to render into, which defaults to one appended to the body
      * @returns - The trigger
      */
-    function renderAt(rect: { top: number; left: number }) {
+    function renderAt(rect: { top: number; left: number }, into?: HTMLElement) {
       const { container } = render(
         <DateTimeWidget
           {...makeWidgetMockProps({ value: '2016-04-05T14:01:30', schema: { type: 'string', format: 'date-time' } })}
         />,
+        { container: into },
       );
       const trigger = container.querySelector<HTMLElement>('button[aria-haspopup]')!;
       const { top, left } = rect;
@@ -519,6 +521,43 @@ describe('DateTimeWidget', () => {
       act(() => intersectionObserver.enterNode(trigger));
       expect(popup()).not.toHaveStyle({ visibility: 'hidden' });
       expect(trigger).toHaveFocus();
+    });
+
+    test('giving the focus back to its trigger when it hides holding it in a form rendered in a shadow root', async () => {
+      const host = document.body.appendChild(document.createElement('div'));
+      onTestFinished(() => host.remove());
+      const shadowRoot = host.attachShadow({ mode: 'open' });
+      const container = shadowRoot.appendChild(document.createElement('div'));
+      const trigger = renderAt({ top: 30, left: 10 }, container);
+      await user.click(trigger);
+      await user.keyboard('{ArrowDown}');
+      // Where the document's `activeElement` is the shadow host, which the popup doesn't contain
+      expect(within(container).getByRole('dialog', { hidden: true })).toContainElement(
+        shadowRoot.activeElement as HTMLElement,
+      );
+
+      act(() => intersectionObserver.leaveNode(trigger));
+
+      expect(shadowRoot.activeElement).toBe(trigger);
+    });
+
+    test("inside the viewport of a quirks-mode document, which is the body's client box rather than the root's", async () => {
+      // There the root's is the whole page, and the body's the viewport, whichever of them scrolls
+      const spies = [
+        vi.spyOn(document, 'compatMode', 'get').mockReturnValue('BackCompat'),
+        vi.spyOn(document.documentElement, 'clientWidth', 'get').mockReturnValue(3000),
+        vi.spyOn(document.documentElement, 'clientHeight', 'get').mockReturnValue(3000),
+        vi.spyOn(document.body, 'clientWidth', 'get').mockReturnValue(1024),
+        vi.spyOn(document.body, 'clientHeight', 'get').mockReturnValue(768),
+      ];
+      onTestFinished(() => spies.forEach((spy) => spy.mockRestore()));
+      const trigger = renderAt({ top: 680, left: 984 });
+      sizeElements(400, 500);
+
+      await user.click(trigger);
+
+      // Above the trigger and inside the right edge, as in the 1024 by 768 viewport of a standards-mode document
+      expect(popup()).toHaveStyle({ top: '175px', left: '604px', maxHeight: '768px' });
     });
   });
 
