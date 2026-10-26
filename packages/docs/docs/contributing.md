@@ -61,6 +61,7 @@ CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the 
 
 A PR that changes anything a user of a published package can notice adds an entry to the changelog.
 Append it as the last bullet under the heading of each package whose users notice the change, in the upcoming release at the top of the file.
+A change that belongs to no single package, such as a new Node or React requirement, goes once under `Dev / docs / playground` instead.
 If the change needs a bigger semver bump than that release's heading names, update the heading.
 Tests, CI, refactors and docs fixes need no entry, and neither does a fix to a change that isn't released yet: edit that change's entry instead.
 
@@ -68,7 +69,7 @@ Write the entry for someone deciding whether to upgrade, who won't open the PR:
 
 - Start with `Add`, `Change`, `Deprecate`, `Fix` or `Remove`, and name the component, prop or export a user meets, in backticks.
 - Say what users notice, not how the code does it. A fix names what went wrong for them: "Fix `ArrayField` dropping the last item's errors when an item is removed".
-- Leave the reasoning, the alternatives and the edge cases to the PR description, and end the entry with a link to the PR and to the issue it fixes.
+- Leave the reasoning, the alternatives and the edge cases to the PR description, and end the entry with a link to the PR and to the issue it fixes, if any.
 - Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and link the [upgrade guide](#upgrade-guide) section that says what to change.
 - A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower type.
 - Aim for a sentence or two, about 200 characters. If it can't be both short and clear, keep it clear.
@@ -79,11 +80,11 @@ For example, instead of an entry that explains the implementation:
 
 write what users see:
 
-> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450), fixing [#5516](https://github.com/rjsf-team/react-jsonschema-form/issues/5516))
+> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450))
 
 ## Upgrade guide
 
-A breaking change also gets a section in the next major version's upgrade guide, in `packages/docs/docs/migration-guides`, in the same PR.
+A breaking change also gets a section in the upgrade guide for the next major version N, `packages/docs/docs/migration-guides/vN.x upgrade guide.md`, in the same PR. Create the file if it doesn't exist yet.
 The guide answers one question: "my code broke, what do I change?". Each section has a heading that names the change as users meet it, then says who it affects, what happened before and what happens now, and what to do instead, with a before/after `diff` when code has to change. Link the reference docs for anything more.
 New features, the reasons behind a change and comparisons of alternatives belong in the reference docs, not in the guide.
 
@@ -185,7 +186,7 @@ If you make changes to those libraries, you will have to maintain that coverage,
 
 ## Releasing
 
-First, turn the upcoming release's section of the changelog into release notes, so that the commit you tag carries them: date its heading, as in `# 6.100.10 (2026-11-01)`, start it with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
+Each release starts by turning the upcoming release's section of the changelog into release notes. Commit them on the `rc` branch below before you run `pnpm exec nx release version --git-tag`, so that the tagged commit carries them. Date the section's heading, as in `# 6.100.10 (2026-11-01)`, start it with a few highlights, put breaking changes first under each package, and merge entries that describe one change.
 
 To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
 For instance if you are about to create the new `6.100.10` branch, then you would run the following commands:
