@@ -959,8 +959,8 @@ describe('mui CheckboxWidget required attribute', () => {
   });
 });
 
-describe('mui server rendering (#4083)', () => {
-  it('renders the dependency a default selects on the server, and hydrates without a mismatch', () => {
+describe('mui renderToString and hydration (#4083)', () => {
+  it('renders the dependency a default selects with renderToString under jsdom, and hydrates without a mismatch', () => {
     const schema: RJSFSchema = {
       definitions: {
         guest: {

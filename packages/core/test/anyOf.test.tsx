@@ -2453,7 +2453,7 @@ describe('anyOf', () => {
     expect(elementOf(node, 'input#root_p')).toHaveValue('x');
   });
 
-  it('renders a recursive $ref under a root whose anyOf key is present but undefined (#5365)', () => {
+  it('renders a recursive $ref under a root whose anyOf key is present but undefined (#5365)', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       anyOf: undefined,
@@ -2461,9 +2461,11 @@ describe('anyOf', () => {
       properties: { root: { $ref: '#/definitions/node' } },
     };
 
-    createFormComponent({ schema, uiSchema: { root: { 'ui:title': 'X' } } });
+    const { node } = createFormComponent({ schema, uiSchema: { root: { 'ui:title': 'X' } } });
 
     expect(screen.getByText('X')).toBeInTheDocument();
+    await user.click(elementOf(node, '#root_root_child__expand'));
+    expect(elementOf(node, '#root_root_child__title')).toHaveTextContent('child');
   });
 });
 

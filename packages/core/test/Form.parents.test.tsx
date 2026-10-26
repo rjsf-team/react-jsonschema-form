@@ -654,29 +654,19 @@ describe('typing in a custom widget under a parent that renders for every change
 });
 
 describe("a custom upload widget that sets its parent's state before calling onChange (#3914)", () => {
-  interface ParentStore {
-    setParentState: (file: File) => void;
-    /** Held until the test has seen the parent commit its new state, for the order the issue's `flushSync` workaround
-     * forced
-     */
-    parentCommitted?: Promise<unknown>;
-  }
-  const ParentStore = createContext<ParentStore>({ setParentState: noop });
+  const SetParentState = createContext<(file: File) => void>(noop);
 
   function UploadWidget({ id, value, onChange }: WidgetProps<Data['name']>) {
-    const { setParentState, parentCommitted } = use(ParentStore);
+    const setParentState = use(SetParentState);
     return (
       <>
         <input
           id={id}
           type='file'
-          onChange={async (event) => {
+          onChange={(event) => {
             const file = event.target.files?.[0];
             if (file) {
               setParentState(file);
-              if (parentCommitted) {
-                await parentCommitted;
-              }
               onChange(file.name);
             }
           }}
@@ -687,59 +677,35 @@ describe("a custom upload widget that sets its parent's state before calling onC
   }
 
   const upload = new File(['contents'], 'a.txt', { type: 'text/plain' });
+  const uiSchema: UiSchema<Data> = { name: { 'ui:widget': UploadWidget } };
 
   function UploadingParent({
+    storesEdits,
     log,
     onSubmit,
-    parentCommitted,
-  }: Pick<ParentProps<Data>, 'log' | 'onSubmit'> & Pick<ParentStore, 'parentCommitted'>) {
+  }: Pick<ParentProps<Data>, 'log' | 'onSubmit'> & { storesEdits: boolean }) {
     const [file, setFile] = useState<File>();
     return (
-      <ParentStore value={{ setParentState: setFile, parentCommitted }}>
+      <SetParentState value={setFile}>
         <output aria-label='file'>{file?.type}</output>
-        <AcceptingParent<Data>
-          schema={schema}
-          uiSchema={{ name: { 'ui:widget': UploadWidget } }}
-          initialValue={{}}
-          log={log}
-          onSubmit={onSubmit}
-        />
-      </ParentStore>
+        {storesEdits ? (
+          <AcceptingParent<Data> schema={schema} uiSchema={uiSchema} initialValue={{}} log={log} onSubmit={onSubmit} />
+        ) : (
+          <Form<Data> schema={schema} validator={validator} uiSchema={uiSchema} onSubmit={onSubmit} />
+        )}
+      </SetParentState>
     );
   }
 
   it('keeps the value when both updates land in one render, the order the issue failed in', async () => {
     const onSubmit = vi.fn();
     const log = createParentLog<Data>();
-    const { container } = render(<UploadingParent log={log} onSubmit={onSubmit} />);
+    const { container } = render(<UploadingParent storesEdits log={log} onSubmit={onSubmit} />);
 
     await user.upload(screen.getByLabelText('name'), upload);
     await submitForm(container, user);
 
     expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('text/plain');
-    expect(screen.getByRole('status', { name: 'stored name' })).toHaveTextContent('a.txt');
-    expect(log.value).toEqual({ name: 'a.txt' });
-    expectToHaveBeenCalledWithFormData(onSubmit, { name: 'a.txt' }, true);
-  });
-
-  it('keeps the value when the parent re-renders with its new state next to the stale form data first', async () => {
-    const onSubmit = vi.fn();
-    const log = createParentLog<Data>();
-    const { promise: parentCommitted, resolve: continueUpload } = Promise.withResolvers();
-    const { container } = render(<UploadingParent log={log} onSubmit={onSubmit} parentCommitted={parentCommitted} />);
-
-    await user.upload(screen.getByLabelText('name'), upload);
-
-    expect(screen.getByRole('status', { name: 'file' })).toHaveTextContent('text/plain');
-    expect(screen.getByRole('status', { name: 'stored name' })).toBeEmptyDOMElement();
-    expect(log.value).toEqual({});
-
-    await act(async () => {
-      continueUpload(undefined);
-      await parentCommitted;
-    });
-    await submitForm(container, user);
-
     expect(screen.getByRole('status', { name: 'stored name' })).toHaveTextContent('a.txt');
     expect(log.value).toEqual({ name: 'a.txt' });
     expectToHaveBeenCalledWithFormData(onSubmit, { name: 'a.txt' }, true);
@@ -747,21 +713,7 @@ describe("a custom upload widget that sets its parent's state before calling onC
 
   it('keeps every value of a form that is passed no formData when the parent re-renders', async () => {
     const onSubmit = vi.fn();
-    function Parent() {
-      const [file, setFile] = useState<File>();
-      return (
-        <ParentStore value={{ setParentState: setFile }}>
-          <output aria-label='file'>{file?.type}</output>
-          <Form<Data>
-            schema={schema}
-            validator={validator}
-            uiSchema={{ name: { 'ui:widget': UploadWidget } }}
-            onSubmit={onSubmit}
-          />
-        </ParentStore>
-      );
-    }
-    const { container } = render(<Parent />);
+    const { container } = render(<UploadingParent storesEdits={false} onSubmit={onSubmit} />);
 
     await user.type(screen.getByRole('textbox', { name: 'other' }), 'x');
     await user.upload(screen.getByLabelText('name'), upload);

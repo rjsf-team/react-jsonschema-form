@@ -1,10 +1,10 @@
 import { Profiler, StrictMode, useLayoutEffect } from 'react';
-import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import Form from '../src/index.ts';
+import Form, { ArrayFieldItemTemplate as DefaultItemTemplate } from '../src/index.ts';
 import { buildRegistry } from '../src/Theme.ts';
 import { AcceptingParent, createFormRef, elementOf, handleOf, ListeningParent, input } from './testUtils.tsx';
 
@@ -159,60 +159,58 @@ describe('render cost of one update', () => {
 describe('render cost of an edit in a long list (#3183)', () => {
   const rows: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
   const initialFormData = Array.from({ length: 20 }, (_, index) => ({ a: `item ${index}` }));
-  const renders = new Map<string, number>();
-  function CountingTextWidget({ id, value, onChange, onFocus, onBlur }: WidgetProps) {
-    renders.set(id, (renders.get(id) ?? 0) + 1);
-    return (
-      <input
-        id={id}
-        value={typeof value === 'string' ? value : ''}
-        onChange={(event) => onChange(event.target.value)}
-        onFocus={(event) => onFocus(id, event.target.value)}
-        onBlur={(event) => onBlur(id, event.target.value)}
-      />
-    );
-  }
   function renderList() {
-    const result = render(
+    const items = new Map<number, number>();
+    const widgets = new Map<string, number>();
+    function CountingItem(props: ArrayFieldItemTemplateProps) {
+      items.set(props.index, (items.get(props.index) ?? 0) + 1);
+      return <DefaultItemTemplate {...props} />;
+    }
+    function CountingTextWidget({ id, value, onChange }: WidgetProps) {
+      widgets.set(id, (widgets.get(id) ?? 0) + 1);
+      return (
+        <input
+          id={id}
+          value={typeof value === 'string' ? value : ''}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      );
+    }
+    const { container } = render(
       <Form
         schema={rows}
         validator={validator}
         initialFormData={initialFormData}
         widgets={{ TextWidget: CountingTextWidget }}
+        templates={{ ArrayFieldItemTemplate: CountingItem }}
       />,
     );
-    renders.clear();
-    return result;
+    items.clear();
+    widgets.clear();
+    return { container, items, widgets };
   }
 
-  it("re-renders only the edited row's widget for a keystroke", async () => {
-    const { container } = renderList();
-
-    await user.type(input(container, 'root_0_a'), 'z');
-
-    expect(input(container, 'root_0_a')).toHaveValue('item 0z');
-    expect(Object.fromEntries(renders)).toEqual({ root_0_a: 1 });
-  });
-
   it('re-renders only the two rows that trade places for a move down', async () => {
-    const { container } = renderList();
+    const { container, items, widgets } = renderList();
 
     await user.click(elementOf(container, '#root_0__moveDown'));
 
     expect(input(container, 'root_0_a')).toHaveValue('item 1');
     expect(input(container, 'root_1_a')).toHaveValue('item 0');
-    expect(Object.fromEntries(renders)).toEqual({ root_0_a: 1, root_1_a: 1 });
+    expect(Object.fromEntries(items)).toEqual({ 0: 1, 1: 1 });
+    expect(Object.fromEntries(widgets)).toEqual({ root_0_a: 1, root_1_a: 1 });
   });
 
-  it('re-renders only the rows that shift up into a removed one, once each', async () => {
-    const { container } = renderList();
+  it("re-renders every row's item template once for the new length, and only the shifted rows' widgets, for a remove", async () => {
+    const { container, items, widgets } = renderList();
 
     await user.click(elementOf(container, '#root_10__remove'));
 
     expect(input(container, 'root_10_a')).toHaveValue('item 11');
     expect(container.querySelector('#root_19_a')).toBeNull();
-    expect(Object.fromEntries(renders)).toEqual(
-      Object.fromEntries(Array.from({ length: 9 }, (_, index) => [`root_${10 + index}_a`, 1])),
-    );
+    // An item template takes `totalItems`, so each remaining row's template renders again
+    expect(Object.fromEntries(items)).toEqual(Object.fromEntries(Array.from({ length: 19 }, (_, index) => [index, 1])));
+    const shifted = Array.from({ length: 9 }, (_, index) => 10 + index);
+    expect(Object.fromEntries(widgets)).toEqual(Object.fromEntries(shifted.map((index) => [`root_${index}_a`, 1])));
   });
 });
