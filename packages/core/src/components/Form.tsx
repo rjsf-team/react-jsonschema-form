@@ -121,7 +121,7 @@ export interface FormProps<
   presentation?: ThemePresentation;
   /** The class names of the elements `@rjsf/core` renders, by element, layered over the theme's `classMap`,
    * which is layered over `@rjsf/core`'s. A class given here replaces the theme's class for that element, and a
-   * function is called with the theme's class to extend it
+   * function is called with the class beneath to extend it, the theme's, or `@rjsf/core`'s where the theme gives none
    */
   classMap?: FormClassMap;
   /** The keys of the extensions to `ui:globalOptions` the form's own widgets, fields and templates read, beyond the
