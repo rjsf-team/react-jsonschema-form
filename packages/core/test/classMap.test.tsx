@@ -31,6 +31,15 @@ describe('classMap', () => {
     expect(registry.classMap.select).toBe('form-control');
   });
 
+  it("keeps only core's keys, so a function under any other key never reaches registry.classMap", () => {
+    const schema: RJSFSchema = { type: 'string' };
+    const classMap = { inptu: (base: string) => `${base} x` } as unknown as FormClassMap;
+    const registry = buildRegistry({ schema, validator, classMap }, schema, createSchemaUtils({ validator }, schema));
+
+    expect(registry.classMap).not.toHaveProperty('inptu');
+    expect(Object.values(registry.classMap).every((value) => typeof value === 'string')).toBe(true);
+  });
+
   it('renders a mapped class in place of the default and keeps the marker and state classes beside it', () => {
     const schema: RJSFSchema = {
       type: 'object',

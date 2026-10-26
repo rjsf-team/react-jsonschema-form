@@ -1,4 +1,5 @@
 import type {
+  ClassMap,
   FormClassMap,
   FormContextType,
   GlobalFormOptions,
@@ -180,6 +181,8 @@ export function buildRegistry<
 >(props: FormProps<T, S, F>, schema: S, schemaUtils: SchemaUtilsType<T, S, F>): Registry<T, S, F> {
   const { translateString = englishStringTranslator, uiSchema } = props;
   const { fields, templates, widgets, presentation, classMap } = generateTheme<T, S, F>();
+  // Only core's keys are kept, as a function under any other key has no class beneath it to resolve against
+  const mergedClassMap = mergeClassMaps(classMap, props.classMap);
   return {
     fields: { ...fields, ...props.fields },
     templates: {
@@ -192,7 +195,9 @@ export function buildRegistry<
     },
     widgets: { ...widgets, ...props.widgets },
     presentation: mergeThemePresentation(presentation, props.presentation),
-    classMap: mergeClassMaps(classMap, props.classMap) as MergedClassMap,
+    classMap: Object.fromEntries(
+      Object.keys(classMap).map((key) => [key, mergedClassMap[key as keyof ClassMap]]),
+    ) as MergedClassMap,
     rootSchema: schema,
     // `F` may be narrower than `{}`, but an omitted formContext is an empty object
     formContext: props.formContext ?? ({} as F),
