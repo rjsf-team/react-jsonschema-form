@@ -18,15 +18,17 @@ export type EventFormData<T> = T extends object ? T : T | undefined;
 
 /** A value nested like the form's data, holding `true` at each field that differs. An object holds an entry only for
  * its members that differ, and an array an entry for each item, `undefined` where the item does not differ. A field
- * that was added, removed or replaced whole holds `true` at each of its leaves, or `true` itself when it is not a plain
- * object or array: a `Date`, a `File` or another `Blob` is marked as one field.
+ * that was added, removed or replaced whole holds `true` at each of its leaves, or `true` itself when it is empty or
+ * not a plain object or array: a `Date`, a `File` or another `Blob` is marked as one field. So a member may be `true`
+ * whatever its type. The root is typed by `T` alone, as `EventFormData` is, though a write at the root that replaces an
+ * object or array root whole marks it `true`.
  */
 export type NestedBooleans<T> = T extends Date | Blob
   ? boolean
   : T extends readonly (infer Item)[]
-    ? (NestedBooleans<Item> | undefined)[]
+    ? (NestedBooleans<Item> | boolean | undefined)[]
     : T extends object
-      ? { [K in keyof T]?: NestedBooleans<T[K]> }
+      ? { [K in keyof T]?: NestedBooleans<T[K]> | boolean }
       : // Tested last: tested first, it makes TypeScript measure `FormRef<T>` as invariant in `T`, so a
         // `FormRef<MyData>` no longer fits a `FormRef<unknown>`
         unknown extends T
