@@ -487,8 +487,9 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   });
   const { model } = cache;
   const { setFormElement } = model;
-  // Renders the form after each operation that changed its state. The server snapshot is the store's own: the render
-  // that reads it is the one that created the model, so nothing has been committed to it yet
+  // Renders the form after each operation that changed what it renders from, see `RENDERED_MEMBERS`. The server
+  // snapshot is the store's own: the render that reads it is the one that created the model, so nothing has been
+  // committed to it yet
   const published = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
   // With no operation since the cached derivation, that derivation is the latest state
   const base = published === cache.published ? cache.state : published;

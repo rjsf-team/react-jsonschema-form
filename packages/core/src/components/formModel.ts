@@ -60,6 +60,33 @@ const HELD_SCALARS_LIMIT = 100;
 type Deliver = (operation: () => void) => void;
 const deliverToCaller: Deliver = (operation) => operation();
 
+/** The members of the state a render of the `Form` reads, directly or through `deriveState()`: all but the touched
+ * marks, which only `getStatus()` and the events report. A commit that changes none of them, such as a blur that only
+ * touches a field, re-renders nothing
+ */
+const RENDERED_MEMBERS: Exclude<keyof FormState, 'touchedPaths'>[] = [
+  'schema',
+  'uiSchema',
+  'schemaUtils',
+  'formData',
+  'baseline',
+  'revealed',
+  'baselineUiState',
+  'isDataPassed',
+  'errors',
+  'errorSchema',
+  'schemaValidationErrors',
+  'schemaValidationErrorSchema',
+  'customErrors',
+  'retrievedSchema',
+  'uiState',
+  'initialDefaultsGenerated',
+  'registry',
+  'validationProps',
+  'defaultsBehavior',
+  'allowsAbsentAdditionalProperties',
+];
+
 /** Whether `element` takes focus, as a form control or an element with a `tabindex` does. A hidden input, an element
  * the `hidden` attribute hides, a disabled control and an `<a>` with no `href` report a `tabIndex` of 0 all the same,
  * yet `focus()` leaves them unfocused
@@ -146,6 +173,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // What operations have made of the form: the store React subscribes to. A render derives what it shows from it and
   // the props, see `deriveState()`, and nothing a render derives is written back
   let published = initial;
+  // The store's state as of its last commit that changed a member the `Form` renders from, which is what React reads,
+  // so a commit that changed none of them returns React the snapshot it already rendered
+  let shown = initial;
   const listeners = new Set<() => void>();
   // What the last commit rendered: its props, the state it showed, and the store's state that state was derived from.
   // Recorded after the commit, so an operation can start from what is on screen
@@ -278,6 +308,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (committed !== start) {
       published = committed;
       publishedProps = committedProps;
+      if (RENDERED_MEMBERS.some((key) => committed[key] !== shown[key])) {
+        shown = committed;
+      }
       hold(committed.formData);
       listeners.forEach((listener) => listener());
     }
@@ -826,7 +859,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     readField: <D>(path: FieldPath) => getAt<D>(current().formData, fieldPathToList(path)),
     readRenderedField: <D>(path: FieldPath) => getAt<D>(rendered.formData, fieldPathToList(path)),
     uiState,
-    getSnapshot: () => published,
+    getSnapshot: () => shown,
     subscribe: (listener: () => void) => {
       listeners.add(listener);
       return () => {
@@ -855,9 +888,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       rendered = derived;
       renderedFrom = from;
       derivedCache = undefined;
-      // Only a commit of the store's latest state: an operation made since the render began has left data the selections
-      // already hold for, which a render of the data before it would release
-      if (from === published) {
+      // Only a commit of the store's latest snapshot: an operation made since the render began has left data the
+      // selections already hold for, which a render of the data before it would release
+      if (from === shown) {
         uiState.rendered((at) => getAt(derived.formData, at));
       }
     },
