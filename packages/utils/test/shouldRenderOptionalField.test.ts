@@ -1,4 +1,4 @@
-import type { GlobalUISchemaOptions, Registry, RJSFSchema, TemplatesType } from '../src/index.ts';
+import type { GlobalUISchemaOptions, Registry, RJSFSchema, TemplatesType, UiSchema } from '../src/index.ts';
 import {
   createSchemaUtils,
   englishStringTranslator,
@@ -7,11 +7,7 @@ import {
   shouldRenderOptionalField,
   toFieldPath,
 } from '../src/index.ts';
-import {
-  getOptionalDataControlsType,
-  getSchemaTypesForXxxOf,
-  isOptionalDataControlsType,
-} from '../src/shouldRenderOptionalField.ts';
+import { getOptionalDataControlsType, isOptionalDataControlsType } from '../src/shouldRenderOptionalField.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.ts';
 
@@ -75,103 +71,148 @@ const registry: Registry = {
   globalFormOptions: GLOBAL_FORM_OPTIONS,
 };
 
-describe('getSchemaTypesForXxxOf', () => {
-  test('empty list', () => {
-    expect(getSchemaTypesForXxxOf([])).toEqual([]);
-  });
-  test('all objects', () => {
-    expect(getSchemaTypesForXxxOf(ONE_OF_SCHEMA_OBJECT.oneOf as RJSFSchema[])).toEqual('object');
-  });
-  test('all arrays', () => {
-    expect(getSchemaTypesForXxxOf(ONE_OF_SCHEMA_ARRAY.oneOf as RJSFSchema[])).toEqual('array');
-  });
-  test('mixed', () => {
-    expect(getSchemaTypesForXxxOf(ONE_OF_SCHEMA_MIXED.oneOf as RJSFSchema[])).toEqual(['object', 'array', 'string']);
-  });
-  test('a const null option reports the same type as the type null spelling of it', () => {
-    expect(getSchemaTypesForXxxOf([{ type: 'string' }, { const: null }])).toEqual(['string', 'null']);
-    expect(getSchemaTypesForXxxOf([{ type: 'string' }, { type: 'null' }])).toEqual(['string', 'null']);
-  });
-  test('only null options', () => {
-    expect(getSchemaTypesForXxxOf([{ const: null }, { type: 'null' }])).toEqual('null');
-  });
-});
-
 describe('getOptionalDataControlsType()', () => {
+  const typeOf = (schema: RJSFSchema) => getOptionalDataControlsType(schema, TEST_ROOT_SCHEMA);
   test('a schema without anyOf/oneOf returns its own type', () => {
-    expect(getOptionalDataControlsType({ type: 'object' })).toEqual('object');
+    expect(typeOf({ type: 'object' })).toEqual('object');
   });
   test('a schema without a type or anyOf/oneOf returns undefined', () => {
-    expect(getOptionalDataControlsType({})).toBeUndefined();
+    expect(typeOf({})).toBeUndefined();
   });
   test.each([
     ['anyOf', ANY_OF_SCHEMA_ARRAY],
     ['oneOf', ONE_OF_SCHEMA_ARRAY],
   ])('an %s schema returns the type its options share', (_, schema) => {
-    expect(getOptionalDataControlsType(schema)).toEqual('array');
+    expect(typeOf(schema)).toEqual('array');
   });
   test('a schema with both anyOf and oneOf returns the type of its anyOf options', () => {
-    expect(getOptionalDataControlsType({ ...ONE_OF_SCHEMA_OBJECT, ...ANY_OF_SCHEMA_ARRAY })).toEqual('array');
+    expect(typeOf({ ...ONE_OF_SCHEMA_OBJECT, ...ANY_OF_SCHEMA_ARRAY })).toEqual('array');
   });
   test.each(['anyOf', 'oneOf'])('a schema with an empty %s returns its own type', (keyword) => {
-    expect(getOptionalDataControlsType({ type: 'array', items: { type: 'string' }, [keyword]: [] })).toEqual('array');
+    expect(typeOf({ type: 'array', items: { type: 'string' }, [keyword]: [] })).toEqual('array');
   });
   test.each<[RJSFSchema['type']]>([[['null', 'object', 'string']], [['object', 'string']]])(
     'a schema listing %j returns the type it resolves to',
     (type) => {
-      expect(getOptionalDataControlsType({ type })).toEqual('object');
+      expect(typeOf({ type })).toEqual('object');
     },
   );
   test('a nullable schema returns its one type other than null', () => {
-    expect(getOptionalDataControlsType({ type: ['null', 'object'] })).toEqual('object');
+    expect(typeOf({ type: ['null', 'object'] })).toEqual('object');
   });
   test('a oneOf option listing several types contributes the type it resolves to', () => {
-    expect(getOptionalDataControlsType({ oneOf: [{ type: ['object', 'string'] }, { type: 'object' }] })).toEqual(
-      'object',
-    );
+    expect(typeOf({ oneOf: [{ type: ['object', 'string'] }, { type: 'object' }] })).toEqual('object');
   });
   test('a oneOf schema with mixed-type options returns every type', () => {
-    expect(getOptionalDataControlsType(ONE_OF_SCHEMA_MIXED)).toEqual(['object', 'array', 'string']);
+    expect(typeOf(ONE_OF_SCHEMA_MIXED)).toEqual(['object', 'array', 'string']);
   });
-  test.each<[string, RJSFSchema]>([
-    ['unresolved $ref options', { anyOf: [{ $ref: '#/definitions/list' }] }],
-    ['typeless options beside a type of its own', { type: 'array', anyOf: [{ minItems: 1 }] }],
-  ])('a schema whose options name no type returns undefined, for %s', (_, schema) => {
-    expect(getOptionalDataControlsType(schema)).toBeUndefined();
+  test('a schema whose options name no type, and that names none itself, returns undefined', () => {
+    expect(typeOf({ anyOf: [{ minLength: 1 }] })).toBeUndefined();
+  });
+  test.each<[RJSFSchema]>([[{ const: null }], [{ enum: [null] }], [{ type: 'null' }]])(
+    'a %j option counts as null',
+    (nullOption) => {
+      expect(typeOf({ oneOf: [{ type: 'string' }, nullOption] })).toEqual(['string', 'null']);
+    },
+  );
+  test.each<[RJSFSchema, string]>([
+    [{ type: ['array', 'null'], items: { type: 'string' }, anyOf: [{ minItems: 1 }, { const: null }] }, 'array'],
+    [
+      {
+        type: ['object', 'null'],
+        properties: { a: { type: 'string' } },
+        anyOf: [{ required: ['a'] }, { const: null }],
+      },
+      'object',
+    ],
+    [
+      {
+        type: ['object', 'null'],
+        properties: { a: { type: 'string' } },
+        anyOf: [{ required: ['a'] }, { enum: [null] }],
+      },
+      'object',
+    ],
+  ])('a null option under a nullable parent %j still counts as null', (schema, type) => {
+    expect(typeOf(schema)).toEqual([type, 'null']);
+  });
+  test.each<[string, RJSFSchema, string | string[]]>([
+    [
+      'an object with a oneOf of required lists',
+      { ...TEST_ROOT_SCHEMA, oneOf: [{ required: ['foo'] }, { minProperties: 1 }] },
+      'object',
+    ],
+    [
+      'an array with an anyOf of bounds',
+      { type: 'array', items: { type: 'string' }, anyOf: [{ minItems: 1 }, { maxItems: 5 }] },
+      'array',
+    ],
+    [
+      'a nullable object whose options are all typeless',
+      { type: ['object', 'null'], anyOf: [{ required: ['foo'] }, { minProperties: 1 }] },
+      'object',
+    ],
+    [
+      'a nullable object with a null option, which keeps the selector that reaches it',
+      { type: ['object', 'null'], anyOf: [{ required: ['foo'] }, { type: 'null' }] },
+      ['object', 'null'],
+    ],
+    ['an object with a boolean option', { ...TEST_ROOT_SCHEMA, oneOf: [false, { required: ['foo'] }] }, 'object'],
+  ])('an option naming no type takes the type of its parent, for %s', (_, schema, expected) => {
+    expect(typeOf(schema)).toEqual(expected);
+  });
+  test('a properties option keeps its object type under a parent listing several types, whose first it would take', () => {
+    expect(
+      typeOf({ type: ['array', 'object'], anyOf: [{ items: { type: 'string' } }, { properties: { a: {} } }] }),
+    ).toEqual(['array', 'object']);
+  });
+  test('an enum option takes the type of its values', () => {
+    expect(
+      typeOf({ type: 'array', items: { type: 'string' }, anyOf: [{ minItems: 1 }, { enum: [['a'], ['b']] }] }),
+    ).toEqual('array');
+  });
+  test('an option written as a $ref takes the type of its definition rather than the type of its object parent', () => {
+    const rootSchema: RJSFSchema = { definitions: { s: { type: 'string' } } };
+    expect(getOptionalDataControlsType({ type: 'object', anyOf: [{ $ref: '#/definitions/s' }] }, rootSchema)).toEqual(
+      'string',
+    );
   });
 });
 
 describe('isOptionalDataControlsType()', () => {
   const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['array'] };
+  const isControlsType = (
+    schema: RJSFSchema | (() => RJSFSchema),
+    uiSchema: UiSchema,
+    global?: GlobalUISchemaOptions,
+  ) => isOptionalDataControlsType(schema, uiSchema, global, TEST_ROOT_SCHEMA);
   test('a type in enableOptionalDataFieldForType returns true', () => {
-    expect(isOptionalDataControlsType(ANY_OF_SCHEMA_ARRAY, {}, globalUiOptions)).toBe(true);
+    expect(isControlsType(ANY_OF_SCHEMA_ARRAY, {}, globalUiOptions)).toBe(true);
   });
   test('a type not in enableOptionalDataFieldForType returns false', () => {
-    expect(isOptionalDataControlsType(ONE_OF_SCHEMA_OBJECT, {}, globalUiOptions)).toBe(false);
+    expect(isControlsType(ONE_OF_SCHEMA_OBJECT, {}, globalUiOptions)).toBe(false);
   });
   test('a list of several types returns false even when one of them is enabled', () => {
-    expect(isOptionalDataControlsType(ONE_OF_SCHEMA_MIXED, {}, globalUiOptions)).toBe(false);
+    expect(isControlsType(ONE_OF_SCHEMA_MIXED, {}, globalUiOptions)).toBe(false);
   });
   test('a type list returns true when the type it resolves to is enabled', () => {
-    expect(isOptionalDataControlsType({ type: ['null', 'array', 'string'] }, {}, globalUiOptions)).toBe(true);
+    expect(isControlsType({ type: ['null', 'array', 'string'] }, {}, globalUiOptions)).toBe(true);
   });
   test('no enabled types returns false', () => {
-    expect(isOptionalDataControlsType({ type: 'array' }, {}, {})).toBe(false);
+    expect(isControlsType({ type: 'array' }, {}, {})).toBe(false);
   });
   test('builds the schema from a function only when some type is enabled', () => {
     const buildSchema = vi.fn((): RJSFSchema => ({ type: 'array' }));
-    expect(isOptionalDataControlsType(buildSchema, {}, {})).toBe(false);
+    expect(isControlsType(buildSchema, {}, {})).toBe(false);
     expect(buildSchema).not.toHaveBeenCalled();
-    expect(isOptionalDataControlsType(buildSchema, {}, globalUiOptions)).toBe(true);
+    expect(isControlsType(buildSchema, {}, globalUiOptions)).toBe(true);
     expect(buildSchema).toHaveBeenCalledTimes(1);
   });
   test('no type returns false', () => {
-    expect(isOptionalDataControlsType({}, {}, globalUiOptions)).toBe(false);
+    expect(isControlsType({}, {}, globalUiOptions)).toBe(false);
   });
   test('the uiSchema options take effect without any global UI options', () => {
-    expect(isOptionalDataControlsType({ type: 'array' }, { 'ui:enableOptionalDataFieldForType': ['array'] })).toBe(
-      true,
-    );
+    expect(isControlsType({ type: 'array' }, { 'ui:enableOptionalDataFieldForType': ['array'] })).toBe(true);
   });
 });
 
