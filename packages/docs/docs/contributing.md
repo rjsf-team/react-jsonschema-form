@@ -85,7 +85,7 @@ For example, instead of an entry that explains the implementation:
 
 write what users see:
 
-> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450))
+> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450), [#5447](https://github.com/rjsf-team/react-jsonschema-form/issues/5447))
 
 A breaking entry has the same shape:
 
