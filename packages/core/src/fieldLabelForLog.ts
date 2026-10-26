@@ -44,16 +44,17 @@ export function entryLabelForLog(
   collapsedKeys?: readonly number[],
 ): string {
   const segments = fieldPathToList(fieldPath);
-  const collapses = (index: number, segment: string | number) =>
-    typeof segment === 'number' || collapsedKeys?.includes(index) === true;
+  const marker = (index: number, segment: string | number) => {
+    if (typeof segment === 'number') {
+      return '[]';
+    }
+    return collapsedKeys?.includes(index) ? '{}' : undefined;
+  };
   const { idPrefix, idSeparator } = globalFormOptions;
-  const id = [idPrefix, ...segments.map((segment, index) => (collapses(index, segment) ? '[]' : segment))].join(
-    idSeparator,
-  );
-  const path = segments.reduce<string>(
-    (entryPath, segment, index) =>
-      collapses(index, segment) ? `${entryPath}[]` : toFieldPath(segment, entryPath as FieldPath),
-    ROOT_FIELD_PATH,
-  );
+  const id = [idPrefix, ...segments.map((segment, index) => marker(index, segment) ?? segment)].join(idSeparator);
+  const path = segments.reduce<string>((entryPath, segment, index) => {
+    const collapsed = marker(index, segment);
+    return collapsed ? `${entryPath}${collapsed}` : toFieldPath(segment, entryPath as FieldPath);
+  }, ROOT_FIELD_PATH);
   return formatLabel(id, path);
 }

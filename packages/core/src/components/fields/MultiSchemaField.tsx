@@ -143,7 +143,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't
   // tell apart from a `uiSchema` it inherits, so a field the option's own entry names is warned about here instead,
   // unless it is `SchemaField`, which renders the option the same either way
-  const additionalDepths = useAdditionalDepths(schema, fieldPath);
+  // The `SchemaField` rendering this has already added its own key's depth to the context
+  const additionalDepths = use(AdditionalPropertyDepthsContext);
   const namedForPath = use(NamedFieldContext)?.fieldPath === fieldPath;
   if (rendersOption && namedForPath && optionUiSchema !== uiSchema) {
     const optionField = getUiOptions<T, S, F>(optionUiSchema).field;
