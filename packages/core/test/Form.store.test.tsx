@@ -213,9 +213,18 @@ it.each([false, true])(
       rows.set(props.index, (rows.get(props.index) ?? 0) + 1);
       return <DefaultItemTemplate {...props} />;
     }
-    function CountingWidget({ id, value, onChange }: WidgetProps) {
+    // Forwards focus and blur as `BaseInputTemplate` does, so a focus that re-renders every row fails this too
+    function CountingWidget({ id, value, onChange, onFocus, onBlur }: WidgetProps) {
       widgets.set(id, (widgets.get(id) ?? 0) + 1);
-      return <input id={id} value={value ?? ''} onChange={(event) => onChange(event.target.value)} />;
+      return (
+        <input
+          id={id}
+          value={value ?? ''}
+          onChange={(event) => onChange(event.target.value)}
+          onFocus={(event) => onFocus(id, event.target.value)}
+          onBlur={(event) => onBlur(id, event.target.value)}
+        />
+      );
     }
     const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
     const props = {

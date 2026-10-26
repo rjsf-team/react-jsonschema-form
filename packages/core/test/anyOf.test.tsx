@@ -15,6 +15,7 @@ import {
   createFormComponent,
   createFormRef,
   elementOf,
+  expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   handleOf,
   submitForm,
@@ -2425,6 +2426,46 @@ describe('anyOf', () => {
       // AnyOf selector
       expect(node.querySelector('select')).toBeInTheDocument();
     });
+  });
+
+  it('renders and submits a field whose anyOf key is present but undefined (#5365)', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { val: { type: 'string', anyOf: undefined } } };
+    const { node, onSubmit } = createFormComponent({ schema });
+
+    await user.type(elementOf(node, 'input#root_val'), 'abc');
+    await submitForm(node, user);
+
+    expectToHaveBeenCalledWithFormData(onSubmit, { val: 'abc' }, true);
+  });
+
+  it('scores an ambiguous oneOf whose option has an anyOf key that is present but undefined (#5365)', () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { properties: { p: {}, q: { type: 'string' } } },
+        { properties: { p: { type: 'string', anyOf: undefined } } },
+      ],
+    };
+
+    const { node } = createFormComponent({ schema, initialFormData: { p: 'x' } });
+
+    // Both options accept the data, so only scoring `p` against the second picks it over the first
+    expect(screen.getByRole('combobox')).toHaveDisplayValue('Option 2');
+    expect(elementOf(node, 'input#root_p')).toHaveValue('x');
+  });
+
+  it('renders a recursive $ref under a root whose anyOf key is present but undefined (#5365)', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      anyOf: undefined,
+      definitions: { node: { type: 'object', properties: { child: { $ref: '#/definitions/node' } } } },
+      properties: { root: { $ref: '#/definitions/node' } },
+    };
+
+    const { node } = createFormComponent({ schema, uiSchema: { root: { 'ui:title': 'X' } } });
+
+    expect(screen.getByText('X')).toBeInTheDocument();
+    await user.click(elementOf(node, '#root_root_child__expand'));
+    expect(elementOf(node, '#root_root_child__title')).toHaveTextContent('child');
   });
 });
 
