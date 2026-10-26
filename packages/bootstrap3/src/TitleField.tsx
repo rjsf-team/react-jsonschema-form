@@ -7,8 +7,6 @@ const REQUIRED_FIELD_SYMBOL = '*';
  * part of that name
  *
  * @param props - The `TitleFieldProps` for this component
- *
- * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
 export default function TitleField<
   T = unknown,

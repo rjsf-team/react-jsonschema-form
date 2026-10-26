@@ -4,8 +4,6 @@ import { joinClassNames, TranslatableString } from '@rjsf/utils';
 import IconButton from './IconButton.tsx';
 
 /** The `AddButton` renders a button that represent the `Add` action on a form
- *
- * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
 export default function AddButton<
   T = unknown,

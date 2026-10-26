@@ -16,8 +16,6 @@ import Label from './Label.tsx';
  * part of an `additionalProperties` part of a schema.
  *
  * @param props - The `WrapIfAdditionalProps` for this component
- *
- * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
 export default function WrapIfAdditionalTemplate<
   T = unknown,

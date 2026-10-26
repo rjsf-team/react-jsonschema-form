@@ -5,8 +5,6 @@ import { getTemplates, getUiOptions, joinClassNames } from '@rjsf/utils';
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
  * @param props - The `ArrayFieldItemTemplateProps` props for the component
- *
- * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
 export default function ArrayFieldItemTemplate<
   T = unknown,

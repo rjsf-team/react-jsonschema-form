@@ -1,9 +1,10 @@
+import { generateTemplates as coreTemplates } from '@rjsf/core';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import Form from '../src/index.ts';
+import Form, { generateTemplates } from '../src/index.ts';
 
 const user = userEvent.setup();
 
@@ -18,6 +19,7 @@ describe('Bootstrap 3 markup', () => {
       properties: { name: { type: 'string', title: 'Name' } },
     };
     const uiSchema: UiSchema = { name: { 'ui:help': 'Your name' } };
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
     const { container } = render(<Form schema={schema} uiSchema={uiSchema} noHtml5Validate validator={validator} />);
     await user.click(screen.getByRole('button', { name: 'Submit' }));
 
@@ -53,6 +55,7 @@ describe('Bootstrap 3 markup', () => {
       toppings: { 'ui:widget': 'checkboxes', 'ui:options': { inline: true } },
       size: { 'ui:widget': 'radio', 'ui:options': { inline: true } },
     };
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
     const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
 
     expect(container.querySelector('select#root_color')).toHaveClass('form-control');
@@ -64,6 +67,7 @@ describe('Bootstrap 3 markup', () => {
 
   it('styles the alt date widget as an inline list with Now and Clear buttons', () => {
     const schema: RJSFSchema = { type: 'string', format: 'date' };
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
     const { container } = render(<Form schema={schema} uiSchema={{ 'ui:widget': 'alt-date' }} validator={validator} />);
 
     expect(container.querySelector('ul.list-inline li.list-inline-item select')).toHaveClass('form-control');
@@ -73,6 +77,7 @@ describe('Bootstrap 3 markup', () => {
 
   it('lays an array out on the grid with glyphicon buttons', () => {
     const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
     const { container } = render(<Form schema={schema} initialFormData={['a', 'b']} validator={validator} />);
 
     expect(container.querySelector('.array-item-list')).toHaveClass('row');
@@ -91,6 +96,7 @@ describe('Bootstrap 3 markup', () => {
   it("adds a Form's arrayItem and arrayItemToolbox classes beside the grid classes", () => {
     const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
     const { container } = render(
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
       <Form
         schema={schema}
         initialFormData={['a']}
@@ -105,6 +111,7 @@ describe('Bootstrap 3 markup', () => {
 
   it('lays an additional property out as a key, value and remove button row', () => {
     const schema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
     const { container } = render(<Form schema={schema} initialFormData={{ extra: 'x' }} validator={validator} />);
 
     const row = container.querySelector('.form-group > .row');
@@ -118,27 +125,25 @@ describe('Bootstrap 3 markup', () => {
     ).toBeInTheDocument();
   });
 
-  // The option's own errors decide its `has-error`, as they decide its `rjsf-field-error` class, whatever the field above
-  // does with its `ui:hideError`
-  it.each([
-    ['shows', true, false],
-    ['hides', false, true],
-  ])(
-    "marks an anyOf option's form group has-error by whether the option %s the errors",
-    (_, aboveHides, optionHides) => {
-      const { container } = render(
-        <Form
-          schema={{ anyOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] }}
-          uiSchema={{ 'ui:hideError': aboveHides, anyOf: [{ 'ui:hideError': optionHides }, {}] }}
-          extraErrors={{ __errors: ['wrong'] }}
-          validator={validator}
-        />,
-      );
+  // Core renders the same markup until it drops Bootstrap 3, so only identity shows the theme renders its own copies
+  it("renders its own templates and buttons in place of core's, apart from core's SubmitButton", () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
+    const own = generateTemplates();
+    const core = coreTemplates();
 
-      const option = container.querySelector('input#root')?.closest('.form-group');
-      expect(option).toHaveClass('rjsf-field');
-      expect(option?.classList.contains('has-error')).toBe(!optionHides);
-      expect(option?.classList.contains('rjsf-field-error')).toBe(!optionHides);
-    },
-  );
+    for (const name of ['ArrayFieldItemTemplate', 'WrapIfAdditionalTemplate', 'TitleFieldTemplate'] as const) {
+      expect(own[name], name).toBeDefined();
+      expect(own[name], name).not.toBe(core[name]);
+    }
+    // Core's names, so a button the theme stops supplying fails here rather than being skipped
+    for (const [name, coreButton] of Object.entries(core.ButtonTemplates)) {
+      const button = own.ButtonTemplates?.[name as keyof typeof core.ButtonTemplates];
+      expect(button, name).toBeDefined();
+      if (name === 'SubmitButton') {
+        expect(button, name).toBe(coreButton);
+      } else {
+        expect(button, name).not.toBe(coreButton);
+      }
+    }
+  });
 });

@@ -2,6 +2,7 @@ import { gridTests } from '@rjsf/snapshot-tests';
 
 import Form from '../src/index.ts';
 
+// oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
 gridTests(Form, {
   ColumnWidthAll: { className: 'col-xs-12' },
   ColumnWidth4: { className: 'col-xs-4' },

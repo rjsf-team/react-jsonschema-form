@@ -70,6 +70,8 @@ import { Theme as Bootstrap3Theme } from '@rjsf/bootstrap3';
 const Form = withTheme(Bootstrap3Theme);
 ```
 
+Import from the package itself; it publishes no deep `@rjsf/bootstrap3/lib/*` paths.
+
 ## Contributing
 
 Read our [contributors' guide](https://rjsf-team.github.io/react-jsonschema-form/docs/contributing/) to get started.

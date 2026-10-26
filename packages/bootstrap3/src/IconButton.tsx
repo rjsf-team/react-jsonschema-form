@@ -3,8 +3,6 @@ import type { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema } f
 import { joinClassNames, TranslatableString } from '@rjsf/utils';
 
 /** Renders a Bootstrap 3 `btn` with a glyphicon
- *
- * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
 function IconButtonFn<
   T = unknown,
@@ -22,8 +20,6 @@ const IconButton = memo(IconButtonFn) as typeof IconButtonFn;
 export default IconButton;
 
 /** The `copy` icon button
- *
- * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
 function CopyButtonFn<
   T = unknown,
@@ -38,8 +34,6 @@ function CopyButtonFn<
 export const CopyButton = memo(CopyButtonFn) as typeof CopyButtonFn;
 
 /** The `arrow-down` icon button
- *
- * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
 function MoveDownButtonFn<
   T = unknown,
@@ -54,8 +48,6 @@ function MoveDownButtonFn<
 export const MoveDownButton = memo(MoveDownButtonFn) as typeof MoveDownButtonFn;
 
 /** The `arrow-up` icon button
- *
- * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
 function MoveUpButtonFn<
   T = unknown,
@@ -70,8 +62,6 @@ function MoveUpButtonFn<
 export const MoveUpButton = memo(MoveUpButtonFn) as typeof MoveUpButtonFn;
 
 /** The `remove` icon button, as `btn-danger`
- *
- * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
 function RemoveButtonFn<
   T = unknown,
@@ -88,8 +78,6 @@ function RemoveButtonFn<
 export const RemoveButton = memo(RemoveButtonFn) as typeof RemoveButtonFn;
 
 /** The `remove` icon button that clears a field
- *
- * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
  */
 function ClearButtonFn<
   T = unknown,

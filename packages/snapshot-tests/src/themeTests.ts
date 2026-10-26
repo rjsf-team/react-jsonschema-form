@@ -3,8 +3,8 @@ import type { RegistryWidgetsType, TemplatesType } from '@rjsf/utils';
 
 export interface ThemeGenerators {
   generateTemplates: () => Partial<TemplatesType>;
-  /** Left out by a theme with no widgets of its own, such as `@rjsf/bootstrap3` */
-  generateWidgets?: () => RegistryWidgetsType;
+  /** `null` for a theme with no widgets of its own, such as `@rjsf/bootstrap3`, which then skips the widget checks */
+  generateWidgets: (() => RegistryWidgetsType) | null;
   generateTheme: () => ThemeProps;
 }
 
@@ -44,7 +44,7 @@ export function themeTests({ generateTemplates, generateWidgets, generateTheme }
     });
     // Freshness alone passes for a generator that returns `{}`. A theme may add aliases (daisyui's `boolean`), so its
     // maps only have to contain every generated key
-    test('generateTemplates() and generateWidgets() return what generateTheme() is built from', () => {
+    test(`generateTemplates()${generateWidgets ? ' and generateWidgets()' : ''} return what generateTheme() is built from`, () => {
       const templateKeys = Object.keys(generateTemplates());
       const { templates = {}, widgets = {} } = generateTheme();
       expect(templateKeys).not.toHaveLength(0);

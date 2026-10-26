@@ -1219,13 +1219,6 @@
       "rules": {
         "react/jsx-no-literals": "off"
       }
-    },
-    {
-      // Every export of the package is deprecated, so its own files and tests use nothing else
-      "files": ["packages/bootstrap3/**"],
-      "rules": {
-        "typescript/no-deprecated": "off"
-      }
     }
   ]
 }

@@ -722,7 +722,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Added `wrapIfAdditionalErrorStateTests()`, which checks that a theme's `FieldTemplate` hands its `WrapIfAdditionalTemplate` the field's `hasErrors`, by rendering an extra key with errors through a `WrapIfAdditionalTemplate` that records it ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 - Added an `objectTests` case for a key matching none of the `patternProperties` beside `additionalProperties: false`, whose row says the key is not allowed, related to [#4630](https://github.com/rjsf-team/react-jsonschema-form/issues/4630)
 - Added `submitPendingTests()`, which checks that the theme's `SubmitButton` is `aria-disabled` and still enabled while a promise `onSubmit` returned is pending, also when the uiSchema enables it, idle once it settles, and kept disabled when the uiSchema disables it, and that a click on it while pending is canceled after the `onClickCapture` and `onClick` the uiSchema sets run, related to [#504](https://github.com/rjsf-team/react-jsonschema-form/issues/504) ([#5649](https://github.com/rjsf-team/react-jsonschema-form/pull/5649))
-- `themeTests()` takes a theme with no widgets of its own, as `@rjsf/bootstrap3` is: `ThemeGenerators.generateWidgets` is optional ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
+- `themeTests()` takes a theme with no widgets of its own, as `@rjsf/bootstrap3` is: `ThemeGenerators.generateWidgets` may be `null`, which skips the widget checks, while every theme still has to pass it ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 
 ## @rjsf/utils
 

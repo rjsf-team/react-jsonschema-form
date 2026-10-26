@@ -11,8 +11,7 @@
       "@rjsf/source": "./src/index.ts",
       "default": "./lib/index.js"
     },
-    "./lib": "./lib/index.js",
-    "./lib/*.js": "./lib/*.js"
+    "./lib": "./lib/index.js"
   },
   "files": [
     "lib",
