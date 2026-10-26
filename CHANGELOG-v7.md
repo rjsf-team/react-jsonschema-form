@@ -1013,7 +1013,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `isValid()` not finding a root with an `$id` from a `$ref` in a 2020-12 root, so an `if: { $ref: … }` condition always took `else` and `getFirstMatchingOption()` picked the wrong `$ref` option; `isValid(rootSchema, data, rootSchema)` for a root whose `$id` ends in an empty fragment also answers rather than returning `false` ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536))
 - Fix `isValid()` and `validateFormData()` reporting an unresolved `$ref` for one that escapes a `#` in a name as `%23`, such as `{ $ref: '#/definitions/a%23b' }` ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536))
 
-## Dev / docs / playground
+## All packages
 
 - **BREAKING CHANGE:** Remove support for Node 20, 23, 25 and 24 before 24.11.0: `engines.node` is now `^22.18.0 || ^24.11.0 || >=26.0.0` in every package, and CI runs Node 22, 24 and 26. See [Node support](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#node-support) ([#5253](https://github.com/rjsf-team/react-jsonschema-form/pull/5253))
 - Change the repo's pnpm from 10.17.1 to 12.6.0, which had been pinned because pnpm 11+ requires Node >=22.13 ([#5257](https://github.com/rjsf-team/react-jsonschema-form/pull/5257))
