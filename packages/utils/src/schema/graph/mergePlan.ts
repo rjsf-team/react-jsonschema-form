@@ -747,18 +747,21 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     let part: Part<S> = { schema, chains: [keywords] };
     const oneOf = keywords.get(ONE_OF_KEY);
-    // Only the entry's own lists are read as the lists beside `dependencies` are; one that an `allOf` member or a
-    // `then`/`else` of the entry holds is read as one that the same member or branch beside `dependencies` holds
+    // Only the entry's own lists are read as the lists beside `dependencies` are; an `allOf` member or a `then`/`else`
+    // of the entry offers its `anyOf` and reads its `oneOf` as a dynamic dependency of the entry's key
     const entryKey = edge === 'dependency' ? dependencyKey : undefined;
     const unkeyedOneOf = entryKey !== undefined && oneOf !== undefined && this.declaresNoKey(oneOf, entryKey);
     if (dependencyKey === undefined) {
       const dependencies = keywords.has(DEPENDENCIES_KEY);
       part = this.applyOption(part, ANY_OF_KEY, keywords.get(ANY_OF_KEY), dependencies);
       part = this.applyOption(part, ONE_OF_KEY, oneOf, dependencies);
-    } else if (entryKey === undefined) {
-      part = withoutList(part, ONE_OF_KEY, oneOf !== undefined);
     } else {
-      part = this.applyDependencyOptions(part, keywords, entryKey, unkeyedOneOf);
+      // A keyed `oneOf` is chosen from by `applyExactlyOne()` rather than offered, so it is dropped before any option is
+      // merged, which keeps a list the options offer themselves
+      part = withoutList(part, ONE_OF_KEY, oneOf !== undefined && !unkeyedOneOf);
+      if (entryKey !== undefined) {
+        part = this.applyDependencyOptions(part, keywords.get(ANY_OF_KEY), unkeyedOneOf ? oneOf : undefined, entryKey);
+      }
     }
     part = this.applyDependencies(part, keywords.get(DEPENDENCIES_KEY), keywords.get(PROPERTIES_KEY));
     // A dependency's `if` belongs to the entry its data qualified, so it is applied whatever the policy, as the entry's
@@ -944,19 +947,19 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
    * `dependencies` are, as the validator reads them: the option the data matches is merged in rather than offered. An
    * `anyOf` has no keyed reading, so its option is merged less a `properties[key]` it declares, as a keyed `oneOf`
    * option is, which would otherwise pin the key to the value it has. A list is dropped once an option of it is chosen,
-   * and a keyed `oneOf` always, as `applyExactlyOne()` chooses from it, before either option is merged, which keeps a
-   * list the options offer themselves; a list with no option to merge stays, as it does beside `dependencies`
+   * before either option is merged, which keeps a list the options offer themselves; a list with no option to merge
+   * stays, as it does beside `dependencies`
    */
   private applyDependencyOptions(
     part: Part<S>,
-    keywords: Map<string | symbol, Provider<S>>,
+    anyOfList: Provider<S> | undefined,
+    oneOfList: Provider<S> | undefined,
     key: string,
-    unkeyedOneOf: boolean,
   ): Part<S> {
-    const anyOf = this.chooseOption(ANY_OF_KEY, keywords.get(ANY_OF_KEY), true);
-    const oneOf = unkeyedOneOf ? this.chooseOption(ONE_OF_KEY, keywords.get(ONE_OF_KEY), true) : undefined;
+    const anyOf = this.chooseOption(ANY_OF_KEY, anyOfList, true);
+    const oneOf = this.chooseOption(ONE_OF_KEY, oneOfList, true);
     let next = withoutList(part, ANY_OF_KEY, anyOf !== undefined);
-    next = withoutList(next, ONE_OF_KEY, unkeyedOneOf ? oneOf !== undefined : keywords.has(ONE_OF_KEY));
+    next = withoutList(next, ONE_OF_KEY, oneOf !== undefined);
     if (anyOf !== undefined) {
       const keyed = dependencyCondition(this.graph, anyOf.id, key) !== undefined;
       next = mergeBranch(next, keyed ? withoutProperty(anyOf.option, key) : anyOf.option, 'o', anyOf.id);
