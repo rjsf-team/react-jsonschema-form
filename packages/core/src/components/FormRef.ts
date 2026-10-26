@@ -30,7 +30,8 @@ export interface FormRef<T = unknown> {
   /** Reads the form's status: whether its latest stored value differs from the baseline, where, and how many submits
    * have reached the form. A prop change that re-derives the data, such as a new `schema` filling in a default, moves
    * the baseline with it and calls no `onChange`, so after one this can differ from the status the last `IChangeEvent`
-   * carried.
+   * carried. Every call returns the same object until the status changes, so treat it as read-only; in development
+   * it is frozen.
    */
   getStatus(): RJSFFormStatus<T>;
   /** Clears the validation errors and the submit count, and resets the data to `seed` with the schema's defaults filled

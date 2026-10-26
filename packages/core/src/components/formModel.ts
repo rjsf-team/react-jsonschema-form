@@ -238,7 +238,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // How many times `reset()` has run, so a blur whose `onBlur` reset the form touches nothing in the state it left
   let resets = 0;
   // The status `getStatus()` last handed out, handed out again while the state and the count stand, so repeated reads
-  // share the `dirtyFields` it built
+  // share the `dirtyFields` it built. Frozen in development, since one reader's mutation would show in every later read
   let lastStatus: { from: FormState<T, S, F>; status: RJSFFormStatus<T> } | undefined;
   const countSubmit = () => {
     attempts += 1;
@@ -700,7 +700,13 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       const state = current();
       const submitCount = attempts - attemptsBeforeReset;
       if (lastStatus?.from !== state || lastStatus.status.submitCount !== submitCount) {
-        lastStatus = { from: state, status: toFormStatus(state, submitCount) };
+        const status = toFormStatus(state, submitCount);
+        if (isDevelopment) {
+          freezeFormData(status.dirtyFields);
+          freezeFormData(status.touchedFields);
+          Object.freeze(status);
+        }
+        lastStatus = { from: state, status };
       }
       return lastStatus.status;
     },
