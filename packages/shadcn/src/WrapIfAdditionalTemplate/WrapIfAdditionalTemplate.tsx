@@ -1,11 +1,13 @@
-import { RichDescription } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
+  descriptionId,
   getAdditionalKeyAttributes,
+  getTemplates,
+  getUiOptions,
   hasAdditionalKeyLabel,
   templateDrawsDescription,
   TranslatableString,
@@ -30,6 +32,7 @@ export default function WrapIfAdditionalTemplate<
     style,
     children,
     disabled,
+    hasErrors,
     id,
     label,
     keyName,
@@ -55,13 +58,14 @@ export default function WrapIfAdditionalTemplate<
 
   if (!additional) {
     return (
-      <div className={cn('flex flex-col gap-2', classNames)} style={style}>
+      <div className={cn('flex flex-col gap-2', classNames)} style={style} data-invalid={hasErrors || undefined}>
         {children}
       </div>
     );
   }
 
   const keyId = additionalKeyId(id);
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema));
 
   return (
     <>
@@ -71,13 +75,14 @@ export default function WrapIfAdditionalTemplate<
       <div
         className={cn('grid grid-cols-12 grid-rows-[auto_1fr] col-span-12 items-start gap-x-2', classNames)}
         style={style}
+        data-invalid={hasErrors || undefined}
       >
         <div className='grid gap-2 col-span-5'>
           <div className='flex flex-col gap-2'>
             {hasKeyLabel && (
               <label
                 htmlFor={keyId}
-                className={cn('rjsf-field-label', classMap.fieldLabel, 'text-muted-foreground')}
+                className={cn('rjsf-field-label text-muted-foreground', classMap.fieldLabel)}
                 data-invalid={keyAttributes['aria-invalid'] || undefined}
               >
                 {keyLabel}
@@ -85,10 +90,18 @@ export default function WrapIfAdditionalTemplate<
               </label>
             )}
             {/* The value's description sits between its label and input, so the key's input is held level with the
-                value's by an invisible copy of it, which wraps alike for a description as wide in either column */}
+                value's by an invisible copy of it, drawn by the same template under an id of its own, which wraps alike
+                for a description as wide in either column */}
             {rawDescription && templateDrawsDescription<T, S, F>(props) && (
-              <div aria-hidden='true' className={cn('rjsf-field-description', classMap.fieldDescription, 'invisible')}>
-                <RichDescription<T, S, F> description={rawDescription} registry={registry} uiSchema={uiSchema} />
+              <div aria-hidden='true' className='invisible'>
+                <DescriptionFieldTemplate
+                  id={descriptionId(keyId)}
+                  description={rawDescription}
+                  hasErrors={hasErrors}
+                  schema={schema}
+                  uiSchema={uiSchema}
+                  registry={registry}
+                />
               </div>
             )}
             <div className='pl-0.5 pt-0.5'>

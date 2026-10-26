@@ -1,11 +1,12 @@
+import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
 import Form from '../src/index.ts';
 
-const schema = {
-  type: 'object' as const,
-  properties: { flag: { type: 'boolean' as const, title: 'Flag', description: 'About' } },
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: { flag: { type: 'boolean', title: 'Flag', description: 'About' } },
 };
 
 describe('CheckboxWidget', () => {

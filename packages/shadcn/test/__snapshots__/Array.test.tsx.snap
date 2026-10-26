@@ -684,6 +684,7 @@ exports[`array fields > has errors 1`] = `
       >
         <div
           class="flex flex-col gap-2 rjsf-field rjsf-field-string rjsf-field-error"
+          data-invalid="true"
         >
           <label
             class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"

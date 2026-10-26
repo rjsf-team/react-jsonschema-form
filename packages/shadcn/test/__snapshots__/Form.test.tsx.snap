@@ -4982,6 +4982,7 @@ exports[`single fields > help and error display 1`] = `
     </div>
     <div
       class="flex flex-col gap-2 rjsf-field rjsf-field-string rjsf-field-error"
+      data-invalid="true"
     >
       <div
         class="p-0.5"
