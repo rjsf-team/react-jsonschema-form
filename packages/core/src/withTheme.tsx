@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import { useMemo } from 'react';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { ClassMap, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { mergeThemePresentation } from '@rjsf/utils';
 
 import type { FormProps } from './components/Form.tsx';
@@ -14,7 +14,12 @@ export type ThemeProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = Pick<FormProps<T, S, F>, 'fields' | 'templates' | 'widgets' | 'presentation' | 'classMap' | 'globalUiOptionsKeys'>;
+> = Pick<FormProps<T, S, F>, 'fields' | 'templates' | 'widgets' | 'presentation' | 'globalUiOptionsKeys'> & {
+  /** The class names of the elements `@rjsf/core` renders, by element, each replacing core's class for its element; only
+   * a `Form`'s `classMap` may extend a class with a function
+   */
+  classMap?: ClassMap;
+};
 
 /** The `Form` returned by `withTheme()`. It stays generic over the form data like `Form` itself, so `T` is inferred
  * from `formData` or named per use (`<ThemedForm<MyData> />`) instead of being fixed when the theme is applied; a theme

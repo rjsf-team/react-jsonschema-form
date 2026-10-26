@@ -3,10 +3,10 @@ import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionsAutofocusIndex,
-  enumOptionsDomValues,
   enumOptionsIsDisabled,
-  enumOptionsIsSelected,
   enumOptionValueDecoder,
+  enumOptionsDomValues,
+  enumOptionsIsSelected,
   getGroupAttributes,
   getOptionValueFormat,
   joinClassNames,
