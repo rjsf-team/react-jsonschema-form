@@ -236,6 +236,87 @@ describe('DateTimeWidget', () => {
       expect(onChange).not.toHaveBeenCalled();
     });
 
+    describe('editing a segment away', () => {
+      const value = '2024-01-01T10:30:00';
+      const schemaProps = { value, schema: { type: 'string', format: 'iso-date-time' } } as const;
+
+      test('does not commit while a segment is blank', async () => {
+        const onChange = vi.fn();
+        renderWidget({ onChange, ...schemaProps });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('{Backspace}');
+
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      test('restores the committed time when focus leaves with a blank segment', async () => {
+        const onChange = vi.fn();
+        renderWidget({ onChange, ...schemaProps });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('{Backspace}');
+        await user.tab({ shift: true });
+
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('10');
+        expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('30');
+        expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('00');
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      test('keeps the blank segment while focus moves between segments', async () => {
+        renderWidget(schemaProps);
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('{Backspace}');
+        await user.click(screen.getByRole('spinbutton', { name: 'minute' }));
+
+        expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveFocus();
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+      });
+
+      test('restores the held time when there is no date yet', async () => {
+        const onChange = vi.fn();
+        renderWidget({ onChange, schema: schemaProps.schema });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('083015');
+        await user.keyboard('{Backspace}');
+        expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('');
+
+        await user.tab();
+
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('08');
+        expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('30');
+        expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('15');
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      test('clears a partly typed time when there is no date and nothing was held', async () => {
+        const onChange = vi.fn();
+        renderWidget({ onChange, schema: schemaProps.schema });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('08');
+        await user.tab();
+
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+        expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('');
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      test('commits a retyped segment and has nothing left to restore', async () => {
+        const onChange = vi.fn();
+        renderWidget({ onChange, ...schemaProps });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('{Backspace}11');
+
+        expect(onChange).toHaveBeenLastCalledWith('2024-01-01T11:30:00');
+      });
+    });
+
     test('time input is cleared when date input is cleared', async () => {
       const onChange = vi.fn();
       const props = {

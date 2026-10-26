@@ -119,6 +119,7 @@ export default function DateTimeInput<
   const timePickerOptions = timePickerProps as TimePickerProps | undefined;
   const [pendingTime, setPendingTime] = useState('');
   const [prevTimeValue, setPrevTimeValue] = useState('');
+  const [timeResetKey, setTimeResetKey] = useState(0);
 
   const parsedValue = useMemo(
     () =>
@@ -174,6 +175,14 @@ export default function DateTimeInput<
     }
   }, [onBlur, id, value]);
 
+  // `TimePicker` keeps its segments in its own state and only re-syncs them when `value` changes, and it doesn't
+  // report a time that was never complete, so an incomplete time left behind on blur is discarded by remounting it
+  // onto `timeValue`, which is a no-op when the segments already match
+  const handleTimeBlur = useCallback(() => {
+    setTimeResetKey((key) => key + 1);
+    handleBlur();
+  }, [handleBlur]);
+
   const handleFocus = useCallback(() => {
     if (onFocus) {
       onFocus(id, value);
@@ -196,6 +205,7 @@ export default function DateTimeInput<
         <Group gap='xs' wrap='nowrap' align='flex-start'>
           <Box flex={1}>{children}</Box>
           <TimePicker
+            key={timeResetKey}
             {...timePickerOptions}
             size={size}
             radius={radius}
@@ -203,7 +213,7 @@ export default function DateTimeInput<
             value={timeValue}
             onChange={handleTimeChange}
             onFocus={handleFocus}
-            onBlur={handleBlur}
+            onBlur={handleTimeBlur}
             withSeconds={withSeconds}
             disabled={disabled || readonly}
             readOnly={readonly}
@@ -245,7 +255,8 @@ export default function DateTimeInput<
       timeValue,
       handleTimeChange,
       handleFocus,
-      handleBlur,
+      handleTimeBlur,
+      timeResetKey,
       disabled,
       readonly,
       error,
