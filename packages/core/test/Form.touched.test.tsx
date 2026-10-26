@@ -1,9 +1,10 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
-import { act } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 
 import type { FormRef } from '../src/index.ts';
+import { SIMPLE_ONEOF } from './testData/layoutData.ts';
 import {
   createFormComponent,
   createFormRef,
@@ -139,6 +140,32 @@ describe('touched', () => {
 
     expect(handle.getFormData()).toEqual({ items: [{ name: 'b' }, { name: 'c' }] });
     expect(handle.getStatus().touchedFields).toEqual({ items: [undefined, { name: true }] });
+  });
+
+  it('follows an item blurred while empty past an item removed before it', async () => {
+    const { container, handle } = mountWithHandle({
+      schema: list,
+      initialFormData: { items: [{ name: 'a' }, { name: 'b' }, {}] },
+    });
+
+    await blur(container, 'root_items_2_name');
+    await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-remove')[1]);
+
+    expect(handle.getFormData()).toEqual({ items: [{ name: 'a' }, {}] });
+    expect(handle.getStatus().touchedFields).toEqual({ items: [undefined, { name: true }] });
+  });
+
+  it('holds an entry for each item of a root array', async () => {
+    const { container, handle } = mountWithHandle({
+      schema: { type: 'array', items: { type: 'string' } },
+      initialFormData: ['a', 'b', 'c', 'd'],
+    });
+
+    await blur(container, 'root_2');
+
+    const { touchedFields } = handle.getStatus();
+    expect(touchedFields).toEqual([undefined, undefined, true, undefined]);
+    expect(Array.isArray(touchedFields) && Object.keys(touchedFields)).toEqual(['0', '1', '2', '3']);
   });
 
   it('is dropped with its removed item', async () => {
@@ -506,6 +533,36 @@ describe('a blur that is not a field', () => {
 
     expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
     expect(fieldErrorsById(node)).toEqual({});
+  });
+  it('touches nothing for the type selector of a field the fallback UI renders', async () => {
+    const { container, handle } = mountWithHandle({
+      schema: { type: 'object', properties: { x: { type: ['number', 'string'] } } },
+      useFallbackUiForUnsupportedType: true,
+    });
+
+    await user.click(elementOf(container, '#root_x___internal_type_selector'));
+    await user.click(document.body);
+
+    expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+  });
+
+  it("touches nothing and reveals only the cell's own errors for a layout grid's discriminated cell", async () => {
+    const { node, handle } = mountWithHandle({
+      schema: {
+        type: 'object',
+        properties: { note: { type: 'string' }, pick: SIMPLE_ONEOF },
+      },
+      uiSchema: { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['note', 'pick'] }] } },
+      initialFormData: { pick: { answer: '1' } },
+      liveValidate: 'onBlur',
+      liveErrors: 'field',
+    });
+
+    await user.click(screen.getByRole('radio', { name: 'Choice 1' }));
+    await user.click(document.body);
+
+    expect(handle.getStatus()).toMatchObject({ dirty: false, touched: false, touchedFields: {} });
+    expect(Object.keys(fieldErrorsById(node))).toEqual(['root_pick']);
   });
 });
 

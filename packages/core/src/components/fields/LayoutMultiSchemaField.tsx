@@ -11,6 +11,7 @@ import {
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 
+import useSendBlur from '../../hooks/useSendBlur.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import { getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
@@ -85,6 +86,8 @@ export default function LayoutMultiSchemaField<
   } = props;
   const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
+  // Its widget is an option selector, no field of the data, even though `SchemaField` renders it as the field
+  const handleBlur = useSendBlur(fieldPath, onBlur, 'nothing');
   const uiSchema = useMemo(() => omitFieldDirectives<T, S, F>(namingUiSchema), [namingUiSchema]);
   const keyword = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
   const enumOptions = useMemo(
@@ -178,7 +181,7 @@ export default function LayoutMultiSchemaField<
       errorSchema={errorSchema}
       placeholder={placeholder}
       onChange={onOptionChange}
-      onBlur={onBlur}
+      onBlur={handleBlur}
       onFocus={onFocus}
       value={selectedOption}
       options={widgetOptions}

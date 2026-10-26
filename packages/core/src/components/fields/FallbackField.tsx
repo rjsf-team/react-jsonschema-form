@@ -1,6 +1,7 @@
-import { useCallback, useMemo, useState } from 'react';
+import { use, useCallback, useMemo, useState } from 'react';
 import type {
   FallbackFieldProps,
+  FieldPath,
   FormContextType,
   RJSFMarkedSchema,
   RJSFSchema,
@@ -35,6 +36,8 @@ import {
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
+import FormDataContext from '../FormDataContext.ts';
+import type { BlurTouch } from '../formState.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 
 /**
@@ -409,6 +412,18 @@ function FallbackUiField<
     () => ({ [UI_OPTIONS_KEY]: { label: uiBooleanOption(label) !== false } }),
     [label],
   );
+  // The selector's `SchemaField` sits at a path no data is stored at, so the blur it names is replaced by this field's
+  // own, which touches nothing, as an option selector's does
+  const access = use(FormDataContext);
+  const typeSelectorAccess = useMemo(
+    () =>
+      access && {
+        ...access,
+        sendBlur: (_selectorPath: FieldPath, _touches: BlurTouch, send: () => void) =>
+          access.sendBlur(fieldPath, 'nothing', send),
+      },
+    [access, fieldPath],
+  );
 
   // Exactly one of the two fields renders the title: the outer one where a template's label names the value, which its
   // plan gives a control only where the value is one, and the value field otherwise, as where the theme declares the
@@ -455,20 +470,22 @@ function FallbackUiField<
       schema={schema}
       registry={registry}
       typeSelector={
-        <SchemaField
-          fieldPath={typeSelectorFieldPath}
-          id={fieldPathToId(typeSelectorFieldPath, globalFormOptions)}
-          name={`${name}__fallback_type`}
-          schema={typesOptionSchema as S}
-          uiSchema={typeSelectorUiSchema}
-          formData={type as T}
-          onChange={onTypeChange}
-          onBlur={onBlur}
-          onFocus={onFocus}
-          registry={registry}
-          disabled={disabled}
-          readonly={readonly}
-        />
+        <FormDataContext value={typeSelectorAccess}>
+          <SchemaField
+            fieldPath={typeSelectorFieldPath}
+            id={fieldPathToId(typeSelectorFieldPath, globalFormOptions)}
+            name={`${name}__fallback_type`}
+            schema={typesOptionSchema as S}
+            uiSchema={typeSelectorUiSchema}
+            formData={type as T}
+            onChange={onTypeChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            registry={registry}
+            disabled={disabled}
+            readonly={readonly}
+          />
+        </FormDataContext>
       }
       schemaField={valueField}
     />

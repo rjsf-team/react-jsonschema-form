@@ -240,22 +240,17 @@ export function toFormStatus<T, S extends StrictRJSFSchema, F extends FormContex
   const dirtyMarks = isDirty ? markChanged(formData, baseline) : noMarks(formData);
   // `touched` is read off the marks rather than the paths, so a touched path that marks nothing, such as a whole-array
   // widget holding no items, cannot report a touch `touchedFields` does not show
-  let touchedMarks = noMarks(formData);
-  let isTouched = false;
+  let touchedMarks: unknown;
   const mark = (fieldPath: FieldPath, isWhole: boolean) => {
-    const marked = markPath(touchedMarks, formData, fieldPathToList(fieldPath), isWhole);
-    if (marked !== undefined) {
-      touchedMarks = marked;
-      isTouched = true;
-    }
+    touchedMarks = markPath(touchedMarks, formData, fieldPathToList(fieldPath), isWhole) ?? touchedMarks;
   };
   touchedPaths.fields.forEach((fieldPath) => mark(fieldPath, false));
   touchedPaths.containers.forEach((fieldPath) => mark(fieldPath, true));
   return {
     dirty: isDirty,
     dirtyFields: asNestedBooleans<T>(dirtyMarks),
-    touched: isTouched,
-    touchedFields: asNestedBooleans<T>(touchedMarks),
+    touched: touchedMarks !== undefined,
+    touchedFields: asNestedBooleans<T>(touchedMarks ?? noMarks(formData)),
     submitCount,
   };
 }
@@ -414,8 +409,13 @@ function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContext
   formData: T | undefined,
   move?: ContainerKeyMove,
 ): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
+  // The moved paths are checked against the earlier data with the same keys moved, so a path a move re-keyed is checked
+  // against the value that moved with it
+  const previous = move
+    ? withKeysMoved(current.formData, formData, fieldPathToList(move.container), move.newKeyOf)
+    : current.formData;
   const follow = (paths: ReadonlySet<FieldPath>) =>
-    withoutDroppedPaths(withPathsMoved(paths, move), current.formData, formData);
+    withoutDroppedPaths(withPathsMoved(paths, move), previous, formData);
   return { touchedPaths: updatePaths(current.touchedPaths, follow), revealed: updatePaths(current.revealed, follow) };
 }
 
