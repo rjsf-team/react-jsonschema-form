@@ -81,11 +81,18 @@ describe('Bootstrap 3 markup', () => {
     const { container } = render(<Form schema={schema} initialFormData={['a', 'b']} validator={validator} />);
 
     expect(container.querySelector('.array-item-list')).toHaveClass('row');
-    const item = container.querySelector('.rjsf-array-item')!;
-    expect(item.querySelector('.col-xs-9.col-md-10.col-xl-11')).toContainElement(item.querySelector('input'));
-    expect(item.querySelector('.col-xs-3.col-md-2.col-xl-1.array-item-toolbox .btn-group')).toBeInTheDocument();
-    expect(item.querySelector('button.btn.btn-default .glyphicon.glyphicon-arrow-down')).toBeInTheDocument();
-    expect(item.querySelector('button.btn.btn-danger .glyphicon.glyphicon-remove')).toBeInTheDocument();
+    expect(container.querySelector('.rjsf-array-item .col-xs-9.col-md-10.col-xl-11')).toContainElement(
+      container.querySelector('.rjsf-array-item input'),
+    );
+    expect(
+      container.querySelector('.rjsf-array-item .col-xs-3.col-md-2.col-xl-1.array-item-toolbox .btn-group'),
+    ).toBeInTheDocument();
+    expect(
+      container.querySelector('.rjsf-array-item button.btn.btn-default .glyphicon.glyphicon-arrow-down'),
+    ).toBeInTheDocument();
+    expect(
+      container.querySelector('.rjsf-array-item button.btn.btn-danger .glyphicon.glyphicon-remove'),
+    ).toBeInTheDocument();
     expect(
       container.querySelector(
         '.row > .col-xs-4.col-xs-offset-8.text-right > .btn.btn-info.btn-add.col-xs-12 .glyphicon-plus',
@@ -136,8 +143,9 @@ describe('Bootstrap 3 markup', () => {
       expect(own[name], name).not.toBe(core[name]);
     }
     // Core's names, so a button the theme stops supplying fails here rather than being skipped
+    const ownButtons = new Map(Object.entries(own.ButtonTemplates ?? {}));
     for (const [name, coreButton] of Object.entries(core.ButtonTemplates)) {
-      const button = own.ButtonTemplates?.[name as keyof typeof core.ButtonTemplates];
+      const button = ownButtons.get(name);
       expect(button, name).toBeDefined();
       if (name === 'SubmitButton') {
         expect(button, name).toBe(coreButton);
@@ -145,6 +153,56 @@ describe('Bootstrap 3 markup', () => {
         expect(button, name).not.toBe(coreButton);
       }
     }
+  });
+
+  // Core's own map is Bootstrap 3's until it drops it, so only the map's content shows the theme carries one
+  it("carries Bootstrap 3's class map", () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
+    expect(generateClassMap()).toMatchInlineSnapshot(`
+      {
+        "altDateClearButton": "btn btn-warning",
+        "altDateList": "list-inline",
+        "altDateListItem": "list-inline-item",
+        "altDateNowButton": "btn btn-info",
+        "arrayFieldset": "",
+        "arrayItem": "",
+        "arrayItemList": "row",
+        "arrayItemToolbox": "",
+        "checkboxInlineLabel": "checkbox-inline",
+        "checkboxInput": "",
+        "checkboxLabel": "",
+        "checkboxWrapper": "checkbox",
+        "cyclicSchemaExpandButton": "btn btn-sm btn-warning",
+        "cyclicSchemaMessage": "text-danger",
+        "disabled": "disabled",
+        "errorList": "panel panel-danger",
+        "errorListHeading": "panel-heading",
+        "errorListItem": "list-group-item text-danger",
+        "errorListItems": "list-group",
+        "errorListTitle": "panel-title",
+        "fieldDescription": "",
+        "fieldError": "text-danger",
+        "fieldErrors": "bs-callout bs-callout-info",
+        "fieldHelp": "help-block",
+        "fieldLabel": "control-label",
+        "fileInput": "form-control",
+        "input": "form-control",
+        "multiSchema": "panel panel-default panel-body",
+        "multiSchemaSelector": "form-group",
+        "objectFieldset": "",
+        "optionalDataAddButton": "btn-sm",
+        "optionalDataRemoveButton": "btn-sm",
+        "radioInlineLabel": "radio-inline",
+        "radioInput": "",
+        "radioLabel": "",
+        "radioWrapper": "radio",
+        "rangeInput": "form-control",
+        "rangeWrapper": "",
+        "select": "form-control",
+        "submitButton": "btn btn-info",
+        "textarea": "form-control",
+      }
+    `);
   });
 
   it('hands a Form put together from its templates the class map generateTheme() carries, a fresh copy each call', () => {

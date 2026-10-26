@@ -36,15 +36,17 @@ export function themeTests({ generateTemplates, generateWidgets, generateTheme }
     test('generateTemplates() returns fresh maps on every call', () => {
       expectFreshMaps(generateTemplates(), generateTemplates());
     });
-    test.runIf(generateWidgets)('generateWidgets() returns a fresh map on every call', () => {
-      expectFreshMaps(generateWidgets!(), generateWidgets!());
-    });
+    if (generateWidgets) {
+      test('generateWidgets() returns a fresh map on every call', () => {
+        expectFreshMaps(generateWidgets(), generateWidgets());
+      });
+    }
     test('generateTheme() returns fresh maps on every call', () => {
       expectFreshMaps(generateTheme(), generateTheme());
     });
     // Freshness alone passes for a generator that returns `{}`. A theme may add aliases (daisyui's `boolean`), so its
     // maps only have to contain every generated key
-    test(`generateTemplates()${generateWidgets ? ' and generateWidgets()' : ''} return what generateTheme() is built from`, () => {
+    test(`${generateWidgets ? 'generateTemplates() and generateWidgets() return' : 'generateTemplates() returns'} what generateTheme() is built from`, () => {
       const templateKeys = Object.keys(generateTemplates());
       const { templates = {}, widgets = {} } = generateTheme();
       expect(templateKeys).not.toHaveLength(0);

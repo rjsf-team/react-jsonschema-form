@@ -90,7 +90,7 @@ export default function WrapIfAdditionalTemplate<
             ) : (
               <input
                 key={keyName}
-                className='form-control'
+                className={classMap.input}
                 type='text'
                 id={keyId}
                 aria-label={hasKeyLabel ? undefined : keyLabel}
