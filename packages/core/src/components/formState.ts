@@ -348,9 +348,9 @@ function withPathsMoved(paths: ReadonlySet<FieldPath>, move: ContainerKeyMove | 
   return moved.size === paths.size && [...moved].every((path) => paths.has(path)) ? paths : moved;
 }
 
-/** Where the change at `fieldPath` moves what the form keeps by path of the fields under a container, the option
- * selections, the touched fields and the fields that revealed their errors: under the keys of the container the move
- * announced for it moved, where the fields' own errors go, or out from under a property the change removes
+/** Where the change at `fieldPath` moves what the form keeps by path of the fields under a container, as the option
+ * selections: under the keys of the container the move announced for it moved, where the fields' own errors go, or out
+ * from under a property the change removes
  *
  * @param change - The change, with the key move announced for it, if any
  * @returns - The container whose keys move and where each goes, or undefined for a change that moves none
@@ -466,7 +466,9 @@ function marksAfterChange<T, S extends StrictRJSFSchema, F extends FormContextTy
   formData: T | undefined,
   props: FormProps<T, S, F>,
 ): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
-  const move = keyMoveOf(change);
+  // The marks belong to the data, so they go where the data went, as the validator's errors do, not where the fields'
+  // own errors go: a field both options of a switch declare keeps its value, and its marks with it
+  const move = keyMoveOf({ ...change, newOwnKeyOf: undefined });
   const followed = marksFollowingData(current, formData, move);
   let { revealed } = followed;
   if (isRevealedByField(props) && !change.editedPath) {

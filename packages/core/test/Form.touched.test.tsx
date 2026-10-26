@@ -548,6 +548,31 @@ describe('a blur that is not a field', () => {
   });
 });
 
+describe('an option switch', () => {
+  it('keeps the touched and revealed field whose value both options hold', async () => {
+    const { container, node, handle } = mountWithHandle({
+      schema: {
+        type: 'object',
+        oneOf: [
+          { title: 'A', properties: { email: { type: 'string', minLength: 5 }, a: { type: 'string', minLength: 5 } } },
+          { title: 'B', properties: { email: { type: 'string', minLength: 5 }, b: { type: 'string', minLength: 5 } } },
+        ],
+      },
+      initialFormData: { email: 'x@y', a: 'x', b: 'x' },
+      liveValidate: 'onBlur',
+      liveErrors: 'field',
+    });
+
+    await blur(container, 'root_email');
+    await user.selectOptions(elementOf(container, '#root__oneof_select'), 'B');
+
+    expect(handle.getStatus()).toMatchObject({ touched: true, touchedFields: { email: true } });
+    // The switch reveals the object's own errors, but not those of `b`, which nothing reached
+    expect(fieldErrorsById(node)).toHaveProperty('root_email');
+    expect(fieldErrorsById(node)).not.toHaveProperty('root_b');
+  });
+});
+
 describe("a layout grid's discriminated cell", () => {
   it('touches the selector field its widget writes', async () => {
     const { node, handle } = mountWithHandle({
