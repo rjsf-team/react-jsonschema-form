@@ -81,6 +81,8 @@ write what users see:
 
 `pnpm run changelog-check` checks the entries your branch adds, as CI does for every PR: the verb, the links, the breaking marker, and that a change to a published package's `src` adds an entry. It compares with `origin/v7` unless you pass another base, such as `pnpm run changelog-check origin/main`.
 
+Git merges the changelogs with `merge=union` (`.gitattributes`), so a rebase keeps both of two entries appended under the same heading instead of stopping on a conflict. It also keeps both versions of a line two branches edited, so check the rebased changelog for a doubled bullet or release heading.
+
 ## Upgrade guide
 
 A breaking change also gets a section in the next major version's upgrade guide, such as `packages/docs/docs/migration-guides/v7.x upgrade guide.md`, in the same PR.

@@ -1,14 +1,14 @@
 // Usage: node .github/changelog/check.mjs [base] [head]
 // Checks the entries a change adds under a package's heading in the changelog
 // against the rules in packages/docs/docs/contributing.md#changelog. Compares HEAD with its merge
-// base on origin/v7 by default. CHANGELOG_SKIP=true (the `no-changelog` label)
+// base with origin/v7 by default. CHANGELOG_SKIP=true (the `no-changelog` label)
 // lets a change to a published package's src add no entry.
 import { execFileSync } from 'node:child_process';
 
 const [baseArg, head = 'HEAD'] = process.argv.slice(2);
 const git = (/** @type {string[]} */ ...args) =>
   execFileSync('git', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
-const base = baseArg ?? git('merge-base', 'origin/v7', head).trim();
+const base = git('merge-base', baseArg ?? 'origin/v7', head).trim();
 // Plain, rename-free output whatever the user's git config says
 const diff = (/** @type {string[]} */ ...args) => git('diff', '--no-color', '--no-ext-diff', '--no-renames', ...args);
 
@@ -23,9 +23,9 @@ const errors = [];
 /** @type {string[]} */
 const warnings = [];
 
-const show = (/** @type {string} */ file) => {
+const show = (/** @type {string} */ file, rev = head) => {
   try {
-    return git('show', `${head}:${file}`);
+    return git('show', `${rev}:${file}`);
   } catch {
     return '';
   }
@@ -73,46 +73,51 @@ const isPublished = (/** @type {string} */ dir) => {
 };
 
 // On v7, CHANGELOG-v7.md sits beside main's CHANGELOG.md: entries belong in the one with the newest release
-const newestRelease = (/** @type {string} */ file) => Number(/^# (\d+)/m.exec(show(file))?.[1] ?? -1);
-const [changelog = 'CHANGELOG.md'] = git('ls-tree', '--name-only', head)
+const [newest] = git('ls-tree', '--name-only', head)
   .split('\n')
   .filter((name) => /^CHANGELOG[^/]*\.md$/.test(name))
-  .sort((a, b) => newestRelease(b) - newestRelease(a));
+  .map((name) => {
+    const text = show(name);
+    return { name, text, release: Number(/^# (\d+)/m.exec(text)?.[1] ?? -1) };
+  })
+  .sort((a, b) => b.release - a.release);
+const changelog = newest?.name ?? 'CHANGELOG.md';
 
 const changedFiles = diff('--name-only', base, head).split('\n').filter(Boolean);
 let entries = 0;
 
 if (changedFiles.includes(changelog)) {
-  // A hunk that removes nothing inserts new entries, which the rules apply to. A hunk that replaces lines edits
-  // existing entries: that counts as the change's entry, but entries written before the rules aren't held to them
-  /** @type {Set<number>} */
-  const inserted = new Set();
-  /** @type {Set<number>} */
-  const edited = new Set();
+  // A hunk's first added lines replace the lines it removes, editing existing entries: that counts as the change's
+  // entry, but entries written before the rules aren't held to them. Its remaining added lines insert new entries,
+  // which the rules apply to. A line already in the base changelog has only moved, as a release's reordering does
+  /** @type {Map<number, boolean>} */
+  const isInsertion = new Map();
   for (const [, removed = '1', start, count = '1'] of diff('--unified=0', base, head, '--', changelog).matchAll(
     /^@@ -\d+(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/gm,
   )) {
-    for (let line = Number(start); line < Number(start) + Number(count); line += 1) {
-      (removed === '0' ? inserted : edited).add(line);
+    for (let offset = 0; offset < Number(count); offset += 1) {
+      isInsertion.set(Number(start) + offset, offset >= Number(removed));
     }
   }
+  const baseLines = new Set(show(changelog, base).split('\n'));
   let releases = 0;
   let heading = '';
-  for (const [index, text] of show(changelog).split('\n').entries()) {
+  for (const [index, text] of (newest?.text ?? '').split('\n').entries()) {
     const line = index + 1;
     const at = `${changelog}:${line}`;
     if (text.startsWith('# ')) {
       releases += 1;
     } else if (text.startsWith('## ')) {
       heading = text.slice(3);
-    } else if (heading.startsWith('@rjsf/') && /^\s*- /.test(text) && (inserted.has(line) || edited.has(line))) {
+    } else if (heading.startsWith('@rjsf/') && /^\s*- /.test(text) && isInsertion.has(line) && !baseLines.has(text)) {
       entries += 1;
-      if (releases !== 1) {
-        errors.push(`${at}: add entries to the upcoming release at the top of the file`);
-      }
-      if (inserted.has(line) && text.startsWith('- ')) {
-        const isBreaking = text.startsWith(`- ${BREAKING}`);
-        const body = text.slice(isBreaking ? 2 + BREAKING.length : 2);
+      if (isInsertion.get(line) === true && text.startsWith('- ')) {
+        if (releases !== 1) {
+          errors.push(`${at}: add entries to the upcoming release at the top of the file`);
+        }
+        const entry = text.slice(2);
+        const isBreaking = entry.startsWith(BREAKING);
+        const body = isBreaking ? entry.slice(BREAKING.length) : entry;
         const guideLinks = [...text.matchAll(GUIDE_LINK)];
         if (!VERBS.some((verb) => body.startsWith(`${verb} `))) {
           errors.push(
@@ -125,7 +130,9 @@ if (changedFiles.includes(changelog)) {
           );
         }
         if (isBreaking && guideLinks.length === 0) {
-          errors.push(`${at}: link a breaking change to the upgrade guide section that says what to change`);
+          errors.push(
+            `${at}: link a breaking change to the upgrade guide section that says what to change, such as [upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#heading-id)`,
+          );
         }
         for (const [, major, anchor] of guideLinks) {
           if (!guideIds(major).has(anchor)) {
