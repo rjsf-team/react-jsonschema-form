@@ -25,7 +25,7 @@ import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
-import { dependencyCondition, targetOf } from './validationTargets.ts';
+import { declaredProperties, dependencyCondition, targetOf } from './validationTargets.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -99,7 +99,8 @@ export interface OptionChoice {
   readonly options: readonly NodeId[];
   /** The list of options as the node holding it declares it */
   readonly list: unknown;
-  /** Whether the schema offering the options has `dependencies`, the one case `retrieveSchema()` merges an option */
+  /** Whether the schema offering the options has `dependencies`, or is a `dependencies` entry offering an `anyOf` or a
+   * `oneOf` no option of which declares its key: the cases `retrieveSchema()` merges an option */
   readonly dependencies: boolean;
   readonly selected?: number;
 }
@@ -333,6 +334,26 @@ function mergeBranch<S extends StrictRJSFSchema>(
   node: NodeId,
 ): Part<S> {
   return mergeOver(part, scopedPart(branch, `${kind}${node}`));
+}
+
+/** Returns the chosen branch of a dependency less its `properties[key]`, the property it was chosen by */
+function withoutProperty<S extends StrictRJSFSchema>(chosen: Part<S>, key: string): Part<S> {
+  const properties = { ...chosen.schema.properties };
+  Reflect.deleteProperty(properties, key);
+  const schema = { ...chosen.schema };
+  Reflect.set(schema, PROPERTIES_KEY, properties);
+  // A chain a nested dependency chose already drops the key its own option was chosen by, which stays dropped
+  const chains = chosen.chains.map((chain) => {
+    const declaring = chain.get(PROPERTIES_KEY);
+    return declaring === undefined || declaring.drops !== undefined
+      ? chain
+      : new Map(chain).set(PROPERTIES_KEY, { ...declaring, drops: key });
+  });
+  return { schema, chains };
+}
+
+function withoutList<S extends StrictRJSFSchema>(part: Part<S>, keyword: 'anyOf' | 'oneOf', drop: boolean): Part<S> {
+  return drop ? { ...part, schema: withoutKeys(part.schema, keyword) } : part;
 }
 
 function withRequired<S extends StrictRJSFSchema>(schema: S, required: readonly string[]): S {
@@ -725,10 +746,22 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       Reflect.set(schema, RJSF_REF_KEY, ref);
     }
     let part: Part<S> = { schema, chains: [keywords] };
+    const oneOf = keywords.get(ONE_OF_KEY);
+    // Only the entry's own lists are read as the lists beside `dependencies` are; an `allOf` member or a `then`/`else`
+    // of the entry offers its `anyOf` and reads its `oneOf` as a dynamic dependency of the entry's key
+    const entryKey = edge === 'dependency' ? dependencyKey : undefined;
+    const unkeyedOneOf = entryKey !== undefined && oneOf !== undefined && this.declaresNoKey(oneOf, entryKey);
     if (dependencyKey === undefined) {
       const dependencies = keywords.has(DEPENDENCIES_KEY);
       part = this.applyOption(part, ANY_OF_KEY, keywords.get(ANY_OF_KEY), dependencies);
-      part = this.applyOption(part, ONE_OF_KEY, keywords.get(ONE_OF_KEY), dependencies);
+      part = this.applyOption(part, ONE_OF_KEY, oneOf, dependencies);
+    } else {
+      // A keyed `oneOf` is chosen from by `applyExactlyOne()` rather than offered, so it is dropped before any option is
+      // merged, which keeps a list the options offer themselves
+      part = withoutList(part, ONE_OF_KEY, oneOf !== undefined && !unkeyedOneOf);
+      if (entryKey !== undefined) {
+        part = this.applyDependencyOptions(part, keywords.get(ANY_OF_KEY), unkeyedOneOf ? oneOf : undefined, entryKey);
+      }
     }
     part = this.applyDependencies(part, keywords.get(DEPENDENCIES_KEY), keywords.get(PROPERTIES_KEY));
     // A dependency's `if` belongs to the entry its data qualified, so it is applied whatever the policy, as the entry's
@@ -737,7 +770,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       part = this.applyCondition(part, keywords, dependencyKey);
     }
     part = this.applyAllOf(part, keywords.get(ALL_OF_KEY), dependencyKey);
-    return dependencyKey === undefined ? part : this.applyExactlyOne(part, dependencyKey, keywords.get(ONE_OF_KEY));
+    return dependencyKey === undefined || unkeyedOneOf ? part : this.applyExactlyOne(part, dependencyKey, oneOf);
   }
 
   /** Merges the `allOf` entries in. Inside a dependency, each entry's own `oneOf` is applied as the dependency's is,
@@ -910,15 +943,45 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return next;
   }
 
+  /** Applies a dependency's `anyOf`, and its `oneOf` where no option declares `key`, as the same lists beside
+   * `dependencies` are, as the validator reads them: the option the data matches is merged in rather than offered. An
+   * `anyOf` has no keyed reading, so its option is merged less a `properties[key]` it declares, as a keyed `oneOf`
+   * option is, which would otherwise pin the key to the value it has. A list is dropped once an option of it is chosen,
+   * before either option is merged, which keeps a list the options offer themselves; a list with no option to merge
+   * stays, as it does beside `dependencies`
+   */
+  private applyDependencyOptions(
+    part: Part<S>,
+    anyOfList: Provider<S> | undefined,
+    oneOfList: Provider<S> | undefined,
+    key: string,
+  ): Part<S> {
+    const anyOf = this.chooseOption(ANY_OF_KEY, anyOfList, true);
+    const oneOf = this.chooseOption(ONE_OF_KEY, oneOfList, true);
+    let next = withoutList(part, ANY_OF_KEY, anyOf !== undefined);
+    next = withoutList(next, ONE_OF_KEY, oneOf !== undefined);
+    if (anyOf !== undefined) {
+      const keyed = declaredProperties(this.graph, anyOf.id, key).length > 0;
+      next = mergeBranch(next, keyed ? withoutProperty(anyOf.option, key) : anyOf.option, 'o', anyOf.id);
+    }
+    return oneOf === undefined ? next : mergeBranch(next, oneOf.option, 'o', oneOf.id);
+  }
+
+  private declaresNoKey(oneOf: Provider<S>, key: string): boolean {
+    const options = this.graph.subschemas(oneOf.node.id, ONE_OF_KEY);
+    return (
+      options.length > 0 && options.every(([, option]) => declaredProperties(this.graph, option, key).length === 0)
+    );
+  }
+
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;
-   * with no such option or several, none is applied. The list is chosen from rather than offered, so it is dropped
-   * before the option is merged in, which keeps an `anyOf` or `oneOf` the option offers itself
+   * with no such option or several, none is applied. The list has been dropped already, before the entry's own
+   * options were merged
    */
   private applyExactlyOne(part: Part<S>, key: string, provider: Provider<S> | undefined): Part<S> {
     if (provider === undefined) {
       return part;
     }
-    const withoutList = { ...part, schema: withoutKeys(part.schema, ONE_OF_KEY) };
     const valid = this.graph
       .subschemas(provider.node.id, ONE_OF_KEY)
       .map(([, option]) => option)
@@ -928,24 +991,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
-      return withoutList;
+      return part;
     }
     const chosen = this.expandBranch(valid[0], provider.refPath, 'dependency');
-    if (chosen === undefined) {
-      return withoutList;
-    }
-    const properties = { ...chosen.schema.properties };
-    Reflect.deleteProperty(properties, key);
-    const schema = { ...chosen.schema };
-    Reflect.set(schema, PROPERTIES_KEY, properties);
-    // A chain a nested dependency chose already drops the key its own option was chosen by, which stays dropped
-    const chains = chosen.chains.map((chain) => {
-      const declaring = chain.get(PROPERTIES_KEY);
-      return declaring === undefined || declaring.drops !== undefined
-        ? chain
-        : new Map(chain).set(PROPERTIES_KEY, { ...declaring, drops: key });
-    });
-    return mergeBranch(withoutList, { schema, chains }, 'b', valid[0]);
+    return chosen === undefined ? part : mergeBranch(part, withoutProperty(chosen, key), 'b', valid[0]);
   }
 
   private applyOption(
@@ -954,8 +1003,17 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     provider: Provider<S> | undefined,
     dependencies: boolean,
   ): Part<S> {
+    const chosen = this.chooseOption(keyword, provider, dependencies);
+    return chosen === undefined ? part : mergeBranch(part, chosen.option, 'o', chosen.id);
+  }
+
+  private chooseOption(
+    keyword: 'anyOf' | 'oneOf',
+    provider: Provider<S> | undefined,
+    dependencies: boolean,
+  ): { option: Part<S>; id: NodeId } | undefined {
     if (provider === undefined || !Array.isArray(provider.node.raw[keyword])) {
-      return part;
+      return undefined;
     }
     const options = this.graph.subschemas(provider.node.id, keyword).map(([, option]) => option);
     const request = {
@@ -978,7 +1036,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     this.choices.push({ ...request, selected });
     const optionRefPath = this.policy.optionsInheritRefPath ? provider.refPath : [];
     const option = selected === undefined ? undefined : this.expandOption(options[selected], optionRefPath);
-    return option === undefined || selected === undefined ? part : mergeBranch(part, option, 'o', options[selected]);
+    return option === undefined || selected === undefined ? undefined : { option, id: options[selected] };
   }
 
   private expandOption(id: NodeId, refPath: RefPath): Part<S> | undefined {

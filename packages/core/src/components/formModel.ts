@@ -623,12 +623,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const committed = commit(settled((base) => applySubmit(base, props, isOmitted ? omitOnce(base) : undefined)));
     // Held from before `onSubmit` runs, so a submit it starts before it returns its promise is ignored too
     pendingSubmit = event;
+    let submitted: unknown;
     try {
-      return props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
+      submitted = props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
+      return submitted;
     } finally {
-      // A submit `onSubmit` started after a `reset()` released this one holds the form now
+      // A `reset()` in `onSubmit` released this hold, and a submit it started since may hold the form now. Only a
+      // promise keeps it: another thenable, such as a query builder, may run its request again on each `then()` call
       if (pendingSubmit === event) {
-        pendingSubmit = undefined;
+        pendingSubmit = submitted instanceof Promise ? submitted : undefined;
       }
     }
   };
@@ -649,13 +652,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       running.error = error;
       running.isThrown = true;
     }
-    // Only a promise: another thenable, such as a query builder, may run its request again on each `then()` call.
     // The form keeps the promise in its own state rather than awaiting it in a transition, since React holds every
     // transition in the app until all its async ones settle. The copy `finally()` returns rejects with the promise's
     // error and no one handles it, so a rejection is reported as an unhandled rejection, as react-hook-form's and
     // TanStack Form's `handleSubmit` rethrow it, and never reaches an Error Boundary
-    if (submitted instanceof Promise) {
-      pendingSubmit = submitted;
+    if (submitted instanceof Promise && pendingSubmit === submitted) {
       onPendingChange(true);
       // oxlint-disable-next-line no-void
       void submitted.finally(() => {

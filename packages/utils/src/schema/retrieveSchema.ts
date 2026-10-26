@@ -334,9 +334,9 @@ export function expandRefCycle<S extends StrictRJSFSchema = RJSFSchema>(schema: 
     : handOut(expanded, childProvenance(stamped, { seeds: restartSeeds(stamped.seeds) }));
 }
 
-/** The policy views are planned with: every `allOf` is merged, and an option only where the schema offering it has
- * `dependencies`, the one case resolution merges the option the data matches rather than leaving the choice to
- * `MultiSchemaField`
+/** The policy views are planned with: every `allOf` is merged, and an option only of a list `OptionChoice.dependencies`
+ * flags, beside `dependencies` or in a `dependencies` entry, the cases resolution merges the option the data matches
+ * rather than leaving the choice to `MultiSchemaField`
  */
 function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -382,8 +382,9 @@ export function optionMatchContext<S extends StrictRJSFSchema, F extends FormCon
   return { validator, additionalPropertiesWhenAbsent };
 }
 
-/** Returns the option of a list beside `dependencies` that `data` matches first, which is merged into the schema
- * rather than left to `MultiSchemaField` to choose; none for any other list
+/** Returns the option that `data` matches first of a list `OptionChoice.dependencies` flags: one beside
+ * `dependencies`, or a `dependencies` entry's `anyOf`, or its `oneOf` no option of which declares the entry's key. That
+ * option is merged into the schema rather than left to `MultiSchemaField` to choose; none for any other list
  *
  * @param context - The `SchemaContext` the options are matched in
  * @param request - The option list the plan met

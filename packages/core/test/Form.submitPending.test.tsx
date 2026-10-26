@@ -130,6 +130,48 @@ describe('a promise onSubmit returns', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
+  it('cancels the click while the promise is pending though the onClick the submit button options set throws', async () => {
+    const save = deferred();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    const thrown = new Error('onClick failed');
+    const onClick = vi
+      .fn()
+      .mockImplementationOnce(() => undefined)
+      .mockImplementation(() => {
+        throw thrown;
+      });
+    createFormComponent({
+      schema: { ...schema, required: ['name'] },
+      uiSchema: { 'ui:submitButtonOptions': { props: { onClick } } },
+      initialFormData: { name: 'a' },
+      onSubmit,
+    });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    const input = screen.getByRole('textbox', { name: /Name/ });
+    const onInvalid = vi.fn();
+    input.addEventListener('invalid', onInvalid);
+    const reported: unknown[] = [];
+    // React reports a throw from an event handler to the window rather than to the code that dispatched the click
+    const onError = (event: ErrorEvent) => {
+      event.preventDefault();
+      reported.push(event.error);
+    };
+    window.addEventListener('error', onError);
+    try {
+      await user.click(button);
+      await user.clear(input);
+
+      await user.click(button);
+    } finally {
+      window.removeEventListener('error', onError);
+    }
+
+    expect(reported).toEqual([thrown]);
+    expect(onInvalid).not.toHaveBeenCalled();
+    expect(input).not.toHaveFocus();
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
   it('passes pending to a custom SubmitButton template', async () => {
     const save = deferred();
     const seen: (boolean | undefined)[] = [];
@@ -400,6 +442,52 @@ describe('a promise onSubmit returns', () => {
     expectPending(button);
     save.resolve(undefined);
     await waitFor(() => expectIdle(button));
+  });
+
+  it('keeps the submit onSubmit starts after a FormRef.reset() pending until its own promise settles', async () => {
+    const outer = deferred();
+    const inner = deferred();
+    const ref = createFormRef();
+    const onSubmit = vi
+      .fn()
+      .mockImplementationOnce(() => {
+        handleOf(ref).reset();
+        handleOf(ref).submit();
+        return outer.promise;
+      })
+      .mockReturnValueOnce(inner.promise);
+    createFormComponent({ ref, schema, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+
+    await act(async () => outer.resolve(undefined));
+
+    expectPending(button);
+    await user.click(button);
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    inner.resolve(undefined);
+    await waitFor(() => expectIdle(button));
+  });
+
+  it('takes a submit again once onSubmit calls FormRef.reset() before it returns its promise', async () => {
+    const save = deferred();
+    const ref = createFormRef();
+    const onSubmit = vi
+      .fn()
+      .mockImplementationOnce(() => {
+        handleOf(ref).reset();
+        return save.promise;
+      })
+      .mockReturnValue(undefined);
+    createFormComponent({ ref, schema, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+
+    await user.click(button);
+
+    expectIdle(button);
+    await user.click(button);
+    expect(onSubmit).toHaveBeenCalledTimes(2);
   });
 
   it('runs no constraint validation for a submit it ignores, from the submit button, Enter or FormRef.submit()', async () => {

@@ -395,6 +395,21 @@ interface PendingButtonProps {
   onClick: (event: MouseEvent<HTMLElement>) => void;
 }
 
+/** Cancels the click even when the app's `onClick` throws, since the browser would otherwise run its constraint
+ * validation for the submit the form ignores
+ */
+function cancelAfterAppClick(
+  event: MouseEvent<HTMLElement>,
+  cancelClick: PendingButtonProps['onClick'],
+  onClick?: (event: MouseEvent<HTMLElement>) => void,
+) {
+  try {
+    onClick?.(event);
+  } finally {
+    cancelClick(event);
+  }
+}
+
 type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormContextType> = SubmitButtonProps<T, S, F> & {
   SubmitButton: TemplatesType<T, S, F>['ButtonTemplates']['SubmitButton'];
   submitting: boolean;
@@ -421,10 +436,12 @@ function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContex
              * would show its message and move focus, for a submit the form ignores. Enter in a field clicks the form's
              * default button too. The app's own `onClick` still runs
              */
-            onClick(event) {
-              getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY]?.props?.onClick?.(event);
-              cancelClick(event);
-            },
+            onClick: (event) =>
+              cancelAfterAppClick(
+                event,
+                cancelClick,
+                getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY]?.props?.onClick,
+              ),
           })
         : uiSchema,
     [submitting, cancelClick, uiSchema],
