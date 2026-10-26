@@ -345,11 +345,12 @@ function createFieldWidgetResolver<
 /** Creates the function a container tells by whether the `SchemaField` it hands `schema`, `uiSchema` and `formData`
  * renders hidden, for a field it lays out before rendering it, as `ObjectField` does for its `ObjectFieldTemplate`. The
  * field is resolved through `createFieldWidgetResolver()`, as `useSchemaFieldPlan()` resolves it, for a field nothing
- * above it names. A `$ref` cycle renders an Expand button, which hides nothing, until it is expanded, and then, as
- * `CyclicSchemaField` does, the field one level further. It models core's `SchemaField` and `CyclicSchemaField`, not a
- * replacement registered in `registry.fields`, which has to keep its `FieldTemplate`'s `hidden` in step itself
+ * above it names. A `$ref` cycle is resolved as the field it expands to, one level further: `CyclicSchemaField` renders
+ * that field once the cycle is expanded, and nothing in place of its Expand button while that field renders hidden, so
+ * the answer is the same either way. It models core's `SchemaField` and `CyclicSchemaField`, not a replacement
+ * registered in `registry.fields`, which has to keep its `FieldTemplate`'s `hidden` in step itself
  *
- * @returns - The function, which keeps each step's last result, so a container keeps one per field it lays out
+ * @returns - The function, which keeps each step's last result, so a caller keeps one per field it checks
  */
 export function createIsSchemaFieldHidden<
   T = unknown,
@@ -375,7 +376,6 @@ export function createIsSchemaFieldHidden<
    * @param formData - The field's data
    * @param fieldPath - The field's path
    * @param registry - The registry
-   * @param [expanded=false] - Whether the field is a `$ref` cycle the user has expanded
    * @returns - True when the field renders hidden
    */
   return (
@@ -384,13 +384,10 @@ export function createIsSchemaFieldHidden<
     formData: T | undefined,
     fieldPath: FieldPath,
     registry: Registry<T, S, F>,
-    expanded = false,
   ): boolean => {
-    const isRefCycle = Boolean((schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
-    if (isRefCycle && !expanded) {
-      return false;
-    }
-    const fieldSchema = isRefCycle ? expandCycle(schema, registry.schemaUtils.getRootSchema()) : schema;
+    const fieldSchema = (schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]
+      ? expandCycle(schema, registry.schemaUtils.getRootSchema())
+      : schema;
     if (!mayHide(resolveOwnUiSchema(fieldSchema, uiSchema, registry), registry.globalUiOptions)) {
       return false;
     }

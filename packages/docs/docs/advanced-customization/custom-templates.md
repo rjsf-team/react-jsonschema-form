@@ -506,6 +506,7 @@ The `CyclicSchemaExpandTemplate` is the template rendered by `CyclicSchemaField`
 RJSF automatically detects when a `$ref` would recurse indefinitely (e.g. a schema whose property references its own root) and stops rendering at the cycle boundary.
 At that point `CyclicSchemaField` renders this template, which shows a warning message and an expand button that the user can click to render one additional level of the recursive structure.
 Which fields are expanded is the form's state, by field path, so an expansion survives the field unmounting and mounting again and follows the moves the form makes, of array items and of additional properties renamed or removed; `CyclicSchemaField` renders an expanded field from [`expandRefCycle()`](../api-reference/utility-functions.md#expandrefcycle).
+When the field one level further would render hidden, through `ui:widget: 'hidden'` or a `deprecatedHandling` of `'hide'`, there is nothing to expand to, so `CyclicSchemaField` renders nothing in place of this template.
 
 Each theme provides its own implementation.
 You can replace the template globally via the `templates` prop on `Form`, or per-field via `ui:CyclicSchemaExpandTemplate` in the `uiSchema`.

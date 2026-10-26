@@ -202,160 +202,61 @@ describe('ObjectField', () => {
       expect(node.querySelector('[data-field="root_extra"]')).toHaveAttribute('data-hidden', 'true');
     });
 
-    it('should not mark a $ref cycle property hidden while its Expand button renders', () => {
-      const recursive: RJSFSchema = {
-        type: 'object',
-        deprecated: true,
-        properties: { child: { $ref: '#/definitions/node' } },
-      };
-      const { node } = createFormComponent({
-        schema: { definitions: { node: recursive }, $ref: '#/definitions/node' },
-        uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' }, 'ui:deprecatedHandling': 'label' },
-        templates: hiddenFlagTemplates,
-      });
-      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'false');
-      expect(node.querySelector('#root_child__expand')).toHaveTextContent('Expand Cycle');
-    });
-
-    it('should agree with FieldTemplate on hidden once a $ref cycle property is expanded', async () => {
-      const recursive: RJSFSchema = {
-        type: 'object',
-        deprecated: true,
-        properties: { child: { $ref: '#/definitions/node' } },
-      };
-      const { node } = createFormComponent({
-        schema: { definitions: { node: recursive }, $ref: '#/definitions/node' },
-        uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' }, 'ui:deprecatedHandling': 'label' },
-        templates: hiddenFlagTemplates,
-      });
-      await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
-      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'true');
-      expect(node.querySelector('[data-field="root_child"]')).toHaveAttribute('data-hidden', 'true');
-    });
-
-    it('should agree with FieldTemplate on hidden once a $ref cycle property is expanded outside a Form', async () => {
-      const rootSchema: RJSFSchema = {
-        definitions: {
-          node: { type: 'object', deprecated: true, properties: { child: { $ref: '#/definitions/node' } } },
-        },
-        $ref: '#/definitions/node',
-      };
-      const registry = {
-        ...getTestRegistry(rootSchema, {}, hiddenFlagTemplates),
-        globalUiOptions: { deprecatedHandling: 'hide' as const },
-      };
-      const { ObjectField: RegistryObjectField } = registry.fields;
-      const { container } = render(
-        <RegistryObjectField
-          schema={registry.schemaUtils.retrieveSchema(rootSchema)}
-          uiSchema={{ 'ui:deprecatedHandling': 'label' }}
-          id='root'
-          name=''
-          fieldPath={ROOT_FIELD_PATH}
-          formData={{}}
-          errorSchema={{}}
-          registry={registry}
-          onChange={noop}
-          onBlur={noop}
-          onFocus={noop}
-          disabled={false}
-          readonly={false}
-        />,
-      );
-      expect(elementOf(container, '[data-property="child"]')).toHaveAttribute('data-hidden', 'false');
-      await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
-      expect(elementOf(container, '[data-property="child"]')).toHaveAttribute('data-hidden', 'true');
-      expect(elementOf(container, '[data-field="root_child"]')).toHaveAttribute('data-hidden', 'true');
-    });
-
-    it('should leave a sibling mounted, with its own option selection, as a $ref cycle property comes and goes outside a Form', async () => {
-      const rootSchema: RJSFSchema = {
-        definitions: {
-          node: {
-            type: 'object',
-            deprecated: true,
-            properties: {
-              withChild: { type: 'boolean' },
-              counter: { type: 'string' },
-              shape: {
-                oneOf: [
-                  { title: 'First', type: 'object', properties: { x: { type: 'string' } } },
-                  { title: 'Second', type: 'object', properties: { y: { type: 'string' } } },
-                ],
-              },
-            },
-            dependencies: { withChild: { properties: { child: { $ref: '#/definitions/node' } } } },
-          },
-        },
-        $ref: '#/definitions/node',
-      };
-      const ClickCountWidget = () => {
-        const [clicks, setClicks] = useState(0);
-        return (
-          <button type='button' onClick={() => setClicks(clicks + 1)}>
-            Clicked {clicks}
-          </button>
-        );
-      };
-      const registry = {
-        ...getTestRegistry(rootSchema, {}, hiddenFlagTemplates),
-        globalUiOptions: { deprecatedHandling: 'hide' as const },
-      };
-      const { ObjectField: RegistryObjectField } = registry.fields;
-      const renderObject = (formData: GenericObjectType) => (
-        <RegistryObjectField
-          schema={registry.schemaUtils.retrieveSchema(rootSchema, formData)}
-          uiSchema={{ 'ui:deprecatedHandling': 'label', counter: { 'ui:widget': ClickCountWidget } }}
-          id='root'
-          name=''
-          fieldPath={ROOT_FIELD_PATH}
-          formData={formData}
-          errorSchema={{}}
-          registry={registry}
-          onChange={noop}
-          onBlur={noop}
-          onFocus={noop}
-          disabled={false}
-          readonly={false}
-        />
-      );
-      const { container, rerender } = render(renderObject({}));
-      await user.click(screen.getByRole('button', { name: 'Clicked 0' }));
-      expect(elementOf(container, '#root_shape__oneof_select')).toHaveValue('0');
-      await user.selectOptions(elementOf(container, '#root_shape__oneof_select'), 'Second');
-
-      rerender(renderObject({ withChild: true }));
-      expect(screen.getByRole('button', { name: 'Clicked 1' })).toBeVisible();
-      expect(elementOf(container, '#root_shape__oneof_select')).toHaveValue('1');
-      await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
-      expect(elementOf(container, '[data-property="child"]')).toHaveAttribute('data-hidden', 'true');
-      expect(elementOf(container, '[data-field="root_child"]')).toHaveAttribute('data-hidden', 'true');
-
-      rerender(renderObject({}));
-      expect(container.querySelector('[data-property="child"]')).toBeNull();
-      expect(screen.getByRole('button', { name: 'Clicked 1' })).toBeVisible();
-      expect(elementOf(container, '#root_shape__oneof_select')).toHaveValue('1');
-    });
-
-    it.each([
+    it.each<[string, RJSFSchema, UiSchema]>([
       [
-        'a deprecated sibling of its $ref under a global hide',
-        { child: { $ref: '#/definitions/node', deprecated: true } },
+        'its own uiSchema names a hidden widget',
+        { type: 'object', properties: { child: { $ref: '#/definitions/node' } } },
+        { child: { 'ui:widget': 'hidden' } },
+      ],
+      [
+        'a ui:definitions entry hides its $ref target',
+        { type: 'object', properties: { child: { $ref: '#/definitions/node' } } },
+        { 'ui:widget': undefined, 'ui:definitions': { '#/definitions/node': { 'ui:widget': 'hidden' } } },
+      ],
+      [
+        'a deprecated sibling of its $ref is under a global hide',
+        { type: 'object', properties: { child: { $ref: '#/definitions/node', deprecated: true } } },
         { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
       ],
       [
-        'a ui:definitions entry hiding its $ref target',
-        { child: { $ref: '#/definitions/node' } },
-        { 'ui:widget': undefined, 'ui:definitions': { '#/definitions/node': { 'ui:widget': 'hidden' } } },
+        'its $ref target is deprecated under a global hide',
+        { type: 'object', deprecated: true, properties: { child: { $ref: '#/definitions/node' } } },
+        { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' }, 'ui:deprecatedHandling': 'label' },
       ],
-    ] as const)('should not mark a $ref cycle property hidden by %s', (_, properties, uiSchema) => {
+    ])('should mark a $ref cycle property hidden, rendering no Expand button, when %s', (_, recursive, uiSchema) => {
       const { node } = createFormComponent({
-        schema: { definitions: { node: { type: 'object', properties } }, $ref: '#/definitions/node' },
+        schema: { definitions: { node: recursive }, $ref: '#/definitions/node' },
         uiSchema,
         templates: hiddenFlagTemplates,
       });
+      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('[data-property="child"]')).toBeEmptyDOMElement();
+      expect(screen.queryByRole('button', { name: 'Expand Cycle' })).toBeNull();
+    });
+
+    it('should agree with FieldTemplate on hidden as an expanded $ref cycle property follows its data', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          definitions: {
+            node: {
+              type: 'object',
+              properties: { old: { type: 'boolean' }, child: { $ref: '#/definitions/node' } },
+              if: { properties: { old: { const: true } }, required: ['old'] },
+              then: { deprecated: true },
+            },
+          },
+          $ref: '#/definitions/node',
+        },
+        uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
+        templates: hiddenFlagTemplates,
+      });
       expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'false');
-      expect(screen.getByRole('button', { name: 'Expand Cycle' })).toBeVisible();
+      await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
+      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'false');
+      expect(node.querySelector('[data-field="root_child"]')).toHaveAttribute('data-hidden', 'false');
+      await user.click(elementOf(node, 'input#root_child_old'));
+      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('[data-field="root_child"]')).toHaveAttribute('data-hidden', 'true');
     });
 
     it('should agree with FieldTemplate on hidden for a hidden widget a constant boolean select is written back', () => {

@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import { memo, use, useCallback, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   EnumOptionsType,
   ErrorSchema,
@@ -8,7 +8,6 @@ import type {
   FormContextType,
   GenericObjectType,
   Registry,
-  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -50,19 +49,15 @@ import {
   fieldPathToId,
   resolveUiSchema,
   isObject,
-  RJSF_REF_CYCLE_KEY,
   TranslatableString,
   uiBooleanOption,
 } from '@rjsf/utils';
 
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
 import useSendMove from '../../hooks/useSendMove.ts';
-import useUiState from '../../hooks/useUiState.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
-import type { UiState } from '../uiState.ts';
-import UiStateContext from '../UiStateContext.ts';
 import {
   declaresProperty,
   getContainerErrorProps,
@@ -253,8 +248,6 @@ interface ObjectFieldPropertyProps<
   propertyNamesEnum?: string[];
   /** Whether the parent schema forbids this additional property's key, which its row then says */
   keyNotAllowed?: boolean;
-  /** The store the parent object reads this property's expansion from, while the property is a `$ref` cycle */
-  cycleUiState?: UiState;
 }
 
 /** The `ObjectFieldProperty` component is used to render the `SchemaField` for a child property of an object
@@ -284,9 +277,7 @@ function ObjectFieldPropertyFn<
     addedByAdditionalProperties,
     propertyNamesEnum,
     keyNotAllowed,
-    cycleUiState,
   } = props;
-  const hasUiStateAbove = use(UiStateContext) !== undefined;
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields, translateString } = registry;
   // Memoized so the row's error schema keeps its identity across renders and `SchemaField` below isn't re-rendered
@@ -355,7 +346,7 @@ function ObjectFieldPropertyFn<
     handleRemoveProperty(propertyName);
   }, [propertyName, handleRemoveProperty]);
 
-  const field = (
+  return (
     <SchemaField
       name={propertyName}
       required={required}
@@ -379,17 +370,6 @@ function ObjectFieldPropertyFn<
       readonly={readonly}
       hideError={hideError}
     />
-  );
-  // Outside a `Form` and any `SchemaField` each property keeps a store of its own, so a cycle property is handed the
-  // object's, which the object reads the expansion from. Every property gets the provider, so one becoming a cycle
-  // changes the tree's shape nowhere else, and it is keyed on being a cycle, so a property's `SchemaField` holds the
-  // object's store only while it is one
-  return hasUiStateAbove ? (
-    field
-  ) : (
-    <UiStateContext key={cycleUiState ? 'cycle' : 'field'} value={cycleUiState}>
-      {field}
-    </UiStateContext>
   );
 }
 
@@ -562,25 +542,6 @@ export default function ObjectField<
   const description = uiOptions.description ?? schema.description;
   const renderOptionalField = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T>(formData);
-  const rendersProperties = !renderOptionalField || hasFormData;
-  // `CyclicSchemaField` keeps a cycle's expansion to the form's ui state, so it is read here as well: an expanded cycle
-  // renders the field one level further, which can be hidden. Only a property `retrieveSchema()` flagged as a cycle can
-  // be expanded
-  const { uiState } = useUiState();
-  const cycleProperties = useMemo(
-    () =>
-      rendersProperties
-        ? Object.keys(schemaProperties).filter(
-            (property) => (getPropertySchema<S>(schema, property) as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY],
-          )
-        : [],
-    [rendersProperties, schemaProperties, schema],
-  );
-  // A string, which the store compares by value, so a change to anything else in the ui state re-renders nothing
-  const readExpandedCycles = () =>
-    JSON.stringify(cycleProperties.filter((property) => uiState.isExpanded(toFieldPath(property, fieldPath))));
-  const expandedCycles = useSyncExternalStore(uiState.subscribe, readExpandedCycles, readExpandedCycles);
-  const expandedCycleProperties = useMemo(() => new Set<string>(JSON.parse(expandedCycles)), [expandedCycles]);
   // Kept in a closure rather than a ref, since `react/refs` rejects reading or writing a ref during render
   const propertyHiddenChecks = useMemo(() => createPropertyHiddenChecks<T, S, F>(), []);
   let orderedProperties: string[] = [];
@@ -941,7 +902,7 @@ export default function ObjectField<
     [lastRenamedProperty],
   );
 
-  if (rendersProperties) {
+  if (!renderOptionalField || hasFormData) {
     try {
       const definedPropertySet = new Set(definedPropertyOrder);
       // A set, since an add that never reaches the data, as under a custom field that keeps the change to itself, leaves
@@ -1020,7 +981,6 @@ export default function ObjectField<
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}
-          cycleUiState={cycleProperties.includes(propertyName) ? uiState : undefined}
           propertyNamesEnum={addedByAdditionalProperties ? allowedPropertyNames?.get(propertyName) : undefined}
           onChange={onPropertyChange}
           onBlur={onBlur}
@@ -1043,7 +1003,6 @@ export default function ObjectField<
           propertyFormData,
           toFieldPath(propertyName, fieldPath),
           registry,
-          expandedCycleProperties.has(propertyName),
         ),
       };
     }),

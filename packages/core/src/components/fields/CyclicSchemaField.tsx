@@ -5,9 +5,11 @@ import { expandRefCycle, getTemplates, getUiOptions } from '@rjsf/utils';
 import { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import useAdditionalDepths from './useAdditionalDepths.ts';
+import { createIsSchemaFieldHidden } from './SchemaField.tsx';
 
 /** The `CyclicSchemaField` component renders a field `retrieveSchema()` collapsed as a `$ref` cycle (marked with
- * `RJSF_REF_CYCLE_KEY`): an Expand button until the field is expanded, and then the field resolved one level further.
+ * `RJSF_REF_CYCLE_KEY`): an Expand button until the field is expanded, and then the field resolved one level further,
+ * or nothing in place of the button while that field would render hidden, since there is nothing to expand to.
  * Which fields are expanded is the form's state, by path, so an expansion outlives the field's components and follows
  * the moves the form is told of, of array items and of additional properties renamed or removed; outside a `Form` it is the outermost `SchemaField`'s, see `useUiState()`.
  *
@@ -19,7 +21,7 @@ export default function CyclicSchemaField<
   F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const { uiState } = useUiState();
-  const { name, registry, schema, uiSchema, id, fieldPath } = props;
+  const { name, registry, schema, uiSchema, id, fieldPath, formData } = props;
   const readExpanded = () => uiState.isExpanded(fieldPath);
   const expanded = useSyncExternalStore(uiState.subscribe, readExpanded, readExpanded);
   const { globalUiOptions, fields, schemaUtils } = registry;
@@ -28,6 +30,10 @@ export default function CyclicSchemaField<
     () => (expanded ? expandRefCycle<S>(schema, rootSchema) : undefined),
     [expanded, schema, rootSchema],
   );
+
+  // The same check `ObjectField` lays the field out by, so its `ObjectFieldTemplate` is told `hidden` for exactly the
+  // cycles that render nothing here
+  const isFieldHidden = useMemo(() => createIsSchemaFieldHidden<T, S, F>(), []);
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   // The entry label is built here rather than handed down by `SchemaField`: a prop would leak through to the
@@ -38,6 +44,9 @@ export default function CyclicSchemaField<
     entryLabelForLog(fieldPath, registry.globalFormOptions, additionalDepths),
   );
   if (expandedSchema === undefined) {
+    if (isFieldHidden(schema, uiSchema, formData, fieldPath, registry)) {
+      return null;
+    }
     return (
       <CyclicSchemaExpandTemplate
         registry={registry}

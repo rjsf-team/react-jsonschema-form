@@ -20,6 +20,7 @@ function makeRegistry(
 
 const OLD_REF: RJSFSchema = { $ref: '#/definitions/old' };
 const OLD_CYCLE = { ...OLD_REF, [RJSF_REF_CYCLE_KEY]: true } as RJSFSchema;
+const SECRET_CYCLE = { $ref: '#/definitions/secret', [RJSF_REF_CYCLE_KEY]: true } as RJSFSchema;
 const BOOLEAN_SELECT: RJSFSchema = { oneOf: [{ const: true }, { const: false }] };
 // `ui:widget` comes last, so `getUiOptions()` reads no widget from it, while the widget `SchemaField` writes back for an
 // inferred select is the caller's `ui:options.widget`
@@ -89,15 +90,15 @@ describe('createIsSchemaFieldHidden()', () => {
     expect(isSchemaFieldHidden(OLD_REF, uiSchema, undefined, ROOT_FIELD_PATH, registry)).toBe(false);
   });
 
-  it('returns false for an unexpanded $ref cycle, which renders an Expand button', () => {
+  it('resolves a $ref cycle as the field it expands to', () => {
     const registry = makeRegistry({ deprecatedHandling: 'hide' });
-    const uiSchema = { 'ui:widget': 'hidden' };
-    expect(isSchemaFieldHidden(OLD_CYCLE, uiSchema, undefined, ROOT_FIELD_PATH, registry)).toBe(false);
+    expect(isSchemaFieldHidden(OLD_CYCLE, undefined, undefined, ROOT_FIELD_PATH, registry)).toBe(true);
+    expect(isSchemaFieldHidden(SECRET_CYCLE, undefined, undefined, ROOT_FIELD_PATH, registry)).toBe(false);
   });
 
-  it('resolves an expanded $ref cycle one level further', () => {
-    const registry = makeRegistry({ deprecatedHandling: 'hide' });
-    expect(isSchemaFieldHidden(OLD_CYCLE, undefined, undefined, ROOT_FIELD_PATH, registry, true)).toBe(true);
+  it('returns true for a $ref cycle its own uiSchema gives a hidden widget', () => {
+    const uiSchema = { 'ui:widget': 'hidden' };
+    expect(isSchemaFieldHidden(SECRET_CYCLE, uiSchema, undefined, ROOT_FIELD_PATH, makeRegistry())).toBe(true);
   });
 
   it('returns false for a boolean schema', () => {
