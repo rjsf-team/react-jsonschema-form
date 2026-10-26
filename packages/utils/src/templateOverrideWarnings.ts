@@ -1,5 +1,4 @@
 import describeUnresolvedComponent from './describeUnresolvedComponent.ts';
-import type { TemplateWarnSource } from './getTemplate.ts';
 import logOnce from './logOnce.ts';
 import type { TemplatesType } from './types.ts';
 
@@ -57,11 +56,11 @@ export function warnOnInvalidOverride(
   name: string,
   override: unknown,
   template: unknown,
-  warnSource: TemplateWarnSource,
+  entryLabel: () => string,
 ): void {
   // The value may sit under `ui:${name}` or under `ui:options`, so the warning names both rather than send the
   // user looking for a key that isn't there
-  const target = `${name} (ui:${name} or ui:options) for ${warnSource.entryLabel()}`;
+  const target = `${name} (ui:${name} or ui:options) for ${entryLabel()}`;
   const description = describeUnresolvedComponent(override, template, 'registered template', 'MyTemplate');
   logOnce(`${target} ${description}, so it is ignored.`);
 }

@@ -2,21 +2,10 @@ import isComponentType from './isComponentType.ts';
 import { isTemplateName, warnOnInvalidOverride } from './templateOverrideWarnings.ts';
 import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
-/** The field a template-override warning should name, passed by the callers that render a field (`SchemaField`, and
- * `CyclicSchemaField` for its expand template) so each warning is logged once, labelled, from there rather than once
- * per `getTemplate()` caller. The label is read only when an override is actually invalid, so a form without one
- * never pays for it.
- */
-export interface TemplateWarnSource {
-  /** Builds the label of the uiSchema entry the field is rendered from, such as `"root_tasks_[]_title"
-   * (tasks[].title)`, so one entry warns once however many rows render it */
-  entryLabel: () => string;
-}
-
 /** Returns the template with the given `name` from either the `uiSchema` if it is defined or from the `registry`
  * otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only those in the `registry` are returned.
  *
- * An override for one of the declared templates that is not a component is ignored, warning when a `warnSource` is
+ * An override for one of the declared templates that is not a component is ignored, warning when an `entryLabel` is
  * given: a string naming no registered template, a React element, or any other non-component value falls back to the
  * registry's own template. Templates are per-field options, not `ui:globalOptions`. An explicit own `null` renders
  * the registry's own template without a warning. An override under a custom name can't be told apart from an
@@ -26,8 +15,9 @@ export interface TemplateWarnSource {
  * @param name - The name of the template to fetch, restricted to the keys of `TemplatesType`
  * @param registry - The `Registry` from which to read the template
  * @param [uiOptions={}] - The `UIOptionsType` from which to read an alternate template
- * @param [warnSource] - Names the field for the override warnings; omitted by callers that only resolve, which
- * stay silent
+ * @param [entryLabel] - Builds the label of the uiSchema entry the field is rendered from, such as
+ * `"root_tasks_[]_title" (tasks[].title)`, so one entry warns once however many rows render it; read only when an
+ * override is actually invalid, and omitted by callers that only resolve, which stay silent
  * @returns - The template from either the `uiSchema` or `registry` for the `name`
  */
 export default function getTemplate<
@@ -39,7 +29,7 @@ export default function getTemplate<
   name: Name,
   registry: Registry<T, S, F>,
   uiOptions: UIOptionsType<T, S, F> = {},
-  warnSource?: TemplateWarnSource,
+  entryLabel?: () => string,
 ): TemplatesType<T, S, F>[Name] {
   const { templates } = registry;
   if (name === 'ButtonTemplates') {
@@ -72,8 +62,8 @@ export default function getTemplate<
     // registry entry accepts, so this is the one place the found component is asserted to be the template type
     return template as TemplatesType<T, S, F>[Name];
   }
-  if (warnSource) {
-    warnOnInvalidOverride(name, override, template, warnSource);
+  if (entryLabel) {
+    warnOnInvalidOverride(name, override, template, entryLabel);
   }
   return templates[name];
 }

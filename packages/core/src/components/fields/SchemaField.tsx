@@ -66,6 +66,7 @@ import {
   getDeprecatedTemplateProps,
   getFieldErrorProps,
   getTemplateParts,
+  isAdditionalPropertySchema,
   withoutAdditionalFlag,
   withoutDescribers,
 } from './fieldWidgetUtils.ts';
@@ -75,6 +76,7 @@ import NamedFieldContext from './NamedFieldContext.ts';
 import type { NamedFieldPath } from './NamedFieldContext.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
+import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
 /** The map of component type to FieldName */
@@ -923,15 +925,18 @@ function SchemaFieldRender<
   // than leave each theme's `ObjectFieldTemplate` to tell that an object it is handed is one and drop its empty frame
   const FieldComponent = plannedAsOptions ? RenderNothing : fieldToRender.FieldComponent;
 
-  // Names the uiSchema entry rather than the field in a template-override warning, so an `items` mistake warns once,
-  // not once per row; the label is built only when an override is actually invalid
-  const templateWarnSource = {
-    entryLabel: () => entryLabelForLog(fieldPath, registry.globalFormOptions),
-  };
+  // Names the uiSchema entry rather than the field in a template-override warning, so an `items` or
+  // `additionalProperties` mistake warns once, not once per row or extra key; the label is built only when an
+  // override is actually invalid. Rendered as a shown `anyOf`/`oneOf` option, the field renders at the option
+  // field's own path, so it is handed the option entry's label rather than name the entry above itself
+  const optionEntryLabel = use(TemplateWarnEntryContext);
+  const templateEntryLabel =
+    optionEntryLabel ??
+    (() => entryLabelForLog(fieldPath, registry.globalFormOptions, isAdditionalPropertySchema(schema)));
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
-    templateWarnSource,
+    templateEntryLabel,
   );
 
   // A field the options give way to renders the choice between them, so with no options it has nothing to choose, which
@@ -1082,40 +1087,43 @@ function SchemaFieldRender<
   };
 
   // The named-field context is provided whether or not a field is named here, since adding or removing a provider would
-  // remount everything below it
+  // remount everything below it. The template-warning entry label is reset the same way: it belongs to this field's
+  // own check, and a field below names the entry it is rendered from, not the option entry this one was handed
   return withUiState(
-    <FieldTemplate {...fieldProps}>
-      <>
-        {field}
-        {XxxOfField && (
-          <NamedFieldContext value={ownNamedFieldPath}>
-            <ShownOptionContext value={shownOption}>
-              <PresentationContext value={optionsBelow}>
-                <XxxOfField
-                  name={name}
-                  disabled={disabled}
-                  readonly={readonly}
-                  hideError={hideError}
-                  errorSchema={optionsErrorSchema}
-                  formData={formData}
-                  fieldPath={fieldPath}
-                  id={fieldId}
-                  onBlur={props.onBlur}
-                  onChange={handleOptionFieldChange}
-                  onFocus={props.onFocus}
-                  options={xxxOfOptions}
-                  registry={registry}
-                  required={effectiveRequired}
-                  schema={schema}
-                  uiSchema={uiSchema}
-                  presentation={optionsPresentation}
-                />
-              </PresentationContext>
-            </ShownOptionContext>
-          </NamedFieldContext>
-        )}
-      </>
-    </FieldTemplate>,
+    <TemplateWarnEntryContext value={undefined}>
+      <FieldTemplate {...fieldProps}>
+        <>
+          {field}
+          {XxxOfField && (
+            <NamedFieldContext value={ownNamedFieldPath}>
+              <ShownOptionContext value={shownOption}>
+                <PresentationContext value={optionsBelow}>
+                  <XxxOfField
+                    name={name}
+                    disabled={disabled}
+                    readonly={readonly}
+                    hideError={hideError}
+                    errorSchema={optionsErrorSchema}
+                    formData={formData}
+                    fieldPath={fieldPath}
+                    id={fieldId}
+                    onBlur={props.onBlur}
+                    onChange={handleOptionFieldChange}
+                    onFocus={props.onFocus}
+                    options={xxxOfOptions}
+                    registry={registry}
+                    required={effectiveRequired}
+                    schema={schema}
+                    uiSchema={uiSchema}
+                    presentation={optionsPresentation}
+                  />
+                </PresentationContext>
+              </ShownOptionContext>
+            </NamedFieldContext>
+          )}
+        </>
+      </FieldTemplate>
+    </TemplateWarnEntryContext>,
   );
 }
 

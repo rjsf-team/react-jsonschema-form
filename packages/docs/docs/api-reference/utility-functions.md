@@ -1689,16 +1689,14 @@ otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only t
 - name: Name - The name of the template to fetch, restricted to the keys of `TemplatesType`
 - registry: Registry&lt;T, S, F> - The `Registry` from which to read the template
 - [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read an alternate template
-- [warnSource]: TemplateWarnSource - Names the field for the invalid-override warning; omitted by callers that only
-  resolve, which stay silent.
-  It has one field:
-  - entryLabel: () => string - Builds the label of the uiSchema entry the field is rendered from, so one entry warns
-    once however many rows render it; called only when an override is invalid
+- [entryLabel]: () => string - Builds the label of the uiSchema entry the field is rendered from, so one entry
+  warns once however many rows or extra keys render it; omitted by callers that only resolve, which stay silent, and
+  called only when an override is invalid
 
 #### Returns
 
 - TemplatesType&lt;T, S, F>[Name] - The template from either the `uiSchema` or `registry` for the `name`. An override
-  that is not a component is ignored, warning once per uiSchema entry when a `warnSource` is given, and falls back to
+  that is not a component is ignored, warning once per uiSchema entry when an `entryLabel` is given, and falls back to
   the registry's own template. Template overrides are per-field only, not `ui:globalOptions`. An explicit own `null`
   renders the registry's own template without a warning. An override under a custom template name can't be told apart
   from an ordinary option, so it is returned unchecked and without a warning: a truthy value (a component or a
@@ -1715,7 +1713,7 @@ left out. Destructure the templates a component renders from the result, e.g.
 
 - registry: Registry&lt;T, S, F> - The `Registry` from which to read the templates
 - [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read alternate templates
-- [warnSource]: TemplateWarnSource - Passed through to `getTemplate()` for the invalid-override warnings
+- [entryLabel]: () => string - Passed through to `getTemplate()` for the invalid-override warnings
 
 #### Returns
 

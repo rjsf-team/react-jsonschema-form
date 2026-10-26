@@ -210,7 +210,6 @@ import widgetDrawsLabelText from './widgetDrawsLabelText.ts';
 import withIdRefPrefix, { rootSchemaIdOf, withRootIdRefPrefix } from './withIdRefPrefix.ts';
 
 export type * from './types.ts';
-export type { TemplateWarnSource } from './getTemplate.ts';
 export * from './enums.ts';
 
 export * from './constants.ts';

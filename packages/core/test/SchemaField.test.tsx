@@ -2419,6 +2419,73 @@ describe('SchemaField', () => {
           ],
         ]);
       });
+
+      it('names the option entry when only the option entry is invalid', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            anyOf: [
+              { type: 'object', properties: { b: { type: 'string' } } },
+              { type: 'object', properties: { c: { type: 'string' } } },
+            ],
+          },
+          uiSchema: {
+            anyOf: [{ 'ui:FieldTemplate': 'Typo' as unknown as UiSchema['ui:FieldTemplate'] }],
+          },
+          initialFormData: { b: 'x' },
+        });
+
+        // The option's own SchemaField names the option entry, so the one warning points at the entry holding the
+        // mistake and none blames the field's own entry, which has no override
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root" names no ' +
+            "registered template ('Typo'), so it is ignored.",
+        );
+      });
+
+      it('names each entry apart when the object entry and the option entry carry different invalid overrides', () => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            anyOf: [
+              { type: 'object', properties: { b: { type: 'string' } } },
+              { type: 'object', properties: { c: { type: 'string' } } },
+            ],
+          },
+          uiSchema: {
+            'ui:FieldTemplate': 'Parent' as unknown as UiSchema['ui:FieldTemplate'],
+            anyOf: [{ 'ui:FieldTemplate': 'Option' as unknown as UiSchema['ui:FieldTemplate'] }],
+          },
+          initialFormData: { b: 'x' },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy.mock.calls).toEqual([
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for "root" names no registered template (\'Parent\'), so it is ignored.',
+          ],
+          [
+            'FieldTemplate (ui:FieldTemplate or ui:options) for the uiSchema.anyOf[0] entry of "root" names no ' +
+              "registered template ('Option'), so it is ignored.",
+          ],
+        ]);
+      });
+
+      it('warns once for an invalid override in an additionalProperties entry, not once per extra key', () => {
+        createFormComponent({
+          schema: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: { type: 'string' } },
+          uiSchema: { additionalProperties: { 'ui:FieldTemplate': <div /> } },
+          initialFormData: { k1: 'x', k2: 'y', k3: 'z' },
+        });
+
+        // Every extra key renders the one `additionalProperties` entry, so like an `items` entry its key collapses
+        // and the entry warns once
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          'FieldTemplate (ui:FieldTemplate or ui:options) for "root_[]" ([]) is a React element rather than a ' +
+            'component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+        );
+      });
     });
 
     describe('recursive definitions', () => {

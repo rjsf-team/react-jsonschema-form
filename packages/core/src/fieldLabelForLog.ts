@@ -29,19 +29,31 @@ function formatLabel(id: string, path: string): string {
 /** Names a field the way `fieldLabelForLog()` does, but with each array index written as `[]`, for a warning about
  * the uiSchema entry the field is rendered from rather than about the field itself. Every item an array's `items`
  * entry renders reads alike, so a mistake in that entry is warned about once rather than once per item, which over a
- * long array would also crowd every other warning out of what `logOnce()` remembers.
+ * long array would also crowd every other warning out of what `logOnce()` remembers. An additional property's key is
+ * collapsed the same way where the caller marks the field as one, since every extra key an `additionalProperties`
+ * entry renders shares that entry too.
  *
  * @param fieldPath - The `FieldPath` identifying the field in the form
  * @param globalFormOptions - The `GlobalFormOptions` holding the `idPrefix` and `idSeparator` the id is built from
+ * @param [additionalProperty=false] - Whether the field is an additional property, whose key is written as `[]`
  * @returns - The field named as `"root_tasks_[]_title" (tasks[].title)`, or just `"root"` at the root
  */
-export function entryLabelForLog(fieldPath: FieldPath, globalFormOptions: GlobalFormOptions): string {
+export function entryLabelForLog(
+  fieldPath: FieldPath,
+  globalFormOptions: GlobalFormOptions,
+  additionalProperty = false,
+): string {
   const segments = fieldPathToList(fieldPath);
+  const last = segments.length - 1;
+  const collapses = (index: number, segment: string | number) =>
+    typeof segment === 'number' || (additionalProperty && index === last);
   const { idPrefix, idSeparator } = globalFormOptions;
-  const id = [idPrefix, ...segments.map((segment) => (typeof segment === 'number' ? '[]' : segment))].join(idSeparator);
+  const id = [idPrefix, ...segments.map((segment, index) => (collapses(index, segment) ? '[]' : segment))].join(
+    idSeparator,
+  );
   const path = segments.reduce<string>(
-    (entryPath, segment) =>
-      typeof segment === 'number' ? `${entryPath}[]` : toFieldPath(segment, entryPath as FieldPath),
+    (entryPath, segment, index) =>
+      collapses(index, segment) ? `${entryPath}[]` : toFieldPath(segment, entryPath as FieldPath),
     ROOT_FIELD_PATH,
   );
   return formatLabel(id, path);

@@ -29,12 +29,12 @@ export default function CyclicSchemaField<
   );
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  // The warn source is built here rather than handed down by `SchemaField`: a prop would leak through to the expanded
-  // field's own `SchemaField` (and from it onto the field it renders), and a fresh object each parent render would
-  // defeat that `SchemaField`'s memo
-  const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions, {
-    entryLabel: () => entryLabelForLog(fieldPath, registry.globalFormOptions),
-  });
+  // The entry label is built here rather than handed down by `SchemaField`: a prop would leak through to the
+  // expanded field's own `SchemaField` (and from it onto the field it renders), and a fresh label each parent render
+  // would defeat that `SchemaField`'s memo
+  const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions, () =>
+    entryLabelForLog(fieldPath, registry.globalFormOptions),
+  );
   if (expandedSchema === undefined) {
     return (
       <CyclicSchemaExpandTemplate
