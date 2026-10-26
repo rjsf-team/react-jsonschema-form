@@ -30,9 +30,6 @@ export default function WrapIfAdditionalTemplate<
     keyName,
     // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     displayLabel,
-    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
-    rawErrors,
-    hideError,
     presentation,
     readonly,
     required,

@@ -818,12 +818,12 @@ This is the order a widget's UI library needs when it manages its own selection 
 Gets the attributes a `WrapIfAdditionalTemplate` gives the key input of an `additionalProperties` entry while `keyNotAllowed` says the object forbids its key and its row shows errors: `aria-invalid`, and `aria-describedby` naming the row's errors.
 The key is the one control the row of a key the object forbids has, so the message that it is not allowed describes it.
 An allowed key's input stays unmarked while its row shows errors about its value.
-The row's errors show under its plan, or, for a template rendered without one, while `rawErrors` show with `hideError` off.
+The row shows errors while its `hasErrors` is set.
 A custom `WrapIfAdditionalTemplate` spreads the result onto its free-text key input and passes it to `AdditionalPropertyKeySelect` as `errorAttributes`.
 
 #### Parameters
 
-- props: Pick&lt;WrapIfAdditionalTemplateProps&lt;T, S, F>, 'id' | 'keyNotAllowed' | 'rawErrors' | 'hideError' | 'presentation'> - The `id`, `keyNotAllowed`, `rawErrors`, `hideError` and `presentation` of the `WrapIfAdditionalTemplate`
+- props: Pick&lt;WrapIfAdditionalTemplateProps&lt;T, S, F>, 'id' | 'keyNotAllowed' | 'hasErrors' | 'presentation'> - The `id`, `keyNotAllowed`, `hasErrors` and `presentation` of the `WrapIfAdditionalTemplate`
 
 #### Returns
 

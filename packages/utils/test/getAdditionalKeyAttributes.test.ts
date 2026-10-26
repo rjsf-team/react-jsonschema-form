@@ -35,7 +35,12 @@ describe('getAdditionalKeyAttributes()', () => {
 
   it('says nothing while the row shows no errors', () => {
     expect(
-      getAdditionalKeyAttributes({ id: 'root_a', keyNotAllowed: true, hasErrors: false, presentation: planShowing([]) }),
+      getAdditionalKeyAttributes({
+        id: 'root_a',
+        keyNotAllowed: true,
+        hasErrors: false,
+        presentation: planShowing([]),
+      }),
     ).toEqual({});
   });
 
