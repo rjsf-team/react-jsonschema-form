@@ -46,7 +46,7 @@ import {
   toIChangeEvent,
   validateFormData,
 } from './formState.ts';
-import { asFieldValue, fieldStateOf } from './uiState.ts';
+import { asFieldValue } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
 const HELD_SCALARS_LIMIT = 100;
@@ -267,10 +267,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * and `validateForm()` act on
    */
   const withExtraDataOmitted = (props: FormProps<T, S, F>) => {
-    const { schemaUtils, schema, formData } = current();
-    return props.omitExtraData === true
-      ? schemaUtils.omitExtraData(schema, formData, fieldStateOf(uiState, schemaUtils))
-      : formData;
+    const state = current();
+    return props.omitExtraData === true ? omitExtraDataOf(state).formData : state.formData;
   };
 
   /** The window of the form element, whose classes the element and what it holds are instances of: a form rendered

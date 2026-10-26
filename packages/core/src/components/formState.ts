@@ -487,10 +487,15 @@ export function shareState<T, S extends StrictRJSFSchema, F extends FormContextT
   start: FormState<T, S, F>,
   next: FormState<T, S, F>,
 ): FormState<T, S, F> {
+  if (Object.is(next.formData, start.formData) && Object.is(next.baseline, start.baseline)) {
+    return replaceEqualDeep(start, next);
+  }
   const baseline = Object.is(next.baseline, start.baseline)
     ? start.baseline
     : replaceEqualDeep(start.formData, next.baseline);
-  const formData = replaceEqualDeep(baseline, replaceEqualDeep(start.formData, next.formData));
+  const formData = Object.is(next.formData, next.baseline)
+    ? baseline
+    : replaceEqualDeep(baseline, replaceEqualDeep(start.formData, next.formData));
   const rest = replaceEqualDeep(start, { ...next, formData: start.formData, baseline: start.baseline });
   if (Object.is(formData, start.formData) && Object.is(baseline, start.baseline)) {
     return rest;
@@ -1449,14 +1454,10 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
 ): FormState<T, S, F> {
   // A schema change sanitizes the data for the new schema's tree, as an edit does for the tree it leads to, and leaves
   // the data of a disabled or read-only form as it is, as an edit there does
-  const { formData, context, areSchemaUtilsReused } = deriveFormData(
-    current,
-    inputFormData,
-    { isSanitized: !props.disabled && !props.readonly },
-    props,
-  );
+  const options = { isSanitized: !props.disabled && !props.readonly };
+  const { formData, context, areSchemaUtilsReused } = deriveFormData(current, inputFormData, options, props);
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
-  const baseline = current ? rederiveBaseline(current, formData, props, context.schemaUtils) : formData;
+  const baseline = current ? rederiveBaseline(current, formData, options, props, context.schemaUtils) : formData;
   // Construction validates nothing: the errors of a seed the user has not touched are not shown until they are earned
   const isDataChanged = current !== undefined && formData !== current.formData;
   const isDataPassed = current ? current.isDataPassed : inputFormData !== undefined;
@@ -1491,6 +1492,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
  *
  * @param current - The state before the prop change
  * @param formData - The data the prop change re-derived
+ * @param options - The options the data was re-derived with
  * @param props - The current props
  * @param schemaUtils - The schema utilities the data was re-derived with
  * @returns - The baseline for `formData`
@@ -1498,6 +1500,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
 function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   formData: T | undefined,
+  options: DeriveDataOptions,
   props: FormProps<T, S, F>,
   schemaUtils: SchemaUtilsType<T, S, F>,
 ): T | undefined {
@@ -1510,8 +1513,7 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
     formData: baseline,
     retrievedSchema: resolveRetrievedSchema(current, current.schemaUtils, baseline),
   };
-  return settleFormData(fromBaseline, baseline, { isSanitized: !props.disabled && !props.readonly }, props, schemaUtils)
-    .formData;
+  return settleFormData(fromBaseline, baseline, options, props, schemaUtils).formData;
 }
 
 /** Freezes plain objects and arrays in `data`, and nothing else: a `File`, a `Date` or a class instance is left
@@ -1839,15 +1841,12 @@ export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextTy
   const { omitExtraData, liveOmit } = props;
   const { customErrors, retrievedSchema } = current;
   const marked = blurred ? markBlur(current, props, blurred) : current;
-  const omitted =
-    omitExtraData === true && liveOmit === 'onBlur'
-      ? omitExtraDataOf(current)
-      : { formData: current.formData, baseline: current.baseline };
+  const omitted = omitExtraData === true && liveOmit === 'onBlur' ? omitExtraDataOf(current) : undefined;
   const validation = isBlurValidated(props)
     ? runLiveValidation(
         props,
         current,
-        omitted.formData,
+        (omitted ?? current).formData,
         customErrors,
         retrievedSchema,
         undefined,
