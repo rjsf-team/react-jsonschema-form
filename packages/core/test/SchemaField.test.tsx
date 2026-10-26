@@ -2353,7 +2353,7 @@ describe('SchemaField', () => {
           },
         });
 
-        expect(node.querySelector('#root_child_child-button')).toHaveTextContent('Expand Cycle');
+        expect(node.querySelector('#root_child_child__expand')).toHaveTextContent('Expand Cycle');
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
           'CyclicSchemaExpandTemplate (ui:CyclicSchemaExpandTemplate or ui:options) for "root_child_child" ' +
             '(child.child) is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so ' +
