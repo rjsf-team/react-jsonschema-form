@@ -153,6 +153,7 @@ function uiStateMoveOf<T>(
 export function createFormModel<T, S extends StrictRJSFSchema, F extends FormContextType>(
   initialProps: FormProps<T, S, F>,
   initial: FormState<T, S, F>,
+  onPendingChange: (isPending: boolean) => void,
 ) {
   let formElement: HTMLElement | null = null;
   // What operations have made of the form: the store React subscribes to. A render derives what it shows from it and
@@ -219,6 +220,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // What a throw from the submit `submit()` is running became, for `submit()` to throw it to its own caller: the
   // submit runs inside the event it fires, where the browser would report the throw instead
   let submission: { error?: unknown; isThrown: boolean } | undefined;
+  // Set while the form ignores another submit: while `onSubmit` runs, then while the promise it returned is pending.
+  // Ignoring it, which TanStack Form leaves to the app's `disabled={!canSubmit}` button, is decided in the submit event,
+  // before a render can show the state, such as for two `submit()` calls in one handler
+  let pendingSubmit: object | undefined;
+  const releasePending = () => {
+    pendingSubmit = undefined;
+    onPendingChange(false);
+  };
   const warnDroppedCall = (method: string) => {
     if (!isDevelopment || isDroppedCallWarned) {
       return;
@@ -563,9 +572,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   };
 
   /** Validates and submits the form's data, with extra data omitted when `omitExtraData` asks for it, and returns what
-   * `onSubmit` returned. While `isSubmitting`, it only keeps the event from submitting the page
+   * `onSubmit` returned. While a submit is pending, it only keeps the event from submitting the page
    */
-  const submitFromEvent = (event: SubmitEvent<HTMLFormElement>, isSubmitting: boolean): unknown => {
+  const submitFromEvent = (event: SubmitEvent<HTMLFormElement>): unknown => {
     event.preventDefault();
     // The event `submit()` dispatched stands in for this form's own submit, so an enclosing form does not get it too
     if (event.nativeEvent === dispatchedSubmit) {
@@ -573,7 +582,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
     // A detached form drops a submit event that still reaches it, such as one from a `<button form>` outside the
     // `<Activity>` that hides it, as it drops `submit()`
-    if (isSubmitting || isDetached || event.target !== event.currentTarget) {
+    if (pendingSubmit !== undefined || isDetached || event.target !== event.currentTarget) {
       return undefined;
     }
     const props = committedProps;
@@ -584,25 +593,46 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
     const committed = commit(settled((base) => applySubmit(base, props, withExtraDataOmitted(props))));
-    return props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
+    // Held from before `onSubmit` runs, so a submit it starts before it returns its promise is ignored too
+    pendingSubmit = event;
+    try {
+      return props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
+    } finally {
+      pendingSubmit = undefined;
+    }
   };
 
-  /** `submitFromEvent()`, with a throw from the submit `submit()` is running kept for `submit()` to throw. Returns what
-   * `onSubmit` returned, so the `Form` can keep the form pending while a promise it returned is, and ignore a submit
-   * meanwhile
+  /** `submitFromEvent()`, with a throw from the submit `submit()` is running kept for `submit()` to throw, keeping the
+   * form pending while a promise `onSubmit` returned is
    */
-  const handleSubmit = (event: SubmitEvent<HTMLFormElement>, isSubmitting: boolean): unknown => {
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     const running = submission;
     submission = undefined;
-    if (!running) {
-      return submitFromEvent(event, isSubmitting);
-    }
+    let submitted: unknown;
     try {
-      return submitFromEvent(event, isSubmitting);
+      submitted = submitFromEvent(event);
     } catch (error) {
+      if (!running) {
+        throw error;
+      }
       running.error = error;
       running.isThrown = true;
-      return undefined;
+    }
+    // Only a promise: another thenable, such as a query builder, may run its request again on each `then()` call.
+    // The form keeps the promise in its own state rather than awaiting it in a transition, since React holds every
+    // transition in the app until all its async ones settle. The copy `finally()` returns rejects with the promise's
+    // error and no one handles it, so a rejection is reported as an unhandled rejection, as react-hook-form's and
+    // TanStack Form's `handleSubmit` rethrow it, and never reaches an Error Boundary
+    if (submitted instanceof Promise) {
+      pendingSubmit = submitted;
+      onPendingChange(true);
+      // oxlint-disable-next-line no-void
+      void submitted.finally(() => {
+        // A `reset()` released the form meanwhile, and a submit since may be pending
+        if (pendingSubmit === submitted) {
+          releasePending();
+        }
+      });
     }
   };
 
@@ -617,6 +647,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     submit: () => {
       if (isDetached) {
         warnDroppedCall('submit');
+        return;
+      }
+      // Returns before `requestSubmit()`, whose constraint validation would show its message and move focus for a
+      // submit the form ignores
+      if (pendingSubmit !== undefined) {
         return;
       }
       const view = formWindow();
@@ -652,6 +687,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         warnDroppedCall('reset');
         return;
       }
+      // A promise that never settles would otherwise keep the form ignoring submits until it remounts
+      releasePending();
       const props = committedProps;
       const committed = commit(settled((base) => applyReset(base, props)));
       props.onChange?.(toIChangeEvent(committed));

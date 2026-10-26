@@ -7,8 +7,8 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', title: 'Name' } } };
 
 /** Pins that the theme's `SubmitButton` is `aria-disabled` while a promise `onSubmit` returned is pending, and stays
- * enabled so a keyboard user keeps focus on it, and that a `disabled` the uiSchema asks for still applies when nothing is
- * pending
+ * enabled so a keyboard user keeps focus on it, that it takes no click meanwhile, and that a `disabled` the uiSchema asks
+ * for still applies when nothing is pending
  *
  * @param Form - The theme's `Form` component
  */
@@ -52,6 +52,22 @@ export function submitPendingTests(Form: ComponentType<FormProps>) {
       act(() => button.click());
 
       expectPending(button);
+      save.resolve(undefined);
+      await waitFor(() => expectIdle(button));
+    });
+
+    test('cancels a click while the promise is pending, so the browser runs no constraint validation', async () => {
+      const save = Promise.withResolvers<undefined>();
+      render(<Form schema={schema} validator={validator} onSubmit={async () => save.promise} />);
+      const button = screen.getByRole('button', { name: 'Submit' });
+      act(() => button.click());
+
+      const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+      act(() => {
+        button.dispatchEvent(click);
+      });
+
+      expect(click.defaultPrevented).toBe(true);
       save.resolve(undefined);
       await waitFor(() => expectIdle(button));
     });

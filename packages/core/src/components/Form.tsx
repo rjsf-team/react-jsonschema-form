@@ -1,13 +1,11 @@
 import type { ElementType, ReactNode, Ref, SubmitEvent } from 'react';
 import {
   memo,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useInsertionEffect,
   useLayoutEffect,
   useMemo,
-  useRef,
   useState,
   useSyncExternalStore,
 } from 'react';
@@ -372,7 +370,7 @@ function Attachment({ attach }: { attach: () => () => void }) {
  */
 function submitButtonUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiSchema: UiSchema<T, S, F> | undefined,
-  buttonProps: { disabled: true } | { 'aria-disabled': true } | undefined,
+  buttonProps: { disabled: true } | PendingButtonProps | undefined,
 ): UiSchema<T, S, F> {
   const submitOptions = getUiOptions<T, S, F>(uiSchema)[SUBMIT_BTN_OPTIONS_KEY] ?? {};
   return {
@@ -384,14 +382,27 @@ function submitButtonUiSchema<T, S extends StrictRJSFSchema, F extends FormConte
   };
 }
 
+interface PendingButtonProps {
+  'aria-disabled': true;
+  onClick: (event: { preventDefault: () => void }) => void;
+}
+
+/** Cancels the click, as a disabled button gets none, so the browser runs no constraint validation, which would show
+ * its message and move focus, for a submit the form ignores. Enter in a field clicks the form's default button too
+ */
+const PENDING_BUTTON_PROPS: PendingButtonProps = {
+  'aria-disabled': true,
+  onClick: (event) => event.preventDefault(),
+};
+
 type PendingSubmitButtonProps<T, S extends StrictRJSFSchema, F extends FormContextType> = SubmitButtonProps<T, S, F> & {
   SubmitButton: TemplatesType<T, S, F>['ButtonTemplates']['SubmitButton'];
   submitting: boolean;
 };
 
-/** The submit button, `aria-disabled` while the form is pending through the props its uiSchema gives the button. Not
- * `disabled`: the browser moves focus off a focused button that becomes disabled, so a keyboard user who submitted would
- * lose their place, and the form ignores a second submit meanwhile anyway
+/** The submit button, `aria-disabled` and taking no click while the form is pending, through the props its uiSchema
+ * gives the button. Not `disabled`: the browser moves focus off a focused button that becomes disabled, so a keyboard
+ * user who submitted would lose their place
  */
 function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContextType>({
   SubmitButton,
@@ -400,7 +411,7 @@ function PendingSubmitButton<T, S extends StrictRJSFSchema, F extends FormContex
   registry,
 }: PendingSubmitButtonProps<T, S, F>) {
   const pendingUiSchema = useMemo(
-    () => (submitting ? submitButtonUiSchema<T, S, F>(uiSchema, { 'aria-disabled': true }) : uiSchema),
+    () => (submitting ? submitButtonUiSchema<T, S, F>(uiSchema, PENDING_BUTTON_PROPS) : uiSchema),
     [submitting, uiSchema],
   );
   return <SubmitButton uiSchema={pendingUiSchema} registry={registry} pending={submitting} />;
@@ -423,12 +434,14 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   props: FormProps<T, S, F>,
 ) {
   const { ref } = props;
+  // Whether a promise `onSubmit` returned is pending, which the model reports
+  const [submitting, setSubmitting] = useState(false);
   // The model is created once and kept in the render cache, so the form has the one model for as long as it is mounted.
   // The cache also holds what the last render derived, which React documents as storing information from previous
   // renders: a render with the same props and no operation since reuses it rather than deriving it again
   const [cache, setCache] = useState(() => {
     const state = initialState(props);
-    return { model: createFormModel(props, state), published: state, props, state };
+    return { model: createFormModel(props, state, setSubmitting), published: state, props, state };
   });
   const { model } = cache;
   const { setFormElement } = model;
@@ -453,30 +466,6 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     }
   }, [model, formDataProp, initialFormData]);
   useImperativeHandle(ref, () => model.handle, [model]);
-  // The form keeps the promise `onSubmit` returned in its own state rather than awaiting it in a transition, since
-  // React holds every transition in the app until all its async ones settle. The copy `finally()` returns rejects with
-  // the promise's error and no one handles it, so a rejection is reported as an unhandled rejection, as react-hook-form's
-  // and TanStack Form's `handleSubmit` rethrow it, and never reaches an Error Boundary
-  const [submitting, setSubmitting] = useState(false);
-  // Ignoring a submit while one is pending, which TanStack Form leaves to the app's `disabled={!canSubmit}` button, is
-  // decided in the submit event, before a render can show the state, such as for two `submit()` calls in one handler
-  const pendingSubmit = useRef<Promise<unknown>>(undefined);
-  const handleSubmit = useCallback(
-    (event: SubmitEvent<HTMLFormElement>) => {
-      const submitted = model.handleSubmit(event, pendingSubmit.current !== undefined);
-      // Only a promise: another thenable, such as a query builder, may run its request again on each `then()` call
-      if (submitted instanceof Promise) {
-        pendingSubmit.current = submitted;
-        setSubmitting(true);
-        // oxlint-disable-next-line no-void
-        void submitted.finally(() => {
-          pendingSubmit.current = undefined;
-          setSubmitting(false);
-        });
-      }
-    },
-    [model],
-  );
 
   const {
     children,
@@ -556,7 +545,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         encType={enctype}
         acceptCharset={acceptCharset}
         noValidate={noHtml5Validate}
-        onSubmit={handleSubmit}
+        onSubmit={model.handleSubmit}
         ref={setFormElement}
       >
         <Handoff handOff={handOff} />

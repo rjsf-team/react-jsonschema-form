@@ -23,11 +23,13 @@ export interface FormRef<T = unknown> {
    * to show, the inputs describe data the form no longer holds, so schema validation alone checks the value. An
    * element another `tagName` renders has no `requestSubmit()`, so it gets a submit event dispatched to it, which skips
    * the browser's constraint validation as well. An error `onSubmit`, `onError` or a validation callback throws comes
-   * out of this call, as it does from the other methods.
+   * out of this call, as it does from the other methods. While a promise `onSubmit` returned is pending, it does
+   * nothing.
    */
   submit(): void;
   /** Clears the validation errors and resets the data to the props' `formData`, or else `initialFormData`, and the
-   * schema's defaults, the way the initial render derives it, reporting the result through `onChange`
+   * schema's defaults, the way the initial render derives it, reporting the result through `onChange`. It also ends a
+   * pending submit, so the form takes a submit again even if the promise `onSubmit` returned never settles
    */
   reset(): void;
   /** Sets the value of the field at `fieldPath`, either a dotted path or a `FieldPathList`. Use `''` or `[]` for the
