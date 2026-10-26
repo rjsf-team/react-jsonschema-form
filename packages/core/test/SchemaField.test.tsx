@@ -2475,7 +2475,9 @@ describe('SchemaField', () => {
       it('warns once for an invalid override in an additionalProperties entry, not once per extra key', () => {
         createFormComponent({
           schema: { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: { type: 'string' } },
-          uiSchema: { additionalProperties: { 'ui:FieldTemplate': <div /> } },
+          uiSchema: {
+            additionalProperties: { 'ui:FieldTemplate': (<div />) as unknown as UiSchema['ui:FieldTemplate'] },
+          },
           initialFormData: { k1: 'x', k2: 'y', k3: 'z' },
         });
 
@@ -2493,7 +2495,9 @@ describe('SchemaField', () => {
             type: 'object',
             additionalProperties: { type: 'object', properties: { foo: { type: 'string' } } },
           },
-          uiSchema: { additionalProperties: { foo: { 'ui:FieldTemplate': <div /> } } },
+          uiSchema: {
+            additionalProperties: { foo: { 'ui:FieldTemplate': (<div />) as unknown as UiSchema['ui:FieldTemplate'] } },
+          },
           initialFormData: { k1: { foo: 'a' }, k2: { foo: 'b' }, k3: { foo: 'c' } },
         });
 
@@ -2507,7 +2511,11 @@ describe('SchemaField', () => {
       it('warns once for an items entry nested beneath an additionalProperties entry, not once per extra key', () => {
         createFormComponent({
           schema: { type: 'object', additionalProperties: { type: 'array', items: { type: 'string' } } },
-          uiSchema: { additionalProperties: { items: { 'ui:FieldTemplate': <div /> } } },
+          uiSchema: {
+            additionalProperties: {
+              items: { 'ui:FieldTemplate': (<div />) as unknown as UiSchema['ui:FieldTemplate'] },
+            },
+          },
           initialFormData: { k1: ['a'], k2: ['b'] },
         });
 
@@ -2523,7 +2531,13 @@ describe('SchemaField', () => {
             type: 'object',
             properties: { arr: { type: 'array', items: { type: 'object', additionalProperties: { type: 'string' } } } },
           },
-          uiSchema: { arr: { items: { additionalProperties: { 'ui:FieldTemplate': <div /> } } } },
+          uiSchema: {
+            arr: {
+              items: {
+                additionalProperties: { 'ui:FieldTemplate': (<div />) as unknown as UiSchema['ui:FieldTemplate'] },
+              },
+            },
+          },
           initialFormData: { arr: [{ k1: 'a' }, { k2: 'b' }] },
         });
 
