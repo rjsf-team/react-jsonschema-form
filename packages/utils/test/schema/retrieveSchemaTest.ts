@@ -1596,17 +1596,19 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
       describe('dynamic', () => {
         it('merges the option the data matches of a oneOf none of whose options declares the key, as it merges a oneOf beside dependencies (#5407)', () => {
+          const oneOf: RJSFSchema[] = [
+            { properties: { b: { type: 'string' } } },
+            { properties: { c: { type: 'number' } } },
+          ];
           const dependent: RJSFSchema = {
             type: 'object',
             properties: { a: { type: 'string' } },
-            dependencies: {
-              a: { oneOf: [{ properties: { b: { type: 'string' } } }, { properties: { c: { type: 'number' } } }] },
-            },
+            dependencies: { a: { oneOf } },
           };
           const beside: RJSFSchema = {
             type: 'object',
             properties: { a: { type: 'string' } },
-            oneOf: [{ properties: { b: { type: 'string' } } }, { properties: { c: { type: 'number' } } }],
+            oneOf,
             dependencies: { a: ['a'] },
           };
           const expected = { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } };

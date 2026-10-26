@@ -7581,6 +7581,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       const objectConstantSelect = (
         dependencies: Dependencies,
         defaultOn: 'parent' | 'field' | 'none' = 'parent',
+        field: RJSFSchema = {},
       ): RJSFSchema => ({
         type: 'object',
         ...(defaultOn === 'parent' && { default: { x: { a: 1 } } }),
@@ -7590,6 +7591,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             enum: [{ a: 1 }, { a: 2 }],
             ...(defaultOn === 'field' && { default: { a: 1 } }),
             dependencies,
+            ...field,
           },
         },
       });
@@ -7678,18 +7680,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       it.each<DefaultFormStateBehavior['constAsDefaults']>(['always', 'skipOneOf', 'never'])(
         'gives a dependency oneOf none of whose options declares the key the default a oneOf beside dependencies gets, under constAsDefaults %s',
         (constAsDefaults) => {
-          const beside: RJSFSchema = {
-            type: 'object',
-            default: { x: { a: 1 } },
-            properties: {
-              x: {
-                type: 'object',
-                enum: [{ a: 1 }, { a: 2 }],
-                oneOf: [{ const: { a: 2 } }],
-                dependencies: { a: ['a'] },
-              },
-            },
-          };
+          const beside = objectConstantSelect({ a: ['a'] }, 'parent', { oneOf: [{ const: { a: 2 } }] });
           const context = { validator: testValidator, defaultFormStateBehavior: { constAsDefaults } };
           expect(getDefaultFormState(context, { schema: objectConstantSelect(unkeyedOneOf) })).toEqual(
             getDefaultFormState(context, { schema: beside }),

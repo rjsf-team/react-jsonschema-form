@@ -99,7 +99,8 @@ export interface OptionChoice {
   readonly options: readonly NodeId[];
   /** The list of options as the node holding it declares it */
   readonly list: unknown;
-  /** Whether the schema offering the options has `dependencies`, the one case `retrieveSchema()` merges an option */
+  /** Whether the schema offering the options has `dependencies`, or is a `dependencies` entry no option of which
+   * declares its key: the cases `retrieveSchema()` merges an option */
   readonly dependencies: boolean;
   readonly selected?: number;
 }
@@ -912,8 +913,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;
    * with no such option or several, none is applied. The list is chosen from rather than offered, so it is dropped
-   * before the option is merged in, which keeps an `anyOf` or `oneOf` the option offers itself. A list no option of
-   * which declares `key` has nothing to choose by, so it is applied as a `oneOf` beside `dependencies` is, as the
+   * before the option is merged in, which keeps an `anyOf` or `oneOf` the option offers itself. A list where no
+   * option declares `key` has nothing to choose by, so it is applied as a `oneOf` beside `dependencies` is, as the
    * validator reads it: the option the data matches is merged in rather than offered
    */
   private applyExactlyOne(part: Part<S>, key: string, provider: Provider<S> | undefined): Part<S> {
