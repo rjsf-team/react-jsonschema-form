@@ -330,6 +330,9 @@ importers:
       react:
         specifier: '>=19.2'
         version: 19.3.0
+      react-dom:
+        specifier: '>=19.2'
+        version: 19.3.0(@types/react@19.3.0)(react@19.3.0)
     devDependencies:
       '@rjsf/utils':
         specifier: workspace:^

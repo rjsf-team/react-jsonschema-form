@@ -6,6 +6,7 @@ import {
   fallbackDescriptionTests,
   formTests,
   optionErrorStateTests,
+  submitPendingTests,
   themeTests,
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
@@ -1011,3 +1012,5 @@ optionErrorStateTests(Form, () =>
 );
 
 wrapIfAdditionalErrorStateTests(Form);
+
+submitPendingTests(Form);
