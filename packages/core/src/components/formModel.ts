@@ -9,7 +9,6 @@ import type {
 } from '@rjsf/utils';
 import {
   callWithDeferredThrow,
-  deepEquals,
   deepEqualsUndefinedAsMissing,
   propertyToPath,
   ROOT_FIELD_PATH,
@@ -17,7 +16,6 @@ import {
   fieldPathFromList,
   fieldPathToId,
   fieldPathToList,
-  getByPath,
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
@@ -38,6 +36,7 @@ import {
   isBlurValidated,
   isLiveValidated,
   keyMoveOf,
+  moveFateOf,
   omitExtraDataOf,
   seedOf,
   shareState,
@@ -45,6 +44,7 @@ import {
   toFormStatus,
   toIChangeEvent,
   validateFormData,
+  withMarksSettled,
 } from './formState.ts';
 import { asFieldValue } from './uiState.ts';
 
@@ -419,8 +419,21 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // Unvalidated, the change still moves its errors with the keys it moved and settles the fields' own errors, which
     // the rewrite then carries through its one validation
     const withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
-    const rewritten = applyChangeToData(withEditErrors, rewrite, props);
-    return { next: applyChangeToErrorsOf(rewritten, edited.formData, rewrite, props, isValidated), edited };
+    const rewritten = applyChangeToErrorsOf(
+      applyChangeToData(withEditErrors, rewrite, props),
+      edited.formData,
+      rewrite,
+      props,
+      isValidated,
+    );
+    // The rewrite moves no key, so the marks the change moved are settled by what the rewrite kept under each key
+    const move = keyMoveOf(change);
+    if (!move) {
+      return { next: rewritten, edited };
+    }
+    const at = fieldPathToList(move.container);
+    const fateOf = moveFateOf(getAt(rewritten.formData, at), getAt(edited.formData, at), getAt(base.formData, at));
+    return { next: withMarksSettled(rewritten, base, move.container, fateOf), edited };
   };
 
   /** Applies a change to the field at `fieldPath` with `applyEdit()`, commits the result and reports it through
@@ -478,6 +491,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
                 newKeyOf: move?.newKeyOf,
                 newOwnKeyOf: move?.newOwnKeyOf,
                 dropsOwnErrors: move?.dropsOwnErrors,
+                isAnnouncedMove: move !== undefined,
                 isFieldEdit,
               },
               props,
@@ -506,13 +520,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
           // A rewritten move put the items where the rewrite says, which `ArrayField` reads the same way for its rows
           const kept = getAt<unknown>(committed.formData, containerPath);
           const movedItems = getAt<unknown>(edit.edited.formData, containerPath);
-          uiState.settleMove(uiMove.container, unmoved, (key) => {
-            const held = getByPath(kept, key);
-            if (deepEquals(held, getByPath(movedItems, key))) {
-              return 'moved';
-            }
-            return deepEquals(held, getByPath(before, key)) ? 'unmoved' : 'none';
-          });
+          uiState.settleMove(uiMove.container, unmoved, moveFateOf(kept, movedItems, before));
         }
         props.onChange?.(toIChangeEvent(committed), id);
       } catch (error) {
@@ -526,10 +534,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
 
   /** What a blurred field does to the form, after the `Form`'s `onBlur`: the field is touched, and any live validation
    * and live omit that the flags ask for on blur run, reported through `onChange` when they changed the data or the
-   * errors an `IChangeEvent` carries. A touch alone is not reported, so `onChange` fires no more often than before;
-   * the next event and `getStatus()` carry it. Run through `callWithDeferredThrow()` as a field's change is, since a
-   * field may report the blur from an Effect, where a throw from a validation callback or `onChange` would unmount the
-   * form.
+   * errors an `IChangeEvent` carries. A touch alone is not reported; the next event and `getStatus()` carry it. Run
+   * through `callWithDeferredThrow()` as a field's change is, since a field may report the blur from an Effect, where a
+   * throw from a validation callback or `onChange` would unmount the form.
    *
    * @param id - The unique `id` of the field that was blurred
    * @param [blurred] - The field that was blurred and what its blur touches, when a `SchemaField` reported it
@@ -825,6 +832,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       }
       const props = committedProps;
       const blurred = blurring;
+      // Taken by this blur, so one that `onBlur` causes names its own field
+      blurring = undefined;
       // Before the blur reads the state, so it validates an edit `onBlur` makes instead of reverting it
       callWithDeferredThrow(() => props.onBlur?.(id, data));
       callWithDeferredThrow(() => blur(id, blurred));

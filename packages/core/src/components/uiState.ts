@@ -21,7 +21,7 @@ import {
   REQUIRED_KEY,
 } from '@rjsf/utils';
 
-import type { KeyMove } from './formState.ts';
+import type { KeyMove, MoveFate } from './formState.ts';
 
 /** The option selected for a field's option list, and the field's data it holds for, see `useOptionSelection()` */
 export interface OptionSelection {
@@ -231,6 +231,16 @@ function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove)
   return fieldPathFromList(moved);
 }
 
+/** The key of the array or object at `container` that `path` runs through, undefined for a path outside it or for the
+ * container itself
+ */
+export function keyUnder(container: FieldPathList, path: FieldPath): string | undefined {
+  const segments = fieldPathToList(path);
+  return segments.length > container.length && isPathPrefix(container, segments)
+    ? String(segments[container.length])
+    : undefined;
+}
+
 /** Whether `prefix` addresses `path` itself or a container holding it, comparing the segments the way `toPath()` spells
  * them, so a numeric array index and its string form are the same segment
  *
@@ -353,18 +363,9 @@ export function createUiState() {
      * form holds the moved item under keeps the moved state, one holding the item it held before the move takes back
      * the state from before, `unmoved`, and any other key loses its state, so its data is matched again
      */
-    settleMove: (
-      container: FieldPath,
-      unmoved: UiStateSnapshot,
-      fateOf: (key: string) => 'moved' | 'unmoved' | 'none',
-    ) => {
+    settleMove: (container: FieldPath, unmoved: UiStateSnapshot, fateOf: (key: string) => MoveFate) => {
       const containerSegments = fieldPathToList(container);
-      const keyOf = (path: FieldPath) => {
-        const segments = fieldPathToList(path);
-        return segments.length > containerSegments.length && isPathPrefix(containerSegments, segments)
-          ? String(segments[containerSegments.length])
-          : undefined;
-      };
+      const keyOf = (path: FieldPath) => keyUnder(containerSegments, path);
       const isKept = (path: FieldPath) => {
         const key = keyOf(path);
         return key === undefined || fateOf(key) === 'moved';

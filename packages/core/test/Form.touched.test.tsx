@@ -1,4 +1,5 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+import { isPlainObject } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import type { Mock } from 'vitest';
@@ -630,5 +631,107 @@ describe('a field with no value', () => {
     expect(handle.getFormData()).toEqual({});
     expect(fieldErrorsById(node)).toEqual({});
     expect(handle.getStatus()).toMatchObject({ touched: false, touchedFields: {} });
+  });
+});
+
+describe('a change transformChange rewrites', () => {
+  function toSortedItems(items: unknown): string[] {
+    return Array.isArray(items) ? items.filter((item) => typeof item === 'string').toSorted() : [];
+  }
+
+  it('leaves the touched item where the rewrite put it back', async () => {
+    const { container, handle } = mountWithHandle({
+      schema: {
+        type: 'object',
+        properties: { count: { type: 'number' }, items: { type: 'array', items: { type: 'string' } } },
+      },
+      initialFormData: { items: ['a', 'b', 'c'] },
+      // Sorts the items back, and counts the edit so the rewrite is not the data before it
+      transformChange: (next) =>
+        isPlainObject(next)
+          ? { count: typeof next.count === 'number' ? next.count + 1 : 1, items: toSortedItems(next.items) }
+          : next,
+    });
+
+    await blur(container, 'root_items_0');
+    await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
+
+    expect(handle.getFormData()).toEqual({ count: 1, items: ['a', 'b', 'c'] });
+    expect(handle.getStatus().touchedFields).toEqual({ items: [true, undefined, undefined] });
+  });
+
+  it("reveals only the array's own errors for an add under liveErrors 'field'", async () => {
+    const { container, node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          count: { type: 'number' },
+          tags: { type: 'array', minItems: 3, items: { type: 'string', minLength: 2 } },
+        },
+      },
+      liveValidate: 'onChange',
+      liveErrors: 'field',
+      initialFormData: { tags: ['a'] },
+      transformChange: (next) =>
+        isPlainObject(next) ? { ...next, count: Array.isArray(next.tags) ? next.tags.length : 0 } : next,
+    });
+
+    await user.click(elementOf(container, '.rjsf-array-item-add button'));
+
+    expect(Object.keys(fieldErrorsById(node))).toEqual(['root_tags']);
+  });
+});
+
+describe('an added property', () => {
+  it("reveals only the object's own errors under liveErrors 'field'", async () => {
+    const { container, node } = createFormComponent({
+      schema: {
+        type: 'object',
+        minProperties: 3,
+        properties: { name: { type: 'string', minLength: 3 } },
+        additionalProperties: { type: 'string' },
+      },
+      liveValidate: 'onChange',
+      liveErrors: 'field',
+      initialFormData: { name: 'x' },
+    });
+
+    await user.click(elementOf(container, '.rjsf-object-property-expand button'));
+
+    expect(Object.keys(fieldErrorsById(node))).toEqual(['root']);
+  });
+});
+
+describe('a whole-array widget blurred while it held nothing', () => {
+  it('stays untouched once data fills it without another blur', async () => {
+    const { handle } = mountWithHandle({
+      schema: checkboxGroup,
+      uiSchema: { tags: { 'ui:widget': 'checkboxes' } },
+      initialFormData: { tags: [] },
+    });
+    await user.tab();
+    await user.click(document.body);
+
+    act(() => handle.setFieldValue('tags', ['a']));
+
+    expect(handle.getStatus().touched).toBe(false);
+    expect(handle.getStatus().touchedFields).toEqual({});
+  });
+});
+
+describe('a blur onBlur causes', () => {
+  it('touches the field that reported it', async () => {
+    const onBlur = (id: string) => {
+      if (id === 'root_name') {
+        const other = document.getElementById('root_address_city');
+        other?.focus();
+        other?.blur();
+      }
+    };
+    const { container, handle } = mountWithHandle({ schema: person, onBlur });
+
+    await blur(container, 'root_name');
+
+    expect(handle.getStatus().touchedFields).toEqual({ name: true, address: { city: true } });
   });
 });

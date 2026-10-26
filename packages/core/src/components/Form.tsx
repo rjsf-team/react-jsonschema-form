@@ -210,7 +210,8 @@ export interface FormProps<
    * once `liveValidate`'s trigger fired for it, the user changing it under `'onChange'` or blurring it under
    * `'onBlur'`, and every error once a submit was attempted or `FormRef.validateForm()` ran, until `reset()`. An
    * array's or object's own errors show once it or a field inside it fired, and adding, removing or moving an array's
-   * items, or blurring its option selector, fires the array. `extraErrors`, and the errors fields raise themselves,
+   * items, adding, renaming or removing an object's properties, or, under `'onBlur'`, blurring its option selector,
+   * fires the array or object. `extraErrors`, and the errors fields raise themselves,
    * always show; `customValidate`'s show as the schema's do. `onChange` carries the errors shown, while `onError` sees
    * every error. Without `liveValidate` it changes nothing.
    */

@@ -20,7 +20,7 @@ export type EventFormData<T> = T extends object ? T : T | undefined;
  * `dirtyFields`, or that was touched, in `touchedFields`. An object holds an entry only for its members that hold a
  * mark, and an array an entry for each item, `undefined` where the item holds none. A field marked whole, one that was
  * added, removed or replaced whole, or an array or object whose own widget was touched, holds `true` at each of its
- * leaves, or `true` itself when it is not a plain object or array: a `Date`, a `File` or another `Blob` is marked as
+ * leaves, those it held at the blur for a touch, or `true` itself when it is not a plain object or array: a `Date`, a `File` or another `Blob` is marked as
  * one field.
  */
 export type NestedBooleans<T> = T extends Date | Blob
@@ -58,7 +58,7 @@ export interface FormStatus<T = unknown> {
    */
   readonly touched: boolean;
   /** Which fields have been touched, following the array items and object keys the form moved. A widget that handles a
-   * whole array or object touches each of its leaves, so one holding nothing touches nothing
+   * whole array or object touches each leaf it holds at the blur, so one holding nothing touches nothing
    */
   readonly touchedFields: NestedBooleans<T>;
   /** How many submits have reached the form, valid or not, since the form mounted or was last reset. A submit the
