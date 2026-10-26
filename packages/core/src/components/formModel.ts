@@ -537,13 +537,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const blur = (id: string, blurred: FieldBlur | undefined) => {
     const props = committedProps;
     const { omitExtraData, liveOmit } = props;
-    if (isDetached) {
+    if (isDetached || !(blurred || (omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
       return;
     }
     const start = current();
-    if (!(blurred || (omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
-      return;
-    }
     const committed = commit(settled((base) => applyBlur(base, props, blurred)));
     // Only the `IChangeEvent` members count; the validator's own results and the status are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {

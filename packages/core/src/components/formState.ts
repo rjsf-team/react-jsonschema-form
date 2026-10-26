@@ -49,7 +49,7 @@ import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, FormStatus, IChangeEvent, NestedBooleans } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
-import { createUiState, fieldStateOf, isPathPrefix, movedPath } from './uiState.ts';
+import { createUiState, fieldStateOf, isPathPrefix, movedPaths } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
  *
@@ -196,10 +196,10 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList, isWhole: b
   }
   const [key, ...rest] = path;
   if (Array.isArray(data)) {
-    const index = Number(key);
-    if (!Number.isInteger(index) || index < 0 || index >= data.length) {
+    if (!holdsKey(data, key)) {
       return undefined;
     }
+    const index = Number(key);
     const items: unknown[] = Array.isArray(marks) ? marks : Array.from({ length: data.length });
     const item = markPath(items[index], data[index], rest, isWhole);
     if (item === undefined) {
@@ -214,7 +214,7 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList, isWhole: b
   }
   const members: GenericObjectType = isPlainObject(marks) ? marks : {};
   const name = String(key);
-  const member = container && Object.hasOwn(container, name) ? container[name] : undefined;
+  const member = container && holdsKey(container, name) ? container[name] : undefined;
   const marked = markPath(Object.hasOwn(members, name) ? members[name] : undefined, member, rest, isWhole);
   if (marked === undefined) {
     return undefined;
@@ -338,7 +338,7 @@ function withoutDroppedPaths(paths: ReadonlySet<FieldPath>, previous: unknown, n
     let before = previous;
     let after = next;
     for (const key of fieldPathToList(fieldPath)) {
-      if (!holdsKey(before, key)) {
+      if (Object.is(before, after) || !holdsKey(before, key)) {
         return false;
       }
       if (!holdsKey(after, key)) {
@@ -349,8 +349,8 @@ function withoutDroppedPaths(paths: ReadonlySet<FieldPath>, previous: unknown, n
     }
     return false;
   };
-  const kept = new Set([...paths].filter((fieldPath) => !isDropped(fieldPath)));
-  return kept.size === paths.size ? paths : kept;
+  const all = [...paths];
+  return all.some(isDropped) ? new Set(all.filter((fieldPath) => !isDropped(fieldPath))) : paths;
 }
 
 /** `paths` with `path` in it, `paths` itself when it holds it already */
@@ -358,16 +358,18 @@ function withPath(paths: ReadonlySet<FieldPath>, path: FieldPath): ReadonlySet<F
   return paths.has(path) ? paths : new Set([...paths, path]);
 }
 
+/** The array or object whose keys a change moves, and where each goes */
+export interface ContainerKeyMove {
+  container: FieldPath;
+  newKeyOf: KeyMove;
+}
+
 /** `paths` once the keys of the container `move` names moved, `paths` itself when none of them moved */
-function withPathsMoved(
-  paths: ReadonlySet<FieldPath>,
-  move: { container: FieldPath; newKeyOf: KeyMove } | undefined,
-): ReadonlySet<FieldPath> {
+function withPathsMoved(paths: ReadonlySet<FieldPath>, move: ContainerKeyMove | undefined): ReadonlySet<FieldPath> {
   if (!move || paths.size === 0) {
     return paths;
   }
-  const container = fieldPathToList(move.container);
-  const moved = new Set([...paths].flatMap((path) => movedPath(path, container, move.newKeyOf) ?? []));
+  const moved = movedPaths(paths, fieldPathToList(move.container), move.newKeyOf);
   return moved.size === paths.size && [...moved].every((path) => paths.has(path)) ? paths : moved;
 }
 
@@ -383,15 +385,16 @@ export function keyMoveOf<T>({
   newValue,
   newKeyOf,
   newOwnKeyOf,
-}: Pick<FieldChange<T>, 'fieldPath' | 'newValue' | 'newKeyOf' | 'newOwnKeyOf'>):
-  | { container: FieldPath; newKeyOf: KeyMove }
-  | undefined {
+}: Pick<FieldChange<T>, 'fieldPath' | 'newValue' | 'newKeyOf' | 'newOwnKeyOf'>): ContainerKeyMove | undefined {
   const ownKeyOf = newOwnKeyOf ?? newKeyOf;
   if (ownKeyOf) {
     return { container: fieldPath, newKeyOf: ownKeyOf };
   }
+  if (newValue !== ADDITIONAL_PROPERTY_KEY_REMOVE) {
+    return undefined;
+  }
   const path = fieldPathToList(fieldPath);
-  if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE && path.length > 0) {
+  if (path.length > 0) {
     const removed = String(path[path.length - 1]);
     return { container: fieldPathFromList(path.slice(0, -1)), newKeyOf: (key) => (key === removed ? undefined : key) };
   }
@@ -401,6 +404,19 @@ export function keyMoveOf<T>({
 /** Whether `liveErrors: 'field'` decides which errors live validation shows: only with `liveValidate` */
 function isRevealedByField<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>) {
   return props.liveErrors === 'field' && (isLiveValidated(props) || isBlurValidated(props));
+}
+
+/** The touched fields and the revealed ones once the data went from `current`'s to `formData`: both follow the keys
+ * `move` moved, and lose those dropped without a move, see `withoutDroppedPaths()`
+ */
+function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  formData: T | undefined,
+  move?: ContainerKeyMove,
+): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
+  const follow = (paths: ReadonlySet<FieldPath>) =>
+    withoutDroppedPaths(withPathsMoved(paths, move), current.formData, formData);
+  return { touchedPaths: updatePaths(current.touchedPaths, follow), revealed: updatePaths(current.revealed, follow) };
 }
 
 /** The touched fields and the revealed ones after `change`, which left `formData`: both follow the keys it moved, and
@@ -415,10 +431,9 @@ function marksAfterChange<T, S extends StrictRJSFSchema, F extends FormContextTy
   props: FormProps<T, S, F>,
 ): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
   const move = keyMoveOf(change);
-  const followData = (paths: ReadonlySet<FieldPath>) =>
-    withoutDroppedPaths(withPathsMoved(paths, move), current.formData, formData);
-  const touchedPaths = updatePaths(current.touchedPaths, followData);
-  let revealed = updatePaths(current.revealed, followData);
+  const followed = marksFollowingData(current, formData, move);
+  const { touchedPaths } = followed;
+  let { revealed } = followed;
   if (isRevealedByField(props)) {
     if (move) {
       revealed = { ...revealed, containers: withPath(revealed.containers, move.container) };
@@ -1475,12 +1490,9 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     formData,
     baseline,
     submitCount: current?.submitCount ?? 0,
-    touchedPaths: current
-      ? updatePaths(current.touchedPaths, (paths) => withoutDroppedPaths(paths, current.formData, formData))
-      : NOTHING_TOUCHED,
-    revealed: current
-      ? updatePaths(current.revealed, (paths) => withoutDroppedPaths(paths, current.formData, formData))
-      : NOTHING_REVEALED,
+    ...(current
+      ? marksFollowingData(current, formData)
+      : { touchedPaths: NOTHING_TOUCHED, revealed: NOTHING_REVEALED }),
     isDataPassed,
     ...errors,
     initialDefaultsGenerated: true,

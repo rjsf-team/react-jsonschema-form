@@ -820,8 +820,8 @@ function SchemaFieldRender<
   } = useSchemaFieldPlan<T, S, F>(props);
   const hasOptions = xxxOfOptions !== undefined;
   // Read off the schema rather than the value, so an array or object holding nothing yet is still one
-  const fieldType = fieldSchema && getSchemaType<S>(fieldSchema);
-  const holdsContainer = [fieldType].flat().some((type) => type === 'array' || type === 'object');
+  const fieldType = getSchemaType<S>(fieldSchema);
+  const holdsContainer = fieldType === 'array' || fieldType === 'object';
   const handleBlur = useSendBlur(fieldPath, props.onBlur, holdsContainer ? 'leaves' : 'field');
   const handleSelectorBlur = useSendBlur(fieldPath, props.onBlur, 'nothing');
   const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;

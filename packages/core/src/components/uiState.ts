@@ -208,10 +208,15 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
   };
 }
 
+/** `paths` with each moved as `movedPath()` moves it, without those under a key that went */
+export function movedPaths(paths: ReadonlySet<FieldPath>, container: FieldPathList, newKeyOf: KeyMove): Set<FieldPath> {
+  return new Set([...paths].flatMap((path) => movedPath(path, container, newKeyOf) ?? []));
+}
+
 /** The new path of `path` once the keys of the array or object at `container` moved as `newKeyOf` says, undefined for
  * one under a key that went, and `path` itself for one outside `container`
  */
-export function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove): FieldPath | undefined {
+function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove): FieldPath | undefined {
   const segments = fieldPathToList(path);
   if (segments.length === container.length || !isPathPrefix(container, segments)) {
     return path;
@@ -386,7 +391,7 @@ export function createUiState() {
         }
       }
       selections = movedSelections;
-      expanded = new Set([...expanded].flatMap((path) => movedPath(path, containerSegments, newKeyOf) ?? []));
+      expanded = movedPaths(expanded, containerSegments, newKeyOf);
       notify();
     },
   };
