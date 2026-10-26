@@ -189,7 +189,7 @@ export function asFieldValue(value: unknown): unknown {
  * @returns - The field state
  */
 export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  uiState: UiState,
+  uiState: UiStateReader,
   schemaUtils: SchemaUtilsType<T, S, F>,
   editedPath?: FieldPathList,
 ): FormFieldState<S> {
@@ -394,17 +394,20 @@ export function createUiState() {
 
 export type UiState = ReturnType<typeof createUiState>;
 
+/** What deriving data reads of a `UiState`: the option selected for a list, and whether a cycle is expanded */
+export type UiStateReader = Pick<UiState, 'selection' | 'isExpanded'>;
+
 /** `uiState` with no option selected, for the baseline the form mounted with: it was derived when the form showed the
  * options its own data matched, so the options the user picked since are the edited data's, not the baseline's
  */
-export function withoutSelections(uiState: UiState): UiState {
-  return { ...uiState, selection: () => undefined };
+export function withoutSelections(uiState: UiState): UiStateReader {
+  return { selection: () => undefined, isExpanded: uiState.isExpanded };
 }
 
 /** `uiState` with the options selected now and never the ones picked later, for the baseline `reset()` derives under
  * the options the form shows at the reset
  */
-export function withSelectionsAsOf(uiState: UiState): UiState {
+export function withSelectionsAsOf(uiState: UiState): UiStateReader {
   const { selections } = uiState.save();
-  return { ...uiState, selection: (path, list) => selections.get(path)?.get(list) };
+  return { selection: (path, list) => selections.get(path)?.get(list), isExpanded: uiState.isExpanded };
 }

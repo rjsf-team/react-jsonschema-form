@@ -435,6 +435,46 @@ describe('submitCount', () => {
     await act(async () => save.resolve(undefined));
   });
 
+  it('takes a click whose onClick resets the pending form, counting it after the reset', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    let resetFromClick = () => {};
+    const { handle } = mountWithHandle({
+      schema: required,
+      uiSchema: { 'ui:submitButtonOptions': { props: { onClick: () => resetFromClick() } } },
+      initialFormData: { name: 'a' },
+      onSubmit,
+    });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+    resetFromClick = () => handle.reset();
+
+    await user.click(button);
+
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    expect(handle.getStatus().submitCount).toBe(1);
+  });
+
+  it('takes a click on the pending button once the promise settled, before React renders it idle', async () => {
+    const save = Promise.withResolvers<undefined>();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    const { handle } = mountWithHandle({ schema: required, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    // Clicked inside one `act()`, which holds React's render until it ends, so the button still has its pending
+    // `onClick`; user-event awaits React between its steps, so it can't click in that window
+    await act(async () => {
+      save.resolve(undefined);
+      await save.promise;
+      await Promise.resolve();
+      button.click();
+    });
+
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+    expect(handle.getStatus().submitCount).toBe(2);
+  });
+
   it("does not count a submit the browser's constraint validation blocks", async () => {
     const { handle, onSubmit, onError } = mountWithHandle({ schema: required });
 

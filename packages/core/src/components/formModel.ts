@@ -889,16 +889,25 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     handleSubmit,
     /** Cancels a click on the pending submit button, see `Form`, after calling the app's `onClick`, even when it
      * throws, since the browser would otherwise run its constraint validation for the submit the form ignores. The
-     * click counts as a submit attempt unless the app's `onClick` made one itself, such as through `submit()`
+     * click counts as a submit attempt unless the app's `onClick` made one itself, such as through `submit()`. A form
+     * that is no longer pending takes the click, as it takes any submit then: one a `reset()` in that `onClick`
+     * released, or whose promise settled before React rendered the button again. `isStatusPending` is whether the
+     * button is pending in React's form status, which holds the form whatever the model holds
      */
-    cancelPendingClick: <E extends { preventDefault: () => void }>(event: E, onClick?: (event: E) => void) => {
+    cancelPendingClick: <E extends { preventDefault: () => void }>(
+      event: E,
+      onClick: ((event: E) => void) | undefined,
+      isStatusPending: boolean,
+    ) => {
       const attemptsBefore = attempts;
       try {
         onClick?.(event);
       } finally {
-        event.preventDefault();
-        if (!isDetached && attempts === attemptsBefore) {
-          countSubmit();
+        if (pendingSubmit !== undefined || isStatusPending) {
+          event.preventDefault();
+          if (!isDetached && attempts === attemptsBefore) {
+            countSubmit();
+          }
         }
       }
     },

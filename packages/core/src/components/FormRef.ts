@@ -1,6 +1,6 @@
 import type { FieldPathList, RJSFValidationError, ValidationData } from '@rjsf/utils';
 
-import type { EventFormData, FormStatus } from './IChangeEvent.ts';
+import type { EventFormData, RJSFFormStatus } from './IChangeEvent.ts';
 
 /** Public methods exposed by a Form ref.
  * Commands read and write Form's latest stored value, edits made earlier in the same tick included. Use event handlers
@@ -32,7 +32,7 @@ export interface FormRef<T = unknown> {
    * the baseline with it and calls no `onChange`, so after one this can differ from the status the last `IChangeEvent`
    * carried.
    */
-  getStatus(): FormStatus<T>;
+  getStatus(): RJSFFormStatus<T>;
   /** Clears the validation errors and the submit count, and resets the data to `seed` with the schema's defaults filled
    * in, the way the initial render derives it, reporting the result through `onChange`. That data becomes the baseline
    * the form is clean against. Pass the data a save stored, from the handler or action that saved it, so the form is
