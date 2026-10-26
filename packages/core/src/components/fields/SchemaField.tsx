@@ -360,8 +360,9 @@ export function createIsSchemaFieldHidden<
   const expandCycle = memoizeLast(expandRefCycle<S>);
   // The resolver only ever writes back the widget the `uiSchema` names through either spelling and never changes the
   // handling, so a field whose `uiSchema` and the global options name neither a hidden widget nor a `'hide'` is visible
-  // without expanding or retrieving. Any other field is retrieved here as well as by its own `SchemaField`, deprecated or not, so
-  // under a global `'hide'` this skips no field
+  // without expanding or retrieving. Any other field is retrieved here as well as by its own `SchemaField`, deprecated
+  // or not, so under a global `'hide'` this skips only a field whose `uiSchema` (its `ui:definitions` entry included)
+  // sets another `deprecatedHandling`
   const mayHide = memoizeLast(
     (ownUiSchema: UiSchema<T, S, F>, globalUiOptions: GlobalUISchemaOptions | undefined) =>
       ownUiSchema[UI_WIDGET_KEY] === 'hidden' ||

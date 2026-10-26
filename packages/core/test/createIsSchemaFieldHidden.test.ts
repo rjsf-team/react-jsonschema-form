@@ -87,7 +87,9 @@ describe('createIsSchemaFieldHidden()', () => {
   it('returns false for a deprecated schema whose own handling overrides a global hide', () => {
     const registry = makeRegistry({ deprecatedHandling: 'hide' });
     const uiSchema = { 'ui:deprecatedHandling': 'label' } as const;
+    const retrieveSchema = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
     expect(isSchemaFieldHidden(OLD_REF, uiSchema, undefined, ROOT_FIELD_PATH, registry)).toBe(false);
+    expect(retrieveSchema).not.toHaveBeenCalled();
   });
 
   it('resolves a $ref cycle as the field it expands to', () => {
