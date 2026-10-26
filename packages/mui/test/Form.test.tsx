@@ -5,8 +5,10 @@ import {
   checkboxLabelTests,
   fallbackDescriptionTests,
   formTests,
+  optionErrorStateTests,
   submitPendingTests,
   themeTests,
+  wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
@@ -958,4 +960,11 @@ describe('mui CheckboxWidget required attribute', () => {
 
 checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'self' });
 fallbackDescriptionTests(Form, false);
+
+optionErrorStateTests(Form, () =>
+  screen.getByText('Help').closest('.MuiFormHelperText-root')?.classList.contains('Mui-error'),
+);
+
+wrapIfAdditionalErrorStateTests(Form);
+
 submitPendingTests(Form);

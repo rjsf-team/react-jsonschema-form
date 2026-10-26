@@ -6,6 +6,7 @@ import {
   formTests,
   submitPendingTests,
   themeTests,
+  wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { ArrayFieldItemTemplateProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { helpId, optionHelpId } from '@rjsf/utils';
@@ -622,4 +623,7 @@ describe('mantine CheckboxWidget required attribute', () => {
 
 checkboxLabelTests(WrappedForm, { generateTemplates, generateWidgets, descriptionBy: 'self' });
 fallbackDescriptionTests(WrappedForm, true);
+
+wrapIfAdditionalErrorStateTests(WrappedForm);
+
 submitPendingTests(WrappedForm);

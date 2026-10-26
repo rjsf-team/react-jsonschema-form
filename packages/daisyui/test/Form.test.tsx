@@ -4,6 +4,7 @@ import {
   formTests,
   submitPendingTests,
   themeTests,
+  wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
@@ -677,4 +678,7 @@ describe("daisyui marks a deprecated field's label, as core does", () => {
 
 checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 'self' });
 fallbackDescriptionTests(Form, false);
+
+wrapIfAdditionalErrorStateTests(Form);
+
 submitPendingTests(Form);

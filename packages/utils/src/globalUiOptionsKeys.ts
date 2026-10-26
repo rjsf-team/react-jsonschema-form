@@ -1,3 +1,4 @@
+import { OVERRIDABLE_TEMPLATE_NAME_MAP } from './templateOverrideWarnings.ts';
 import type { GlobalUISchemaOptionsKeys, ReservedUiOptionName } from './types.ts';
 
 /** `GLOBAL_UI_OPTIONS_KEYS` as an object, so that a key added to `GlobalUISchemaOptionsKeys` without being added here,
@@ -28,27 +29,9 @@ export const GLOBAL_UI_OPTIONS_KEYS = Object.keys(
  */
 export const RESERVED_UI_OPTION_NAMES = Object.keys({
   ...GLOBAL_UI_OPTIONS_KEY_MAP,
-  ArrayFieldDescriptionTemplate: true,
-  ArrayFieldItemButtonsTemplate: true,
-  ArrayFieldItemTemplate: true,
-  ArrayFieldTemplate: true,
-  ArrayFieldTitleTemplate: true,
-  BaseInputTemplate: true,
-  CyclicSchemaExpandTemplate: true,
-  DescriptionFieldTemplate: true,
-  ErrorListTemplate: true,
-  FallbackFieldTemplate: true,
-  FieldErrorTemplate: true,
-  FieldHelpTemplate: true,
-  FieldTemplate: true,
-  GridTemplate: true,
-  MarkdownTemplate: true,
-  MultiSchemaFieldTemplate: true,
-  ObjectFieldTemplate: true,
-  OptionalDataControlsTemplate: true,
-  TitleFieldTemplate: true,
-  UnsupportedFieldTemplate: true,
-  WrapIfAdditionalTemplate: true,
+  // The declared template names, one list shared with `isTemplateName()`; it lives in
+  // `templateOverrideWarnings.ts` so this public module adds no export for it
+  ...OVERRIDABLE_TEMPLATE_NAME_MAP,
   field: true,
   classNames: true,
   style: true,

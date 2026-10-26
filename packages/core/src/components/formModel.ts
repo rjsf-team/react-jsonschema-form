@@ -660,10 +660,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         resetSeed = { seed };
       }
       const props = committedProps;
-      let nextSeed = seedOf(props);
-      if (resetSeed) {
-        nextSeed = resetSeed.seed;
-      }
+      const nextSeed = resetSeed ? resetSeed.seed : seedOf(props);
       const committed = commit(settled((base) => applyReset(base, props, nextSeed)));
       props.onChange?.(toIChangeEvent(committed));
     },

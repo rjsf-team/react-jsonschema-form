@@ -7,7 +7,8 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', title: 'Name' } } };
 
 /** Pins that the theme's `SubmitButton` is disabled while a promise `onSubmit` returned is pending, so it can't submit the
- * form a second time meanwhile, and that `pending` adds to the disabled state the uiSchema asks for rather than replacing it
+ * form a second time meanwhile, whatever `disabled` the uiSchema asks for, and that a `disabled` it asks for still applies when
+ * nothing is pending
  *
  * @param Form - The theme's `Form` component
  */
@@ -19,6 +20,25 @@ export function submitPendingTests(Form: ComponentType<FormProps>) {
       render(<Form schema={schema} validator={validator} onSubmit={async () => save.promise} />);
       const button = screen.getByRole('button', { name: 'Submit' });
       expect(button).toBeEnabled();
+
+      act(() => button.click());
+
+      expect(button).toBeDisabled();
+      save.resolve(undefined);
+      await waitFor(() => expect(button).toBeEnabled());
+    });
+
+    test('is disabled while the promise is pending though the uiSchema enables it', async () => {
+      const save = Promise.withResolvers<undefined>();
+      render(
+        <Form
+          schema={schema}
+          uiSchema={{ 'ui:submitButtonOptions': { props: { disabled: false } } }}
+          validator={validator}
+          onSubmit={async () => save.promise}
+        />,
+      );
+      const button = screen.getByRole('button', { name: 'Submit' });
 
       act(() => button.click());
 
