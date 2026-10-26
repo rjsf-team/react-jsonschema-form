@@ -1,28 +1,28 @@
+import type { CSSProperties, ReactNode } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplates, getUiOptions } from '@rjsf/utils';
+
+const GROUP_ONLY_FIELDSET_STYLE: CSSProperties = { border: 0, margin: 0, padding: 0, minWidth: 0 };
 
 /** Draws the title and description a field's plan gives the field itself, for a field with no control for a label to
  * name, as `NullField` and the unsupported-field box `FallbackField` or an array with no `items` renders are
  *
- * @param props - The field's `schema`, `uiSchema`, `registry` and `presentation`
+ * @param props - The field's `schema`, `uiSchema`, `registry` and `presentation`, and the `children` the title heads
  */
 export default function OwnTitleAndDescription<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: Pick<FieldProps<T, S, F>, 'schema' | 'uiSchema' | 'registry' | 'presentation'>) {
-  const { schema, uiSchema, registry, presentation } = props;
-  if (!presentation) {
-    return null;
+>(props: Pick<FieldProps<T, S, F>, 'schema' | 'uiSchema' | 'registry' | 'presentation'> & { children?: ReactNode }) {
+  const { schema, uiSchema, registry, presentation, children } = props;
+  const drawsLabel = presentation?.label.by === 'self' && Boolean(presentation.label.text);
+  const drawsDescription = presentation?.description.by === 'self';
+  if (!presentation || (!drawsLabel && !drawsDescription)) {
+    return <>{children}</>;
   }
   const { label, description } = presentation;
-  const drawsLabel = label.by === 'self' && Boolean(label.text);
-  const drawsDescription = description.by === 'self';
-  if (!drawsLabel && !drawsDescription) {
-    return null;
-  }
   const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions(uiSchema));
-  return (
+  const content = (
     <>
       {drawsLabel && (
         <TitleFieldTemplate
@@ -43,6 +43,21 @@ export default function OwnTitleAndDescription<
           registry={registry}
         />
       )}
+      {children}
     </>
+  );
+  if (!drawsLabel) {
+    return content;
+  }
+  // A `TitleFieldTemplate` may draw a `<legend>`, as core's does, which is valid only as the first child of a
+  // `<fieldset>` it names, so a title is drawn inside one with the content it heads, as an object's heading and
+  // properties are. A theme's title is often a heading rather than a legend, so the group is named by the title's id
+  // whatever element draws it. The fieldset is only there for the group, so it draws none of the border and spacing a
+  // browser gives one, which not every theme resets. Core ships no stylesheet to reset it in, so the reset is inline and
+  // the class is what an app selects it by
+  return (
+    <fieldset className='rjsf-own-title-group' aria-labelledby={label.id} style={GROUP_ONLY_FIELDSET_STYLE}>
+      {content}
+    </fieldset>
   );
 }

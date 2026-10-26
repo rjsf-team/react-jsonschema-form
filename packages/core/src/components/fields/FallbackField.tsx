@@ -13,6 +13,7 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
+  fallbackTypeSelectorId,
   getSchemaOwnTypes,
   getFieldTypeForWidget,
   getTemplates,
@@ -27,7 +28,6 @@ import {
   PROPERTIES_KEY,
   RJSF_REF_KEY,
   toFieldPath,
-  fieldPathToId,
   TranslatableString,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
@@ -39,6 +39,7 @@ import type { JSONSchema7TypeName } from 'json-schema';
 import FormDataContext from '../FormDataContext.ts';
 import type { BlurTouch } from '../formState.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
+import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 
 /**
  * Get the types the type selection component offers for a schema: the ones the schema allows, or every JSON Schema
@@ -348,7 +349,7 @@ function FallbackUiField<
     onChange,
     presentation,
   } = props;
-  const { translateString, fields, widgets, globalFormOptions, globalUiOptions } = registry;
+  const { translateString, fields, widgets, globalUiOptions } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(
@@ -442,6 +443,14 @@ function FallbackUiField<
 
   const { SchemaField } = fields;
   const valueField = <SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />;
+  // The value can offer types of its own, as an `anyOf` option listing several does, so its type selector is numbered by
+  // the type selectors above for this id
+  const selectorsAbove = useSelectorsAbove(id);
+  const typeSelectorDepth = selectorsAbove.type + 1;
+  const selectorsBelow = useMemo(
+    () => ({ ...selectorsAbove, type: typeSelectorDepth }),
+    [selectorsAbove, typeSelectorDepth],
+  );
 
   // One type is not a choice to be made, so the value field renders alone: without a control that can only be left as
   // it is, and without the template that lays that control out above it, whose wrapper would otherwise put a theme's
@@ -473,7 +482,7 @@ function FallbackUiField<
         <FormDataContext value={typeSelectorAccess}>
           <SchemaField
             fieldPath={typeSelectorFieldPath}
-            id={fieldPathToId(typeSelectorFieldPath, globalFormOptions)}
+            id={fallbackTypeSelectorId(id, typeSelectorDepth)}
             name={`${name}__fallback_type`}
             schema={typesOptionSchema as S}
             uiSchema={typeSelectorUiSchema}
@@ -487,7 +496,7 @@ function FallbackUiField<
           />
         </FormDataContext>
       }
-      schemaField={valueField}
+      schemaField={<SelectorsAboveContext value={selectorsBelow}>{valueField}</SelectorsAboveContext>}
     />
   );
 }
@@ -513,9 +522,8 @@ export default function FallbackField<
   const { UnsupportedFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema));
 
   return (
-    <>
-      <OwnTitleAndDescription<T, S, F> {...props} />
+    <OwnTitleAndDescription<T, S, F> {...props}>
       <UnsupportedFieldTemplate schema={schema} uiSchema={uiSchema} id={id} reason={reason} registry={registry} />
-    </>
+    </OwnTitleAndDescription>
   );
 }

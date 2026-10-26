@@ -1578,7 +1578,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                                         >
                                           <input
                                             class="ant-checkbox-input"
-                                            id="root_choices-0"
+                                            id="root_choices__0"
                                             name="root[choices][]"
                                             type="checkbox"
                                             value="0"
@@ -1601,7 +1601,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                                         >
                                           <input
                                             class="ant-checkbox-input"
-                                            id="root_choices-1"
+                                            id="root_choices__1"
                                             name="root[choices][]"
                                             type="checkbox"
                                             value="1"
@@ -1624,7 +1624,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                                         >
                                           <input
                                             class="ant-checkbox-input"
-                                            id="root_choices-2"
+                                            id="root_choices__2"
                                             name="root[choices][]"
                                             type="checkbox"
                                             value="2"
@@ -2152,7 +2152,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                                       >
                                         <input
                                           class="ant-radio-input"
-                                          id="root_option-0"
+                                          id="root_option__0"
                                           name="root[option]"
                                           type="radio"
                                           value="0"
@@ -2172,7 +2172,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                                       >
                                         <input
                                           class="ant-radio-input"
-                                          id="root_option-1"
+                                          id="root_option__1"
                                           name="root[option]"
                                           type="radio"
                                           value="1"
@@ -2281,7 +2281,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                                 >
                                   <div
                                     class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                    name="root[color]"
                                     style="width: 100%;"
                                   >
                                     <div
@@ -2326,6 +2325,11 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                                       </span>
                                     </div>
                                   </div>
+                                  <input
+                                    name="root[color]"
+                                    type="hidden"
+                                    value=""
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -4437,7 +4441,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                                 >
                                   <div
                                     class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                    name="root.color"
                                     style="width: 100%;"
                                   >
                                     <div
@@ -4482,6 +4485,11 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                                       </span>
                                     </div>
                                   </div>
+                                  <input
+                                    name="root.color"
+                                    type="hidden"
+                                    value=""
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -4823,7 +4831,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                     >
                       <input
                         class="ant-radio-input"
-                        id="root-0"
+                        id="root__0"
                         name="root"
                         type="radio"
                         value="__rjsf_index:0"
@@ -4844,7 +4852,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                       <input
                         checked=""
                         class="ant-radio-input"
-                        id="root-1"
+                        id="root__1"
                         name="root"
                         type="radio"
                         value="__rjsf_index:1"
@@ -4946,7 +4954,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                     <div>
                                       <div
                                         class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                        name="root_region__oneof_select"
                                         style="width: 100%;"
                                       >
                                         <div
@@ -4991,6 +4998,11 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                           </span>
                                         </div>
                                       </div>
+                                      <input
+                                        name="root_region__oneof_select"
+                                        type="hidden"
+                                        value="1"
+                                      />
                                     </div>
                                     <div
                                       class="rjsf-field rjsf-field-string"
@@ -5012,7 +5024,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                               >
                                                 <div
                                                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                                  name="root_region"
                                                   style="width: 100%;"
                                                 >
                                                   <div
@@ -5056,6 +5067,11 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                                     </span>
                                                   </div>
                                                 </div>
+                                                <input
+                                                  name="root_region"
+                                                  type="hidden"
+                                                  value="1"
+                                                />
                                               </div>
                                             </div>
                                           </div>
@@ -5115,7 +5131,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -5159,6 +5174,11 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="0"
+                />
               </div>
             </div>
           </div>
@@ -5202,7 +5222,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -5246,6 +5265,11 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="1"
+                />
               </div>
             </div>
           </div>
@@ -5289,7 +5313,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -5333,6 +5356,11 @@ exports[`select widget from oneOf boolean constants with a null option without a
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="0"
+                />
               </div>
             </div>
           </div>
@@ -5376,7 +5404,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -5420,6 +5447,11 @@ exports[`select widget from oneOf constants without a type 1`] = `
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="1"
+                />
               </div>
             </div>
           </div>
@@ -5463,7 +5495,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -5507,6 +5538,11 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="1"
+                />
               </div>
             </div>
           </div>
@@ -5550,7 +5586,6 @@ exports[`select widget with options sharing a String() in the realValue format (
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -5594,6 +5629,11 @@ exports[`select widget with options sharing a String() in the realValue format (
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="__rjsf_index:1"
+                />
               </div>
             </div>
           </div>
@@ -5740,7 +5780,7 @@ exports[`single fields > Cyclic schema 1`] = `
                                               >
                                                 <button
                                                   class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-sm"
-                                                  id="root_child_child-button"
+                                                  id="root_child_child__expand"
                                                   type="button"
                                                 >
                                                   <span>
@@ -6205,7 +6245,7 @@ exports[`single fields > checkboxes field 1`] = `
                       >
                         <input
                           class="ant-checkbox-input"
-                          id="root-0"
+                          id="root__0"
                           name="root"
                           type="checkbox"
                           value="0"
@@ -6228,7 +6268,7 @@ exports[`single fields > checkboxes field 1`] = `
                       >
                         <input
                           class="ant-checkbox-input"
-                          id="root-1"
+                          id="root__1"
                           name="root"
                           type="checkbox"
                           value="1"
@@ -6251,7 +6291,7 @@ exports[`single fields > checkboxes field 1`] = `
                       >
                         <input
                           class="ant-checkbox-input"
-                          id="root-2"
+                          id="root__2"
                           name="root"
                           type="checkbox"
                           value="2"
@@ -6274,7 +6314,7 @@ exports[`single fields > checkboxes field 1`] = `
                       >
                         <input
                           class="ant-checkbox-input"
-                          id="root-3"
+                          id="root__3"
                           name="root"
                           type="checkbox"
                           value="3"
@@ -6362,7 +6402,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                           aria-describedby="root__description root__help"
                           checked=""
                           class="ant-checkbox-input"
-                          id="root-0"
+                          id="root__0"
                           name="root"
                           type="checkbox"
                           value="0"
@@ -6385,7 +6425,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                         <input
                           aria-describedby="root__description root__help"
                           class="ant-checkbox-input"
-                          id="root-1"
+                          id="root__1"
                           name="root"
                           type="checkbox"
                           value="1"
@@ -6408,7 +6448,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                         <input
                           aria-describedby="root__description root__help"
                           class="ant-checkbox-input"
-                          id="root-2"
+                          id="root__2"
                           name="root"
                           type="checkbox"
                           value="2"
@@ -6522,7 +6562,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                         <input
                           aria-describedby="root__description"
                           class="ant-checkbox-input"
-                          id="root-0"
+                          id="root__0"
                           name="root"
                           type="checkbox"
                           value="0"
@@ -6546,7 +6586,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                         <input
                           aria-describedby="root__description"
                           class="ant-checkbox-input"
-                          id="root-1"
+                          id="root__1"
                           name="root"
                           type="checkbox"
                           value="1"
@@ -6570,7 +6610,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                         <input
                           aria-describedby="root__description"
                           class="ant-checkbox-input"
-                          id="root-2"
+                          id="root__2"
                           name="root"
                           type="checkbox"
                           value="2"
@@ -9074,7 +9114,6 @@ exports[`single fields > optional data controls > does not show optional control
                                     <div>
                                       <div
                                         class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                        name="root_optionalObjectWithOneofs__oneof_select"
                                         style="width: 100%;"
                                       >
                                         <div
@@ -9119,6 +9158,11 @@ exports[`single fields > optional data controls > does not show optional control
                                           </span>
                                         </div>
                                       </div>
+                                      <input
+                                        name="root_optionalObjectWithOneofs__oneof_select"
+                                        type="hidden"
+                                        value="0"
+                                      />
                                     </div>
                                     <div
                                       class="rjsf-field rjsf-field-object"
@@ -9263,7 +9307,6 @@ exports[`single fields > optional data controls > does not show optional control
                                     <div>
                                       <div
                                         class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                        name="root_optionalArrayWithAnyofs__anyof_select"
                                         style="width: 100%;"
                                       >
                                         <div
@@ -9308,6 +9351,11 @@ exports[`single fields > optional data controls > does not show optional control
                                           </span>
                                         </div>
                                       </div>
+                                      <input
+                                        name="root_optionalArrayWithAnyofs__anyof_select"
+                                        type="hidden"
+                                        value="0"
+                                      />
                                     </div>
                                     <div
                                       class="rjsf-field rjsf-field-array"
@@ -10559,7 +10607,6 @@ exports[`single fields > optional data controls > does not show optional control
                                     <div>
                                       <div
                                         class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-disabled ant-select-show-search"
-                                        name="root_optionalObjectWithOneofs__oneof_select"
                                         style="width: 100%;"
                                       >
                                         <div
@@ -10605,6 +10652,12 @@ exports[`single fields > optional data controls > does not show optional control
                                           </span>
                                         </div>
                                       </div>
+                                      <input
+                                        disabled=""
+                                        name="root_optionalObjectWithOneofs__oneof_select"
+                                        type="hidden"
+                                        value="0"
+                                      />
                                     </div>
                                     <div
                                       class="rjsf-field rjsf-field-object"
@@ -10749,7 +10802,6 @@ exports[`single fields > optional data controls > does not show optional control
                                     <div>
                                       <div
                                         class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-disabled ant-select-show-search"
-                                        name="root_optionalArrayWithAnyofs__anyof_select"
                                         style="width: 100%;"
                                       >
                                         <div
@@ -10795,6 +10847,12 @@ exports[`single fields > optional data controls > does not show optional control
                                           </span>
                                         </div>
                                       </div>
+                                      <input
+                                        disabled=""
+                                        name="root_optionalArrayWithAnyofs__anyof_select"
+                                        type="hidden"
+                                        value="0"
+                                      />
                                     </div>
                                     <div
                                       class="rjsf-field rjsf-field-array"
@@ -15330,7 +15388,7 @@ exports[`single fields > radio field 1`] = `
                     >
                       <input
                         class="ant-radio-input"
-                        id="root-0"
+                        id="root__0"
                         name="root"
                         type="radio"
                         value="0"
@@ -15350,7 +15408,7 @@ exports[`single fields > radio field 1`] = `
                     >
                       <input
                         class="ant-radio-input"
-                        id="root-1"
+                        id="root__1"
                         name="root"
                         type="radio"
                         value="1"
@@ -15433,7 +15491,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                       <input
                         aria-describedby="root__description"
                         class="ant-radio-input"
-                        id="root-0"
+                        id="root__0"
                         name="root"
                         type="radio"
                         value="0"
@@ -15454,7 +15512,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                       <input
                         aria-describedby="root__description"
                         class="ant-radio-input"
-                        id="root-1"
+                        id="root__1"
                         name="root"
                         type="radio"
                         value="1"
@@ -15931,7 +15989,6 @@ exports[`single fields > select field 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -15976,6 +16033,11 @@ exports[`single fields > select field 1`] = `
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -16019,7 +16081,6 @@ exports[`single fields > select field multiple choice 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-multiple ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -16118,7 +16179,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-multiple ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -16230,7 +16290,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                       >
                         <input
                           class="ant-checkbox-input"
-                          id="root-0"
+                          id="root__0"
                           name="root"
                           type="checkbox"
                           value="0"
@@ -16254,7 +16314,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                         <input
                           class="ant-checkbox-input"
                           disabled=""
-                          id="root-1"
+                          id="root__1"
                           name="root"
                           type="checkbox"
                           value="1"
@@ -16277,7 +16337,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                       >
                         <input
                           class="ant-checkbox-input"
-                          id="root-2"
+                          id="root__2"
                           name="root"
                           type="checkbox"
                           value="2"
@@ -16300,7 +16360,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                       >
                         <input
                           class="ant-checkbox-input"
-                          id="root-3"
+                          id="root__3"
                           name="root"
                           type="checkbox"
                           value="3"
@@ -16358,7 +16418,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-multiple ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -16490,6 +16549,16 @@ exports[`single fields > select field multiple choice formData 1`] = `
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="0"
+                />
+                <input
+                  name="root"
+                  type="hidden"
+                  value="1"
+                />
               </div>
             </div>
           </div>
@@ -16533,7 +16602,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-multiple ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -16632,7 +16700,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -16677,6 +16744,11 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -16731,7 +16803,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                     >
                       <input
                         class="ant-radio-input"
-                        id="root-0"
+                        id="root__0"
                         name="root"
                         type="radio"
                         value="0"
@@ -16752,7 +16824,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                       <input
                         class="ant-radio-input"
                         disabled=""
-                        id="root-1"
+                        id="root__1"
                         name="root"
                         type="radio"
                         value="1"
@@ -16820,7 +16892,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                       <input
                         class="ant-radio-input"
                         disabled=""
-                        id="root-0"
+                        id="root__0"
                         name="root"
                         type="radio"
                         value="0"
@@ -16841,7 +16913,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                       <input
                         class="ant-radio-input"
                         disabled=""
-                        id="root-1"
+                        id="root__1"
                         name="root"
                         type="radio"
                         value="1"
@@ -16898,7 +16970,6 @@ exports[`single fields > select field single choice formData 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -16942,6 +17013,11 @@ exports[`single fields > select field single choice formData 1`] = `
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="1"
+                />
               </div>
             </div>
           </div>
@@ -16985,7 +17061,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -17030,6 +17105,11 @@ exports[`single fields > select field single choice optgroups 1`] = `
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -17073,7 +17153,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -17118,6 +17197,11 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -17173,7 +17257,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                       <input
                         class="ant-radio-input"
                         disabled=""
-                        id="root-0"
+                        id="root__0"
                         name="root"
                         type="radio"
                         value="0"
@@ -17194,7 +17278,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                       <input
                         class="ant-radio-input"
                         disabled=""
-                        id="root-1"
+                        id="root__1"
                         name="root"
                         type="radio"
                         value="1"
@@ -17265,7 +17349,6 @@ exports[`single fields > select widget with description in schema and FieldTempl
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -17311,6 +17394,11 @@ exports[`single fields > select widget with description in schema and FieldTempl
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value=""
+                />
               </div>
             </div>
             <div
@@ -17367,7 +17455,6 @@ exports[`single fields > select widget with selected oneOf option description 1`
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -17412,6 +17499,11 @@ exports[`single fields > select widget with selected oneOf option description 1`
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="0"
+                />
                 <span
                   id="root__selectedOptionDescription"
                 >
@@ -17460,7 +17552,6 @@ exports[`single fields > select widget with selected oneOf option description an
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -17504,6 +17595,11 @@ exports[`single fields > select widget with selected oneOf option description an
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="0"
+                />
               </div>
             </div>
           </div>
@@ -17547,7 +17643,6 @@ exports[`single fields > select widget with selected oneOf option description be
               >
                 <div
                   class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                  name="root"
                   style="width: 100%;"
                 >
                   <div
@@ -17592,6 +17687,11 @@ exports[`single fields > select widget with selected oneOf option description be
                     </span>
                   </div>
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="0"
+                />
                 <span
                   id="root__selectedOptionDescription"
                 >
@@ -17677,6 +17777,11 @@ exports[`single fields > slider field 1`] = `
                     tabindex="0"
                   />
                 </div>
+                <input
+                  name="root"
+                  type="hidden"
+                  value="75"
+                />
               </div>
             </div>
           </div>
@@ -18308,7 +18413,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
                     name="root"
                     placeholder=""
                     type="text"
-                    value="[object Object]"
+                    value=""
                   />
                   <span
                     class="ant-input-suffix"
@@ -19113,7 +19218,6 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                                 >
                                   <div
                                     class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
-                                    name="root_answer"
                                     style="width: 100%;"
                                   >
                                     <div
@@ -19157,6 +19261,11 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                                       </span>
                                     </div>
                                   </div>
+                                  <input
+                                    name="root_answer"
+                                    type="hidden"
+                                    value="0"
+                                  />
                                 </div>
                               </div>
                             </div>

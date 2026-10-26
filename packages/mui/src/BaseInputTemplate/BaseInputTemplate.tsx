@@ -1,5 +1,6 @@
 import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
+import type { FormHelperTextProps } from '@mui/material/FormHelperText';
 import type { InputProps as MuiInputProps } from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
 import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
@@ -25,7 +26,7 @@ import {
 } from '@rjsf/utils';
 
 import type { MuiSlotProps } from '../util.ts';
-import { describeByHelperText, getMuiProps, resolveSlotProps } from '../util.ts';
+import { describeByHelperText, getMuiProps, helperTextSlot, inputLabelId, resolveSlotProps } from '../util.ts';
 
 type HtmlInputAttributes = React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
 
@@ -42,6 +43,8 @@ export interface BaseInputTemplateMuiProps extends GenericObjectType {
     input?: MuiInputProps;
     /** Props applied to the MUI `InputLabel` element. */
     inputLabel?: MuiInputLabelProps;
+    /** Props applied to the helper text, as an object or as MUI's `(ownerState) => props`. */
+    formHelperText?: MuiSlotProps<FormHelperTextProps, TextFieldOwnerState>;
   };
 }
 
@@ -102,9 +105,10 @@ export default function BaseInputTemplate<
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const textFieldOverrides = { ...otherMuiProps, ...textFieldProps } as TextFieldProps;
+  const textFieldId = textFieldOverrides.id ?? id;
   const controlAttributes = describeByHelperText(
     getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []),
-    textFieldOverrides.id ?? id,
+    textFieldId,
     textFieldOverrides.helperText,
   );
   const numericTitle = getNumericInputTitle(derivedInputProps, registry.translateString);
@@ -179,7 +183,12 @@ export default function BaseInputTemplate<
           ...muiSlotProps,
           input: inputProps,
           htmlInput: htmlInputProps,
-          inputLabel: DisplayInputLabelProps,
+          inputLabel: { ...DisplayInputLabelProps, id: DisplayInputLabelProps.id ?? inputLabelId(textFieldId) },
+          formHelperText: helperTextSlot<FormHelperTextProps, TextFieldOwnerState>(
+            textFieldId,
+            slotProps?.formHelperText,
+            muiSlotProps?.formHelperText,
+          ),
         }}
         {...rest}
         value={value || value === 0 ? value : ''}

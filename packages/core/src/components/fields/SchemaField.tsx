@@ -19,7 +19,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
-  fieldPathToId,
+  besideOptionsId,
   fieldPathToList,
   getDeprecatedHandling,
   getDescribedControlAttributes,
@@ -49,7 +49,6 @@ import {
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
   toConstant,
-  toFieldPath,
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
@@ -76,6 +75,7 @@ import type { NamedFieldResolution } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 import type { NamedFieldPath } from './NamedFieldContext.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
+import { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
 import useAdditionalDepths from './useAdditionalDepths.ts';
@@ -649,11 +649,13 @@ export function useSchemaFieldPlan<
     inheritedPresentation?.plan.showLabel ??
     uiBooleanOption(globalUiOptions?.label) ??
     true;
-  // When the options render, the field component renders beside them under the id a child named `XxxOf` would have,
-  // to avoid DOM id duplication with the rendering of the same data address by the `XxxOfField`. The `fieldPath`
-  // stays the truthful data address either way
+  // When the options render, the field component renders beside them under an id of its own, to avoid DOM id
+  // duplication with the rendering of the same data address by the `XxxOfField`, numbered by the selectors above for
+  // this id, so an option rendering options of its own doesn't take the id of the component beside its field's. The
+  // `fieldPath` stays the truthful data address either way
+  const selectorsAbove = useSelectorsAbove(fieldId);
   const fieldComponentId = retrievesOptions
-    ? fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions)
+    ? besideOptionsId(fieldId, selectorsAbove.anyOf + selectorsAbove.oneOf + 1)
     : fieldId;
   // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
   // the data hands it the same array, which its callbacks key on

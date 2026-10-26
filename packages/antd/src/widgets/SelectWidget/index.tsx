@@ -1,16 +1,10 @@
 import { useMemo, useState } from 'react';
-import type {
-  FormContextType,
-  GenericObjectType,
-  IndexedEnumOptionType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
   isEnumOptionsGroup,
@@ -23,6 +17,8 @@ import {
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select/index.js';
+
+import useControlState from '../../controlState.ts';
 
 const SELECT_STYLE = {
   width: '100%',
@@ -59,8 +55,7 @@ export default function SelectWidget<
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const [open, setOpen] = useState(false);
-  const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const control = useControlState<T, S, F>({ disabled, readonly, registry });
 
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -89,16 +84,43 @@ export default function SelectWidget<
 
   const getPopupContainer = SelectWidget.getPopupContainerCallback();
 
-  const selectValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
-
-  // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
-  // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
-  const extraProps = {
-    name: htmlName || id,
-  };
-
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
+
+  const groupedOptions = useMemo(
+    () => groupEnumOptions<S>(enumOptions, optgroups, enumDisabled),
+    [enumOptions, optgroups, enumDisabled],
+  );
+
+  const { drawnDomValues, disabledDomValues, enabledDomValues } = useMemo(() => {
+    const drawnOptions = flattenGroupedOptions<S>(groupedOptions);
+    const drawn = new Set(drawnOptions.map(({ index }) => domValues[index]));
+    const disabledOnes = new Set(drawnOptions.filter((option) => option.disabled).map(({ index }) => domValues[index]));
+    return {
+      drawnDomValues: drawn,
+      disabledDomValues: disabledOnes,
+      enabledDomValues: [...drawn].filter((domValue) => !disabledOnes.has(domValue)),
+    };
+  }, [groupedOptions, domValues]);
+
+  // `realValue` encodes form data no option holds as itself, which selects nothing in a native `<select>`
+  const selectedValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, multiple ? [] : '');
+  const isDrawn = (domValue: string) => drawnDomValues.has(domValue);
+  const selected = Array.isArray(selectedValue) ? selectedValue.filter(isDrawn) : ([selectedValue].find(isDrawn) ?? '');
+  // With no empty placeholder to fall back on, a native `<select>` that holds no option selects its first enabled one in
+  // the order they are drawn, or none at all, so the `Select` draws that one too
+  const holdsNoOption = selected === '' && !showPlaceholderOption;
+  const fallbackDomValue = holdsNoOption ? enabledDomValues[0] : undefined;
+  const selectValue =
+    fallbackDomValue ?? enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
+
+  // A native `<select>` posts one entry per selected option, in the order the options are drawn, but none for a
+  // selected option that is disabled
+  const postedValues = Array.isArray(selected)
+    ? enabledDomValues.filter((domValue) => selected.includes(domValue))
+    : [holdsNoOption ? fallbackDomValue : selected].filter(
+        (domValue) => domValue !== undefined && !disabledDomValues.has(domValue),
+      );
 
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {
@@ -108,11 +130,10 @@ export default function SelectWidget<
         value: domValues[option.index],
         label: option.label,
       });
-      const enumOptionsList: DefaultOptionType[] = groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map(
-        (item) =>
-          isEnumOptionsGroup<S>(item)
-            ? { label: item.label, options: item.options.map(toOptionType) }
-            : toOptionType(item),
+      const enumOptionsList: DefaultOptionType[] = groupedOptions.map((item) =>
+        isEnumOptionsGroup<S>(item)
+          ? { label: item.label, options: item.options.map(toOptionType) }
+          : toOptionType(item),
       );
 
       if (showPlaceholderOption) {
@@ -121,14 +142,14 @@ export default function SelectWidget<
       return enumOptionsList;
     }
     return undefined;
-  }, [enumDisabled, enumOptions, optgroups, placeholder, showPlaceholderOption, domValues]);
+  }, [enumOptions, groupedOptions, placeholder, showPlaceholderOption, domValues]);
 
   return (
     <>
       <Select
         open={open}
         autoFocus={autofocus}
-        disabled={disabled || (readonlyAsDisabled && readonly)}
+        disabled={control.disabled}
         getPopupContainer={getPopupContainer}
         id={id}
         mode={multiple ? 'multiple' : undefined}
@@ -138,14 +159,19 @@ export default function SelectWidget<
         placeholder={placeholder}
         style={SELECT_STYLE}
         value={selectValue}
-        {...extraProps}
         // When the open change is called, set the open state, needed so that the select opens properly in the playground
         onOpenChange={setOpen}
         showSearch={{ filterOption }}
         {...widgetAriaProps(props)}
         aria-required={required || undefined}
+        aria-readonly={control.ariaReadonly}
         options={selectOptions}
       />
+      {/* antd's `Select` renders no native control, so the value a native submit or `FormData` reads is carried by
+      hidden inputs, as a native `<select>` posts one entry per selected option, or its empty placeholder */}
+      {postedValues.map((domValue) => (
+        <input key={domValue} type='hidden' name={htmlName || id} value={domValue} disabled={control.disabled} />
+      ))}
       <SelectedOptionDescription
         id={id}
         multiple={multiple}

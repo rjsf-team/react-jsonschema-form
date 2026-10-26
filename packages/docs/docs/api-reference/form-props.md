@@ -725,7 +725,7 @@ Sometimes you may want to trigger events or modify external state when a field h
 ## onChange
 
 Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes, such as the schema's defaults: read those with `getFormData()`. The edit has been applied by the time it is called, so not storing it does not undo it; refuse or rewrite edits in [`transformChange`](#transformchange).
-The event also carries the form's status: `dirty`, `dirtyFields`, `touched`, `touchedFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields). A change to the status alone fires no `onChange`, so a blur that only touches a field fires none: the next event carries it. Neither does a prop change that moves the baseline with the data, so read `getStatus()` after one. `submitCount` counts the submits that reach the form: one the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set.
+The event also carries the form's status: `dirty`, `dirtyFields`, `touched`, `touchedFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields). A change to the status alone fires no `onChange`, so a blur that only touches a field fires none: the next event carries it. Neither does a prop change that moves the baseline with the data, so read `getStatus()` after one. `submitCount` counts the submits that reach the form, including one the form ignores while a promise `onSubmit` returned is pending: one the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set.
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
@@ -776,7 +776,7 @@ render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, docum
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
 
-When `onSubmit` returns a promise, the submit button gets `pending` and is disabled until that promise settles.
+When `onSubmit` returns a promise, the form ignores another submit until that promise settles, and meanwhile the submit button gets `pending` and `aria-disabled`.
 When the promise rejects, the form's own copy of it is reported as an unhandled rejection, even if you handle the promise you return, so catch errors inside `onSubmit` and return a promise that resolves.
 See [Submitting](../usage/submitting.md), which also shows how to dispatch a `useActionState` action from `onSubmit`.
 

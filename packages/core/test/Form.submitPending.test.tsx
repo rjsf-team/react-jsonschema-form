@@ -32,17 +32,80 @@ afterEach(() => {
   }
 });
 
+/** Pending marks the button `aria-disabled` and leaves it enabled, so it keeps focus */
+function expectPending(button: HTMLElement) {
+  expect(button).toHaveAttribute('aria-disabled', 'true');
+  expect(button).toBeEnabled();
+}
+
+function expectIdle(button: HTMLElement) {
+  expect(button).not.toHaveAttribute('aria-disabled');
+  expect(button).toBeEnabled();
+}
+
 describe('a promise onSubmit returns', () => {
-  it('disables the default submit button until the promise settles', async () => {
+  it('marks the default submit button aria-disabled, rather than disabled, until the promise settles', async () => {
     const save = deferred();
     createFormComponent({ schema, initialFormData: { name: 'a' }, onSubmit: () => save.promise });
     const button = screen.getByRole('button', { name: 'Submit' });
 
     await user.click(button);
 
-    expect(button).toBeDisabled();
+    expectPending(button);
     save.resolve(undefined);
-    await waitFor(() => expect(button).toBeEnabled());
+    await waitFor(() => expectIdle(button));
+  });
+
+  it('keeps focus on the submit button a keyboard user submitted with', async () => {
+    const save = deferred();
+    const onSubmit = vi.fn(() => save.promise);
+    createFormComponent({ schema, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.tab();
+    await user.tab();
+    expect(button).toHaveFocus();
+
+    await user.keyboard('{Enter}');
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expectPending(button);
+    expect(button).toHaveFocus();
+    save.resolve(undefined);
+    await waitFor(() => expectIdle(button));
+    expect(button).toHaveFocus();
+  });
+
+  it('ignores another submit while the promise is pending, and takes one once it settles', async () => {
+    const save = deferred();
+    const onSubmit = vi.fn().mockReturnValueOnce(save.promise);
+    createFormComponent({ schema, initialFormData: { name: 'a' }, onSubmit });
+    const button = screen.getByRole('button', { name: 'Submit' });
+    await user.click(button);
+
+    await user.click(button);
+    await user.type(screen.getByRole('textbox', { name: 'Name' }), '{Enter}');
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    save.resolve(undefined);
+    await waitFor(() => expectIdle(button));
+    await user.click(button);
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+  });
+
+  it('ignores another submit from a button the form is passed as children while the promise is pending', async () => {
+    const save = deferred();
+    const onSubmit = vi.fn(() => save.promise);
+    render(
+      <Form schema={schema} validator={validator} initialFormData={{ name: 'a' }} onSubmit={onSubmit}>
+        <button type='submit'>Send</button>
+      </Form>,
+    );
+    const button = screen.getByRole('button', { name: 'Send' });
+
+    await user.click(button);
+    await user.click(button);
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
   it('passes pending to a custom SubmitButton template', async () => {
@@ -67,7 +130,7 @@ describe('a promise onSubmit returns', () => {
     await waitFor(() => expect(seen.at(-1)).toBe(false));
   });
 
-  it('disables a custom SubmitButton template that spreads the props its uiSchema gives the button', async () => {
+  it('marks a custom SubmitButton template that spreads the props its uiSchema gives the button aria-disabled', async () => {
     const save = deferred();
     function SpreadingSubmitButton({ uiSchema }: SubmitButtonProps) {
       const { props } = getSubmitButtonOptions(uiSchema);
@@ -87,9 +150,9 @@ describe('a promise onSubmit returns', () => {
 
     await user.click(button);
 
-    expect(button).toBeDisabled();
+    expectPending(button);
     save.resolve(undefined);
-    await waitFor(() => expect(button).toBeEnabled());
+    await waitFor(() => expectIdle(button));
   });
 
   it('leaves a thenable that is not a promise alone, since calling its then() again can rerun a lazy request', async () => {
@@ -100,7 +163,7 @@ describe('a promise onSubmit returns', () => {
     await user.click(button);
 
     expect(then).not.toHaveBeenCalled();
-    expect(button).toBeEnabled();
+    expectIdle(button);
   });
 
   it('reads no enclosing form status when it renders as an element other than a form', async () => {
@@ -124,7 +187,7 @@ describe('a promise onSubmit returns', () => {
     await user.click(screen.getByRole('button', { name: 'Outer' }));
 
     expect(screen.getByRole('status', { name: 'outer' })).toHaveTextContent('pending');
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeEnabled();
+    expectIdle(screen.getByRole('button', { name: 'Submit' }));
     outerSave.resolve(undefined);
     await waitFor(() => expect(screen.getByRole('status', { name: 'outer' })).toHaveTextContent('idle'));
   });
@@ -137,7 +200,7 @@ describe('a promise onSubmit returns', () => {
     await user.click(button);
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
-    expect(button).toBeEnabled();
+    expectIdle(button);
   });
 
   it('holds no transition elsewhere in the app while the promise is pending', async () => {
@@ -161,26 +224,25 @@ describe('a promise onSubmit returns', () => {
     await user.click(screen.getByRole('button', { name: 'History' }));
 
     expect(screen.getByRole('status', { name: 'tab' })).toHaveTextContent(/^history$/);
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+    expectPending(screen.getByRole('button', { name: 'Submit' }));
   });
 
-  it('stays pending until every promise from a second submit settles too', async () => {
-    const first = deferred();
-    const second = deferred();
-    const onSubmit = vi.fn().mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
+  it('ignores a second FormRef.submit() in the same handler, before the pending state renders', async () => {
+    const save = deferred();
+    const onSubmit = vi.fn(() => save.promise);
     const ref = createFormRef();
     createFormComponent({ ref, schema, initialFormData: { name: 'a' }, onSubmit });
     const button = screen.getByRole('button', { name: 'Submit' });
 
-    act(() => handleOf(ref).submit());
-    act(() => handleOf(ref).submit());
-    first.resolve(undefined);
-    await act(() => first.promise);
+    act(() => {
+      handleOf(ref).submit();
+      handleOf(ref).submit();
+    });
 
-    expect(onSubmit).toHaveBeenCalledTimes(2);
-    expect(button).toBeDisabled();
-    second.resolve(undefined);
-    await waitFor(() => expect(button).toBeEnabled());
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expectPending(button);
+    save.resolve(undefined);
+    await waitFor(() => expectIdle(button));
   });
 
   it('leaves useFormStatus() idle in buttons the form is passed as children, which a transition onSubmit starts makes pending', async () => {
@@ -233,9 +295,9 @@ describe('a promise onSubmit returns', () => {
 
     act(() => handleOf(ref).submit());
 
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+    expectPending(screen.getByRole('button', { name: 'Submit' }));
     save.resolve(undefined);
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Submit' })).toBeEnabled());
+    await waitFor(() => expectIdle(screen.getByRole('button', { name: 'Submit' })));
   });
 
   it('is pending for a submit through FormRef.submit() of an edit the inputs have yet to show', async () => {
@@ -250,9 +312,9 @@ describe('a promise onSubmit returns', () => {
     });
 
     expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { name: 'b' } }), expect.anything());
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+    expectPending(screen.getByRole('button', { name: 'Submit' }));
     save.resolve(undefined);
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Submit' })).toBeEnabled());
+    await waitFor(() => expectIdle(screen.getByRole('button', { name: 'Submit' })));
   });
 
   describe('that rejects', () => {
@@ -296,10 +358,10 @@ describe('a promise onSubmit returns', () => {
       const button = screen.getByRole('button', { name: 'Submit' });
 
       await user.click(button);
-      expect(button).toBeDisabled();
+      expectPending(button);
       save.reject(rejection);
 
-      await waitFor(() => expect(button).toBeEnabled());
+      await waitFor(() => expectIdle(button));
       await waitFor(() => expect(unhandled).toEqual([rejection]));
       expect(screen.queryByText('caught')).not.toBeInTheDocument();
     });

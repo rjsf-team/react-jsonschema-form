@@ -55,7 +55,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_first"
-                label="First Name"
                 name="root_person_name_first"
                 placeholder=""
                 required=""
@@ -83,7 +82,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_middle"
-                label="Middle"
                 name="root_person_name_middle"
                 placeholder=""
                 type="text"
@@ -115,7 +113,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_last"
-                label="Last Name"
                 name="root_person_name_last"
                 placeholder=""
                 required=""
@@ -152,7 +149,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_birth_date"
-                label="Date of Birth"
                 name="root_person_birth_date"
                 placeholder="DOB"
                 required=""
@@ -200,7 +196,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         name="root_person_race"
                         type="checkbox"
                         value="0"
@@ -218,7 +214,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         name="root_person_race"
                         type="checkbox"
                         value="1"
@@ -236,7 +232,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         name="root_person_race"
                         type="checkbox"
                         value="2"
@@ -254,7 +250,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         name="root_person_race"
                         type="checkbox"
                         value="3"
@@ -272,7 +268,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         name="root_person_race"
                         type="checkbox"
                         value="4"
@@ -323,7 +319,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_line_1"
-                      label="Address"
                       name="root_person_address_line_1"
                       placeholder=""
                       required=""
@@ -351,7 +346,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_line_2"
-                      label="Address 2"
                       name="root_person_address_line_2"
                       placeholder=""
                       type="text"
@@ -383,7 +377,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_city"
-                      label="City"
                       name="root_person_address_city"
                       placeholder=""
                       required=""
@@ -730,7 +723,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         class="form-control"
                         id="root_person_address_postal_code"
-                        label="ZIP Code"
                         name="root_person_address_postal_code"
                         placeholder=""
                         required=""
@@ -771,7 +763,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <span>
                     <input
                       checked=""
-                      id="root_employment-0"
+                      id="root_employment__0"
                       name="root_employment"
                       type="radio"
                       value="0"
@@ -786,7 +778,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      id="root_employment-1"
+                      id="root_employment__1"
                       name="root_employment"
                       type="radio"
                       value="1"
@@ -801,7 +793,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      id="root_employment-2"
+                      id="root_employment__2"
                       name="root_employment"
                       type="radio"
                       value="2"
@@ -838,7 +830,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_employment_business"
-                label="Company Name"
                 name="root_employment_business"
                 placeholder=""
                 required=""
@@ -866,7 +857,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_employment_title"
-                label="Job Title"
                 name="root_employment_title"
                 placeholder=""
                 type="text"
@@ -898,7 +888,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_employment_location_city"
-                label="City"
                 name="root_employment_location_city"
                 placeholder=""
                 required=""
@@ -1290,7 +1279,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_first"
-                label="First Name"
                 name="root_person_name_first"
                 placeholder=""
                 required=""
@@ -1318,7 +1306,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_middle"
-                label="Middle"
                 name="root_person_name_middle"
                 placeholder=""
                 type="text"
@@ -1350,7 +1337,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_last"
-                label="Last Name"
                 name="root_person_name_last"
                 placeholder=""
                 required=""
@@ -1387,7 +1373,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_birth_date"
-                label="Date of Birth"
                 name="root_person_birth_date"
                 placeholder="DOB"
                 required=""
@@ -1435,7 +1420,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         name="root_person_race"
                         type="checkbox"
                         value="0"
@@ -1453,7 +1438,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         name="root_person_race"
                         type="checkbox"
                         value="1"
@@ -1471,7 +1456,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         name="root_person_race"
                         type="checkbox"
                         value="2"
@@ -1489,7 +1474,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         name="root_person_race"
                         type="checkbox"
                         value="3"
@@ -1507,7 +1492,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         name="root_person_race"
                         type="checkbox"
                         value="4"
@@ -1558,7 +1543,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_line_1"
-                      label="Address"
                       name="root_person_address_line_1"
                       placeholder=""
                       required=""
@@ -1586,7 +1570,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_line_2"
-                      label="Address 2"
                       name="root_person_address_line_2"
                       placeholder=""
                       type="text"
@@ -1618,7 +1601,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_city"
-                      label="City"
                       name="root_person_address_city"
                       placeholder=""
                       required=""
@@ -1965,7 +1947,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         class="form-control"
                         id="root_person_address_postal_code"
-                        label="ZIP Code"
                         name="root_person_address_postal_code"
                         placeholder=""
                         required=""
@@ -2005,7 +1986,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      id="root_employment-0"
+                      id="root_employment__0"
                       name="root_employment"
                       type="radio"
                       value="0"
@@ -2021,7 +2002,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <span>
                     <input
                       checked=""
-                      id="root_employment-1"
+                      id="root_employment__1"
                       name="root_employment"
                       type="radio"
                       value="1"
@@ -2036,7 +2017,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      id="root_employment-2"
+                      id="root_employment__2"
                       name="root_employment"
                       type="radio"
                       value="2"
@@ -2068,7 +2049,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_employment_district"
-                label="District Name"
                 name="root_employment_district"
                 placeholder=""
                 type="text"
@@ -2100,7 +2080,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_employment_school"
-                label="School Name"
                 name="root_employment_school"
                 placeholder=""
                 required=""
@@ -2128,7 +2107,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_employment_title"
-                label="Job Title"
                 name="root_employment_title"
                 placeholder=""
                 type="text"
@@ -2160,7 +2138,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_employment_location_city"
-                label="City"
                 name="root_employment_location_city"
                 placeholder=""
                 required=""
@@ -2552,7 +2529,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_first"
-                label="First Name"
                 name="root_person_name_first"
                 placeholder=""
                 required=""
@@ -2580,7 +2556,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_middle"
-                label="Middle"
                 name="root_person_name_middle"
                 placeholder=""
                 type="text"
@@ -2612,7 +2587,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_last"
-                label="Last Name"
                 name="root_person_name_last"
                 placeholder=""
                 required=""
@@ -2649,7 +2623,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_birth_date"
-                label="Date of Birth"
                 name="root_person_birth_date"
                 placeholder="DOB"
                 required=""
@@ -2697,7 +2670,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         name="root_person_race"
                         type="checkbox"
                         value="0"
@@ -2715,7 +2688,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         name="root_person_race"
                         type="checkbox"
                         value="1"
@@ -2733,7 +2706,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         name="root_person_race"
                         type="checkbox"
                         value="2"
@@ -2751,7 +2724,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         name="root_person_race"
                         type="checkbox"
                         value="3"
@@ -2769,7 +2742,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         name="root_person_race"
                         type="checkbox"
                         value="4"
@@ -2820,7 +2793,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_line_1"
-                      label="Address"
                       name="root_person_address_line_1"
                       placeholder=""
                       required=""
@@ -2848,7 +2820,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_line_2"
-                      label="Address 2"
                       name="root_person_address_line_2"
                       placeholder=""
                       type="text"
@@ -2880,7 +2851,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_city"
-                      label="City"
                       name="root_person_address_city"
                       placeholder=""
                       required=""
@@ -3227,7 +3197,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         class="form-control"
                         id="root_person_address_postal_code"
-                        label="ZIP Code"
                         name="root_person_address_postal_code"
                         placeholder=""
                         required=""
@@ -3267,7 +3236,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      id="root_employment-0"
+                      id="root_employment__0"
                       name="root_employment"
                       type="radio"
                       value="0"
@@ -3282,7 +3251,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      id="root_employment-1"
+                      id="root_employment__1"
                       name="root_employment"
                       type="radio"
                       value="1"
@@ -3298,7 +3267,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <span>
                     <input
                       checked=""
-                      id="root_employment-2"
+                      id="root_employment__2"
                       name="root_employment"
                       type="radio"
                       value="2"
@@ -3412,7 +3381,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_first"
-                label="First Name"
                 name="root_person_name_first"
                 placeholder=""
                 required=""
@@ -3440,7 +3408,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_middle"
-                label="Middle"
                 name="root_person_name_middle"
                 placeholder=""
                 type="text"
@@ -3472,7 +3439,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_name_last"
-                label="Last Name"
                 name="root_person_name_last"
                 placeholder=""
                 required=""
@@ -3509,7 +3475,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_person_birth_date"
-                label="Date of Birth"
                 name="root_person_birth_date"
                 placeholder="DOB"
                 required=""
@@ -3557,7 +3522,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-0"
+                        id="root_person_race__0"
                         name="root_person_race"
                         type="checkbox"
                         value="0"
@@ -3575,7 +3540,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-1"
+                        id="root_person_race__1"
                         name="root_person_race"
                         type="checkbox"
                         value="1"
@@ -3593,7 +3558,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-2"
+                        id="root_person_race__2"
                         name="root_person_race"
                         type="checkbox"
                         value="2"
@@ -3611,7 +3576,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-3"
+                        id="root_person_race__3"
                         name="root_person_race"
                         type="checkbox"
                         value="3"
@@ -3629,7 +3594,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <span>
                       <input
                         aria-describedby="root_person_race__description"
-                        id="root_person_race-4"
+                        id="root_person_race__4"
                         name="root_person_race"
                         type="checkbox"
                         value="4"
@@ -3680,7 +3645,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_line_1"
-                      label="Address"
                       name="root_person_address_line_1"
                       placeholder=""
                       required=""
@@ -3708,7 +3672,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_line_2"
-                      label="Address 2"
                       name="root_person_address_line_2"
                       placeholder=""
                       type="text"
@@ -3740,7 +3703,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     <input
                       class="form-control"
                       id="root_person_address_city"
-                      label="City"
                       name="root_person_address_city"
                       placeholder=""
                       required=""
@@ -4087,7 +4049,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <input
                         class="form-control"
                         id="root_person_address_postal_code"
-                        label="ZIP Code"
                         name="root_person_address_postal_code"
                         placeholder=""
                         required=""
@@ -4128,7 +4089,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   <span>
                     <input
                       checked=""
-                      id="root_employment-0"
+                      id="root_employment__0"
                       name="root_employment"
                       type="radio"
                       value="0"
@@ -4143,7 +4104,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      id="root_employment-1"
+                      id="root_employment__1"
                       name="root_employment"
                       type="radio"
                       value="1"
@@ -4158,7 +4119,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      id="root_employment-2"
+                      id="root_employment__2"
                       name="root_employment"
                       type="radio"
                       value="2"
@@ -4195,7 +4156,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_employment_business"
-                label="Company Name"
                 name="root_employment_business"
                 placeholder=""
                 required=""
@@ -4223,7 +4183,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_employment_title"
-                label="Job Title"
                 name="root_employment_title"
                 placeholder=""
                 type="text"
@@ -4255,7 +4214,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <input
                 class="form-control"
                 id="root_employment_location_city"
-                label="City"
                 name="root_employment_location_city"
                 placeholder=""
                 required=""
@@ -4642,7 +4600,6 @@ exports[`Three even column grid > renders person and address in three columns, n
             <input
               class="form-control"
               id="root_person_name_first"
-              label="First Name"
               name="root_person_name_first"
               placeholder=""
               required=""
@@ -4670,7 +4627,6 @@ exports[`Three even column grid > renders person and address in three columns, n
             <input
               class="form-control"
               id="root_person_name_middle"
-              label="Middle"
               name="root_person_name_middle"
               placeholder=""
               type="text"
@@ -4702,7 +4658,6 @@ exports[`Three even column grid > renders person and address in three columns, n
             <input
               class="form-control"
               id="root_person_name_last"
-              label="Last Name"
               name="root_person_name_last"
               placeholder=""
               required=""
@@ -4735,7 +4690,6 @@ exports[`Three even column grid > renders person and address in three columns, n
             <input
               class="form-control"
               id="root_person_birth_date"
-              label="Date of Birth"
               name="root_person_birth_date"
               placeholder="DOB"
               required=""
@@ -4783,7 +4737,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <span>
                     <input
                       aria-describedby="root_person_race__description"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       name="root_person_race"
                       type="checkbox"
                       value="0"
@@ -4801,7 +4755,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <span>
                     <input
                       aria-describedby="root_person_race__description"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       name="root_person_race"
                       type="checkbox"
                       value="1"
@@ -4819,7 +4773,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <span>
                     <input
                       aria-describedby="root_person_race__description"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       name="root_person_race"
                       type="checkbox"
                       value="2"
@@ -4837,7 +4791,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <span>
                     <input
                       aria-describedby="root_person_race__description"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       name="root_person_race"
                       type="checkbox"
                       value="3"
@@ -4855,7 +4809,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   <span>
                     <input
                       aria-describedby="root_person_race__description"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       name="root_person_race"
                       type="checkbox"
                       value="4"
@@ -4893,7 +4847,6 @@ exports[`Three even column grid > renders person and address in three columns, n
             <input
               class="form-control"
               id="root_person_address_line_1"
-              label="Address"
               name="root_person_address_line_1"
               placeholder=""
               required=""
@@ -4921,7 +4874,6 @@ exports[`Three even column grid > renders person and address in three columns, n
             <input
               class="form-control"
               id="root_person_address_line_2"
-              label="Address 2"
               name="root_person_address_line_2"
               placeholder=""
               type="text"
@@ -4953,7 +4905,6 @@ exports[`Three even column grid > renders person and address in three columns, n
             <input
               class="form-control"
               id="root_person_address_city"
-              label="City"
               name="root_person_address_city"
               placeholder=""
               required=""
@@ -5342,7 +5293,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
             <input
               class="form-control"
               id="root_person_name_first"
-              label="First Name"
               name="root_person_name_first"
               placeholder=""
               required=""
@@ -5370,7 +5320,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
             <input
               class="form-control"
               id="root_person_name_middle"
-              label="Middle"
               name="root_person_name_middle"
               placeholder=""
               type="text"
@@ -5402,7 +5351,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
             <input
               class="form-control"
               id="root_person_name_first"
-              label="First Name"
               name="root_person_name_first"
               placeholder=""
               required=""
@@ -5435,7 +5383,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
             <input
               class="form-control"
               id="root_person_birth_date"
-              label="Date of Birth"
               name="root_person_birth_date"
               placeholder="DOB"
               required=""
@@ -5483,7 +5430,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <span>
                     <input
                       aria-describedby="root_person_race__description"
-                      id="root_person_race-0"
+                      id="root_person_race__0"
                       name="root_person_race"
                       type="checkbox"
                       value="0"
@@ -5501,7 +5448,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <span>
                     <input
                       aria-describedby="root_person_race__description"
-                      id="root_person_race-1"
+                      id="root_person_race__1"
                       name="root_person_race"
                       type="checkbox"
                       value="1"
@@ -5519,7 +5466,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <span>
                     <input
                       aria-describedby="root_person_race__description"
-                      id="root_person_race-2"
+                      id="root_person_race__2"
                       name="root_person_race"
                       type="checkbox"
                       value="2"
@@ -5537,7 +5484,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <span>
                     <input
                       aria-describedby="root_person_race__description"
-                      id="root_person_race-3"
+                      id="root_person_race__3"
                       name="root_person_race"
                       type="checkbox"
                       value="3"
@@ -5555,7 +5502,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   <span>
                     <input
                       aria-describedby="root_person_race__description"
-                      id="root_person_race-4"
+                      id="root_person_race__4"
                       name="root_person_race"
                       type="checkbox"
                       value="4"
@@ -5593,7 +5540,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
             <input
               class="form-control"
               id="root_person_address_line_1"
-              label="Address"
               name="root_person_address_line_1"
               placeholder=""
               required=""
@@ -5621,7 +5567,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
             <input
               class="form-control"
               id="root_person_address_line_2"
-              label="Address 2"
               name="root_person_address_line_2"
               placeholder=""
               type="text"
@@ -5653,7 +5598,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
             <input
               class="form-control"
               id="root_person_address_city"
-              label="City"
               name="root_person_address_city"
               placeholder=""
               required=""
