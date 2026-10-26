@@ -425,10 +425,19 @@ describe('resolveFieldPresentation()', () => {
       expect(plan.describedBy[0]).toBe(`${ID}__error`);
     });
 
-    it('is valid when the field above shows no errors', () => {
+    it('draws its own errors where the field above hides them, and is described by them and invalid', () => {
       const plan = resolve({ inherited: resolve({ errors: ['hidden'], hideError: true }), errors: ['is required'] });
+      expect(plan.errors).toEqual({ messages: ['is required'], by: 'template', id: `${ID}__error` });
+      expect(plan.control?.attributes['aria-invalid']).toBe(true);
+      expect(plan.describedBy[0]).toBe(`${ID}__error`);
+    });
+
+    it('is valid when it hides its errors as the field above does, or has none to show', () => {
+      const hiding = resolve({ errors: ['hidden'], hideError: true });
+      const plan = resolve({ inherited: hiding, errors: ['is required'], hideError: true });
       expect(plan.errors.by).toBe('none');
       expect(plan.control?.attributes['aria-invalid']).toBeUndefined();
+      expect(resolve({ inherited: hiding }).errors.by).toBe('none');
     });
 
     it('compares a help element by identity', () => {
