@@ -51,6 +51,13 @@
     margin-block: 0.25rem;
   }
 
+  /* `rjsf.css`'s offset past a description, for the spacing above: the label's and the description's 0.25rem margins
+     collapse into one, the description's 0.875rem font gives a line of 0.875lh where the form's font is 1rem, and its
+     own 0.25rem margin follows. It replaces that rule only from a stylesheet imported after `rjsf.css` */
+  :where(.rjsf .rjsf-array-item[data-display-label][data-has-description] > .rjsf-array-item-toolbox) {
+    margin-block-start: calc(1.875lh + 0.5rem);
+  }
+
   :where(.rjsf .rjsf-error-detail) {
     color: var(--rjsf-danger);
     font-size: 0.875rem;

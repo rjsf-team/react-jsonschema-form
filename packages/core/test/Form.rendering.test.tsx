@@ -2125,6 +2125,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       // With no selector to lay out, the template contributes only its wrapper, which every theme gives padding or a
       // card of its own, and the empty row the selector would have filled
       expect(node.querySelector('#root_val')).toBeInTheDocument();
+      expect(node.querySelector('.rjsf-multi-schema')).toBeNull();
       expect(node.querySelector('.rjsf-multi-schema-selector')).toBeNull();
     });
   });

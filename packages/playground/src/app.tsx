@@ -54,7 +54,7 @@ const validators: PlaygroundProps['validators'] = {
 };
 
 const themes: PlaygroundProps['themes'] = {
-  default: {
+  core: {
     stylesheet: [rjsfStylesheet, rjsfThemeStylesheet],
     theme: {},
     subthemes: {

@@ -3,7 +3,7 @@ import { createSchemaUtils, joinClassNames, mergeClassMaps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
-import { buildRegistry, withTheme } from '../src/index.ts';
+import { buildRegistry, generateTheme, withTheme } from '../src/index.ts';
 import { createFormComponent } from './testUtils.tsx';
 
 describe('classMap', () => {
@@ -16,6 +16,16 @@ describe('classMap', () => {
     );
 
     expect(registry.classMap).toEqual(expect.objectContaining({ input: 'theme-input', textarea: undefined }));
+  });
+
+  // A registry built from it by hand, without `buildRegistry()`, renders no `class=""` on an element reading a key bare
+  it("gives every key of core's own map as undefined, and calls a Form function entry over it with ''", () => {
+    expect(Object.values(generateTheme().classMap).every((value) => value === undefined)).toBe(true);
+
+    const schema: RJSFSchema = { type: 'string' };
+    const classMap: FormClassMap = { input: (base) => joinClassNames(base, 'wide') };
+    const registry = buildRegistry({ schema, validator, classMap }, schema, createSchemaUtils({ validator }, schema));
+    expect(registry.classMap.input).toBe('wide');
   });
 
   // From JavaScript or a map read as JSON, a `null` or a conditional's `false` keeps the class beneath it too

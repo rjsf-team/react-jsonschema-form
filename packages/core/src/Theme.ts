@@ -64,49 +64,49 @@ function generatePresentation(): ThemePresentation {
  * carries only its `rjsf-` markers. A theme's `classMap` adds its framework's classes beside them
  */
 const CLASS_MAP: MergedClassMap = {
-  input: '',
-  select: '',
-  textarea: '',
-  fileInput: '',
-  rangeInput: '',
-  rangeWrapper: '',
-  checkboxWrapper: '',
-  checkboxLabel: '',
-  checkboxInput: '',
-  checkboxInlineLabel: '',
-  radioWrapper: '',
-  radioLabel: '',
-  radioInput: '',
-  radioInlineLabel: '',
-  disabled: '',
-  altDateList: '',
-  altDateListItem: '',
-  altDateNowButton: '',
-  altDateClearButton: '',
-  fieldLabel: '',
-  fieldErrors: '',
-  fieldError: '',
-  fieldHelp: '',
-  fieldDescription: '',
-  errorList: '',
-  errorListHeading: '',
-  errorListTitle: '',
-  errorListItems: '',
-  errorListItem: '',
-  arrayFieldset: '',
-  arrayItemList: '',
-  arrayItem: '',
-  arrayItemToolbox: '',
-  objectFieldset: '',
-  multiSchema: '',
-  multiSchemaSelector: '',
-  cyclicSchemaMessage: '',
-  cyclicSchemaExpandButton: '',
-  optionalDataAddButton: '',
-  optionalDataRemoveButton: '',
-  submitButton: '',
-  iconButton: '',
-  buttonIcon: '',
+  input: undefined,
+  select: undefined,
+  textarea: undefined,
+  fileInput: undefined,
+  rangeInput: undefined,
+  rangeWrapper: undefined,
+  checkboxWrapper: undefined,
+  checkboxLabel: undefined,
+  checkboxInput: undefined,
+  checkboxInlineLabel: undefined,
+  radioWrapper: undefined,
+  radioLabel: undefined,
+  radioInput: undefined,
+  radioInlineLabel: undefined,
+  disabled: undefined,
+  altDateList: undefined,
+  altDateListItem: undefined,
+  altDateNowButton: undefined,
+  altDateClearButton: undefined,
+  fieldLabel: undefined,
+  fieldErrors: undefined,
+  fieldError: undefined,
+  fieldHelp: undefined,
+  fieldDescription: undefined,
+  errorList: undefined,
+  errorListHeading: undefined,
+  errorListTitle: undefined,
+  errorListItems: undefined,
+  errorListItem: undefined,
+  arrayFieldset: undefined,
+  arrayItemList: undefined,
+  arrayItem: undefined,
+  arrayItemToolbox: undefined,
+  objectFieldset: undefined,
+  multiSchema: undefined,
+  multiSchemaSelector: undefined,
+  cyclicSchemaMessage: undefined,
+  cyclicSchemaExpandButton: undefined,
+  optionalDataAddButton: undefined,
+  optionalDataRemoveButton: undefined,
+  submitButton: undefined,
+  iconButton: undefined,
+  buttonIcon: undefined,
 };
 
 /** The core theme: every field, widget and template `@rjsf/core` implements, which parts of a field they draw, and the
@@ -131,7 +131,8 @@ function isClassMapKey(key: string): key is keyof ClassMap {
 }
 
 /** Keeps the merged map's `ClassMap` keys. A Form `''` entry survives `mergeClassMaps()` so that it drops the theme's
- * class beneath it; it becomes `undefined` here, so an element reading it bare renders no `class` attribute
+ * class beneath it; it becomes `undefined` here, so an element reading it bare renders no `class` attribute. A function
+ * entry no layer gives a class beneath is called with `''`, since core's own map leaves every key `undefined`
  *
  * @param map - The theme's class map with the Form's layered on top
  * @returns - Each `ClassMap` key's class, or `undefined` for none
@@ -140,7 +141,8 @@ function resolveClassMap(map: FormClassMap): MergedClassMap {
   const resolved: Record<keyof ClassMap, string | undefined> = { ...CLASS_MAP };
   for (const [key, value] of Object.entries(map)) {
     if (isClassMapKey(key)) {
-      resolved[key] = typeof value === 'string' && value ? value : undefined;
+      const className = typeof value === 'function' ? value('') : value;
+      resolved[key] = typeof className === 'string' && className ? className : undefined;
     }
   }
   return resolved;
