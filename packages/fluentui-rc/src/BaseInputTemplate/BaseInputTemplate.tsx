@@ -105,7 +105,7 @@ export default function BaseInputTemplate<
         onBlur={handleBlur}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

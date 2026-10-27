@@ -141,7 +141,7 @@ describe('uiSchema', () => {
         <input type='text' className='custom' value={toInputValue(props.value)} onChange={noop} />
       );
       const ForwardedWidget = forwardRef<HTMLInputElement, WidgetProps>((props, ref) => (
-        <input ref={ref} type='text' className='custom' value={props.value ?? ''} onChange={noop} />
+        <input ref={ref} type='text' className='custom' value={toInputValue(props.value)} onChange={noop} />
       ));
 
       const wrappedWidgets: [string, Widget][] = [

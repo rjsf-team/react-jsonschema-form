@@ -206,7 +206,7 @@ const ArrayFieldTest = (props: FieldProps<unknown[]>) => {
         __errors: ['Value must be "Appie"'],
       };
     }
-    props.onChange(newFormData as unknown[], path, newErrorSchema, id);
+    props.onChange(newFormData, path, newErrorSchema, id);
   };
   return <ArrayField {...props} onChange={onChangeTest} />;
 };
@@ -406,6 +406,15 @@ describe('ArrayField', () => {
         },
       });
       expect(node.querySelector('div[hidden] > fieldset')).toBeInTheDocument();
+    });
+
+    it('renders a hidden multi-select as its items joined with commas, as a native submit sends them', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['a', 'b', 'c'] } },
+        uiSchema: { 'ui:widget': 'hidden' },
+        initialFormData: ['a', 'b'],
+      });
+      expect(node.querySelector('input[type=hidden]')).toHaveValue('a,b');
     });
 
     it('should render a customized title', () => {

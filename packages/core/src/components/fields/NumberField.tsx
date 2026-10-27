@@ -61,7 +61,7 @@ function NumberField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
           ? asNumber(normalizedValue.replace(trailingCharMatcher, ''))
           : asNumber(normalizedValue);
 
-      onChange(processed as unknown as T, path, errorSchema, id);
+      onChange(processed, path, errorSchema, id);
     },
     [onChange, separator],
   );

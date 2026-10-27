@@ -1,6 +1,6 @@
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -8,6 +8,18 @@ import Form from '../src/index.ts';
 const user = userEvent.setup();
 
 describe('BaseInputTemplate', () => {
+  test('shows a numeric string in the number input', () => {
+    render(
+      <Form
+        schema={{ type: 'string' }}
+        uiSchema={{ 'ui:inputType': 'number' }}
+        validator={validator}
+        initialFormData='5'
+      />,
+    );
+
+    expect(screen.getByRole('spinbutton')).toHaveValue('5');
+  });
   test('calls `onChangeOverride` with the change event for a numeric field', async () => {
     const schema: RJSFSchema = { type: 'number' };
     const onChange = vi.fn();
