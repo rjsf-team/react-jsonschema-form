@@ -57,7 +57,14 @@ export default function SelectWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: WidgetProps<T, S, F>) {
+>(
+  props: WidgetProps<T, S, F> & {
+    /** Older MUI `TextField` props, kept off the `TextField` rather than spread on it */
+    InputLabelProps?: unknown;
+    /** Older MUI `TextField` props, kept off the `TextField` rather than spread on it */
+    SelectProps?: unknown;
+  },
+) {
   const {
     schema,
     id,

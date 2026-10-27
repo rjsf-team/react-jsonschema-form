@@ -205,7 +205,7 @@ const ArrayFieldTest = (props: FieldProps<unknown[]>) => {
         __errors: ['Value must be "Appie"'],
       };
     }
-    props.onChange(newFormData as unknown[], path, newErrorSchema, id);
+    props.onChange(newFormData, path, newErrorSchema, id);
   };
   return <ArrayField {...props} onChange={onChangeTest} />;
 };

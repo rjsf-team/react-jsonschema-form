@@ -1,4 +1,4 @@
-import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import type { ChangeEvent, FocusEvent, InputHTMLAttributes, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
@@ -9,6 +9,7 @@ import {
   getInputProps,
   getNumericInputTitle,
   hasWidgetErrors,
+  toInputValue,
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
@@ -16,7 +17,12 @@ export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: BaseInputTemplateProps<T, S, F>) {
+>(
+  props: BaseInputTemplateProps<T, S, F> & {
+    /** Props to spread on the input along with the ones the schema derives, of which a `pattern` or `inputMode` wins */
+    extraProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
+  },
+) {
   const {
     id,
     htmlName,
@@ -77,7 +83,7 @@ export default function BaseInputTemplate<
     readOnly: readonly,
     list: hasExamples ? examplesId(id) : undefined,
     ...inputProps,
-    value: value || value === 0 ? value : '',
+    value: toInputValue(value || value === 0 ? value : ''),
     onChange: onChangeOverride ?? handleChange,
     onBlur: handleBlur,
     onFocus: handleFocus,
@@ -95,7 +101,7 @@ export default function BaseInputTemplate<
       ) : (
         <Form.Control isInvalid={isInvalid} {...controlProps} />
       )}
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}

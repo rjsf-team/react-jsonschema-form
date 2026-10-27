@@ -1,4 +1,4 @@
-import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import type { ChangeEvent, FocusEvent, InputHTMLAttributes, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
@@ -9,6 +9,7 @@ import {
   getInputProps,
   getNumericInputTitle,
   hasWidgetErrors,
+  toInputValue,
 } from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
@@ -24,7 +25,12 @@ export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: BaseInputTemplateProps<T, S, F>) {
+>(
+  props: BaseInputTemplateProps<T, S, F> & {
+    /** Props to spread on the input along with the ones the schema derives, of which a `pattern` or `inputMode` wins */
+    extraProps?: InputHTMLAttributes<HTMLInputElement>;
+  },
+) {
   const {
     id,
     htmlName,
@@ -79,7 +85,6 @@ export default function BaseInputTemplate<
       <Input
         id={id}
         name={htmlName || id}
-        type={type}
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
@@ -89,7 +94,7 @@ export default function BaseInputTemplate<
         list={hasExamples ? examplesId(id) : undefined}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
-        value={value || value === 0 ? value : ''}
+        value={toInputValue(value || value === 0 ? value : '')}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
