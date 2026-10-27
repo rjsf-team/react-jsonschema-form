@@ -44,7 +44,7 @@ const TestRefWidget: Widget = forwardRef<HTMLSpanElement, Partial<WidgetProps>>(
   (props: Partial<WidgetProps>, ref: ForwardedRef<HTMLSpanElement>) => {
     const { id = 'test-id', ...options } = props.options ?? {};
     return (
-      <span id={id} {...options} ref={ref}>
+      <span id={typeof id === 'string' ? id : undefined} {...options} ref={ref}>
         test
       </span>
     );
@@ -59,7 +59,7 @@ function TestWidget(props: WidgetProps) {
 function TestWidgetWithDefaultOptions(props: WidgetProps) {
   const { color = 'yellow', ...options } = props.options;
   return (
-    <div color={color} {...options}>
+    <div color={typeof color === 'string' ? color : undefined} {...options}>
       test
     </div>
   );

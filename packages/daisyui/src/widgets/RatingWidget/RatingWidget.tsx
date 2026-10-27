@@ -61,7 +61,7 @@ export default function RatingWidget<
   const maskClass = shape === 'heart' ? 'mask-heart' : 'mask-star-2';
 
   // Generate size class
-  const sizeClass = size === 'md' ? '' : `rating-${size}`;
+  const sizeClass = typeof size === 'string' && size !== 'md' ? `rating-${size}` : '';
 
   /** Handles change events from radio inputs */
   const handleChange = useCallback(
@@ -101,7 +101,7 @@ export default function RatingWidget<
    */
   const getColorClass = (index: number): string => {
     if (!colorGradient) {
-      return `bg-${color}-400`;
+      return `bg-${typeof color === 'string' ? color : 'orange'}-400`;
     }
 
     // For gradient effect, use different colors based on position

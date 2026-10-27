@@ -23,7 +23,7 @@ export default function ToggleWidget<
   const { size = 'md' } = props.options;
 
   // Only add size class if it's not the default size
-  const sizeClass = size !== 'md' ? `toggle-${size}` : '';
+  const sizeClass = typeof size === 'string' && size !== 'md' ? `toggle-${size}` : '';
 
   return (
     <BooleanInput
