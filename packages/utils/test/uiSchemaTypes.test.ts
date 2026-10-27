@@ -119,6 +119,7 @@ describe('UiSchema type', () => {
   it('leaves a field whose type says nothing about its data unconstrained', () => {
     const ui: Known = { loose: { nested: { 'ui:title': 'Nested' } } };
 
+    expectTypeOf(ui.loose?.nested).toBeUnknown();
     expect(ui.loose?.nested).toEqual({ 'ui:title': 'Nested' });
   });
 

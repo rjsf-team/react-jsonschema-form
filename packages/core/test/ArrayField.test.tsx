@@ -2419,9 +2419,10 @@ describe('ArrayField', () => {
     });
 
     it('should pass uiSchema to custom widget', () => {
-      const CustomWidget = ({ uiSchema }: WidgetProps<{ custom_field_key?: unknown }>) => (
-        <div id='custom-ui-option-value'>{String(uiSchema?.custom_field_key?.['ui:options']?.test)}</div>
-      );
+      const CustomWidget = ({ uiSchema }: WidgetProps) => {
+        const ui: UiSchema<{ custom_field_key?: unknown }> | undefined = uiSchema;
+        return <div id='custom-ui-option-value'>{String(ui?.custom_field_key?.['ui:options']?.test)}</div>;
+      };
 
       const { node } = createFormComponent({
         schema: {
