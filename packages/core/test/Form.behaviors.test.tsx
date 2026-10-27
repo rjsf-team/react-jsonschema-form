@@ -3450,6 +3450,51 @@ describe('clearing a field with a schema default does not re-apply the default (
     expect(formData).not.toHaveProperty('someStrings', 'Chuck');
     expect(formData).not.toHaveProperty('someNumbers', 1);
   });
+
+  describe("under 'useDefaultIfFormDataUndefined'", () => {
+    const defaultFormStateBehavior = { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' } as const;
+
+    it('keeps an earlier cleared field empty while other fields change, until the user fills it', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string', default: 'A' }, b: { type: 'string', default: 'B' } },
+      };
+      const { node, onChange } = createFormComponent({ schema, defaultFormStateBehavior });
+
+      await user.clear(elementOf(node, 'input#root_a'));
+      await user.clear(elementOf(node, 'input#root_b'));
+      await user.type(elementOf(node, 'input#root_b'), 'x');
+
+      expect(elementOf(node, 'input#root_a')).toHaveValue('');
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: undefined, b: 'x' });
+
+      await user.type(elementOf(node, 'input#root_a'), 'y');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'y', b: 'x' });
+    });
+
+    it('keeps a field cleared in one array item empty when another item changes, and when the item moves', async () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { a: { type: 'string', default: 'A' } } },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        defaultFormStateBehavior,
+        initialFormData: [{ a: 'first' }, { a: 'second' }],
+      });
+
+      await user.clear(elementOf(node, 'input#root_0_a'));
+      await user.type(elementOf(node, 'input#root_1_a'), '!');
+
+      expect(elementOf(node, 'input#root_0_a')).toHaveValue('');
+      expect(onChange.mock.lastCall?.[0].formData).toEqual([{ a: undefined }, { a: 'second!' }]);
+
+      await user.click(node.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual([{ a: 'second!' }, { a: undefined }]);
+    });
+  });
 });
 
 // NOTE: Some v6 tests labeled `a parent dropping data the form reported as absent` have been deleted
