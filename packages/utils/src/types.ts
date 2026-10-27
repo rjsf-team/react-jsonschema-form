@@ -2003,7 +2003,7 @@ type UIOptionsDeclaredType<
   };
 
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to
- * remap the keys. Its `GenericObjectType` leaves the vocabulary open to any option a theme or custom component reads,
+ * remap the keys. Its string index leaves the vocabulary open to any option a theme or custom component reads,
  * which is also what gives `UiSchema` its `ui:${string}` keys once remapped
  */
 interface UIOptionsBaseType<
@@ -2020,7 +2020,7 @@ export type UIOptionsType<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = UIOptionsBaseType<T, S, F> & Record<string, unknown>;
+> = UIOptionsBaseType<T, S, F>;
 
 /**
  * A utility type that extracts the element type from an array type.
