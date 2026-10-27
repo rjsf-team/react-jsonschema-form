@@ -384,7 +384,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       };
       const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'yo');
       expectToHaveBeenCalledWithFormData(onChange, ['yo'], 'root_0');
@@ -401,7 +401,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       };
       const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'yo');
 
@@ -446,7 +446,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       const checkbox = node.querySelector('[type=checkbox]');
       await user.click(checkbox!);
 
-      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+      await user.click(node.querySelector('.rjsf-array-item-add')!);
 
       await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'yo');
 

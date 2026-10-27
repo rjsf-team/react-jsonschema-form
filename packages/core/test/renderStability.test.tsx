@@ -522,7 +522,7 @@ describe('render stability across sibling fields', () => {
       const thirdBefore = renderCount('root_2');
       expect(thirdBefore).toBeGreaterThan(0);
 
-      await user.click(container.querySelector('.rjsf-array-item-add button')!);
+      await user.click(container.querySelector('.rjsf-array-item-add')!);
       expect(container.querySelectorAll('input[type=text]')).toHaveLength(4);
       expect(renderCount('root_0')).toBe(firstBefore);
       expect(renderCount('root_1')).toBe(secondBefore);

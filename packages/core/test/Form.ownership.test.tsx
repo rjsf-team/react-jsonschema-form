@@ -542,7 +542,7 @@ describe('form data ownership', () => {
       await act(async () => {
         handleOf(ref).validateForm();
       });
-      expect(container.querySelectorAll('.error-detail li')).toHaveLength(1);
+      expect(container.querySelectorAll('.rjsf-error-detail li')).toHaveLength(1);
       act(() => handleOf(ref).setFieldValue('a', 'edited'));
       onChange.mockClear();
 
@@ -550,7 +550,7 @@ describe('form data ownership', () => {
         handleOf(ref).reset();
       });
 
-      expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+      expect(container.querySelectorAll('.rjsf-error-detail li')).toHaveLength(0);
       expect(input(container, 'root_a')).toHaveValue('x');
       expect(input(container, 'root_b')).toHaveValue('defaulted');
       expect(onChange).toHaveBeenCalledTimes(1);
@@ -575,7 +575,7 @@ describe('form data ownership', () => {
         handleOf(ref).reset();
       });
 
-      expect(container.querySelector('.error-detail li')).toHaveTextContent('from the server');
+      expect(container.querySelector('.rjsf-error-detail li')).toHaveTextContent('from the server');
     });
 
     it.each(['formData', 'initialFormData'] as const)(
@@ -639,12 +639,12 @@ describe('form data ownership', () => {
       await act(async () => {
         handleOf(ref).validateForm();
       });
-      expect(container.querySelectorAll('.error-detail li')).toHaveLength(1);
+      expect(container.querySelectorAll('.rjsf-error-detail li')).toHaveLength(1);
 
       await user.click(elementOf(container, 'button'));
 
       expect(input(container, 'root_a')).toHaveValue('replaced');
-      expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+      expect(container.querySelectorAll('.rjsf-error-detail li')).toHaveLength(0);
       // The reset reported the data it put back, and the root value set after it its own
       expect(reported).toEqual([
         { a: 'x', b: 'defaulted' },
@@ -1718,7 +1718,7 @@ describe('form data ownership', () => {
       const log = createParentLog<string[]>();
       const { container } = render(<ListeningParent schema={arraySchema} initialValue={['one', 'two']} log={log} />);
 
-      await user.click(elementOf(container, '.rjsf-array-item-add button'));
+      await user.click(elementOf(container, '.rjsf-array-item-add'));
       expect(log.reported).toEqual([['one', 'two', undefined]]);
       expect(container.querySelectorAll('input[type=text]')).toHaveLength(3);
 
@@ -1772,7 +1772,7 @@ describe('form data ownership', () => {
         );
       }
       const { container } = render(<SetBackOnceParent />);
-      const addButton = () => elementOf(container, '.rjsf-object-property-expand button');
+      const addButton = () => elementOf(container, '.rjsf-object-property-expand');
 
       await user.click(addButton());
       expect(container.querySelectorAll('#root_newKey')).toHaveLength(0);

@@ -17,5 +17,12 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  return <BooleanInput {...props} inputClassName='checkbox' labelClassName='label cursor-pointer justify-start' />;
+  return (
+    <BooleanInput
+      {...props}
+      // The class map's, as for `CheckboxesWidget`'s boxes, so restyling the key restyles every checkbox
+      inputClassName={props.registry.classMap.checkboxInput}
+      labelClassName='label cursor-pointer justify-start'
+    />
+  );
 }

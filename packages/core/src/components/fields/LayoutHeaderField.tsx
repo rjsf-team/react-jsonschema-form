@@ -32,6 +32,7 @@ export default function LayoutHeaderField<
       schema={schema}
       uiSchema={uiSchema}
       registry={registry}
+      outsideFieldset
     />
   );
 }

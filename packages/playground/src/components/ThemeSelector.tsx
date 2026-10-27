@@ -9,7 +9,8 @@ import type { SubthemesType } from './SubthemeSelector.tsx';
 
 export interface ThemesType {
   theme: ThemeProps;
-  stylesheet: string;
+  /** The stylesheet, or stylesheets, the form's frame loads */
+  stylesheet: string | string[];
   subthemes?: SubthemesType;
 }
 

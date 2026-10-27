@@ -30,4 +30,15 @@ describe('getTestRegistry()', () => {
     expect(registry.formContext).toBe(formContext);
     expect(Object.isFrozen(registry.formContext)).toBe(false);
   });
+
+  it("layers a classMap over core's, as a Form's is, and freezes it", () => {
+    const registry = getTestRegistry({}, {}, {}, {}, {}, undefined, undefined, {
+      input: 'theme-input',
+      select: (base) => `${base} wide`,
+    });
+
+    expect(registry.classMap.input).toBe('theme-input');
+    expect(registry.classMap.select).toBe(' wide');
+    expect(Object.isFrozen(registry.classMap)).toBe(true);
+  });
 });

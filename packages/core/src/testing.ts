@@ -1,10 +1,11 @@
-import type { Registry, ThemePresentation } from '@rjsf/utils';
+import type { FormClassMap, Registry, ThemePresentation } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import { buildRegistry } from './Theme.ts';
 
-/** Use for react testing library tests where we directly test the component rather than testing inside a Form
+/** Use for react testing library tests where we directly test the component rather than testing inside a Form. A
+ * `classMap` is layered over core's as a `Form`'s is, so a theme can test a core template under its own class map
  */
 export function getTestRegistry(
   rootSchema: Registry['rootSchema'] = {},
@@ -18,11 +19,12 @@ export function getTestRegistry(
     useFallbackUiForUnsupportedType: false,
   },
   presentation?: ThemePresentation,
+  classMap?: FormClassMap,
 ): Registry {
   const schemaUtils = createSchemaUtils({ validator }, rootSchema);
   const registry: Registry = {
     ...buildRegistry(
-      { schema: rootSchema, validator, fields, templates, widgets, formContext, presentation },
+      { schema: rootSchema, validator, fields, templates, widgets, formContext, presentation, classMap },
       rootSchema,
       schemaUtils,
     ),
@@ -39,6 +41,7 @@ export function getTestRegistry(
     }
   }
   Object.freeze(registry.widgets);
+  Object.freeze(registry.classMap);
   // `mergeThemePresentation()` builds every object it returns, so freezing them reaches nothing the caller owns
   const { presentation: merged } = registry;
   for (const declaration of [...Object.values(merged.widgets), ...Object.values(merged.fields)]) {

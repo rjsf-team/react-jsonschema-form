@@ -1,6 +1,9 @@
 import type {
+  ClassMap,
+  FormClassMap,
   FormContextType,
   GlobalFormOptions,
+  MergedClassMap,
   Registry,
   RJSFSchema,
   SchemaUtilsType,
@@ -11,6 +14,7 @@ import {
   DEFAULT_ID_PREFIX,
   DEFAULT_ID_SEPARATOR,
   englishStringTranslator,
+  mergeClassMaps,
   mergeThemePresentation,
   pickGlobalUiOptions,
   UI_DEFINITIONS_KEY,
@@ -56,18 +60,92 @@ function generatePresentation(): ThemePresentation {
   };
 }
 
-/** The core theme: every field, widget and template `@rjsf/core` implements, and which parts of a field they draw */
+/** The class names `@rjsf/core`'s components render by default: none, since core's markup is toolkit-independent and
+ * carries only its `rjsf-` markers. A theme's `classMap` adds its framework's classes beside them
+ */
+const CLASS_MAP: MergedClassMap = {
+  input: undefined,
+  select: undefined,
+  textarea: undefined,
+  fileInput: undefined,
+  rangeInput: undefined,
+  rangeWrapper: undefined,
+  checkboxWrapper: undefined,
+  checkboxLabel: undefined,
+  checkboxInput: undefined,
+  checkboxInlineLabel: undefined,
+  radioWrapper: undefined,
+  radioLabel: undefined,
+  radioInput: undefined,
+  radioInlineLabel: undefined,
+  disabled: undefined,
+  altDateList: undefined,
+  altDateListItem: undefined,
+  altDateNowButton: undefined,
+  altDateClearButton: undefined,
+  fieldLabel: undefined,
+  fieldErrors: undefined,
+  fieldError: undefined,
+  fieldHelp: undefined,
+  fieldDescription: undefined,
+  errorList: undefined,
+  errorListHeading: undefined,
+  errorListTitle: undefined,
+  errorListItems: undefined,
+  errorListItem: undefined,
+  arrayFieldset: undefined,
+  arrayItemList: undefined,
+  arrayItem: undefined,
+  arrayItemToolbox: undefined,
+  objectFieldset: undefined,
+  multiSchema: undefined,
+  multiSchemaSelector: undefined,
+  cyclicSchemaMessage: undefined,
+  cyclicSchemaExpandButton: undefined,
+  optionalDataAddButton: undefined,
+  optionalDataRemoveButton: undefined,
+  submitButton: undefined,
+  iconButton: undefined,
+  buttonIcon: undefined,
+};
+
+/** The core theme: every field, widget and template `@rjsf/core` implements, which parts of a field they draw, and the
+ * class names they render, which are none
+ */
 export function generateTheme<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates'> & { presentation: ThemePresentation } {
+>(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates' | 'classMap'> & { presentation: ThemePresentation } {
   return {
     fields: generateFields<T, S, F>(),
     widgets: generateWidgets<T, S, F>(),
     templates: generateTemplates<T, S, F>(),
     presentation: generatePresentation(),
+    classMap: { ...CLASS_MAP },
   };
+}
+
+function isClassMapKey(key: string): key is keyof ClassMap {
+  return Object.hasOwn(CLASS_MAP, key);
+}
+
+/** Keeps the merged map's `ClassMap` keys. A Form `''` entry survives `mergeClassMaps()` so that it drops the theme's
+ * class beneath it; it becomes `undefined` here, so an element reading it bare renders no `class` attribute. A function
+ * entry no layer gives a class beneath is called with `''`, since core's own map leaves every key `undefined`
+ *
+ * @param map - The theme's class map with the Form's layered on top
+ * @returns - Each `ClassMap` key's class, or `undefined` for none
+ */
+function resolveClassMap(map: FormClassMap): MergedClassMap {
+  const resolved: Record<keyof ClassMap, string | undefined> = { ...CLASS_MAP };
+  for (const [key, value] of Object.entries(map)) {
+    if (isClassMapKey(key)) {
+      const className = typeof value === 'function' ? value('') : value;
+      resolved[key] = typeof className === 'string' && className ? className : undefined;
+    }
+  }
+  return resolved;
 }
 
 /** Extracts the `GlobalFormOptions` from the given Form `props`
@@ -107,7 +185,7 @@ export function buildRegistry<
   F extends FormContextType = FormContextType,
 >(props: FormProps<T, S, F>, schema: S, schemaUtils: SchemaUtilsType<T, S, F>): Registry<T, S, F> {
   const { translateString = englishStringTranslator, uiSchema } = props;
-  const { fields, templates, widgets, presentation } = generateTheme<T, S, F>();
+  const { fields, templates, widgets, presentation, classMap } = generateTheme<T, S, F>();
   return {
     fields: { ...fields, ...props.fields },
     templates: {
@@ -120,6 +198,7 @@ export function buildRegistry<
     },
     widgets: { ...widgets, ...props.widgets },
     presentation: mergeThemePresentation(presentation, props.presentation),
+    classMap: resolveClassMap(mergeClassMaps(classMap, props.classMap)),
     rootSchema: schema,
     // `F` may be narrower than `{}`, but an omitted formContext is an empty object
     formContext: props.formContext ?? ({} as F),

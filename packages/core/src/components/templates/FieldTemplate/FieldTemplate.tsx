@@ -2,6 +2,7 @@ import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema 
 import {
   getTemplates,
   getUiOptions,
+  joinClassNames,
   templateDrawsDescription,
   templateDrawsLabel,
   templateLabelFor,
@@ -20,11 +21,12 @@ export default function FieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: FieldTemplateProps<T, S, F>) {
-  const { label, children, errors, help, description, hidden, registry, uiSchema, presentation } = props;
+  const { label, children, errors, help, description, hidden, hasErrors, registry, uiSchema, presentation } = props;
+  const { classMap } = registry;
   const uiOptions = getUiOptions(uiSchema);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
-    return <div className='hidden'>{children}</div>;
+    return <div hidden>{children}</div>;
   }
   // The plan's label already says whether a checkbox draws its own; the guess by the `checkbox` alias is left for a
   // template rendered without one, which `getDisplayLabel()` still tells to draw it, as the themes' templates do
@@ -37,6 +39,8 @@ export default function FieldTemplate<
           required={templateMarksRequired<T, S, F>(props)}
           id={templateLabelFor<T, S, F>(props)}
           labelId={presentation?.label.id}
+          className={joinClassNames('rjsf-field-label', classMap.fieldLabel)}
+          invalid={hasErrors}
         />
       )}
       {templateDrawsDescription<T, S, F>(props) && description}

@@ -1,7 +1,7 @@
 import { createElement, forwardRef, lazy, memo } from 'react';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
-import type { Registry, UIOptionsType } from '../src/index.ts';
+import type { MergedClassMap, Registry, UIOptionsType } from '../src/index.ts';
 import {
   createSchemaUtils,
   englishStringTranslator,
@@ -58,6 +58,7 @@ const registry: Registry = {
   fields: {},
   widgets: {},
   presentation: mergeThemePresentation(),
+  classMap: {} as MergedClassMap,
   globalFormOptions: GLOBAL_FORM_OPTIONS,
 };
 

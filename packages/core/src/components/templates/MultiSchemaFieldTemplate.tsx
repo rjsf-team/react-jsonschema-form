@@ -1,4 +1,5 @@
 import type { FormContextType, MultiSchemaFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { joinClassNames } from '@rjsf/utils';
 
 /** The `MultiSchemaFieldTemplate` component renders the layout for the MultiSchemaField, which supports choosing
  * a schema from a list of schemas defined using `anyOf` or `oneOf`.
@@ -10,11 +11,14 @@ export default function MultiSchemaFieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: MultiSchemaFieldTemplateProps<T, S, F>) {
-  const { selector, optionSchemaField } = props;
+  const { selector, optionSchemaField, registry } = props;
+  const { classMap } = registry;
   return (
-    <div className='panel panel-default panel-body'>
+    <div className={joinClassNames('rjsf-multi-schema', classMap.multiSchema)}>
       {/* No row is laid out for a selector the field doesn't render, as while an optional field has no data (#5401) */}
-      {selector ? <div className='form-group'>{selector}</div> : null}
+      {selector ? (
+        <div className={joinClassNames('rjsf-multi-schema-selector', classMap.multiSchemaSelector)}>{selector}</div>
+      ) : null}
       {optionSchemaField}
     </div>
   );

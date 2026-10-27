@@ -176,7 +176,7 @@ describe('NumberField', () => {
         initialFormData: 3,
       });
 
-      await user.click(node.querySelector('button.btn-clear')!);
+      await user.click(node.querySelector('button.rjsf-btn-clear')!);
 
       expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
     });
@@ -212,7 +212,7 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        expect(node.querySelector('.field-description')).toHaveTextContent('bar');
+        expect(node.querySelector('.rjsf-field-description')).toHaveTextContent('bar');
       });
 
       it('formData should default to undefined', async () => {

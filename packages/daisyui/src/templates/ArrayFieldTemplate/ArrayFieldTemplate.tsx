@@ -13,9 +13,9 @@ import {
  *
  * This DaisyUI implementation:
  * - Renders the entire array in a rounded container with base-200 background
- * - Uses custom ArrayFieldTitleTemplate and ArrayFieldDescriptionTemplate
+ * - Uses the theme's ArrayFieldTitleTemplate, and core's ArrayFieldDescriptionTemplate styled by the class map
  * - Displays an info alert when the array is empty
- * - Renders each array item using ArrayFieldItemTemplate with additional props
+ * - Renders each array item using the registry's ArrayFieldItemTemplate, which is core's styled by the class map
  * - Positions the add button at the bottom right using flexbox
  * - Uses DaisyUI's button styling for the add button
  * - Maintains proper spacing with margin and padding utilities
@@ -31,6 +31,7 @@ export default function ArrayFieldTemplate<
     canAdd,
     className,
     disabled,
+    hasErrors,
     id,
     items,
     optionalDataControl,
@@ -80,6 +81,7 @@ export default function ArrayFieldTemplate<
       <ArrayFieldDescriptionTemplate
         id={id}
         description={shownDescription}
+        hasErrors={hasErrors}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
@@ -99,7 +101,7 @@ export default function ArrayFieldTemplate<
           <div className='flex justify-end'>
             <AddButton
               id={buttonId(id, 'add')}
-              className='rjsf-array-item-add btn btn-primary btn-sm'
+              className='rjsf-array-item-add btn-primary'
               onClick={handleAddClick}
               disabled={disabled || readonly}
               uiSchema={uiSchema}

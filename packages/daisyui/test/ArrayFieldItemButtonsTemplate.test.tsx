@@ -16,11 +16,12 @@ const schema: RJSFSchema = {
 const files = [{ name: 'report.pdf' }, { name: 'invoice.pdf' }];
 const BUTTONS = ['move-up', 'move-down', 'copy', 'remove'];
 
-/** daisyui's buttons use their title as their accessible name too, so check both */
-function namesOf(container: HTMLElement, index: number) {
-  return BUTTONS.map((button) => {
+/** A button's title is its accessible name too, since its icon is hidden from assistive technology, so check both */
+function expectNames(container: HTMLElement, index: number, names: string[]) {
+  BUTTONS.forEach((button, i) => {
     const element = container.querySelectorAll(`.rjsf-array-item-${button}`)[index];
-    return [element.getAttribute('title'), element.getAttribute('aria-label')];
+    expect(element).toHaveAttribute('title', names[i]);
+    expect(element).toHaveAccessibleName(names[i]);
   });
 }
 
@@ -40,24 +41,19 @@ describe('ArrayFieldItemButtonsTemplate', () => {
   test('keeps the default titles and labels when itemLabel is not set', () => {
     const { container } = renderForm({ 'ui:options': { copyable: true } });
 
-    expect(namesOf(container, 0)).toEqual([
-      ['Move up', 'Move up'],
-      ['Move down', 'Move down'],
-      ['Copy', 'Copy'],
-      ['Remove', 'Remove'],
-    ]);
+    expectNames(container, 0, ['Move up', 'Move down', 'Copy', 'Remove']);
   });
 
   test('names each item in the titles and labels of its buttons when itemLabel is set', () => {
     const { container } = renderForm({ 'ui:options': { copyable: true, itemLabel: 'name' } });
 
-    expect(namesOf(container, 0)).toEqual([
-      ['Move report.pdf up', 'Move report.pdf up'],
-      ['Move report.pdf down', 'Move report.pdf down'],
-      ['Copy report.pdf', 'Copy report.pdf'],
-      ['Remove report.pdf', 'Remove report.pdf'],
+    expectNames(container, 0, ['Move report.pdf up', 'Move report.pdf down', 'Copy report.pdf', 'Remove report.pdf']);
+    expectNames(container, 1, [
+      'Move invoice.pdf up',
+      'Move invoice.pdf down',
+      'Copy invoice.pdf',
+      'Remove invoice.pdf',
     ]);
-    expect(namesOf(container, 1)[3]).toEqual(['Remove invoice.pdf', 'Remove invoice.pdf']);
   });
 
   test('translates the item names', () => {
@@ -65,7 +61,7 @@ describe('ArrayFieldItemButtonsTemplate', () => {
       str === TranslatableString.RemoveItemButton ? `Supprimer ${params?.[0]}` : englishStringTranslator(str, params),
     );
 
-    expect(container.querySelector('.rjsf-array-item-remove')).toHaveAttribute('aria-label', 'Supprimer report.pdf');
+    expect(container.querySelector('.rjsf-array-item-remove')).toHaveAccessibleName('Supprimer report.pdf');
   });
 
   test('keeps each name with its item when the items are reordered', async () => {
@@ -73,9 +69,8 @@ describe('ArrayFieldItemButtonsTemplate', () => {
 
     await user.click(container.querySelectorAll('.rjsf-array-item-move-down')[0]);
 
-    const removeLabels = [...container.querySelectorAll('.rjsf-array-item-remove')].map((button) =>
-      button.getAttribute('aria-label'),
-    );
-    expect(removeLabels).toEqual(['Remove invoice.pdf', 'Remove report.pdf']);
+    const removeButtons = container.querySelectorAll('.rjsf-array-item-remove');
+    expect(removeButtons[0]).toHaveAccessibleName('Remove invoice.pdf');
+    expect(removeButtons[1]).toHaveAccessibleName('Remove report.pdf');
   });
 });
