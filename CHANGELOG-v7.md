@@ -415,6 +415,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix an object `ui:required` makes required, while `enableOptionalDataFieldForType` names `object`, leaving the `null`s of its `type: 'null'` properties out of the form's defaults, so an empty form failed the `ui:required` check on submit ([#5672](https://github.com/rjsf-team/react-jsonschema-form/pull/5672))
 - Fix a field whose `anyOf`/`oneOf` is empty rendering an empty select or an option selector with nothing to choose instead of the field for its `type`, an `object` chosen for one in the fallback UI getting no key/value controls, and clearing one, or one whose `anyOf`/`oneOf` is `undefined`, bringing back its default under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'` ([#5675](https://github.com/rjsf-team/react-jsonschema-form/pull/5675), [#5365](https://github.com/rjsf-team/react-jsonschema-form/issues/5365))
 - Fix a field cleared under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'` getting its default back when another field changes, or at once inside an array item ([#5675](https://github.com/rjsf-team/react-jsonschema-form/pull/5675))
+- Fix `AnyOfField` and `OneOfField` throwing when named through `ui:field`: they now read their options from the schema ([#5675](https://github.com/rjsf-team/react-jsonschema-form/pull/5675))
 
 ## @rjsf/daisyui
 
