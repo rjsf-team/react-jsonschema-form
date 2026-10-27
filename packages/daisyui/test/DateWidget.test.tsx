@@ -589,6 +589,36 @@ describe('DateWidget', () => {
       expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
     });
 
+    // A listener on the document sees a press inside a shadow root as one on its host, which is neither in the popup
+    // nor the trigger, so a press on a day would close the popup on the way down and one on the trigger reopen it
+    test('stays open for a press inside it, and is closed by one on the trigger, in a form rendered in a shadow root', async () => {
+      const host = document.body.appendChild(document.createElement('div'));
+      onTestFinished(() => host.remove());
+      const shadowRoot = host.attachShadow({ mode: 'open' });
+      const container = shadowRoot.appendChild(document.createElement('div'));
+      const onChange = vi.fn();
+      render(
+        <Form
+          schema={dateSchema}
+          initialFormData={{ birthday: '2020-05-03' }}
+          validator={validator}
+          onChange={onChange}
+        />,
+        { container },
+      );
+      const trigger = within(container).getByRole('combobox', { name: 'Birthday' });
+
+      await user.click(trigger);
+      await user.click(within(container).getByRole('button', { name: /May 17th/ }));
+      expect(within(container).getByRole('dialog', { name: 'Birthday' })).toBeInTheDocument();
+      onChange.mockClear();
+      await user.click(trigger);
+
+      expect(within(container).queryByRole('dialog')).not.toBeInTheDocument();
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
+    });
+
     test('is named by its placeholder where it has no label', () => {
       const { container } = render(
         <Form schema={schema} uiSchema={{ 'ui:placeholder': 'Pick a day' }} validator={validator} />,

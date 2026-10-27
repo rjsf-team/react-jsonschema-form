@@ -355,7 +355,7 @@ describe('DateTimeWidget', () => {
     }
 
     /** Gives every element a size, which jsdom, laying nothing out, leaves at zero, until the test ends. Its width is
-     * capped by its own `width` style, as `max-w-xs` caps the popup's at its own
+     * capped by its own `width` style, as the popup's `max-width` caps the popup's at its own
      */
     function sizeElements(width: number, height: number) {
       const widthSpy = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function offsetWidth(
@@ -375,8 +375,8 @@ describe('DateTimeWidget', () => {
     const popup = () => screen.getByRole('dialog', { hidden: true });
 
     test('below its trigger, inside the right edge of the viewport by its own width', async () => {
-      // 40px short of the right edge of the 1024px-wide viewport, with the popup 400px wide, as `max-w-xs` makes it
-      // under a 20px root font
+      // 40px short of the right edge of the 1024px-wide viewport, with the popup 400px wide, as its 20rem `max-width`
+      // makes it under a 20px root font
       const trigger = renderAt({ top: 30, left: 984 });
       sizeElements(400, 0);
 
@@ -476,7 +476,11 @@ describe('DateTimeWidget', () => {
         paddingTop: '0px',
         paddingLeft: '0px',
         boxSizing: 'border-box',
+        width: '1024px',
       });
+      // Capped at 20rem, as `max-w-xs` would be where a page's Tailwind build scans this package, since the width it is
+      // given is the whole viewport's
+      expect(popup().style.maxWidth).toBe('20rem');
     });
 
     const removeShowPopover = () => Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');

@@ -1,4 +1,4 @@
-import type { MouseEvent, SyntheticEvent } from 'react';
+import type { SyntheticEvent } from 'react';
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { callWithDeferredThrow } from '@rjsf/utils';
@@ -371,8 +371,11 @@ export function useDatePicker<V>({
         latestCancel.current();
       }
     };
-    const handlePressOutside = (e: MouseEvent | globalThis.MouseEvent) => {
-      if (containerRef.current?.contains(e.target as Node) || pressOpensThePopup(e.target, triggerRef.current)) {
+    const handlePressOutside = (e: MouseEvent) => {
+      // The node pressed rather than `e.target`, which a listener on the document sees as the shadow host of a form
+      // rendered in a shadow root, and so as a press outside the popup wherever in that form it lands
+      const [target] = e.composedPath();
+      if (containerRef.current?.contains(target as Node) || pressOpensThePopup(target, triggerRef.current)) {
         return;
       }
       latestClose.current(true);
@@ -444,7 +447,7 @@ export function useDatePicker<V>({
       const viewBottom = Math.min(client.clientHeight, visual ? visual.offsetTop + visual.height : Infinity);
       const viewRight = Math.min(client.clientWidth, visual ? visual.offsetLeft + visual.width : Infinity);
       // Not `100vh`, which takes in a horizontal scrollbar along the bottom of the viewport. The width replaces only
-      // `w-full`, so the theme's `max-w-xs` still applies, and the popup scrolls whatever no longer fits it
+      // `w-full`, so the popup's own `max-width` still applies, and the popup scrolls whatever no longer fits it
       popup.style.maxHeight = `${viewBottom - viewTop}px`;
       popup.style.width = `${viewRight - viewLeft}px`;
       const rect = trigger.getBoundingClientRect();
