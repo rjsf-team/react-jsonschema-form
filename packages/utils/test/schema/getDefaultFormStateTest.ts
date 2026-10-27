@@ -216,17 +216,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const result = getDefaultFormState(
             { validator: testValidator },
             { schema, formData: existingFormData, rootSchema: schema },
-          ) as GenericObjectType;
+          ) as { outer?: { inner?: { str?: string } } };
 
           // The user's value should be preserved, NOT overridden by the default
           expect(result?.outer?.inner?.str).toBe('user_value');
         });
 
         test('getDefaultFormState should apply defaults when formData is undefined', () => {
-          const result = getDefaultFormState(
-            { validator: testValidator },
-            { schema, rootSchema: schema },
-          ) as GenericObjectType;
+          const result = getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema }) as {
+            outer?: { inner?: { str?: string } };
+          };
 
           // Defaults should be applied when no formData exists
           expect(result?.outer?.inner?.str).toBe('default_str');
@@ -10065,10 +10064,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       };
 
       it('should create independent object instances for array items via getDefaultFormState', () => {
-        const result = getDefaultFormState(
-          { validator: testValidator },
-          { schema, rootSchema: schema },
-        ) as GenericObjectType;
+        const result = getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema }) as {
+          config: { items: { field?: string }[] };
+        };
 
         expect(result).toStrictEqual({ config: { items: [{}, {}] } });
 
@@ -10085,7 +10083,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       it('should create independent object instances for array items via computeDefaults', () => {
         const result = computeDefaults({ validator: testValidator }, schema, {
           rootSchema: schema,
-        }) as GenericObjectType;
+        }) as { config: { items: { field?: string }[] } };
 
         expect(result).toStrictEqual({ config: { items: [{}, {}] } });
 
@@ -10185,7 +10183,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
         const result = getArrayDefaults({ validator: testValidator }, nestedObjectSchema, {
           rootSchema: nestedObjectSchema,
-        }) as GenericObjectType[];
+        }) as { nested: { value: string } }[];
 
         expect(result).toStrictEqual([
           { nested: { value: 'nested-default' } },

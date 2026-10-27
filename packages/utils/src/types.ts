@@ -15,10 +15,8 @@ import type { JSONSchema7 } from 'json-schema';
 import type { TranslatableString } from './enums.ts';
 import './jsonSchemaAugmentation.ts';
 
-/** The representation of any generic object type, usually used as an intersection on other types to make them more
- * flexible in the properties they support (i.e. anything else)
- */
-export type GenericObjectType = Record<string, any>;
+/** An object with any string keys, whose values are unknown until narrowed */
+export type GenericObjectType = Record<string, unknown>;
 
 /** A callback whose parameters are checked bivariantly, the way React checks event handlers, so a props type carrying
  * one stays covariant in `T`, and an implementation may declare narrower parameters than the callback's own.
@@ -39,8 +37,8 @@ declare class SlotComponentClass<P> extends Component<object> {
  */
 export type SlotComponent<P> = Bivariant<[props: P], ReactNode | Promise<ReactNode>> | typeof SlotComponentClass<P>;
 
-/** The representation of any generic object type, usually used as an intersection on other types to make them more
- * flexible in the properties they support (i.e. anything else) AND symbol markers with a value of string or boolean
+/** An object with any string keys, whose values are unknown until narrowed, and symbol markers holding a string or a
+ * boolean
  */
 export type GenericSymbolObjectType = GenericObjectType & Record<symbol, boolean | string>;
 
@@ -1992,7 +1990,7 @@ type UIOptionsDeclaredType<
   };
 
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to
- * remap the keys. Its `GenericObjectType` leaves the vocabulary open to any option a theme or custom component reads,
+ * remap the keys. Its index signature leaves the vocabulary open to any option a theme or custom component reads,
  * which is also what gives `UiSchema` its `ui:${string}` keys once remapped
  */
 interface UIOptionsBaseType<
@@ -2041,13 +2039,13 @@ type UnionToMergedKeys<U> = {
 };
 
 /** @internal Whether `Then` declares its own `K` key, as opposed to merely admitting one through a string index
- * signature (as `UiOptionsCheck`'s default `Then = GenericObjectType` does). Without this guard, `Then extends {
+ * signature (as `UiOptionsCheck`'s default `Then = Record<string, unknown>` does). Without this guard, `Then extends {
  * [K]?: infer W }` matches an index-signature `Then` too - inferring `W` as whatever the index signature's value
- * type is (typically `any`) - so a `UiOptionsCheck` written without a `widget`/`field` key would otherwise silently
+ * type is (typically `unknown`) - so a `UiOptionsCheck` written without a `widget`/`field` key would otherwise silently
  * widen the vocabulary for every field its `when` matches, rather than contributing nothing.
  *
  * TypeScript has no way to tell "a key admitted only by an index signature" apart from "a key admitted by an index
- * signature that also happens to declare it explicitly", so a `Then` combining the two (e.g. `GenericObjectType &
+ * signature that also happens to declare it explicitly", so a `Then` combining the two (e.g. `Record<string, unknown> &
  * { widget: 'Foo' }`) is treated as declaring neither - a narrow, silent under-inclusion rather than a type error.
  * Not a concern for `Then`s written as an explicit object literal, which is the documented, expected shape.
  */
