@@ -360,7 +360,7 @@ describe('withTheme', () => {
         validator,
       });
       expect(registry?.classMap).toEqual(
-        expect.objectContaining({ input: 'prop-input', select: 'theme-select', textarea: 'form-control' }),
+        expect.objectContaining({ input: 'prop-input', select: 'theme-select', textarea: undefined }),
       );
     });
   });

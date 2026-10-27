@@ -154,6 +154,8 @@ if (sharedSetupError !== undefined) {
   console.error(sharedSetupError);
 }
 
+const RENAMED_THEMES: Record<string, string> = { 'material-ui-5': 'mui', default: 'bootstrap3' };
+
 /** The playground state that loading `data` sets: for the page's first render, a picked sample, or a shared link.
  * `currentTheme` stands in for a theme the data doesn't name. `sampleName` and `validator` are `undefined` when the
  * data doesn't carry them, so the caller keeps its own.
@@ -182,10 +184,11 @@ export function loadedState(
     ...rest
   } = data;
 
-  // To support mui v6 `material-ui-5` was change to `mui` fix the load to update that as well
-  const namedTheme = dataTheme === 'material-ui-5' ? 'mui' : dataTheme;
+  // Old shared links name themes the playground has since renamed: `material-ui-5` is `mui` since mui v6, and
+  // `default` was the Bootstrap 3 markup, now `bootstrap3`, until core's own unstyled markup became `core`
+  const namedTheme = Object.hasOwn(RENAMED_THEMES, dataTheme) ? RENAMED_THEMES[dataTheme] : dataTheme;
   // Old shared links still name themes the playground has since dropped, such as `semantic-ui` or `fluent-ui`
-  const theme = Object.hasOwn(themes, namedTheme) ? namedTheme : 'default';
+  const theme = Object.hasOwn(themes, namedTheme) ? namedTheme : 'core';
   const uiSchema = typeof loadedUiSchema === 'function' ? loadedUiSchema(currentTheme) : loadedUiSchema;
   const knownSampleName = sampleName !== undefined && !Object.hasOwn(samples, sampleName) ? 'Simple' : sampleName;
   const sampleUiSchema = knownSampleName ? samples[knownSampleName].uiSchema : undefined;
@@ -241,7 +244,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
           liveSettings: INITIAL_LIVE_SETTINGS,
           validator: DEFAULT_VALIDATOR,
         },
-        'default',
+        'core',
         themes,
         validators,
       ),
@@ -263,7 +266,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [theme, setTheme] = useState<string>(initial.theme);
   const [sampleName, setSampleName] = useState<string>(initial.sampleName ?? 'Simple');
   const [subtheme, setSubtheme] = useState<string | null>(null);
-  const [stylesheet, setStylesheet] = useState<string | null>(initial.stylesheet ?? null);
+  const [stylesheet, setStylesheet] = useState<string | string[] | null>(initial.stylesheet ?? null);
   const [validator, setValidator] = useState<string>(initial.validator ?? DEFAULT_VALIDATOR);
   // A load remounts every form the playground seeds, the selectors and the options drawer's included. The form owns
   // its data once it has mounted, so data edited in the formData editor reaches it by remounting the main form alone
@@ -392,7 +395,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         <Divider variant='fullWidth' sx={{ my: 1 }} />
         <ErrorBoundary>
           <DemoFrame
-            head={<link rel='stylesheet' id='theme' href={stylesheet || ''} />}
+            head={[stylesheet ?? []].flat().map((href) => (
+              <link key={href} rel='stylesheet' href={href} />
+            ))}
             style={{
               width: '100%',
               height: 1000,

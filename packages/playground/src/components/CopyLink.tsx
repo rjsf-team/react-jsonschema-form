@@ -1,4 +1,9 @@
 import { useRef } from 'react';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
 
 interface CopyLinkProps {
   shareURL: string | null;
@@ -16,23 +21,35 @@ export default function CopyLink({ shareURL, onShare }: CopyLinkProps) {
     });
   }
 
-  const style = { maxWidth: '21.525rem', margin: '5px 0' };
+  const sx = { my: 1 };
   if (!shareURL) {
     return (
-      <button className='btn btn-default' type='button' onClick={onShare} style={style}>
+      <Button variant='outlined' size='small' onClick={onShare} sx={sx}>
         Share Playground
-      </button>
+      </Button>
     );
   }
 
   return (
-    <div className='input-group' style={style}>
-      <input type='text' ref={input} className='form-control' defaultValue={shareURL} />
-      <span className='input-group-btn'>
-        <button aria-label='Copy link' className='btn btn-default' type='button' onClick={onCopyClick}>
-          <i className='glyphicon glyphicon-copy' />
-        </button>
-      </span>
-    </div>
+    <TextField
+      size='small'
+      inputRef={input}
+      defaultValue={shareURL}
+      sx={sx}
+      slotProps={{
+        // The button group above sets the column's width; a 1-character input adds no intrinsic width of its own
+        htmlInput: { size: 1 },
+        input: {
+          readOnly: true,
+          endAdornment: (
+            <InputAdornment position='end'>
+              <IconButton aria-label='Copy link' edge='end' onClick={onCopyClick}>
+                <ContentCopyIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        },
+      }}
+    />
   );
 }

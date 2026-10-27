@@ -28,7 +28,6 @@
 ## Supported Themes
 
 - [Ant Design v6](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/antd)
-- [Bootstrap v3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/core) (the default, moving to `@rjsf/bootstrap3` in v7)
 - [Bootstrap v3 (deprecated)](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/bootstrap3)
 - [Chakra UI v3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/chakra-ui)
 - [Daisy UI v5](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/daisyui)

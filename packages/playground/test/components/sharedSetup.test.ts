@@ -6,14 +6,15 @@ import type { ThemesType } from '../../src/components/ThemeSelector.tsx';
 import base64 from '../../src/utils/base64.ts';
 
 const themes: Record<string, ThemesType> = {
-  default: { theme: {}, stylesheet: 'default.css' },
+  core: { theme: {}, stylesheet: 'core.css' },
+  bootstrap3: { theme: {}, stylesheet: 'bootstrap3.css' },
   mui: { theme: {}, stylesheet: 'mui.css' },
 };
 const validators = { AJV8: validator };
 const schema = { type: 'object' as const, properties: { name: { type: 'string' as const, default: 'Ada' } } };
 
 function load(data: Record<string, unknown>) {
-  return loadedState({ schema, liveSettings: {}, ...data }, 'default', themes, validators);
+  return loadedState({ schema, liveSettings: {}, ...data }, 'core', themes, validators);
 }
 
 describe('readSharedSetup', () => {
@@ -57,10 +58,15 @@ describe('loadedState', () => {
     expect(load({ theme: 'material-ui-5' }).theme).toBe('mui');
   });
 
+  // `default` was the Bootstrap 3 markup until core rendered its own unstyled markup, which is `core`
+  it('opens a link naming `default` in `bootstrap3`', () => {
+    expect(load({ theme: 'default' })).toMatchObject({ theme: 'bootstrap3', stylesheet: 'bootstrap3.css' });
+  });
+
   it.each([['semantic-ui'], ['constructor'], ['toString'], ['__proto__']])(
     'falls back to the default theme for %s',
     (theme) => {
-      expect(load({ theme })).toMatchObject({ theme: 'default', stylesheet: 'default.css' });
+      expect(load({ theme })).toMatchObject({ theme: 'core', stylesheet: 'core.css' });
     },
   );
 

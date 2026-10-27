@@ -12,7 +12,7 @@ export default function ErrorList<
 >({ errors, registry }: ErrorListProps<T, S, F>) {
   const { translateString, classMap } = registry;
   return (
-    <div className={joinClassNames(classMap.errorList, 'errors')}>
+    <div className={joinClassNames('rjsf-errors', classMap.errorList)}>
       <div className={classMap.errorListHeading}>
         <h3 className={classMap.errorListTitle}>{translateString(TranslatableString.ErrorsLabel)}</h3>
       </div>

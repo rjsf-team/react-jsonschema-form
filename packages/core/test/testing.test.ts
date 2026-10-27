@@ -38,7 +38,7 @@ describe('getTestRegistry()', () => {
     });
 
     expect(registry.classMap.input).toBe('theme-input');
-    expect(registry.classMap.select).toBe('form-control wide');
+    expect(registry.classMap.select).toBe(' wide');
     expect(Object.isFrozen(registry.classMap)).toBe(true);
   });
 });

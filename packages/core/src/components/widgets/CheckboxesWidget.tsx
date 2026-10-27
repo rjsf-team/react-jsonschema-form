@@ -51,12 +51,13 @@ function CheckboxesWidget<
   );
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
-    <div className='checkboxes' id={id} {...groupAttributes}>
+    <div className='rjsf-checkboxes' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
           const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
-          const disabledCls = (disabled || itemDisabled || readonly) && classMap.disabled;
+          const optionDisabled = disabled || itemDisabled || readonly;
+          const disabledCls = optionDisabled && classMap.disabled;
 
           const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
             if (event.target.checked) {
@@ -70,7 +71,7 @@ function CheckboxesWidget<
             <span>
               <input
                 type='checkbox'
-                className={classMap.checkboxInput || undefined}
+                className={classMap.checkboxInput}
                 id={optionId(id, index)}
                 name={htmlName || id}
                 checked={checked}
@@ -86,14 +87,22 @@ function CheckboxesWidget<
             </span>
           );
           return inline ? (
-            // oxlint-disable-next-line react/no-array-index-key
-            <label key={index} className={joinClassNames(classMap.checkboxInlineLabel, disabledCls)}>
+            <label
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
+              className={joinClassNames('rjsf-checkbox-inline', classMap.checkboxInlineLabel, disabledCls)}
+              data-disabled={optionDisabled || undefined}
+            >
               {checkbox}
             </label>
           ) : (
-            // oxlint-disable-next-line react/no-array-index-key
-            <div key={index} className={joinClassNames(classMap.checkboxWrapper, disabledCls)}>
-              <label className={classMap.checkboxLabel || undefined}>{checkbox}</label>
+            <div
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
+              className={joinClassNames('rjsf-checkbox', classMap.checkboxWrapper, disabledCls)}
+              data-disabled={optionDisabled || undefined}
+            >
+              <label className={classMap.checkboxLabel}>{checkbox}</label>
             </div>
           );
         })}

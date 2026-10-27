@@ -1,3 +1,4 @@
+import fieldShowsOwnErrors from './fieldShowsOwnErrors.ts';
 import getSelectedOptionDescription from './getSelectedOptionDescription.ts';
 import getTemplates from './getTemplates.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
@@ -30,6 +31,7 @@ export default function SelectedOptionDescription<
     <DescriptionFieldTemplate
       id={selected.id}
       description={selected.description}
+      hasErrors={fieldShowsOwnErrors<T, S, F>(props)}
       schema={selected.schema}
       uiSchema={uiSchema}
       registry={registry}

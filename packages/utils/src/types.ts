@@ -539,6 +539,10 @@ export interface GridTemplateProps extends GenericObjectType {
    * for Rows vs Columns. NOTE: This is falsy by default when not specified
    */
   column?: boolean;
+  /** How many of a row's tracks a column spans. Core's `GridTemplate` reads it on its 12-track grid, where a column
+   * without one is full width; another theme may read it on its own grid, such as antd's 24 columns, or ignore it
+   */
+  span?: number;
 }
 
 /** The set of `Fields` stored in the `Registry` */
@@ -868,7 +872,7 @@ export interface FieldProps<
    * @deprecated Kept through v7 for a field rendered without a plan: read `getErrorsToDraw()` for the messages the
    *   field draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
    *   `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and
-   *   `presentation.errors.messages.length > 0` for an error state. Beside a selector, the plan keeps the field's
+   *   `presentation.errors.own` for an error state. Beside a selector, the plan keeps the field's
    *   errors, which its template draws, so the field shows as invalid along with the selector
    */
   rawErrors?: string[];
@@ -981,7 +985,7 @@ export type MergedThemePresentation = Required<ThemePresentation>;
  * `data-*` attribute a theme selects on
  */
 export interface ClassMap {
-  /** The `<input>` of `BaseInputTemplate` */
+  /** The `<input>` of `BaseInputTemplate`, other than a file or range input, which `fileInput` and `rangeInput` style */
   input?: string;
   /** The `<select>` of `SelectWidget` */
   select?: string;
@@ -1065,6 +1069,10 @@ export interface ClassMap {
   optionalDataRemoveButton?: string;
   /** The `<button>` of `SubmitButton` */
   submitButton?: string;
+  /** The `<button>` of `IconButton`, which the array item, add, remove and clear buttons render */
+  iconButton?: string;
+  /** The inline `<svg>` icon of `IconButton` */
+  buttonIcon?: string;
 }
 
 /** The `classMap` a `Form` takes: a `ClassMap` whose entries may also be a function of the class beneath, the theme's,
@@ -1073,10 +1081,10 @@ export interface ClassMap {
  */
 export type FormClassMap = { [K in keyof ClassMap]?: ClassMap[K] | ((themeClass: string) => string) };
 
-/** A form's `ClassMap` once `buildRegistry()` layered the `Form`'s over the theme's over `@rjsf/core`'s: every key has
- * a value
+/** A form's `ClassMap` once `buildRegistry()` layered the `Form`'s over the theme's over `@rjsf/core`'s: every key is
+ * present, `undefined` where no layer gives the element a class, so an element reading it renders no `class` attribute
  */
-export type MergedClassMap = Readonly<Required<ClassMap>>;
+export type MergedClassMap = Readonly<Record<keyof ClassMap, string | undefined>>;
 
 /** Where one part of a field is drawn: by its template, by its field or widget component, by a field above it
  * rendering the same id, or not at all
@@ -1121,6 +1129,10 @@ export interface FieldPresentation {
   errors: PartPresentation & {
     /** The messages to show, with `ui:hideError` applied */
     messages: readonly string[];
+    /** Whether the field shows errors of its own, as `ui:hideError` leaves them, whoever draws them: the error state of
+     * its wrapper and of the label and description drawn for it, where `messages` may be those of a field above
+     */
+    own: boolean;
   };
   /** The ids of the field's parts describing its control, in order, counting only parts that render here or above. A
    * field below rendering the same id inherits them, so the ids of the elements a widget renders to describe its own
@@ -1214,7 +1226,7 @@ export type FieldTemplateProps<
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
   /** Whether the field shows its own errors, as `ui:hideError` leaves them: the state its wrapper's `rjsf-field-error`
-   * class, its label and its help take. Beneath an `anyOf`/`oneOf` field it can differ from the
+   * class, its label, its help and its description take. Beneath an `anyOf`/`oneOf` field it can differ from the
    * plan's errors, which are the field above's where it shows them. Required, so a custom field that renders a
    * `FieldTemplate` itself says whether the field is in error rather than silently leaving the template out of it
    */
@@ -1304,6 +1316,10 @@ export type TitleFieldProps<
   required?: boolean;
   /** Add optional data control */
   optionalDataControl?: ReactNode;
+  /** Set where the title is rendered anywhere but as a `<fieldset>`'s first child, such as a layout grid's header, so
+   * a template that renders a `<legend>` renders an element valid there instead
+   */
+  outsideFieldset?: boolean;
 };
 
 /** The properties that are passed to a `DescriptionFieldTemplate` implementation */
@@ -1316,6 +1332,8 @@ export type DescriptionFieldProps<
   id: string;
   /** The description of the field being rendered */
   description: string | ReactElement;
+  /** Whether the field it describes shows its own errors, as `ui:hideError` leaves them */
+  hasErrors?: boolean;
 };
 
 /** The properties that are passed to a `ArrayFieldTitleTemplate` implementation */
@@ -1745,7 +1763,9 @@ export type IconButtonProps<
   Omit<RJSFBaseProps<T, S, F>, 'schema'> & {
     /** An alternative specification for the type of the icon button */
     iconType?: string;
-    /** The name representation or actual react element implementation for the icon */
+    /** The name representation or actual react element implementation for the icon. `@rjsf/core`'s `IconButton` draws
+     * only `plus`, `copy`, `arrow-up`, `arrow-down` and `remove`, and no icon for any other name
+     */
     icon?: string | ReactElement;
   };
 

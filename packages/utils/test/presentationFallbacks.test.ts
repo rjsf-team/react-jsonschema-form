@@ -2,6 +2,7 @@
 import type { FieldPresentation, Registry, ResolvedPresentationDeclaration } from '../src/index.ts';
 import {
   englishStringTranslator,
+  fieldShowsOwnErrors,
   getControlAriaLabel,
   getControlFallbackName,
   getErrorsToDraw,
@@ -65,6 +66,21 @@ describe('templateMarksRequired()', () => {
   it('follows required without a plan', () => {
     expect(templateMarksRequired({ required: true })).toBe(true);
     expect(templateMarksRequired({})).toBe(false);
+  });
+});
+
+describe('fieldShowsOwnErrors()', () => {
+  it("follows the plan's own errors, not the control's, beneath a field above that shows its errors", () => {
+    const above = plan({ errors: ['bad'] });
+    expect(fieldShowsOwnErrors({ presentation: plan({ inherited: above, errors: ['bad'] }) })).toBe(true);
+    expect(fieldShowsOwnErrors({ presentation: plan({ inherited: above, errors: ['bad'], hideError: true }) })).toBe(
+      false,
+    );
+  });
+
+  it('follows rawErrors and hideError without a plan', () => {
+    expect(fieldShowsOwnErrors({ rawErrors: ['bad'] })).toBe(true);
+    expect(fieldShowsOwnErrors({ rawErrors: ['bad'], hideError: true })).toBe(false);
   });
 });
 

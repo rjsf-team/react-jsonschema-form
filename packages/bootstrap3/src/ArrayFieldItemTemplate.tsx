@@ -28,7 +28,9 @@ export default function ArrayFieldItemTemplate<
     <div className={joinClassNames(className, classMap.arrayItem)} style={containerStyle}>
       <div className={hasToolbar ? 'col-xs-9 col-md-10 col-xl-11' : 'col-xs-12'}>{children}</div>
       {hasToolbar && (
-        <div className={joinClassNames('col-xs-3 col-md-2 col-xl-1 array-item-toolbox', classMap.arrayItemToolbox)}>
+        <div
+          className={joinClassNames('col-xs-3 col-md-2 col-xl-1 rjsf-array-item-toolbox', classMap.arrayItemToolbox)}
+        >
           <div className='btn-group' style={toolbarStyle}>
             <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />
           </div>

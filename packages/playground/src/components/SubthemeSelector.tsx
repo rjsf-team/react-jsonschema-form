@@ -10,7 +10,7 @@ const uiSchema: UiSchema = {
 };
 
 export interface SubthemeType {
-  stylesheet?: string;
+  stylesheet?: string | string[];
   dataTheme?: string;
 }
 

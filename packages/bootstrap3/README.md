@@ -25,9 +25,10 @@
 ## About The Project
 
 Exports the Bootstrap 3 theme for `react-jsonschema-form`: a [class map](https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-themes#class-map)
-of Bootstrap 3 class names for the elements `@rjsf/core` renders, plus the four templates whose markup is Bootstrap
-3's rather than a class name: the glyphicon buttons, `ArrayFieldItemTemplate`, `WrapIfAdditionalTemplate` and
-`TitleField`. Everything else is `@rjsf/core`'s own component.
+of Bootstrap 3 class names for the elements `@rjsf/core` renders, plus the templates whose markup is Bootstrap 3's
+rather than a class name: the glyphicon buttons, `OptionalDataControlsTemplate` which renders them,
+`ArrayFieldItemTemplate`, `WrapIfAdditionalTemplate`, `TitleField`, and `CyclicSchemaExpandTemplate`, which keeps the
+top margin core leaves to its optional stylesheet. Everything else is `@rjsf/core`'s own component.
 
 ### Built With
 
@@ -70,7 +71,7 @@ import { Theme as Bootstrap3Theme } from '@rjsf/bootstrap3';
 const Form = withTheme(Bootstrap3Theme);
 ```
 
-A `Form` put together from the theme's `generateTemplates()` rather than its `Theme` passes `classMap={generateClassMap()}` too. `@rjsf/core` still renders the Bootstrap 3 classes on its own for now, but once it renders unstyled markup its components get them only from this map.
+A `Form` put together from the theme's `generateTemplates()` rather than its `Theme` passes `classMap={generateClassMap()}` too, since `@rjsf/core`'s components render no Bootstrap 3 classes of their own and get them only from this map.
 
 Import from the package itself; it publishes no deep `@rjsf/bootstrap3/lib/*` paths.
 

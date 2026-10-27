@@ -18,7 +18,7 @@ export default function SubmitButton<
       <button
         type='submit'
         {...submitButtonProps}
-        className={joinClassNames(classMap.submitButton, submitButtonProps.className)}
+        className={joinClassNames('rjsf-submit-button', classMap.submitButton, submitButtonProps.className)}
       >
         {submitText}
       </button>

@@ -246,8 +246,8 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       expect(node.getAttribute('id')).toEqual(formProps.id);
     });
 
-    it('should set attr class of form', () => {
-      expect(node.getAttribute('class')).toEqual(formProps.className);
+    it('should set attr class of form beside the rjsf marker the stylesheet keys on', () => {
+      expect(node).toHaveClass('rjsf', formProps.className!);
     });
 
     it('should set attr name of form', () => {

@@ -27,10 +27,10 @@ describe('Bootstrap 3 markup', () => {
     expect(container.querySelector('label.control-label[for="root_name"]')).toHaveTextContent('Name');
     expect(container.querySelector('#root_name')).toHaveClass('form-control');
     expect(container.querySelector('.help-block')).toHaveTextContent('Your name');
-    expect(container.querySelector('.error-detail.bs-callout.bs-callout-info .text-danger')).toHaveTextContent(
+    expect(container.querySelector('.rjsf-error-detail.bs-callout.bs-callout-info .text-danger')).toHaveTextContent(
       "must have required property 'Name'",
     );
-    expect(container.querySelector('.panel.panel-danger.errors .panel-heading .panel-title')).toHaveTextContent(
+    expect(container.querySelector('.panel.panel-danger.rjsf-errors .panel-heading .panel-title')).toHaveTextContent(
       'Errors',
     );
     expect(container.querySelector('.panel-danger .list-group .list-group-item.text-danger')).toHaveTextContent(
@@ -71,8 +71,8 @@ describe('Bootstrap 3 markup', () => {
     const { container } = render(<Form schema={schema} uiSchema={{ 'ui:widget': 'alt-date' }} validator={validator} />);
 
     expect(container.querySelector('ul.list-inline li.list-inline-item select')).toHaveClass('form-control');
-    expect(container.querySelector('.btn-now')).toHaveClass('btn', 'btn-info');
-    expect(container.querySelector('.btn-clear')).toHaveClass('btn', 'btn-warning');
+    expect(container.querySelector('.rjsf-btn-now')).toHaveClass('btn', 'btn-info');
+    expect(container.querySelector('.rjsf-btn-clear')).toHaveClass('btn', 'btn-warning');
   });
 
   it('lays an array out on the grid with glyphicon buttons', () => {
@@ -80,12 +80,12 @@ describe('Bootstrap 3 markup', () => {
     // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
     const { container } = render(<Form schema={schema} initialFormData={['a', 'b']} validator={validator} />);
 
-    expect(container.querySelector('.array-item-list')).toHaveClass('row');
+    expect(container.querySelector('.rjsf-array-item-list')).toHaveClass('row');
     expect(container.querySelector('.rjsf-array-item .col-xs-9.col-md-10.col-xl-11')).toContainElement(
       container.querySelector('.rjsf-array-item input'),
     );
     expect(
-      container.querySelector('.rjsf-array-item .col-xs-3.col-md-2.col-xl-1.array-item-toolbox .btn-group'),
+      container.querySelector('.rjsf-array-item .col-xs-3.col-md-2.col-xl-1.rjsf-array-item-toolbox .btn-group'),
     ).toBeInTheDocument();
     expect(
       container.querySelector('.rjsf-array-item button.btn.btn-default .glyphicon.glyphicon-arrow-down'),
@@ -95,7 +95,7 @@ describe('Bootstrap 3 markup', () => {
     ).toBeInTheDocument();
     expect(
       container.querySelector(
-        '.row > .col-xs-4.col-xs-offset-8.text-right > .btn.btn-info.btn-add.col-xs-12 .glyphicon-plus',
+        '.row > .col-xs-4.col-xs-offset-8.text-right > .btn.btn-info.rjsf-btn-add.col-xs-12 .glyphicon-plus',
       ),
     ).toBeInTheDocument();
   });
@@ -113,7 +113,7 @@ describe('Bootstrap 3 markup', () => {
     );
 
     expect(container.querySelector('.rjsf-array-item')).toHaveClass('my-item');
-    expect(container.querySelector('.array-item-toolbox')).toHaveClass('col-xs-3', 'my-toolbox');
+    expect(container.querySelector('.rjsf-array-item-toolbox')).toHaveClass('col-xs-3', 'my-toolbox');
   });
 
   it('lays an additional property out as a key, value and remove button row', () => {
@@ -132,13 +132,19 @@ describe('Bootstrap 3 markup', () => {
     ).toBeInTheDocument();
   });
 
-  // Core renders the same markup until it drops Bootstrap 3, so only identity shows the theme renders its own copies
+  // Identity catches a template the theme stops supplying even where core's markup would still pass an assertion
   it("renders its own templates and buttons in place of core's, apart from core's SubmitButton", () => {
     // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
     const own = generateTemplates();
     const core = coreTemplates();
 
-    for (const name of ['ArrayFieldItemTemplate', 'WrapIfAdditionalTemplate', 'TitleFieldTemplate'] as const) {
+    for (const name of [
+      'ArrayFieldItemTemplate',
+      'CyclicSchemaExpandTemplate',
+      'OptionalDataControlsTemplate',
+      'TitleFieldTemplate',
+      'WrapIfAdditionalTemplate',
+    ] as const) {
       expect(own[name], name).toBeDefined();
       expect(own[name], name).not.toBe(core[name]);
     }
@@ -168,6 +174,7 @@ describe('Bootstrap 3 markup', () => {
         "arrayItem": "",
         "arrayItemList": "row",
         "arrayItemToolbox": "",
+        "buttonIcon": "",
         "checkboxInlineLabel": "checkbox-inline",
         "checkboxInput": "",
         "checkboxLabel": "",
@@ -186,6 +193,7 @@ describe('Bootstrap 3 markup', () => {
         "fieldHelp": "help-block",
         "fieldLabel": "control-label",
         "fileInput": "form-control",
+        "iconButton": "",
         "input": "form-control",
         "multiSchema": "panel panel-default panel-body",
         "multiSchemaSelector": "form-group",

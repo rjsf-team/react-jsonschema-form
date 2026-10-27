@@ -41,6 +41,7 @@ import {
   idSegment,
   toFieldPath,
 } from './fieldPath.ts';
+import fieldShowsOwnErrors from './fieldShowsOwnErrors.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getAdditionalKeyAttributes from './getAdditionalKeyAttributes.ts';
@@ -295,6 +296,7 @@ export {
   ErrorSchemaBuilder,
   fallbackTypeSelectorId,
   fieldLabelId,
+  fieldShowsOwnErrors,
   // oxlint-disable-next-line typescript/no-deprecated -- re-exported for callers written against 6.x
   findSchemaDefinition,
   flattenGroupedOptions,

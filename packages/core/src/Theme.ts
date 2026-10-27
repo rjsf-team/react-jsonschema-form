@@ -1,5 +1,6 @@
 import type {
   ClassMap,
+  FormClassMap,
   FormContextType,
   GlobalFormOptions,
   MergedClassMap,
@@ -59,53 +60,57 @@ function generatePresentation(): ThemePresentation {
   };
 }
 
-/** The class names `@rjsf/core`'s components render by default: Bootstrap 3's, which core's markup is written for */
+/** The class names `@rjsf/core`'s components render by default: none, since core's markup is toolkit-independent and
+ * carries only its `rjsf-` markers. A theme's `classMap` adds its framework's classes beside them
+ */
 const CLASS_MAP: MergedClassMap = {
-  input: 'form-control',
-  select: 'form-control',
-  textarea: 'form-control',
-  fileInput: 'form-control',
-  rangeInput: 'form-control',
-  rangeWrapper: '',
-  checkboxWrapper: 'checkbox',
-  checkboxLabel: '',
-  checkboxInput: '',
-  checkboxInlineLabel: 'checkbox-inline',
-  radioWrapper: 'radio',
-  radioLabel: '',
-  radioInput: '',
-  radioInlineLabel: 'radio-inline',
-  disabled: 'disabled',
-  altDateList: 'list-inline',
-  altDateListItem: 'list-inline-item',
-  altDateNowButton: 'btn btn-info',
-  altDateClearButton: 'btn btn-warning',
-  fieldLabel: 'control-label',
-  fieldErrors: 'bs-callout bs-callout-info',
-  fieldError: 'text-danger',
-  fieldHelp: 'help-block',
-  fieldDescription: '',
-  errorList: 'panel panel-danger',
-  errorListHeading: 'panel-heading',
-  errorListTitle: 'panel-title',
-  errorListItems: 'list-group',
-  errorListItem: 'list-group-item text-danger',
-  arrayFieldset: '',
-  arrayItemList: 'row',
-  arrayItem: '',
-  arrayItemToolbox: '',
-  objectFieldset: '',
-  multiSchema: 'panel panel-default panel-body',
-  multiSchemaSelector: 'form-group',
-  cyclicSchemaMessage: 'text-danger',
-  cyclicSchemaExpandButton: 'btn btn-sm btn-warning',
-  optionalDataAddButton: 'btn-sm',
-  optionalDataRemoveButton: 'btn-sm',
-  submitButton: 'btn btn-info',
+  input: undefined,
+  select: undefined,
+  textarea: undefined,
+  fileInput: undefined,
+  rangeInput: undefined,
+  rangeWrapper: undefined,
+  checkboxWrapper: undefined,
+  checkboxLabel: undefined,
+  checkboxInput: undefined,
+  checkboxInlineLabel: undefined,
+  radioWrapper: undefined,
+  radioLabel: undefined,
+  radioInput: undefined,
+  radioInlineLabel: undefined,
+  disabled: undefined,
+  altDateList: undefined,
+  altDateListItem: undefined,
+  altDateNowButton: undefined,
+  altDateClearButton: undefined,
+  fieldLabel: undefined,
+  fieldErrors: undefined,
+  fieldError: undefined,
+  fieldHelp: undefined,
+  fieldDescription: undefined,
+  errorList: undefined,
+  errorListHeading: undefined,
+  errorListTitle: undefined,
+  errorListItems: undefined,
+  errorListItem: undefined,
+  arrayFieldset: undefined,
+  arrayItemList: undefined,
+  arrayItem: undefined,
+  arrayItemToolbox: undefined,
+  objectFieldset: undefined,
+  multiSchema: undefined,
+  multiSchemaSelector: undefined,
+  cyclicSchemaMessage: undefined,
+  cyclicSchemaExpandButton: undefined,
+  optionalDataAddButton: undefined,
+  optionalDataRemoveButton: undefined,
+  submitButton: undefined,
+  iconButton: undefined,
+  buttonIcon: undefined,
 };
 
 /** The core theme: every field, widget and template `@rjsf/core` implements, which parts of a field they draw, and the
- * class names they render
+ * class names they render, which are none
  */
 export function generateTheme<
   T = unknown,
@@ -119,6 +124,28 @@ export function generateTheme<
     presentation: generatePresentation(),
     classMap: { ...CLASS_MAP },
   };
+}
+
+function isClassMapKey(key: string): key is keyof ClassMap {
+  return Object.hasOwn(CLASS_MAP, key);
+}
+
+/** Keeps the merged map's `ClassMap` keys. A Form `''` entry survives `mergeClassMaps()` so that it drops the theme's
+ * class beneath it; it becomes `undefined` here, so an element reading it bare renders no `class` attribute. A function
+ * entry no layer gives a class beneath is called with `''`, since core's own map leaves every key `undefined`
+ *
+ * @param map - The theme's class map with the Form's layered on top
+ * @returns - Each `ClassMap` key's class, or `undefined` for none
+ */
+function resolveClassMap(map: FormClassMap): MergedClassMap {
+  const resolved: Record<keyof ClassMap, string | undefined> = { ...CLASS_MAP };
+  for (const [key, value] of Object.entries(map)) {
+    if (isClassMapKey(key)) {
+      const className = typeof value === 'function' ? value('') : value;
+      resolved[key] = typeof className === 'string' && className ? className : undefined;
+    }
+  }
+  return resolved;
 }
 
 /** Extracts the `GlobalFormOptions` from the given Form `props`
@@ -159,8 +186,6 @@ export function buildRegistry<
 >(props: FormProps<T, S, F>, schema: S, schemaUtils: SchemaUtilsType<T, S, F>): Registry<T, S, F> {
   const { translateString = englishStringTranslator, uiSchema } = props;
   const { fields, templates, widgets, presentation, classMap } = generateTheme<T, S, F>();
-  // Only core's keys are kept, as a function under any other key has no class beneath it to resolve against
-  const mergedClassMap = mergeClassMaps(classMap, props.classMap);
   return {
     fields: { ...fields, ...props.fields },
     templates: {
@@ -173,9 +198,7 @@ export function buildRegistry<
     },
     widgets: { ...widgets, ...props.widgets },
     presentation: mergeThemePresentation(presentation, props.presentation),
-    classMap: Object.fromEntries(
-      Object.keys(classMap).map((key) => [key, mergedClassMap[key as keyof ClassMap]]),
-    ) as MergedClassMap,
+    classMap: resolveClassMap(mergeClassMaps(classMap, props.classMap)),
     rootSchema: schema,
     // `F` may be narrower than `{}`, but an omitted formContext is an empty object
     formContext: props.formContext ?? ({} as F),

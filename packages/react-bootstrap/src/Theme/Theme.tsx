@@ -5,7 +5,17 @@ import { createTemplates } from '../Templates/index.ts';
 import { createWidgets } from '../Widgets/index.ts';
 
 function createTheme() {
-  return { templates: createTemplates(), widgets: createWidgets() };
+  return {
+    templates: createTemplates(),
+    widgets: createWidgets(),
+    // Core's `AltDateWidget`, which this theme falls back to, lays its parts out with these
+    classMap: {
+      altDateList: 'list-inline',
+      altDateListItem: 'list-inline-item',
+      altDateNowButton: 'btn btn-info',
+      altDateClearButton: 'btn btn-warning',
+    },
+  };
 }
 
 export function generateTheme<
