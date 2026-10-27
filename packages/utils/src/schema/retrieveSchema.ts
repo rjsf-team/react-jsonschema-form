@@ -493,7 +493,7 @@ export type OwnRef<S extends StrictRJSFSchema = RJSFSchema> = ResolvedOwnRef<S> 
  * those `resolveMergedOwnRef()` resolved, by graph, `customMergeAllOf`, the node declaring the reference and the schema
  * holding it
  */
-const ownRefs = new KeyedMemo<ResolvedOwnRef<StrictRJSFSchema>>();
+const ownRefs = new KeyedMemo<ResolvedOwnRef>();
 
 /** Returns a schema's own `$ref` resolved and marked with it, as a schema an option's `$ref` stands for is scored and
  * validated: the definition overridden by the keywords beside the reference where those only annotate, and otherwise

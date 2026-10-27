@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '../src/index.ts';
+import type { RJSFMarkedSchema, RJSFSchema } from '../src/index.ts';
 import { ADDITIONAL_PROPERTY_FLAG, englishStringTranslator, getFieldLabel } from '../src/index.ts';
 
 const translateString = englishStringTranslator;
@@ -25,7 +25,7 @@ describe('getFieldLabel()', () => {
   });
 
   it('labels an additionalProperties entry by its key rather than its schema title', () => {
-    const schema: RJSFSchema = { type: 'string', title: 'Entry', [ADDITIONAL_PROPERTY_FLAG]: true };
+    const schema: RJSFMarkedSchema = { type: 'string', title: 'Entry', [ADDITIONAL_PROPERTY_FLAG]: true };
     expect(getFieldLabel(schema, { title: 'Ui' }, translateString, { name: 'key' })).toBe('key');
   });
 

@@ -548,7 +548,6 @@ describe('ObjectField', () => {
     it('Check schema with if/then/else conditions and activate the then/else subschemas, the onChange event should reflect the actual validation errors', async () => {
       const schema: RJSFSchema = {
         type: 'object',
-        _const: 'test',
         required: ['checkbox'],
         properties: {
           checkbox: {
@@ -1648,7 +1647,7 @@ describe('ObjectField', () => {
       expect(fieldErrorsById(node)).toEqual({});
     });
 
-    it.each([
+    it.each<[string, RJSFSchema]>([
       ['names no additionalProperties', {}],
       ['allows additionalProperties', { additionalProperties: true }],
       ['describes unevaluatedProperties', { unevaluatedProperties: { type: 'string' } }],

@@ -343,7 +343,7 @@ describe('validationTargets() of a root sharing objects', () => {
     expect(listed(sharing)).not.toContainEqual({ $ref: '#/properties/x/properties/next/oneOf/0' });
   });
   it('lists the subschemas below the place a $ref names under a keyword no walk follows', () => {
-    const root: RJSFSchema = {
+    const root: RJSFSchema & { components?: object } = {
       $ref: '#/components/schemas/Pet',
       components: { schemas: { Pet: { oneOf: [{ type: 'string' }] } } },
     };
