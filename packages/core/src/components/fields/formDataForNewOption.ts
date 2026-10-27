@@ -19,7 +19,6 @@ import {
   getStaticItemsUiSchema,
   getXxxOfKey,
   isCollapsedByOptionalDataControls,
-  isFormDataAvailable,
   isPlainObject,
   mergeSchemas,
   resolveUiSchema,
@@ -253,9 +252,8 @@ function withoutAddedOptionalObjects<
     );
     let keptValue: unknown = value;
     if (isPlainObject(value) && Object.keys(value).length === 0) {
-      // Sanitize writes an empty object only where the old data held nothing
+      // Sanitize writes an empty object only where the old data held nothing, which the collapse check reads too
       if (
-        !isFormDataAvailable(oldValue) &&
         isCollapsedByOptionalDataControls<T, S, F>(
           () => schemaUtils.retrieveSchema(rawPropertySchema),
           rawPropertySchema,
