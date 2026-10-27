@@ -371,7 +371,13 @@ export function useDatePicker<V>({
         latestCancel.current();
       }
     };
-    const handlePressOutside = (e: MouseEvent) => {
+    let handledPress: Event | undefined;
+    const handlePressOutside = (e: Event) => {
+      // Once per press, which the trigger's shadow root sees before the document does
+      if (e === handledPress) {
+        return;
+      }
+      handledPress = e;
       // The node pressed rather than `e.target`, which a listener on the document sees as the shadow host of a form
       // rendered in a shadow root, and so as a press outside the popup wherever in that form it lands
       const [target] = e.composedPath();
@@ -381,12 +387,16 @@ export function useDatePicker<V>({
       latestClose.current(true);
     };
     // The document the form is in rather than this module's: neither a press nor a key inside a framed form reaches
-    // ours, which would leave Done and the trigger as the only ways out of the popup
+    // ours, which would leave Done and the trigger as the only ways out of the popup. Presses are heard on the
+    // trigger's root as well, since the `composedPath()` a listener outside a closed shadow root sees stops at its host
     const doc = documentOf(triggerRef.current);
+    const root = triggerRef.current?.getRootNode() ?? doc;
     doc.addEventListener('keydown', handleEscape);
+    root.addEventListener('mousedown', handlePressOutside);
     doc.addEventListener('mousedown', handlePressOutside);
     return () => {
       doc.removeEventListener('keydown', handleEscape);
+      root.removeEventListener('mousedown', handlePressOutside);
       doc.removeEventListener('mousedown', handlePressOutside);
     };
   }, [isOpen, latestCancel, latestClose]);
@@ -429,6 +439,9 @@ export function useDatePicker<V>({
       popup.setAttribute('popover', 'manual');
       popup.showPopover();
     }
+    // As the browser's own popover styles make it, but which a stylesheet's rule for the popup would win over: the
+    // `top` and `left` written below are viewport coordinates
+    popup.style.position = 'fixed';
     // The trigger is measured against the viewport of the window the form is in, so that is the one to keep inside
     // of. Its client box less its scrollbars is the root element's, or in a quirks-mode document, where the root's is the
     // whole page, the body's. Told by `compatMode` rather than `scrollingElement`, which is null in a quirks-mode
@@ -439,13 +452,19 @@ export function useDatePicker<V>({
     popup.style.top = '0px';
     popup.style.left = '0px';
     const place = () => {
+      // Under CSS `zoom` on an ancestor, the popup's `top`, `left` and sizes are drawn at that scale, while the
+      // viewport and client rects are measured as drawn, so those are divided by it. It is how much wider the popup is
+      // drawn than its computed width, rounded, as that width is serialized to six significant digits: either that
+      // error or `offsetWidth`'s whole pixels would have a fractional width change the scale it is written with
+      const drawn = popup.getBoundingClientRect();
+      const scale = Math.round((drawn.width / parseFloat(win.getComputedStyle(popup).width)) * 1e4) / 1e4 || 1;
       // Of that box, the part the user sees: an on-screen keyboard, by default in Chrome on Android, or a pinch zoom
       // shrinks and moves only the visual viewport, leaving the client box the popup is fixed in as it was
       const visual = win.visualViewport;
-      const viewTop = Math.max(0, visual?.offsetTop ?? 0);
-      const viewLeft = Math.max(0, visual?.offsetLeft ?? 0);
-      const viewBottom = Math.min(client.clientHeight, visual ? visual.offsetTop + visual.height : Infinity);
-      const viewRight = Math.min(client.clientWidth, visual ? visual.offsetLeft + visual.width : Infinity);
+      const viewTop = Math.max(0, visual?.offsetTop ?? 0) / scale;
+      const viewLeft = Math.max(0, visual?.offsetLeft ?? 0) / scale;
+      const viewBottom = Math.min(client.clientHeight, visual ? visual.offsetTop + visual.height : Infinity) / scale;
+      const viewRight = Math.min(client.clientWidth, visual ? visual.offsetLeft + visual.width : Infinity) / scale;
       // Not `100vh`, which takes in a horizontal scrollbar along the bottom of the viewport. The width replaces only
       // `w-full`, so the popup's own `max-width` still applies, and the popup scrolls whatever no longer fits it
       popup.style.maxHeight = `${viewBottom - viewTop}px`;
@@ -456,12 +475,11 @@ export function useDatePicker<V>({
       // from it. How far the popup is drawn from its own `top` and `left` is that shift, in whichever browser. Rounded
       // to whole pixels, since it also holds the browser's sub-pixel snapping of that `top` and `left`, which would
       // otherwise feed into the next frame's and have a trigger at a fractional offset rewrite them every frame
-      const drawn = popup.getBoundingClientRect();
-      const shiftY = Math.round(parseFloat(popup.style.top) - drawn.top);
-      const shiftX = Math.round(parseFloat(popup.style.left) - drawn.left);
+      const shiftY = Math.round(parseFloat(popup.style.top) - drawn.top / scale);
+      const shiftX = Math.round(parseFloat(popup.style.left) - drawn.left / scale);
       const { offsetWidth: width, offsetHeight: height } = popup;
-      const above = rect.top + shiftY - 5 - height;
-      const below = rect.bottom + shiftY + 5;
+      const above = rect.top / scale + shiftY - 5 - height;
+      const below = rect.bottom / scale + shiftY + 5;
       // Kept inside both edges of the visible box after choosing a side, as a trigger outside of it, such as one an
       // on-screen keyboard covers, would otherwise take the popup out of it too
       const y = Math.max(
@@ -469,7 +487,7 @@ export function useDatePicker<V>({
         Math.min(below + height > viewBottom && above >= viewTop ? above : below, viewBottom - height),
       );
       // A 20px gutter at the right edge, narrowed to whatever room is left by a popup about as wide as the viewport
-      const x = Math.max(viewLeft, Math.min(rect.left + shiftX, viewRight - 20 - width));
+      const x = Math.max(viewLeft, Math.min(rect.left / scale + shiftX, viewRight - 20 - width));
       popup.style.top = `${y}px`;
       popup.style.left = `${x}px`;
     };

@@ -175,15 +175,15 @@ interface DatePickerPopupProps {
  * the Done button under the widget's own contents. Shared so a change to the frame around a picker reaches both.
  *
  * `useDatePicker()` shows it as a manual popover, in the top layer, so neither a modal dialog the form is in nor an
- * ancestor that clips or transforms it, as daisyUI's scrolling modal box does both, covers, clips or offsets it. Its
- * `position`, `z-index` and `max-width` are inline rather than classes: the `top` and `left` `useDatePicker()` writes
- * are viewport coordinates, which place only a fixed popup, the width it writes is the viewport's, and a consumer whose
- * Tailwind build doesn't scan this package gets none of its classes. In a browser without native popovers, one with
- * only a polyfill's included, `useDatePicker()` positions it in the field's flow instead. The `right`, `bottom`,
- * `margin`, `padding` and `color` undo the browser's own popover styles, which pin a popover to all four edges of the
- * viewport, pad it and recolor its text, where no Tailwind preflight resets them. Its `box-sizing`, also left to
- * preflight otherwise, keeps its border inside the width and the height cap that `useDatePicker()` fits to the
- * viewport. It scrolls within that height, so a viewport shorter than the popup still reaches its Done button
+ * ancestor that clips or transforms it, as daisyUI's scrolling modal box does both, covers, clips or offsets it, and
+ * in a browser without native popovers, one with only a polyfill's included, it keeps it in the field's flow instead,
+ * so the hook sets the `position` and stacking each of those needs. Its `max-width` is inline rather than a class: the
+ * width `useDatePicker()` writes is the viewport's, and a consumer whose Tailwind build doesn't scan this package gets
+ * none of its classes. The `right`, `bottom`, `margin`, `padding` and `color` undo the browser's own popover styles,
+ * which pin a popover to all four edges of the viewport, pad it and recolor its text, where no Tailwind preflight
+ * resets them. Its `box-sizing`, also left to preflight otherwise, keeps its border inside the width and the height cap
+ * that `useDatePicker()` fits to the viewport. It scrolls within that height, so a viewport shorter than the popup
+ * still reaches its Done button
  *
  * @param props - The popup's id and name, the ref to attach, the Done handler and its label, and its contents
  */
@@ -197,14 +197,12 @@ export function DatePickerPopup({ id, name, containerRef, translateString, onDon
       aria-label={name}
       className='date-picker-popup w-full bg-base-100 border border-base-300 shadow-lg rounded-box'
       style={{
-        position: 'fixed',
         right: 'auto',
         bottom: 'auto',
         margin: 0,
         padding: 0,
         boxSizing: 'border-box',
         maxWidth: '20rem',
-        zIndex: 99999,
         overflowY: 'auto',
         color: 'inherit',
       }}

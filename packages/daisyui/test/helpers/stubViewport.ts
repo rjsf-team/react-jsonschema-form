@@ -6,16 +6,17 @@ export function rectAt(top: number, left: number, width = 0, height = 0): DOMRec
 /** A length snapped to the 1/64px layout unit Chrome and WebKit lay boxes out in */
 const snap = (length: number) => Math.round(length * 64) / 64;
 
-/** Has every element drawn at its own `top` and `left`, snapped as a browser snaps them, in client rects measured from
- * (`left`, `top`) of the coordinates those are in, where jsdom draws everything at the viewport's corner. A fixed
- * element's client rect is measured from where its own `top` and `left` are, (0, 0), in Chrome and Firefox, and from the
- * visual viewport's corner in WebKit. Installed as a plain method rather than a spy, which `vi.spyOn()` on one element
- * would take over for every element
+/** Has every element drawn at its own `top`, `left` and `width`, scaled by an ancestor's CSS `zoom` and snapped as a
+ * browser snaps them, in client rects measured from (`left`, `top`) of the coordinates those are in, where jsdom draws
+ * everything at the viewport's corner. A fixed element's client rect is measured from where its own `top` and `left`
+ * are, (0, 0), in Chrome and Firefox, and from the visual viewport's corner in WebKit. Installed as a plain method
+ * rather than a spy, which `vi.spyOn()` on one element would take over for every element
  */
-export function measureClientRectsFrom(top: number, left: number) {
+export function measureClientRectsFrom(top: number, left: number, zoom = 1) {
   Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', {
     value(this: HTMLElement) {
-      return rectAt(snap(parseFloat(this.style.top) || 0) - top, snap(parseFloat(this.style.left) || 0) - left);
+      const drawn = (length: string) => snap((parseFloat(length) || 0) * zoom);
+      return rectAt(drawn(this.style.top) - top, drawn(this.style.left) - left, drawn(this.style.width));
     },
     configurable: true,
   });

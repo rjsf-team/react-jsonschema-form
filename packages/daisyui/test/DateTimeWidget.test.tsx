@@ -446,6 +446,32 @@ describe('DateTimeWidget', () => {
       expect({ top: popup().style.top, left: popup().style.left }).toEqual(placed);
     });
 
+    test.each([2, 1.5])('below its trigger, and staying there, under `zoom: %s` on an ancestor', async (zoom) => {
+      // Which draws the popup at that multiple of its own `top`, `left` and size, and measures client rects as drawn
+      measureClientRectsFrom(0, 0, zoom);
+      const trigger = renderAt({ top: 188, left: 100 });
+      sizeElements(320, 200);
+      const placement = () => {
+        const { top, left, maxHeight, width } = popup().style;
+        return { top, left, maxHeight, width };
+      };
+      await user.click(trigger);
+      // A frame on, as jsdom computes the popup no width to tell the zoom by until one is written
+      await new Promise(requestAnimationFrame);
+      const placed = placement();
+
+      // 5px of its own below the trigger's 208px bottom, inside the 1024 by 768 viewport, all in its own pixels
+      expect(parseFloat(placed.top)).toBeCloseTo(208 / zoom + 5);
+      expect(parseFloat(placed.left)).toBeCloseTo(100 / zoom);
+      expect(parseFloat(placed.maxHeight)).toBeCloseTo(768 / zoom);
+      expect(parseFloat(placed.width)).toBeCloseTo(1024 / zoom);
+
+      await new Promise(requestAnimationFrame);
+      await new Promise(requestAnimationFrame);
+
+      expect(placement()).toEqual(placed);
+    });
+
     test.each([
       ['as wide as the viewport', 320, '0px'],
       ['too wide for the gutter', 310, '0px'],

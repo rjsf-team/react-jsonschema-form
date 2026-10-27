@@ -7,7 +7,7 @@ import Form from '../src/index.ts';
 import DateWidget from '../src/widgets/DateWidget/DateWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 import pinTimeZone from './helpers/pinTimeZone.ts';
-import stubViewport from './helpers/stubViewport.ts';
+import stubViewport, { rectAt } from './helpers/stubViewport.ts';
 
 const user = userEvent.setup();
 
@@ -590,34 +590,38 @@ describe('DateWidget', () => {
     });
 
     // A listener on the document sees a press inside a shadow root as one on its host, which is neither in the popup
-    // nor the trigger, so a press on a day would close the popup on the way down and one on the trigger reopen it
-    test('stays open for a press inside it, and is closed by one on the trigger, in a form rendered in a shadow root', async () => {
-      const host = document.body.appendChild(document.createElement('div'));
-      onTestFinished(() => host.remove());
-      const shadowRoot = host.attachShadow({ mode: 'open' });
-      const container = shadowRoot.appendChild(document.createElement('div'));
-      const onChange = vi.fn();
-      render(
-        <Form
-          schema={dateSchema}
-          initialFormData={{ birthday: '2020-05-03' }}
-          validator={validator}
-          onChange={onChange}
-        />,
-        { container },
-      );
-      const trigger = within(container).getByRole('combobox', { name: 'Birthday' });
+    // nor the trigger, so a press on a day would close the popup on the way down and one on the trigger reopen it. In
+    // a closed one, even the `composedPath()` that listener sees starts at the host
+    test.each(['open', 'closed'] as const)(
+      'stays open for a press inside it, and is closed by one on the trigger, in a form rendered in a shadow root in %s mode',
+      async (mode) => {
+        const host = document.body.appendChild(document.createElement('div'));
+        onTestFinished(() => host.remove());
+        const shadowRoot = host.attachShadow({ mode });
+        const container = shadowRoot.appendChild(document.createElement('div'));
+        const onChange = vi.fn();
+        render(
+          <Form
+            schema={dateSchema}
+            initialFormData={{ birthday: '2020-05-03' }}
+            validator={validator}
+            onChange={onChange}
+          />,
+          { container },
+        );
+        const trigger = within(container).getByRole('combobox', { name: 'Birthday' });
 
-      await user.click(trigger);
-      await user.click(within(container).getByRole('button', { name: /May 17th/ }));
-      expect(within(container).getByRole('dialog', { name: 'Birthday' })).toBeInTheDocument();
-      onChange.mockClear();
-      await user.click(trigger);
+        await user.click(trigger);
+        await user.click(within(container).getByRole('button', { name: /May 17th/ }));
+        expect(within(container).getByRole('dialog', { name: 'Birthday' })).toBeInTheDocument();
+        onChange.mockClear();
+        await user.click(trigger);
 
-      expect(within(container).queryByRole('dialog')).not.toBeInTheDocument();
-      expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
-    });
+        expect(within(container).queryByRole('dialog')).not.toBeInTheDocument();
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
+      },
+    );
 
     test('is named by its placeholder where it has no label', () => {
       const { container } = render(
@@ -669,21 +673,6 @@ describe('DateWidget', () => {
   describe('the calendar it places', () => {
     stubViewport();
 
-    /** A trigger 20px high whose bottom edge is `bottom` pixels down the viewport */
-    function triggerRect(bottom: number): DOMRect {
-      return {
-        x: 10,
-        y: bottom - 20,
-        width: 90,
-        height: 20,
-        top: bottom - 20,
-        right: 100,
-        bottom,
-        left: 10,
-        toJSON() {},
-      };
-    }
-
     test('is in place before the day a key opens it onto takes the focus', async () => {
       render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />);
       let topAtDayFocus: string | undefined;
@@ -706,7 +695,9 @@ describe('DateWidget', () => {
       render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />);
       const trigger = screen.getByRole('combobox');
       let bottom = 50;
-      const measure = vi.spyOn(trigger, 'getBoundingClientRect').mockImplementation(() => triggerRect(bottom));
+      const measure = vi
+        .spyOn(trigger, 'getBoundingClientRect')
+        .mockImplementation(() => rectAt(bottom - 20, 10, 90, 20));
       await user.click(trigger);
       // Taken to be hidden, as jsdom's own stylesheet hides a popover that the stubbed `showPopover()` doesn't show
       const popup = screen.getByRole('dialog', { hidden: true });
