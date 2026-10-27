@@ -1,22 +1,26 @@
+import type { MantineSpacing, StyleProp } from '@mantine/core';
 import { Container, Grid } from '@mantine/core';
 import type { GridTemplateProps } from '@rjsf/utils';
-
-const ROW_SIZE_STYLES = ['flex', 'flexBasis', 'flexGrow', 'width'] as const;
 
 /** Renders a `GridTemplate` for mantine, which is expecting the column sizing information coming in via the
  * extra props provided by the caller, which are spread directly on the `Grid`/`Grid.Col`.
  *
  * @param props - The GridTemplateProps, including the extra props containing the Mantine grid positioning details
  */
-export default function GridTemplate(props: GridTemplateProps) {
-  const { children, column, fieldId: _fieldId, fluid = true, gutter, gap = gutter, span, ...rest } = props;
+export default function GridTemplate(
+  props: GridTemplateProps & {
+    /** Whether a row is wrapped in a fluid `Container`, which it is by default */
+    fluid?: boolean;
+    /** The gap between a row's columns, the older name for `gap` */
+    gutter?: StyleProp<MantineSpacing>;
+    /** The gap between a row's columns */
+    gap?: StyleProp<MantineSpacing>;
+  },
+) {
+  const { children, column, fluid = true, gutter, gap = gutter, ...rest } = props;
 
   if (column) {
-    return (
-      <Grid.Col span={span} {...rest}>
-        {children}
-      </Grid.Col>
-    );
+    return <Grid.Col {...rest}>{children}</Grid.Col>;
   }
 
   // Grid with fluid container
@@ -29,19 +33,9 @@ export default function GridTemplate(props: GridTemplateProps) {
       </Container>
     );
   }
-  // Grid without container, grown to fill its line so a row nested in a row takes a line of its own rather than
-  // shrinking to its content; `flex` rather than `width: 100%`, which would overflow the row's own margins, and left off
-  // a row with a flex or width of its own, which the fill would override or mix with, or with a style function, which
-  // can't be read for one
-  const { style, ...gridProps } = rest;
-  // Mantine's `style` arrays nest
-  const styles = [style].flat(Infinity);
-  const fills =
-    gridProps.w === undefined &&
-    gridProps.flex === undefined &&
-    styles.every((entry) => typeof entry !== 'function' && ROW_SIZE_STYLES.every((key) => entry?.[key] === undefined));
+  // Grid without container
   return (
-    <Grid grow gap={gap} style={fills ? [{ flex: '1 1 100%' }, style] : style} {...gridProps}>
+    <Grid grow gap={gap} {...rest}>
       {children}
     </Grid>
   );
