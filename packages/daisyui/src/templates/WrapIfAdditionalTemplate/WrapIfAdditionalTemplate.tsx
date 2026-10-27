@@ -16,9 +16,9 @@ import {
  * the value's control, such as the Clear button, keeps its own width rather than stretching to the column
  */
 const ROW_CLASSES =
-  'grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] ' +
+  'grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] ' +
   'has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full ' +
-  'has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid ' +
+  'has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:items-start ' +
   'has-[>.field-template>label]:[&>.field-template>button]:justify-self-start';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
@@ -81,7 +81,7 @@ export default function WrapIfAdditionalTemplate<
     <div className={`wrap-if-additional-template ${classNames ?? ''}`.trim()} style={style} {...rest}>
       {/* The key's input and the remove button sit on the value's control row, however far its label wraps */}
       <div className={ROW_CLASSES}>
-        <div className='rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)'>
+        <div className='rjsf-additional-property-key row-span-full grid grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]'>
           {hasKeyLabel && (
             <label htmlFor={keyId} className='rjsf-field-label label'>
               <span className='label-text'>{keyLabel}</span>
@@ -117,7 +117,7 @@ export default function WrapIfAdditionalTemplate<
           )}
         </div>
         {children}
-        <div className='flex row-(--rjsf-control-row)'>
+        <div className='flex row-[var(--rjsf-control-row)/-1]'>
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'

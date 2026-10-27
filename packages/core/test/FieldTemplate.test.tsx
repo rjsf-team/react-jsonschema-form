@@ -2,6 +2,7 @@ import { Children } from 'react';
 import type { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { getTemplate } from '@rjsf/utils';
 import { render } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
 
 import { FieldLabel } from '../src/index.ts';
 import { getTestRegistry } from '../src/testing.ts';
@@ -198,41 +199,44 @@ describe('FieldTemplate', () => {
     });
   });
 
-  // jsdom can't measure layout, so these tie `rjsf.css`'s row selectors to core's markup: an element between the row
-  // and the field's parts, or a part out of order, would turn the rows off with no snapshot flagging it
-  describe('the parts rjsf.css counts above the control', () => {
-    const description = ":is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])";
+  // jsdom can't measure layout, but it matches `rjsf.css`'s selectors, so these tie its rows to core's markup: an element
+  // between the row and the field's parts, or a part out of order, would turn the rows off with no snapshot flagging it.
+  // jsdom parses `@layer` but applies none of the rules inside it, so the sheet goes in without it
+  describe('the control row rjsf.css finds', () => {
+    const style = document.createElement('style');
     const oneOf = [
       { const: 'a', title: 'A', description: 'About a' },
       { const: 'b', title: 'B', description: 'About b' },
     ];
 
-    it("puts an array item's label, description and selected option's description first in its field", () => {
+    beforeAll(() => {
+      const css = readFileSync(`${import.meta.dirname}/../src/rjsf.css`, 'utf8');
+      style.textContent = css.replace(/@layer rjsf \{([^]*)\}\s*$/, '$1');
+      document.head.append(style);
+    });
+
+    afterAll(() => {
+      style.remove();
+    });
+
+    it("puts an array item's toolbox past its label, description and selected option's description", () => {
       const { node } = createFormComponent({
         schema: { type: 'array', items: { type: 'string', title: 'Item', description: 'About the item', oneOf } },
         initialFormData: ['a'],
       });
 
-      expect(
-        node
-          .querySelector('.rjsf-array-item')
-          ?.matches(`:has(> .rjsf-field > .rjsf-field-label:first-child + ${description} + ${description})`),
-      ).toBe(true);
+      const item = node.querySelector('.rjsf-array-item')!;
+      expect(getComputedStyle(item).getPropertyValue('--rjsf-control-row')).toBe('4');
     });
 
-    it("puts an additional property's value's label and description first, beside the key's label", () => {
+    it("puts an additional property's key input past the value's label and description", () => {
       const { node } = createFormComponent({
         schema: { type: 'object', additionalProperties: { type: 'string', title: 'Value', description: 'About it' } },
         initialFormData: { foo: 'x' },
       });
 
-      expect(
-        node
-          .querySelector('.rjsf-additional-property')
-          ?.matches(
-            `:has(> .rjsf-additional-property-key > .rjsf-field-label):has(> .rjsf-additional-property-value > .rjsf-field-label:first-child + ${description})`,
-          ),
-      ).toBe(true);
+      const row = node.querySelector('.rjsf-additional-property')!;
+      expect(getComputedStyle(row).getPropertyValue('--rjsf-control-row')).toBe('3');
     });
   });
 });
