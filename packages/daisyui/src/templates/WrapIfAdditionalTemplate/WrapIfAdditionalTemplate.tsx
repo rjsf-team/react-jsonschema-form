@@ -9,6 +9,16 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
+/** The row of the key, the value and the remove button: `--rjsf-control-row` is the value's control row, past the key's
+ * label. The value, the second child, spans every row by its position, so a value of any `FieldTemplate` keeps its
+ * column; it is laid out on the row's rows where it is this theme's `FieldTemplate` `<div>` drawing the value's label,
+ * and otherwise the last row, `1fr`, takes whatever height it needs past the key's label and input
+ */
+const ROW_CLASSES =
+  'grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] ' +
+  'has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full ' +
+  'has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid';
+
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
  *
@@ -41,6 +51,7 @@ export default function WrapIfAdditionalTemplate<
     onRemoveProperty,
     propertyNamesEnum,
     keyNotAllowed,
+    // Kept out of the props this spreads onto the element
     rawDescription,
     registry,
     ...rest
@@ -55,8 +66,6 @@ export default function WrapIfAdditionalTemplate<
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const keyId = additionalKeyId(id);
-  const marginDesc = rawDescription ? 10 : 0;
-  const margin = hasKeyLabel ? 32 + marginDesc : 10;
 
   if (!additional) {
     return (
@@ -68,10 +77,11 @@ export default function WrapIfAdditionalTemplate<
 
   return (
     <div className={`wrap-if-additional-template ${classNames ?? ''}`.trim()} style={style} {...rest}>
-      <div className='flex items-baseline' style={{ justifyContent: 'space-between' }}>
-        <div>
+      {/* The key's input and the remove button sit on the value's control row, however far its label wraps */}
+      <div className={ROW_CLASSES}>
+        <div className='rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)'>
           {hasKeyLabel && (
-            <label htmlFor={keyId} className='label'>
+            <label htmlFor={keyId} className='rjsf-field-label label'>
               <span className='label-text'>{keyLabel}</span>
             </label>
           )}
@@ -105,7 +115,7 @@ export default function WrapIfAdditionalTemplate<
           )}
         </div>
         {children}
-        <div className='flex self-start' style={{ marginTop: `${margin}px` }}>
+        <div className='flex row-(--rjsf-control-row)'>
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'

@@ -26,9 +26,16 @@ const DAISYUI_CLASS_MAP: ClassMap = {
   fieldHelp: 'text-gray-500 text-sm',
   errorListTitle: 'font-bold text-red-600',
   errorListItems: 'list-disc list-inside text-red-600',
-  // Top-aligned, so errors or help under the input don't move the toolbox; past a label core marks, down to the input
+  // Top-aligned, so errors or help under the input don't move the toolbox. This theme's `FieldTemplate` draws only its
+  // label above the control, so with a label the item lays the field's parts out on its rows, one each, through the two
+  // `<div>`s around them, and the toolbox sits on the second, the control's, however far the label wraps. A
+  // `FieldTemplate` of your own has the toolbox pushed down past the label core marks the item `data-display-label` for
   arrayItem:
-    'fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5',
+    'fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px ' +
+    'has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 ' +
+    'has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full ' +
+    'has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 ' +
+    'data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5',
   arrayItemToolbox: 'mt-1 flex justify-end',
   multiSchema: 'p-4 border rounded-sm shadow-sm',
   multiSchemaSelector: 'mb-4',

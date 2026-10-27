@@ -3,6 +3,7 @@ import type { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { getTemplate } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 
+import { FieldLabel } from '../src/index.ts';
 import { getTestRegistry } from '../src/testing.ts';
 import { createFormComponent } from './testUtils.tsx';
 
@@ -158,6 +159,42 @@ describe('FieldTemplate', () => {
       const { container } = renderTemplate(true, { 'ui:widget': 'checkbox' });
       expect(container.querySelector('label')).toBeNull();
       expect(container.querySelector('#root_foo__description')).toHaveTextContent('About foo');
+    });
+  });
+
+  // Exported so a custom `FieldTemplate` draws the label `rjsf.css` lines the array item's buttons and the key's input up
+  // with, as core's `FieldTemplate` does
+  describe('FieldLabel', () => {
+    it("is exported from the package entry and draws the label core's FieldTemplate draws", () => {
+      const { container } = render(
+        <FieldLabel
+          label='Name'
+          required
+          id='root_name'
+          labelId='root_name__label'
+          className='rjsf-field-label'
+          invalid
+        />,
+      );
+
+      const label = container.querySelector('label');
+      expect(label).toHaveClass('rjsf-field-label');
+      expect(label).toHaveAttribute('for', 'root_name');
+      expect(label).toHaveAttribute('data-invalid', 'true');
+      expect(label?.querySelector('#root_name__label')).toHaveTextContent(/^Name$/);
+      expect(label?.querySelector('.rjsf-required')).toHaveTextContent('*');
+    });
+
+    it('draws the bare text with no marker, id or invalid state when none is asked for', () => {
+      const { container } = render(<FieldLabel label='Name' id='root_name' />);
+
+      expect(container.innerHTML).toBe('<label for="root_name">Name</label>');
+    });
+
+    it('draws nothing for an empty label', () => {
+      const { container } = render(<FieldLabel label='' required />);
+
+      expect(container).toBeEmptyDOMElement();
     });
   });
 });
