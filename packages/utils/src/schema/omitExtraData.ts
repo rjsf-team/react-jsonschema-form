@@ -28,7 +28,8 @@ import type {
 } from '../types.ts';
 import fieldShownOption, { rendersOptionsAsSelect } from './fieldShownOption.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
-import { mergeAllOf, schemaFrom, schemaOfBoolean } from './graph/mergePlan.ts';
+import { mergeAllOf } from './graph/mergePlan.ts';
+import { schemaFrom, schemaOfBoolean } from './graph/schemaFrom.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, { conditionHolds, joinOptionExtraKeys, resolveOwnRef } from './retrieveSchema.ts';
 

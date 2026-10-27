@@ -21,7 +21,8 @@ import {
   REQUIRED_KEY,
 } from '@rjsf/utils';
 
-import type { KeyMove, MoveFate } from './formState.ts';
+import type { MoveFate } from './formState.ts';
+import type { KeyMove } from './keyMove.ts';
 
 /** The option selected for a field's option list, and the field's data it holds for, see `useOptionSelection()` */
 export interface OptionSelection {

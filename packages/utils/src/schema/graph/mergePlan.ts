@@ -24,7 +24,8 @@ import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, Stri
 import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { stringKeyword } from './parseSchemaGraph.ts';
-import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
+import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
+import { booleanSchema, schemaFrom } from './schemaFrom.ts';
 import { declaredProperties, dependencyCondition, targetOf } from './validationTargets.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
@@ -199,18 +200,6 @@ const conditionMemo = new KeyedMemo<boolean>();
  */
 const plans = new KeyedMemo<MergePlan<StrictRJSFSchema>>();
 
-/** Returns the keywords of `source` on a schema of the plan's type. A literal or a merge result is not known to be an
- * `S`, so the copy starts as `template`, which is one, with every keyword removed. A `source` that is not an object,
- * which only an `allOf` merge with a `false` member returns, has no keywords to copy.
- */
-export function schemaFrom<S extends StrictRJSFSchema, U>(template: S, source: U): S {
-  const schema = { ...template };
-  for (const key of Reflect.ownKeys(schema)) {
-    Reflect.deleteProperty(schema, key);
-  }
-  return Object.assign(schema, source);
-}
-
 /** Merges an `allOf` schema into a single flat schema, delegating to the context's `customMergeAllOf` when it has one
  * and falling back to @x0k/json-schema-merge's shallow `allOf` merge otherwise, which merges an `allOf` holding a
  * `false` to that `false`. A `customMergeAllOf` may reject subschemas it considers irreconcilable, so this never
@@ -270,16 +259,6 @@ function symbolsOf(schemas: readonly object[]): Map<symbol, unknown> {
   return symbols;
 }
 
-/** Returns the schema the boolean subschema `value` reads as: `true` as `{}`, `false` as `{ not: {} }`
- *
- * @param value - The boolean subschema
- * @param template - A schema of the type to return, whose keywords are not copied
- * @returns - The object schema
- */
-export function schemaOfBoolean<S extends StrictRJSFSchema>(value: boolean, template: S): S {
-  return schemaFrom(template, value ? {} : { not: {} });
-}
-
 const EMPTY_SCHEMA: StrictRJSFSchema = Object.freeze({});
 
 /** The empty schema a field renders a boolean option as, one object for every call, so that the memos keyed on a
@@ -288,11 +267,6 @@ const EMPTY_SCHEMA: StrictRJSFSchema = Object.freeze({});
 export function emptySchema<S extends StrictRJSFSchema>(): S;
 export function emptySchema(): StrictRJSFSchema {
   return EMPTY_SCHEMA;
-}
-
-/** The schema a boolean node reads as, as `schemaOfBoolean()` reads its value; any other node reads as `{}` */
-export function booleanSchema<S extends StrictRJSFSchema>(node: SchemaNode<S>, template: S): S {
-  return schemaOfBoolean(node.kind !== 'boolean' || node.value, template);
 }
 
 /** Returns `chain` with `step` put before the scope of each of its providers, see `Scope`, but for those of a chosen

@@ -21,7 +21,8 @@ import {
   toConstant,
 } from '@rjsf/utils';
 
-import type { FieldEdit, KeyMove } from './formState.ts';
+import type { FieldEdit } from './formState.ts';
+import type { KeyMove } from './keyMove.ts';
 import type { UiStateReader } from './uiState.ts';
 import { asFieldValue, isPathPrefix, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 

@@ -20,12 +20,8 @@ import mergeSchemas from './mergeSchemas.ts';
 import rendersOwnFieldBesideOption, { takesParentExtraKeys } from './rendersOwnFieldBesideOption.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { withoutKeys } from './schema/graph/mergePlan.ts';
-import {
-  CONTAINER_KEYWORDS,
-  EXTRA_KEY_KEYWORDS,
-  IDENTIFIER_KEYWORDS,
-  joinOptionExtraKeys,
-} from './schema/retrieveSchema.ts';
+import { joinOptionExtraKeys } from './schema/retrieveSchema.ts';
+import { CONTAINER_KEYWORDS, EXTRA_KEY_KEYWORDS, IDENTIFIER_KEYWORDS } from './schema/schemaKeywords.ts';
 import { DECLARED_ABOVE_KEY } from './schemaMarkers.ts';
 import { isSubschemaKeyword, keywordShape } from './schemaUri.ts';
 import type { GenericObjectType, RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from './types.ts';

@@ -3,6 +3,7 @@ import guessType from '../guessType.ts';
 import { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+import nodeOfSchema from './graph/nodeOfSchema.ts';
 import type { AdoptedSchema, SchemaNode } from './graph/parseSchemaGraph.ts';
 import {
   declaredProperties,
@@ -10,7 +11,7 @@ import {
   holdsDeclaredKey,
   scoringTarget,
 } from './graph/validationTargets.ts';
-import { CONSTRAINING_KEYWORDS, nodeOfSchema } from './retrieveSchema.ts';
+import { CONSTRAINING_KEYWORDS } from './schemaKeywords.ts';
 
 /** An option as matching reads it: the node it stands for, or a boolean option given as one */
 export type OptionNode<S extends StrictRJSFSchema = RJSFSchema> = AdoptedSchema<S> | boolean;

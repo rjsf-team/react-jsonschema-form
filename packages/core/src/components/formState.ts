@@ -51,6 +51,7 @@ import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import { schemaFieldDrawsControlsBesideOptions } from './fields/SchemaField.tsx';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
+import type { KeyMove } from './keyMove.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
 import type { UiStateReader } from './uiState.ts';
@@ -704,9 +705,6 @@ export type MoveOutcome =
   | { kind: 'taken'; kept: unknown }
   | { kind: 'rewritten'; kept: unknown; edited: unknown };
 
-/** Where a change put what an array or object held under `key`: the new key, or `undefined` when it is gone */
-export type KeyMove = (key: string) => string | undefined;
-
 /** A change being made to the data: its path, and where it moved the keys of the array or object there, if it moved
  * any
  */
@@ -736,13 +734,6 @@ export interface AnnouncedMove {
    * option's widget would be shown by one that never made it
    */
   dropsOwnErrors?: boolean;
-}
-
-/** The `KeyMove` of an array whose items went where `newIndexOf` says, `undefined` for one that was removed. A key that
- * names no item stays where it is
- */
-export function moveOfItems(newIndexOf: (index: number) => number | undefined): KeyMove {
-  return (key) => (/^(0|[1-9]\d*)$/.test(key) ? newIndexOf(Number(key))?.toString() : key);
 }
 
 /** The part of the state that rendering derives from the props and the data alone: the schema utilities, the root and
