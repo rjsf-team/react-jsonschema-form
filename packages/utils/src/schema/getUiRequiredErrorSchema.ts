@@ -174,7 +174,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const effectiveRequired = fieldUiRequired ?? required;
   // An Optional Data Control hides what it holds until the user opts in, so a `ui:required` field beneath it isn't
   // visible for the user to fill in or correct either. ObjectField and ArrayField render the control, and hide their
-  // fields whenever `!isFormDataAvailable(formData)`, which is also true for `null` and `{}`. MultiSchemaField renders
+  // fields whenever `!isFormDataAvailable(formData)`, which is also true for `null`. MultiSchemaField renders
   // no control of its own: it renders the selected option as a field of its own, with the option's uiSchema, so that
   // field is gated.
   const xxxOf = getXxxOfOptions<S>(resolvedSchema);

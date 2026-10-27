@@ -1500,7 +1500,7 @@ A `pattern` that the value fails is reported by the browser as a bare "Please ma
 
 - string | undefined: The `title` string, or undefined when the input has no `pattern` to explain
 
-### getOptionalDataControlsType&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### getOptionalDataControlsType&lt;S extends StrictRJSFSchema = RJSFSchema>() {#getoptionaldatacontrolstype}
 
 Returns the type of the field that the Optional Data Controls UI is rendered for. An `anyOf`/`oneOf` schema's type is read from its options as they render, from its `anyOf` when it carries both keywords, as `getXxxOfKey()` decides: an option written as a `$ref` is resolved against `rootSchema`, and an option naming or implying no type of its own takes the schema's, as `getRenderedOptionSchema()` passes it on. The type is the one the options agree on, the unique list of them when they name several, a `null` option counted among them so that such a list keeps the selector the `null` branch is reached through, and `undefined` when they name none. Otherwise, including for an empty `anyOf: []`/`oneOf: []`, it is the schema's own type.
 `shouldRenderOptionalField()` decides whether to render the controls from this type, `getUiRequiredErrorSchema()` reads it to tell which fields are hidden behind the controls, and `OptionalDataControlsField` uses it to pick the empty value it adds, so they always agree.
@@ -2248,9 +2248,9 @@ This is the case when `schema.items` is a non-empty array that only contains obj
 
 - boolean: True if there are fixed items in the schema, false otherwise
 
-### isFormDataAvailable&lt;T = unknown>()
+### isFormDataAvailable&lt;T = unknown>() {#isformdataavailable}
 
-Determines whether the given `formData` represents valid form data, such as a primitive type, an array, or a non-empty object.
+Determines whether the given `formData` holds a value, which is anything but `undefined` or `null`. An empty object or array is a value: it is what an Optional Data Control's Add stores, so it reads as opted in.
 
 #### Parameters
 
@@ -2258,7 +2258,7 @@ Determines whether the given `formData` represents valid form data, such as a pr
 
 #### Returns
 
-- boolean: True if `formData` is not undefined, null, a primitive type or an array or an empty object
+- boolean: True if `formData` is neither `undefined` nor `null`
 
 ### isLabelledByTemplate()
 
@@ -2301,6 +2301,22 @@ In this case, `thing` is an object if it has the type `object` but is NOT null, 
 #### Returns
 
 - boolean: True if it is a non-null, non-array, non-File object
+
+### isOptionalDataControlsType&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#isoptionaldatacontrolstype}
+
+Determines whether the type of the field for `schema`, as [`getOptionalDataControlsType()`](#getoptionaldatacontrolstype) reads it, is one that `enableOptionalDataFieldForType` turns the Optional Data Controls UI on for. A field whose `anyOf`/`oneOf` options name several types is never one of them.
+Unlike `shouldRenderOptionalField()`, it takes no `registry` and leaves out whether the field is required or the root, so code that only has the schema and uiSchema can ask whether a field would be rendered with the controls.
+
+#### Parameters
+
+- schema: S | (() => S) - The schema for the field, or a function building it, called only once the uiSchema turns the Optional Data Controls UI on for some type
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema for the field, if any
+- globalUiOptions: GlobalUISchemaOptions | undefined - The global UI options, if any
+- rootSchema: S - The root schema an option written as a `$ref` names its definition in
+
+#### Returns
+
+- boolean: True if the Optional Data Controls UI is enabled for the type of the field, otherwise false
 
 ### isPlainObject()
 

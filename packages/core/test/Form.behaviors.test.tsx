@@ -2371,7 +2371,7 @@ describe('optionalDataControls', () => {
     expect(removeObjectControlNode).toEqual(null);
     expect(testInput).toEqual(null);
   });
-  it('gives the controls of an object that is itself a oneOf a distinct id from those of the selected option', () => {
+  it('gives an object that is itself a oneOf one set of controls, in its own heading beside the options', () => {
     const oneOfObjectSchema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -2389,8 +2389,8 @@ describe('optionalDataControls', () => {
     const ids = [...node.querySelectorAll('[id]')].map((element) => element.id);
 
     expect(new Set(ids).size).toEqual(ids.length);
-    expect(ids).toContain(objectControlAddId);
     expect(ids).toContain(optionalControlsId(besideOptionsId(objectId), 'Add'));
+    expect(ids).not.toContain(objectControlAddId);
   });
   it('renders the controls for an object and an array with an empty option list, and adds and removes the value', async () => {
     const emptyOptionsSchema: RJSFSchema = {
@@ -2437,7 +2437,6 @@ describe('optionalDataControls', () => {
     const { node, onSubmit, onError } = createFormComponent({
       schema: thingSchema,
       uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
-      initialFormData: { thing: {} },
     });
 
     expect(node.querySelector('#root_thing_a')).toEqual(null);
@@ -2456,11 +2455,10 @@ describe('optionalDataControls', () => {
     const { node, onSubmit, onError } = createFormComponent({
       schema: thingSchema,
       uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
-      initialFormData: { thing: {} },
       noHtml5Validate: true,
     });
 
-    expect(node.querySelector(`#${optionalControlsId('root_thing', 'Add')}`)).not.toEqual(null);
+    expect(node.querySelector(`#${optionalControlsId(besideOptionsId('root_thing'), 'Add')}`)).not.toEqual(null);
     expect(node.querySelector('#root_thing_a')).toEqual(null);
     await submitForm(node, user);
 
@@ -2501,13 +2499,53 @@ describe('optionalDataControls', () => {
       },
     };
     const { node } = createFormComponent({ schema: atLeastOneOf, uiSchema: objectOnUiSchema });
-    expect(node.querySelector(`#${optionalControlsId('root_n', 'Add')}`)).not.toEqual(null);
+    expect(node.querySelector(`#${optionalControlsId(besideOptionsId('root_n'), 'Add')}`)).not.toEqual(null);
+    expect(node.querySelector(`#${optionalControlsId('root_n', 'Add')}`)).toEqual(null);
     expect(node.querySelector('#root_n_a')).toEqual(null);
 
-    // The object's own Add rather than the option's: the option's stores `{}`, which the object reads as still empty (#5427)
     await user.click(elementOf(node, `#${optionalControlsId(besideOptionsId('root_n'), 'Add')}`));
 
     expect(node.querySelector('#root_n_a')).not.toEqual(null);
+    expect(node.querySelector('#root_n_b')).not.toEqual(null);
+    expect(node.querySelector('#root_n__oneof_select')).not.toEqual(null);
+    expect(node.querySelectorAll('.rjsf-remove-optional-data')).toHaveLength(1);
+  });
+
+  it('keeps the Add of an object beside oneOf options whose own uiSchemas turn the controls off', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        n: {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          oneOf: [{ properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+        },
+      },
+    };
+    const off = { 'ui:enableOptionalDataFieldForType': [] };
+    const { node } = createFormComponent({ schema, uiSchema: { ...objectOnUiSchema, n: { oneOf: [off, off] } } });
+
+    await user.click(elementOf(node, `#${optionalControlsId(besideOptionsId('root_n'), 'Add')}`));
+
+    expect(node.querySelector('#root_n_a')).not.toEqual(null);
+  });
+
+  it('opts an object whose default is {} in on Add and out on Remove (#5427)', async () => {
+    const metaSchema: RJSFSchema = {
+      type: 'object',
+      properties: { meta: { type: 'object', additionalProperties: { type: 'string' } } },
+    };
+    const { node, onChange } = createFormComponent({ schema: metaSchema, uiSchema: objectOnUiSchema });
+
+    await user.click(elementOf(node, `#${optionalControlsId('root_meta', 'Add')}`));
+
+    expect(onChange.mock.lastCall?.[0]).toMatchObject({ formData: { meta: {} }, dirtyFields: { meta: true } });
+    expect(node.querySelector(`#${optionalControlsId('root_meta', 'Add')}`)).toEqual(null);
+
+    await user.click(elementOf(node, `#${optionalControlsId('root_meta', 'Remove')}`));
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+    expect(node.querySelector(`#${optionalControlsId('root_meta', 'Add')}`)).not.toEqual(null);
   });
 });
 

@@ -70,7 +70,11 @@ export function getOptionalDataControlsType<S extends StrictRJSFSchema = RJSFSch
  * @param rootSchema - The root schema, see `getOptionalDataControlsType()`
  * @returns - True if the Optional Data Controls UI is enabled for the type of the field, otherwise false
  */
-export function isOptionalDataControlsType<T, S extends StrictRJSFSchema, F extends FormContextType>(
+export function isOptionalDataControlsType<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   schema: S | (() => S),
   uiSchema: UiSchema<T, S, F> | undefined,
   globalUiOptions: GlobalUISchemaOptions | undefined,

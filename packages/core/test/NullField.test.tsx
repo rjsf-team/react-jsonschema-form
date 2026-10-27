@@ -266,9 +266,58 @@ describe('NullField', () => {
 
       await user.selectOptions(elementOf(node, '#root_choice__oneof_select'), 'B');
 
-      // The switch carries the new option's object over empty, which the controls show as holding nothing
-      expect(getFormData()).toEqual({ choice: { opt: {} } });
+      // The switch leaves the new option's optional object out, as the form's defaults do when it mounts on it
+      expect(getFormData()).toEqual({ choice: {} });
       expect(node.querySelector('#root_choice_opt__optionalAdd')).toBeInTheDocument();
+    });
+
+    it('is left out of the data an option switch writes where a ui:definitions entry turns its controls on', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: {
+          type: 'object',
+          required: ['choice'],
+          $defs: { Opt: { type: 'object', properties: { n: { type: 'null' } } } },
+          properties: {
+            choice: {
+              oneOf: [
+                { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+                { title: 'B', type: 'object', properties: { opt: { $ref: '#/$defs/Opt' } } },
+              ],
+            },
+          },
+        },
+        uiSchema: { 'ui:definitions': { '#/$defs/Opt': { 'ui:enableOptionalDataFieldForType': ['object'] } } },
+        initialFormData: { choice: { a: 'x' } },
+      });
+
+      await user.selectOptions(elementOf(node, '#root_choice__oneof_select'), 'B');
+
+      expect(getFormData()).toEqual({ choice: {} });
+      expect(node.querySelector('#root_choice_opt__optionalAdd')).toBeInTheDocument();
+    });
+
+    it('stays in the data an option switch writes where the old option held it added', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: {
+          type: 'object',
+          required: ['choice'],
+          properties: {
+            choice: {
+              oneOf: [
+                { ...holder, title: 'A', properties: { ...holder.properties, a: { type: 'string' } } },
+                { ...holder, title: 'B' },
+              ],
+            },
+          },
+        },
+        uiSchema,
+        initialFormData: { choice: { a: 'x', opt: {} } },
+      });
+
+      await user.selectOptions(elementOf(node, '#root_choice__oneof_select'), 'B');
+
+      expect(getFormData()).toEqual({ choice: { opt: { n: null } } });
+      expect(node.querySelector('#root_choice_opt__optionalRemove')).toBeInTheDocument();
     });
   });
 

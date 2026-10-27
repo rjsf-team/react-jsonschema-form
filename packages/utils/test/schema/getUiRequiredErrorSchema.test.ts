@@ -943,7 +943,7 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(errors[0].property).toBe('.thing.aField');
     });
 
-    it.each([{}, null])(
+    it.each([undefined, null])(
       'does not fire for a field inside a plain object Optional Data Control whose own value is %j, matching ObjectField hiding its real fields in that case too',
       (thingValue) => {
         const schema: RJSFSchema = {
@@ -967,19 +967,19 @@ describe('getUiRequiredErrorSchema()', () => {
 
     const objectOption: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
     const aRequired: UiSchema = { thing: { a: { 'ui:required': true } } };
-    const errorsAtEmptyObject = (thing: RJSFSchema) =>
+    const errorsAt = (thing: RJSFSchema, thingValue: unknown) =>
       toErrorList(
         getUiRequiredErrorSchema(
           { validator: testValidator },
           { type: 'object', properties: { thing } },
           aRequired,
-          { thing: {} },
+          { thing: thingValue },
           undefined,
           globalUiOptions,
         ),
       );
 
-    it.each<[string, RJSFSchema]>([
+    describe.each<[string, RJSFSchema]>([
       ['an object beside an empty anyOf', { ...objectOption, anyOf: [] }],
       ['an object beside an empty oneOf', { ...objectOption, oneOf: [] }],
       ['the object option selected in an anyOf', { anyOf: [objectOption] }],
@@ -993,12 +993,19 @@ describe('getUiRequiredErrorSchema()', () => {
         { ...objectOption, anyOf: [{ minProperties: 0 }, { maxProperties: 5 }] },
       ],
       ['the object option selected in an allOf that resolves to an anyOf', { allOf: [{ anyOf: [objectOption] }] }],
+      // The test validator holds every `if`, so the `anyOf` sits in the `then`
       [
         'the object option selected in an if/then/else that resolves to an anyOf',
-        { if: { required: ['zzz'] }, then: {}, else: { anyOf: [objectOption] } },
+        { if: { required: ['zzz'] }, then: { anyOf: [objectOption] }, else: {} },
       ],
-    ])('does not fire at {} for a field of %s, since the field is hidden behind its Add button', (_, thing) => {
-      expect(errorsAtEmptyObject(thing)).toEqual([]);
+    ])('for a field of %s', (_, thing) => {
+      it('does not fire while the object holds no value, since the field is hidden behind its Add button', () => {
+        expect(errorsAt(thing, undefined)).toEqual([]);
+      });
+
+      it('fires at the {} its Add button stores, since the field then renders', () => {
+        expect(errorsAt(thing, {}).map(({ property }) => property)).toEqual(['.thing.a']);
+      });
     });
 
     it("still fires for a field of the selected option whose value is {} when the option's own uiSchema does not enable the controls, since the option then renders its fields", () => {

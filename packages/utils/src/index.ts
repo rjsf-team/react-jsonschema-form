@@ -187,7 +187,10 @@ import { keywordShape, normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
 import setOwn from './setOwn.ts';
-import shouldRenderOptionalField, { getOptionalDataControlsType } from './shouldRenderOptionalField.ts';
+import shouldRenderOptionalField, {
+  getOptionalDataControlsType,
+  isOptionalDataControlsType,
+} from './shouldRenderOptionalField.ts';
 import templateDrawsDescription from './templateDrawsDescription.ts';
 import templateDrawsLabel from './templateDrawsLabel.ts';
 import templateDrawsPlannedLabel from './templateDrawsPlannedLabel.ts';
@@ -381,6 +384,7 @@ export {
   isLabelledByTemplate,
   isNamedByTemplateLabel,
   isObject,
+  isOptionalDataControlsType,
   isPlainObject,
   isSchemaObject,
   isWholeValueSelect,

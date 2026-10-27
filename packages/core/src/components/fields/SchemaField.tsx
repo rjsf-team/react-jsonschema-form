@@ -78,6 +78,7 @@ import { lookUpUiField, resolveNamedField, withoutNamedField } from './namedFiel
 import type { NamedFieldResolution } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 import type { NamedFieldPath } from './NamedFieldContext.ts';
+import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
@@ -1004,6 +1005,13 @@ function SchemaFieldRender<
     fieldSchema,
   } = useSchemaFieldPlan<T, S, F>(props);
   const hasOptions = xxxOfOptions !== undefined;
+  // An object rendered beside the options draws its Optional Data Controls in its heading, so the option's field doesn't
+  const controlsBesideAbove = use(OptionalControlsBesideContext);
+  const controlsDrawnBeside =
+    hasOptions &&
+    !plannedAsOptions &&
+    renderedComponent === fields.ObjectField &&
+    shouldRenderOptionalField<T, S, F>(registry, fieldSchema, effectiveRequired, fieldUiSchema, fieldPath);
   // Read off the schema rather than the value, so an array or object holding nothing yet is still one
   const fieldType = getSchemaType<S>(fieldSchema);
   const holdsContainer = fieldType === 'array' || fieldType === 'object';
@@ -1293,27 +1301,29 @@ function SchemaFieldRender<
             {XxxOfField && (
               <NamedFieldContext value={ownNamedFieldPath}>
                 <ShownOptionContext value={shownOption}>
-                  <PresentationContext value={optionsBelow}>
-                    <XxxOfField
-                      name={name}
-                      disabled={disabled}
-                      readonly={readonly}
-                      hideError={hideError}
-                      errorSchema={optionsErrorSchema}
-                      formData={formData}
-                      fieldPath={fieldPath}
-                      id={fieldId}
-                      onBlur={handleSelectorBlur}
-                      onChange={handleOptionFieldChange}
-                      onFocus={props.onFocus}
-                      options={xxxOfOptions}
-                      registry={registry}
-                      required={effectiveRequired}
-                      schema={schema}
-                      uiSchema={uiSchema}
-                      presentation={optionsPresentation}
-                    />
-                  </PresentationContext>
+                  <OptionalControlsBesideContext value={controlsDrawnBeside ? fieldPath : controlsBesideAbove}>
+                    <PresentationContext value={optionsBelow}>
+                      <XxxOfField
+                        name={name}
+                        disabled={disabled}
+                        readonly={readonly}
+                        hideError={hideError}
+                        errorSchema={optionsErrorSchema}
+                        formData={formData}
+                        fieldPath={fieldPath}
+                        id={fieldId}
+                        onBlur={handleSelectorBlur}
+                        onChange={handleOptionFieldChange}
+                        onFocus={props.onFocus}
+                        options={xxxOfOptions}
+                        registry={registry}
+                        required={effectiveRequired}
+                        schema={schema}
+                        uiSchema={uiSchema}
+                        presentation={optionsPresentation}
+                      />
+                    </PresentationContext>
+                  </OptionalControlsBesideContext>
                 </ShownOptionContext>
               </NamedFieldContext>
             )}

@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, use, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   EnumOptionsType,
   ErrorSchema,
@@ -66,6 +66,7 @@ import {
   storedValue,
   withGlobalUiOptions,
 } from './fieldWidgetUtils.ts';
+import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import { createIsSchemaFieldHidden } from './SchemaField.tsx';
 import { useShownOptionBeside } from './ShownOptionContext.ts';
 
@@ -541,6 +542,7 @@ export default function ObjectField<
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
   const renderOptionalField = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema, fieldPath);
+  const controlsDrawnBeside = use(OptionalControlsBesideContext) === fieldPath;
   const hasFormData = isFormDataAvailable<T>(formData);
   // Kept in a closure rather than a ref, since `react/refs` rejects reading or writing a ref during render
   const propertyHiddenChecks = useMemo(() => createPropertyHiddenChecks<T, S, F>(), []);
@@ -939,9 +941,8 @@ export default function ObjectField<
 
   const hiddenChecks = propertyHiddenChecks(orderedProperties);
   const { ObjectFieldTemplate: Template } = getTemplates<T, S, F>(registry, uiOptions);
-  const optionalDataControl = renderOptionalField ? (
-    <OptionalDataControlsField {...props} schema={schema} />
-  ) : undefined;
+  const optionalDataControl =
+    renderOptionalField && !controlsDrawnBeside ? <OptionalDataControlsField {...props} schema={schema} /> : undefined;
 
   // The plan says whether the heading and description are the object's to draw, so an option repeating its field's
   // title draws no second heading

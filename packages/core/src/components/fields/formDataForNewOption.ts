@@ -12,11 +12,15 @@ import {
   CONST_KEY,
   DEFAULT_KEY,
   deepEquals,
+  getByPath,
   getPropertySchema,
   getRenderedOptionSchema,
   getXxxOfKey,
+  isFormDataAvailable,
+  isOptionalDataControlsType,
   isPlainObject,
   mergeSchemas,
+  resolveUiSchema,
 } from '@rjsf/utils';
 
 import { asFieldValue } from '../uiState.ts';
@@ -131,6 +135,64 @@ function withoutDiscardedKeys<D extends GenericObjectType, S extends StrictRJSFS
   // Copy rather than delete from what `sanitizeDataForNewSchema()` returned, as below
   const kept = { ...data };
   discardedKeys.forEach((key) => delete kept[key]);
+  return kept;
+}
+
+/** Returns `data` without each key `sanitizeDataForNewSchema()` filled with an empty object, where the old data held
+ * nothing, for an optional object the Optional Data Controls render. The form's own defaults leave such an object out,
+ * so after a switch it shows its Add button, as it does when the form mounts on the option.
+ * shortcut: only the option's own keys are checked, so an optional object nested deeper still opens; walk the data if
+ * that comes up.
+ *
+ * @param schemaUtils - The `SchemaUtilsType` implementation to resolve each property's schema with
+ * @param data - The data `sanitizeDataForNewSchema()` returned
+ * @param formData - The form data associated with the old option
+ * @param newOption - The option switched to, with the `required` of the schema holding the options
+ * @param [uiSchema] - The new option's own uiSchema
+ * @param [uiSchemaDefinitions] - The registry's `ui:definitions`, which a property's uiSchema may come from
+ * @param [globalUiOptions] - The form's global UI options
+ * @returns - `data`, or a copy of it without those keys
+ */
+function withoutAddedOptionalObjects<
+  D extends GenericObjectType,
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  data: D,
+  formData: unknown,
+  newOption: S,
+  uiSchema?: UiSchema<T, S, F>,
+  uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
+  globalUiOptions?: GlobalUISchemaOptions,
+): D {
+  const rootSchema = schemaUtils.getRootSchema();
+  const addedKeys = Object.keys(data).filter((key) => {
+    const value: unknown = data[key];
+    if (!isPlainObject(value) || Object.keys(value).length > 0 || newOption.required?.includes(key)) {
+      return false;
+    }
+    const oldValue: unknown = getByPath(formData, key);
+    if (isFormDataAvailable(oldValue)) {
+      return false;
+    }
+    const rawPropertySchema = getPropertySchema<S>(newOption, key);
+    const propertyUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, key);
+    return isOptionalDataControlsType<T, S, F>(
+      () => schemaUtils.retrieveSchema(rawPropertySchema),
+      uiSchemaDefinitions
+        ? resolveUiSchema<T, S, F>(rawPropertySchema, propertyUiSchema, { rootSchema, uiSchemaDefinitions })
+        : propertyUiSchema,
+      globalUiOptions,
+      rootSchema,
+    );
+  });
+  if (addedKeys.length === 0) {
+    return data;
+  }
+  const kept = { ...data };
+  addedKeys.forEach((key) => delete kept[key]);
   return kept;
 }
 
@@ -252,6 +314,17 @@ export default function formDataForNewOption<
   }
   const newOptionForDefaults = withParentRequired<S>(parentSchema, newOption);
   if (newOptionForDefaults) {
+    if (isPlainObject(newFormData)) {
+      newFormData = withoutAddedOptionalObjects<GenericObjectType & T, T, S, F>(
+        schemaUtils,
+        newFormData,
+        formData,
+        newOptionForDefaults,
+        uiSchemas.newOptionUiSchema,
+        uiSchemaDefinitions,
+        globalUiOptions,
+      );
+    }
     const oldOptionForDefaults = withParentRequired<S>(parentSchema, oldOption);
     let oldDefaults: unknown;
     let oldDefaultsComputed = false;
