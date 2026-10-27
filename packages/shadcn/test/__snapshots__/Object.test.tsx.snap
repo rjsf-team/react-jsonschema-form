@@ -234,36 +234,32 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_customField__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_customField__key"
-                >
-                  customField Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_customField__key"
-                    name="root_customField__key"
-                    type="text"
-                    value="customField"
-                  />
-                </div>
+                customField Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_customField__key"
+                  name="root_customField__key"
+                  type="text"
+                  value="customField"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -290,7 +286,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -546,7 +542,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&>.rjsf-array-item-toolbox]:col-start-2 [&>.rjsf-array-item-toolbox]:row-[var(--rjsf-control-row)/-1] [--rjsf-control-row:1] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-field>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:gap-y-0 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:items-start has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field>:not(:last-child)]:mb-2 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-array-item-toolbox]:pt-0.5 data-display-label:not-has-[>.rjsf-field>.rjsf-field-label:first-child]:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:not-has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-array-item-toolbox]:mt-13"
                 data-display-label="true"
               >
                 <div
@@ -676,7 +672,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&>.rjsf-array-item-toolbox]:col-start-2 [&>.rjsf-array-item-toolbox]:row-[var(--rjsf-control-row)/-1] [--rjsf-control-row:1] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-field>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:gap-y-0 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:items-start has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field>:not(:last-child)]:mb-2 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-array-item-toolbox]:pt-0.5 data-display-label:not-has-[>.rjsf-field>.rjsf-field-label:first-child]:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:not-has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-array-item-toolbox]:mt-13"
                 data-display-label="true"
               >
                 <div
@@ -1230,7 +1226,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
               class="rjsf-array-item-list mb-2"
             >
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&>.rjsf-array-item-toolbox]:col-start-2 [&>.rjsf-array-item-toolbox]:row-[var(--rjsf-control-row)/-1] [--rjsf-control-row:1] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-field>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:gap-y-0 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:items-start has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field>:not(:last-child)]:mb-2 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-array-item-toolbox]:pt-0.5 data-display-label:not-has-[>.rjsf-field>.rjsf-field-label:first-child]:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:not-has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-array-item-toolbox]:mt-13"
                 data-display-label="true"
               >
                 <div
@@ -1360,7 +1356,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 </div>
               </div>
               <div
-                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13"
+                class="rjsf-array-item mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 [&>.rjsf-array-item-toolbox]:col-start-2 [&>.rjsf-array-item-toolbox]:row-[var(--rjsf-control-row)/-1] [--rjsf-control-row:1] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-field>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:gap-y-0 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field]:items-start has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-field>:not(:last-child)]:mb-2 has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-array-item-toolbox]:pt-0.5 data-display-label:not-has-[>.rjsf-field>.rjsf-field-label:first-child]:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:not-has-[>.rjsf-field>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>.rjsf-array-item-toolbox]:mt-13"
                 data-display-label="true"
               >
                 <div
@@ -1667,36 +1663,32 @@ exports[`object fields > additionalProperties 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_foo__key"
-                    name="root_foo__key"
-                    type="text"
-                    value="foo"
-                  />
-                </div>
+                foo Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_foo__key"
+                  name="root_foo__key"
+                  type="text"
+                  value="foo"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -1723,7 +1715,7 @@ exports[`object fields > additionalProperties 1`] = `
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -1835,89 +1827,74 @@ exports[`object fields > additionalProperties with a description, propertyNames 
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo Key
-                </label>
+                foo Key
+              </label>
+              <div
+                class="p-0.5"
+              >
                 <div
-                  aria-hidden="true"
-                  class="invisible"
+                  aria-disabled="false"
+                  class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
+                  cmdk-root=""
+                  data-slot="command"
+                  tabindex="-1"
                 >
-                  <div
-                    class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive"
-                    id="root_foo__key__description"
+                  <label
+                    cmdk-label=""
+                    for="radix-_r_8_"
+                    id="radix-_r_7_"
+                    style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
+                  />
+                  <button
+                    aria-controls="_r_5_"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    id="root_foo__key"
+                    role="combobox"
+                    type="button"
                   >
-                    A description
-                  </div>
-                </div>
-                <div
-                  class="p-0.5"
-                >
-                  <div
-                    aria-disabled="false"
-                    class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
-                    cmdk-root=""
-                    data-slot="command"
-                    tabindex="-1"
-                  >
-                    <label
-                      cmdk-label=""
-                      for="radix-_r_8_"
-                      id="radix-_r_7_"
-                      style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-                    />
-                    <button
-                      aria-controls="_r_5_"
-                      aria-expanded="false"
-                      aria-haspopup="listbox"
-                      class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                      id="root_foo__key"
-                      role="combobox"
-                      type="button"
+                    <span
+                      class="flex-1 line-clamp-1"
                     >
-                      <span
-                        class="flex-1 line-clamp-1"
-                      >
-                        foo
-                      </span>
-                      <svg
-                        aria-hidden="true"
-                        class="lucide lucide-chevron-down h-4 w-4 opacity-50"
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="m6 9 6 6 6-6"
-                        />
-                      </svg>
-                    </button>
-                    <div
-                      class="relative"
-                      id="_r_5_"
-                    />
-                  </div>
+                      foo
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    class="relative"
+                    id="_r_5_"
+                  />
                 </div>
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -1951,7 +1928,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -2063,36 +2040,32 @@ exports[`object fields > additionalProperties, array type 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_foo__key"
-                    name="root_foo__key"
-                    type="text"
-                    value="foo"
-                  />
-                </div>
+                foo Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_foo__key"
+                  name="root_foo__key"
+                  type="text"
+                  value="foo"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <fieldset
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
@@ -2156,7 +2129,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
               </fieldset>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -2268,47 +2241,32 @@ exports[`object fields > additionalProperties, description 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo Key
-                </label>
-                <div
-                  aria-hidden="true"
-                  class="invisible"
-                >
-                  <div
-                    class="rjsf-field-description text-sm text-muted-foreground data-invalid:text-destructive"
-                    id="root_foo__key__description"
-                  >
-                    item description
-                  </div>
-                </div>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_foo__key"
-                    name="root_foo__key"
-                    type="text"
-                    value="foo"
-                  />
-                </div>
+                foo Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_foo__key"
+                  name="root_foo__key"
+                  type="text"
+                  value="foo"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -2342,7 +2300,7 @@ exports[`object fields > additionalProperties, description 1`] = `
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -2454,36 +2412,32 @@ exports[`object fields > additionalProperties, label off 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_foo__key"
-                    name="root_foo__key"
-                    type="text"
-                    value="foo"
-                  />
-                </div>
+                foo Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_foo__key"
+                  name="root_foo__key"
+                  type="text"
+                  value="foo"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -2510,7 +2464,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -2622,36 +2576,32 @@ exports[`object fields > additionalProperties, object type 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_foo__key"
-                    name="root_foo__key"
-                    type="text"
-                    value="foo"
-                  />
-                </div>
+                foo Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_foo__key"
+                  name="root_foo__key"
+                  type="text"
+                  value="foo"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <fieldset
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
@@ -2706,7 +2656,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
               </fieldset>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -2818,78 +2768,74 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo Key
-                </label>
+                foo Key
+              </label>
+              <div
+                class="p-0.5"
+              >
                 <div
-                  class="p-0.5"
+                  aria-disabled="false"
+                  class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
+                  cmdk-root=""
+                  data-slot="command"
+                  tabindex="-1"
                 >
-                  <div
-                    aria-disabled="false"
-                    class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
-                    cmdk-root=""
-                    data-slot="command"
-                    tabindex="-1"
+                  <label
+                    cmdk-label=""
+                    for="radix-_r_4_"
+                    id="radix-_r_3_"
+                    style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
+                  />
+                  <button
+                    aria-controls="_r_1_"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    id="root_foo__key"
+                    role="combobox"
+                    type="button"
                   >
-                    <label
-                      cmdk-label=""
-                      for="radix-_r_4_"
-                      id="radix-_r_3_"
-                      style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-                    />
-                    <button
-                      aria-controls="_r_1_"
-                      aria-expanded="false"
-                      aria-haspopup="listbox"
-                      class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                      id="root_foo__key"
-                      role="combobox"
-                      type="button"
+                    <span
+                      class="flex-1 line-clamp-1"
                     >
-                      <span
-                        class="flex-1 line-clamp-1"
-                      >
-                        foo
-                      </span>
-                      <svg
-                        aria-hidden="true"
-                        class="lucide lucide-chevron-down h-4 w-4 opacity-50"
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="m6 9 6 6 6-6"
-                        />
-                      </svg>
-                    </button>
-                    <div
-                      class="relative"
-                      id="_r_1_"
-                    />
-                  </div>
+                      foo
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    class="relative"
+                    id="_r_1_"
+                  />
                 </div>
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -2916,7 +2862,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -3028,78 +2974,74 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo (deprecated) Key
-                </label>
+                foo (deprecated) Key
+              </label>
+              <div
+                class="p-0.5"
+              >
                 <div
-                  class="p-0.5"
+                  aria-disabled="false"
+                  class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
+                  cmdk-root=""
+                  data-slot="command"
+                  tabindex="-1"
                 >
-                  <div
-                    aria-disabled="false"
-                    class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
-                    cmdk-root=""
-                    data-slot="command"
-                    tabindex="-1"
+                  <label
+                    cmdk-label=""
+                    for="radix-_r_c_"
+                    id="radix-_r_b_"
+                    style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
+                  />
+                  <button
+                    aria-controls="_r_9_"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    id="root_foo__key"
+                    role="combobox"
+                    type="button"
                   >
-                    <label
-                      cmdk-label=""
-                      for="radix-_r_c_"
-                      id="radix-_r_b_"
-                      style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-                    />
-                    <button
-                      aria-controls="_r_9_"
-                      aria-expanded="false"
-                      aria-haspopup="listbox"
-                      class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                      id="root_foo__key"
-                      role="combobox"
-                      type="button"
+                    <span
+                      class="flex-1 line-clamp-1"
                     >
-                      <span
-                        class="flex-1 line-clamp-1"
-                      >
-                        foo
-                      </span>
-                      <svg
-                        aria-hidden="true"
-                        class="lucide lucide-chevron-down h-4 w-4 opacity-50"
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="m6 9 6 6 6-6"
-                        />
-                      </svg>
-                    </button>
-                    <div
-                      class="relative"
-                      id="_r_9_"
-                    />
-                  </div>
+                      foo
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    class="relative"
+                    id="_r_9_"
+                  />
                 </div>
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -3126,7 +3068,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -3322,36 +3264,32 @@ exports[`object fields > patternProperties, a key additionalProperties false for
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_abc__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_abc__key"
-                >
-                  abc Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_abc__key"
-                    name="root_abc__key"
-                    type="text"
-                    value="abc"
-                  />
-                </div>
+                abc Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_abc__key"
+                  name="root_abc__key"
+                  type="text"
+                  value="abc"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -3378,7 +3316,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -3431,39 +3369,35 @@ exports[`object fields > patternProperties, a key additionalProperties false for
           data-invalid="true"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                data-invalid="true"
+                for="root_a__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  data-invalid="true"
-                  for="root_a__key"
-                >
-                  a Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    aria-describedby="root_a__error"
-                    aria-invalid="true"
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_a__key"
-                    name="root_a__key"
-                    type="text"
-                    value="a"
-                  />
-                </div>
+                a Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  aria-describedby="root_a__error"
+                  aria-invalid="true"
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_a__key"
+                  name="root_a__key"
+                  type="text"
+                  value="a"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <fieldset
                 aria-labelledby="root_a__title"
@@ -3504,7 +3438,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -3765,36 +3699,32 @@ exports[`object fields > show add button and fields if additionalProperties is t
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_additionalProperty__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_additionalProperty__key"
-                >
-                  additionalProperty Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_additionalProperty__key"
-                    name="root_additionalProperty__key"
-                    type="text"
-                    value="additionalProperty"
-                  />
-                </div>
+                additionalProperty Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_additionalProperty__key"
+                  name="root_additionalProperty__key"
+                  type="text"
+                  value="additionalProperty"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -3821,7 +3751,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -3958,36 +3888,32 @@ exports[`object fields > with title and description > additionalProperties 1`] =
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_foo__key"
-                    name="root_foo__key"
-                    type="text"
-                    value="foo"
-                  />
-                </div>
+                foo Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_foo__key"
+                  name="root_foo__key"
+                  type="text"
+                  value="foo"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -4014,7 +3940,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -4274,36 +4200,32 @@ exports[`object fields > with title and description > show add button and fields
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_additionalProperty__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_additionalProperty__key"
-                >
-                  additionalProperty Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_additionalProperty__key"
-                    name="root_additionalProperty__key"
-                    type="text"
-                    value="additionalProperty"
-                  />
-                </div>
+                additionalProperty Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_additionalProperty__key"
+                  name="root_additionalProperty__key"
+                  type="text"
+                  value="additionalProperty"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -4330,7 +4252,7 @@ exports[`object fields > with title and description > show add button and fields
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -4467,36 +4389,32 @@ exports[`object fields > with title and description from both > additionalProper
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_foo__key"
-                    name="root_foo__key"
-                    type="text"
-                    value="foo"
-                  />
-                </div>
+                foo Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_foo__key"
+                  name="root_foo__key"
+                  type="text"
+                  value="foo"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -4523,7 +4441,7 @@ exports[`object fields > with title and description from both > additionalProper
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -4783,36 +4701,32 @@ exports[`object fields > with title and description from uiSchema > additionalPr
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_foo__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_foo__key"
-                >
-                  foo Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_foo__key"
-                    name="root_foo__key"
-                    type="text"
-                    value="foo"
-                  />
-                </div>
+                foo Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_foo__key"
+                  name="root_foo__key"
+                  type="text"
+                  value="foo"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -4839,7 +4753,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -5099,36 +5013,32 @@ exports[`object fields > with title and description from uiSchema > show add but
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
-              <div
-                class="flex flex-col gap-2"
+              <label
+                class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
+                for="root_additionalProperty__key"
               >
-                <label
-                  class="rjsf-field-label text-muted-foreground text-sm font-medium leading-none data-invalid:text-destructive"
-                  for="root_additionalProperty__key"
-                >
-                  additionalProperty Key
-                </label>
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_additionalProperty__key"
-                    name="root_additionalProperty__key"
-                    type="text"
-                    value="additionalProperty"
-                  />
-                </div>
+                additionalProperty Key
+              </label>
+              <div
+                class="pl-0.5 pt-0.5"
+              >
+                <input
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_additionalProperty__key"
+                  name="root_additionalProperty__key"
+                  type="text"
+                  value="additionalProperty"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <label
                 class="rjsf-field-label text-sm font-medium leading-none data-invalid:text-destructive"
@@ -5155,7 +5065,7 @@ exports[`object fields > with title and description from uiSchema > show add but
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -5267,31 +5177,27 @@ exports[`object fields > with title and description with global label off > addi
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
               <div
-                class="flex flex-col gap-2"
+                class="pl-0.5 pt-0.5"
               >
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    aria-label="foo Key"
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_foo__key"
-                    name="root_foo__key"
-                    type="text"
-                    value="foo"
-                  />
-                </div>
+                <input
+                  aria-label="foo Key"
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_foo__key"
+                  name="root_foo__key"
+                  type="text"
+                  value="foo"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <div
                 class="p-0.5"
@@ -5309,7 +5215,7 @@ exports[`object fields > with title and description with global label off > addi
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
@@ -5487,31 +5393,27 @@ exports[`object fields > with title and description with global label off > show
           class="flex flex-col gap-2 rjsf-field rjsf-field-string"
         >
           <div
-            class="grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2"
+            class="rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[--rjsf-control-row:4]"
           >
             <div
-              class="grid gap-2 col-span-5"
+              class="rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]"
             >
               <div
-                class="flex flex-col gap-2"
+                class="pl-0.5 pt-0.5"
               >
-                <div
-                  class="pl-0.5 pt-0.5"
-                >
-                  <input
-                    aria-label="additionalProperty Key"
-                    class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
-                    data-slot="input"
-                    id="root_additionalProperty__key"
-                    name="root_additionalProperty__key"
-                    type="text"
-                    value="additionalProperty"
-                  />
-                </div>
+                <input
+                  aria-label="additionalProperty Key"
+                  class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 min-w-0 rounded-md bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive w-full border shadow-sm"
+                  data-slot="input"
+                  id="root_additionalProperty__key"
+                  name="root_additionalProperty__key"
+                  type="text"
+                  value="additionalProperty"
+                />
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-6 row-span-2 pr-0.5"
+              class="rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description],[id$=\\_\\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2"
             >
               <div
                 class="p-0.5"
@@ -5529,7 +5431,7 @@ exports[`object fields > with title and description with global label off > show
               </div>
             </div>
             <div
-              class="grid gap-2 col-span-1 self-end"
+              class="grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5"
             >
               <button
                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"

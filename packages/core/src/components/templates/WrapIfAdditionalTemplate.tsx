@@ -4,13 +4,9 @@ import {
   additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
-  descriptionId,
   getAdditionalKeyAttributes,
-  getTemplates,
-  getUiOptions,
   hasAdditionalKeyLabel,
   joinClassNames,
-  templateDrawsDescription,
   TranslatableString,
 } from '@rjsf/utils';
 
@@ -18,7 +14,7 @@ import Label from './FieldTemplate/Label.tsx';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema. The key, the value and the remove button sit in a row that
- * `rjsf.css` lays out as a grid.
+ * `rjsf.css` lays out as a grid, on whose rows the key's label and input line up with the value's label and control.
  *
  * @param props - The `WrapIfAdditionalProps` for this component
  */
@@ -39,7 +35,6 @@ export default function WrapIfAdditionalTemplate<
     onKeyRenameBlur,
     onRemoveProperty,
     propertyNamesEnum,
-    rawDescription,
     readonly,
     required,
     schema,
@@ -64,7 +59,6 @@ export default function WrapIfAdditionalTemplate<
       </div>
     );
   }
-  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema));
   return (
     <div className={classNames} style={style} data-invalid={hasErrors || undefined}>
       <div className='rjsf-additional-property'>
@@ -77,21 +71,6 @@ export default function WrapIfAdditionalTemplate<
               className={joinClassNames('rjsf-field-label', classMap.fieldLabel)}
               invalid={keyAttributes['aria-invalid']}
             />
-          )}
-          {/* The value's description sits between its label and input, so an invisible copy of it, drawn by the same
-              template under an id of its own, holds the key's input level with the value's, wrapping alike for a
-              description as wide in either column */}
-          {rawDescription && templateDrawsDescription<T, S, F>(props) && (
-            <div aria-hidden='true' style={{ visibility: 'hidden' }}>
-              <DescriptionFieldTemplate
-                id={descriptionId(keyId)}
-                description={rawDescription}
-                hasErrors={hasErrors}
-                schema={schema}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            </div>
           )}
           {propertyNamesEnum ? (
             <AdditionalPropertyKeySelect<T, S, F>

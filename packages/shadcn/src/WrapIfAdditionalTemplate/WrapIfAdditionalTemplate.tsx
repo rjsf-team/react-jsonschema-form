@@ -1,21 +1,36 @@
+import { FieldLabel } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   additionalKeyId,
   AdditionalPropertyKeySelect,
   buttonId,
-  descriptionId,
   getAdditionalKeyAttributes,
-  getTemplates,
-  getUiOptions,
   hasAdditionalKeyLabel,
-  templateDrawsDescription,
   TranslatableString,
 } from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
 import { Separator } from '../components/ui/separator.tsx';
 import { cn } from '../lib/utils.ts';
+
+/** The row of the key, the value and the remove button: `--rjsf-control-row` is the value's control row, past the key's
+ * label, the value's description or both. A value of any other `FieldTemplate` spans every row, and the last row, `1fr`,
+ * takes whatever height it needs past the key's label and input. `String.raw` keeps the `\_` Tailwind reads as an
+ * underscore in a description's id, where a bare `_` would be a space
+ */
+const ROW_CLASSES =
+  String.raw`rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] ` +
+  String.raw`has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:2] ` +
+  String.raw`has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:3] ` +
+  String.raw`has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:4]`;
+
+/** The value, laid out on the row's rows where it holds core's `FieldTemplate` parts, spaced by a margin under each
+ * rather than a gap, which would space the empty rows too, so its control's row starts where the key's input does
+ */
+const VALUE_CLASSES =
+  String.raw`rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 ` +
+  String.raw`has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2`;
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -40,7 +55,6 @@ export default function WrapIfAdditionalTemplate<
     onKeyRename,
     onKeyRenameBlur,
     propertyNamesEnum,
-    rawDescription,
     readonly,
     required,
     schema,
@@ -65,79 +79,60 @@ export default function WrapIfAdditionalTemplate<
   }
 
   const keyId = additionalKeyId(id);
-  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema));
 
   return (
     // One element, so the separator keeps its gap under the row wherever the object's template puts the property
     <div className={cn('flex flex-col gap-2', classNames)} style={style} data-invalid={hasErrors || undefined}>
-      {/* Top-aligned, with the value spanning both rows, so the first is as tall as the key's label, the value's
-          description and the key input, and the remove button sits at its foot, beside the key input, whatever errors
-          or help follow the value's input */}
-      <div className='grid grid-cols-12 grid-rows-[auto_1fr] items-start gap-x-2'>
-        <div className='grid gap-2 col-span-5'>
-          <div className='flex flex-col gap-2'>
-            {hasKeyLabel && (
-              <label
-                htmlFor={keyId}
-                className={cn('rjsf-field-label text-muted-foreground', classMap.fieldLabel)}
-                data-invalid={keyAttributes['aria-invalid'] || undefined}
-              >
-                {keyLabel}
-                {required && <span className='rjsf-required'>*</span>}
-              </label>
-            )}
-            {/* The value's description sits between its label and input, so the key's input is held level with the
-                value's by an invisible copy of it, drawn by the same template under an id of its own, which wraps alike
-                for a description as wide in either column */}
-            {rawDescription && templateDrawsDescription<T, S, F>(props) && (
-              <div aria-hidden='true' className='invisible'>
-                <DescriptionFieldTemplate
-                  id={descriptionId(keyId)}
-                  description={rawDescription}
-                  hasErrors={hasErrors}
-                  schema={schema}
-                  uiSchema={uiSchema}
-                  registry={registry}
-                />
-              </div>
-            )}
-            {propertyNamesEnum ? (
-              <AdditionalPropertyKeySelect<T, S, F>
-                errorAttributes={keyAttributes}
-                id={keyId}
-                label={keyLabel}
-                hideLabel
-                labelledByTemplate={hasKeyLabel}
-                value={keyName}
-                propertyNamesEnum={propertyNamesEnum}
-                onKeyRename={onKeyRename}
-                disabled={disabled}
-                readonly={readonly}
+      {/* The key's input and the remove button sit on the value's control row, however far its label or description
+          wraps */}
+      <div className={ROW_CLASSES}>
+        <div className='rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]'>
+          {hasKeyLabel && (
+            <FieldLabel
+              label={keyLabel}
+              required={required}
+              id={keyId}
+              className={cn('rjsf-field-label text-muted-foreground', classMap.fieldLabel)}
+              invalid={keyAttributes['aria-invalid']}
+            />
+          )}
+          {propertyNamesEnum ? (
+            <AdditionalPropertyKeySelect<T, S, F>
+              errorAttributes={keyAttributes}
+              id={keyId}
+              label={keyLabel}
+              hideLabel
+              labelledByTemplate={hasKeyLabel}
+              value={keyName}
+              propertyNamesEnum={propertyNamesEnum}
+              onKeyRename={onKeyRename}
+              disabled={disabled}
+              readonly={readonly}
+              required={required}
+              registry={registry}
+            />
+          ) : (
+            // The theme's `SelectWidget` pads itself; the input takes the same 2px the value's input wrapper has
+            <div className='pl-0.5 pt-0.5'>
+              <Input
+                key={keyName}
+                aria-label={hasKeyLabel ? undefined : keyLabel}
+                {...keyAttributes}
                 required={required}
-                registry={registry}
+                defaultValue={keyName}
+                disabled={disabled || readonly}
+                id={keyId}
+                name={keyId}
+                onBlur={!readonly ? onKeyRenameBlur : undefined}
+                type='text'
+                className='w-full border shadow-sm'
               />
-            ) : (
-              // The theme's `SelectWidget` pads itself; the input takes the same 2px the value's input wrapper has
-              <div className='pl-0.5 pt-0.5'>
-                <Input
-                  key={keyName}
-                  aria-label={hasKeyLabel ? undefined : keyLabel}
-                  {...keyAttributes}
-                  required={required}
-                  defaultValue={keyName}
-                  disabled={disabled || readonly}
-                  id={keyId}
-                  name={keyId}
-                  onBlur={!readonly ? onKeyRenameBlur : undefined}
-                  type='text'
-                  className='w-full border shadow-sm'
-                />
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-        <div className='grid gap-2 col-span-6 row-span-2 pr-0.5'>{children}</div>
-        <div className='grid gap-2 col-span-1 self-end'>
+        <div className={VALUE_CLASSES}>{children}</div>
+        {/* The same 2px as the inputs' wrappers, so the button lines up with them */}
+        <div className='grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5'>
           <RemoveButton
             id={buttonId(id, 'remove')}
             iconType='block'

@@ -789,6 +789,8 @@ To take control over the inner organization of each field (each form row), you c
 
 A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
+To keep an array item's buttons and an additional property's key input level with the field's control, see [Lining up a custom `FieldTemplate`](../usage/themes.md#lining-up-a-custom-fieldtemplate).
+
 ```tsx
 import { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -1266,6 +1268,7 @@ The following props are passed to each `UnsupportedFieldTemplate`:
 
 The `WrapIfAdditionalTemplate` is used by the `FieldTemplate` to conditionally render additional controls if `additionalProperties` or `patternProperties` are present in the schema.
 You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or behavior of user-controlled `additionalProperties` and `patternProperties`.
+Core's lays the key, the value and the remove button out on shared grid rows, so the key's input sits level with the value's; see [Lining up a custom `FieldTemplate`](../usage/themes.md#lining-up-a-custom-fieldtemplate).
 
 ```tsx
 import { ADDITIONAL_PROPERTY_FLAG, additionalKeyId, RJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';

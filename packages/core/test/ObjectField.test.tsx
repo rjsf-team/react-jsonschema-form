@@ -1028,22 +1028,20 @@ describe('ObjectField', () => {
     };
     const forbidsUnmatched: RJSFSchema = { ...namedByPattern, additionalProperties: false };
 
-    // The value's description sits between its label and input, so the key column holds an invisible copy of it to keep
-    // the key's input level with the value's
-    it("holds the key input level with the value's past its description with a hidden copy of it", () => {
+    // `rjsf.css` lines the key's input up with the value's by grid rows, so the description is drawn in the value column
+    // alone
+    it("draws the value's description once, in the value column", () => {
       const { node } = createFormComponent({
         schema: { type: 'object', additionalProperties: { type: 'string', description: 'about the value' } },
         initialFormData: { foo: 'x' },
       });
 
-      const copy = node.querySelector('.rjsf-additional-property-key > [aria-hidden="true"]');
-      expect(copy).toHaveStyle({ visibility: 'hidden' });
-      expect(copy?.querySelector('.rjsf-field-description')).toHaveTextContent('about the value');
-      expect(copy?.querySelector('[id]')).toHaveAttribute('id', 'root_foo__key__description');
+      expect(screen.getByText('about the value')).toHaveAttribute('id', 'root_foo__description');
+      expect(node.querySelector('.rjsf-additional-property-value .rjsf-field-description')).toBeInTheDocument();
       expect(screen.getByRole('textbox', { name: 'foo' })).toHaveAccessibleDescription('about the value');
     });
 
-    it('draws the hidden copy of the description through the template the value column uses', () => {
+    it("renders a custom DescriptionFieldTemplate once for an additional property's value", () => {
       function DescriptionFieldTemplate({ id, description }: DescriptionFieldProps) {
         return (
           <details id={id} className='custom-description'>
@@ -1058,10 +1056,9 @@ describe('ObjectField', () => {
         initialFormData: { foo: 'x' },
       });
 
-      expect(node.querySelector('.rjsf-additional-property-value .custom-description')).toBeInTheDocument();
-      expect(
-        node.querySelector('.rjsf-additional-property-key > [aria-hidden="true"] .custom-description'),
-      ).toHaveAttribute('id', 'root_foo__key__description');
+      const descriptions = node.querySelectorAll('.custom-description');
+      expect(descriptions).toHaveLength(1);
+      expect(descriptions[0].closest('.rjsf-additional-property-value')).not.toBeNull();
     });
 
     async function renameKey(node: ParentNode, from: string, to: string) {

@@ -1,3 +1,4 @@
+import { FieldLabel } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -9,8 +10,6 @@ import {
   joinClassNames,
   TranslatableString,
 } from '@rjsf/utils';
-
-import Label from './Label.tsx';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -70,7 +69,9 @@ export default function WrapIfAdditionalTemplate<
       <div className='row'>
         <div className='col-xs-5 form-additional'>
           <div className='form-group'>
-            {hasKeyLabel && <Label label={keyLabel} required={required} id={keyId} className={classMap.fieldLabel} />}
+            {hasKeyLabel && (
+              <FieldLabel label={keyLabel} required={required} id={keyId} className={classMap.fieldLabel} />
+            )}
             {hasKeyLabel && rawDescription && <div>&nbsp;</div>}
             {propertyNamesEnum ? (
               <AdditionalPropertyKeySelect<T, S, F>

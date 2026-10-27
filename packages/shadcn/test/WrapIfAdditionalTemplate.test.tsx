@@ -10,14 +10,13 @@ const describedValue: RJSFSchema = {
 };
 
 describe('WrapIfAdditionalTemplate', () => {
-  // The key column copies the value column's heights, so a class map that restyles the value's label or description
-  // restyles the key's label and the hidden copy alike
-  test("takes the key's label and the description's hidden copy from the class map", () => {
+  // The key's label shares the value's row, so a class map that restyles the value's label restyles the key's alike
+  test("takes the key's label from the class map", () => {
     const { container } = render(
       <Form
         schema={describedValue}
         initialFormData={{ foo: 'x' }}
-        classMap={{ fieldLabel: 'text-lg text-blue-700', fieldDescription: 'text-base' }}
+        classMap={{ fieldLabel: 'text-lg text-blue-700' }}
         validator={validator}
       />,
     );
@@ -29,13 +28,10 @@ describe('WrapIfAdditionalTemplate', () => {
       'text-blue-700',
     );
     expect(container.querySelector('label[for="root_foo__key"]')).not.toHaveClass('text-muted-foreground');
-    const copy = container.querySelector('[aria-hidden="true"].invisible > #root_foo__key__description');
-    expect(copy).toHaveClass('rjsf-field-description', 'text-base');
-    expect(copy).toHaveTextContent('About the value');
   });
 
-  // The copy has to take the value description's height whichever template draws it
-  test("draws the description's hidden copy through the form's DescriptionFieldTemplate", () => {
+  // The rows line the key's input up with the value's, so the description is drawn in the value column alone
+  test("draws the value's description once, through the form's DescriptionFieldTemplate", () => {
     const { container } = render(
       <Form
         schema={describedValue}
@@ -45,9 +41,8 @@ describe('WrapIfAdditionalTemplate', () => {
       />,
     );
 
-    expect(container.querySelector('[aria-hidden="true"].invisible > p#root_foo__key__description')).toHaveTextContent(
-      'About the value',
-    );
+    expect(screen.getByText('About the value')).toHaveAttribute('id', 'root_foo__description');
+    expect(container.querySelector('.rjsf-additional-property-value > p#root_foo__description')).toBeInTheDocument();
   });
 
   // As core's wrapper does, so a `data-invalid:` variant in `ui:classNames` reaches it
