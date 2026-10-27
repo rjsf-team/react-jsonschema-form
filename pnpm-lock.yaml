@@ -395,9 +395,6 @@ importers:
       react-day-picker:
         specifier: ^10.0.2
         version: 10.0.2(@types/react@19.3.0)(react@19.3.0)
-      tailwindcss:
-        specifier: ^4.3.3
-        version: 4.3.3
     devDependencies:
       '@rjsf/core':
         specifier: workspace:^

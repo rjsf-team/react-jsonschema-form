@@ -1,12 +1,12 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
 import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate/index.ts';
-import ArrayFieldTemplate from './ArrayFieldTemplate/ArrayFieldTemplate.tsx';
+import ArrayFieldTemplate from './ArrayFieldTemplate/index.ts';
 import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate/index.ts';
 import FieldTemplate from './FieldTemplate/index.ts';
-import GridTemplate from './GridTemplate/GridTemplate.tsx';
+import GridTemplate from './GridTemplate/index.ts';
 import ObjectFieldTemplate from './ObjectFieldTemplate/index.ts';
-import TitleFieldTemplate from './TitleField/TitleField.tsx';
+import TitleFieldTemplate from './TitleField/index.ts';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate/index.ts';
 
 export function createTemplates() {

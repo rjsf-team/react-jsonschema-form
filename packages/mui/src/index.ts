@@ -1,4 +1,4 @@
-import MuiForm from './MuiForm/MuiForm.tsx';
+import MuiForm from './MuiForm/index.ts';
 
 export { default as Form, generateForm } from './MuiForm/index.ts';
 export { default as Templates, generateTemplates } from './Templates/index.ts';

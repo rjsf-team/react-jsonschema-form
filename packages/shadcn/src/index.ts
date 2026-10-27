@@ -1,4 +1,4 @@
-import Form from './Form/Form.tsx';
+import Form from './Form/index.ts';
 
 export { generateClassMap } from './classMap.ts';
 export { default as Form, generateForm } from './Form/index.ts';

@@ -59,7 +59,9 @@
       "@rjsf/source": "./src/index.ts",
       "default": "./lib/index.js"
     },
-    "./package.json": "./package.json",
-    "./*": "./*"
+    "./setup": {
+      "@rjsf/source": "./src/setup.ts",
+      "default": "./lib/setup.js"
+    }
   }
 }

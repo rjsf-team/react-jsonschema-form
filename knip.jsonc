@@ -19,13 +19,6 @@
     "packages/chakra-ui": {
       "ignore": ["src/index.ts"],
     },
-    "packages/daisyui": {
-      // Every src file is resolvable through the `./lib/*.js` exports wildcard,
-      // and per review (#5194) the files nothing in-repo imports stay until the
-      // next major rather than break deep imports. Treat all of src as entry
-      // points until then.
-      "entry": ["src/**/*.{ts,tsx,css}"],
-    },
     "packages/react-bootstrap": {
       "ignore": ["src/index.ts"],
     },

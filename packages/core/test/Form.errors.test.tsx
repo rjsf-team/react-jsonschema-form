@@ -1,4 +1,4 @@
-import { createRef } from 'react';
+import { createRef, useRef } from 'react';
 import type {
   ErrorListProps,
   ErrorSchema,
@@ -388,8 +388,9 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
         const input = node.querySelector<HTMLInputElement>('input[type=text]')!;
         await user.type(input, 'short');
-        const focusSpy = vi.fn();
-        // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+        const focusSpy = vi.fn(() => HTMLElement.prototype.focus.call(input));
+        // Since programmatically triggering focus does not call onFocus, change the focus method to a spy that still
+        // focuses, since the form moves on from an element whose focus() does nothing
         // Set up AFTER user.type so typing works (focus spy would prevent element from receiving focus)
         Object.defineProperty(input, 'focus', {
           configurable: true,
@@ -641,6 +642,160 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await submitForm(node, user);
 
         expect(node.querySelector('#root_when_year')).not.toHaveFocus();
+      });
+
+      it('moves on from an element that ignores focus() to the next one its field offers', async () => {
+        // A wrapper that CSS hides, that is inert or that sits in a closed <details> passes the selector check yet
+        // ignores focus(); jsdom applies no stylesheet, so a no-op focus() stands in for all three
+        const IgnoresFocusWidget = ({ id }: WidgetProps) => (
+          <div
+            role='slider'
+            tabIndex={0}
+            id={id}
+            aria-label='Value'
+            aria-valuenow={0}
+            ref={(wrapper) => {
+              if (wrapper) {
+                Object.defineProperty(wrapper, 'focus', { configurable: true, value: vi.fn() });
+              }
+            }}
+          >
+            <input aria-label='Inner control' />
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: { type: 'string', minLength: 5 },
+          initialFormData: 'a',
+          uiSchema: { 'ui:widget': 'IgnoresFocusWidget' },
+          widgets: { IgnoresFocusWidget },
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('textbox', { name: 'Inner control' })).toHaveFocus();
+      });
+
+      it('calls focus() once on an input that both carries the id and is named after the field', async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'string', minLength: 5 },
+          initialFormData: 'a',
+          focusOnFirstError: true,
+        });
+        const focus = vi.fn();
+        Object.defineProperty(screen.getByRole('textbox'), 'focus', { configurable: true, value: focus });
+
+        await submitForm(node, user);
+
+        expect(focus).toHaveBeenCalledTimes(1);
+      });
+
+      it('moves on from a named radio that ignores focus() to the next one', async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'string', enum: ['a', 'b'] },
+          initialFormData: 'c',
+          uiSchema: { 'ui:widget': 'radio' },
+          focusOnFirstError: true,
+        });
+        const [first, second] = screen.getAllByRole('radio');
+        Object.defineProperty(first, 'focus', { configurable: true, value: vi.fn() });
+
+        await submitForm(node, user);
+
+        expect(second).toHaveFocus();
+      });
+
+      it('calls focus() once on each radio of a group none of whose radios takes focus', async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'string', enum: ['a', 'b'] },
+          initialFormData: 'c',
+          uiSchema: { 'ui:widget': 'radio' },
+          focusOnFirstError: true,
+        });
+        const focusSpies = screen.getAllByRole('radio').map((radio) => {
+          const focus = vi.fn();
+          Object.defineProperty(radio, 'focus', { configurable: true, value: focus });
+          return focus;
+        });
+
+        await submitForm(node, user);
+
+        focusSpies.forEach((focus) => expect(focus).toHaveBeenCalledTimes(1));
+      });
+
+      it('moves on from an input whose id is a part of the field id that ignores focus() to the next one', async () => {
+        const ChoiceWidget = ({ id }: WidgetProps) => (
+          <div>
+            <button type='button' id={partId(id, '0')}>
+              First
+            </button>
+            <button type='button' id={partId(id, '1')}>
+              Second
+            </button>
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: { type: 'number', minimum: 5 },
+          uiSchema: { 'ui:widget': 'ChoiceWidget' },
+          widgets: { ChoiceWidget },
+          initialFormData: 1,
+          focusOnFirstError: true,
+        });
+        Object.defineProperty(screen.getByRole('button', { name: 'First' }), 'focus', {
+          configurable: true,
+          value: vi.fn(),
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('button', { name: 'Second' })).toHaveFocus();
+      });
+
+      describe('with an element carrying the id that passes focus on', () => {
+        const DelegatingWidget = ({ id }: WidgetProps) => {
+          const target = useRef<HTMLInputElement>(null);
+          return (
+            <div
+              role='toolbar'
+              tabIndex={0}
+              id={id}
+              onFocus={(event) => {
+                if (event.target === event.currentTarget) {
+                  target.current?.focus();
+                }
+              }}
+            >
+              <button type='button'>Clear</button>
+              <input aria-label='Inner control' ref={target} />
+            </div>
+          );
+        };
+        const schema: RJSFSchema = { type: 'string', minLength: 5 };
+        const formProps = {
+          schema,
+          initialFormData: 'a',
+          uiSchema: { 'ui:widget': 'DelegatingWidget' },
+          widgets: { DelegatingWidget },
+          focusOnFirstError: true,
+        };
+
+        it('leaves focus where it passes it on to', async () => {
+          const { node } = createFormComponent(formProps);
+
+          await submitForm(node, user);
+
+          expect(screen.getByRole('textbox', { name: 'Inner control' })).toHaveFocus();
+        });
+
+        it('leaves focus where it passes it on to when focus already sits there', async () => {
+          createFormComponent(formProps);
+          const inner = screen.getByRole('textbox', { name: 'Inner control' });
+
+          await user.click(inner);
+          await user.keyboard('{Enter}');
+
+          expect(inner).toHaveFocus();
+        });
       });
 
       it('focuses the field in a DOM with no CSS namespace', async () => {
@@ -1119,9 +1274,10 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           focusOnFirstError: true,
         });
 
-        const focusSpy = vi.fn();
         const input = node.querySelector<HTMLInputElement>('input[id=root_outer_0_1]')!;
-        // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+        const focusSpy = vi.fn(() => HTMLElement.prototype.focus.call(input));
+        // Since programmatically triggering focus does not call onFocus, change the focus method to a spy that still
+        // focuses, since the form moves on from an element whose focus() does nothing
         Object.defineProperty(input, 'focus', {
           configurable: true,
           value: focusSpy,

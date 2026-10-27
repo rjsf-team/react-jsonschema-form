@@ -41,8 +41,6 @@ const TEMPLATE_NAME_SET: ReadonlySet<string> = new Set(Object.keys(OVERRIDABLE_T
 /** Whether `name` is one of the templates `TemplatesType` declares, rather than a custom template or an ordinary
  * option. The registry may also hold templates of a custom name, and `uiOptions` holds ordinary options such as
  * `help`, so a value under a name outside this list that is not a component is as likely an option as a mistake.
- * Internal to `@rjsf/utils`: `package.json` excludes this module from the `./lib/*.js` exports wildcard so it
- * can't be deep-imported, since a reachable subpath would have to keep working until the next major.
  *
  * @param name - The name to check
  * @returns - True when `name` is a declared template name

@@ -4,9 +4,9 @@ import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
 import { generateClassMap } from '../classMap.ts';
-import { createTemplates } from '../templates/Templates.tsx';
+import { createTemplates } from '../templates/index.ts';
 import { DAISY_GLOBAL_UI_OPTIONS_KEYS } from '../utils.ts';
-import { createWidgets } from '../widgets/Widgets.tsx';
+import { createWidgets } from '../widgets/index.ts';
 import { FrameThemeContext } from './frameTheme.ts';
 import { DEFAULT_THEME, readStoredTheme, storeTheme, subscribeToStoredTheme } from './storedTheme.ts';
 

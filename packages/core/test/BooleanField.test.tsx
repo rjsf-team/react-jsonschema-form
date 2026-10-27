@@ -457,12 +457,13 @@ describe('BooleanField', () => {
       focusOnFirstError: true,
       uiSchema: { bool: { 'ui:widget': 'radio' } },
     });
-    const focusSpys = [vi.fn(), vi.fn()];
-    const inputs = node.querySelectorAll('input[id^=root_bool]');
+    const inputs = node.querySelectorAll<HTMLInputElement>('input[id^=root_bool]');
+    const focusSpys = [...inputs].map((input) => vi.fn(() => HTMLElement.prototype.focus.call(input)));
     expect(inputs).toHaveLength(2);
     let errorInputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).toHaveLength(0);
-    // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+    // Since programmatically triggering focus does not call onFocus, change the focus method to a spy that still focuses,
+    // since the form moves on from an element whose focus() does nothing.
     // Object.defineProperty is used because userEvent.setup() patches HTMLElement.prototype.focus as
     // a getter-only, making simple assignment throw in strict mode
     Object.defineProperty(inputs[0], 'focus', { value: focusSpys[0], writable: true, configurable: true });
@@ -495,12 +496,13 @@ describe('BooleanField', () => {
       focusOnFirstError: true,
       uiSchema: { bool: { 'ui:widget': 'radio', 'ui:hideError': true } },
     });
-    const focusSpys = [vi.fn(), vi.fn()];
-    const inputs = node.querySelectorAll('input[id^=root_bool]');
+    const inputs = node.querySelectorAll<HTMLInputElement>('input[id^=root_bool]');
+    const focusSpys = [...inputs].map((input) => vi.fn(() => HTMLElement.prototype.focus.call(input)));
     expect(inputs).toHaveLength(2);
     let errorInputs = node.querySelectorAll('.rjsf-field.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).toHaveLength(0);
-    // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
+    // Since programmatically triggering focus does not call onFocus, change the focus method to a spy that still focuses,
+    // since the form moves on from an element whose focus() does nothing.
     // Object.defineProperty is used because userEvent.setup() patches HTMLElement.prototype.focus as
     // a getter-only, making simple assignment throw in strict mode
     Object.defineProperty(inputs[0], 'focus', { value: focusSpys[0], writable: true, configurable: true });
