@@ -1827,8 +1827,7 @@ export interface BaseInputTemplateProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->
-  extends WidgetProps<T, S, F>, Record<string, unknown> {
+> extends WidgetProps<T, S, F> {
   /** A `BaseInputTemplate` implements a default `onChange` handler that it passes to the HTML input component to handle
    * the `ChangeEvent`. Sometimes a widget may need to handle the `ChangeEvent` using custom logic. If that is the case,
    * that widget should provide its own handler via this prop.
@@ -1838,6 +1837,8 @@ export interface BaseInputTemplateProps<
   type?: string;
   /** A `pattern` the widget sets on the input, which takes the place of the one the schema derives */
   pattern?: string;
+  /** The file types a file input accepts, which `FileWidget` sets from its `accept` option */
+  accept?: string;
 }
 
 /** The type that defines the props used by the Submit button */

@@ -61,6 +61,10 @@ function NumberField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
         processed = trailingCharMatcherWithPrefix.exec(normalizedValue)
           ? asNumber(normalizedValue.replace(trailingCharMatcher, ''))
           : asNumber(normalizedValue);
+      } else if (normalizedValue !== null) {
+        // Any other value converts as `asNumber()` converts it, such as a checkbox's `true` to `1`
+        const numeric = Number(normalizedValue);
+        processed = Number.isNaN(numeric) ? normalizedValue : numeric;
       }
 
       onChange(processed, path, errorSchema, id);
