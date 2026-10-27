@@ -1,5 +1,6 @@
 import type { MockInstance } from 'vitest';
 
+import type { WithOpenApiComponents } from '../../../../testing/openApiSchema.ts';
 import type { RJSFMarkedSchema, RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -144,8 +145,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     const option: RJSFSchema = { $ref: '#/components/schemas/M' };
 
     it('reads a definition no $ref of the root reaches as the form reads it, the keywords beside a chained $ref merged in', () => {
-      const unreached: RJSFSchema & { components?: object } = { components };
-      const reached: RJSFSchema & { components?: object } = {
+      const unreached: WithOpenApiComponents<RJSFSchema> = { components };
+      const reached: WithOpenApiComponents<RJSFSchema> = {
         components,
         properties: { x: { $ref: '#/components/schemas/M' } },
       };
@@ -4823,7 +4824,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         );
       });
       it('keeps an $id under a keyword that holds no subschemas from moving the base of a $ref beside it (#5529)', () => {
-        const schema: RJSFSchema & { components?: object } = {
+        const schema: WithOpenApiComponents<RJSFSchema> = {
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           $id: 'https://example.com/root.json',
           $defs: { real: { $id: 'n.json', type: 'boolean' }, s: { type: 'string' } },

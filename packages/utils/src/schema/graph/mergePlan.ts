@@ -198,7 +198,8 @@ const conditionMemo = new KeyedMemo<boolean>();
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
  * object each time, as an object field's is on every edit, reuse its plan
  */
-const plans = new KeyedMemo<MergePlan>();
+// oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
+const plans = new KeyedMemo<MergePlan<StrictRJSFSchema>>();
 
 /** Merges an `allOf` schema into a single flat schema, delegating to the context's `customMergeAllOf` when it has one
  * and falling back to @x0k/json-schema-merge's shallow `allOf` merge otherwise, which merges an `allOf` holding a
@@ -1053,7 +1054,8 @@ export function ownChains<S extends StrictRJSFSchema = RJSFSchema>(
 
 /** Whether a plan read back from the memo, which holds the plans of every schema type, is one of `graph` */
 function isPlanOf<S extends StrictRJSFSchema>(
-  value: MergePlan | undefined,
+  // oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
+  value: MergePlan<StrictRJSFSchema> | undefined,
   graph: SchemaGraph<S>,
 ): value is MergePlan<S> {
   return value?.graph === graph;
