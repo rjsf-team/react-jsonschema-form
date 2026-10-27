@@ -2511,7 +2511,7 @@ Recursively merge deeply nested objects.
 
 #### Returns
 
-@returns - A new object that is the merge of the two given objects
+- R: A new object that is the merge of the two given objects, typed as the `R` its caller passes as a type argument, `Record<string, unknown>` by default
 
 ### mergeSchemas()
 
@@ -2520,12 +2520,12 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 
 #### Parameters
 
-- obj1: GenericObjectType - The first object to merge
-- obj2: GenericObjectType - The second object to merge
+- obj1: object - The first object to merge
+- obj2: object - The second object to merge
 
 #### Returns
 
-- GenericObjectType: The merged schema object
+- R: The merged schema object, typed as the `R` its caller passes as a type argument, `Record<string, unknown>` by default
 
 ### mergeThemePresentation()
 
@@ -3124,7 +3124,7 @@ A plain assignment to a `__proto__` key, which JSON-sourced data can hold, would
 
 #### Parameters
 
-- obj: GenericObjectType - The object to write to
+- obj: object - The object to write to
 - key: string | number - The key to write, a path segment's array index included
 - value: unknown - The value to store at `key`
 
