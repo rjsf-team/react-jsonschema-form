@@ -26,6 +26,7 @@ export default function ObjectFieldTemplate<
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
+    hasErrors,
     title,
     properties,
     required,
@@ -69,6 +70,7 @@ export default function ObjectFieldTemplate<
         <DescriptionFieldTemplate
           id={presentation?.description.id ?? descriptionId(id)}
           description={description}
+          hasErrors={hasErrors}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -89,7 +91,7 @@ export default function ObjectFieldTemplate<
           <div className='flex justify-end'>
             <AddButton
               id={buttonId(id, 'add')}
-              className='rjsf-object-property-expand btn btn-primary btn-sm'
+              className='rjsf-object-property-expand btn-primary'
               onClick={onAddProperty}
               disabled={disabled || readonly}
               uiSchema={uiSchema}

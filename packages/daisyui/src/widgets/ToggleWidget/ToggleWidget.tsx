@@ -1,4 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { joinClassNames } from '@rjsf/utils';
 
 import BooleanInput from '../BooleanInput.tsx';
 
@@ -27,7 +28,7 @@ export default function ToggleWidget<
   return (
     <BooleanInput
       {...props}
-      inputClassName={`toggle ${sizeClass}`}
+      inputClassName={joinClassNames('toggle', sizeClass, 'mr-2')}
       labelClassName='cursor-pointer label my-auto justify-start'
     />
   );

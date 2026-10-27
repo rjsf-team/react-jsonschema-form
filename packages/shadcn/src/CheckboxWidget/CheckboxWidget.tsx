@@ -1,7 +1,9 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
+  fieldShowsOwnErrors,
   getControlAttributes,
   getTemplates,
+  getUiOptions,
   getWidgetDescription,
   hasWidgetErrors,
   labelValue,
@@ -48,18 +50,22 @@ export default function CheckboxWidget<
   // "const" or "enum" keywords
   const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
+  const hasErrors = fieldShowsOwnErrors<T, S, F>(props);
 
   const handleChange = (checked: boolean) => onChange(checked);
   const handleBlur = () => onBlur(id, value);
   const handleFocus = () => onFocus(id, value);
 
-  const description = getWidgetDescription<T, S, F>(props);
+  // Without a plan, core's `FieldTemplate` draws the description of a field whose `ui:widget` is the `checkbox` alias
+  const description =
+    presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (
     <div className={`relative ${disabled || readonly ? 'cursor-not-allowed opacity-50' : ''}`}>
       {description && (
         <DescriptionFieldTemplate
           id={description.id}
           description={description.text}
+          hasErrors={hasErrors}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -79,7 +85,11 @@ export default function CheckboxWidget<
           {...getControlAttributes<T, S, F>({ id, presentation })}
           className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className)}
         />
-        <Label className='leading-tight' htmlFor={id}>
+        <Label
+          className='leading-tight data-invalid:text-destructive'
+          htmlFor={id}
+          data-invalid={hasErrors || undefined}
+        >
           {labelValue(label, hideLabel || !label)}
           {!hideLabel && label && trueValueRequired && <span className='text-destructive ml-1'>*</span>}
         </Label>

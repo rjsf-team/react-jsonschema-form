@@ -10,7 +10,7 @@ import type {
 } from '@rjsf/utils';
 import { noop, partId, toFieldPath } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
@@ -125,7 +125,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             />,
           );
           const node = container.firstElementChild!;
-          const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
+          const shownErrors = () => Array.from(node.querySelectorAll('.rjsf-error-detail')).map((e) => e.textContent);
 
           await submitForm(node, user);
           expect(shownErrors()).toEqual([
@@ -249,7 +249,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             />,
           );
           const node = container.firstElementChild!;
-          const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
+          const shownErrors = () => Array.from(node.querySelectorAll('.rjsf-error-detail')).map((e) => e.textContent);
 
           await submitForm(node, user);
           expect(shownErrors()).toEqual(['must NOT have duplicate items (items ## 1 and 0 are identical)']);
@@ -285,7 +285,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             />,
           );
           const node = container.firstElementChild!;
-          const shownErrors = () => Array.from(node.querySelectorAll('.error-detail')).map((e) => e.textContent);
+          const shownErrors = () => Array.from(node.querySelectorAll('.rjsf-error-detail')).map((e) => e.textContent);
 
           await submitForm(node, user);
           expect(shownErrors()).toEqual([
@@ -332,7 +332,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
 
           expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(1);
-          expect(node.querySelector('.rjsf-field-string .error-detail')).toHaveTextContent(
+          expect(node.querySelector('.rjsf-field-string .rjsf-error-detail')).toHaveTextContent(
             'must NOT have fewer than 8 characters',
           );
         });
@@ -796,8 +796,8 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
         await submitForm(node, user);
 
-        const errorListHTML = '<li class="text-danger">must NOT have fewer than 8 characters</li>';
-        const errors = node.querySelectorAll('.error-detail');
+        const errorListHTML = '<li class="rjsf-error">must NOT have fewer than 8 characters</li>';
+        const errors = node.querySelectorAll('.rjsf-error-detail');
         // Check for errors attached to the field
         expect(errors).toHaveLength(1);
         expect(errors[0].innerHTML).toEqual(errorListHTML);
@@ -805,7 +805,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.clear(node.querySelector<HTMLInputElement>('input[type=text]')!);
         await user.type(node.querySelector<HTMLInputElement>('input[type=text]')!, 'long enough');
         await submitForm(node, user);
-        expect(node.querySelectorAll('.error-detail')).toHaveLength(0);
+        expect(node.querySelectorAll('.rjsf-error-detail')).toHaveLength(0);
       });
     });
 
@@ -845,7 +845,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.type(node.querySelector<HTMLInputElement>('input')!, 'shorts');
 
         expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(1);
-        expect(node.querySelector('.rjsf-field-string .error-detail')).toHaveTextContent(
+        expect(node.querySelector('.rjsf-field-string .rjsf-error-detail')).toHaveTextContent(
           'must NOT have fewer than 8 characters',
         );
       });
@@ -895,7 +895,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
         await user.clear(node.querySelector<HTMLInputElement>('input')!);
         await user.type(node.querySelector<HTMLInputElement>('input')!, 'shorts');
-        const liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
+        const liNodes = node.querySelectorAll('.rjsf-field-string .rjsf-error-detail li');
         const errors = [].map.call(liNodes, (li: Element) => li.textContent);
 
         expect(errors).toEqual(['must NOT have fewer than 8 characters', 'must match pattern "d+"']);
@@ -952,7 +952,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
         await user.clear(node.querySelector<HTMLInputElement>('input')!);
         await user.type(node.querySelector<HTMLInputElement>('input')!, 'shorts');
-        const errorDetail = node.querySelector('.rjsf-field-object .rjsf-field-string .error-detail');
+        const errorDetail = node.querySelector('.rjsf-field-object .rjsf-field-string .rjsf-error-detail');
 
         expect(node.querySelectorAll('.rjsf-field-error')).toHaveLength(1);
         expect(errorDetail).toHaveTextContent('must NOT have fewer than 8 characters');
@@ -1002,7 +1002,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.clear(fieldNodes[1].querySelector('input')!);
         await user.type(fieldNodes[1].querySelector('input')!, 'bad');
 
-        const liNodes = fieldNodes[1].querySelectorAll(':scope .error-detail li');
+        const liNodes = fieldNodes[1].querySelectorAll(':scope .rjsf-error-detail li');
         const errors = [].map.call(liNodes, (li: Element) => li.textContent);
 
         expect(errors).toEqual(['must NOT have fewer than 4 characters']);
@@ -1072,7 +1072,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         });
 
         const fields = node.querySelectorAll('.rjsf-field-string');
-        let liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
+        let liNodes = node.querySelectorAll('.rjsf-field-string .rjsf-error-detail li');
         let errors = [].map.call(liNodes, (li: Element) => li.textContent);
 
         // live validate does not run on initial render anymore
@@ -1081,7 +1081,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.clear(fields[1].querySelector('input')!);
         await user.type(fields[1].querySelector('input')!, 'bad');
 
-        liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
+        liNodes = node.querySelectorAll('.rjsf-field-string .rjsf-error-detail li');
         errors = [].map.call(liNodes, (li: Element) => li.textContent);
         expect(errors).toEqual(['must NOT have fewer than 4 characters']);
       });
@@ -1156,7 +1156,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
         const fields = node.querySelectorAll('.rjsf-field-string');
         let errors = [].map.call(fields, (field: Element) => {
-          const li = field.querySelector('.error-detail li');
+          const li = field.querySelector('.rjsf-error-detail li');
           return li && li.textContent;
         });
 
@@ -1166,7 +1166,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.clear(fields[0].querySelector('input')!);
         await user.type(fields[0].querySelector('input')!, 'bad');
         errors = [].map.call(fields, (field: Element) => {
-          const li = field.querySelector('.error-detail li');
+          const li = field.querySelector('.rjsf-error-detail li');
           return li && li.textContent;
         });
 
@@ -1226,7 +1226,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.clear(fieldNodes[1].querySelector('input')!);
         await user.type(fieldNodes[1].querySelector('input')!, 'bad');
 
-        const liNodes = fieldNodes[1].querySelectorAll('.error-detail li');
+        const liNodes = fieldNodes[1].querySelectorAll('.rjsf-error-detail li');
         const errors = [].map.call(liNodes, (li: Element) => li.textContent);
         expect(fieldNodes[1].classList.contains('rjsf-field-error')).toEqual(true);
         expect(errors).toEqual(['must NOT have fewer than 4 characters']);
@@ -1816,7 +1816,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.clear(endInput);
         await user.type(endInput, '1');
         expect(node.querySelectorAll('#root_Start__error')).toHaveLength(1);
-        let errorMessageContent = node.querySelector('#root_Start__error .text-danger');
+        let errorMessageContent = node.querySelector('#root_Start__error .rjsf-error');
         expect(errorMessageContent).toHaveTextContent('Validate error: Test should be LE than End');
 
         // Change the End field to a larger value than Start field to remove customValidate raised errors.
@@ -1836,7 +1836,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.type(endInput, '0');
 
         expect(node.querySelectorAll('#root_Start__error')).toHaveLength(1);
-        errorMessageContent = node.querySelector('#root_Start__error .text-danger');
+        errorMessageContent = node.querySelector('#root_Start__error .rjsf-error');
         expect(errorMessageContent).toHaveTextContent('Validate error: Test should be LE than End');
         expect(onChange).toHaveBeenLastCalledWith(
           expect.objectContaining({
@@ -2174,5 +2174,23 @@ describe('the errors a field raises for the items of an array', () => {
       { property: '.obj', message: 'whole', stack: '.obj whole' },
       { property: '.obj.__proto__.a', message: 'taken', stack: '.obj.__proto__.a taken' },
     ]);
+  });
+});
+
+// Every theme that renders core's `FieldErrorTemplate` relies on these: the plan counts an empty message when it
+// describes the control by `__error`, so the element must be there for it to find
+describe("a field's own error list", () => {
+  it('keeps the id the control is described by for messages that are all empty, with no bullet', () => {
+    const { node } = createFormComponent({ schema: { type: 'string' }, extraErrors: { __errors: [''] } });
+
+    const errors = elementOf(node, '#root__error', HTMLElement);
+    expect(screen.getByRole('textbox').getAttribute('aria-describedby')).toContain('root__error');
+    expect(within(errors).queryAllByRole('listitem')).toHaveLength(0);
+  });
+
+  it('draws no bullet for an empty message beside another', () => {
+    const { node } = createFormComponent({ schema: { type: 'string' }, extraErrors: { __errors: ['', 'Too short'] } });
+
+    expect(within(elementOf(node, '#root__error', HTMLElement)).getAllByRole('listitem')).toHaveLength(1);
   });
 });

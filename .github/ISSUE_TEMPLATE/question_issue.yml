@@ -17,6 +17,7 @@ body:
       label: What theme are you using?
       options:
         - antd
+        - bootstrap3
         - chakra-ui
         - core
         - daisyui

@@ -41,6 +41,7 @@ import {
   idSegment,
   toFieldPath,
 } from './fieldPath.ts';
+import fieldShowsOwnErrors from './fieldShowsOwnErrors.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getAdditionalKeyAttributes from './getAdditionalKeyAttributes.ts';
@@ -148,6 +149,7 @@ import isNamedByTemplateLabel from './isNamedByTemplateLabel.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
+import joinClassNames from './joinClassNames.ts';
 import labelValue from './labelValue.ts';
 import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
 import localToUTC from './localToUTC.ts';
@@ -155,6 +157,7 @@ import logOnce, { resetLogOnce } from './logOnce.ts';
 import type { LogOnceLevel } from './logOnce.ts';
 import logUnsupportedDefaultForEnum from './logUnsupportedDefaultForEnum.ts';
 import lookupFromFormContext from './lookupFromFormContext.ts';
+import mergeClassMaps from './mergeClassMaps.ts';
 import mergeDefaultsWithFormData from './mergeDefaultsWithFormData.ts';
 import mergeObjects from './mergeObjects.ts';
 import mergeSchemas from './mergeSchemas.ts';
@@ -293,6 +296,7 @@ export {
   ErrorSchemaBuilder,
   fallbackTypeSelectorId,
   fieldLabelId,
+  fieldShowsOwnErrors,
   // oxlint-disable-next-line typescript/no-deprecated -- re-exported for callers written against 6.x
   findSchemaDefinition,
   flattenGroupedOptions,
@@ -380,12 +384,14 @@ export {
   isPlainObject,
   isSchemaObject,
   isWholeValueSelect,
+  joinClassNames,
   labelValue,
   localTimeToOffsetTime,
   localToUTC,
   logOnce,
   logUnsupportedDefaultForEnum,
   lookupFromFormContext,
+  mergeClassMaps,
   mergeDefaultsWithFormData,
   mergeObjects,
   mergeSchemas,

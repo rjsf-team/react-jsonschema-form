@@ -16,7 +16,7 @@ vi.mock('../../src/components/DemoFrame.tsx', () => ({
 function renderPlayground() {
   const { container } = render(
     <Playground
-      themes={{ default: { stylesheet: '', theme: {} }, other: { stylesheet: '', theme: {} } }}
+      themes={{ core: { stylesheet: '', theme: {} }, other: { stylesheet: '', theme: {} } }}
       validators={{ AJV8: validator }}
     />,
   );

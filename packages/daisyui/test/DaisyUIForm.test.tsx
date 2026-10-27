@@ -2,7 +2,7 @@ import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
-import Form, { generateForm, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import Form, { generateForm, generateTheme, generateWidgets } from '../src/index.ts';
 
 describe('daisyui entry points', () => {
   test('generateForm() renders a working Form', () => {
@@ -10,12 +10,6 @@ describe('daisyui entry points', () => {
     const schema: RJSFSchema = { type: 'string' };
     const { container } = render(<GeneratedForm schema={schema} validator={validator} />);
     expect(container.querySelector('input')).not.toBeNull();
-  });
-
-  test('generateTemplates() registers the DaisyUI array title/description templates', () => {
-    const templates = generateTemplates();
-    expect(templates.ArrayFieldTitleTemplate).toBeDefined();
-    expect(templates.ArrayFieldDescriptionTemplate).toBeDefined();
   });
 
   test('generateTheme() wires the generated templates and widgets together', () => {
@@ -57,10 +51,10 @@ describe('DaisyUI array field title/description', () => {
     expect(container.querySelector('#root_tags__title')).not.toBeNull();
   });
 
-  test('renders the array description with DaisyUI styling instead of the core default', () => {
+  test('renders the array description through the core template, styled by the class map', () => {
     const { container } = render(<Form schema={schema} validator={validator} />);
-    const description = container.querySelector('.text-sm.text-accent');
-    expect(description).not.toBeNull();
+    const description = container.querySelector('.rjsf-field-description');
+    expect(description).toHaveClass('text-sm', 'text-base-content/80');
     expect(description).toHaveTextContent('A list of tags');
   });
 
@@ -73,7 +67,19 @@ describe('DaisyUI array field title/description', () => {
     const uiSchema: UiSchema = { tags: { 'ui:options': { label: false } } };
     const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
     expect(container.querySelector('h3')).toBeNull();
-    expect(container.querySelector('.text-sm.text-accent')).toBeNull();
+    expect(container.querySelector('.rjsf-field-description')).toBeNull();
+  });
+
+  test("marks the array's and the object's descriptions invalid while each has errors of its own", () => {
+    const { container } = render(
+      <Form
+        schema={{ ...schema, description: 'The form' }}
+        validator={validator}
+        extraErrors={{ __errors: ['form error'], tags: { __errors: ['tags error'] } }}
+      />,
+    );
+    expect(container.querySelector('#root__description')).toHaveAttribute('data-invalid', 'true');
+    expect(container.querySelector('#root_tags__description')).toHaveAttribute('data-invalid', 'true');
   });
 });
 

@@ -1,8 +1,10 @@
-import type { CSSProperties } from 'react';
 import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions, joinClassNames } from '@rjsf/utils';
 
-/** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
+/** The `ArrayFieldItemTemplate` component is the template used to render an items of an array: the item beside its
+ * toolbox of buttons, which `rjsf.css` lays out as a grid. `data-display-label` and `data-has-description` let a
+ * stylesheet line the toolbox up with the item's control below its label and description, for any `FieldTemplate`
+ * that draws them above it
  *
  * @param props - The `ArrayFieldItemTemplateProps` props for the component
  */
@@ -14,23 +16,17 @@ export default function ArrayFieldItemTemplate<
   const { children, className, buttonsProps, displayLabel, hasDescription, hasToolbar, registry, uiSchema } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldItemButtonsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  const btnStyle: CSSProperties = {
-    flex: 1,
-    paddingLeft: 6,
-    paddingRight: 6,
-    fontWeight: 'bold',
-  };
-  const margin = hasDescription ? 31 : 9;
-  const containerStyle = { display: 'flex', alignItems: displayLabel ? 'center' : 'baseline' };
-  const toolbarStyle = { display: 'flex', justifyContent: 'flex-end', marginTop: displayLabel ? `${margin}px` : 0 };
+  const { classMap } = registry;
   return (
-    <div className={className} style={containerStyle}>
-      <div className={hasToolbar ? 'col-xs-9 col-md-10 col-xl-11' : 'col-xs-12'}>{children}</div>
+    <div
+      className={joinClassNames(className, classMap.arrayItem)}
+      data-display-label={displayLabel || undefined}
+      data-has-description={hasDescription || undefined}
+    >
+      {children}
       {hasToolbar && (
-        <div className='col-xs-3 col-md-2 col-xl-1 array-item-toolbox'>
-          <div className='btn-group' style={toolbarStyle}>
-            <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />
-          </div>
+        <div className={joinClassNames('rjsf-array-item-toolbox', classMap.arrayItemToolbox)}>
+          <ArrayFieldItemButtonsTemplate {...buttonsProps} />
         </div>
       )}
     </div>

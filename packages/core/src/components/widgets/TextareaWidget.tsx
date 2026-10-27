@@ -24,8 +24,10 @@ function TextareaWidget<
   onBlur,
   onFocus,
   htmlName,
+  registry,
   presentation,
 }: WidgetProps<T, S, F>) {
+  const { classMap } = registry;
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
       onChange(newValue === '' ? options.emptyValue : newValue),
@@ -46,7 +48,7 @@ function TextareaWidget<
     <textarea
       id={id}
       name={htmlName || id}
-      className='form-control'
+      className={classMap.textarea}
       value={value || ''}
       placeholder={placeholder}
       required={required}
