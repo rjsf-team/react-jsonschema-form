@@ -19,7 +19,7 @@ import hashForSchema from '../../hashForSchema.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import { getByPath } from '../../pathUtils.ts';
 import { keywordShape } from '../../schemaUri.ts';
-import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { booleanSchema, schemaFrom } from './mergePlan.ts';
 import { childPointer, isRootPointer } from './parseSchemaGraph.ts';
@@ -71,7 +71,7 @@ function refTo(pointer: string): string {
 }
 
 /** Returns `{ $ref }` naming the subschema at the JSON `pointer` in the root */
-function refAt(pointer: string): GenericObjectType {
+function refAt(pointer: string): Record<string, unknown> {
   return { [REF_KEY]: refTo(pointer) };
 }
 
@@ -494,6 +494,7 @@ function derive<S extends StrictRJSFSchema>(
   };
   const unplaced = (value: unknown, child: NodeId) =>
     pointerTo(graph, child) ?? sub(value, child, undefined, false, KEPT);
+  const rawSchema: object = node.raw;
   const {
     [ID_KEY]: _id,
     [REQUIRED_KEY]: required,
@@ -503,8 +504,8 @@ function derive<S extends StrictRJSFSchema>(
     [ELSE_KEY]: otherwise,
     [DEPENDENCIES_KEY]: dependencies,
     ...rest
-  }: GenericObjectType = node.raw;
-  const copy: GenericObjectType = Object.fromEntries(
+  }: Record<string, unknown> = { ...rawSchema };
+  const copy: Record<string, unknown> = Object.fromEntries(
     Object.entries(rest).map(([key, value]) => [key, pointed(graph, key, value, place, node.baseUri, unplaced)]),
   );
   if (!loosening.required && required !== undefined) {

@@ -21,7 +21,6 @@ import type {
   FieldPathList,
   FormContextType,
   FormFieldState,
-  GenericObjectType,
   RJSFSchema,
   SchemaContext,
   StrictRJSFSchema,
@@ -154,17 +153,17 @@ export default function omitExtraData<
    * @param key - The property key to read
    * @returns - The own value at `key`, or `undefined`
    */
-  function ownValue(obj: GenericObjectType, key: string): unknown {
+  function ownValue(obj: Record<string, unknown>, key: string): unknown {
     return Object.hasOwn(obj, key) ? obj[key] : undefined;
   }
 
-  /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
+  /** Type predicate that narrows `value` to `Record<string, unknown>` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
    *
    * @param value - The value to check
    * @returns - True if `value` is a plain non-array object
    */
-  function isObjectValue(value: unknown): value is GenericObjectType {
+  function isObjectValue(value: unknown): value is Record<string, unknown> {
     return isObject(value);
   }
 
@@ -187,11 +186,11 @@ export default function omitExtraData<
    */
   function handleObject(
     childSchema: S,
-    source: GenericObjectType,
-    target: GenericObjectType,
+    source: Record<string, unknown>,
+    target: Record<string, unknown>,
     path: FieldPathList,
     judge?: ExtraKeyJudge<S>,
-  ): GenericObjectType {
+  ): Record<string, unknown> {
     const { properties } = childSchema;
     const extraKeys = judge?.schema;
     const patternProperties = extraKeys?.patternProperties;

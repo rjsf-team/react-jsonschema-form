@@ -4,7 +4,7 @@ import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
 import { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
 import { resolveOwnRef } from './schema/retrieveSchema.ts';
-import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
+import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Merges a `ui:definitions` entry under the local uiSchema of a field whose schema `$ref`s it. A definition is typed
  * by unknown data, since TypeScript can't follow a `$ref` to the fields it lands on, so the merge is where it is taken
@@ -15,7 +15,7 @@ function mergeDefinition<T, S extends StrictRJSFSchema, F extends FormContextTyp
   definition: UiSchema<unknown, S, F>,
   localUiSchema: UiSchema<T, S, F>,
 ): UiSchema<T, S, F> {
-  return mergeObjects(definition, localUiSchema) as UiSchema<T, S, F>;
+  return mergeObjects<UiSchema<T, S, F>>(definition, localUiSchema);
 }
 
 /** Returns the name a `ui:definitions` entry for `schema` is keyed by. The marker comes first: a schema resolved from a
@@ -87,7 +87,7 @@ export default function resolveUiSchema<
     for (const keyword of [ONE_OF_KEY, ANY_OF_KEY] as const) {
       const schemaOptions = resolvedSchema[keyword];
       if (Array.isArray(schemaOptions) && schemaOptions.length > 0) {
-        const currentUiSchemaArray = (result as GenericObjectType)[keyword];
+        const currentUiSchemaArray = (result as Record<string, unknown>)[keyword];
         const uiSchemaArray: UiSchema<T, S, F>[] = Array.isArray(currentUiSchemaArray) ? [...currentUiSchemaArray] : [];
 
         let hasExpanded = false;
@@ -100,7 +100,7 @@ export default function resolveUiSchema<
         }
 
         if (hasExpanded) {
-          (result as GenericObjectType)[keyword] = uiSchemaArray;
+          (result as Record<string, unknown>)[keyword] = uiSchemaArray;
         }
       }
     }

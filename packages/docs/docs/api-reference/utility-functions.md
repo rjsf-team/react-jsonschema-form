@@ -2296,7 +2296,7 @@ In this case, `thing` is an object if it has the type `object` but is NOT null, 
 
 #### Parameters
 
-- thing: any - The thing to check to see whether it is an object
+- thing: unknown - The thing to check to see whether it is an object
 
 #### Returns
 
@@ -2505,8 +2505,8 @@ Recursively merge deeply nested objects.
 
 #### Parameters
 
-- obj1: GenericObjectType - The first object to merge
-- obj2: GenericObjectType - The second object to merge
+- obj1: object - The first object to merge
+- obj2: object - The second object to merge
 - [concatArrays=false]: boolean | "preventDuplicates" - Optional flag that, when true, will cause arrays to be concatenated. Use "preventDuplicates" to merge arrays in a manner that prevents any duplicate entries from being merged.
 
 #### Returns

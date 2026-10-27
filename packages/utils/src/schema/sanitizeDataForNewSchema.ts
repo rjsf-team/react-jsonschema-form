@@ -8,7 +8,7 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
-import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, { ownRefResolves } from './retrieveSchema.ts';
 
@@ -169,7 +169,7 @@ export default function sanitizeDataForNewSchema<
     // Create an object containing root-level keys in the old schema, setting each key to undefined to remove the data.
     // It and `nestedData` are without a prototype, so that a `__proto__` key is written as a plain key, and the spread
     // into `newFormData` copies it as an own one
-    const removeOldSchemaData: GenericObjectType = Object.create(null);
+    const removeOldSchemaData: Record<string, unknown> = Object.create(null);
     const oldProperties = oldSchema?.[PROPERTIES_KEY];
     if (oldProperties) {
       Object.keys(oldProperties).forEach((key) => {
@@ -180,7 +180,7 @@ export default function sanitizeDataForNewSchema<
     }
     const keys: string[] = Object.keys(newProperties);
     // Create a place to store nested data that will be a side-effect of the filter
-    const nestedData: GenericObjectType = Object.create(null);
+    const nestedData: Record<string, unknown> = Object.create(null);
     keys.forEach((key) => {
       const formValue = getByPath(data, key);
       const isNewProperty = !hasByPath(oldSchema, [PROPERTIES_KEY, key]);
@@ -374,7 +374,7 @@ export default function sanitizeDataForNewSchema<
     } else if (
       // `additionalItems` describes nothing beside an `items` that is not a tuple, so it only counts beside one
       (Array.isArray(oldSchemaItems) || Array.isArray(newSchemaItems) ? TUPLE_KEYWORDS : ITEMS_KEYWORDS).every((key) =>
-        deepEquals((oldSchema as GenericObjectType)[key], (newSchema as GenericObjectType)[key]),
+        deepEquals((oldSchema as Record<string, unknown>)[key], (newSchema as Record<string, unknown>)[key]),
       )
     ) {
       // A tuple, a boolean `items`, or an array declaring no `items`, that both schemas describe alike holds what it

@@ -42,7 +42,7 @@ function withParentRequired<S extends StrictRJSFSchema = RJSFSchema>(parentSchem
   if (!option || !parentSchema?.required) {
     return option;
   }
-  return mergeSchemas({ required: parentSchema.required }, option) as S;
+  return mergeSchemas<S>({ required: parentSchema.required }, option);
 }
 
 /** Returns `option` as `MultiSchemaField` renders it, which is what the data being carried across a switch was entered

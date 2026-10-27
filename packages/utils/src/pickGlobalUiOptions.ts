@@ -1,7 +1,7 @@
 import { GLOBAL_UI_OPTIONS_KEYS, RESERVED_UI_OPTION_NAMES } from './globalUiOptionsKeys.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
-import type { GenericObjectType, GlobalUISchemaOptions } from './types.ts';
+import type { GlobalUISchemaOptions } from './types.ts';
 
 const GLOBAL_NAMES: ReadonlySet<string> = new Set(GLOBAL_UI_OPTIONS_KEYS);
 const RESERVED_NAMES: ReadonlySet<string> = new Set(RESERVED_UI_OPTION_NAMES);
@@ -25,8 +25,8 @@ export default function pickGlobalUiOptions(
     return undefined;
   }
   // Read as a plain record, since an extension's keys aren't declared on the type
-  const globals: GenericObjectType = globalOptions;
-  const picked: GenericObjectType = {};
+  const globals: Record<string, unknown> = globalOptions;
+  const picked: Record<string, unknown> = {};
   for (const key of GLOBAL_UI_OPTIONS_KEYS) {
     if (Object.hasOwn(globals, key)) {
       picked[key] = globals[key];

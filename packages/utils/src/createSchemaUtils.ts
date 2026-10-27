@@ -23,7 +23,6 @@ import type {
   FormContextType,
   FormFieldState,
   FoundFieldType,
-  GenericObjectType,
   GlobalUISchemaOptions,
   RJSFSchema,
   SchemaContext,
@@ -63,7 +62,7 @@ class SchemaUtils<
     this.rootSchema = rootSchema;
     // A v6 caller passing the validator here leaves `validator` undefined, which surfaces only as a `TypeError` from
     // inside `retrieveSchema()` that names nothing. Warned rather than thrown, since TypeScript already rejects it
-    if (context && !('validator' in context) && typeof (context as GenericObjectType).isValid === 'function') {
+    if (context && !('validator' in context) && typeof (context as Record<string, unknown>).isValid === 'function') {
       logOnce(
         'createSchemaUtils() takes a SchemaContext rather than a validator: pass `{ validator }`, plus any `customMergeAllOf` and `defaultFormStateBehavior`',
       );

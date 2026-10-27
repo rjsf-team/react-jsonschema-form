@@ -1,4 +1,4 @@
-import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
+import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Determines whether a `thing` is an object for the purposes of RJSF. In this case, `thing` is an object if it has
  * the type `object` but is NOT null, an array or a File.
@@ -6,7 +6,7 @@ import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts
  * @param thing - The thing to check to see whether it is an object
  * @returns - True if it is a non-null, non-array, non-File object
  */
-export default function isObject(thing: unknown): thing is GenericObjectType {
+export default function isObject(thing: unknown): thing is Record<string, unknown> {
   if (typeof thing !== 'object' || thing === null) {
     return false;
   }

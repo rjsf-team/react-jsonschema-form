@@ -5,7 +5,7 @@ import type { AdoptedSchema, SchemaGraph } from './schema/graph/parseSchemaGraph
 import { readProvenance } from './schema/graph/provenance.ts';
 import { declaringSeed } from './schema/retrieveSchema.ts';
 import { isSubschemaKeyword, keywordShape, resolveUri } from './schemaUri.ts';
-import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
+import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** How `prefixRefs()` rewrites the `$ref`s of a schema handed to a validator beside the root */
 interface RefRewrite {
@@ -122,13 +122,13 @@ function prefixSubschemas(key: string, value: unknown, rewrite: RefRewrite, scop
  * @param isData - Whether the object is part of a data keyword's value rather than a schema
  */
 function withIdRefPrefixObject(
-  node: GenericObjectType,
+  node: Record<string, unknown>,
   holder: object,
   rewrite: RefRewrite,
   outerScope: string,
   isData: boolean,
-): GenericObjectType {
-  const realObj: GenericObjectType = node;
+): Record<string, unknown> {
+  const realObj: Record<string, unknown> = node;
   const ownId: unknown = realObj[ID_KEY];
   const scope =
     !isData && typeof ownId === 'string' && !ownId.startsWith('#') ? resolveUri(outerScope, ownId) : outerScope;

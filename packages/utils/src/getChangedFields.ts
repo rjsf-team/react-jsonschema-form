@@ -1,10 +1,9 @@
 import { deepEqualsUndefinedAsMissing } from './deepEquals.ts';
 import isPlainObject from './isPlainObject.ts';
 import { getByPath } from './pathUtils.ts';
-import type { GenericObjectType } from './types.ts';
 
 /** The keys of `object` that hold a value, since a key holding `undefined` reads as one that is missing */
-function keysHoldingValue(object: GenericObjectType): string[] {
+function keysHoldingValue(object: Record<string, unknown>): string[] {
   return Object.keys(object).filter((key) => object[key] !== undefined);
 }
 

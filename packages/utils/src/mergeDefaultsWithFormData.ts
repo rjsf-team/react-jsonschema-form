@@ -1,4 +1,3 @@
-import type { GenericObjectType } from './index.ts';
 import isObject from './isObject.ts';
 import setOwn from './setOwn.ts';
 
@@ -67,14 +66,14 @@ export default function mergeDefaultsWithFormData<T = unknown>(
     return mapped as unknown as T;
   }
   if (isObject(formData)) {
-    const formDataObj: GenericObjectType = formData;
-    const defaultsObj: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
-    const acc: GenericObjectType = { ...defaultsObj }; // Prevent mutation of source object.
+    const formDataObj: Record<string, unknown> = formData;
+    const defaultsObj: Record<string, unknown> | undefined = isObject(defaults) ? defaults : undefined;
+    const acc: Record<string, unknown> = { ...defaultsObj }; // Prevent mutation of source object.
     return Object.keys(formDataObj).reduce((accumulator, key) => {
       const keyValue = formDataObj[key];
       const keyExistsInDefaults = defaultsObj !== undefined && Object.hasOwn(defaultsObj, key);
       const ownDefault = keyExistsInDefaults ? defaultsObj[key] : undefined;
-      const merged = mergeDefaultsWithFormData<T>(
+      const merged = mergeDefaultsWithFormData(
         ownDefault,
         keyValue,
         mergeExtraArrayDefaults,

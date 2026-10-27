@@ -52,7 +52,6 @@ import type {
   FieldPathList,
   FormContextType,
   FormFieldState,
-  GenericObjectType,
   GetDefaultFormStateProps,
   GlobalUISchemaOptions,
   RJSFSchema,
@@ -238,7 +237,7 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extend
  *        rendered for the schema can hold, and the other defaults the objects hold were already left out by this rule
  */
 function maybeAddDefaultToObject<T = unknown>(
-  acc: GenericObjectType,
+  acc: Record<string, unknown>,
   key: string,
   computedDefault: T | T[] | null | undefined,
   includeUndefinedValues: boolean | 'excludeObjectChildren',
@@ -336,8 +335,10 @@ interface ComputeDefaultsProps<
  * @param renderedOption - The selected option as it is rendered
  * @returns - The rendered option with the parent's `default` merged into its own
  */
-function withDefaultOf(parent: GenericObjectType, renderedOption: GenericObjectType): GenericObjectType {
-  return DEFAULT_KEY in parent ? mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) : renderedOption;
+function withDefaultOf<S extends StrictRJSFSchema>(parent: S, renderedOption: S): S {
+  return DEFAULT_KEY in parent
+    ? mergeSchemas<S>({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption)
+    : renderedOption;
 }
 
 /** What the `null` fills of one `getDefaultFormState()` call share as they reach every level */
@@ -1239,7 +1240,7 @@ function copiedValue(value: unknown, copies: WeakMap<object, unknown>): unknown 
     });
     return copy;
   }
-  const copy: GenericObjectType = {};
+  const copy: Record<string, unknown> = {};
   copies.set(value, copy);
   for (const [key, entry] of Object.entries(value)) {
     setOwn(copy, key, copiedValue(entry, copies));
@@ -1411,7 +1412,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const offered = isSchemaObject<S>(listed) ? offeredOption<S>(view, key, index, listed) : undefined;
     const declared = offered?.graph.node(offered.node);
     const rendered = rendersOwnField
-      ? mergeSchemas(remaining, option)
+      ? mergeSchemas<S>(remaining, option)
       : withDefaultOf(
           remaining,
           renderOption<S>(
@@ -1629,7 +1630,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       : undefined;
   const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
-  const computed: GenericObjectType = {};
+  const computed: Record<string, unknown> = {};
   const childProps = (key: string, uiSchemaKey: string) => ({
     includeUndefinedValues: includeUndefinedValues === true,
     parentDefaults: getByPath(defaults, key),
@@ -1707,7 +1708,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     if (propertyNullFills !== nullFills) {
       // Its own defaults can add it all the same, and an object added with a value renders its fields, whose `null`s
       // it then holds, as it does once the user adds it
-      const added: GenericObjectType = {};
+      const added: Record<string, unknown> = {};
       maybeAddDefaultToObject(
         added,
         key,
@@ -2508,7 +2509,7 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   if (constTakesPrecedence) {
     validFormData = schemaToMatch.const;
   } else if (isObject(validFormData) && isObject(schemaToMatch.properties)) {
-    const matched: GenericObjectType = { ...validFormData };
+    const matched: Record<string, unknown> = { ...validFormData };
     const rootGraph = parseSchemaGraph<S>(rootSchema);
     // A property `retrieveSchema()` handed out is the field it was handed out for, and any other is declared where the
     // declarations of the schema holding it declare it
@@ -2593,7 +2594,7 @@ export default function getDefaultFormState<
   }: GetDefaultFormStateProps<T, S, F>,
 ): T | T[] | null | undefined {
   if (!isObject(theSchema)) {
-    throw new Error(`Invalid schema: ${String(theSchema)}`);
+    throw new Error(`Invalid schema: ${JSON.stringify(theSchema)}`);
   }
   const root = rootSchema ?? theSchema;
   // The root is resolved as `retrieveSchema()` resolves it, its `allOf` merged and the extra keys of its data stubbed

@@ -32,7 +32,6 @@ import type {
   FieldPath,
   FormContextType,
   FormFieldState,
-  GenericObjectType,
   GlobalUISchemaOptions,
   RJSFMarkedSchema,
   RJSFSchema,
@@ -95,7 +94,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   if (!rendersOwnFieldBesideOption<S>(schema)) {
     return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema };
   }
-  return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema };
+  return { schema: mergeSchemas<S>(remaining, option), option, uiSchema: optionUiSchema };
 }
 
 /** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution. A fixed (tuple) schema's
@@ -216,7 +215,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // but `formData` still holds a primitive (e.g. a leftover string from a previous oneOf/anyOf branch, or mismatched
     // caller data), indexing the primitive directly (`'abc'['0']` yields `'a'`, not `undefined`) can make a genuinely
     // missing required child look present.
-    const data = isObject(formData) ? formData : ({} as GenericObjectType);
+    const data = isObject(formData) ? formData : ({} as Record<string, unknown>);
     const childParentPresent = formData !== undefined;
     Object.entries(retrieved.properties ?? {}).forEach(([key, propertySchema]) => {
       if (typeof propertySchema === 'boolean') {
@@ -268,7 +267,7 @@ function hasUiRequiredOption<T, S extends StrictRJSFSchema, F extends FormContex
   if (!isObject(node)) {
     return false;
   }
-  if (getUiOptions<T, S, F>(node).required !== undefined) {
+  if (getUiOptions<unknown, S, F>(node).required !== undefined) {
     return true;
   }
   return Object.entries(node).some(([key, value]) => {

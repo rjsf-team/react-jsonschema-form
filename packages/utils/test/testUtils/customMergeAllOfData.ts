@@ -53,6 +53,8 @@ export function titleChoiceMergeAllOf(schema: RJSFSchema): RJSFSchema {
   if (!isObject(choice) || !Array.isArray(choice.oneOf)) {
     return merged;
   }
-  const oneOf = choice.oneOf.filter(isObject).map((option) => ({ ...option, title: `Option ${option.const}` }));
+  const oneOf = choice.oneOf
+    .filter(isObject)
+    .map((option) => ({ ...option, title: `Option ${JSON.stringify(option.const)}` }));
   return { ...merged, properties: { ...merged.properties, choice: { ...choice, oneOf } } };
 }
