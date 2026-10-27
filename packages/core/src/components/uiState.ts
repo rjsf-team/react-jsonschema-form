@@ -117,6 +117,22 @@ function emptySchema(): StrictRJSFSchema {
   return EMPTY_SCHEMA;
 }
 
+/** The options of a field whose retrieved schema is `view`, each retrieved for `formData`, constants included;
+ * undefined where it offers none. An `AnyOfField` or `OneOfField` named through `ui:field` renders these
+ */
+export function retrievedOptionListOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  view: S,
+  formData: T | undefined,
+): S[] | undefined {
+  const xxxOfKey = getXxxOfKey<S>(view);
+  return xxxOfKey
+    ? view[xxxOfKey]?.map((option) =>
+        schemaUtils.retrieveSchema(isSchemaObject<S>(option) ? option : emptySchema<S>(), formData),
+      )
+    : undefined;
+}
+
 /** The options of a field whose retrieved schema is `view`, each retrieved for `formData`; undefined where it offers
  * none, or only constants, which a select renders instead. `SchemaField` retrieves the options it renders with this,
  * where its `uiSchema` lets them render; the sanitize walk, which reads no `uiSchema`, takes them as rendered wherever
@@ -128,13 +144,9 @@ export function retrievedOptionsOf<T, S extends StrictRJSFSchema, F extends Form
   formData: T | undefined,
 ): S[] | undefined {
   const xxxOfKey = getXxxOfKey<S>(view);
-  const list = xxxOfKey ? view[xxxOfKey] : undefined;
-  if (!list || isConstantOptionList<S>(list, true)) {
-    return undefined;
-  }
-  return list.map((option) =>
-    schemaUtils.retrieveSchema(isSchemaObject<S>(option) ? option : emptySchema<S>(), formData),
-  );
+  return xxxOfKey && isConstantOptionList<S>(view[xxxOfKey])
+    ? undefined
+    : retrievedOptionListOf<T, S, F>(schemaUtils, view, formData);
 }
 
 /** Whether `keyword` of an option, with `value`, can tell data apart by what it holds at `property`. `properties` and

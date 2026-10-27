@@ -2215,18 +2215,16 @@ This happens when either the schema has an `enum` array with a single value or t
 ### isConstantOptionList&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Checks whether `options` is a list of constant schemas (see `isConstant()`), the shape of an `anyOf` or `oneOf` rendered
-as a select. An empty list passes unless `nonEmpty` is set, since every one of its options is vacuously a constant but
-it offers nothing to select.
+as a select. An empty list passes, since every one of its options is vacuously a constant; a list read through
+`getXxxOfKey()` is never empty.
 
 #### Parameters
 
 - options: unknown - The `anyOf` or `oneOf` list, or anything else
-- [nonEmpty=false]: boolean - Whether an empty list is rejected
 
 #### Returns
 
-- boolean: True if `options` is an array whose every entry is a constant schema object, and which has at least one entry
-  when `nonEmpty` is set
+- boolean: True if `options` is an array whose every entry is a constant schema object
 
 ### isConstantSelect&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

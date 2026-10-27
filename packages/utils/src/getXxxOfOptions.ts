@@ -20,5 +20,5 @@ export default function getXxxOfOptions<S extends StrictRJSFSchema = RJSFSchema>
 ): XxxOfOptions<S> | undefined {
   const key = getXxxOfKey<S>(schema);
   const options = key && (schema[key] as S[]);
-  return options && options.length > 0 ? { key, options } : undefined;
+  return options ? { key, options } : undefined;
 }
