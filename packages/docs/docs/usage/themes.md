@@ -2,8 +2,8 @@
 
 By default, this library renders form fields and widgets as plain HTML5 markup with no CSS framework's classes, marked by `rjsf-` prefixed class names, and two optional stylesheets style that markup with HTML5 and CSS3 alone, so taking the structure doesn't mean taking the look:
 
-- `@rjsf/core/rjsf.css` is the layout: the field gap, the `fieldset` and `legend` reset, the label as a block, the option rows, the alt-date and range rows, the array item beside its toolbox, the additional-property row, the add button and the [layout grid](./layout-grid.md)'s rows and columns. Its one custom property is `--rjsf-gap`. It is the file an app with its own design system imports, or copies and owns.
-- `@rjsf/core/rjsf-theme.css` is a default look on top of it: the input borders and padding, the error colors, the error list's box, the button borders and the disabled opacity. Its colors are the custom properties `--rjsf-radius`, `--rjsf-border`, `--rjsf-muted`, `--rjsf-danger`, `--rjsf-accent` and `--rjsf-surface`, whose `light-dark()` values follow the `color-scheme` your page declares (browsers from 2024). It is a starting point, not a design system. Import it after `rjsf.css`, as below: for a [`FieldTemplate` of your own](#lining-up-a-custom-fieldtemplate), it replaces that file's offset of an array item's buttons past a description with one for its own description spacing.
+- `@rjsf/core/rjsf.css` is the layout: the field gap, the `fieldset` and `legend` reset, the label as a block, the option rows, the alt-date and range rows, the array item beside its toolbox, the additional-property row, the add button and the [layout grid](./layout-grid.md)'s rows and columns. Its custom properties are `--rjsf-gap`, the spacing, and `--rjsf-control-row`, the grid row it puts an array item's buttons and an additional property's key input and remove button on, past the field's label and description. It needs `:has()` and `subgrid`: Chrome and Edge 117, Safari 16.4 and Firefox 121 or later (browsers from 2023). It is the file an app with its own design system imports, or copies and owns.
+- `@rjsf/core/rjsf-theme.css` is a default look on top of it: the input borders and padding, the error colors, the error list's box, the button borders and the disabled opacity. Its colors are the custom properties `--rjsf-radius`, `--rjsf-border`, `--rjsf-muted`, `--rjsf-danger`, `--rjsf-accent` and `--rjsf-surface`, whose `light-dark()` values follow the `color-scheme` your page declares (browsers from 2024). It is a starting point, not a design system. Import it after `rjsf.css`, as below. For a [`FieldTemplate` of your own](#lining-up-a-custom-fieldtemplate), it sets `--rjsf-toolbox-description-offset`, `rjsf.css`'s offset of an array item's buttons past a description, for its own description spacing.
 
 Every rule in both is a zero-specificity `:where(.rjsf …)`, so your own CSS overrides it, and both sit in `@layer rjsf`, so unlayered CSS beats them whatever its specificity. A Tailwind app puts them above its preflight, whose `margin: 0`, `padding: 0` and `border: 0` would otherwise undo them, and beneath its utilities, by declaring the layer order once: `@layer theme, base, rjsf, components, utilities;`.
 
@@ -117,14 +117,16 @@ State is styled the same way, with a variant on the attribute core sets, such as
 ## Lining up a custom `FieldTemplate`
 
 `rjsf.css` lines an array item's buttons, and an additional property's key input and remove button, up with the field's control however far a wrapping label or description pushes it down.
-It lays the field's parts out on the row's grid rows, one part to a row, and puts the buttons and the key's input on the control's row.
+It lays the field's parts out on the row's grid rows, one part to a row, and puts the buttons and the key's input on the control's row, `--rjsf-control-row`.
 It finds the label by its class and the description by its class or its id, so a `FieldTemplate` of your own gets the same layout when it:
 
 - renders its parts inside `WrapIfAdditionalTemplate`, passing it the template's props, as core's `FieldTemplate` does;
-- draws them as that wrapper's direct children, one element each, in this order: the label, with the class `rjsf-field-label`, then the description, then the control, the errors and the help;
+- draws them as that wrapper's direct children, one element each, in this order: the label, with the class `rjsf-field-label`, then the description, then the control, the errors and the help; the label and description are counted only from the first child, so one drawn below the control doesn't move the buttons;
 - draws no more than eight direct children, as the rows are fixed at eight; anything past that shares the last row, so wrap extra parts in one element.
 
-Core's `DescriptionFieldTemplate` carries `rjsf-field-description`, and a `DescriptionFieldTemplate` of your own keeps the layout if its outer element carries the `id` it is given, as the control's `aria-describedby` needs, or that class. Core's `FieldLabel` carries only the classes you pass it, so pass it `rjsf-field-label`:
+Give `.rjsf-array-item` and `.rjsf-additional-property` only a column gap (`column-gap`, or `gap-x-*` in a class map): a row gap spaces all eight rows, empty or not.
+
+Core's `DescriptionFieldTemplate` carries `rjsf-field-description`, and a `DescriptionFieldTemplate` of your own keeps the layout if its outer element carries the `id` it is given, as the control's `aria-describedby` needs, or that class. One that carries neither, under core's label, still takes a row but isn't counted, so the buttons sit on the description rather than the control, further off than the fixed offsets below leave them. Core's `FieldLabel` carries only the classes you pass it, so pass it `rjsf-field-label`:
 
 ```tsx
 import { FieldLabel } from '@rjsf/core';

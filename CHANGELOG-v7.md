@@ -814,6 +814,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `WrapIfAdditionalTemplate` to mark a key's label `*` where the object's `required` names the key, as `@rjsf/core`'s does ([#5641](https://github.com/rjsf-team/react-jsonschema-form/pull/5641), [#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 - Add `altDateList`, `altDateListItem`, `altDateNowButton` and `altDateClearButton` to the theme's `classMap`, so core's `AltDateWidget` renders its parts in one wrapping row with outline Now and Clear buttons ([#5641](https://github.com/rjsf-team/react-jsonschema-form/pull/5641), [#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 - Fix `ObjectFieldTemplate` leaving a gap for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
+- Fix an array item's buttons and an additional property's key input and remove button sitting off the field's input when its label or description is taller than one line ([#5673](https://github.com/rjsf-team/react-jsonschema-form/pull/5673), [#5667](https://github.com/rjsf-team/react-jsonschema-form/issues/5667))
 
 ## @rjsf/snapshot-tests
 
