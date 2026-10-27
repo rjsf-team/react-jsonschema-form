@@ -18,7 +18,7 @@ import getUiOptions from '../getUiOptions.ts';
 import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
-import guessType from '../guessType.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject from '../isObject.ts';
@@ -35,7 +35,6 @@ import type {
   FormFieldState,
   GenericObjectType,
   GlobalUISchemaOptions,
-  RJSFMarkedSchema,
   RJSFSchema,
   SchemaContext,
   StrictRJSFSchema,
@@ -185,7 +184,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { schemaContext, rootSchema, uiSchemaDefinitions, globalUiOptions, formContext, fieldState, builder } = ctx;
   // A recursive $ref that `retrieveSchema()` flagged as a cycle is not rendered until the user expands it (see
   // SchemaField/CyclicSchemaField), so nothing below it can be required of them until then
-  if (Reflect.get(schema, RJSF_REF_CYCLE_KEY)) {
+  if (hasSchemaMarker(schema, RJSF_REF_CYCLE_KEY)) {
     if (!fieldState?.isExpanded(fieldPathFromList(path))) {
       return;
     }
@@ -276,7 +275,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
       const childUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
         branchUiSchema,
-        (propertySchema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] ? ADDITIONAL_PROPERTIES_KEY : key,
+        hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG) ? ADDITIONAL_PROPERTIES_KEY : key,
       );
       const childRequired = Boolean(retrieved.required?.includes(key));
       walk(ctx, propertySchema as S, childUiSchema, data[key], [...path, key], childRequired, childParentPresent);

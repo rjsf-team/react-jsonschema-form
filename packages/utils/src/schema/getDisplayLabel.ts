@@ -1,8 +1,8 @@
 import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY } from '../constants.ts';
 import getUiOptions from '../getUiOptions.ts';
 import { DEFAULT_BOOLEAN_WIDGET, getFieldTypeForWidget } from '../getWidget.tsx';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isCustomWidget from '../isCustomWidget.ts';
-import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type {
   FormContextType,
@@ -47,7 +47,7 @@ export default function getDisplayLabel<
     // Only the field's own `ui:widget` picks that field, so a `widget` in `globalOptions` is left out
     const { widget } = getUiOptions<T, S, F>(uiSchema);
     const schemaType = getFieldTypeForWidget<S>(schema, widget);
-    const addedByAdditionalProperty = isObject(schema) && Boolean(Reflect.get(schema, ADDITIONAL_PROPERTY_FLAG));
+    const addedByAdditionalProperty = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
     // A schema handed in as written holds a select's constants as `$ref`s, so they are read resolved
     const isWholeValue = () =>
       isWholeValueSelect<S>(rootSchema === undefined ? schema : resolveConstantOptions<S>(schema, rootSchema));
