@@ -1121,6 +1121,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `isCollapsedByOptionalDataControls()`, whether the Optional Data Controls show a property behind its Add button ([#5672](https://github.com/rjsf-team/react-jsonschema-form/pull/5672), [#5427](https://github.com/rjsf-team/react-jsonschema-form/issues/5427))
 - Fix `getDefaultFormState()` leaving out the `null`s of the `type: 'null'` properties of an object `ui:required` makes required while `enableOptionalDataFieldForType` names `object` ([#5672](https://github.com/rjsf-team/react-jsonschema-form/pull/5672))
 - Add the optional `drawsControlsBesideOptions()` to `FormFieldState`, so `getUiRequiredErrorSchema()` asks the form whether an object's `anyOf`/`oneOf` option is hidden behind the object's Add button ([#5672](https://github.com/rjsf-team/react-jsonschema-form/pull/5672), [#5427](https://github.com/rjsf-team/react-jsonschema-form/issues/5427))
+- Add `getOptionUiSchema()`, the uiSchema of the `anyOf`/`oneOf` option at an index, as `AnyOfField` resolves it: the keyword's array entry for that option, or the field's own uiSchema ([#5277](https://github.com/rjsf-team/react-jsonschema-form/pull/5277), [#4983](https://github.com/rjsf-team/react-jsonschema-form/issues/4983))
+- Add `selectOptionUiSchema()`, which picks an option's uiSchema from per-option uiSchemas already resolved, falling back to the field's own uiSchema ([#5277](https://github.com/rjsf-team/react-jsonschema-form/pull/5277), [#4983](https://github.com/rjsf-team/react-jsonschema-form/issues/4983))
 
 ## @rjsf/validator-ajv8
 
