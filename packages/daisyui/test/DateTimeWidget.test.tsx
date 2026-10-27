@@ -598,6 +598,21 @@ describe('DateTimeWidget', () => {
       expect(trigger).toHaveFocus();
     });
 
+    test('giving the focus to its trigger when it hides with nothing holding it, as Safari leaves it after a press on a day', async () => {
+      const trigger = renderAt({ top: 30, left: 10 });
+      await user.click(trigger);
+      const day = within(popup()).getByRole('button', { name: /12th, 2016/, hidden: true });
+      await user.click(day);
+      // Safari focuses no button it presses, where user-event focuses the day
+      act(() => day.blur());
+      expect(document.body).toHaveFocus();
+
+      act(() => intersectionObserver.leaveNode(trigger));
+
+      expect(popup()).toHaveStyle({ visibility: 'hidden' });
+      expect(trigger).toHaveFocus();
+    });
+
     // The user can't see the date it holds, which leaving the field is no request to store
     test.each([
       ['moves the focus on', () => user.tab()],
@@ -617,6 +632,48 @@ describe('DateTimeWidget', () => {
       expect(onChange).not.toHaveBeenCalled();
       expect(onBlur).toHaveBeenCalledTimes(1);
     });
+
+    // Tab past Done leaves it showing, until scrolling to the field the focus moved to clips the trigger
+    test.each([
+      ['', () => undefined, () => user.tab()],
+      [
+        // Whose own `activeElement` is null once the focus is outside it. user-event's Tab doesn't step out of one
+        ' of a form rendered in a shadow root',
+        () => {
+          const host = document.body.appendChild(document.createElement('div'));
+          onTestFinished(() => host.remove());
+          return host.attachShadow({ mode: 'open' }).appendChild(document.createElement('div'));
+        },
+        (next: HTMLElement) => act(() => next.focus()),
+      ],
+    ])(
+      'closed without storing the date it holds where it hides with the focus already out%s',
+      async (_, container, leave) => {
+        const onChange = vi.fn();
+        const onBlur = vi.fn();
+        const into = container();
+        const trigger = renderAt({ top: 30, left: 10 }, into, { onChange, onBlur });
+        const next = document.body.appendChild(document.createElement('input'));
+        onTestFinished(() => next.remove());
+        await user.click(trigger);
+        await user.click(within(into ?? document.body).getByRole('button', { name: /12th, 2016/, hidden: true }));
+        await leave(next);
+        expect(next).toHaveFocus();
+        expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+        act(() => intersectionObserver.leaveNode(trigger));
+
+        expect(within(into ?? document.body).queryByRole('dialog', { hidden: true })).not.toBeInTheDocument();
+        expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        expect(next).toHaveFocus();
+        expect(onBlur).toHaveBeenCalledTimes(1);
+        // Nor back once the trigger is, for the next press elsewhere to store
+        act(() => intersectionObserver.enterNode(trigger));
+        await user.click(document.body);
+        expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        expect(onChange).not.toHaveBeenCalled();
+      },
+    );
 
     test('storing the date it holds again once it shows again', async () => {
       const onChange = vi.fn();

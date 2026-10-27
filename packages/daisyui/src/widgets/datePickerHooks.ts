@@ -506,9 +506,12 @@ export function useDatePicker<V>({
     // A scrolling panel clips the trigger but not the fixed popup, which is hidden while none of the trigger shows
     // rather than left floating over whatever is at its place, and stops following it until it shows again, placed
     // before it does. Hidden, it can't hold the focus, which would fall to the document body and leave Tab to start
-    // the page over, so the focus goes back to the trigger first, without scrolling it back into the view the user
-    // scrolled it out of, and the trigger losing it closes the popup. The observer doesn't exist outside a browser,
-    // such as in a consumer's jsdom tests
+    // the page over, so the focus goes to the trigger first, without scrolling it back into the view the user
+    // scrolled it out of, and the trigger losing it closes the popup. It goes there from the body too, where Safari
+    // leaves it after a press on a day. Focus already on another element is the user having left the field, as Tab
+    // past Done does, so the popup closes instead, storing nothing, as Escape does: it would otherwise stay open,
+    // hidden with nothing left to close it. The observer doesn't exist outside a browser, such as in a consumer's
+    // jsdom tests
     const sight =
       'IntersectionObserver' in win
         ? new win.IntersectionObserver((entries) => {
@@ -517,7 +520,11 @@ export function useDatePicker<V>({
             if (!isInSight) {
               win.cancelAnimationFrame(frame);
               frame = 0;
-              if (popup.contains(activeElementOf(popup))) {
+              // A shadow root's `activeElement` is null while the focus is outside it
+              const focused = activeElementOf(popup) ?? doc.activeElement;
+              if (focused && focused !== doc.body && focused !== trigger && !popup.contains(focused)) {
+                latestCancel.current();
+              } else {
                 trigger.focus({ preventScroll: true });
               }
             } else if (!frame) {
@@ -532,7 +539,7 @@ export function useDatePicker<V>({
       sight?.disconnect();
       isHidden.current = false;
     };
-  }, [isOpen]);
+  }, [isOpen, latestCancel]);
 
   /** Take a date the user chose in the popup, which is what makes closing it store one
    *
