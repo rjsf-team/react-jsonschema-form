@@ -21,7 +21,7 @@ describe('createPrecompiledValidator()', () => {
     >();
   });
   describe('passing validatorFns and rootSchema to createPrecompiledValidator', () => {
-    let custom: any;
+    let custom: unknown;
     beforeAll(() => {
       mockedValidator.mockClear();
       custom = createPrecompiledValidator(validateFns, rootSchema);
@@ -34,7 +34,7 @@ describe('createPrecompiledValidator()', () => {
     });
   });
   describe('passing validatorFns, rootSchema and localizer to createPrecompiledValidator', () => {
-    let custom: any;
+    let custom: unknown;
     let localizer: Localizer;
     beforeAll(() => {
       localizer = vi.fn();
@@ -49,7 +49,7 @@ describe('createPrecompiledValidator()', () => {
     });
   });
   describe('passing suppressDuplicateFiltering to createPrecompiledValidator', () => {
-    let custom: any;
+    let custom: unknown;
     beforeAll(() => {
       mockedValidator.mockClear();
       custom = createPrecompiledValidator(validateFns, rootSchema, { suppressDuplicateFiltering: 'all' });

@@ -505,15 +505,17 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
       it('should return non-object formData as-is', () => {
         const schema: RJSFSchema = { type: 'string' };
         // String type falls through without object/array branching, source is returned.
-        expect(omitExtraData({ validator: testValidator }, schema, schema, 'hello' as any)).toEqual('hello');
+        expect(omitExtraData({ validator: testValidator }, schema, schema, 'hello')).toEqual('hello');
       });
 
       it('should return formData as-is when schema is null or undefined', () => {
         const formData = { foo: 'bar' };
         // isEmpty(null) and isEmpty(undefined) are both true, so the schema is treated
         // as a pass-through and source is returned unchanged.
-        expect(omitExtraData({ validator: testValidator }, null as any, undefined, formData)).toEqual({ foo: 'bar' });
-        expect(omitExtraData({ validator: testValidator }, undefined as any, undefined, formData)).toEqual({
+        // @ts-expect-error: TS2345, a missing schema is what this case checks
+        expect(omitExtraData({ validator: testValidator }, null, undefined, formData)).toEqual({ foo: 'bar' });
+        // @ts-expect-error: TS2345, a missing schema is what this case checks
+        expect(omitExtraData({ validator: testValidator }, undefined, undefined, formData)).toEqual({
           foo: 'bar',
         });
       });
@@ -1025,12 +1027,12 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
 
       it('returns undefined when schema type is object but source is a non-object scalar', () => {
         const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
-        expect(omitExtraData({ validator: testValidator }, schema, schema, 'not-an-object' as any)).toBeUndefined();
+        expect(omitExtraData({ validator: testValidator }, schema, schema, 'not-an-object')).toBeUndefined();
       });
 
       it('returns undefined when schema type is array but source is a non-array value', () => {
         const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
-        expect(omitExtraData({ validator: testValidator }, schema, schema, 'not-an-array' as any)).toBeUndefined();
+        expect(omitExtraData({ validator: testValidator }, schema, schema, 'not-an-array')).toBeUndefined();
       });
     });
 
@@ -1187,7 +1189,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const customMerge = vi.fn().mockReturnValue(merged);
         const formData = { foo: 'hi', bar: 1, extra: 'drop' };
         const result = omitExtraData(
-          { validator: testValidator, customMergeAllOf: customMerge as any },
+          { validator: testValidator, customMergeAllOf: customMerge },
           schema,
           schema,
           formData,
@@ -1308,10 +1310,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           return merged;
         };
         const data = { top: 'T', x: 'X', y: 'Y', z: 'Z' };
-        const utils = createSchemaUtils(
-          { validator: testValidator, customMergeAllOf: customMergeAllOf as any },
-          schema,
-        );
+        const utils = createSchemaUtils({ validator: testValidator, customMergeAllOf }, schema);
         expect(Object.keys(utils.retrieveSchema(schema, data).properties ?? {})).toEqual(['top', 'x', 'y']);
         expect(utils.omitExtraData(schema, data)).toEqual({ top: 'T', x: 'X', y: 'Y' });
       });
@@ -1327,12 +1326,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           throw new Error('omission merge failed');
         });
         const formData = { foo: 'hi', extra: 'drop' };
-        const result = omitExtraData(
-          { validator: testValidator, customMergeAllOf: customMergeAllOf as any },
-          schema,
-          schema,
-          formData,
-        );
+        const result = omitExtraData({ validator: testValidator, customMergeAllOf }, schema, schema, formData);
         expect(customMergeAllOf).toHaveBeenCalled();
         expect(result).toEqual({ foo: 'hi' });
         expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', expect.any(Error));
@@ -1930,7 +1924,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           anyOf: [{ items: { type: 'string' } }, { items: { type: 'number' } }],
           items: { type: 'string' },
         };
-        expect(omitExtraData({ validator: testValidator }, schema, schema, [] as any)).toEqual([]);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, [])).toEqual([]);
       });
 
       it('reuses an array target already built by anyOf when outer schema is also type:array', () => {
@@ -1943,7 +1937,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           anyOf: [{ type: 'array', items: { type: 'string' } }],
           items: { type: 'string' },
         };
-        expect(omitExtraData({ validator: testValidator }, schema, schema, [] as any)).toEqual([]);
+        expect(omitExtraData({ validator: testValidator }, schema, schema, [])).toEqual([]);
       });
     });
 

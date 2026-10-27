@@ -36,7 +36,7 @@ describe('enumOptionsSelectValue()', () => {
   });
   it('handles falsy values', () => {
     selected = [];
-    const expected: any[] = [];
+    const expected: unknown[] = [];
     FALSY_OPTIONS.forEach((option, index) => {
       expected.push(option.value);
       selected = enumOptionsSelectValue(index, selected, FALSY_OPTIONS);

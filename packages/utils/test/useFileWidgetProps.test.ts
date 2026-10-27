@@ -56,14 +56,14 @@ function toFileList(list: File[]) {
 describe('useFileWidgetProps()', () => {
   let onChange: Mock;
   let windowFileReaderSpy: MockInstance<typeof window.FileReader>;
-  let FN_RESULT: any;
+  let FN_RESULT: unknown;
   beforeAll(() => {
     onChange = vi.fn();
     FN_RESULT = { target: { result: 'data:text/plain;base64,' } };
     // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
     windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(function windowFileReaderSpy() {
       return {
-        set onload(fn: (event: any) => void) {
+        set onload(fn: (event: unknown) => void) {
           fn(FN_RESULT);
         },
         readAsDataUrl: vi.fn(),

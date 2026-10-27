@@ -24,7 +24,9 @@ describe('FileWidget', () => {
   test('clearing a single file input reports an undefined value', async () => {
     const schema: RJSFSchema = { type: 'string', format: 'data-url' };
     const onChange = vi.fn();
-    render(<Form schema={schema} uiSchema={uiSchema} formData={FILE_STR} validator={validator} onChange={onChange} />);
+    render(
+      <Form schema={schema} uiSchema={uiSchema} initialFormData={FILE_STR} validator={validator} onChange={onChange} />,
+    );
 
     await user.click(screen.getByLabelText('Clear'));
 
@@ -35,7 +37,13 @@ describe('FileWidget', () => {
     const schema: RJSFSchema = { type: 'array', items: { type: 'string', format: 'data-url' } };
     const onChange = vi.fn();
     render(
-      <Form schema={schema} uiSchema={uiSchema} formData={[FILE_STR]} validator={validator} onChange={onChange} />,
+      <Form
+        schema={schema}
+        uiSchema={uiSchema}
+        initialFormData={[FILE_STR]}
+        validator={validator}
+        onChange={onChange}
+      />,
     );
 
     await user.click(screen.getByLabelText('Clear'));

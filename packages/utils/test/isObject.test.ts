@@ -22,7 +22,7 @@ describe('isObject()', () => {
     expect(isObject(['foo'])).toBe(false);
   });
   it('returns true when an object is provided', () => {
-    OBJECTS.forEach((object: any) => {
+    OBJECTS.forEach((object: unknown) => {
       expect(isObject(object)).toBe(true);
     });
   });
@@ -57,7 +57,7 @@ describe('isObject()', () => {
     });
 
     it('returns true when an object is provided', () => {
-      OBJECTS.forEach((object: any) => {
+      OBJECTS.forEach((object: unknown) => {
         expect(isObject(object)).toBe(true);
       });
     });

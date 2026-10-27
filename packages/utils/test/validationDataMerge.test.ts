@@ -3,14 +3,14 @@ import { ERRORS_KEY, toErrorSchema, validationDataMerge } from '../src/index.ts'
 
 describe('validationDataMerge()', () => {
   it('Returns validationData when no additionalErrorSchema is passed', () => {
-    const validationData: ValidationData<any> = {
+    const validationData: ValidationData<unknown> = {
       errorSchema: {},
       errors: [],
     };
     expect(validationDataMerge(validationData)).toBe(validationData);
   });
   it('Returns only additionalErrorSchema when additionalErrorSchema is passed and no validationData', () => {
-    const validationData: ValidationData<any> = {
+    const validationData: ValidationData<unknown> = {
       errorSchema: {},
       errors: [],
     };
@@ -39,7 +39,7 @@ describe('validationDataMerge()', () => {
   });
   it('Returns merged data when additionalErrorSchema is passed', () => {
     const oldError = 'ajv error';
-    const validationData: ValidationData<any> = {
+    const validationData: ValidationData<unknown> = {
       errorSchema: { [ERRORS_KEY]: [oldError] },
       errors: [{ stack: oldError, name: 'foo', schemaPath: '.foo' }],
     };
@@ -54,7 +54,7 @@ describe('validationDataMerge()', () => {
   });
   it('Returns merged data when additionalErrorSchema is passed, prevent duplicates', () => {
     const oldError = 'ajv error';
-    const validationData: ValidationData<any> = {
+    const validationData: ValidationData<unknown> = {
       errorSchema: { [ERRORS_KEY]: [oldError] },
       errors: [{ stack: oldError, name: 'foo', schemaPath: '.foo' }],
     };
@@ -70,7 +70,7 @@ describe('validationDataMerge()', () => {
   it('Skips additional errors already in the errorSchema when preventing duplicates', () => {
     const message = 'must be at least 3 characters';
     const existing = { property: '.street', message, stack: `.street ${message}` };
-    const validationData: ValidationData<any> = {
+    const validationData: ValidationData<unknown> = {
       errorSchema: { street: { [ERRORS_KEY]: [message] } },
       errors: [existing],
     };
@@ -86,17 +86,18 @@ describe('validationDataMerge()', () => {
     const message = 'must have required property';
     const additional = (path: string[]): ErrorSchema => {
       const schema: ErrorSchema = {};
-      let node: any = schema;
+      let node: Record<string, unknown> = schema;
       path.forEach((key) => {
-        node[key] = {};
-        node = node[key];
+        const child: Record<string, unknown> = {};
+        node[key] = child;
+        node = child;
       });
       node[ERRORS_KEY] = [message];
       return schema;
     };
     const existingAt = (property: string | undefined) => ({ property, message, stack: `${property} ${message}` });
     // The `ValidationData` a validator returns: the `errorSchema` built from the `errors` by `toErrorSchema()`
-    const validated = (...errors: RJSFValidationError[]): ValidationData<any> => ({
+    const validated = (...errors: RJSFValidationError[]): ValidationData<unknown> => ({
       errors,
       errorSchema: toErrorSchema(errors),
     });
@@ -138,7 +139,7 @@ describe('validationDataMerge()', () => {
 
     it('lists a root error that the errorSchema keeps apart from an invalid-schema error', () => {
       // An invalid schema is reported with no `property`, and held under `$schema` in the `errorSchema`
-      const validationData: ValidationData<any> = {
+      const validationData: ValidationData<unknown> = {
         errors: [existingAt(undefined)],
         errorSchema: { $schema: { [ERRORS_KEY]: [message] } },
       };
@@ -165,7 +166,7 @@ describe('validationDataMerge()', () => {
     });
 
     it('merges an additional array into the object the validator keys by index, keeping both errors', () => {
-      const validationData: ValidationData<any> = {
+      const validationData: ValidationData<unknown> = {
         errors: [listed(1, 'from schema')],
         errorSchema: { list: { 1: item('from schema') } },
       };
@@ -175,7 +176,7 @@ describe('validationDataMerge()', () => {
     });
 
     it('merges two arrays item by item instead of appending one to the other', () => {
-      const validationData: ValidationData<any> = {
+      const validationData: ValidationData<unknown> = {
         errors: [listed(0, 'first')],
         errorSchema: { list: [item('first')] },
       };
@@ -186,7 +187,7 @@ describe('validationDataMerge()', () => {
     });
 
     it("keeps the validator's errors for an item the additional array holds undefined for", () => {
-      const validationData: ValidationData<any> = {
+      const validationData: ValidationData<unknown> = {
         errors: [listed(0, 'from schema')],
         errorSchema: { list: { 0: item('from schema') } },
       };
@@ -205,7 +206,7 @@ describe('validationDataMerge()', () => {
       ['empty additional errors', {}],
       ['additional errors that hold only undefined', { other: undefined }],
     ])('returns an existing array as the object keyed by index with %s', (_, additional) => {
-      const validationData: ValidationData<any> = {
+      const validationData: ValidationData<unknown> = {
         errors: [listed(0, 'first')],
         errorSchema: { list: [item('first')] },
       };
@@ -216,7 +217,7 @@ describe('validationDataMerge()', () => {
     });
 
     it('returns validationData itself with nothing to merge when its errorSchema holds no array', () => {
-      const validationData: ValidationData<any> = {
+      const validationData: ValidationData<unknown> = {
         errors: [listed(0, 'first')],
         errorSchema: { list: { 0: item('first') } },
       };
