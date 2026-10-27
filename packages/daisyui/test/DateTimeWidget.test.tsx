@@ -513,8 +513,9 @@ describe('DateTimeWidget', () => {
       // Capped at 20rem, as `max-w-xs` would be where a page's Tailwind build scans this package, since the width it is
       // given is the whole viewport's
       expect(popup().style.maxWidth).toBe('20rem');
-      // Scrolling past its end scrolls nothing else, as the page would, taking the trigger out of view and hiding it
-      expect(popup()).toHaveStyle({ overscrollBehavior: 'contain' });
+      // Scrolling within the height it is capped at, and scrolling nothing else past its end, as the page would, taking
+      // the trigger out of view and hiding it
+      expect(popup()).toHaveStyle({ overflowY: 'auto', overscrollBehavior: 'contain' });
     });
 
     const removeShowPopover = () => Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
@@ -547,6 +548,9 @@ describe('DateTimeWidget', () => {
       expect(popup()).toHaveStyle({ position: 'absolute', marginTop: '5px', zIndex: '100', minWidth: 'min-content' });
       expect(trigger.closest('.form-control')).toHaveClass('relative');
       expect(popup().style.top).toBe('');
+      // Uncapped there, so left `overflow: visible` rather than made a scrolling box that could clip it
+      expect(popup().style.overflowY).toBe('');
+      expect(popup().style.overscrollBehavior).toBe('');
       expect(popup()).not.toHaveAttribute('popover');
       expect(trigger.getBoundingClientRect).not.toHaveBeenCalled();
     });

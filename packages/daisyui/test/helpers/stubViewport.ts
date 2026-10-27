@@ -35,13 +35,19 @@ export default function stubViewport() {
     const supports = vi
       .spyOn(CSS, 'supports')
       .mockImplementation((condition) => condition === 'selector(:popover-open)');
+    const showPopover = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'showPopover');
     Object.defineProperty(HTMLElement.prototype, 'showPopover', { value: vi.fn(), configurable: true });
     measureClientRectsFrom(0, 0);
     return () => {
       width.mockRestore();
       height.mockRestore();
       supports.mockRestore();
-      Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
+      // Restored rather than deleted, so a jsdom that gains its own isn't left without it for every later test
+      if (showPopover) {
+        Object.defineProperty(HTMLElement.prototype, 'showPopover', showPopover);
+      } else {
+        Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
+      }
       Reflect.deleteProperty(HTMLElement.prototype, 'getBoundingClientRect');
     };
   });

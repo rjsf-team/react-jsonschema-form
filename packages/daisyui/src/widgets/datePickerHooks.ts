@@ -448,6 +448,12 @@ export function useDatePicker<V>({
     // As the browser's own popover styles make it, but which a stylesheet's rule for the popup would win over: the
     // `top` and `left` written below are viewport coordinates
     popup.style.position = 'fixed';
+    // Scrolling within the height cap written below, so a viewport shorter than the popup still reaches its Done
+    // button, without a scroll past either end scrolling the page, which would take the trigger out of view and hide
+    // the popup the user is scrolling. Not in the field's flow, where nothing caps its height and its overflow stays
+    // `visible`
+    popup.style.overflowY = 'auto';
+    popup.style.overscrollBehavior = 'contain';
     // The trigger is measured against the viewport of the window the form is in, so that is the one to keep inside
     // of. Its client box less its scrollbars is the root element's, or in a quirks-mode document, where the root's is the
     // whole page, the body's. Told by `compatMode` rather than `scrollingElement`, which is null in a quirks-mode
