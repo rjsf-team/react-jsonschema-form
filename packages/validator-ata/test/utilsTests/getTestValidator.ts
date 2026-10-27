@@ -33,10 +33,7 @@ export default function getTestValidator(options: CustomValidatorOptionsType): T
     isValid(schema: RJSFSchema, formData: unknown, rootSchema: RJSFSchema): boolean {
       return validator.isValid(schema, formData, rootSchema);
     },
-    rawValidation<Result = any>(
-      schema: RJSFSchema,
-      formData?: unknown,
-    ): { errors?: Result[]; validationError?: Error } {
+    rawValidation(schema: RJSFSchema, formData?: unknown) {
       return validator.rawValidation(schema, formData);
     },
     // This is intentionally a no-op as we are using the real validator here

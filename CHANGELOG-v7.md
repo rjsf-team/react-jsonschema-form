@@ -1117,6 +1117,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change the array button handlers (`onAddItem`, `onCopyItem`, `onMoveUpItem`, `onMoveDownItem`, `onRemoveItem`, `onAddClick`) to take an optional `SyntheticEvent<HTMLElement>` instead of `any`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#PR1](https://github.com/rjsf-team/react-jsonschema-form/pull/PR1))
 - **BREAKING CHANGE:** Change `style` in `FieldTemplateProps` and `ui:style` from `StyleHTMLAttributes<any>` to `CSSProperties`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#PR1](https://github.com/rjsf-team/react-jsonschema-form/pull/PR1))
 - **BREAKING CHANGE:** Change `RJSFValidationError.params` from `any` to `Record<string, unknown>`, so a value read from it needs narrowing. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#PR1](https://github.com/rjsf-team/react-jsonschema-form/pull/PR1))
+- **BREAKING CHANGE:** Remove the `Result` type argument from `ValidatorType.rawValidation()`, whose errors are now `unknown[]`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#PR2](https://github.com/rjsf-team/react-jsonschema-form/pull/PR2))
 
 ## @rjsf/validator-ajv8
 
@@ -1144,6 +1145,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `isValid()` answering every schema `false` and logging `schema with key or id … already exists` once a root whose `$id` ends in an empty fragment, such as `http://example.com/root.json#`, was edited under the same `$id` ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536))
 - Change `isValid()` to validate a copy of the data under Ajv's `useDefaults`, `coerceTypes`, `removeAdditional` or a `modifying: true` keyword so it leaves the data as handed, as does a precompiled validator for functions marked with the new `CompiledValidateFunction.changesData`; data that can't be copied makes `isValid()` return `false` with a warning, or throw when precompiled ([#5537](https://github.com/rjsf-team/react-jsonschema-form/pull/5537))
 - Change a precompiled validator's error for a schema it has no function for to name that schema: by where in the root a `$ref` it was handed points, or by the `$id` in its first `allOf` entry ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536), [#5455](https://github.com/rjsf-team/react-jsonschema-form/issues/5455))
+- **BREAKING CHANGE:** Remove the `Result` type argument from `rawValidation()`, which now returns Ajv's `ErrorObject`s. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#PR2](https://github.com/rjsf-team/react-jsonschema-form/pull/PR2))
 
 ## @rjsf/validator-ata
 
@@ -1165,6 +1167,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix a precompiled validator throwing `was not compiled to a standalone validator` from `isValid()` for a schema holding only annotations, such as the root `{ title: 'Anything' }`; it now returns `true` ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536))
 - Fix a precompiled validator throwing `was not compiled to a standalone validator` when a form scored an option carrying its own `$id`; `compileSchemaValidatorsCode()` now compiles it and reads a `$ref` below it against the option ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536), [#5455](https://github.com/rjsf-team/react-jsonschema-form/issues/5455))
 - Change a precompiled validator's error for a schema it has no function for to name that schema: by where in the root a `$ref` it was handed points, or by the `$id` in its first `allOf` entry ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536), [#5455](https://github.com/rjsf-team/react-jsonschema-form/issues/5455))
+- **BREAKING CHANGE:** Remove the `Result` type argument from `rawValidation()`, which now returns `ata-validator`'s `ValidationError`s. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#PR2](https://github.com/rjsf-team/react-jsonschema-form/pull/PR2))
 
 ## @rjsf/validator-cfworker
 
@@ -1180,6 +1183,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `isValid()` not finding a root with an `$id` from a `$ref` in a 2020-12 root, so an `if: { $ref: … }` condition always took `else` and `getFirstMatchingOption()` picked the wrong `$ref` option ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536))
 - Fix `isValid(rootSchema, data, rootSchema)` returning `false` for a root whose `$id` ends in an empty fragment ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536))
 - Fix `isValid()` and `validateFormData()` reporting an unresolved `$ref` for one that escapes a `#` in a name as `%23`, such as `{ $ref: '#/definitions/a%23b' }` ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536))
+- **BREAKING CHANGE:** Remove the `Result` type argument from `rawValidation()`, which now returns `CFWorkerValidationError`s. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#PR2](https://github.com/rjsf-team/react-jsonschema-form/pull/PR2))
 
 ## All packages
 

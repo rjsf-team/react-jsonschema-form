@@ -17,7 +17,6 @@ import pointerValidationTests, {
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import * as pkg from '../src/index.ts';
-import type { CFWorkerValidationError } from '../src/types.ts';
 import { normalizeFormDataForValidation } from '../src/validator.ts';
 
 describe('CFWorkerValidator', () => {
@@ -30,7 +29,7 @@ describe('CFWorkerValidator', () => {
     };
     const formData = { email: undefined };
 
-    const raw = validator.rawValidation<CFWorkerValidationError>(schema, formData);
+    const raw = validator.rawValidation(schema, formData);
     expect(raw.validationError).toBeUndefined();
     expect(raw.errors?.some((error) => error.keyword === 'required')).toBe(true);
 
@@ -43,7 +42,7 @@ describe('CFWorkerValidator', () => {
     const validator = customizeValidator();
     const schema: RJSFSchema = { type: 'string', minLength: 3 };
     expect(validator.rawValidation(schema, 'valid')).toEqual({ errors: undefined, validationError: undefined });
-    const invalid = validator.rawValidation<CFWorkerValidationError>(schema, 'x');
+    const invalid = validator.rawValidation(schema, 'x');
     expect(invalid.validationError).toBeUndefined();
     expect(invalid.errors?.some((error) => error.keyword === 'minLength')).toBe(true);
   });

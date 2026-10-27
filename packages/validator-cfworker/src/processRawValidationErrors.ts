@@ -25,9 +25,9 @@ import {
 import type { CFWorkerValidationError, SuppressDuplicateFilteringType } from './types.ts';
 
 /** The raw validation results produced by the underlying engine, before conversion into RJSF's error formats. */
-export interface RawValidationErrorsType<Result = any> {
+export interface RawValidationErrorsType {
   /** The raw errors returned by the engine's validation run, when any. */
-  errors?: Result[];
+  errors?: CFWorkerValidationError[];
 
   /** The error thrown when the engine could not run validation, such as on an invalid schema. */
   validationError?: Error;
@@ -200,7 +200,7 @@ export default function processRawValidationErrors<
   F extends FormContextType = FormContextType,
 >(
   context: SchemaContext<S, F>,
-  rawErrors: RawValidationErrorsType<CFWorkerValidationError>,
+  rawErrors: RawValidationErrorsType,
   formData: T | undefined,
   schema: S,
   customValidate?: CustomValidator<T, S, F>,
