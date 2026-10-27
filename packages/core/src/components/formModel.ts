@@ -88,6 +88,28 @@ function isFocusable(element: Node | null | undefined, view: Window & typeof glo
   );
 }
 
+/** Focuses `element` where `isFocusable()` allows it, and tells whether focus took. An element that CSS hides, that is
+ * `inert` or that sits in a closed `<details>` passes `isFocusable()` yet ignores `focus()`, which no selector can tell,
+ * so the active element of its document or shadow root is read back instead. Focus that moved anywhere counts, since
+ * an element whose focus handler passes focus on, such as a radio group to its checked radio, took it
+ *
+ * @param element - The element to focus
+ * @param view - The window of the form
+ * @returns - True if `element` holds focus afterwards, or focus moved
+ */
+function takesFocus(element: Node | null | undefined, view: Window & typeof globalThis): boolean {
+  if (!isFocusable(element, view)) {
+    return false;
+  }
+  const root = element.getRootNode();
+  if (!(root instanceof view.Document || root instanceof view.ShadowRoot)) {
+    return false;
+  }
+  const before = root.activeElement;
+  element.focus();
+  return root.activeElement === element || root.activeElement !== before;
+}
+
 /** The first of `elements` that `matches`, stopping there rather than copying the whole list to search it
  *
  * @param elements - The elements to search, in document order
@@ -103,8 +125,8 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
   return undefined;
 }
 
-/** Gets the element an error leads focus to where neither the element carrying its field's id nor a form control named
- * after the field takes focus: the first focusable element inside a widget's wrapper carrying the id, such as a slider's
+/** Focuses what an error leads to where neither the element carrying its field's id nor a form control named after the
+ * field takes focus: the first element that takes focus inside a widget's wrapper carrying the id, such as a slider's
  * root around its thumb, but none inside a container's `<fieldset>`, since an object's or an array's own error is about
  * none of the controls in it; and where no element carries the id, the first native input or button standing in for
  * one whose id is a part of the field's, as radio buttons' and checkboxes' are. A part's id, unlike any id that merely
@@ -114,24 +136,24 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
  * @param exact - The element carrying the field's id, if any
  * @param elementId - The field's id
  * @param view - The window of the form
- * @returns - The element to focus, if any
  */
-function focusableForId(
+function focusForId(
   formElement: Element,
   exact: Element | undefined,
   elementId: string,
   view: Window & typeof globalThis,
-): Element | undefined {
+): void {
   if (exact instanceof view.HTMLFieldSetElement) {
-    return undefined;
+    return;
   }
   if (exact) {
-    return findElement(exact.querySelectorAll('*'), (element) => isFocusable(element, view));
+    findElement(exact.querySelectorAll('*'), (element) => takesFocus(element, view));
+    return;
   }
   const partPrefix = partId(elementId, '');
-  return findElement(
+  findElement(
     formElement.querySelectorAll('input[id], button[id]'),
-    (element) => element.id.startsWith(partPrefix) && isFocusable(element, view),
+    (element) => element.id.startsWith(partPrefix) && takesFocus(element, view),
   );
 }
 
@@ -347,18 +369,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // A form control named after the field is taken only where it takes focus, since a checkbox that isn't a form
     // control, such as shadcn's, keeps its value in a hidden input named after the field too. A wrapper that isn't
     // focusable and names no focusable form control, such as a slider's root around its thumb or a group of such
-    // checkboxes, leads to the focusable element inside it, as `focusableForId()` finds it. A field whose own control
-    // can't take focus, being disabled or hidden, leaves focus where it is rather than sending it to another field. The
-    // search stays inside the form, which another form on the page rendering the same ids would defeat through
-    // `getElementById()`, and compares ids as strings, so a property name holding a selector's syntax needs no escaping
+    // checkboxes, leads to the focusable element inside it, as `focusForId()` finds it. Each candidate counts only once
+    // focus took, so one that ignores `focus()` hands over to the next. A field whose own control can't take focus,
+    // being disabled or hidden, leaves focus where it is rather than sending it to another field. The search stays
+    // inside the form, which another form on the page rendering the same ids would defeat through `getElementById()`,
+    // and compares ids as strings, so a property name holding a selector's syntax needs no escaping
     const exact = findElement(formElement.querySelectorAll('[id]'), (element) => element.id === elementId);
     const named = formElement instanceof view.HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
     const namedControls = named instanceof view.RadioNodeList ? Array.from(named) : [named];
-    const field =
-      [exact, ...namedControls].find((element) => isFocusable(element, view)) ??
-      focusableForId(formElement, exact, elementId, view);
-    if (field instanceof view.HTMLElement) {
-      field.focus();
+    if (![exact, ...namedControls].some((element) => takesFocus(element, view))) {
+      focusForId(formElement, exact, elementId, view);
     }
   };
 

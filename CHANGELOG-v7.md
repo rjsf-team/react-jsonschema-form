@@ -409,6 +409,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `ObjectFieldTemplate`'s `hidden` flag for a property `SchemaField` hides through `deprecatedHandling: 'hide'`, a `ui:definitions` hidden widget or a hidden `$ref` cycle ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - **BREAKING CHANGE:** Remove the Expand button `CyclicSchemaField` rendered for a `$ref` cycle whose field one level further renders hidden, which expanded to nothing visible. See [A `$ref` cycle whose field renders hidden has no Expand button](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-ref-cycle-whose-field-renders-hidden-has-no-expand-button-breaking-change) ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Add `LAYOUT_GRID_OPTION`, `LAYOUT_GRID_UI_OPTION` and the `GridProps`, `GridSchemaType`, `LayoutGridSchemaType` and `LayoutGridFieldProps` types to the package's exports, which only a deep import reached before ([#5599](https://github.com/rjsf-team/react-jsonschema-form/issues/5599))
+- Fix `focusOnFirstError` stopping at an element that ignores `focus()`, such as one CSS hides, an `inert` one or one in a closed `<details>`, instead of moving on to the field's next control ([#5599](https://github.com/rjsf-team/react-jsonschema-form/issues/5599))
 
 ## @rjsf/daisyui
 
