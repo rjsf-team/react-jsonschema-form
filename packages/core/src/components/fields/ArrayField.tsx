@@ -715,6 +715,8 @@ function ArrayFieldItemInner<
     fieldToRender,
     presentation,
     labelPlacement,
+    ownUiOptions,
+    deprecatedHandling,
   } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
   const typeSelectorFirst =
     fieldToRender?.FieldComponent === registry.fields.FallbackField &&
@@ -724,12 +726,11 @@ function ArrayFieldItemInner<
   const displayLabel = typeSelectorFirst
     ? Boolean(presentation?.control) && presentation?.showLabel === true
     : labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
-  const { description, disabled: itemDisabled, readonly: itemReadonly } = getUiOptions(itemUiSchema);
-  // The item's buttons lock with the item, as they do with the array: an `items` uiSchema can disable or make read-only
-  // one item, and a schema `readOnly`, which `if`/`then` can set from the item's data, makes it read-only
-  const areButtonsDisabled = disabled || itemDisabled === true;
-  const areButtonsReadonly = readonly || itemReadonly === true || itemSchema.readOnly === true;
-  const hasDescription = !!description || !!itemSchema.description;
+  // The item and its buttons lock as its `SchemaField` locks its inputs, from the same plan, so a `ui:definitions`
+  // entry, `deprecatedHandling` or an item's own `ui:disabled: false` under a disabled array reach both alike
+  const itemDisabled = (ownUiOptions.disabled ?? disabled) || deprecatedHandling === 'disable';
+  const itemReadonly = Boolean(ownUiOptions.readonly ?? (readonly || itemSchema.readOnly || plannedSchema.readOnly));
+  const hasDescription = !!ownUiOptions.description || !!itemSchema.description;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
   const has: Record<string, boolean> = {
     moveUp: orderable && canMoveUp,
@@ -802,8 +803,8 @@ function ArrayFieldItemInner<
     children: <ItemSchemaField {...itemFieldProps} />,
     buttonsProps: {
       id: fieldId,
-      disabled: areButtonsDisabled,
-      readonly: areButtonsReadonly,
+      disabled: itemDisabled,
+      readonly: itemReadonly,
       canAdd,
       hasCopy: has.copy,
       hasMoveUp: has.moveUp,
@@ -823,11 +824,11 @@ function ArrayFieldItemInner<
     },
     itemKey,
     className: 'rjsf-array-item',
-    disabled,
+    disabled: itemDisabled,
     hasToolbar: has.toolbar,
     index,
     totalItems,
-    readonly,
+    readonly: itemReadonly,
     registry,
     schema: itemSchema,
     uiSchema: itemUiSchema,
