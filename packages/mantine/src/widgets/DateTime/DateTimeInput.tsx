@@ -11,7 +11,7 @@ import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);
 
-const dateParser = (input: string | undefined, format: string) => {
+const dateParser = (input: string | undefined, format?: string) => {
   if (!input) {
     return null;
   }
@@ -105,9 +105,7 @@ export default function DateTimeInput<
   }, [onFocus, id, value]);
 
   const parsedValue =
-    requiresOffset || typeof value !== 'string'
-      ? offsetValueParser(localValue)
-      : dateParser(localValue, valueFormat as string);
+    requiresOffset || typeof value !== 'string' ? offsetValueParser(localValue) : dateParser(localValue, valueFormat);
 
   const ariaDescribedByProps = useInputAriaProps('DateInput', props);
   const error = getWidgetError<T, S, F>(props);
@@ -117,7 +115,7 @@ export default function DateTimeInput<
       id={id}
       name={htmlName || id}
       value={parsedValue}
-      dateParser={(v) => dateParser(v, displayFormat as string)}
+      dateParser={(v) => dateParser(v, displayFormat)}
       placeholder={placeholder || undefined}
       required={required}
       disabled={disabled || readonly}

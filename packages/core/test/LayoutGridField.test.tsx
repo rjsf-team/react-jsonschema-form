@@ -1816,7 +1816,7 @@ describe('LayoutGridField', () => {
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
   });
-  test('renderRow not nested', () => {
+  test('renderRow', () => {
     const gridProps = { spacing: 2 };
     const props = getProps({
       schema: SAMPLE_SCHEMA,
@@ -1839,7 +1839,7 @@ describe('LayoutGridField', () => {
     // Second field as the second child
     expect(fields[1]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
   });
-  test('renderRow nested', () => {
+  test('renderRow with a className', () => {
     const props = getProps({
       schema: SAMPLE_SCHEMA,
       uiSchema: sampleUISchema,
@@ -1850,7 +1850,7 @@ describe('LayoutGridField', () => {
       registry: sampleSchemaRegistry,
     });
     render(<LayoutGridField {...props} />);
-    // Renders an outer grid row item with width 6
+    // Renders the grid row with its className
     const row = screen.getByTestId(LayoutGridField.TEST_IDS.row);
     expect(row).toHaveClass(ColumnWidth6);
     // Renders 2 fields in the row
