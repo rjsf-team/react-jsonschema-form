@@ -11,12 +11,13 @@ import type {
 } from '../src/index.ts';
 import { getUiOptions, noop } from '../src/index.ts';
 
-const uiSchema: UiSchema = {
+const uiSchema: Record<string, UiSchema> = {
   widgetText: {
     'ui:widget': 'select',
   },
   widgetObject: {
     'ui:widget': {
+      // @ts-expect-error: TS2353, options under `ui:widget` are no longer supported, which is what this case checks
       component: 'radio',
     },
   },
@@ -34,6 +35,7 @@ const uiSchema: UiSchema = {
       norender: true,
     },
     'ui:readonly': true,
+    // @ts-expect-error: TS2322, a non-object `ui:options` is ignored, which is what this case checks
     'ui:options': 'text',
     junk: 'not-shown',
   },

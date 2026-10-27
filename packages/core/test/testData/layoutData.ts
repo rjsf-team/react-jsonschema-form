@@ -94,7 +94,7 @@ export const SAMPLE_SCHEMA: RJSFSchema = {
   },
   required: ['ranges'],
 };
-export const sampleUISchema: UiSchema = {
+export const sampleUISchema: Record<string, UiSchema> = {
   simpleString: {
     'ui:placeholder': 'Enter a string',
   },
