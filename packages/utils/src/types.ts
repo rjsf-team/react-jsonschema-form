@@ -444,8 +444,9 @@ type IsMarker<V, M> = [V] extends [never] ? false : [V] extends [M] ? true : fal
 
 /** A child error node. `any` short-circuits so that data of an unconstrained type keeps an unconstrained node, and the
  * `ArrayLength` an array's `length` holds becomes `never` */
-// oxlint-disable-next-line typescript/no-explicit-any -- see `ErrorTreeChildData`: an unconstrained child node stays `any`
-type ErrorTreeChild<V, Node> = IsAny<V> extends true ? any : IsArrayLength<V> extends true ? never : ErrorTree<V, Node>;
+type ErrorTreeChild<V, Node> =
+  // oxlint-disable-next-line typescript/no-explicit-any -- see `ErrorTreeChildData`: an unconstrained child node stays `any`
+  IsAny<V> extends true ? any : IsMarker<V, ArrayLength> extends true ? never : ErrorTree<V, Node>;
 
 /** The recursive error tree for data of type `V`, carrying `Node` at every level.
  *
