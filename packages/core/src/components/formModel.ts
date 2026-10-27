@@ -145,9 +145,6 @@ function isPromise(value: unknown): value is Promise<unknown> {
 /** The model holds the form's state between renders and performs every operation on it. An operation starts from the
  * current state and reads the props once, as it starts, so that everything it computes and reports belongs to one
  * moment.
- *
- * Internal to `@rjsf/core`: `package.json` excludes `./lib/components/formModel.js` from the `./lib/*.js` exports
- * wildcard so it can't be deep-imported, since a reachable subpath would have to keep working until the next major.
  */
 export function createFormModel<T, S extends StrictRJSFSchema, F extends FormContextType>(
   initialProps: FormProps<T, S, F>,

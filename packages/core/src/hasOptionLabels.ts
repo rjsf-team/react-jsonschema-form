@@ -5,9 +5,6 @@ import { getUiOptions, isObject } from '@rjsf/utils';
  * `ui:title` of the matching `uiSchema.anyOf`/`uiSchema.oneOf` entry. `ui:enumNames` names only `enum` values, so it
  * doesn't label these options.
  *
- * Internal to `@rjsf/core`: `package.json` excludes `./lib/hasOptionLabels.js` from the `./lib/*.js` exports wildcard so
- * it can't be deep-imported, since a reachable subpath would have to keep working until the next major.
- *
  * @param options - The options of the keyword, which needn't be constants
  * @param keyword - The keyword the `options` came from
  * @param [uiSchema] - The `uiSchema` for the field

@@ -65,9 +65,6 @@ import {
 } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
- *
- * Internal to `@rjsf/core`: `package.json` excludes `./lib/components/formState.js` from the `./lib/*.js` exports
- * wildcard so it can't be deep-imported, since a reachable subpath would have to keep working until the next major.
  */
 
 /** The validation half of the state */

@@ -10,8 +10,7 @@
     ".": {
       "@rjsf/source": "./src/index.ts",
       "default": "./lib/index.js"
-    },
-    "./lib": "./lib/index.js"
+    }
   },
   "files": [
     "lib",

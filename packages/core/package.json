@@ -27,16 +27,6 @@
       "@rjsf/source": "./src/markdown.tsx",
       "default": "./lib/markdown.js"
     },
-    "./lib": "./lib/index.js",
-    "./lib/components/formModel.js": null,
-    "./lib/components/formState.js": null,
-    "./lib/fieldLabelForLog.js": null,
-    "./lib/hasOptionLabels.js": null,
-    "./lib/hooks/useReadFieldData.js": null,
-    "./lib/hooks/useSendMove.js": null,
-    "./lib/hooks/useWarnIfFormDataNotPassedThrough.js": null,
-    "./lib/isDevelopment.js": null,
-    "./lib/*.js": "./lib/*.js",
     "./testing": {
       "@rjsf/source": "./src/testing.ts",
       "default": "./lib/testing.js"

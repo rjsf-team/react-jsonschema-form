@@ -18,6 +18,8 @@ When making a change to a widget or template, consider if the change should be g
 
 Check what `@rjsf/utils` already shares before writing theme logic, e.g. `enumOptionsSelectValue` / `enumOptionsDeselectValue` and the `useFileWidgetProps` / `useAltDateWidgetProps` hooks.
 
+A package's public API is its root's exports plus the subpaths its `exports` lists; nothing under `lib/` is importable, so a new module stays internal until the root exports from it. See `## Public entry points` in `packages/docs/docs/contributing.md`.
+
 ## Code style
 
 - **TypeScript strict mode**, `esnext` target, `verbatimModuleSyntax` (type-only imports must be `import type`), relative imports include the `.ts`/`.tsx` extension

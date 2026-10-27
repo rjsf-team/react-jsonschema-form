@@ -6,5 +6,6 @@ export { default as GridTemplate } from './GridTemplate/index.ts';
 export { default as ObjectFieldTemplate } from './ObjectFieldTemplate/index.ts';
 export { default as TitleField } from './TitleField/index.ts';
 export { default as WrapIfAdditionalTemplate } from './WrapIfAdditionalTemplate/index.ts';
+export { default } from './Templates.tsx';
 export * from './Templates.tsx';
 export { generateTemplates } from './Templates.tsx';

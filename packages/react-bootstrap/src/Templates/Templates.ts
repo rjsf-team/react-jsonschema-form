@@ -3,7 +3,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } fro
 import AddButton from '../AddButton/index.ts';
 import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate/index.ts';
 import ArrayFieldTemplate from '../ArrayFieldTemplate/index.ts';
-import BaseInputTemplate from '../BaseInputTemplate/BaseInputTemplate.tsx';
+import BaseInputTemplate from '../BaseInputTemplate/index.ts';
 import CyclicSchemaExpandTemplate from '../CyclicSchemaExpandTemplate/index.ts';
 import DescriptionField from '../DescriptionField/index.ts';
 import ErrorList from '../ErrorList/index.ts';

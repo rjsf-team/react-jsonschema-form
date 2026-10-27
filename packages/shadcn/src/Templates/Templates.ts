@@ -1,7 +1,7 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
 import AddButton from '../AddButton/index.ts';
-import BaseInputTemplate from '../BaseInputTemplate/BaseInputTemplate.tsx';
+import BaseInputTemplate from '../BaseInputTemplate/index.ts';
 import CyclicSchemaExpandTemplate from '../CyclicSchemaExpandTemplate/index.ts';
 import ErrorList from '../ErrorList/index.ts';
 import GridTemplate from '../GridTemplate/index.ts';

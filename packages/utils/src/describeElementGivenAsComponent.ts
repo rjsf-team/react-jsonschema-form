@@ -3,10 +3,6 @@
  * `describeUnresolvedComponent()` (in this package) words its element case with this helper, so the warnings for
  * every option that takes a component or a name read alike.
  *
- * Internal to `@rjsf/utils`: `package.json` excludes `./lib/describeElementGivenAsComponent.js` from the `./lib/*.js`
- * exports wildcard so it can't be deep-imported, since a reachable subpath would have to keep working until the next
- * major.
- *
  * @param exampleName - The component name the message uses to show what to pass instead of an element
  * @returns - The description, phrased to follow the name of the option the element was given for
  */

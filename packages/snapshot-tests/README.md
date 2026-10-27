@@ -78,7 +78,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['@rjsf/snapshot-tests/lib/setup.js'],
+    setupFiles: ['@rjsf/snapshot-tests/setup'],
     server: { deps: { inline: [/@rjsf\//] } },
   },
 });

@@ -43,6 +43,18 @@ export * from './components/fields/index.ts';
 export * from './components/templates/index.ts';
 export * from './components/widgets/index.ts';
 export { buildRegistry, generateTheme } from './Theme.ts';
+export {
+  GridType,
+  LAYOUT_GRID_OPTION,
+  LAYOUT_GRID_UI_OPTION,
+  Operators,
+} from './components/fields/LayoutGridField.tsx';
+export type {
+  GridProps,
+  GridSchemaType,
+  LayoutGridFieldProps,
+  LayoutGridSchemaType,
+} from './components/fields/LayoutGridField.tsx';
 
 export { withTheme, RichDescription, RichHelp, SchemaExamples, useOptionSelection };
 export default Form;

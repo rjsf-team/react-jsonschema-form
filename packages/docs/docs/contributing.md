@@ -57,6 +57,12 @@ Staged files are automatically formatted upon commit using precommit hooks, assu
 
 CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the repository root for any commit the hooks did not see — one made with `--no-verify`, from a fresh worktree, or through the GitHub web editor.
 
+## Public entry points
+
+A package's public API is what its root exports, plus the subpaths its `package.json` `exports` lists: `@rjsf/core/markdown`, `@rjsf/core/testing`, core's two stylesheets, `compileSchemaValidators` in `@rjsf/validator-ajv8` and `@rjsf/validator-ata`, and `@rjsf/snapshot-tests/setup`.
+Nothing under `lib/` can be imported on its own, so a new module is internal until the package root exports something from it, and every name the root exports has to keep working until the next major.
+To make something public, export it from the package root and add a changelog entry; add a subpath to `exports` only for an entry point that has to load separately, as `@rjsf/core/markdown` does.
+
 ## Changelog
 
 A PR that changes anything a user of a published package can notice adds an entry to the changelog for each change users notice, so a PR that fixes one thing and adds another adds two.
@@ -137,12 +143,18 @@ arrayTests(Form); // OR
 // objectTests(Form);
 ```
 
-The suites expect `getTestIds` from `@rjsf/utils` to be mocked out before the theme's `Form` is imported, so each theme's `vitest.config.mts` also lists the shared setup file. Without it the tests still pass, but the snapshots pick up numbered `data-testid` values that the other themes don't produce:
+The suites expect `getTestIds` from `@rjsf/utils` to be mocked out before the theme's `Form` is imported, so each theme's `vitest.config.mts` lists a `test/snapshotSetup.ts` that loads `@rjsf/snapshot-tests/setup`. Without it the snapshots pick up numbered `data-testid` values that the other themes don't produce, and fail.
+The file imports the setup rather than `setupFiles` naming it, since Vitest resolves a `setupFiles` entry without the `@rjsf/source` condition, so naming it there would load the built `lib/setup.js` and need a build first:
+
+```ts
+// test/snapshotSetup.ts
+import '@rjsf/snapshot-tests/setup';
+```
 
 ```ts
 export default mergeConfig(base, {
   test: {
-    setupFiles: ['../snapshot-tests/src/setup.ts'],
+    setupFiles: ['./test/snapshotSetup.ts'],
   },
 });
 ```
