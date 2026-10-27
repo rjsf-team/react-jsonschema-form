@@ -3,6 +3,7 @@ import type {
   FieldPathList,
   FormContextType,
   FormFieldState,
+  Registry,
   SchemaUtilsType,
   StrictRJSFSchema,
 } from '@rjsf/utils';
@@ -21,6 +22,7 @@ import {
   REQUIRED_KEY,
 } from '@rjsf/utils';
 
+import { schemaFieldDrawsControlsBesideOptions } from './fields/SchemaField.tsx';
 import type { KeyMove, MoveFate } from './formState.ts';
 
 /** The option selected for a field's option list, and the field's data it holds for, see `useOptionSelection()` */
@@ -180,21 +182,33 @@ export function asFieldValue(value: unknown): unknown {
 }
 
 /** The fields `uiState` shows, as the schema utilities' walks read them: the option each field shows and the cycles
- * the user expanded
+ * the user expanded, and, given the registry, which objects draw their Optional Data Controls beside their options
  *
  * @param uiState - The form's option selections and cycle expansions
  * @param schemaUtils - The schema utilities the form renders with
  * @param [editedPath] - The path of the edit being made, whose field and the fields above it keep their selections, as
  *        they do when the form renders the edit
+ * @param [registry] - The registry the form renders with, whose fields decide where the controls are drawn
  * @returns - The field state
  */
 export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiState: UiStateReader,
   schemaUtils: SchemaUtilsType<T, S, F>,
   editedPath?: FieldPathList,
+  registry?: Registry<T, S, F>,
 ): FormFieldState<S> {
   const rootSchema = schemaUtils.getRootSchema();
   return {
+    ...(registry && {
+      drawsControlsBesideOptions: (fieldPath, schema, uiSchema, formData) =>
+        schemaFieldDrawsControlsBesideOptions<T, S, F>(
+          registry,
+          fieldPath,
+          schema,
+          uiSchema,
+          asFieldValue<T>(formData),
+        ),
+    }),
     selectedOption: (fieldPath, options, formData, discriminator) =>
       shownOption<T, S, F>(
         schemaUtils,

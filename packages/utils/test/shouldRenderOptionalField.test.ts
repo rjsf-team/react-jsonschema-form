@@ -14,7 +14,11 @@ import {
   shouldRenderOptionalField,
   toFieldPath,
 } from '../src/index.ts';
-import { getOptionalDataControlsType, isOptionalDataControlsType } from '../src/shouldRenderOptionalField.ts';
+import {
+  getOptionalDataControlsType,
+  isCollapsedByOptionalDataControls,
+  isOptionalDataControlsType,
+} from '../src/shouldRenderOptionalField.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.ts';
 
@@ -221,6 +225,40 @@ describe('isOptionalDataControlsType()', () => {
   });
   test('the uiSchema options take effect without any global UI options', () => {
     expect(isControlsType({ type: 'array' }, { 'ui:enableOptionalDataFieldForType': ['array'] })).toBe(true);
+  });
+});
+
+describe('isCollapsedByOptionalDataControls()', () => {
+  const objectSchema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+  const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+  const isCollapsed = (uiSchema: UiSchema | undefined, required: boolean, formData: unknown) =>
+    isCollapsedByOptionalDataControls(objectSchema, objectSchema, uiSchema, {
+      globalUiOptions,
+      rootSchema: objectSchema,
+      required,
+      formData,
+    });
+  test('an optional object holding no data is collapsed', () => {
+    expect(isCollapsed(undefined, false, undefined)).toBe(true);
+    expect(isCollapsed(undefined, false, null)).toBe(true);
+  });
+  test('one holding data, even {}, is not', () => {
+    expect(isCollapsed(undefined, false, {})).toBe(false);
+  });
+  test("its own ui:required is read before the object's required", () => {
+    expect(isCollapsed({ 'ui:required': true }, false, undefined)).toBe(false);
+    expect(isCollapsed({ 'ui:required': false }, true, undefined)).toBe(true);
+  });
+  test('the ui:definitions entry of the definition it references turns the controls on', () => {
+    const rootSchema: RJSFSchema = { definitions: { Obj: objectSchema } };
+    expect(
+      isCollapsedByOptionalDataControls(objectSchema, { $ref: '#/definitions/Obj' }, undefined, {
+        uiSchemaDefinitions: { '#/definitions/Obj': { 'ui:enableOptionalDataFieldForType': ['object'] } },
+        rootSchema,
+        required: false,
+        formData: undefined,
+      }),
+    ).toBe(true);
   });
 });
 

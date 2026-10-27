@@ -175,7 +175,7 @@ import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } 
 import type { ObjectPath } from './pathUtils.ts';
 import pickGlobalUiOptions from './pickGlobalUiOptions.ts';
 import rangeSpec from './rangeSpec.ts';
-import rendersOwnFieldBesideOption from './rendersOwnFieldBesideOption.ts';
+import rendersOwnFieldBesideOption, { hasOwnContentBesideOptions } from './rendersOwnFieldBesideOption.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
 import resolveDefaultWidget from './resolveDefaultWidget.ts';
@@ -189,6 +189,7 @@ import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription
 import setOwn from './setOwn.ts';
 import shouldRenderOptionalField, {
   getOptionalDataControlsType,
+  isCollapsedByOptionalDataControls,
   isOptionalDataControlsType,
 } from './shouldRenderOptionalField.ts';
 import templateDrawsDescription from './templateDrawsDescription.ts';
@@ -365,6 +366,7 @@ export {
   guessType,
   hasAdditionalKeyLabel,
   hasByPath,
+  hasOwnContentBesideOptions,
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   hasVisibleErrors,
   hasWidget,
@@ -373,6 +375,7 @@ export {
   hashObject,
   hashString,
   helpId,
+  isCollapsedByOptionalDataControls,
   isComponentType,
   isConstant,
   isConstantOptionList,

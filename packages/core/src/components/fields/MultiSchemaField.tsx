@@ -351,6 +351,10 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       </SelectorsAboveContext>
     ) : null;
 
+  // A theme frames the selector and option, so with neither there is only an empty box to draw
+  if (!selector && !optionsSchemaField) {
+    return null;
+  }
   return (
     <MultiSchemaFieldTemplate
       id={id}

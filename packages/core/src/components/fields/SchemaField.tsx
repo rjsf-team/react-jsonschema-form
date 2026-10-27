@@ -40,6 +40,7 @@ import {
   getXxxOfKey,
   GUESSED_TYPE_FLAG,
   guessType,
+  hasOwnContentBesideOptions,
   isComponentType,
   isConstant,
   isConstantOptionList,
@@ -599,6 +600,117 @@ function getFieldComponent<
   };
 }
 
+/** Plans the component that renders a field `createFieldWidgetResolver()` resolved, `SchemaField` named for its own data
+ * counting as no field named, since it renders that data with none. Undefined for a `$ref` cycle, which names no field
+ *
+ * @param resolved - The field as `createFieldWidgetResolver()` resolved it
+ * @param registry - The registry from which fields are obtained
+ * @returns - What `getFieldComponent()` plans for the field, or undefined for a `$ref` cycle
+ */
+function planFieldComponent<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  {
+    selectSchemaInfo,
+    uiField,
+    ownUiOptions,
+  }: Pick<FieldWidgetPlan<T, S, F>, 'selectSchemaInfo' | 'uiField' | 'ownUiOptions'>,
+  registry: Registry<T, S, F>,
+) {
+  if (!uiField) {
+    return undefined;
+  }
+  const { schema, xxxOfKey, isSelectSchema, hasConstantOptions } = selectSchemaInfo;
+  const namedField = uiField.namedField === registry.fields.SchemaField ? undefined : uiField.namedField;
+  return getFieldComponent<T, S, F>(
+    schema,
+    ownUiOptions,
+    namedField,
+    uiField.namedFieldKey,
+    registry,
+    xxxOfKey,
+    isSelectSchema,
+    hasConstantOptions,
+  );
+}
+
+/** Whether a field planned as `plan` draws its Optional Data Controls beside the `anyOf`/`oneOf` options it renders
+ * itself, keeping the selected option off screen until Add: its own `ObjectField` renders beside them, which a pure
+ * union, an object with nothing of its own beside its options, doesn't. Whether the controls apply to the field at all
+ * is `shouldRenderOptionalField()`'s to say
+ *
+ * @param plan - What `getFieldComponent()` planned for the field
+ * @param fields - The registered fields
+ * @param hasOwnContent - Whether the object has content of its own beside its options, see
+ *        `hasOwnContentBesideOptions()`, asked only where that decides it
+ * @returns - True when the field's `ObjectField` draws the controls beside its options
+ */
+function drawsControlsBesideOwnOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  plan: ReturnType<typeof getFieldComponent<T, S, F>>,
+  fields: Registry<T, S, F>['fields'],
+  hasOwnContent: () => boolean,
+): boolean {
+  return (
+    plan.rendersOptionSelector &&
+    !plan.rendersOptionsItself &&
+    !plan.isWithheld &&
+    plan.FieldComponent === fields.ObjectField &&
+    (!plan.yieldsToOptions || hasOwnContent())
+  );
+}
+
+/** Whether the object field at `fieldPath` draws its Optional Data Controls beside its `anyOf`/`oneOf` options, for the
+ * `ui:required` walk, which has to leave out the selected option they keep off screen. The field is planned as
+ * `useSchemaFieldPlan()` plans it, through the same resolver, for a field nothing above it names. Where it doesn't render
+ * the options itself, the field below it at the same path does, planned with no field named: the fallback UI's value
+ * field, with the object's type pinned, or the field a named one renders its data through under
+ * `ui:fieldReplacesAnyOrOneOf`. It models core's `SchemaField`, not a replacement registered in `registry.fields`
+ *
+ * @param registry - The registry the form renders with
+ * @param fieldPath - The field's path
+ * @param schema - The object's schema, with the extra-key keywords of the option shown joined in
+ * @param uiSchema - The object's uiSchema
+ * @param formData - The object's form data
+ * @param [isFieldBelow=false] - Whether this is the field below at the same path, planned with no field named
+ * @returns - True when the object draws the controls beside its options
+ */
+export function schemaFieldDrawsControlsBesideOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  registry: Registry<T, S, F>,
+  fieldPath: FieldPath,
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  formData: T | undefined,
+  isFieldBelow = false,
+): boolean {
+  const resolved = createFieldWidgetResolver<T, S, F>().resolve(
+    schema,
+    uiSchema,
+    formData,
+    fieldPath,
+    registry,
+    false,
+    isFieldBelow,
+  );
+  const plan = planFieldComponent<T, S, F>(resolved, registry);
+  if (!plan) {
+    return false;
+  }
+  if (plan.rendersOptionsItself || plan.optionsGiveWayToField) {
+    return (
+      !isFieldBelow &&
+      schemaFieldDrawsControlsBesideOptions<T, S, F>(
+        registry,
+        fieldPath,
+        plan.rendersOptionsItself ? { ...schema, type: getSchemaType<S>(schema) } : schema,
+        uiSchema,
+        formData,
+        true,
+      )
+    );
+  }
+  return drawsControlsBesideOwnOptions<T, S, F>(plan, registry.fields, () =>
+    hasOwnContentBesideOptions<T, S, F>(registry.schemaUtils, schema, resolved.uiSchema, formData),
+  );
+}
+
 /** Gets a part of a field's plan with the field's own drawing of it taken away, so nothing draws a part the field was
  * planned to draw itself
  *
@@ -704,7 +816,7 @@ export function useSchemaFieldPlan<
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { schemaUtils, globalUiOptions, fields } = registry;
+  const { schemaUtils, globalUiOptions } = registry;
   const namedFieldAbove = use(NamedFieldContext);
   const namedHere = namedFieldAbove?.fieldPath === fieldPath ? namedFieldAbove : undefined;
   const namedAbove = namedHere !== undefined;
@@ -722,25 +834,11 @@ export function useSchemaFieldPlan<
     () => resolveFieldWidget(_schema, _uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove),
     [resolveFieldWidget, _schema, _uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove],
   );
-  const { schema, xxxOfKey, isSelectSchema, hasConstantOptions } = selectSchemaInfo;
-  // `SchemaField` named for its own data is the field that renders it with no field named, so it is rendered that way.
-  // `FallbackField` still renders, as it does for a schema whose type sends it there, within this field's template
-  const namedField = uiField?.namedField === fields.SchemaField ? undefined : uiField?.namedField;
+  const { schema, xxxOfKey } = selectSchemaInfo;
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
   // The field's own options pick the field, since `getDisplayLabel()` and the defaults read only its own `ui:widget`
-  const fieldToRender =
-    uiField &&
-    getFieldComponent<T, S, F>(
-      schema,
-      ownUiOptions,
-      namedField,
-      uiField.namedFieldKey,
-      registry,
-      xxxOfKey,
-      isSelectSchema,
-      hasConstantOptions,
-    );
+  const fieldToRender = planFieldComponent<T, S, F>({ selectSchemaInfo, uiField, ownUiOptions }, registry);
   // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
   // type in effect — and only the inner one would follow the type the user chose. Below a named field, the
@@ -869,16 +967,12 @@ export function useSchemaFieldPlan<
         : schema,
     [optionBeside, schema, schemaUtils, _schema, formData],
   );
-  // An object with no properties of its own besides its options, a pure union, has nothing to render beside them, so
-  // like a withheld field it is planned as the field that renders its options, whose template labels it. One holding
-  // extra keys or showing its add button renders its own heading beside them. The `properties` are counted, since a
-  // view taking extra keys stubs each one the data holds among them, and the add button is read joined with the option
-  // shown, so an object whose every option is closed, or whose `expandable` is off, stays a pure union however its
-  // keywords read
+  // An object with nothing of its own to render beside its options, a pure union, is planned like a withheld field as
+  // the field that renders its options, whose template labels it. `fieldSchema` carries the option shown, so an object
+  // whose every option is closed stays a pure union however its own keywords read
   const isPureUnion =
     fieldToRender?.yieldsToOptions === true &&
-    Object.keys(fieldSchema.properties ?? {}).length === 0 &&
-    !schemaUtils.canExpand(fieldSchema, fieldUiSchema, formData);
+    !hasOwnContentBesideOptions<T, S, F>(schemaUtils, fieldSchema, fieldUiSchema, formData);
   const plannedAsOptions = fieldToRender?.isWithheld === true || isPureUnion;
   const renderedComponent = fieldToRender?.FieldComponent;
   // The `SchemaField` that named the field takes its own errors out of the `errorSchema` it hands on, and passes them
@@ -1009,8 +1103,9 @@ function SchemaFieldRender<
   const controlsBesideAbove = use(OptionalControlsBesideContext);
   const controlsDrawnBeside =
     hasOptions &&
-    !plannedAsOptions &&
-    renderedComponent === fields.ObjectField &&
+    fieldToRender !== undefined &&
+    // Asked only of a field that isn't withheld, which `plannedAsOptions` then plans as the options for being a pure union
+    drawsControlsBesideOwnOptions<T, S, F>(fieldToRender, fields, () => !plannedAsOptions) &&
     shouldRenderOptionalField<T, S, F>(registry, fieldSchema, effectiveRequired, fieldUiSchema, fieldPath);
   // Read off the schema rather than the value, so an array or object holding nothing yet is still one
   const fieldType = getSchemaType<S>(fieldSchema);

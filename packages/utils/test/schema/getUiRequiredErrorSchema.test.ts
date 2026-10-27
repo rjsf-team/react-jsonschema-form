@@ -1041,6 +1041,60 @@ describe('getUiRequiredErrorSchema()', () => {
       },
     );
 
+    it('fires for a field of the selected option of an object with properties of its own under a ui:field, which draws no controls beside the options, so the option renders as its own uiSchema says', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { thing: { ...objectOption, anyOf: [{ properties: { b: { type: 'string' } } }] } },
+      };
+      const uiSchema: UiSchema = {
+        thing: {
+          'ui:field': 'Wrapper',
+          anyOf: [{ 'ui:enableOptionalDataFieldForType': [], b: { 'ui:required': true } }],
+        },
+      };
+      const errors = toErrorList(
+        getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {}, undefined, globalUiOptions),
+      );
+      expect(errors.map(({ property }) => property)).toEqual(['.thing.b']);
+    });
+
+    it.each([true, false])(
+      "asks the form's fieldState whether the object draws the controls beside the options, which says %s",
+      (draws) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { thing: { ...objectOption, anyOf: [{ properties: { b: { type: 'string' } } }] } },
+        };
+        const uiSchema: UiSchema = {
+          thing: { anyOf: [{ 'ui:enableOptionalDataFieldForType': [], b: { 'ui:required': true } }] },
+        };
+        const asked: [string, RJSFSchema][] = [];
+        const fieldState: FormFieldState = {
+          selectedOption: () => 0,
+          isExpanded: () => false,
+          drawsControlsBesideOptions: (fieldPath, fieldSchema) => {
+            asked.push([fieldPath, fieldSchema]);
+            return draws;
+          },
+        };
+        const errors = toErrorList(
+          getUiRequiredErrorSchema(
+            { validator: testValidator },
+            schema,
+            uiSchema,
+            {},
+            undefined,
+            globalUiOptions,
+            undefined,
+            fieldState,
+          ),
+        );
+        expect(errors.map(({ property }) => property)).toEqual(draws ? [] : ['.thing.b']);
+        expect(asked.map(([fieldPath]) => fieldPath)).toEqual(['thing']);
+        expect(asked[0][1].properties).toEqual(objectOption.properties);
+      },
+    );
+
     it('fires for a field of the selected option of an open object with no properties of its own whose option closes it, since it then renders the option as its own uiSchema says', () => {
       const schema: RJSFSchema = {
         type: 'object',

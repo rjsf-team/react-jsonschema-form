@@ -25,7 +25,7 @@ import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
-import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
+import rendersOwnFieldBesideOption, { hasOwnContentBesideOptions } from '../rendersOwnFieldBesideOption.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
 import type {
@@ -130,6 +130,30 @@ interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   builder: ErrorSchemaBuilder<T>;
 }
 
+/** Whether the object at `path`, offering `anyOf`/`oneOf` options, draws its Optional Data Controls beside them, as
+ * the form's `fieldState` says. Without one, an object does when its uiSchema names no `ui:field`, so `SchemaField`
+ * renders its `ObjectField` itself, and it has content of its own beside the options
+ */
+function drawsControlsBesideOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  { schemaContext, fieldState }: WalkContext<T, S, F>,
+  path: (string | number)[],
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  formData: unknown,
+): boolean {
+  if (fieldState?.drawsControlsBesideOptions) {
+    return fieldState.drawsControlsBesideOptions(fieldPathFromList(path), schema, uiSchema, formData);
+  }
+  return (
+    !getUiOptions<T, S, F>(uiSchema).field &&
+    hasOwnContentBesideOptions<T, S, F>(
+      { canExpand: (...args) => canExpand<T, S, F>(schemaContext, ...args) },
+      schema,
+      uiSchema,
+    )
+  );
+}
+
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: WalkContext<T, S, F>,
   schema: S,
@@ -206,12 +230,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     (option !== undefined
       ? !effectiveRequired &&
         isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions, rootSchema) &&
-        // One with properties of its own, or room for more, draws the controls beside the options, and the selected
-        // option renders nothing until Add, whatever its own uiSchema says, as `SchemaField`'s `isPureUnion` decides,
-        // reading the room for more joined with the option shown
-        (Object.keys(resolvedSchema.properties ?? {}).length > 0 ||
-          canExpand<T, S, F>(schemaContext, withOptionExtraKeys<S>(resolvedSchema, option), uiSchema) ||
-          isOptionControl())
+        // One that draws the controls beside the options keeps the selected option off screen until Add, whatever
+        // the option's own uiSchema says. The form knows which field renders the object, which decides that, so it is
+        // asked only once the cheaper check of the option's own controls fails
+        (isOptionControl() ||
+          drawsControlsBesideOptions(ctx, path, withOptionExtraKeys<S>(resolvedSchema, option), uiSchema, formData))
       : isOptionControl())
   ) {
     return;

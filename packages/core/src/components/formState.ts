@@ -901,7 +901,8 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
   // Falsy root values (`false`, `0`, `''`) are valid data, so only `undefined` skips the round trip (#5404).
   const serializedFormData = JSON.stringify(formData);
   const validationFormData = serializedFormData === undefined ? undefined : JSON.parse(serializedFormData);
-  const fieldState = fieldStateOf(context.uiState, schemaUtils, heldPath);
+  // The committed registry's fields, not the props', since whether an option is hidden is a question of what renders
+  const fieldState = fieldStateOf(context.uiState, schemaUtils, heldPath, context.registry);
 
   // The data handed to `customValidate` carries defaults computed here rather than inside the validator, so they honor
   // the `customMergeAllOf` and `defaultFormStateBehavior` this form was given, which a validator has no way to know.

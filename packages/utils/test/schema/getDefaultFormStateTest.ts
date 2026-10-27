@@ -9694,6 +9694,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(collapsedDefaultsOf(schema)).toEqual({ req: { n: null } });
         });
 
+        it('fills in the null of a ui:required one, which renders its fields, as without the controls', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { opt: { type: 'object', properties: { n: { type: 'null' } } } },
+          };
+          const defaultsWith = (uiSchema: UiSchema) =>
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+              { schema, rootSchema: schema, uiSchema },
+            );
+          const uiRequired: UiSchema = { opt: { 'ui:required': true } };
+          expect(
+            defaultsWith({ ...uiRequired, 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }),
+          ).toEqual(defaultsWith(uiRequired));
+        });
+
         it('is left out when the `ui:definitions` entry of the definition it references asks for the controls', () => {
           const schema: RJSFSchema = {
             type: 'object',

@@ -33,7 +33,7 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
-**`FormFieldState`** — What a form shows beyond its schema and data, which [`getUiRequiredErrorSchema()`](#getuirequirederrorschema) and [`omitExtraData()`](#omitextradata) read to walk the fields on screen: `selectedOption(fieldPath, options, formData, discriminator?)` returns the index of the `anyOf`/`oneOf` option the field at `fieldPath` shows among its `options`, each retrieved for `formData`, and `isExpanded(fieldPath)` whether the user expanded the collapsed `$ref` cycle there. `Form` passes its own option selections and cycle expansions.
+**`FormFieldState`** — What a form shows beyond its schema and data, which [`getUiRequiredErrorSchema()`](#getuirequirederrorschema) and [`omitExtraData()`](#omitextradata) read to walk the fields on screen: `selectedOption(fieldPath, options, formData, discriminator?)` returns the index of the `anyOf`/`oneOf` option the field at `fieldPath` shows among its `options`, each retrieved for `formData`, `isExpanded(fieldPath)` whether the user expanded the collapsed `$ref` cycle there, and the optional `drawsControlsBesideOptions(fieldPath, schema, uiSchema, formData)` whether the object field there draws its Optional Data Controls beside its `anyOf`/`oneOf` options, keeping its selected option off screen until Add; without it, one whose uiSchema names no `ui:field` does when [`hasOwnContentBesideOptions()`](#hasowncontentbesideoptions) says so. `Form` passes its own option selections and cycle expansions, and answers where the controls are drawn from the field its registry renders.
 
 **`ThemePresentation`**, **`PresentationDeclaration`** and **`FieldPresentation`** — A theme's record of which parts of a field (the label, description, errors and help) each of its components draws itself, rather than leaving them to the `FieldTemplate`. A `PresentationDeclaration` names the owner of each part, `'template'`, `'self'` or, for a field that renders a single widget, `'widget'`, `labelledBy`, whether a label the template draws reaches the control through its `for` or through the control's `aria-labelledby`, and `labelPlacement`, whether a label the component draws itself sits `'above'` or `'beside'` its control; a widget's is a `WidgetPresentationDeclaration`, which has no `'widget'` owner. A `ThemePresentation` holds them by registry key under `widgets` and `fields`, plus `default`, what every widget draws for a part the layer's own entry for it doesn't declare, custom and unregistered widgets included, which [mergeThemePresentation()](#mergethemepresentation) layers beneath the layer's own entry for every key, so it overrides the parts it declares in the layers beneath, even under a key one of them declares, and `fieldDefault`, what every field draws for a part its merged entry doesn't declare, custom fields included, and what a part a field leaves to its widget falls back to when it renders none; unlike `default`, it sits beneath the merged entries rather than each layer's own, so it can't override a part a lower layer declares under a key. The merged result is a `MergedThemePresentation`. Nothing is declared on a component itself: one given directly, as a `ui:field` or `ui:widget`, takes the declaration for the first key it is registered under that declares it, so a wrapper such as `memo()` can't lose it. [getPresentationDeclaration()](#getpresentationdeclaration) resolves a field's declaration and [resolveFieldPresentation()](#resolvefieldpresentation) builds its `FieldPresentation`, the plan of where each part is drawn, under which id, and the attributes its control carries, linked as `inherited` to the plan of the field above it that renders the same id.
 
@@ -2094,6 +2094,23 @@ Without a plan, as for a template rendered outside `SchemaField`, it follows `di
 
 - boolean: True when the key input is labelled
 
+### hasOwnContentBesideOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#hasowncontentbesideoptions}
+
+Determines whether an object holding `anyOf`/`oneOf` options has anything of its own to render beside them: properties of its own or room for more keys.
+Such an object renders its own heading beside the options, which draws its Optional Data Controls, so its selected option's field draws none and renders nothing until Add.
+One with neither renders as the field holding its options, which leaves the controls to the option.
+
+#### Parameters
+
+- schemaUtils: Pick&lt;SchemaUtilsType&lt;T, S, F>, 'canExpand'> - The `canExpand()` of the form's `SchemaUtilsType`
+- schema: S - The object's schema, with the extra-key keywords of the option shown joined in
+- [uiSchema]: UiSchema&lt;T, S, F> - The object's uiSchema, whose `expandable` can rule out more keys
+- [formData]: T - The object's form data, which can fill its `maxProperties`
+
+#### Returns
+
+- boolean: True when the object renders properties of its own or room for more keys beside its options
+
 ### hasVisibleErrors()
 
 Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
@@ -2147,6 +2164,22 @@ Return a consistent `id` for the field help element.
 #### Returns
 
 - string: The consistent id for the field help element from the given `id`
+
+### isCollapsedByOptionalDataControls&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#iscollapsedbyoptionaldatacontrols}
+
+Determines whether the Optional Data Controls render the property of an object collapsed, showing only its Add button: it holds no data, it is not required, read from its own `ui:required` before the object's `required`, and [`isOptionalDataControlsType()`](#isoptionaldatacontrolstype) is true for it.
+Its uiSchema is the one its field renders with, the `ui:definitions` entry of a definition it references merged in.
+
+#### Parameters
+
+- schema: S | (() => S) - The property's schema, retrieved, or a function retrieving it, called only once the uiSchema turns the Optional Data Controls UI on for some type
+- rawSchema: S - The property's schema as the object declares it, whose `$ref` picks its `ui:definitions` entry
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The property's own uiSchema, if any
+- options: object - `uiSchemaDefinitions` and `globalUiOptions`, both optional, the `rootSchema`, `required`, whether the object's `required` lists the property, and the property's `formData`
+
+#### Returns
+
+- boolean: True when the property renders collapsed behind its Add button
 
 ### isComponentType&lt;P = never>()
 
