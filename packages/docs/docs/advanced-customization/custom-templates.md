@@ -506,6 +506,8 @@ The `CyclicSchemaExpandTemplate` is the template rendered by `CyclicSchemaField`
 RJSF automatically detects when a `$ref` would recurse indefinitely (e.g. a schema whose property references its own root) and stops rendering at the cycle boundary.
 At that point `CyclicSchemaField` renders this template, which shows a warning message and an expand button that the user can click to render one additional level of the recursive structure.
 Which fields are expanded is the form's state, by field path, so an expansion survives the field unmounting and mounting again and follows the moves the form makes, of array items and of additional properties renamed or removed; `CyclicSchemaField` renders an expanded field from [`expandRefCycle()`](../api-reference/utility-functions.md#expandrefcycle).
+When the field one level further would render hidden, through `ui:widget: 'hidden'` or a `deprecatedHandling` of `'hide'`, there is nothing to expand to, so `CyclicSchemaField` renders nothing in place of this template.
+Only an object's property is collapsed into a cycle, and `ObjectField` marks such a property `hidden` for its `ObjectFieldTemplate`; an array's `items` are resolved for each item's data, which ends the recursion, so an array row is never a cycle and a hidden one renders as any hidden item does.
 
 Each theme provides its own implementation.
 You can replace the template globally via the `templates` prop on `Form`, or per-field via `ui:CyclicSchemaExpandTemplate` in the `uiSchema`.
@@ -1101,7 +1103,7 @@ The following props are part of each element in `properties`:
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
 - `readonly`: A boolean value stating if the property is read-only.
-- `hidden`: A boolean value stating if the property should be hidden.
+- `hidden`: A boolean value stating if the property should be hidden: whether its field renders hidden through `ui:widget: 'hidden'` or a `deprecatedHandling` of `'hide'`, as its `FieldTemplate` is told. It can change with the data, such as for a property that `dependencies` or `if`/`then` mark `deprecated`, and a template that renders a hidden property under another parent, or leaves it out, mounts the property's field afresh when it does. It is decided the way the default `SchemaField` and `CyclicSchemaField` resolve the property, see [Custom SchemaField](./custom-widgets-fields.md#custom-schemafield).
 
 > Note: Array and object field templates are always rendered inside the FieldTemplate. To fully customize an object field template, you may need to specify both `ui:FieldTemplate` and `ui:ObjectFieldTemplate`.
 

@@ -209,6 +209,16 @@ describe('ObjectFieldTemplate colSpan map', () => {
     classes.forEach((c) => expect(c).toContain('ant-col-8'));
   });
 
+  it('gives the one visible property the full row when a deprecated one is hidden by deprecatedHandling', () => {
+    const deprecatedSchema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' }, b: { type: 'string', deprecated: true } },
+    };
+    const classes = getColClasses({ 'ui:globalOptions': { deprecatedHandling: 'hide' } }, {}, deprecatedSchema);
+    expect(classes).toHaveLength(1);
+    expect(classes[0]).toContain('ant-col-24');
+  });
+
   describe('a property whose type depends on its form data', () => {
     const textOrNumber: RJSFSchema = { if: { const: 'text' }, then: { type: 'string' }, else: { type: 'number' } };
     const getSpan = (formSchema: RJSFSchema, formData: unknown) => {

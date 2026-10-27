@@ -28,4 +28,21 @@ describe('ObjectFieldTemplate', () => {
     );
     expect(rules).toEqual(['2', '3']);
   });
+
+  test('leaves out a deprecated property hidden by deprecatedHandling, as one hidden by ui:widget', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { a: { type: 'string' }, b: { type: 'string', deprecated: true }, c: { type: 'string' } },
+        }}
+        uiSchema={{ 'ui:globalOptions': { deprecatedHandling: 'hide' }, c: { 'ui:widget': 'hidden' } }}
+        validator={validator}
+      />,
+    );
+
+    const grid = container.querySelector('.mantine-SimpleGrid-root');
+    expect(grid?.children).toHaveLength(1);
+    expect(grid?.querySelector('#root_a')).toBeInTheDocument();
+  });
 });

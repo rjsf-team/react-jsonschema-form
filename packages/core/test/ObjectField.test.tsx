@@ -9,8 +9,10 @@ import type {
   DescriptionFieldProps,
   GenericObjectType,
   FormValidation,
+  FieldTemplateProps,
   ObjectFieldTemplateProps,
   PartPlacement,
+  Registry,
   UiSchema,
 } from '@rjsf/utils';
 import { fieldLabelId, isObject, isPlainObject, noop, ROOT_FIELD_PATH, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
@@ -96,6 +98,236 @@ describe('ObjectField', () => {
         },
       });
       expect(node.querySelector('div[hidden] > fieldset')).toBeInTheDocument();
+    });
+
+    it('should mark properties hidden by ui:widget or deprecatedHandling as hidden in the template props', () => {
+      const ObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => (
+        <>
+          {properties.map(({ name, hidden }) => (
+            <span key={name} data-property={name} data-hidden={String(hidden)} />
+          ))}
+        </>
+      );
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          definitions: { old: { type: 'string', deprecated: true } },
+          properties: {
+            a: { type: 'string' },
+            b: { type: 'string', deprecated: true },
+            c: { $ref: '#/definitions/old' },
+            d: { type: 'string' },
+          },
+        },
+        uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' }, d: { 'ui:widget': 'hidden' } },
+        templates: { ObjectFieldTemplate },
+      });
+      const hiddenFlags = Array.from(node.querySelectorAll('[data-property]'), (el) => [
+        el.getAttribute('data-property'),
+        el.getAttribute('data-hidden'),
+      ]);
+      expect(hiddenFlags).toEqual([
+        ['a', 'false'],
+        ['b', 'true'],
+        ['c', 'true'],
+        ['d', 'true'],
+      ]);
+    });
+
+    const HiddenFlagObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => (
+      <>
+        {properties.map(({ name, hidden, content }) => (
+          <div key={name} data-property={name} data-hidden={String(hidden)}>
+            {content}
+          </div>
+        ))}
+      </>
+    );
+    const HiddenFlagFieldTemplate = ({ id, hidden, children }: FieldTemplateProps) => (
+      <div data-field={id} data-hidden={String(Boolean(hidden))}>
+        {children}
+      </div>
+    );
+    const hiddenFlagTemplates = {
+      ObjectFieldTemplate: HiddenFlagObjectFieldTemplate,
+      FieldTemplate: HiddenFlagFieldTemplate,
+    };
+
+    it.each([
+      ['ui:definitions hides a property', undefined, 'hide', 'true'],
+      ['ui:definitions overrides a global hide with label', 'hide', 'label', 'false'],
+      ['ui:definitions overrides a global hide with disable', 'hide', 'disable', 'false'],
+    ] as const)(
+      'should agree with FieldTemplate on hidden when %s',
+      (_, globalHandling, definitionHandling, expected) => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            definitions: { old: { type: 'string', deprecated: true } },
+            properties: { a: { $ref: '#/definitions/old' } },
+          },
+          uiSchema: {
+            ...(globalHandling && { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: globalHandling } }),
+            'ui:definitions': { '#/definitions/old': { 'ui:deprecatedHandling': definitionHandling } },
+          },
+          templates: hiddenFlagTemplates,
+        });
+        expect(node.querySelector('[data-property="a"]')).toHaveAttribute('data-hidden', expected);
+        expect(node.querySelector('[data-field="root_a"]')).toHaveAttribute('data-hidden', expected);
+      },
+    );
+
+    it('should agree with FieldTemplate on hidden when ui:definitions sets ui:widget hidden', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          definitions: { secret: { type: 'string' } },
+          properties: { a: { $ref: '#/definitions/secret' } },
+        },
+        uiSchema: { 'ui:definitions': { '#/definitions/secret': { 'ui:widget': 'hidden' } } },
+        templates: hiddenFlagTemplates,
+      });
+      expect(node.querySelector('[data-property="a"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('[data-field="root_a"]')).toHaveAttribute('data-hidden', 'true');
+    });
+
+    it('should agree with FieldTemplate on hidden for a deprecated extra key', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { type: 'string', deprecated: true } },
+        uiSchema: { additionalProperties: { 'ui:deprecatedHandling': 'hide' } },
+        initialFormData: { extra: 'value' },
+        templates: hiddenFlagTemplates,
+      });
+      expect(node.querySelector('[data-property="extra"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('[data-field="root_extra"]')).toHaveAttribute('data-hidden', 'true');
+    });
+
+    it.each<[string, RJSFSchema, UiSchema]>([
+      [
+        'its own uiSchema names a hidden widget',
+        { type: 'object', properties: { child: { $ref: '#/definitions/node' } } },
+        { child: { 'ui:widget': 'hidden' } },
+      ],
+      [
+        'a ui:definitions entry hides its $ref target',
+        { type: 'object', properties: { child: { $ref: '#/definitions/node' } } },
+        { 'ui:widget': undefined, 'ui:definitions': { '#/definitions/node': { 'ui:widget': 'hidden' } } },
+      ],
+      [
+        'a deprecated sibling of its $ref is under a global hide',
+        { type: 'object', properties: { child: { $ref: '#/definitions/node', deprecated: true } } },
+        { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
+      ],
+      [
+        'its $ref target is deprecated under a global hide',
+        { type: 'object', deprecated: true, properties: { child: { $ref: '#/definitions/node' } } },
+        { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' }, 'ui:deprecatedHandling': 'label' },
+      ],
+    ])('should mark a $ref cycle property hidden, rendering no Expand button, when %s', (_, recursive, uiSchema) => {
+      const { node } = createFormComponent({
+        schema: { definitions: { node: recursive }, $ref: '#/definitions/node' },
+        uiSchema,
+        templates: hiddenFlagTemplates,
+      });
+      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('[data-property="child"]')).toBeEmptyDOMElement();
+      expect(screen.queryByRole('button', { name: 'Expand Cycle' })).toBeNull();
+    });
+
+    it('should agree with FieldTemplate on hidden as an expanded $ref cycle property follows its data', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          definitions: {
+            node: {
+              type: 'object',
+              properties: { old: { type: 'boolean' }, child: { $ref: '#/definitions/node' } },
+              if: { properties: { old: { const: true } }, required: ['old'] },
+              then: { deprecated: true },
+            },
+          },
+          $ref: '#/definitions/node',
+        },
+        uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
+        templates: hiddenFlagTemplates,
+      });
+      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'false');
+      await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
+      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'false');
+      expect(node.querySelector('[data-field="root_child"]')).toHaveAttribute('data-hidden', 'false');
+      await user.click(elementOf(node, 'input#root_child_old'));
+      expect(node.querySelector('[data-property="child"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('[data-field="root_child"]')).toHaveAttribute('data-hidden', 'true');
+    });
+
+    it('should agree with FieldTemplate on hidden for a hidden widget a constant boolean select is written back', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { a: { oneOf: [{ const: true }, { const: false }] } } },
+        // `ui:widget` comes last, so only the caller's widget `SchemaField` writes back for the inferred select hides `a`
+        uiSchema: { a: { 'ui:options': { widget: 'hidden' }, 'ui:widget': undefined } },
+        templates: hiddenFlagTemplates,
+      });
+      expect(node.querySelector('[data-property="a"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('[data-field="root_a"]')).toHaveAttribute('data-hidden', 'true');
+      expect(node.querySelector('input#root_a')).toHaveAttribute('type', 'hidden');
+    });
+
+    it.each<[string, RJSFSchema]>([
+      [
+        'if/then',
+        {
+          if: { properties: { a: { const: 'x' } }, required: ['a'] },
+          then: { properties: { b: { deprecated: true } } },
+        },
+      ],
+      ['dependencies', { dependencies: { a: { properties: { b: { deprecated: true } } } } }],
+    ])(
+      'should agree with FieldTemplate on hidden as a sibling makes a property deprecated through %s',
+      async (_, condition) => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' }, b: { type: 'string' } },
+            ...condition,
+          },
+          uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
+          templates: hiddenFlagTemplates,
+        });
+        const a = elementOf(node, 'input#root_a');
+        expect(node.querySelector('[data-property="b"]')).toHaveAttribute('data-hidden', 'false');
+        expect(node.querySelector('[data-field="root_b"]')).toHaveAttribute('data-hidden', 'false');
+        await user.type(a, 'x');
+        expect(node.querySelector('[data-property="b"]')).toHaveAttribute('data-hidden', 'true');
+        expect(node.querySelector('[data-field="root_b"]')).toHaveAttribute('data-hidden', 'true');
+        await user.clear(a);
+        expect(node.querySelector('[data-property="b"]')).toHaveAttribute('data-hidden', 'false');
+        expect(node.querySelector('[data-field="root_b"]')).toHaveAttribute('data-hidden', 'false');
+      },
+    );
+
+    it('should not resolve a property again for an edit to its sibling', async () => {
+      const registries: Registry[] = [];
+      const RegistryReadingTemplate = (props: ObjectFieldTemplateProps) => {
+        registries.push(props.registry);
+        return <HiddenFlagObjectFieldTemplate {...props} />;
+      };
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { a: { type: 'string', title: 'A' }, b: { type: 'string', title: 'B', deprecated: true } },
+        },
+        uiSchema: { [UI_GLOBAL_OPTIONS_KEY]: { deprecatedHandling: 'hide' } },
+        templates: { ObjectFieldTemplate: RegistryReadingTemplate },
+      });
+      const [registry] = registries;
+      if (!registry) {
+        throw new Error('ObjectFieldTemplate was not rendered');
+      }
+      const retrieveSchema = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
+      await user.type(screen.getByRole('textbox', { name: 'A' }), 'x');
+      const retrievedTitles = retrieveSchema.mock.calls.map(([schema]) => schema.title);
+      expect(retrievedTitles).toContain('A');
+      expect(retrievedTitles).not.toContain('B');
+      expect(node.querySelector('[data-property="b"]')).toHaveAttribute('data-hidden', 'true');
     });
 
     it('should render a customized title', () => {

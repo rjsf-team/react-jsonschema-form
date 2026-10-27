@@ -3850,6 +3850,26 @@ describe('oneOf', () => {
       expect(new Set(schemas).size).toBe(1);
     });
 
+    it('should keep the uiSchema a typeless boolean select is written its widget into when its data changes', async () => {
+      const uiSchemas: unknown[] = [];
+      const RecordingSelectWidget = (props: WidgetProps) => {
+        uiSchemas.push(props.uiSchema);
+        return <SelectWidget {...props} />;
+      };
+      createFormComponent({
+        schema: { type: 'object', properties: { v: { oneOf: [{ const: true }, { const: false }] } } },
+        widgets: { SelectWidget: RecordingSelectWidget },
+        uiSchema: { v: { 'ui:title': 'Pick' } },
+      });
+      const select = screen.getByRole('combobox', { name: 'Pick' });
+      await user.selectOptions(select, 'Yes');
+      await user.selectOptions(select, 'No');
+
+      expect(select).toHaveDisplayValue('No');
+      expect(uiSchemas.length).toBeGreaterThan(1);
+      expect(new Set(uiSchemas).size).toBe(1);
+    });
+
     it('should not hand a custom ui:field the select widget inferred for labelled boolean consts', () => {
       const uiWidgets: unknown[] = [];
       const MyToggle = ({ uiSchema }: FieldProps) => {

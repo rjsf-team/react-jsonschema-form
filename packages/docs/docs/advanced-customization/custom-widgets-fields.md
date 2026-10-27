@@ -508,6 +508,11 @@ If you're curious how this could ever be useful, have a look at the [Kinto formb
 
 Props passed to a custom SchemaField are the same as [the ones passed to a custom field](#field-props).
 
+`ObjectField` tells its `ObjectFieldTemplate` which properties are `hidden` before rendering them, from the schema, `uiSchema` and data it hands each one, the way the default `SchemaField` and `CyclicSchemaField` resolve them.
+A replacement for either that hides a field some other way, such as a `SchemaField` adding `ui:widget: 'hidden'` to the `uiSchema` it is handed, leaves the property `hidden: false` in the `ObjectFieldTemplate` while its `FieldTemplate` gets `hidden: true`.
+A `$ref` cycle is `hidden` there whenever the field it expands to renders hidden, expanded or not, since the default `CyclicSchemaField` renders nothing in place of its Expand button for such a cycle; a replacement that renders the button anyway has it left out by an `ObjectFieldTemplate` that leaves out `hidden` properties, such as antd's and mantine's.
+Such a replacement keeps the two in step itself: hide the field through the `uiSchema` handed to the form, or give the form an `ObjectFieldTemplate` that doesn't lay out its properties by `hidden`.
+
 ### Custom ArraySchemaField
 
 Everything that was mentioned above for a `Custom SchemaField` applies, but this is only used to render the Array item `children` that are then passed to the `ArrayFieldItemTemplate`.
