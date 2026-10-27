@@ -4862,7 +4862,9 @@ describe('ArrayField', () => {
           const locked = itemButtons(node, 0);
           expect(locked).toHaveLength(3);
           locked.forEach((button) => expect(button).toBeDisabled());
-          itemButtons(node, 1).forEach((button) => expect(button).toBeEnabled());
+          const unlocked = itemButtons(node, 1);
+          expect(unlocked).toHaveLength(3);
+          unlocked.forEach((button) => expect(button).toBeEnabled());
         },
       );
 
@@ -4900,12 +4902,6 @@ describe('ArrayField', () => {
           { 'ui:definitions': { '#/$defs/row': { 'ui:disabled': true } } },
           rowData,
         ],
-        [
-          "deprecatedHandling 'disable' on a deprecated item",
-          { type: 'array', items: { type: 'string', deprecated: true } },
-          { 'ui:globalOptions': { deprecatedHandling: 'disable' } },
-          ['a', 'b'],
-        ],
       ])("locks every item's inputs and buttons alike through %s", (_, lockedSchema, uiSchema, initialFormData) => {
         const { node } = createFormComponent({
           schema: lockedSchema,
@@ -4913,29 +4909,46 @@ describe('ArrayField', () => {
           initialFormData,
         });
 
-        node.querySelectorAll('.rjsf-array-item input').forEach((input) => expect(input).toBeDisabled());
+        const inputs = node.querySelectorAll('.rjsf-array-item input');
+        expect(inputs).toHaveLength(2);
+        inputs.forEach((input) => expect(input).toBeDisabled());
         const buttons = [0, 1].flatMap((index) => itemButtons(node, index));
-        expect(buttons.length).toBeGreaterThan(0);
+        expect(buttons).toHaveLength(6);
         buttons.forEach((button) => expect(button).toBeDisabled());
       });
 
-      it.each<[string, RJSFSchema, UiSchema]>([
-        [
-          "ui:readonly: false over the item schema's readOnly",
-          { ...rowSchema, items: { $ref: '#/$defs/row', readOnly: true } },
-          { items: { 'ui:readonly': false } },
-        ],
-      ])("keeps an item's inputs and buttons enabled alike for %s", (_, unlockedSchema, uiSchema) => {
+      it("keeps an item's inputs and buttons enabled alike for ui:readonly: false over the item schema's readOnly", () => {
         const { node } = createFormComponent({
-          schema: unlockedSchema,
-          uiSchema: { ...uiSchema, 'ui:options': { copyable: true } },
+          schema: { ...rowSchema, items: { $ref: '#/$defs/row', readOnly: true } },
+          uiSchema: { items: { 'ui:readonly': false }, 'ui:options': { copyable: true } },
           initialFormData: rowData,
         });
 
-        node.querySelectorAll('.rjsf-array-item input').forEach((input) => expect(input).toBeEnabled());
+        const inputs = node.querySelectorAll('.rjsf-array-item input');
+        expect(inputs).toHaveLength(2);
+        inputs.forEach((input) => expect(input).toBeEnabled());
         const buttons = itemButtons(node, 0);
         expect(buttons).toHaveLength(3);
         buttons.forEach((button) => expect(button).toBeEnabled());
+      });
+
+      it("keeps a deprecated item's buttons enabled under deprecatedHandling 'disable', so it can still be removed", async () => {
+        const { node, onChange } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string', deprecated: true } },
+          uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'disable' }, 'ui:options': { copyable: true } },
+          initialFormData: ['a', 'b'],
+        });
+
+        const inputs = node.querySelectorAll('.rjsf-array-item input');
+        expect(inputs).toHaveLength(2);
+        inputs.forEach((input) => expect(input).toBeDisabled());
+        const buttons = itemButtons(node, 0);
+        expect(buttons).toHaveLength(3);
+        buttons.forEach((button) => expect(button).toBeEnabled());
+
+        await user.click(buttons[2]);
+
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: ['b'] }), 'root');
       });
 
       it.each(['ui:disabled', 'ui:readonly'])(
@@ -4947,7 +4960,9 @@ describe('ArrayField', () => {
             initialFormData: rowData,
           });
 
-          node.querySelectorAll('.rjsf-array-item input').forEach((input) => expect(input).toBeEnabled());
+          const inputs = node.querySelectorAll('.rjsf-array-item input');
+          expect(inputs).toHaveLength(2);
+          inputs.forEach((input) => expect(input).toBeEnabled());
           const buttons = itemButtons(node, 0);
           expect(buttons).toHaveLength(3);
           buttons.forEach((button) => expect(button).toBeDisabled());
@@ -4978,6 +4993,33 @@ describe('ArrayField', () => {
           ['false', 'false'],
         ]);
       });
+
+      it.each(['ui:disabled', 'ui:readonly'])(
+        "hands a locked array's lock to ArrayFieldItemTemplate, as to its buttons, under an item's own %s: false",
+        (key) => {
+          const prop = key === 'ui:disabled' ? 'disabled' : 'readonly';
+          const ItemTemplate = (props: ArrayFieldItemTemplateProps) => (
+            <div className='item' data-lock={props[prop]} data-buttons-lock={props.buttonsProps[prop]}>
+              {props.children}
+            </div>
+          );
+          const { node } = createFormComponent({
+            schema: rowSchema,
+            uiSchema: { [key]: true, items: { [key]: false } },
+            initialFormData: rowData,
+            templates: { ArrayFieldItemTemplate: ItemTemplate },
+          });
+
+          const locks = Array.from(node.querySelectorAll('.item'), (item) => [
+            item.getAttribute('data-lock'),
+            item.getAttribute('data-buttons-lock'),
+          ]);
+          expect(locks).toEqual([
+            ['true', 'true'],
+            ['true', 'true'],
+          ]);
+        },
+      );
     });
   });
 

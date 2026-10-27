@@ -998,8 +998,9 @@ export function useSchemaFieldPlan<
     required: effectiveRequired,
     inherited: inheritedPresentation?.plan,
   });
-  // Planned here so an array item's own buttons lock exactly as its inputs do
-  const disabled = Boolean(ownUiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
+  // The lock the form, its schema or its uiSchema puts on the field, planned here so an array item's buttons follow it.
+  // `SchemaFieldRender` adds the states that only leave its control unusable, which still let an item be removed
+  const disabled = Boolean(ownUiOptions.disabled ?? props.disabled);
   const readonly = Boolean(ownUiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
   return {
     namedFieldAbove,
@@ -1081,6 +1082,7 @@ function SchemaFieldRender<
     ownUiOptions,
     uiOptions,
     fieldToRender,
+    deprecatedHandling,
     uiRequired,
     effectiveRequired,
     hideError,
@@ -1245,7 +1247,7 @@ function SchemaFieldRender<
   // A field the options give way to renders the choice between them, so with no options it has nothing to choose, which
   // no `ui:disabled` can change
   const hasNoOptionToChoose = optionsGiveWayToField && xxxOfKey !== undefined && (schema[xxxOfKey]?.length ?? 0) === 0;
-  const disabled = plannedDisabled || hasNoOptionToChoose;
+  const disabled = plannedDisabled || deprecatedHandling === 'disable' || hasNoOptionToChoose;
   if (
     uiRequired === false &&
     required &&

@@ -728,6 +728,10 @@ function ArrayFieldItemInner<
     ? Boolean(presentation?.control) && presentation?.showLabel === true
     : labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
   const hasDescription = !!ownUiOptions.description || !!itemSchema.description;
+  // The buttons change the array, so its lock holds them whatever an item's own `ui:disabled: false` unlocks. The
+  // template gets the same lock, so one that draws its own move or remove control can't disagree with them
+  const lockedDisabled = disabled || itemDisabled;
+  const lockedReadonly = readonly || itemReadonly;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
   const has: Record<string, boolean> = {
     moveUp: orderable && canMoveUp,
@@ -800,9 +804,8 @@ function ArrayFieldItemInner<
     children: <ItemSchemaField {...itemFieldProps} />,
     buttonsProps: {
       id: fieldId,
-      // The buttons change the array, so its lock holds them whatever an item's own `ui:disabled: false` unlocks
-      disabled: disabled || itemDisabled,
-      readonly: readonly || itemReadonly,
+      disabled: lockedDisabled,
+      readonly: lockedReadonly,
       canAdd,
       hasCopy: has.copy,
       hasMoveUp: has.moveUp,
@@ -822,11 +825,11 @@ function ArrayFieldItemInner<
     },
     itemKey,
     className: 'rjsf-array-item',
-    disabled: itemDisabled,
+    disabled: lockedDisabled,
     hasToolbar: has.toolbar,
     index,
     totalItems,
-    readonly: itemReadonly,
+    readonly: lockedReadonly,
     registry,
     schema: itemSchema,
     uiSchema: itemUiSchema,
