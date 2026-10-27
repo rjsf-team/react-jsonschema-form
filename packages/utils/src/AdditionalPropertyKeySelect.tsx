@@ -26,8 +26,10 @@ export type AdditionalPropertyKeySelectProps<
    * that is not among them is still shown, as a disabled option, so the dropdown reads back the key it is on
    */
   propertyNamesEnum: string[];
-  /** Callback used to rename the property to the newly selected key name */
-  onKeyRename: (newKey: string) => void;
+  /** Callback used to rename the property to the newly selected key name, which a template hands on from its
+   * `FieldTemplateProps`, where it is undefined for a field that isn't an additional property
+   */
+  onKeyRename?: (newKey: string) => void;
   /** The attributes the errors its row shows give the key, from `getAdditionalKeyAttributes()` */
   errorAttributes?: Pick<ControlAttributes, 'aria-describedby' | 'aria-invalid'>;
 };
@@ -74,7 +76,7 @@ export default function AdditionalPropertyKeySelect<
   const handleChange = useCallback(
     (newKey: unknown) => {
       if (!disabled && !readonly && typeof newKey === 'string' && propertyNamesEnum.includes(newKey)) {
-        onKeyRename(newKey);
+        onKeyRename?.(newKey);
       }
     },
     [disabled, onKeyRename, propertyNamesEnum, readonly],

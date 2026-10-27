@@ -54,7 +54,14 @@ export default function DateTimeInput<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: WidgetProps<T, S, F>) {
+>(
+  props: WidgetProps<T, S, F> & {
+    /** The dayjs format the value is stored in */
+    valueFormat?: string;
+    /** The dayjs format the value is shown in */
+    displayFormat?: string;
+  },
+) {
   const {
     id,
     htmlName,
@@ -80,7 +87,7 @@ export default function DateTimeInput<
 
   const handleChange = useCallback(
     (nextValue: DateStringValue | null) => {
-      onChange(requiresOffset ? offsetValueFormatter(nextValue) : dateFormat(nextValue, valueFormat as string));
+      onChange(requiresOffset ? offsetValueFormatter(nextValue) : dateFormat(nextValue, valueFormat));
     },
     [onChange, valueFormat, requiresOffset],
   );

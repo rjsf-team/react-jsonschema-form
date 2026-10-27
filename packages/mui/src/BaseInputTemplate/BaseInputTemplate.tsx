@@ -62,7 +62,15 @@ export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: BaseInputTemplateProps<T, S, F>) {
+>(
+  props: BaseInputTemplateProps<T, S, F> &
+    Pick<BaseInputTemplateMuiProps, 'slotProps'> & {
+      /** Props for MUI's `InputLabel`, under the name MUI's `TextField` once took them by */
+      InputLabelProps?: Partial<MuiInputLabelProps>;
+      /** Props for MUI's `Input`, under the name MUI's `TextField` once took them by */
+      InputProps?: Partial<MuiInputProps>;
+    },
+) {
   const {
     id,
     name, // remove this from textFieldProps
@@ -143,9 +151,10 @@ export default function BaseInputTemplate<
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
-  const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
-    ? { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps, shrink: true }
-    : { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps };
+  const DisplayInputLabelProps =
+    type !== undefined && TYPES_THAT_SHRINK_LABEL.includes(type)
+      ? { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps, shrink: true }
+      : { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps };
   const handleClear = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();

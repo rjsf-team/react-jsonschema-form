@@ -19,7 +19,12 @@ export default function TextareaWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: WidgetProps<T, S, F>) {
+>(
+  props: WidgetProps<T, S, F> & {
+    /** A handler that replaces the textarea's own change handling */
+    onChangeOverride?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  },
+) {
   const {
     id,
     htmlName,
@@ -65,8 +70,8 @@ export default function TextareaWidget<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        value={String(toInputValue(value))}
-        onChange={onChangeOverride || handleChange}
+        value={String(toInputValue(value || value === 0 ? value : ''))}
+        onChange={onChangeOverride ?? handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
         {...getControlAttributes<T, S, F>({ id, presentation })}

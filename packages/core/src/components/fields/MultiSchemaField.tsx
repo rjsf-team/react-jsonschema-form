@@ -9,9 +9,10 @@ import {
   getTemplates,
   getUiOptions,
   getValidationTarget,
-  hasWidget,
+  getXxxOfKey,
   isFormDataAvailable,
   logOnce,
+  ONE_OF_KEY,
   optionSelectorId,
   resolveWidget,
   selectOptionUiSchema,
@@ -22,17 +23,8 @@ import {
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
-import { retrievedOptionListOf } from '../uiState.ts';
-import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
-import {
-  displaysLabel,
-  getWidgetErrorProps,
-  getWidgetLabelProps,
-  isAdditionalPropertySchema,
-  optionsKeywordOf,
-  withoutOptionalControls,
-} from './fieldWidgetUtils.ts';
+import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import getOptionFieldUiSchema from './getOptionFieldUiSchema.ts';
 import { lookUpUiField } from './namedField.ts';
@@ -42,21 +34,43 @@ import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContex
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
 import type { TemplateWarnEntry } from './TemplateWarnEntryContext.ts';
 
-/** The widgets the option index has an implementation of that would show the index as a number to edit */
-const VALUE_ENTRY_WIDGETS = new Set<unknown>(['text', 'updown', 'range', 'TextWidget', 'UpDownWidget', 'RangeWidget']);
+/** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
+ * description, which the field's plan already carries to the option's, so the option keeps the title and description
+ * its own schema gives it rather than taking the field's in their place. Shadowed in `ui:options` as well, as
+ * `getUiOptions()` reads either spelling
+ *
+ * @param uiSchema - The field's uiSchema
+ * @returns - The uiSchema the option renders with
+ */
+function withoutFieldText<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiSchema: UiSchema<T, S, F>,
+): UiSchema<T, S, F> {
+  const options = uiSchema[UI_OPTIONS_KEY];
+  if (
+    !('ui:title' in uiSchema) &&
+    !('ui:description' in uiSchema) &&
+    options?.title === undefined &&
+    options?.description === undefined
+  ) {
+    return uiSchema;
+  }
+  const { 'ui:title': _title, 'ui:description': _description, ...rest } = uiSchema;
+  // The rest of a generic `UiSchema<T, S, F>` is a type the checker can't relate back to it
+  return { ...rest, [UI_OPTIONS_KEY]: { ...options, title: undefined, description: undefined } } as UiSchema<T, S, F>;
+}
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It shows
  * the option `useOptionSelection()` holds for the field, selects another when the user picks one, and cleans up any
  * irrelevant data in `formData`.
  *
  * @param props - The `FieldProps` for this template. `options` holds the option schemas, each already retrieved for
- *   `formData` by `SchemaField`. A field named through `ui:field`, or rendered by a custom field, is handed none, so it
- *   retrieves them from its `schema` as `SchemaField` does. It is not a declared `FieldProps` key, so it would be read
- *   as `any` through `FieldProps`' `GenericObjectType` index signature; declaring it here names what `SchemaField`
- *   passes, but nothing checks it, since `SchemaField` renders this through a `Field` slot that only knows `FieldProps`
+ *   `formData` by `SchemaField`, which is the one place they are retrieved; a custom field rendering this itself
+ *   retrieves them the same way. `FieldProps` declares it optional, since only a `oneOf`/`anyOf` field gets it; it is
+ *   required here, which nothing checks, since `SchemaField` renders this through a `Field` slot that only knows
+ *   `FieldProps`
  */
 function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  props: FieldProps<T, S, F> & { options?: S[] },
+  props: FieldProps<T, S, F> & { options: S[] },
 ) {
   const {
     name,
@@ -69,7 +83,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     onBlur,
     onChange,
     onFocus,
-    options: givenOptions,
+    options,
     readonly,
     registry,
     required = false,
@@ -79,10 +93,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   } = props;
   const { schemaUtils } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
-  const options = useMemo(
-    () => givenOptions ?? retrievedOptionListOf<T, S, F>(schemaUtils, schema, formData) ?? [],
-    [givenOptions, schemaUtils, schema, formData],
-  );
 
   const { selectedOption, selectOption } = useOptionSelection<T, S, F>(
     registry,
@@ -92,7 +102,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     getDiscriminatorFieldFromSchema<S>(schema),
   );
 
-  const xxxOfKey = optionsKeywordOf<S>(schema);
+  const xxxOfKey = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
   const selectorsAbove = useSelectorsAbove(id);
   const selectorDepth = selectorsAbove[xxxOfKey] + 1;
   const fieldId = optionSelectorId(id, xxxOfKey, selectorDepth);

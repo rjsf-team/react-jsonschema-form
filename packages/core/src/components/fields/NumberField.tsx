@@ -26,8 +26,8 @@ const trailingCharMatcher = /[0.]0*$/;
 function NumberField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F>,
 ) {
-  const { registry, onChange, formData, value: initialValue } = props;
-  const [lastValue, setLastValue] = useState(initialValue);
+  const { registry, onChange, formData } = props;
+  const [lastValue, setLastValue] = useState<unknown>();
   const { StringField } = registry.fields;
 
   const separator = getDecimalSeparator();
@@ -39,7 +39,7 @@ function NumberField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
    * @param value - The current value for the change occurring
    */
   const handleChange = useCallback(
-    (newValue: FieldProps<T, S, F>['value'], path: FieldPath, errorSchema?: ErrorSchema<T>, id?: string) => {
+    (newValue: unknown, path: FieldPath, errorSchema?: ErrorSchema<T>, id?: string) => {
       // Cache the original value in component state
       setLastValue(newValue);
 
@@ -56,10 +56,12 @@ function NumberField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       // Check that the value is a string (this can happen if the widget used is a
       // <select>, due to an enum declaration etc) then, if the value ends in a
       // trailing decimal point or multiple zeroes, strip the trailing values
-      const processed =
-        typeof normalizedValue === 'string' && trailingCharMatcherWithPrefix.exec(normalizedValue)
+      let processed = normalizedValue;
+      if (typeof normalizedValue === 'string') {
+        processed = trailingCharMatcherWithPrefix.exec(normalizedValue)
           ? asNumber(normalizedValue.replace(trailingCharMatcher, ''))
           : asNumber(normalizedValue);
+      }
 
       onChange(processed, path, errorSchema, id);
     },

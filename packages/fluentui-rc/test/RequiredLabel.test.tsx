@@ -37,7 +37,7 @@ function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetProps {
 // only its `*`, which would name the control "star"
 describe.each<[string, ComponentType<WidgetProps>, string]>([
   ['RangeWidget', RangeWidget, 'input[type="range"]'],
-  ['BaseInputTemplate', BaseInputTemplate, 'input'],
+  ['BaseInputTemplate', (props: WidgetProps) => <BaseInputTemplate {...props} />, 'input'],
   ['TextareaWidget', TextareaWidget, 'textarea'],
 ])('%s', (_, Widget, controlSelector) => {
   test('draws no label for a required field whose label is empty, and stays required', () => {
