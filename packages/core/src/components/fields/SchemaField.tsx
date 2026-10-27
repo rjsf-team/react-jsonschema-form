@@ -444,6 +444,7 @@ function getFieldComponent<
   rendersNamedField: boolean;
   rendersOptionsItself: boolean;
   rendersOptionSelector: boolean;
+  optionsGiveWayToField: boolean;
   yieldsToOptions: boolean;
   isWithheld: boolean;
   fieldKey: string | undefined;
@@ -590,6 +591,7 @@ function getFieldComponent<
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
+    optionsGiveWayToField,
     yieldsToOptions,
     isWithheld,
     fieldKey,
