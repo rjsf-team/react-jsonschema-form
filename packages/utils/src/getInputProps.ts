@@ -139,7 +139,7 @@ export default function getInputProps<
   }
 
   if (options.accept) {
-    inputProps.accept = options.accept;
+    inputProps.accept = Array.isArray(options.accept) ? options.accept.join(',') : options.accept;
   }
 
   return inputProps;

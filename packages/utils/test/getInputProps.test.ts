@@ -35,6 +35,10 @@ describe('getInputProps', () => {
       accept: options.accept,
     });
   });
+  it('joins an accept list given as an array', () => {
+    const options: UIOptionsType = { accept: ['.png', '.jpg'] };
+    expect(getInputProps({}, 'file', options)).toEqual({ type: 'file', accept: '.png,.jpg' });
+  });
   it('returns type=defaultType even when schema has type', () => {
     const schema: RJSFSchema = {
       type: 'number',

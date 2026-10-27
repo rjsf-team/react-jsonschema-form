@@ -3,6 +3,16 @@ import type { DateObject } from './types.ts';
 /** Available options for re-ordering date input element */
 export type DateElementFormat = 'DMY' | 'MDY' | 'YMD';
 
+/** Whether `value` is a `DateElementFormat`, as the `format` option an `AltDateWidget` reads, which another widget can
+ * read as a format of its own, such as a color's
+ *
+ * @param value - The value of the `format` option
+ * @returns - Whether `value` orders the date elements
+ */
+export function isDateElementFormat(value: unknown): value is DateElementFormat {
+  return value === 'DMY' || value === 'MDY' || value === 'YMD';
+}
+
 /** Type describing format of DateElement prop */
 export interface DateElementProp {
   type: string;

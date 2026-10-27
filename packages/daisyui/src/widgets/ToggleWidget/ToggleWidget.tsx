@@ -19,8 +19,7 @@ export default function ToggleWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  // Get size from options or use default "md"
-  const { size = 'md' } = props.options;
+  const { size } = props.options;
 
   // Only add size class if it's not the default size
   const sizeClass = typeof size === 'string' && size !== 'md' ? `toggle-${size}` : '';

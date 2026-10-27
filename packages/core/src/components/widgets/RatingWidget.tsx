@@ -57,6 +57,11 @@ export default function RatingWidget<
     'radiogroup',
   );
 
+  // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
+  // A `stars` that isn't a number, as a JSON uiSchema can hold, shows the default 5
+  const numStars = schema.maximum
+    ? Math.min(schema.maximum, 5)
+    : Math.min(Math.max(Number.isFinite(stars) ? stars : 5, 1), 5);
   const min = schema.minimum ?? 0;
   const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
