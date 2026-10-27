@@ -1,4 +1,5 @@
-import { createElement, forwardRef, lazy, memo } from 'react';
+import type { ComponentType } from 'react';
+import { Component, createElement, forwardRef, lazy, memo } from 'react';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import type { MergedClassMap, Registry, UIOptionsType } from '../src/index.ts';
@@ -337,5 +338,43 @@ describe('getTemplates', () => {
   it('leaves out an override for a template the registry lacks, unlike getTemplate', () => {
     expect(getTemplates(registry, { CustomTemplate })).toBe(registry.templates);
     expect(getTemplate('CustomTemplate', registry, { CustomTemplate })).toBe(CustomTemplate);
+  });
+});
+
+describe('a custom entry in TemplatesType', () => {
+  interface CustomProps {
+    label: string;
+  }
+  class ClassTemplate extends Component<CustomProps> {
+    render() {
+      return this.props.label;
+    }
+  }
+  const FunctionTemplate = (props: CustomProps) => props.label;
+  const templates: Registry['templates'] = {
+    ...registry.templates,
+    ClassTemplate,
+    FunctionTemplate,
+    MemoTemplate: memo(FunctionTemplate),
+    ForwardRefTemplate: forwardRef<HTMLSpanElement, CustomProps>((props, ref) => {
+      return createElement('span', { ref }, props.label);
+    }),
+    LazyTemplate: lazy(async () => ({ default: FunctionTemplate })),
+    CustomGroup: { ClassTemplate, FunctionTemplate },
+  };
+
+  it('accepts any kind of component, alone or in a group', () => {
+    expect(templates.ClassTemplate).toBe(ClassTemplate);
+    expect(templates.CustomGroup).toEqual({ ClassTemplate, FunctionTemplate });
+  });
+
+  it("can't be rendered once read back until the lookup names its props", () => {
+    const readBack = templates.FunctionTemplate;
+    if (typeof readBack === 'function') {
+      // @ts-expect-error a custom entry's props type is `never`
+      createElement(readBack, { label: 'Label' });
+    }
+    const Typed = templates.FunctionTemplate as ComponentType<CustomProps>;
+    expect(createElement(Typed, { label: 'Label' }).props).toEqual({ label: 'Label' });
   });
 });
