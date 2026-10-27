@@ -96,7 +96,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   if (!rendersOwnFieldBesideOption<S>(schema)) {
     return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema };
   }
-  return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema };
+  return { schema: mergeSchemas<S>(remaining, option), option, uiSchema: optionUiSchema };
 }
 
 /** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution. A fixed (tuple) schema's
@@ -300,7 +300,7 @@ function hasUiRequiredOption<T, S extends StrictRJSFSchema, F extends FormContex
   if (!isObject(node)) {
     return false;
   }
-  if (getUiOptions<T, S, F>(node).required !== undefined) {
+  if (getUiOptions<unknown, S, F>(node).required !== undefined) {
     return true;
   }
   return Object.entries(node).some(([key, value]) => {

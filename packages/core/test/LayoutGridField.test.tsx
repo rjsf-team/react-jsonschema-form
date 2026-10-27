@@ -1942,7 +1942,7 @@ describe('LayoutGridField', () => {
     expect(fields[1]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
     // Test onChange and value in the input
     const input = within(fields[0]).getByRole('textbox');
-    expect(input).toHaveValue((props.formData as GenericObjectType)[fieldName]);
+    expect(input).toHaveValue((props.formData as Record<string, string>)[fieldName]);
     await userEvent.type(input, '!');
     expect(props.onChange).toHaveBeenCalledWith('foo!', fieldPath, EXTRA_ERROR, fieldId);
   });

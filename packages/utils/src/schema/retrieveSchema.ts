@@ -1084,7 +1084,8 @@ const EXCLUDED_STUB_KEYWORDS = new Set<string>([...SUBSCHEMA_KEYWORDS, ...UNSTUB
  * @returns - The copy to build the stub from
  */
 function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): S {
-  const schema: GenericObjectType = { ...subSchema };
+  // The copy reads as a record of keywords while some are dropped, which leaves a schema of the same type
+  const schema = { ...subSchema } as GenericObjectType;
   UNSTUBBABLE_KEYWORDS.forEach((keyword) => delete schema[keyword]);
   return schema as S;
 }
@@ -1108,7 +1109,8 @@ function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S):
  */
 function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: unknown, subSchema: S = {} as S): S {
   const type = guessType(formData);
-  const schema: GenericObjectType = { ...subSchema };
+  // The copy reads as a record of keywords while some are dropped and the type is set, which leaves a schema
+  const schema = { ...subSchema } as GenericObjectType;
   let isConstrained = false;
   Object.entries(subSchema).forEach(([key, value]) => {
     if (CONSTRAINING_KEYWORDS.has(key)) {
@@ -1199,7 +1201,8 @@ export function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(sch
  * @returns - The schema with the option's extra-key keywords joined to its own
  */
 export function joinOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option: S): S {
-  const joined: GenericObjectType = { ...schema };
+  // The copy reads as a record of keywords while the option's are joined in
+  const joined = { ...schema } as GenericObjectType;
   const optionEvaluatesRest = additionalPropertiesKeyword<S>(option) !== undefined;
   for (const keyword of [ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY]) {
     const own: unknown =
@@ -1322,7 +1325,7 @@ export function stubExistingAdditionalProperties<
       // and `SchemaField` resolves the stub again to render it
       const described =
         REF_KEY in keySchema || Array.isArray(keySchema[ALL_OF_KEY])
-          ? retrieveSchema<T, S, F>(context, keySchema, rootSchema, formData[key])
+          ? retrieveSchema<unknown, S, F>(context, keySchema, rootSchema, formData[key])
           : keySchema;
       stub = stubSchemaForSubSchema<S>(described, formData[key], typeOf);
     } else {

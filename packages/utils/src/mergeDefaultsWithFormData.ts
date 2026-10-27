@@ -74,7 +74,7 @@ export default function mergeDefaultsWithFormData<T = unknown>(
       const keyValue = formDataObj[key];
       const keyExistsInDefaults = defaultsObj !== undefined && Object.hasOwn(defaultsObj, key);
       const ownDefault = keyExistsInDefaults ? defaultsObj[key] : undefined;
-      const merged = mergeDefaultsWithFormData<T>(
+      const merged = mergeDefaultsWithFormData(
         ownDefault,
         keyValue,
         mergeExtraArrayDefaults,

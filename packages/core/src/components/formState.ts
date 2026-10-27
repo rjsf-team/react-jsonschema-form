@@ -4,10 +4,10 @@ import type {
   FieldPathList,
   FormContextType,
   GenericObjectType,
-  StrictRJSFSchema,
   RJSFSchema,
   SchemaContext,
   SchemaUtilsType,
+  StrictRJSFSchema,
   UiSchema,
   ValidationData,
 } from '@rjsf/utils';
@@ -192,7 +192,7 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
   if (Array.isArray(data) ? !hasByPath(data, key) : data !== undefined && !isPlainObject(data)) {
     return undefined;
   }
-  let container: GenericObjectType = isPlainObject(marks) ? marks : {};
+  let container: object = isPlainObject(marks) ? marks : {};
   if (Array.isArray(data)) {
     container = Array.isArray(marks) ? marks : Array.from({ length: data.length });
   }

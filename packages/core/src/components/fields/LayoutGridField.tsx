@@ -1,12 +1,12 @@
 import type { ComponentType, JSXElementConstructor, ReactNode } from 'react';
 import { useCallback, useMemo } from 'react';
 import type {
-  FieldProps,
   FieldPath,
+  FieldProps,
   FormContextType,
   GenericObjectType,
-  RJSFSchema,
   Registry,
+  RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
 } from '@rjsf/utils';
@@ -491,7 +491,7 @@ export function computeUIComponentPropsFromGridSchema<
     name = gridSchema ?? '';
   } else {
     const { name: innerName = '', render, ...innerProps } = gridSchema;
-    name = innerName;
+    name = typeof innerName === 'string' ? innerName : '';
     uiProps = innerProps;
     // Transform any `$lookup=` in the uiProps props with the appropriate value
     Object.entries(uiProps).forEach(([key, prop]) => {
@@ -503,7 +503,10 @@ export function computeUIComponentPropsFromGridSchema<
         }
       }
     });
-    UIComponent = getCustomRenderComponent<T, S, F>(render, registry);
+    UIComponent =
+      typeof render === 'string' || isComponentType(render)
+        ? getCustomRenderComponent<T, S, F>(render, registry)
+        : null;
     if (!innerName && UIComponent) {
       rendered = <UIComponent {...innerProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent} />;
     }

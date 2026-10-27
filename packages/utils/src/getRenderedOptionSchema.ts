@@ -320,7 +320,8 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
     return option;
   }
   if (!rendersOwnField) {
-    return meetSchemas(inherited, option) as S;
+    // The option reads as a record of keywords, and the two met are a schema of the option's type
+    return meetSchemas(inherited, option as GenericObjectType) as S;
   }
   // An object parent passes on no bound, so there is none to tighten. An option key holding `undefined`, as one built
   // in code can, declares nothing, as `meetSchemas()` reads it, but `mergeSchemas()` copies it over what was inherited
@@ -333,7 +334,10 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
   if (!takesExtraKeys) {
     return merged as S;
   }
-  const withParentExtraKeys: GenericObjectType = withoutKeys<S>(merged as S, ...EXTRA_KEY_KEYWORDS);
+  const withParentExtraKeys: GenericObjectType = { ...merged };
+  for (const keyword of EXTRA_KEY_KEYWORDS) {
+    delete withParentExtraKeys[keyword];
+  }
   for (const keyword of EXTRA_KEY_KEYWORDS) {
     if (Object.hasOwn(parent, keyword)) {
       withParentExtraKeys[keyword] = Reflect.get(parent, keyword);

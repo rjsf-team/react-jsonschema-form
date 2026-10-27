@@ -71,7 +71,7 @@ export default function validationDataMerge<T = unknown>(
     if (preventDuplicates) {
       additional = withoutMergedErrors(additional, existing) as ErrorSchema<T>;
     }
-    errorSchema = mergeObjects(existing, additional, true) as ErrorSchema<T>;
+    errorSchema = mergeObjects<ErrorSchema<T>>(existing, additional, true);
   }
   const errors = toErrorList(additional);
   return { errorSchema, errors: [...oldErrors, ...errors] };

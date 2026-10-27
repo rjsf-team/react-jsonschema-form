@@ -2,7 +2,7 @@ import { REQUIRED_KEY } from './constants.ts';
 import getSchemaType from './getSchemaType.ts';
 import isObject from './isObject.ts';
 import setOwn from './setOwn.ts';
-import type { GenericObjectType, GenericSymbolObjectType } from './types.ts';
+import type { GenericObjectType } from './types.ts';
 
 /** Recursively merge deeply nested schemas. The difference between `mergeSchemas` and `mergeObjects` is that
  * `mergeSchemas` only concats arrays for values under the 'required' keyword, and when it does, it doesn't include
@@ -10,16 +10,16 @@ import type { GenericObjectType, GenericSymbolObjectType } from './types.ts';
  *
  * @param obj1 - The first schema object to merge
  * @param obj2 - The second schema object to merge
- * @returns - The merged schema object
+ * @returns - The merged schema object, typed as the `R` the caller declares
  */
-export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjectType) {
-  const acc = { ...obj1 }; // Prevent mutation of source object.
+export default function mergeSchemas<R extends object = GenericObjectType>(obj1: object, obj2: object): R {
+  const acc: GenericObjectType = { ...obj1 }; // Prevent mutation of source object.
   const result = Object.keys(obj2).reduce((accumulator, key) => {
     // Only an own member of `obj1` takes part, so a JSON-sourced `__proto__` or `toString` key doesn't read an
     // inherited member
     const hasLeft = Object.hasOwn(obj1, key);
-    const left: unknown = hasLeft ? obj1[key] : undefined,
-      right: unknown = obj2[key];
+    const left: unknown = hasLeft ? Reflect.get(obj1, key) : undefined,
+      right: unknown = Reflect.get(obj2, key);
     if (hasLeft && isObject(right)) {
       setOwn(accumulator, key, mergeSchemas(isObject(left) ? left : {}, right));
     } else if (
@@ -37,9 +37,8 @@ export default function mergeSchemas(obj1: GenericObjectType, obj2: GenericObjec
   }, acc);
   // Copy own Symbol-keyed properties from obj2 (Object.keys skips them).
   for (const sym of Object.getOwnPropertySymbols(obj2)) {
-    // To avoid issues with symbols, we cast them to GenericSymbolObjectType. If we make the mergeSchema function take
-    // in GenericSymbolObjectType rather than GenericObjectType, it causes a bunch of type errors downstream
-    (result as GenericSymbolObjectType)[sym] = (obj2 as GenericSymbolObjectType)[sym];
+    Reflect.set(result, sym, Reflect.get(obj2, sym));
   }
-  return result;
+  // The single deliberate cast here: the merged object is trusted to be the `R` the caller declared
+  return result as R;
 }

@@ -6,6 +6,7 @@ import {
   getDiscriminatorFieldFromSchema,
   getFirstMatchingOption,
   isObject,
+  isSchemaObject,
   omitExtraData,
   retrieveSchema,
   schemaKey,
@@ -114,8 +115,8 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
     function scoreRenderedChoice(validator: ValidatorType) {
       const context = { validator, customMergeAllOf };
       const property = retrieveSchema(context, rootSchema, rootSchema, formData).properties?.p;
-      const choice = isObject(property) ? property.properties?.choice : undefined;
-      const options = isObject(choice) ? (choice.oneOf ?? []) : [];
+      const choice = isSchemaObject(property) ? property.properties?.choice : undefined;
+      const options = isSchemaObject(choice) ? (choice.oneOf ?? []) : [];
       return getClosestMatchingOption(context, rootSchema, formData.p.choice, options.filter(isObject), 0);
     }
 

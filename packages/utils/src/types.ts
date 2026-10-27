@@ -18,7 +18,7 @@ import './jsonSchemaAugmentation.ts';
 /** The representation of any generic object type, usually used as an intersection on other types to make them more
  * flexible in the properties they support (i.e. anything else)
  */
-export type GenericObjectType = Record<string, any>;
+export type GenericObjectType = Record<string, unknown>;
 
 /** A callback whose parameters are checked bivariantly, the way React checks event handlers, so a props type carrying
  * one stays covariant in `T`, and an implementation may declare narrower parameters than the callback's own.
