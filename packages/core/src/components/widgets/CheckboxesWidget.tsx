@@ -9,6 +9,7 @@ import {
   enumOptionsSelectValue,
   getGroupAttributes,
   getOptionValueFormat,
+  joinClassNames,
   optionId,
   useOptionFocusHandlers,
 } from '@rjsf/utils';
@@ -33,9 +34,11 @@ function CheckboxesWidget<
   onBlur,
   onFocus,
   htmlName,
+  registry,
   presentation,
 }: WidgetProps<T, S, F>) {
   const { inline = false, enumOptions, enumDisabled } = options;
+  const { classMap } = registry;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const checkboxesValues = Array.isArray(value) ? value : [value];
@@ -53,7 +56,7 @@ function CheckboxesWidget<
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
           const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
-          const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
+          const disabledCls = (disabled || itemDisabled || readonly) && classMap.disabled;
 
           const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
             if (event.target.checked) {
@@ -67,6 +70,7 @@ function CheckboxesWidget<
             <span>
               <input
                 type='checkbox'
+                className={classMap.checkboxInput || undefined}
                 id={optionId(id, index)}
                 name={htmlName || id}
                 checked={checked}
@@ -83,13 +87,13 @@ function CheckboxesWidget<
           );
           return inline ? (
             // oxlint-disable-next-line react/no-array-index-key
-            <label key={index} className={`checkbox-inline ${disabledCls}`}>
+            <label key={index} className={joinClassNames(classMap.checkboxInlineLabel, disabledCls)}>
               {checkbox}
             </label>
           ) : (
             // oxlint-disable-next-line react/no-array-index-key
-            <div key={index} className={`checkbox ${disabledCls}`}>
-              <label>{checkbox}</label>
+            <div key={index} className={joinClassNames(classMap.checkboxWrapper, disabledCls)}>
+              <label className={classMap.checkboxLabel || undefined}>{checkbox}</label>
             </div>
           );
         })}

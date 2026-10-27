@@ -12,6 +12,7 @@ import {
   titleId,
   buttonId,
   titleDrawsOptionalDataControl,
+  joinClassNames,
 } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
@@ -50,9 +51,9 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { schemaUtils } = registry;
+  const { schemaUtils, classMap } = registry;
   return (
-    <fieldset className={className} id={id}>
+    <fieldset className={joinClassNames(className, classMap.objectFieldset) || undefined} id={id}>
       {title && (
         <TitleFieldTemplate
           id={titleId(id)}

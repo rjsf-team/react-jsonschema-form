@@ -1,5 +1,11 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, getGroupAttributes, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import {
+  DateElement,
+  getGroupAttributes,
+  joinClassNames,
+  TranslatableString,
+  useAltDateWidgetProps,
+} from '@rjsf/utils';
 
 /** The `AltDateWidget` is an alternative widget for rendering date properties. Its list of date parts sits in the
  * `group` carrying the field's id, named by the template's label through `aria-labelledby`, since no part carries that
@@ -24,16 +30,16 @@ function AltDateWidget<
     onFocus,
     presentation,
   } = props;
-  const { translateString } = registry;
+  const { translateString, classMap } = registry;
   const { group } = getGroupAttributes<T, S, F>({ id, presentation }, 'group');
   const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
 
   return (
     <div id={id} {...group}>
-      <ul className='list-inline'>
+      <ul className={classMap.altDateList}>
         {elements.map((elemProps, i) => (
           // oxlint-disable-next-line react/no-array-index-key
-          <li className='list-inline-item' key={i}>
+          <li className={classMap.altDateListItem} key={i}>
             <DateElement
               rootId={id}
               label={label}
@@ -50,17 +56,22 @@ function AltDateWidget<
           </li>
         ))}
         {!options.hideNowButton && (
-          <li className='list-inline-item'>
-            <button type='button' className='btn btn-info btn-now' onClick={handleSetNow} disabled={buttonsDisabled}>
+          <li className={classMap.altDateListItem}>
+            <button
+              type='button'
+              className={joinClassNames(classMap.altDateNowButton, 'btn-now')}
+              onClick={handleSetNow}
+              disabled={buttonsDisabled}
+            >
               {translateString(TranslatableString.NowLabel)}
             </button>
           </li>
         )}
         {!options.hideClearButton && (
-          <li className='list-inline-item'>
+          <li className={classMap.altDateListItem}>
             <button
               type='button'
-              className='btn btn-warning btn-clear'
+              className={joinClassNames(classMap.altDateClearButton, 'btn-clear')}
               onClick={handleClear}
               disabled={buttonsDisabled}
             >

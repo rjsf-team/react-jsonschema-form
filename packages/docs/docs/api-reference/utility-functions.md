@@ -93,7 +93,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
 - onBlur: (id: string, value: any) => void - Callback for the widget's blur event
 - onFocus: (id: string, value: any) => void - Callback for the widget's focus event
-- [className='form-control']: string - Optional class name given to the rendered widget
+- [className]: string - Optional class name given to the rendered widget
 - [autofocus]: boolean - Optional flag, if true, the widget autofocuses
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
@@ -2341,6 +2341,19 @@ array constant, since `SchemaField` renders a typeless select over such values a
 
 - boolean: True if `schema` is a select whose value is an object or array picked as a whole
 
+### joinClassNames()
+
+Joins the class names of one element into its `className`, leaving out the conditional ones that are `false`, `null`, `undefined` or empty, as in `joinClassNames(classMap.checkboxWrapper, disabled && classMap.disabled)`.
+`@rjsf/core`'s components join their marker classes and their [class map](../advanced-customization/custom-themes.md#class-map) entries with it, and a custom component reading `registry.classMap` can do the same.
+
+#### Parameters
+
+- ...classNames: (string | false | null | undefined)[] - The class names, each a string or a falsy conditional to leave out
+
+#### Returns
+
+- string: The class names present, space separated, `''` where there are none
+
 ### keywordShape()
 
 Classifies one of a schema's own entries by the shape of the subschemas its keyword's value holds: `'map'` for a map of names, which are data, to subschemas, such as `properties`, `'array'` for an array of them, such as `allOf`, `'single'` for one, such as `not`, and `undefined` for a keyword holding data or annotations, such as `const`, `default` or `title`.
@@ -2431,6 +2444,21 @@ If no such value exists, return the `fallback` value.
 #### Returns
 
 - R: The value associated with `toLookup` in the form context or `fallback`
+
+### mergeClassMaps()
+
+Layers class maps key by key, the way `@rjsf/core` layers a theme's `classMap` over its own and the `Form`'s over the theme's.
+An entry that is neither a class nor a function, such as one left `undefined`, `null` from JSON or `false` from a conditional, keeps the class beneath it.
+A function entry is called with the class beneath it, or composed with the function beneath it until a class is there to call them with.
+Code that builds a registry for a themed form outside `Form` layers the theme's map and its own with it before handing them to `buildRegistry()`.
+
+#### Parameters
+
+- ...layers: (FormClassMap | undefined)[] - The class maps to layer, from the bottom; `undefined` entries are skipped
+
+#### Returns
+
+- FormClassMap: The layered class map, whose entries are functions only where no layer beneath gives a class
 
 ### mergeDefaultsWithFormData&lt;T = unknown>()
 

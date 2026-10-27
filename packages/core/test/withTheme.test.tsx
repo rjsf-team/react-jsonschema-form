@@ -344,6 +344,27 @@ describe('withTheme', () => {
     });
   });
 
+  describe('With classMap', () => {
+    it("layers the props' over the theme's over core's, key by key, keeping the theme's under a prop entry left undefined", () => {
+      let registry: Registry | undefined;
+      const fields = {
+        StringField(props: FieldProps) {
+          registry = props.registry;
+          return null;
+        },
+      };
+      const theme: ThemeProps = { fields, classMap: { input: 'theme-input', select: 'theme-select' } };
+      createComponent(WrapperClassComponent(theme), {
+        schema: { type: 'string' },
+        classMap: { input: 'prop-input', select: undefined },
+        validator,
+      });
+      expect(registry?.classMap).toEqual(
+        expect.objectContaining({ input: 'prop-input', select: 'theme-select', textarea: 'form-control' }),
+      );
+    });
+  });
+
   describe('With globalUiOptionsKeys', () => {
     it("reads the theme's keys and the props' from ui:globalOptions, and no other", () => {
       let registry: Registry | undefined;
