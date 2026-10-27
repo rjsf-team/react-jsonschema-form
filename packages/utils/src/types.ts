@@ -2,7 +2,6 @@ import type {
   ButtonHTMLAttributes,
   ChangeEvent,
   Component,
-  ComponentType,
   CSSProperties,
   FocusEvent,
   HTMLAttributes,
@@ -638,7 +637,7 @@ export type TemplatesType<
     /** The template to use for the Clear button used for input fields */
     ClearButton: SlotComponent<IconButtonProps<T, S, F>>;
   };
-} & Record<string, ComponentType<any> | Record<string, ComponentType<any>> | undefined>;
+} & Record<string, SlotComponent<never> | Record<string, SlotComponent<never>> | undefined>;
 
 /** The options RJSF reads from `ui:globalOptions`, as fallbacks for a field that sets none of its own. These are the
  * only ones it reads there: any other option is set per field, and a key outside this list belongs to an extension.
