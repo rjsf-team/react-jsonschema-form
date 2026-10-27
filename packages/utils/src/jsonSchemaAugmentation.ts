@@ -1,7 +1,8 @@
 import type { JSONSchema7 } from 'json-schema';
 
 /**
- * This file is used to augment the `json-schema` module with the `deprecated` keyword.
+ * This file is used to augment the `json-schema` module with the keywords RJSF reads beyond draft 7: `deprecated` and
+ * the other keywords of later drafts it supports, OpenAPI's `discriminator`, and Ajv's `formatMinimum`/`formatMaximum`.
  *
  * It is a dedicated file because `json-schema` is a type-only package. Standard augmentation
  * using `import 'json-schema'` in a file with other imports can cause module resolution
@@ -15,6 +16,24 @@ declare module 'json-schema' {
      * used and may be removed in the future.
      */
     deprecated?: boolean;
+    /** A plain-name fragment identifier for the schema (draft 2019-09) */
+    $anchor?: string;
+    /** A dynamic-scope fragment identifier for the schema (draft 2020-12) */
+    $dynamicAnchor?: string;
+    /** The properties the presence of a property requires, by that property's name (draft 2019-09) */
+    dependentRequired?: Record<string, string[]>;
+    /** The subschema the presence of a property applies, by that property's name (draft 2019-09) */
+    dependentSchemas?: Record<string, JSONSchema7Definition>;
+    /** The property whose value selects the `oneOf`/`anyOf` option (OpenAPI) */
+    discriminator?: { propertyName: string; mapping?: Record<string, string> };
+    /** The latest date or time the value may hold, for a `format` that has an order (Ajv's `ajv-formats`) */
+    formatMaximum?: string;
+    /** The earliest date or time the value may hold, for a `format` that has an order (Ajv's `ajv-formats`) */
+    formatMinimum?: string;
+    /** The schemas of the array's leading items, by position (draft 2020-12) */
+    prefixItems?: JSONSchema7Definition[];
+    /** The schema of the properties no other keyword evaluates (draft 2019-09) */
+    unevaluatedProperties?: JSONSchema7Definition;
   }
 }
 

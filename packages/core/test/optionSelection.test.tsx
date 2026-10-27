@@ -884,7 +884,7 @@ describe('option selection as form state', () => {
       );
     });
 
-    it.each<[string, RJSFSchema]>([
+    it.each<[string, RJSFSchema & { 'x-group'?: string }]>([
       ['$defs', { $defs: { unused: { type: 'string' } } }],
       ['discriminator', { discriminator: { propertyName: 'b' } }],
       ['an x- keyword', { 'x-group': 'b' }],

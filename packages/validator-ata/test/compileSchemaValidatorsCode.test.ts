@@ -604,7 +604,7 @@ describe('compileSchemaValidatorsCode', () => {
     expect(() => compileSchemaValidatorsCode(rootSchema)).not.toThrow();
   });
   test('reads a $ref below an $id under a container no keyword names against the resource around the container', () => {
-    const rootSchema: RJSFSchema = {
+    const rootSchema: RJSFSchema & { components?: object } = {
       components: {
         schemas: {
           X: { $id: 'http://example.com/y.json', type: 'object', properties: { k: { $ref: '#/definitions/s' } } },

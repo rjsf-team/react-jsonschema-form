@@ -1,4 +1,3 @@
-import type { RJSFSchema } from '@rjsf/utils';
 import { LOOKUP_MAP_NAME } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
@@ -275,7 +274,7 @@ const layoutGrid: Sample = {
         required: ['job_type', 'description'],
       },
     },
-  } as RJSFSchema,
+  },
   uiSchema(theme: string) {
     switch (theme) {
       case 'antd':

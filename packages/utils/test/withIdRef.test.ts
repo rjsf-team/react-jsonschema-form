@@ -171,7 +171,8 @@ describe('withRootIdRefPrefix()', () => {
     });
     it('leaves one as written below an $id the schema handed over holds, where a relative root id would move', () => {
       const { $id: _id, ...root } = rootSchema;
-      expect(withRootIdRefPrefix({ $id: 'https://example.com/variant.json', properties: { relative } }, root)).toEqual({
+      const variant: RJSFSchema = { $id: 'https://example.com/variant.json', properties: { relative } };
+      expect(withRootIdRefPrefix(variant, root)).toEqual({
         $id: 'https://example.com/variant.json',
         properties: { relative: { $ref: 'kinds.json#/$defs/cat' } },
       });

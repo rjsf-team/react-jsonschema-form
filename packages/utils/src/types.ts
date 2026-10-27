@@ -49,9 +49,10 @@ export type GenericSymbolObjectType = GenericObjectType & Record<symbol, boolean
  */
 export type StrictRJSFSchema = JSONSchema7;
 
-/** Allow for more flexible schemas (i.e. draft-2019) than the strict JSONSchema7
+/** The schema RJSF reads: JSON Schema draft 7 with the keywords of later drafts, OpenAPI and Ajv that RJSF supports,
+ * which `jsonSchemaAugmentation.ts` declares. A schema with keywords of its own gives `S` a type that declares them
  */
-export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
+export type RJSFSchema = StrictRJSFSchema;
 
 /** Allow for more flexible schemas (i.e. draft-2019) than the strict JSONSchema7 with special marking added by
  * `retrieveSchema()`
