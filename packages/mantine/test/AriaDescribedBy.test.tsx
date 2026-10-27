@@ -15,7 +15,7 @@ import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
 
-const extraErrors = { __errors: ['An error'] } as ErrorSchema;
+const extraErrors: ErrorSchema = { __errors: ['An error'] };
 
 function renderField(schema: RJSFSchema, uiSchema: UiSchema = {}) {
   return render(
