@@ -25,6 +25,7 @@ import {
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
+import { retrievedOptionsOf } from '../uiState.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
@@ -63,13 +64,13 @@ function withoutFieldText<T, S extends StrictRJSFSchema, F extends FormContextTy
  * irrelevant data in `formData`.
  *
  * @param props - The `FieldProps` for this template. `options` holds the option schemas, each already retrieved for
- *   `formData` by `SchemaField`, which is the one place they are retrieved; a custom field rendering this itself
- *   retrieves them the same way. It is not a declared `FieldProps` key, so it would be read as `any` through
- *   `FieldProps`' `GenericObjectType` index signature; declaring it as `S[]` here names what `SchemaField` passes,
- *   but nothing checks it, since `SchemaField` renders this through a `Field` slot that only knows `FieldProps`
+ *   `formData` by `SchemaField`. A field named through `ui:field`, or rendered by a custom field, is handed none, so it
+ *   retrieves them from its `schema` as `SchemaField` does. It is not a declared `FieldProps` key, so it would be read
+ *   as `any` through `FieldProps`' `GenericObjectType` index signature; declaring it here names what `SchemaField`
+ *   passes, but nothing checks it, since `SchemaField` renders this through a `Field` slot that only knows `FieldProps`
  */
 function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  props: FieldProps<T, S, F> & { options: S[] },
+  props: FieldProps<T, S, F> & { options?: S[] },
 ) {
   const {
     name,
@@ -82,7 +83,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     onBlur,
     onChange,
     onFocus,
-    options,
+    options: givenOptions,
     readonly,
     registry,
     required = false,
@@ -92,6 +93,10 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   } = props;
   const { schemaUtils } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
+  const options = useMemo(
+    () => givenOptions ?? retrievedOptionsOf<T, S, F>(schemaUtils, schema, formData) ?? [],
+    [givenOptions, schemaUtils, schema, formData],
+  );
 
   const { selectedOption, selectOption } = useOptionSelection<T, S, F>(
     registry,
