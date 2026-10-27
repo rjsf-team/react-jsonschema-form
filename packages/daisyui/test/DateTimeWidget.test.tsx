@@ -1,3 +1,4 @@
+import type { WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -340,12 +341,17 @@ describe('DateTimeWidget', () => {
      *
      * @param rect - Where the trigger is in the viewport
      * @param [into] - The element to render into, which defaults to one appended to the body
+     * @param [props] - The widget's props beyond its value and schema
      * @returns - The trigger
      */
-    function renderAt(rect: { top: number; left: number }, into?: HTMLElement) {
+    function renderAt(rect: { top: number; left: number }, into?: HTMLElement, props?: Partial<WidgetProps>) {
       const { container } = render(
         <DateTimeWidget
-          {...makeWidgetMockProps({ value: '2016-04-05T14:01:30', schema: { type: 'string', format: 'date-time' } })}
+          {...makeWidgetMockProps({
+            value: '2016-04-05T14:01:30',
+            schema: { type: 'string', format: 'date-time' },
+            ...props,
+          })}
         />,
         { container: into },
       );
@@ -507,6 +513,8 @@ describe('DateTimeWidget', () => {
       // Capped at 20rem, as `max-w-xs` would be where a page's Tailwind build scans this package, since the width it is
       // given is the whole viewport's
       expect(popup().style.maxWidth).toBe('20rem');
+      // Scrolling past its end scrolls nothing else, as the page would, taking the trigger out of view and hiding it
+      expect(popup()).toHaveStyle({ overscrollBehavior: 'contain' });
     });
 
     const removeShowPopover = () => Reflect.deleteProperty(HTMLElement.prototype, 'showPopover');
@@ -588,6 +596,39 @@ describe('DateTimeWidget', () => {
       act(() => intersectionObserver.enterNode(trigger));
       expect(popup()).not.toHaveStyle({ visibility: 'hidden' });
       expect(trigger).toHaveFocus();
+    });
+
+    // The user can't see the date it holds, which leaving the field is no request to store
+    test.each([
+      ['moves the focus on', () => user.tab()],
+      ['presses elsewhere', () => user.click(document.body)],
+    ])('closed without storing the date it holds where the user %s while it is hidden', async (_, leave) => {
+      const onChange = vi.fn();
+      const onBlur = vi.fn();
+      const trigger = renderAt({ top: 30, left: 10 }, undefined, { onChange, onBlur });
+      await user.click(trigger);
+      await user.click(within(popup()).getByRole('button', { name: /12th, 2016/, hidden: true }));
+      act(() => intersectionObserver.leaveNode(trigger));
+
+      await leave();
+
+      expect(screen.queryByRole('dialog', { hidden: true })).not.toBeInTheDocument();
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      expect(onChange).not.toHaveBeenCalled();
+      expect(onBlur).toHaveBeenCalledTimes(1);
+    });
+
+    test('storing the date it holds again once it shows again', async () => {
+      const onChange = vi.fn();
+      const trigger = renderAt({ top: 30, left: 10 }, undefined, { onChange });
+      await user.click(trigger);
+      await user.click(within(popup()).getByRole('button', { name: /12th, 2016/, hidden: true }));
+      act(() => intersectionObserver.leaveNode(trigger));
+      act(() => intersectionObserver.enterNode(trigger));
+
+      await user.click(document.body);
+
+      expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2016-04-1[12]T/));
     });
 
     test('giving the focus back to its trigger when it hides holding it in a form rendered in a shadow root', async () => {

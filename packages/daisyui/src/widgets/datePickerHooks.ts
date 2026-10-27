@@ -226,6 +226,9 @@ export function useDatePicker<V>({
   // hears focus and blur in turn however many of the ways in and out of the popup see the same one: opening it and the
   // trigger's own focus event, closing it and the trigger's own blur event
   const isFocusReported = useRef(false);
+  // Whether the open popup is hidden while its trigger is out of view, which a close then stores nothing from: the user
+  // can no longer see the date it holds
+  const isHidden = useRef(false);
   // A new object for every new value, where `initialDate` alone is `undefined` for every empty one: a value the parent
   // replaces and then restores must not revive a draft made against it
   const basis = useMemo(() => ({ date: initialDate }), [initialDate]);
@@ -295,8 +298,9 @@ export function useDatePicker<V>({
     }
   }, [reportFocus]);
 
-  /** Close the popup, storing the date it holds, which every way out of it but Escape does. Blur is reported from the
-   * close Effect rather than here, so the parent's update to `value` is in hand before the consumer hears about it
+  /** Close the popup, storing the date it holds, which every way out of it but Escape does, unless it is hidden. Blur is
+   * reported from the close Effect rather than here, so the parent's update to `value` is in hand before the consumer
+   * hears about it
    *
    * @param [isPressElsewhere=false] - Whether the close is a press elsewhere, which moves the focus only once this
    *          returns, if it does: a trigger that still holds the focus is then left to report its own loss of it
@@ -305,7 +309,9 @@ export function useDatePicker<V>({
     (isPressElsewhere = false) => {
       pendingClose.current = { reportBlur, isPressElsewhere };
       setIsOpen(false);
-      commitDate();
+      if (!isHidden.current) {
+        commitDate();
+      }
     },
     [commitDate, reportBlur],
   );
@@ -501,11 +507,13 @@ export function useDatePicker<V>({
     // rather than left floating over whatever is at its place, and stops following it until it shows again, placed
     // before it does. Hidden, it can't hold the focus, which would fall to the document body and leave Tab to start
     // the page over, so the focus goes back to the trigger first, without scrolling it back into the view the user
-    // scrolled it out of. The observer doesn't exist outside a browser, such as in a consumer's jsdom tests
+    // scrolled it out of, and the trigger losing it closes the popup. The observer doesn't exist outside a browser,
+    // such as in a consumer's jsdom tests
     const sight =
       'IntersectionObserver' in win
         ? new win.IntersectionObserver((entries) => {
             const isInSight = entries[entries.length - 1].isIntersecting;
+            isHidden.current = !isInSight;
             if (!isInSight) {
               win.cancelAnimationFrame(frame);
               frame = 0;
@@ -522,6 +530,7 @@ export function useDatePicker<V>({
     return () => {
       win.cancelAnimationFrame(frame);
       sight?.disconnect();
+      isHidden.current = false;
     };
   }, [isOpen]);
 
@@ -568,13 +577,16 @@ export function useDatePicker<V>({
   );
 
   /** Report blur on the trigger, unless the popup is open: the focus has moved into it, which the field still holds,
-   * and each way out of the popup reports the blur for itself
+   * and each way out of the popup reports the blur for itself. A hidden popup can't take the focus, so the trigger
+   * losing it then is the user leaving the field, which closes the popup they can't see, storing nothing, as Escape does
    */
   const handleBlur = useCallback(() => {
     if (!isOpen) {
       reportBlur();
+    } else if (isHidden.current) {
+      closePicker();
     }
-  }, [isOpen, reportBlur]);
+  }, [closePicker, isOpen, reportBlur]);
 
   /** Close the popup from its Done button, returning focus to the trigger it was opened from — unconditionally, where
    * Escape returns it only from inside the popup: a browser that does not focus a button on click, as Safari does not,

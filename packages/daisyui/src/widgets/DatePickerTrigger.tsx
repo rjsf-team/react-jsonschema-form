@@ -183,7 +183,8 @@ interface DatePickerPopupProps {
  * which pin a popover to all four edges of the viewport, pad it and recolor its text, where no Tailwind preflight
  * resets them. Its `box-sizing`, also left to preflight otherwise, keeps its border inside the width and the height cap
  * that `useDatePicker()` fits to the viewport. It scrolls within that height, so a viewport shorter than the popup
- * still reaches its Done button
+ * still reaches its Done button, and keeps a scroll past either end of it from scrolling the page, which would take the
+ * trigger out of view and hide the popup the user is scrolling
  *
  * @param props - The popup's id and name, the ref to attach, the Done handler and its label, and its contents
  */
@@ -204,6 +205,7 @@ export function DatePickerPopup({ id, name, containerRef, translateString, onDon
         boxSizing: 'border-box',
         maxWidth: '20rem',
         overflowY: 'auto',
+        overscrollBehavior: 'contain',
         color: 'inherit',
       }}
       onClick={(e) => e.stopPropagation()}
