@@ -80,7 +80,7 @@ async function processFiles(files: FileList | File[]) {
  * @param dataURLs - The information about the files
  * @returns - The list of `FileInfoType` objects extracted from the data urls
  */
-function extractFileInfo(dataURLs: string[]): FileInfoType[] {
+function extractFileInfo(dataURLs: (string | null)[]): FileInfoType[] {
   return dataURLs.reduce<FileInfoType[]>((acc, dataURL) => {
     if (!dataURL) {
       return acc;
@@ -103,6 +103,19 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
   }, []);
 }
 
+/** The data URLs a `FileWidget` value holds: one data URL, or a list of them with `null` for a file that couldn't be
+ * read. Any other value holds none
+ *
+ * @param value - The current value of the `FileWidget`
+ * @returns - The data URLs in `value`
+ */
+function storedDataURLs(value: unknown): (string | null)[] {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string | null => typeof item === 'string' || item === null);
+  }
+  return typeof value === 'string' && value !== '' ? [value] : [];
+}
+
 /** Hook which encapsulates the logic needed to read and convert a `value` of `File` or `File[]` into the
  * `filesInfo: FileInfoType[]` and the two callback implementations needed to change the list or to remove a
  * `File` from the list. To be used by theme specific `FileWidget` implementations.
@@ -113,20 +126,13 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
  * @returns - The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
  */
 export default function useFileWidgetProps(
-  value: string | string[] | undefined | null,
+  value: unknown,
   onChange: (value?: string | null | (string | null)[]) => void,
   multiple = false,
 ): UseFileWidgetPropsResult {
-  const values: (string | null)[] = useMemo(() => {
-    if (multiple && value) {
-      return Array.isArray(value) ? value : [value];
-    }
-    return [];
-  }, [value, multiple]);
-  const filesInfo = useMemo(
-    () => (Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value || ''])),
-    [value],
-  );
+  const stored = useMemo(() => storedDataURLs(value), [value]);
+  const values = useMemo(() => (multiple ? stored : []), [stored, multiple]);
+  const filesInfo = useMemo(() => extractFileInfo(stored), [stored]);
 
   const handleChange = useCallback(
     async (files: FileList | File[]) => {

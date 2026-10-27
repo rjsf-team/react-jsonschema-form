@@ -61,7 +61,11 @@ export default function RangeWidget<
       rootRef.current?.querySelector('input')?.focus();
     }
   }, []);
-  const sliderProps = { value, name: htmlName || id, ...rangeSpec<S>(schema) };
+  const sliderValue =
+    typeof value === 'number' || (isRangeOfValues && value.every((part): part is number => typeof part === 'number'))
+      ? value
+      : undefined;
+  const sliderProps = { value: sliderValue, name: htmlName || id, ...rangeSpec<S>(schema) };
 
   const handleChange: NonNullable<SliderProps['onChange']> = (_, newValue) => onChange(newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);

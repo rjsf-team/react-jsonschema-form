@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Textarea } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, hasWidgetErrors, labelValue, widgetDrawsLabelText } from '@rjsf/utils';
+import { getControlAttributes, hasWidgetErrors, labelValue, toInputValue, widgetDrawsLabelText } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
@@ -49,7 +49,7 @@ export default function TextareaWidget<
       <Textarea
         id={id}
         name={htmlName || id}
-        value={value ?? ''}
+        value={toInputValue(value)}
         placeholder={placeholder}
         autoFocus={autofocus}
         onChange={handleChange}

@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { PasswordInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue, widgetDrawsLabel } from '@rjsf/utils';
+import { labelValue, toInputValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
 
@@ -68,7 +68,7 @@ export default function PasswordWidget<
     <PasswordInput
       id={id}
       name={htmlName || id}
-      value={value || ''}
+      value={toInputValue(value || '')}
       placeholder={placeholder || undefined}
       required={required}
       disabled={disabled || readonly}

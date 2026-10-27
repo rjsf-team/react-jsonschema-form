@@ -1419,7 +1419,7 @@ export default function ArrayField<
    * @param index - The index of the item being changed
    */
   const handleChange = useCallback(
-    (value: any, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
+    (value: T[] | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
       // A cleared item is stored as `null`, and a cleared property inside an item as `undefined`
       onChange(storedValue(value, changedFieldPath, false), changedFieldPath, newErrorSchema, id);
     },
@@ -1428,7 +1428,7 @@ export default function ArrayField<
 
   /** Callback handler used to change the value for a checkbox */
   const onSelectChange = useCallback(
-    (value: any) => {
+    (value: T[] | undefined) => {
       onChange(value, fieldPath, undefined, fieldId);
     },
     [onChange, fieldPath, fieldId],

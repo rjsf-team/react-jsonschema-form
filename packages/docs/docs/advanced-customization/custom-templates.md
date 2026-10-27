@@ -374,7 +374,7 @@ For instance, say you have a `CustomTextInput` component that you want to integr
 
 ```tsx
 import { ChangeEvent, FocusEvent } from 'react';
-import { getControlAttributes, getInputProps, hasWidgetErrors, RJSFSchema, BaseInputTemplateProps } from '@rjsf/utils';
+import { BaseInputTemplateProps, getControlAttributes, getInputProps, hasWidgetErrors, RJSFSchema, toInputValue } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import CustomTextInput from '../CustomTextInput';
@@ -430,7 +430,7 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
       <CustomTextInput
         id={id}
         label={label}
-        value={value}
+        value={toInputValue(value)}
         placeholder={placeholder}
         disabled={disabled}
         readOnly={readonly}

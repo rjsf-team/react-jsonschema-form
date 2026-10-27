@@ -1,4 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { toInputValue } from '@rjsf/utils';
 
 import useControlState from '../../controlState.ts';
 
@@ -14,13 +15,5 @@ export default function HiddenWidget<
   F extends FormContextType = FormContextType,
 >({ id, value, htmlName, disabled, readonly, registry }: WidgetProps<T, S, F>) {
   const control = useControlState<T, S, F>({ disabled, readonly, registry });
-  return (
-    <input
-      type='hidden'
-      id={id}
-      name={htmlName || id}
-      value={typeof value === 'undefined' ? '' : value}
-      disabled={control.disabled}
-    />
-  );
+  return <input type='hidden' id={id} name={htmlName || id} value={toInputValue(value)} disabled={control.disabled} />;
 }

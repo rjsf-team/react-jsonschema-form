@@ -12,7 +12,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
  */
 export interface FancySelectItem {
   /** The value of the item */
-  value: any;
+  value: unknown;
   /** The display label for the item */
   label: string;
   /** The index position of the item */
@@ -51,7 +51,7 @@ interface FancySelectInterface {
   /** Currently selected item value */
   selected: string;
   /** Callback function when value changes */
-  onValueChange?: (value: any) => void;
+  onValueChange?: (value: unknown) => void;
   /** Whether the component should autofocus */
   autoFocus?: boolean;
   /** Accessible name given to the combobox that opens the dropdown, for a select that no label points at, since a
@@ -226,7 +226,7 @@ export function FancySelect({
       <CommandItem
         disabled={item.disabled}
         ref={item.value === selected ? selectedRef : undefined}
-        key={item.value}
+        key={String(item.value)}
         value={String(item.value)}
         onMouseDown={(e) => {
           e.preventDefault();

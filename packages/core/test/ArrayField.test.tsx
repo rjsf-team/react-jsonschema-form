@@ -23,6 +23,7 @@ import {
   getVisibleErrors,
   isPlainObject,
   noop,
+  toInputValue,
   TranslatableString,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -5395,7 +5396,7 @@ describe('ArrayField', () => {
     describe('should not hand a row to another item when the form keeps other data than the change sent', () => {
       /** Shows its item, and which instance of the widget shows it: the state a row holds, as focus or a draft would be */
       function InstanceWidget({ id, value }: WidgetProps) {
-        return <input id={id} data-instance={useId()} value={value ?? ''} readOnly />;
+        return <input id={id} data-instance={useId()} value={toInputValue(value)} readOnly />;
       }
       /** Each item shown, with the instance that shows it */
       const shown = (node: Element) =>

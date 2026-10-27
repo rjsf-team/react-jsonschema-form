@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getTemplates, joinClassNames } from '@rjsf/utils';
+import { getTemplates, joinClassNames, toInputValue } from '@rjsf/utils';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -24,7 +24,7 @@ export default function RangeWidget<
         disabled={disabled || readonly}
         options={{ ...options, allowClearTextInputs: false }}
       />
-      <span className='rjsf-range-view'>{value}</span>
+      <span className='rjsf-range-view'>{toInputValue(value)}</span>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { FileInput, Pill } from '@mantine/core';
 import type { FormContextType, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue, useFileWidgetProps, widgetDrawsLabel } from '@rjsf/utils';
@@ -44,6 +44,11 @@ export default function FileWidget<
     [handleChange],
   );
 
+  // `FileInput` holds `File`s, while the form data holds data URLs. It only reads whether it holds any, to choose
+  // between `ValueComponent` and the placeholder and to show its clear button, so a stored file is handed over as a
+  // `File` carrying its name and type
+  const selectedFiles = useMemo(() => filesInfo.map(({ name, type }) => new File([], name, { type })), [filesInfo]);
+
   const ValueComponent = useCallback(() => {
     if (Array.isArray(filesInfo) && filesInfo.length > 0) {
       return (
@@ -67,7 +72,7 @@ export default function FileWidget<
     <FileInput
       id={id}
       name={htmlName || id}
-      value={value || null}
+      value={multiple ? selectedFiles : (selectedFiles[0] ?? null)}
       placeholder={placeholder || undefined}
       accept={options.accept ? String(options.accept) : undefined}
       required={required}

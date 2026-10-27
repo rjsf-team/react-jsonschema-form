@@ -1,7 +1,7 @@
 import type { FocusEvent } from 'react';
 import type { NumberInputValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, hasWidgetErrors, labelValue, widgetDrawsLabelText } from '@rjsf/utils';
+import { getControlAttributes, hasWidgetErrors, labelValue, toInputValue, widgetDrawsLabelText } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { NumberInputRoot } from '../components/ui/number-input.tsx';
@@ -54,7 +54,7 @@ export default function UpDownWidget<
         // is passed as its text too, or that comparison would report a change nobody made. The widget hands Zag no
         // `min` or `max`, so its blur would clamp a number past the safe integers to them, and only on blur, not Enter;
         // the schema's own bounds are the form's to validate, so that clamp is turned off
-        value={value == null ? '' : String(value)}
+        value={String(toInputValue(value))}
         clampValueOnBlur={false}
         onValueChange={handleChange}
         onBlur={handleBlur}

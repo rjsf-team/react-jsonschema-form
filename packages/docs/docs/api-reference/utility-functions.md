@@ -3390,6 +3390,19 @@ Appends `segment` to `parentPath`, returning the `FieldPath` of the child field.
 
 - FieldPath: The `FieldPath` of the field
 
+### toInputValue()
+
+Turns a widget's `value`, which can hold anything, into what an input's `value` prop accepts.
+A string or a number is kept, so a numeric input stays numeric, a boolean or a bigint is stringified the way React renders it, and anything else, `undefined` and `null` included, becomes an empty string.
+
+#### Parameters
+
+- value: unknown - The widget's value
+
+#### Returns
+
+- string | number: The value for an input's `value` prop
+
 ### toPath()
 
 Converts a dotted path string, such as the `property` of a validation error, into its list of path segments.
@@ -3496,9 +3509,9 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 
 #### Parameters
 
-- value: string | string[] | undefined | null - The current value of the `FileWidget`
-- onChange: (value?: string | null | (string | null)[]) => void - The onChange handler for the `FileWidget`
-- [multiple=false]: boolean - Flag indicating whether the control supports multiple selections
+- value: unknown - The current value of the `FileWidget`: a data URL or a list of them, anything else holding no files
+- onChange: (value: string | null | (string | null)[]) => void - The onChange handler for the `FileWidget`
+- [multiple=false] - Flag indicating whether the control supports multiple selections
 
 #### Returns
 

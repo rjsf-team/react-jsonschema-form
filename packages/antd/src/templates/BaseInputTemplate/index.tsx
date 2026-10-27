@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { examplesId, getControlAttributes, getExampleSuggestions, getInputProps } from '@rjsf/utils';
+import { examplesId, getControlAttributes, getExampleSuggestions, getInputProps, toInputValue } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
 
 import useControlState from '../../controlState.ts';
@@ -94,7 +94,7 @@ export default function BaseInputTemplate<
       min={typeof min === 'number' ? min : undefined}
       max={typeof max === 'number' ? max : undefined}
       type={undefined}
-      value={value}
+      value={typeof value === 'number' ? value : undefined}
       {...controlAttributes}
     />
   ) : (
@@ -112,7 +112,7 @@ export default function BaseInputTemplate<
       style={INPUT_STYLE}
       list={hasExamples ? examplesId(id) : undefined}
       {...inputProps}
-      value={value}
+      value={value === undefined ? undefined : toInputValue(value)}
       {...controlAttributes}
     />
   );

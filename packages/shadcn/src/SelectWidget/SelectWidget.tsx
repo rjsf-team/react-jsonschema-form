@@ -134,7 +134,10 @@ export default function SelectWidget<
           sections={sections}
           selected={enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '')}
           onValueChange={(selectedValue) => {
-            onChange(enumOptionValueDecoder<S>(selectedValue, enumOptions, optionValueFormat, optEmptyValue));
+            // A single select's items carry their DOM values, which are strings
+            if (typeof selectedValue === 'string') {
+              onChange(enumOptionValueDecoder<S>(selectedValue, enumOptions, optionValueFormat, optEmptyValue));
+            }
           }}
           autoFocus={autofocus}
           disabled={disabled || readonly}
@@ -162,7 +165,7 @@ export default function SelectWidget<
           className={cnClassName}
           items={items}
           sections={sections}
-          selected={value}
+          selected={Array.isArray(value) ? value : []}
           onValueChange={(indexes) => {
             // `FancyMultiSelect` reports the selected options by index whatever the `optionValueFormat`, so they're
             // resolved as indexes rather than decoded as DOM values
