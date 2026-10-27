@@ -213,7 +213,7 @@ A `ui:field` naming `SchemaField` names no custom field, so the options are rend
 With that prop on, the [fallback UI](../json-schema/single.md#multiple-types) renders the options itself, against the schema whose type its selector has pinned.
 With it off the same name renders the unsupported-field template, which renders nothing of the schema, so there is nothing for the options to give way to and they are rendered in its place.
 
-A field the options give way to renders the choice between them, so on an `anyOf`/`oneOf` with no options it has nothing to choose and is disabled, along with its `FieldTemplate`, whatever `ui:disabled` says.
+An `anyOf`/`oneOf` that is empty, or left `undefined`, offers no options to give way to, so the field renders as it does for a schema without the keyword, and `ui:disabled` applies to it as to any other field.
 
 ### `ui:options`
 

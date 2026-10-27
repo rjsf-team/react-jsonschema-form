@@ -18,7 +18,7 @@ import {
   getPropertySchema,
   getSchemaType,
   getUiOptions,
-  getXxxOfKey,
+  getXxxOfOptions,
   isObject,
   optionsList,
   PROPERTIES_KEY,
@@ -73,8 +73,8 @@ function withOptionSelectorSchema<S extends StrictRJSFSchema = RJSFSchema>(
  * @param schemaUtils - The SchemaUtilsType object used to call retrieveSchema,
  * @param [uiSchema] - The optional uiSchema for the schema
  * @param [formData] - The optional formData associated with the schema
- * @returns - The list of enumOptions for the `schema`
- * @throws - Error when no enum options were computed
+ * @returns - The list of enumOptions for the `schema`, empty when it offers no option, as an empty `oneOf`/`anyOf` does
+ * @throws - Error when no enum options were computed from the options the schema offers
  */
 export function computeEnumOptions<
   T = unknown,
@@ -83,9 +83,9 @@ export function computeEnumOptions<
 >(schema: S, schemaUtils: SchemaUtilsType<T, S, F>, uiSchema?: UiSchema<T, S, F>, formData?: T): EnumOptionsType<S>[] {
   const selectorField = getSelectorField<T, S, F>(schema, getUiOptions<T, S, F>(uiSchema));
   let tempSchema = schema;
-  const xxxOfKey = getXxxOfKey<S>(schema);
-  if (xxxOfKey) {
-    const realOptions = ((schema[xxxOfKey] ?? []) as S[]).map((opt: S) => {
+  const xxxOf = getXxxOfOptions<S>(schema);
+  if (xxxOf) {
+    const realOptions = xxxOf.options.map((opt: S) => {
       const option = schemaUtils.retrieveSchema(opt, formData);
       if (!selectorField) {
         return option;
@@ -94,13 +94,13 @@ export function computeEnumOptions<
         schemaUtils.retrieveSchema(ref, getByPath(formData, selectorField)),
       );
     });
-    tempSchema = { ...schema, [xxxOfKey]: realOptions };
+    tempSchema = { ...schema, [xxxOf.key]: realOptions };
   }
   const enumOptions = optionsList<T, S, F>(tempSchema, uiSchema);
-  if (!enumOptions) {
+  if (!enumOptions && xxxOf) {
     throw new Error(`No enumOptions were computed from the schema ${JSON.stringify(tempSchema)}`);
   }
-  return enumOptions;
+  return enumOptions ?? [];
 }
 
 /** Gets the name of the property that selects the option: `ui:optionsSchemaSelector`, or else the discriminator
@@ -132,8 +132,7 @@ export function getFirstOption<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(schema: S, schemaUtils: SchemaUtilsType<T, S, F>, selectorField: string): S | undefined {
-  const xxxOfKey = getXxxOfKey<S>(schema);
-  const firstOption = (((xxxOfKey && schema[xxxOfKey]) ?? []) as S[]).find((option) => isObject(option));
+  const firstOption = getXxxOfOptions<S>(schema)?.options.find((option) => isObject(option));
   if (!firstOption) {
     return undefined;
   }

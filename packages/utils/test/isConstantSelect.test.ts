@@ -11,10 +11,13 @@ describe('isConstantSelect()', () => {
     expect(isConstantSelect({ type: 'object', enum: [], oneOf: [{ const: { a: 1 } }] })).toBe(true);
     expect(isConstantSelect({ type: 'object', enum: [], oneOf: [{ type: 'string' }] })).toBe(false);
   });
-  it('accepts an empty enum or list when allowEmpty is set, as isSelect() does', () => {
+  it('accepts an empty enum when allowEmpty is set, as isSelect() does', () => {
     expect(isConstantSelect({ type: 'string', enum: [], oneOf: [{ type: 'string' }] }, true)).toBe(true);
-    expect(isConstantSelect({ type: 'object', oneOf: [] }, true)).toBe(true);
     expect(isConstantSelect({ anyOf: [{ type: 'string' }] }, true)).toBe(false);
+  });
+  // An empty list is no option list at all, so the schema is not a select (#5365)
+  it.each(['anyOf', 'oneOf'])('rejects an empty %s even when allowEmpty is set', (keyword) => {
+    expect(isConstantSelect({ type: 'string', [keyword]: [] }, true)).toBe(false);
   });
   it('accepts a non-empty oneOf or anyOf of constants', () => {
     expect(isConstantSelect({ type: 'array', oneOf: [{ const: [1] }] })).toBe(true);

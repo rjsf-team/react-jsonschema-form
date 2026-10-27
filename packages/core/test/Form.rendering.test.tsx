@@ -86,6 +86,25 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('.rjsf-unsupported-field')).toHaveTextContent('Unknown field type undefined');
     });
 
+    // A key with nothing under it, or an empty list, says nothing about the object's members, so choosing `object` offers
+    // the key/value UI a schema without the key gets (#5365). The property names no type, which the fallback ui offers
+    // every type for
+    it.each<[string, RJSFSchema]>([
+      ['no oneOf', {}],
+      ['a oneOf that is present but undefined', { oneOf: undefined }],
+      ['an empty oneOf', { oneOf: [] }],
+    ])('offers the key/value UI for an object chosen in the fallback ui, with %s', async (_, options) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { untypedProperty: { title: 'Untyped', ...options } },
+      };
+      const { node } = createFormComponent({ useFallbackUiForUnsupportedType: true, schema });
+
+      await user.selectOptions(screen.getByRole('combobox'), 'object');
+
+      expect(node.querySelector('.rjsf-object-property-expand')).toBeInTheDocument();
+    });
+
     it('will render fallback ui when useFallbackUiForUnsupportedType is true', async () => {
       const schema = {
         type: 'object',
