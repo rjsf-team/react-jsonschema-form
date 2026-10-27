@@ -54,6 +54,10 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - `BaseInputTemplate`, `TextareaWidget`, `PasswordWidget` and `DateWidget` honor `ui:autofocus`, as the other widgets do, and `SelectWidget` and `RangeWidget` render hidden inputs under `htmlName`, one per selected value, so a native submit or `new FormData(form)` gets their values as it gets a native `<select>`'s or range input's: a select with no empty placeholder, under a schema `default`, posts its first enabled option while it holds none and draws it selected, a selected option `ui:enumDisabled` disables posts nothing, and a range value outside `minimum`/`maximum` or off `multipleOf` is clamped and snapped to its step, as a native range input holds it, and the slider's handle is drawn there too. `SelectWidget` no longer puts `name` on the select's root `<div>`, where it named no control ([#5597](https://github.com/rjsf-team/react-jsonschema-form/issues/5597))
 - **BREAKING CHANGE:** the key input of an additional property is `root_foo__key` rather than `root_foo-key`, from the new `additionalKeyId()`. See [Ids can't collide or split an id list](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#ids-cant-collide-or-split-an-id-list-breaking-change)
 
+## @rjsf/bootstrap3
+
+- Add `@rjsf/bootstrap3`, a theme that keeps the Bootstrap 3 markup `@rjsf/core` rendered through v6, deprecated from the start and removed in v8 ([#5635](https://github.com/rjsf-team/react-jsonschema-form/pull/5635), [#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
+
 ## @rjsf/chakra-ui
 
 - Converted the internal `forwardRef`-wrapped UI primitives (`Field`, `Slider`, `Alert`, `NumberInputRoot`, `Checkbox`, `Radio`, `CloseButton`, and the `Select` family) to plain function components that accept `ref` as a regular prop, now that React 19 supports this natively
@@ -718,6 +722,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Added `wrapIfAdditionalErrorStateTests()`, which checks that a theme's `FieldTemplate` hands its `WrapIfAdditionalTemplate` the field's `hasErrors`, by rendering an extra key with errors through a `WrapIfAdditionalTemplate` that records it ([#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 - Added an `objectTests` case for a key matching none of the `patternProperties` beside `additionalProperties: false`, whose row says the key is not allowed, related to [#4630](https://github.com/rjsf-team/react-jsonschema-form/issues/4630)
 - Added `submitPendingTests()`, which checks that the theme's `SubmitButton` is `aria-disabled` and still enabled while a promise `onSubmit` returned is pending, also when the uiSchema enables it, idle once it settles, and kept disabled when the uiSchema disables it, and that a click on it while pending is canceled after the `onClickCapture` and `onClick` the uiSchema sets run, related to [#504](https://github.com/rjsf-team/react-jsonschema-form/issues/504) ([#5649](https://github.com/rjsf-team/react-jsonschema-form/pull/5649))
+- Change `themeTests()` to accept a theme with no widgets of its own, whose `generateWidgets` is `null` ([#5635](https://github.com/rjsf-team/react-jsonschema-form/pull/5635), [#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 
 ## @rjsf/utils
 

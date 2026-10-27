@@ -1,0 +1,55 @@
+import type { ClassMap, MergedClassMap } from '@rjsf/utils';
+
+/** The Bootstrap 3 class names for every element `@rjsf/core` renders */
+const BOOTSTRAP3_CLASS_MAP: MergedClassMap = {
+  input: 'form-control',
+  select: 'form-control',
+  textarea: 'form-control',
+  fileInput: 'form-control',
+  rangeInput: 'form-control',
+  rangeWrapper: '',
+  checkboxWrapper: 'checkbox',
+  checkboxLabel: '',
+  checkboxInput: '',
+  checkboxInlineLabel: 'checkbox-inline',
+  radioWrapper: 'radio',
+  radioLabel: '',
+  radioInput: '',
+  radioInlineLabel: 'radio-inline',
+  disabled: 'disabled',
+  altDateList: 'list-inline',
+  altDateListItem: 'list-inline-item',
+  altDateNowButton: 'btn btn-info',
+  altDateClearButton: 'btn btn-warning',
+  fieldLabel: 'control-label',
+  fieldErrors: 'bs-callout bs-callout-info',
+  fieldError: 'text-danger',
+  fieldHelp: 'help-block',
+  fieldDescription: '',
+  errorList: 'panel panel-danger',
+  errorListHeading: 'panel-heading',
+  errorListTitle: 'panel-title',
+  errorListItems: 'list-group',
+  errorListItem: 'list-group-item text-danger',
+  arrayFieldset: '',
+  arrayItemList: 'row',
+  arrayItem: '',
+  arrayItemToolbox: '',
+  objectFieldset: '',
+  multiSchema: 'panel panel-default panel-body',
+  multiSchemaSelector: 'form-group',
+  cyclicSchemaMessage: 'text-danger',
+  cyclicSchemaExpandButton: 'btn btn-sm btn-warning',
+  optionalDataAddButton: 'btn-sm',
+  optionalDataRemoveButton: 'btn-sm',
+  submitButton: 'btn btn-info',
+};
+
+/** The theme's class map, a fresh copy on every call, for a `Form` put together from `generateTemplates()` rather than
+ * `generateTheme()`, which passes it as its `classMap`
+ *
+ * @deprecated `@rjsf/bootstrap3` is removed in v8; move to another theme
+ */
+export function generateClassMap(): ClassMap {
+  return { ...BOOTSTRAP3_CLASS_MAP };
+}

@@ -41,7 +41,10 @@ export function checkboxLabelTests(
     generateTemplates,
     generateWidgets,
     descriptionBy,
-  }: Pick<ThemeGenerators, 'generateTemplates' | 'generateWidgets'> & { descriptionBy: 'self' | 'template' },
+  }: Pick<ThemeGenerators, 'generateTemplates'> & {
+    generateWidgets: NonNullable<ThemeGenerators['generateWidgets']>;
+    descriptionBy: 'self' | 'template';
+  },
 ) {
   describe('a checkbox named by any spelling of ui:widget (#5389)', () => {
     const FieldTemplate = generateTemplates().FieldTemplate!;

@@ -11,7 +11,7 @@ import { render, screen } from '@testing-library/react';
  *
  * These live in their own file rather than alongside `formTests()` because every render advances React's `useId`
  * counter for the rest of the module, so running them there would renumber the ids in that suite's snapshots in
- * core and all eight themes.
+ * core and all nine themes.
  *
  * @param Form - The theme's `Form` component
  */
