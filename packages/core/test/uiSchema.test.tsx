@@ -487,18 +487,19 @@ describe('uiSchema', () => {
           },
         },
       };
+      const enumDisabled = ['foo'];
       const uiSchema: UiSchema = {
         field: {
           'ui:widget': SelectWidget,
           'ui:options': {
             className: 'custom',
           },
-          'ui:enumDisabled': ['foo'],
+          'ui:enumDisabled': enumDisabled,
         },
       };
       it('should have atleast one option disabled', () => {
         const { node } = createFormComponent({ schema, uiSchema });
-        const disabledOptionsLen = uiSchema.field['ui:enumDisabled'].length;
+        const disabledOptionsLen = enumDisabled.length;
         expect(node.querySelectorAll('option:disabled')).toHaveLength(disabledOptionsLen);
         expect(node.querySelectorAll('option:enabled')).toHaveLength(
           // Two options, one disabled, plus the placeholder
@@ -517,18 +518,19 @@ describe('uiSchema', () => {
           },
         },
       };
+      const enumDisabled = ['foo'];
       const uiSchema: UiSchema = {
         field: {
           'ui:widget': RadioWidget,
           'ui:options': {
             className: 'custom',
           },
-          'ui:enumDisabled': ['foo'],
+          'ui:enumDisabled': enumDisabled,
         },
       };
       it('should have atleast one radio option disabled', () => {
         const { node } = createFormComponent({ schema, uiSchema });
-        const disabledOptionsLen = uiSchema.field['ui:enumDisabled'].length;
+        const disabledOptionsLen = enumDisabled.length;
         expect(node.querySelectorAll('input:disabled')).toHaveLength(disabledOptionsLen);
         expect(node.querySelectorAll('input:enabled')).toHaveLength(
           // Two options, one disabled, plus the placeholder

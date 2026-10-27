@@ -11,7 +11,7 @@ const TIME_PARTS = ['hour', 'minute', 'second'];
 const when: RJSFSchema = { type: 'string', title: 'When', format: 'date' };
 const at: RJSFSchema = { type: 'string', title: 'At', format: 'date-time' };
 const bareSchema: RJSFSchema = { type: 'object', properties: { when, at } };
-const bareUiSchema: UiSchema = {
+const bareUiSchema: UiSchema<{ when?: string; at?: string }> = {
   when: { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } },
   at: { 'ui:widget': 'alt-datetime', 'ui:options': { yearsRange: [2020, 2024] } },
 };
@@ -22,7 +22,7 @@ const schema: RJSFSchema = {
     at: { ...at, description: 'The moment it ends' },
   },
 };
-const uiSchema: UiSchema = {
+const uiSchema: UiSchema<{ when?: string; at?: string }> = {
   when: { ...bareUiSchema.when, 'ui:help': 'Any day will do' },
   at: { ...bareUiSchema.at, 'ui:help': 'Any time will do' },
 };
@@ -155,8 +155,8 @@ export function altDateTests(Form: ComponentType<FormProps>) {
 
   describe('alt-date Now and Clear buttons', () => {
     const withOptions = (whenOptions: UiSchema['ui:options'], atOptions: UiSchema['ui:options']): UiSchema => ({
-      when: { ...bareUiSchema.when, 'ui:options': { ...bareUiSchema.when['ui:options'], ...whenOptions } },
-      at: { ...bareUiSchema.at, 'ui:options': { ...bareUiSchema.at['ui:options'], ...atOptions } },
+      when: { ...bareUiSchema.when, 'ui:options': { ...bareUiSchema.when?.['ui:options'], ...whenOptions } },
+      at: { ...bareUiSchema.at, 'ui:options': { ...bareUiSchema.at?.['ui:options'], ...atOptions } },
     });
 
     test('are enabled by default', () => {
