@@ -207,7 +207,7 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
     PATTERN_PROPERTIES_KEY in valueSchema ||
     hasOptions;
   if (type === 'object' && !describesMembers) {
-    Reflect.set(valueSchema, ADDITIONAL_PROPERTIES_KEY, true);
+    valueSchema[ADDITIONAL_PROPERTIES_KEY] = true;
   }
   return valueSchema;
 }

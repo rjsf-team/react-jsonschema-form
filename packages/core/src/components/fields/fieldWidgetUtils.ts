@@ -9,7 +9,6 @@ import type {
   FormContextType,
   GlobalUISchemaOptions,
   Registry,
-  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -28,6 +27,7 @@ import {
   resolveDefaultWidget,
   UI_GLOBAL_OPTIONS_KEY,
   uiBooleanOption,
+  hasSchemaMarker,
 } from '@rjsf/utils';
 
 import { getFirstOption, getSelectorField, resolveSelectorWidget } from './layoutMultiSchemaFieldSelector.ts';
@@ -312,7 +312,7 @@ export function getTemplateParts(presentation: FieldPresentation | undefined) {
  * @returns - True when the schema describes an additional property
  */
 export function isAdditionalPropertySchema(schema: unknown) {
-  return Boolean((schema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
+  return hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
 }
 
 /** Returns whether the object declares `key` in its own `properties`, rather than holding it as an extra key

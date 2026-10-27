@@ -1,5 +1,6 @@
 import { ALL_OF_KEY, EXTRA_KEYS_ELSEWHERE_FLAG, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
 import getSchemaType from './getSchemaType.ts';
+import hasSchemaMarker from './hasSchemaMarker.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
 import { schemaFrom } from './schema/graph/mergePlan.ts';
@@ -114,7 +115,7 @@ export function absentKeywordAllows<
 >(context: SchemaContext<S, F>, schema: S): boolean {
   return (
     readsAbsentAsAllowed<S, F>(context) &&
-    !Reflect.get(schema, EXTRA_KEYS_ELSEWHERE_FLAG) &&
+    !hasSchemaMarker(schema, EXTRA_KEYS_ELSEWHERE_FLAG) &&
     additionalPropertiesKeyword<S>(schema) === undefined &&
     schema.const === undefined &&
     schema.enum === undefined &&

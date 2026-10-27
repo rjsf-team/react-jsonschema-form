@@ -126,6 +126,19 @@ describe('UiSchema type', () => {
     expect(ui.loose?.nested).toEqual({ 'ui:title': 'Nested' });
   });
 
+  it('leaves the entries open for data whose index signature holds unknown values', () => {
+    interface OpenData {
+      // oxlint-disable-next-line typescript/consistent-indexed-object-style -- an interface's index signature is the case
+      [key: string]: unknown;
+    }
+    const record: UiSchema<Record<string, unknown>> = { 'ui:widget': 'custom', foo: { 'ui:title': 'Foo' } };
+    const open: UiSchema<OpenData> = { 'ui:widget': 'custom' };
+
+    expectTypeOf(record.foo).toBeUnknown();
+    expect(record.foo).toEqual({ 'ui:title': 'Foo' });
+    expect(open['ui:widget']).toBe('custom');
+  });
+
   it('keeps the ui: namespace open for theme and application directives', () => {
     const ui: Known = { 'ui:order': ['name', '*'], 'ui:myTheme:thing': 42 };
 

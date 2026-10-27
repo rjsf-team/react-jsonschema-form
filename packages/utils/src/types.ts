@@ -439,12 +439,15 @@ type ChildKeys<D> = D extends unknown ? keyof D : never;
 /** The child data every member of `D` holds at `key`, for the members that have one */
 type ChildAt<D, K extends PropertyKey> = D extends unknown ? (K extends keyof D ? D[K] : never) : never;
 
-/** Whether `V` is the `ArrayLength` marker itself. `never` extends every type, so it is ruled out first */
-type IsArrayLength<V> = [V] extends [never] ? false : [V] extends [ArrayLength] ? true : false;
+/** Whether `V` is the marker type `M` itself, rather than merely assignable to it. `never` extends every type, so it is
+ * ruled out first
+ */
+type IsMarker<V, M> = [V] extends [never] ? false : [V] extends [M] ? true : false;
 
 /** A child error node. `any` short-circuits so that data of an unconstrained type keeps an unconstrained node, and the
  * `ArrayLength` an array's `length` holds becomes `never` */
-type ErrorTreeChild<V, Node> = IsAny<V> extends true ? any : IsArrayLength<V> extends true ? never : ErrorTree<V, Node>;
+type ErrorTreeChild<V, Node> =
+  IsAny<V> extends true ? any : IsMarker<V, ArrayLength> extends true ? never : ErrorTree<V, Node>;
 
 /** The recursive error tree for data of type `V`, carrying `Node` at every level.
  *
@@ -2173,16 +2176,20 @@ type UiSchemaFieldMembers<T> = Exclude<Extract<NonNullable<T>, object>, readonly
 declare const openFieldData: unique symbol;
 type OpenFieldData = typeof openFieldData;
 
-/** Whether `V` is the `OpenFieldData` marker itself. `never` extends every type, so it is ruled out first */
-type IsOpenFieldData<V> = [V] extends [never] ? false : [V] extends [OpenFieldData] ? true : false;
-
 /** The data whose keys become the nested per-field entries of a `UiSchema` for data of type `T`. Data of an unknown
- * type keeps every field name open, each holding `OpenFieldData`; an array nests through `items` rather than by index;
- * a leaf has no nested fields.
+ * type keeps every field name open, each holding `OpenFieldData`, as does an index signature holding data of no
+ * particular type, such as `Record<string, unknown>`'s; an array nests through `items` rather than by index; a leaf has
+ * no nested fields.
  */
 type UiSchemaChildData<T> = unknown extends T
   ? Record<string, OpenFieldData>
-  : UnionMembersMerged<UiSchemaFieldMembers<T>>;
+  : OpenIndex<UnionMembersMerged<UiSchemaFieldMembers<T>>>;
+
+/** `D` with an index signature that holds data of no particular type marked `OpenFieldData`. The index signature also
+ * covers the `ui:` keys, whose values aren't uiSchemas, so its entries can't be the loose `UiSchema` a field declared
+ * `unknown` gets
+ */
+type OpenIndex<D> = { [K in keyof D]: string extends K ? (unknown extends D[K] ? OpenFieldData : D[K]) : D[K] };
 
 /** The keys of `X` that name form fields. A method is not a field, and mapping one would also break assignability
  * for every uiSchema literal, since an object literal's apparent type carries `Object.prototype`'s methods.
@@ -2204,11 +2211,11 @@ type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullab
  * uiSchemas
  */
 type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
-  IsAny<V> extends true ? unknown : IsOpenFieldData<V> extends true ? unknown : UiSchema<V, S, F>;
+  IsAny<V> extends true ? unknown : IsMarker<V, OpenFieldData> extends true ? unknown : UiSchema<V, S, F>;
 
 /** A nested field entry of a `StrictUiSchema`, unconstrained for unknown data the same way as `UiSchemaChild` */
 type StrictUiSchemaChild<Checks extends UiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
-  IsAny<V> extends true ? unknown : IsOpenFieldData<V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
+  IsAny<V> extends true ? unknown : IsMarker<V, OpenFieldData> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
 
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`. It accepts any `ui:widget`/`ui:field` name and any `ui:`-prefixed option; `StrictUiSchema` is

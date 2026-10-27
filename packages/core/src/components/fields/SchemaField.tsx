@@ -46,7 +46,6 @@ import {
   isConstantSelect,
   isFormDataAvailable,
   isLabelledByTemplate,
-  isObject,
   logOnce,
   omitConsumedStyling,
   rendersOwnFieldBesideOption,
@@ -58,6 +57,7 @@ import {
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
   uiBooleanOption,
+  hasSchemaMarker,
 } from '@rjsf/utils';
 
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
@@ -391,8 +391,7 @@ export function createIsSchemaFieldHidden<
     fieldPath: FieldPath,
     registry: Registry<T, S, F>,
   ): boolean => {
-    // A boolean subschema reaches here too, at runtime, and carries no marker
-    const isRefCycle = isObject(schema) && Boolean(Reflect.get(schema, RJSF_REF_CYCLE_KEY));
+    const isRefCycle = hasSchemaMarker(schema, RJSF_REF_CYCLE_KEY);
     const ownUiSchema = isRefCycle
       ? resolveCycleUiSchema(schema, uiSchema, registry)
       : resolveOwnUiSchema(schema, uiSchema, registry);
@@ -830,7 +829,7 @@ export function useSchemaFieldPlan<
   // result is memoized as well because the React Compiler (`react/preserve-manual-memoization`) takes what a call
   // returns for a value that may still be mutated, and so refuses the memos below that depend on it
   const resolveFieldWidget = useMemo(() => createFieldWidgetResolver<T, S, F>().resolve, []);
-  const isRefCycle = isObject(_schema) && Boolean(Reflect.get(_schema, RJSF_REF_CYCLE_KEY));
+  const isRefCycle = hasSchemaMarker(_schema, RJSF_REF_CYCLE_KEY);
   const { selectSchemaInfo, uiField, uiSchema, ownUiOptions, uiOptions, deprecatedHandling, hidden } = useMemo(
     () => resolveFieldWidget(_schema, _uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove),
     [resolveFieldWidget, _schema, _uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove],

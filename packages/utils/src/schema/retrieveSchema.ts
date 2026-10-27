@@ -38,7 +38,6 @@ import type {
   CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
-  RJSFMarkedSchema,
   RJSFSchema,
   SchemaContext,
   StrictRJSFSchema,
@@ -1122,7 +1121,7 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
   });
   schema.type = type;
   if (!isConstrained) {
-    (schema as RJSFMarkedSchema)[GUESSED_TYPE_FLAG] = true;
+    Reflect.set(schema, GUESSED_TYPE_FLAG, true);
   }
   return schema as S;
 }

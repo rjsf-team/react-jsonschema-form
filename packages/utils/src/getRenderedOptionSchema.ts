@@ -15,6 +15,7 @@ import {
   REQUIRED_KEY,
   THEN_KEY,
 } from './constants.ts';
+import hasSchemaMarker from './hasSchemaMarker.ts';
 import isObject from './isObject.ts';
 import mergeSchemas from './mergeSchemas.ts';
 import rendersOwnFieldBesideOption, { takesParentExtraKeys } from './rendersOwnFieldBesideOption.ts';
@@ -28,7 +29,7 @@ import {
 } from './schema/retrieveSchema.ts';
 import { DECLARED_ABOVE_KEY } from './schemaMarkers.ts';
 import { isSubschemaKeyword, keywordShape } from './schemaUri.ts';
-import type { GenericObjectType, RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from './types.ts';
+import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** The keywords of a non-object parent that its option is rendered without. The options themselves and the
  * `discriminator` that picks between them describe the choice rather than the value. The annotations describe the
@@ -294,7 +295,7 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
       // `additionalProperties` as taking any key, which would give the option an add button of its own. An
       // `additionalProperties: false` in its place would be read as the option's own by a field joining it with an
       // option of its own, and so shut out that option's
-      (inherited as RJSFMarkedSchema)[EXTRA_KEYS_ELSEWHERE_FLAG] = true;
+      Reflect.set(inherited, EXTRA_KEYS_ELSEWHERE_FLAG, true);
     }
     if (parent.required) {
       inherited[REQUIRED_KEY] = parent.required;
@@ -364,7 +365,7 @@ function declaredAbove<S extends StrictRJSFSchema>(parent: S): string[] {
   const above: unknown = Reflect.get(parent, DECLARED_ABOVE_KEY);
   const names = new Set<string>(Array.isArray(above) ? above : []);
   for (const [name, property] of Object.entries(parent.properties ?? {})) {
-    if (!(isObject(property) && Reflect.get(property, ADDITIONAL_PROPERTY_FLAG))) {
+    if (!hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG)) {
       names.add(name);
     }
   }

@@ -2127,6 +2127,20 @@ Deprecated, and kept through v7 for a component rendered without a plan: read [h
 
 - boolean: True when there are errors the component should surface, otherwise false
 
+### hasSchemaMarker()
+
+Whether `schema` carries the `marker` the schema utilities set on the schemas they build, such as the `ADDITIONAL_PROPERTY_FLAG` `retrieveSchema()` sets on a property an `additionalProperties` adds.
+A boolean subschema, which can stand wherever a schema can, carries none.
+
+#### Parameters
+
+- schema: unknown - The schema to check, which may be a boolean subschema
+- marker: symbol - The symbol of the marker
+
+#### Returns
+
+- boolean: Whether the marker is set on `schema`
+
 ### hasWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Detects whether the `widget` exists for the `schema` with the associated `registryWidgets` and returns true if it does, or false if it doesn't.

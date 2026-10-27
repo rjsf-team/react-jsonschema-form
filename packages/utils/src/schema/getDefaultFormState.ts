@@ -28,6 +28,7 @@ import getUiOptions from '../getUiOptions.ts';
 import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isConstantSelect from '../isConstantSelect.ts';
@@ -1580,7 +1581,7 @@ function itemField<S extends StrictRJSFSchema>(
 
 /** Whether `propertySchema` is the stub `stubExistingAdditionalProperties()` made for an additional property */
 function isStubbed(propertySchema: unknown): boolean {
-  return isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
+  return hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG);
 }
 
 /** Computes the default value for objects.

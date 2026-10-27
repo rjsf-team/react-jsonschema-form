@@ -11,6 +11,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.
 import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isContainerValue from '../isContainerValue.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
@@ -61,7 +62,7 @@ function withoutStubs<S extends StrictRJSFSchema>(option: S): S {
     return option;
   }
   const declared = Object.entries(properties).filter(
-    ([, property]) => !(isObject(property) && Reflect.get(property, ADDITIONAL_PROPERTY_FLAG)),
+    ([, property]) => !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG),
   );
   return declared.length === Object.keys(properties).length
     ? option
