@@ -48,7 +48,7 @@ describe('mantine AnyOfField', () => {
       ],
       'object',
     ],
-  ] as [string, RJSFSchema[], string][])(
+  ] as [string, RJSFSchema[], 'array' | 'object'][])(
     'draws the description of an optional anyOf of %s once while it has no data',
     (_, anyOf, type) => {
       render(
@@ -118,7 +118,7 @@ describe('mantine FieldTemplate', () => {
     expect(container.querySelector('label[for="root_foo"]')).toHaveTextContent(/^Foo$/);
   });
 
-  test.each([
+  test.each<[string, string, string, RJSFSchema]>([
     ['radio', 'RadioWidget', 'radiogroup', { type: 'string', title: 'Color', enum: ['red', 'blue'] }],
     [
       'checkboxes',
@@ -126,7 +126,7 @@ describe('mantine FieldTemplate', () => {
       'group',
       { type: 'array', title: 'Color', items: { type: 'string', enum: ['red', 'blue'] }, uniqueItems: true },
     ],
-  ] as const)(
+  ])(
     "names a %s group by the template's label, drawn with no for, which would name the group's wrapper",
     (widget, key, role, color) => {
       const { container } = render(

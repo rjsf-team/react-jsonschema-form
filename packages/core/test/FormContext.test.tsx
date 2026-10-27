@@ -8,8 +8,8 @@ const formContext = { foo: 'bar' };
 
 const fooId = `#${formContext.foo}`;
 
-// Use `props: any` to support the variety of uses (widgets, fields, templates)
-function CustomComponent(props: any) {
+// Typed by the `registry` alone, which widgets, fields and templates all receive
+function CustomComponent(props: { registry: { formContext: { foo?: string } } }) {
   const { registry } = props;
   const { formContext } = registry;
   return <div id={formContext.foo} />;

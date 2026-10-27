@@ -22,7 +22,8 @@ describe('getMuiProps', () => {
   });
 
   it('should handle missing options gracefully', () => {
-    const result = getMuiProps(undefined as any);
+    // @ts-expect-error: TS2345, missing options are what this case checks
+    const result = getMuiProps(undefined);
     expect(result).toEqual({});
   });
 

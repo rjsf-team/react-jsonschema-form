@@ -281,7 +281,7 @@ describe('getTemplate', () => {
         getTemplate<typeof name>(
           name,
           registry,
-          Object.keys(uiOptions).reduce((acc: Record<string, any>, key) => {
+          Object.keys(uiOptions).reduce((acc: Record<string, unknown>, key) => {
             acc[key] = key;
             return acc;
           }, {}),

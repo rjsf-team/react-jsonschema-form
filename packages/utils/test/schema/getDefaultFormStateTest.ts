@@ -1368,7 +1368,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                     emptyObjectFields: 'populateAllDefaults',
                     allOf: 'skipDefaults',
                     arrayMinItems: {
-                      populate: 'populate' as any,
+                      // @ts-expect-error: TS2322, an unknown `populate` value is what this case checks
+                      populate: 'populate',
                       mergeExtraDefaults: false,
                     },
                     mergeDefaultsIntoFormData: 'useFormDataIfPresent',
@@ -9158,7 +9159,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
     describe('object with defaults and undefined in formData, testing mergeDefaultsIntoFormData', () => {
       let schema: RJSFSchema;
-      let defaultedFormData: any;
+      let defaultedFormData: unknown;
       beforeAll(() => {
         schema = {
           type: 'object',

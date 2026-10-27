@@ -20,7 +20,9 @@ vi.mock('../src/createAjvInstance', async (importOriginal) => {
   const { default: realCreateAjvInstance } = await importOriginal<{
     default: typeof createAjvInstance;
   }>();
-  return { default: vi.fn((...args: any[]) => realCreateAjvInstance(...args)) };
+  return {
+    default: vi.fn((...args: Parameters<typeof createAjvInstance>) => realCreateAjvInstance(...args)),
+  };
 });
 
 /** The parsed schemas as they are compiled */

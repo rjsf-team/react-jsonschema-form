@@ -45,7 +45,8 @@ describe('groupEnumOptions', () => {
         { value: { id: 1 }, label: 'One' },
         { value: two, label: 'Two' },
       ];
-      const result = groupEnumOptions(objectOptions, undefined, [{ id: 1 }, two] as any);
+      // @ts-expect-error: TS2322, object enum values, which `EnumValue` doesn't cover, are what this case checks
+      const result = groupEnumOptions(objectOptions, undefined, [{ id: 1 }, two]);
       expect(result.map((o) => (isEnumOptionsGroup(o) ? undefined : o.disabled))).toEqual([false, true]);
     });
   });
@@ -182,7 +183,8 @@ describe('groupEnumOptions', () => {
         { value: { id: 1 }, label: 'One' },
         { value: two, label: 'Two' },
       ];
-      const result = groupEnumOptions(objectOptions, { Group: [{ id: 1 }, two] as any });
+      // @ts-expect-error: TS2322, object enum values, which `EnumValue` doesn't cover, are what this case checks
+      const result = groupEnumOptions(objectOptions, { Group: [{ id: 1 }, two] });
       const group = result[0];
       if (isEnumOptionsGroup(group)) {
         expect(group.options.map((o) => o.label)).toEqual(['Two']);

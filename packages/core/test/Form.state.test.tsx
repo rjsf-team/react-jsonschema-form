@@ -235,8 +235,8 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     });
 
     describe('when the onChange prop sets formData to a falsey value', () => {
-      function TestForm(props: { falseyValue: any }) {
-        const [formData, setFormData] = useState<any>({});
+      function TestForm(props: { falseyValue: unknown }) {
+        const [formData, setFormData] = useState<unknown>({});
 
         const onChange = useCallback(() => {
           setFormData(props.falseyValue);

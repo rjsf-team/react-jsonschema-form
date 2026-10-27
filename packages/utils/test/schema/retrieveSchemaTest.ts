@@ -4205,7 +4205,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const formData = { dep1: 'value' };
         const customMergeAllOf = vi.fn().mockImplementation((schema: RJSFSchema) => {
-          const allProperties: any = {};
+          const allProperties: NonNullable<RJSFSchema['properties']> = {};
           if (schema.properties) {
             Object.assign(allProperties, schema.properties);
           }
