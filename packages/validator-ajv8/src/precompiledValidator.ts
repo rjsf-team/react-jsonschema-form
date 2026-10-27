@@ -10,7 +10,6 @@ import type {
   ValidatorType,
 } from '@rjsf/utils';
 import { createRootSchemaGuard, ID_KEY, REF_KEY, schemaKey } from '@rjsf/utils';
-import type { ErrorObject } from 'ajv';
 
 import { copyForValidation } from './dataForValidation.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -148,7 +147,7 @@ export default class AJV8PrecompiledValidator<
    * @param [formData] - The form data to validate, if any
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
+  rawValidation(schema: S, formData?: unknown): RawValidationErrorsType {
     this.ensureSameRootSchema(schema, formData);
     this.mainValidator(formData);
 
@@ -160,7 +159,7 @@ export default class AJV8PrecompiledValidator<
     // Clear errors to prevent persistent errors, see #1104
     this.mainValidator.errors = null;
 
-    return { errors: errors as unknown as Result[] };
+    return { errors };
   }
 
   /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives
@@ -184,7 +183,7 @@ export default class AJV8PrecompiledValidator<
     uiSchema?: UiSchema<T, S, F>,
     getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
+    const rawErrors = this.rawValidation(schema, formData);
     return processRawValidationErrors(
       this.schemaContext,
       rawErrors,

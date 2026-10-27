@@ -174,7 +174,7 @@ export default class ATAValidator<
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
+  rawValidation(schema: S, formData?: unknown): RawValidationErrorsType {
     let compilationError: Error | undefined;
     let errors: ValidationError[] | undefined;
 
@@ -196,7 +196,7 @@ export default class ATAValidator<
     }
 
     return {
-      errors: errors as unknown as Result[] | undefined,
+      errors,
       validationError: compilationError,
     };
   }
@@ -221,7 +221,7 @@ export default class ATAValidator<
     uiSchema?: UiSchema<T, S, F>,
     getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ValidationError>(schema, formData);
+    const rawErrors = this.rawValidation(schema, formData);
     return processRawValidationErrors(
       { validator: this },
       rawErrors,

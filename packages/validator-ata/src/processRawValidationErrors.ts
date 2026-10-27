@@ -25,8 +25,8 @@ import type { ValidationError } from 'ata-validator';
 
 import type { SuppressDuplicateFilteringType } from './types.ts';
 
-export interface RawValidationErrorsType<Result = any> {
-  errors?: Result[];
+export interface RawValidationErrorsType {
+  errors?: ValidationError[];
   validationError?: Error;
 }
 
@@ -188,7 +188,7 @@ export default function processRawValidationErrors<
   F extends FormContextType = FormContextType,
 >(
   context: SchemaContext<S, F>,
-  rawErrors: RawValidationErrorsType<ValidationError>,
+  rawErrors: RawValidationErrorsType,
   formData: T | undefined,
   schema: S,
   customValidate?: CustomValidator<T, S, F>,
