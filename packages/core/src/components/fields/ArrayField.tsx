@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import type { SyntheticEvent } from 'react';
 import { memo, useCallback, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   ArrayFieldItemButtonProps,
@@ -634,10 +634,10 @@ function ArrayFieldItemInner<
   onFocus: FieldProps<T[], S, F>['onFocus'];
   onChange: FieldProps<T[], S, F>['onChange'];
   totalItems: number;
-  handleAddItem: (event: MouseEvent, index?: number) => void;
-  handleCopyItem: (event: MouseEvent, index: number) => void;
-  handleRemoveItem: (event: MouseEvent, index: number) => void;
-  handleReorderItems: (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => void;
+  handleAddItem: (event: SyntheticEvent<HTMLElement> | undefined, index?: number) => void;
+  handleCopyItem: (event: SyntheticEvent<HTMLElement> | undefined, index: number) => void;
+  handleRemoveItem: (event: SyntheticEvent<HTMLElement> | undefined, index: number) => void;
+  handleReorderItems: (event: SyntheticEvent<HTMLElement> | undefined, index: number, newIndex: number) => void;
 }) {
   const {
     itemKey,
@@ -770,31 +770,31 @@ function ArrayFieldItemInner<
   }, [copyTitle, moveDownTitle, moveUpTitle, removeTitle]);
 
   const onAddItem = useCallback(
-    (event: MouseEvent) => {
+    (event: SyntheticEvent<HTMLElement> | undefined) => {
       handleAddItem(event, index + 1);
     },
     [handleAddItem, index],
   );
   const onCopyItem = useCallback(
-    (event: MouseEvent) => {
+    (event: SyntheticEvent<HTMLElement> | undefined) => {
       handleCopyItem(event, index);
     },
     [handleCopyItem, index],
   );
   const onRemoveItem = useCallback(
-    (event: MouseEvent) => {
+    (event: SyntheticEvent<HTMLElement> | undefined) => {
       handleRemoveItem(event, index);
     },
     [handleRemoveItem, index],
   );
   const onMoveUpItem = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
+    (event: SyntheticEvent<HTMLElement> | undefined) => {
       handleReorderItems(event, index, index - 1);
     },
     [handleReorderItems, index],
   );
   const onMoveDownItem = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
+    (event: SyntheticEvent<HTMLElement> | undefined) => {
       handleReorderItems(event, index, index + 1);
     },
     [handleReorderItems, index],
@@ -850,13 +850,13 @@ interface InternalArrayFieldProps<
   /** The `formData` items paired with their stable React keys */
   keyedFormData: KeyedFormDataType<T>[];
   /** The callback used to handle the adding of an item at the given index (or the end, if missing) */
-  handleAddItem: (event: MouseEvent, index?: number) => void;
+  handleAddItem: (event: SyntheticEvent<HTMLElement> | undefined, index?: number) => void;
   /** The callback used to handle the copying of the item at the given index, below itself */
-  handleCopyItem: (event: MouseEvent, index: number) => void;
+  handleCopyItem: (event: SyntheticEvent<HTMLElement> | undefined, index: number) => void;
   /** The callback used to handle removing an item at the given index */
-  handleRemoveItem: (event: MouseEvent, index: number) => void;
+  handleRemoveItem: (event: SyntheticEvent<HTMLElement> | undefined, index: number) => void;
   /** The callback used to handle reordering an item at the given index to its newIndex */
-  handleReorderItems: (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => void;
+  handleReorderItems: (event: SyntheticEvent<HTMLElement> | undefined, index: number, newIndex: number) => void;
 }
 
 /** Renders a normal array without any limitations of length
@@ -1292,7 +1292,7 @@ export default function ArrayField<
    * @param [index] - The optional index at which to add the new data
    */
   const handleAddItem = useCallback(
-    (event: MouseEvent, index?: number) => {
+    (event: SyntheticEvent<HTMLElement> | undefined, index?: number) => {
       if (event) {
         event.preventDefault();
       }
@@ -1320,7 +1320,7 @@ export default function ArrayField<
    * @param index - The index at which the copy button is clicked
    */
   const handleCopyItem = useCallback(
-    (event: MouseEvent, index: number) => {
+    (event: SyntheticEvent<HTMLElement> | undefined, index: number) => {
       if (event) {
         event.preventDefault();
       }
@@ -1352,7 +1352,7 @@ export default function ArrayField<
    * @param index - The index at which the remove button is clicked
    */
   const handleRemoveItem = useCallback(
-    (event: MouseEvent, index: number) => {
+    (event: SyntheticEvent<HTMLElement> | undefined, index: number) => {
       if (event) {
         event.preventDefault();
       }
@@ -1376,7 +1376,7 @@ export default function ArrayField<
    * @param newIndex - The index to where the item is to be moved
    */
   const handleReorderItems = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => {
+    (event: SyntheticEvent<HTMLElement> | undefined, index: number, newIndex: number) => {
       if (event) {
         event.preventDefault();
         event.currentTarget.blur();
