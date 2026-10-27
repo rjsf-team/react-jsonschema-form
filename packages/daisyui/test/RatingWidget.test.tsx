@@ -7,6 +7,13 @@ import { makeWidgetMockProps } from './helpers/createMocks.ts';
 const user = userEvent.setup();
 
 describe('RatingWidget', () => {
+  test('shows the default 5 stars for a `stars` option that is not a number, as a JSON uiSchema can hold', () => {
+    const jsonOptions: Record<string, unknown> = { stars: 'five' };
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getAllByRole('radio')).toHaveLength(5);
+  });
+
   test('renders with default props (value=0)', () => {
     const { asFragment } = render(
       <RatingWidget

@@ -730,14 +730,11 @@ export type ReservedUiOptionName =
   | 'fieldReplacesAnyOrOneOf'
   | 'enumOptions'
   | OverridableTemplateName
-  | 'accept'
   | 'expandable'
   | 'format'
   | 'hideClearButton'
   | 'hideNowButton'
-  | 'shape'
-  | 'stars'
-  | 'yearsRange';
+  | 'shape';
 
 /** Checks the keys an extension of `GlobalUISchemaOptions` adds: each one also in `Reserved` is mapped to `never`, so
  * an extension declaring one doesn't satisfy it, and so is an extension with a string index signature, which would
@@ -1996,6 +1993,12 @@ type UIOptionsDeclaredType<
     rows?: number;
     /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
     submitButtonOptions?: UISchemaSubmitButtonOptions;
+    /** The file types a `FileWidget` accepts: a comma-separated list, or an array of them */
+    accept?: string | string[];
+    /** The number of stars a `RatingWidget` shows, from 1 to 5, when the schema has no `maximum` */
+    stars?: number;
+    /** The first and last year an `AltDateWidget` offers, as `[first, last]` */
+    yearsRange?: number[];
     /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */
@@ -2003,8 +2006,8 @@ type UIOptionsDeclaredType<
   };
 
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to
- * remap the keys. Its string index leaves the vocabulary open to any option a theme or custom component reads,
- * which is also what gives `UiSchema` its `ui:${string}` keys once remapped
+ * remap the keys. Its string index leaves the vocabulary open to any option a theme or custom component reads, typed
+ * `unknown` until it is checked, which is also what gives `UiSchema` its `ui:${string}` keys once remapped
  */
 interface UIOptionsBaseType<
   T = unknown,

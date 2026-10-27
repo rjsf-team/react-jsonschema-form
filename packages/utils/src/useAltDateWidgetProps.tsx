@@ -5,8 +5,8 @@ import { useCallback, useMemo, useState } from 'react';
 
 import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
-import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
-import getDateElementProps, { elementValue } from './getDateElementProps.ts';
+import type { DateElementProp } from './getDateElementProps.ts';
+import getDateElementProps, { elementValue, isDateElementFormat } from './getDateElementProps.ts';
 import getNestedControlPresentation from './getNestedControlPresentation.ts';
 import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
@@ -216,15 +216,16 @@ export default function useAltDateWidgetProps<
     [buttonsDisabled, time, onChange],
   );
 
+  const { yearsRange, format } = options;
   const elements = useMemo(
     () =>
       getDateElementProps(
         state,
         time,
-        options.yearsRange as [number, number] | undefined,
-        options.format as DateElementFormat | undefined,
+        yearsRange ? [yearsRange[0], yearsRange[1]] : undefined,
+        isDateElementFormat(format) ? format : undefined,
       ),
-    [state, time, options.yearsRange, options.format],
+    [state, time, yearsRange, format],
   );
   return { elements, handleChange, handleClear, handleSetNow, buttonsDisabled };
 }

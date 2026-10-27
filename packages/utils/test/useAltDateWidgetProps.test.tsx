@@ -144,6 +144,17 @@ describe('useAltDateWidgetProps()', () => {
     expect(PROPS.onChange).toHaveBeenCalledExactlyOnceWith(part === 'month' ? '2023-11-27' : '2023-10-28');
   });
 
+  test.each([
+    ['orders the elements by a date `format`', 'DMY', ['day', 'month', 'year']],
+    ['keeps the default order for a `format` of another widget, such as a color', 'hex', ['year', 'month', 'day']],
+  ])('%s, with the default years range', (_, format, order) => {
+    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: { format } }));
+    expect(result.current.elements.map(({ type }) => type)).toEqual(order);
+    expect(result.current.elements.find(({ type }) => type === 'year')?.range).toEqual(
+      getDateElementProps(parseDateString(undefined), false).find(({ type }) => type === 'year')?.range,
+    );
+  });
+
   test('time is false, value undefined', () => {
     const { result } = renderHook(() => useAltDateWidgetProps(PROPS));
     const { elements, handleChange, handleClear, handleSetNow } = result.current;
