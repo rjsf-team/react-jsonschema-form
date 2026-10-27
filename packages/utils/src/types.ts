@@ -1995,11 +1995,14 @@ type UIOptionsDeclaredType<
  * remap the keys. Its `GenericObjectType` leaves the vocabulary open to any option a theme or custom component reads,
  * which is also what gives `UiSchema` its `ui:${string}` keys once remapped
  */
-type UIOptionsBaseType<
+interface UIOptionsBaseType<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = UIOptionsDeclaredType<T, S, F> & GenericObjectType;
+> extends UIOptionsDeclaredType<T, S, F> {
+  // oxlint-disable-next-line typescript/consistent-indexed-object-style -- an interface: intersecting a `Record` instead makes the checker hang
+  [option: string]: unknown;
+}
 
 /** The type that represents the Options potentially provided by `ui:options` */
 export type UIOptionsType<

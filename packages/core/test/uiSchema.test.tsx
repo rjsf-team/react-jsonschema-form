@@ -394,7 +394,13 @@ describe('uiSchema', () => {
 
       const CustomWidget = (props: WidgetProps) => {
         const { value, options } = props;
-        return <input type='text' className={options.className} value={toInputValue(value)} />;
+        return (
+          <input
+            type='text'
+            className={typeof options.className === 'string' ? options.className : undefined}
+            value={toInputValue(value)}
+          />
+        );
       };
 
       describe('direct reference', () => {
@@ -455,7 +461,7 @@ describe('uiSchema', () => {
         const { options } = props;
         const { enumOptions, className } = options;
         return (
-          <select className={className}>
+          <select className={typeof className === 'string' ? className : undefined}>
             {Array.isArray(enumOptions) &&
               enumOptions.map(({ value }) => <option key={String(value)}>{String(value)}</option>)}
           </select>

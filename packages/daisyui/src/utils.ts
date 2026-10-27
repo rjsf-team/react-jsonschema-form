@@ -68,12 +68,8 @@ export const DAISY_GLOBAL_UI_OPTIONS_KEYS = Object.keys({ daisy: true } satisfie
  * @param uiOptions - The field's options, with the registry's `globalUiOptions` beneath them
  * @returns - The `daisy` props, or none when they aren't an object
  */
-export function getDaisy<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(uiOptions: DaisyUiOptions<T, S, F>): DaisyProps {
-  const daisy: unknown = uiOptions.daisy;
+export function getDaisy(uiOptions: Readonly<Record<string, unknown>>): DaisyProps {
+  const { daisy } = uiOptions;
   return isObject(daisy) ? daisy : {};
 }
 
