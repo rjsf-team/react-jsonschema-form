@@ -38,8 +38,7 @@ export default function ArrayFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const antdContext: AntdFormContext = formContext;
-  const { labelAlign = 'right', rowGutter = 24 } = antdContext;
+  const { labelAlign = 'right', rowGutter = 24 }: AntdFormContext = formContext;
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('form');
