@@ -800,8 +800,9 @@ function ArrayFieldItemInner<
     children: <ItemSchemaField {...itemFieldProps} />,
     buttonsProps: {
       id: fieldId,
-      disabled: itemDisabled,
-      readonly: itemReadonly,
+      // The buttons change the array, so its lock holds them whatever an item's own `ui:disabled: false` unlocks
+      disabled: disabled || itemDisabled,
+      readonly: readonly || itemReadonly,
       canAdd,
       hasCopy: has.copy,
       hasMoveUp: has.moveUp,

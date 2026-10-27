@@ -4925,11 +4925,6 @@ describe('ArrayField', () => {
           { ...rowSchema, items: { $ref: '#/$defs/row', readOnly: true } },
           { items: { 'ui:readonly': false } },
         ],
-        [
-          'ui:disabled: false on the items under a disabled array',
-          rowSchema,
-          { 'ui:disabled': true, items: { 'ui:disabled': false } },
-        ],
       ])("keeps an item's inputs and buttons enabled alike for %s", (_, unlockedSchema, uiSchema) => {
         const { node } = createFormComponent({
           schema: unlockedSchema,
@@ -4942,6 +4937,22 @@ describe('ArrayField', () => {
         expect(buttons).toHaveLength(3);
         buttons.forEach((button) => expect(button).toBeEnabled());
       });
+
+      it.each(['ui:disabled', 'ui:readonly'])(
+        'keeps the buttons of an item whose own %s is false locked under a locked array',
+        (key) => {
+          const { node } = createFormComponent({
+            schema: rowSchema,
+            uiSchema: { [key]: true, items: { [key]: false }, 'ui:options': { copyable: true } },
+            initialFormData: rowData,
+          });
+
+          node.querySelectorAll('.rjsf-array-item input').forEach((input) => expect(input).toBeEnabled());
+          const buttons = itemButtons(node, 0);
+          expect(buttons).toHaveLength(3);
+          buttons.forEach((button) => expect(button).toBeDisabled());
+        },
+      );
 
       it("hands the item's lock to ArrayFieldItemTemplate as its disabled and readonly", () => {
         const ItemTemplate = ({ disabled, readonly, children }: ArrayFieldItemTemplateProps) => (
