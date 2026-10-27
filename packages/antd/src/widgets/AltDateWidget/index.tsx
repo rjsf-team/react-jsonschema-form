@@ -1,6 +1,8 @@
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { DateElement, dateElementId, getGroupAttributes, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 import { Row, Col, Button } from 'antd';
+
+import type { AntdFormContext } from '../../formContext.ts';
 
 export default function AltDateWidget<
   T = unknown,
@@ -20,7 +22,9 @@ export default function AltDateWidget<
     presentation,
   } = props;
   const { formContext, translateString } = registry;
-  const { rowGutter = 24 } = formContext as GenericObjectType;
+  const { rowGutter: contextGutter }: AntdFormContext = formContext;
+  // The date parts are spaced by half the gutter, which takes a number
+  const rowGutter = typeof contextGutter === 'number' ? contextGutter : 24;
   const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
   // The date parts are a group carrying the field's id, as core's are, named by the template's label, which a `for`
   // can't reach since no part carries that id

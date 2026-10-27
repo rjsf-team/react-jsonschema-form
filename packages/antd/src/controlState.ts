@@ -1,11 +1,7 @@
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { ConfigProvider } from 'antd';
 
-/** The `formContext` option this theme reads to decide whether a read-only field is drawn disabled */
-interface ReadonlyAsDisabledContext {
-  /** Whether a read-only field is drawn disabled, which it is unless this is `false` */
-  readonlyAsDisabled?: boolean;
-}
+import type { AntdFormContext } from './formContext.ts';
 
 /** The state an antd control takes from its field, worked out once for every widget and template */
 export interface ControlState {
@@ -48,7 +44,7 @@ export default function useControlState<
   required?: boolean;
   registry: Registry<T, S, F>;
 }): ControlState {
-  const { readonlyAsDisabled = true }: ReadonlyAsDisabledContext = registry.formContext;
+  const { readonlyAsDisabled = true }: AntdFormContext = registry.formContext;
   const { componentDisabled } = ConfigProvider.useConfig();
   const fieldDisabled = disabled || (readonlyAsDisabled && readonly) || componentDisabled;
   return {

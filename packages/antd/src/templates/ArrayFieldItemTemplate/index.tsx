@@ -2,6 +2,8 @@ import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJ
 import { getUiOptions, getTemplates } from '@rjsf/utils';
 import { Col, Row, Space } from 'antd';
 
+import type { AntdFormContext } from '../../formContext.ts';
+
 const BTN_GRP_STYLE = {
   width: '100%',
   justifyContent: 'flex-end',
@@ -23,7 +25,8 @@ export default function ArrayFieldItemTemplate<
   const { children, buttonsProps, displayLabel, hasDescription, hasToolbar, index, registry, uiSchema } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldItemButtonsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  const { rowGutter = 24, toolbarAlign = displayLabel ? 'middle' : 'top' } = registry.formContext;
+  const antdContext: AntdFormContext = registry.formContext;
+  const { rowGutter = 24, toolbarAlign = displayLabel ? 'middle' : 'top' } = antdContext;
   const margin = hasDescription ? -8 : 16;
 
   return (

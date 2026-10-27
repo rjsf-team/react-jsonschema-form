@@ -3846,12 +3846,12 @@ describe('ArrayField', () => {
       ],
     };
     it('should pass form context to schema field for the root AND array schema fields', () => {
-      const formContext: GenericObjectType = {
+      const formContext: Record<string, string> = {
         root: 'root-id',
         root_0: 'root_0-id',
         root_1: 'root_1-id',
       };
-      function CustomSchemaField(props: FieldProps) {
+      function CustomSchemaField(props: FieldProps<unknown, RJSFSchema, Record<string, string>>) {
         const {
           registry: { formContext },
           id,
@@ -3876,12 +3876,12 @@ describe('ArrayField', () => {
       });
     });
     it('should pass form context to array schema field only', () => {
-      const formContext: GenericObjectType = {
+      const formContext: Record<string, string> = {
         root: 'root-id',
         root_0: 'root_0-id',
         root_1: 'root_1-id',
       };
-      function CustomSchemaField(props: FieldProps) {
+      function CustomSchemaField(props: FieldProps<unknown, RJSFSchema, Record<string, string>>) {
         const {
           registry: { formContext },
           id,
