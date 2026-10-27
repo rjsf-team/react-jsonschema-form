@@ -593,9 +593,6 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // With no option matching, every option is a candidate, and the pick is always one of the candidates
   const candidates = validIndexes.length > 0 ? validIndexes : [...options.keys()];
-  if (candidates.length === 0) {
-    return { index: selectedOption, score: () => 0 };
-  }
   // A tie keeps the selected option where it is a candidate, and the first candidate otherwise
   const first = candidates.includes(selectedOption) ? selectedOption : candidates[0];
   let best = { index: first, score: optionScore(first) };
@@ -635,6 +632,10 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
   discriminatorField?: string,
   listing?: Listing<S>,
 ): number {
+  // Only a caller's own list can be empty: a nested one is read through `getXxxOfKey()`, which never returns one
+  if (options.length === 0) {
+    return selectedOption;
+  }
   return bestOption<unknown, S, F>(
     context,
     rootSchema,

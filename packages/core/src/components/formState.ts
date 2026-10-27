@@ -41,8 +41,7 @@ import {
   fieldPathFromList,
   ERRORS_KEY,
   SCHEMA_KEY,
-  ANY_OF_KEY,
-  ONE_OF_KEY,
+  getXxxOfKey,
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
@@ -1802,7 +1801,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
           valueForPath = null;
         } else {
           const { field: leaf } = current.schemaUtils.findFieldInSchema(current.schema, path, oldFormData);
-          const isOneOfOrAnyOfLeaf = leaf && (ONE_OF_KEY in leaf || ANY_OF_KEY in leaf);
+          const isOneOfOrAnyOfLeaf = leaf !== undefined && getXxxOfKey<S>(leaf) !== undefined;
           // oneOf/anyOf and unresolved leaves keep `undefined` so mergeDefaults doesn't
           // re-apply a branch default when the user clears the widget.
           // Plain resolved leaves use plainLeafWasCleared instead (see below). A `null` field has nothing to clear:

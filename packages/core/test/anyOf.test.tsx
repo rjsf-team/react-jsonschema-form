@@ -2467,6 +2467,36 @@ describe('anyOf', () => {
     await user.click(elementOf(node, '#root_root_child__expand'));
     expect(elementOf(node, '#root_root_child__title')).toHaveTextContent('child');
   });
+
+  it.each(['anyOf', 'oneOf'])('renders a string whose %s is empty as a text input (#5365)', async (key) => {
+    const schema: RJSFSchema = { type: 'object', properties: { val: { type: 'string', [key]: [] } } };
+    const { node, onChange } = createFormComponent({ schema });
+
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    await user.type(elementOf(node, 'input#root_val'), 'abc');
+
+    expectToHaveBeenCalledWithFormData(onChange, { val: 'abc' }, 'root_val');
+  });
+
+  it.each([
+    ['no anyOf', {}],
+    ['an anyOf that is present but undefined', { anyOf: undefined }],
+    ['an empty anyOf', { anyOf: [] }],
+  ])("clears a field with %s, under 'useDefaultIfFormDataUndefined' (#5365)", async (_, options) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { val: { type: 'string', default: 'v', ...options } },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+    });
+
+    await user.clear(elementOf(node, 'input#root_val'));
+
+    expect(elementOf(node, 'input#root_val')).toHaveValue('');
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ val: undefined });
+  });
 });
 
 describe('anyOf with a precompiled validator', () => {

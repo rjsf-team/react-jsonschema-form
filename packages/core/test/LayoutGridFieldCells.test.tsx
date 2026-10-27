@@ -98,27 +98,13 @@ describe('a discriminated cell of a layout grid', () => {
     expect(node.querySelector('label[for="root_pick"]')).toBeNull();
   });
 
-  // With no option to type the selector by, it is typed as an object, which maps the radio alias, so a union with no
-  // options still renders one, with nothing to select
-  it('renders a radio group with nothing to select for a union with no options', () => {
-    renderGrid(gridUiSchema(), schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [] }));
+  // An empty oneOf offers no choice, so the cell renders the object it is, enabled, rather than a selector (#5365)
+  it('renders a union with no options as its object, with no selector', () => {
+    const { node, templateProps } = renderGrid(gridUiSchema(), schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [] }));
 
-    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-labelledby', 'root_pick__label');
-    expect(screen.queryAllByRole('radio')).toHaveLength(0);
-  });
-
-  // Its FieldTemplate draws the label and wrapper of a disabled field, as its selector is
-  it.each([
-    ['no ui:disabled', {}],
-    ['a ui:disabled of false', { 'ui:disabled': false }],
-  ])('is disabled, template and all, for a union with no options, with %s', (_, pickUiSchema) => {
-    const { templateProps } = renderGrid(
-      gridUiSchema({ pick: pickUiSchema }),
-      schemaWithPick({ ...SIMPLE_ONEOF, oneOf: [] }),
-    );
-
-    expect(templateProps.get('root_pick')?.disabled).toBe(true);
-    expect(templateProps.get('root_note')?.disabled).toBe(false);
+    expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
+    expect(node.querySelector('fieldset#root_pick')).toBeInTheDocument();
+    expect(templateProps.get('root_pick')?.disabled).toBe(false);
   });
 
   // The selector takes its options' type, which needs no option selected, so the widget never depends on the data
@@ -141,7 +127,6 @@ describe('a discriminated cell of a layout grid', () => {
   it.each([
     ['options that declare theirs', SIMPLE_ONEOF_SCHEMAS],
     ['options that only imply theirs', SIMPLE_ONEOF_SCHEMAS.map(({ type: _type, ...option }) => option)],
-    ['no options', []],
   ])('renders the select it names by alias, for a selector property with no type, in %s', (_, oneOf) => {
     createFormComponent({
       schema: schemaWithPick({ ...SIMPLE_ONEOF, oneOf: withTypelessSelector(oneOf) }),
