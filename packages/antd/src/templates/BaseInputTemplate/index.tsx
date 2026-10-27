@@ -72,6 +72,10 @@ export default function BaseInputTemplate<
   // receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
   const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
 
+  // A numeric string shows too, as a string field that `ui:inputType: 'number'` renders here stores one
+  const parsedValue = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
+  const numberValue = typeof parsedValue === 'number' && !Number.isNaN(parsedValue) ? parsedValue : undefined;
+
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []);
@@ -94,7 +98,7 @@ export default function BaseInputTemplate<
       min={typeof min === 'number' ? min : undefined}
       max={typeof max === 'number' ? max : undefined}
       type={undefined}
-      value={typeof value === 'number' ? value : undefined}
+      value={numberValue}
       {...controlAttributes}
     />
   ) : (
@@ -120,7 +124,7 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

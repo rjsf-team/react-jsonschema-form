@@ -3393,7 +3393,7 @@ Appends `segment` to `parentPath`, returning the `FieldPath` of the child field.
 ### toInputValue()
 
 Turns a widget's `value`, which can hold anything, into what an input's `value` prop accepts.
-A string or a number is kept, so a numeric input stays numeric, a boolean or a bigint is stringified the way React renders it, and anything else, `undefined` and `null` included, becomes an empty string.
+A string or a number is kept, so a numeric input stays numeric, a boolean or a bigint is stringified and an array joined with commas the way React renders them, so a hidden multi-select still submits its items, and anything else, `undefined` and `null` included, becomes an empty string.
 
 #### Parameters
 
@@ -3510,12 +3510,12 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 #### Parameters
 
 - value: unknown - The current value of the `FileWidget`: a data URL or a list of them, anything else holding no files
-- onChange: (value: string | null | (string | null)[]) => void - The onChange handler for the `FileWidget`
+- onChange: (value?: unknown) => void - The onChange handler for the `FileWidget`, given the stored items as they are, so an item that isn't a data URL is kept
 - [multiple=false] - Flag indicating whether the control supports multiple selections
 
 #### Returns
 
-- UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
+- UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation, whose `handleRemove` takes the index of a file in its `filesInfo`
 
 ### useOptionFocusHandlers&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

@@ -1419,7 +1419,7 @@ export default function ArrayField<
    * @param index - The index of the item being changed
    */
   const handleChange = useCallback(
-    (value: T[] | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
+    (value: unknown, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
       // A cleared item is stored as `null`, and a cleared property inside an item as `undefined`
       onChange(storedValue(value, changedFieldPath, false), changedFieldPath, newErrorSchema, id);
     },

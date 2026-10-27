@@ -142,7 +142,7 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}

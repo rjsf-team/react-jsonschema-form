@@ -851,11 +851,11 @@ export interface FieldProps<
   formData?: T;
   /** The tree of errors for this field and its children */
   errorSchema?: ErrorSchema<T>;
-  /** The field change event handler; called with the updated field value, the `FieldPath` of the value
-   * (the root of the form is `''`), an optional ErrorSchema holding the errors this field itself raises at that path,
-   * never the `errorSchema` prop handed back, and the optional id of the field being changed
+  /** The field change event handler; called with the value at the `FieldPath` it names, which is this field's own value
+   * or one nested inside it (the root of the form is `''`), an optional ErrorSchema holding the errors this field
+   * itself raises at that path, never the `errorSchema` prop handed back, and the optional id of the field being changed
    */
-  onChange: Bivariant<[newValue: T | undefined, fieldPath: FieldPath, es?: ErrorSchema<T>, id?: string]>;
+  onChange: Bivariant<[newValue: unknown, fieldPath: FieldPath, es?: ErrorSchema<T>, id?: string]>;
   /** The input blur event handler; call it with the field id and value */
   onBlur: (id: string, value: unknown) => void;
   /** The input focus event handler; call it with the field id and value */

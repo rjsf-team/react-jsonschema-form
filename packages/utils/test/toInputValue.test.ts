@@ -16,8 +16,11 @@ describe('toInputValue', () => {
     expect(toInputValue(true)).toBe('true');
     expect(toInputValue(BigInt(2))).toBe('2');
   });
-  it('turns an object or an array into an empty string', () => {
+  it('joins an array with commas the way React renders a value prop', () => {
+    expect(toInputValue(['a', 'b'])).toBe('a,b');
+    expect(toInputValue([1, null, 'c'])).toBe('1,,c');
+  });
+  it('turns an object into an empty string', () => {
     expect(toInputValue({ a: 1 })).toBe('');
-    expect(toInputValue(['a', 'b'])).toBe('');
   });
 });

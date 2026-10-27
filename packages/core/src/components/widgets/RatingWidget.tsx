@@ -45,7 +45,9 @@ export default function RatingWidget<
   const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
   const min = schema.minimum ?? 0;
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
-  const rating = typeof value === 'number' ? value : undefined;
+  // A rating stored as a numeric string fills its stars too, as the comparison with the raw value always did
+  const numericValue = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
+  const rating = typeof numericValue === 'number' && Number.isFinite(numericValue) ? numericValue : undefined;
   const autofocusIndex =
     rating === undefined ? 0 : Math.max(Array.from({ length: numStars }, (_, index) => min + index).indexOf(rating), 0);
   // React acts on `autoFocus` only for a form control, which a star isn't, so the star takes focus as it mounts, in the
@@ -130,7 +132,7 @@ export default function RatingWidget<
             data-value={starValue}
             tabIndex={disabled || readonly ? -1 : 0}
             role='radio'
-            aria-checked={starValue === value}
+            aria-checked={starValue === rating}
             aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
             {...optionAttributes}
             style={{

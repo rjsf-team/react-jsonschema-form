@@ -95,7 +95,7 @@ export default function BaseInputTemplate<
       ) : (
         <Form.Control isInvalid={isInvalid} {...controlProps} />
       )}
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}

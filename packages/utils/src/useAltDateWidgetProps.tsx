@@ -177,7 +177,8 @@ export default function useAltDateWidgetProps<
     (property: keyof DateObject, newValue: unknown) => {
       const nextState = {
         ...state,
-        [property]: newValue === undefined || newValue === '' ? -1 : Number(newValue),
+        // A select that reports its cleared choice as `null`, through an `emptyValue` of `null`, picks nothing either
+        [property]: newValue === undefined || newValue === null || newValue === '' ? -1 : Number(newValue),
       };
 
       if (readyForChange(nextState)) {
