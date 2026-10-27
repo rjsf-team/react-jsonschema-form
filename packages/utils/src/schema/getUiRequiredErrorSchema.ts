@@ -1,3 +1,4 @@
+import canExpand from '../canExpand.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -24,7 +25,7 @@ import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
-import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
+import rendersOwnFieldBesideOption, { hasOwnContentBesideOptions } from '../rendersOwnFieldBesideOption.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
 import type {
@@ -45,7 +46,7 @@ import uiBooleanOption from '../uiBooleanOption.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
 import { emptySchema } from './graph/mergePlan.ts';
-import retrieveSchema, { expandRefCycle } from './retrieveSchema.ts';
+import retrieveSchema, { expandRefCycle, withOptionExtraKeys } from './retrieveSchema.ts';
 
 /** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node, and, for an object node, the option
  * itself. An object node's branch merges the whole node into the option, since the walk visits the properties the
@@ -129,6 +130,30 @@ interface WalkContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   builder: ErrorSchemaBuilder<T>;
 }
 
+/** Whether the object at `path`, offering `anyOf`/`oneOf` options, draws its Optional Data Controls beside them, as
+ * the form's `fieldState` says. Without one, an object does when its uiSchema names no `ui:field`, so `SchemaField`
+ * renders its `ObjectField` itself, and it has content of its own beside the options
+ */
+function drawsControlsBesideOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  { schemaContext, fieldState }: WalkContext<T, S, F>,
+  path: (string | number)[],
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  formData: unknown,
+): boolean {
+  if (fieldState?.drawsControlsBesideOptions) {
+    return fieldState.drawsControlsBesideOptions(fieldPathFromList(path), schema, uiSchema, formData);
+  }
+  return (
+    !getUiOptions<T, S, F>(uiSchema).field &&
+    hasOwnContentBesideOptions<T, S, F>(
+      { canExpand: (...args) => canExpand<T, S, F>(schemaContext, ...args) },
+      schema,
+      uiSchema,
+    )
+  );
+}
+
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: WalkContext<T, S, F>,
   schema: S,
@@ -174,7 +199,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const effectiveRequired = fieldUiRequired ?? required;
   // An Optional Data Control hides what it holds until the user opts in, so a `ui:required` field beneath it isn't
   // visible for the user to fill in or correct either. ObjectField and ArrayField render the control, and hide their
-  // fields whenever `!isFormDataAvailable(formData)`, which is also true for `null` and `{}`. MultiSchemaField renders
+  // fields whenever `!isFormDataAvailable(formData)`, which is also true for `null`. MultiSchemaField renders
   // no control of its own: it renders the selected option as a field of its own, with the option's uiSchema, so that
   // field is gated.
   const xxxOf = getXxxOfOptions<S>(resolvedSchema);
@@ -188,22 +213,29 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
   // fields rather than an Add button
   const branchRequired = uiBooleanOption(getUiOptions<T, S, F>(branchUiSchema).required) ?? effectiveRequired;
-  if (
-    path.length > 0 &&
-    !isFormDataAvailable(formData) &&
+  const isOptionControl = () =>
     !branchRequired &&
     isOptionalDataControlsType<T, S, F>(
       option ? () => getRenderedOptionSchema<S>(resolvedSchema, option) : retrieved,
       branchUiSchema,
       globalUiOptions,
       rootSchema,
-    ) &&
+    );
+  if (
+    path.length > 0 &&
+    !isFormDataAvailable(formData) &&
     // An object node also renders its own ObjectField beside the option (see `getFieldComponent()` in `SchemaField`),
-    // showing the properties it shares with the option unless the node is a control that hides them as well
-    (!xxxOf ||
-      !rendersOwnFieldBesideOption<S>(resolvedSchema) ||
-      (!effectiveRequired &&
-        isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions, rootSchema)))
+    // showing the properties it shares with the option unless the node is a control that hides them as well, and only
+    // such a node's branch carries the option
+    (option !== undefined
+      ? !effectiveRequired &&
+        isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions, rootSchema) &&
+        // One that draws the controls beside the options keeps the selected option off screen until Add, whatever
+        // the option's own uiSchema says. The form knows which field renders the object, which decides that, so it is
+        // asked only once the cheaper check of the option's own controls fails
+        (isOptionControl() ||
+          drawsControlsBesideOptions(ctx, path, withOptionExtraKeys<S>(resolvedSchema, option), uiSchema, formData))
+      : isOptionControl())
   ) {
     return;
   }

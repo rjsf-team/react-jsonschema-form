@@ -4,7 +4,7 @@ const TEST_CASES = [
   { value: undefined, result: false },
   { value: null, result: false },
   { value: [], result: true },
-  { value: {}, result: false },
+  { value: {}, result: true },
   { value: true, result: true },
   { value: 1, result: true },
   { value: 'string', result: true },

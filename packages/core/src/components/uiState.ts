@@ -180,21 +180,25 @@ export function asFieldValue(value: unknown): unknown {
 }
 
 /** The fields `uiState` shows, as the schema utilities' walks read them: the option each field shows and the cycles
- * the user expanded
+ * the user expanded, and, given the answer, which objects draw their Optional Data Controls beside their options
  *
  * @param uiState - The form's option selections and cycle expansions
  * @param schemaUtils - The schema utilities the form renders with
  * @param [editedPath] - The path of the edit being made, whose field and the fields above it keep their selections, as
  *        they do when the form renders the edit
+ * @param [drawsControlsBesideOptions] - Where the form's fields draw the controls, passed in by the caller so this
+ *        module needn't import `SchemaField`, which imports it
  * @returns - The field state
  */
 export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiState: UiStateReader,
   schemaUtils: SchemaUtilsType<T, S, F>,
   editedPath?: FieldPathList,
+  drawsControlsBesideOptions?: FormFieldState<S>['drawsControlsBesideOptions'],
 ): FormFieldState<S> {
   const rootSchema = schemaUtils.getRootSchema();
   return {
+    ...(drawsControlsBesideOptions && { drawsControlsBesideOptions }),
     selectedOption: (fieldPath, options, formData, discriminator) =>
       shownOption<T, S, F>(
         schemaUtils,

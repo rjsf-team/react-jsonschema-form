@@ -1,7 +1,7 @@
 import getSchemaType from './getSchemaType.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
 import isConstantSelect from './isConstantSelect.ts';
-import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
+import type { FormContextType, RJSFSchema, SchemaUtilsType, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's
  * `ObjectField` does (see `getFieldComponent()` in `SchemaField`). Such a field shows its own properties and other
@@ -43,4 +43,30 @@ export function rendersOwnFieldBesideOwnOptions<S extends StrictRJSFSchema = RJS
  */
 export function takesParentExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(parent: S, option: S): boolean {
   return rendersOwnFieldBesideOption<S>(parent) && rendersOwnFieldBesideOwnOptions<S>(option);
+}
+
+/** Whether an object holding `anyOf`/`oneOf` options has anything of its own to render beside them: properties of its
+ * own or room for more keys. Such an object renders its own heading beside the options, which draws its Optional Data
+ * Controls, so its selected option's field draws none and renders nothing until Add. One with neither is a pure union,
+ * rendered as the field holding its options, which leaves the controls to the option. The `properties` are counted,
+ * since a view taking extra keys stubs each one the data holds among them.
+ *
+ * @param schemaUtils - The `canExpand()` of the form's `SchemaUtilsType`
+ * @param schema - The object's schema, with the extra-key keywords of the option shown joined in, so an object whose
+ *        every option closes it has no room for more
+ * @param [uiSchema] - The object's uiSchema, whose `expandable` can rule out more keys
+ * @param [formData] - The object's form data, which can fill its `maxProperties`
+ * @returns - True when the object renders properties of its own or room for more keys beside its options
+ */
+export function hasOwnContentBesideOptions<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  schemaUtils: Pick<SchemaUtilsType<T, S, F>, 'canExpand'>,
+  schema: S,
+  uiSchema?: UiSchema<T, S, F>,
+  formData?: T,
+): boolean {
+  return Object.keys(schema.properties ?? {}).length > 0 || schemaUtils.canExpand(schema, uiSchema, formData);
 }

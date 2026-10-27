@@ -9655,7 +9655,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(broughtIn).toEqual(defaultsOf(withOpt({ type: 'object', properties: { opt } })));
         });
 
-        it('fills in no null in one the data holds as an empty object, which the controls show as holding none', () => {
+        it('fills in the null of one the data holds as an empty object, which the controls show as added', () => {
           const schema: RJSFSchema = {
             type: 'object',
             properties: { opt: { type: 'object', properties: { n: { type: 'null' } } } },
@@ -9670,7 +9670,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
               },
             ),
-          ).toEqual({ opt: {} });
+          ).toEqual({ opt: { n: null } });
         });
 
         it('fills in the null of one its own defaults add, which renders its fields', () => {
@@ -9692,6 +9692,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             properties: { req: { type: 'object', properties: { n: { type: 'null' } } } },
           };
           expect(collapsedDefaultsOf(schema)).toEqual({ req: { n: null } });
+        });
+
+        it('fills in the null of a ui:required one, which renders its fields, as without the controls', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { opt: { type: 'object', properties: { n: { type: 'null' } } } },
+          };
+          const defaultsWith = (uiSchema: UiSchema) =>
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { emptyObjectFields } },
+              { schema, rootSchema: schema, uiSchema },
+            );
+          const uiRequired: UiSchema = { opt: { 'ui:required': true } };
+          expect(
+            defaultsWith({ ...uiRequired, 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }),
+          ).toEqual(defaultsWith(uiRequired));
         });
 
         it('is left out when the `ui:definitions` entry of the definition it references asks for the controls', () => {

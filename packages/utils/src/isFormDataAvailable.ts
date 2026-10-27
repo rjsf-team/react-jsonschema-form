@@ -1,15 +1,9 @@
-/** Determines whether the given `formData` represents valid form data, such as a primitive type, an array, or a
- * non-empty object.
+/** Determines whether the given `formData` holds a value, which is anything but `undefined` or `null`. An empty object
+ * or array is a value: it is what an Optional Data Control's Add stores, so it reads as opted in.
  *
  * @param formData - The data to check
- * @returns - True if `formData` is not undefined, null, a primitive type or an array or an empty object
+ * @returns - True if `formData` is neither `undefined` nor `null`
  */
 export default function isFormDataAvailable<T = unknown>(formData?: T): boolean {
-  if (formData === undefined || formData === null) {
-    return false;
-  }
-  if (typeof formData !== 'object' || Array.isArray(formData)) {
-    return true;
-  }
-  return Object.keys(formData).length > 0;
+  return formData !== undefined && formData !== null;
 }

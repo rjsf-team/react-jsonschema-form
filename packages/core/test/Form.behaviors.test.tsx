@@ -2371,7 +2371,7 @@ describe('optionalDataControls', () => {
     expect(removeObjectControlNode).toEqual(null);
     expect(testInput).toEqual(null);
   });
-  it('gives the controls of an object that is itself a oneOf a distinct id from those of the selected option', () => {
+  it('gives an object that is itself a oneOf one set of controls, in its own heading beside the options', () => {
     const oneOfObjectSchema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -2389,8 +2389,8 @@ describe('optionalDataControls', () => {
     const ids = [...node.querySelectorAll('[id]')].map((element) => element.id);
 
     expect(new Set(ids).size).toEqual(ids.length);
-    expect(ids).toContain(objectControlAddId);
     expect(ids).toContain(optionalControlsId(besideOptionsId(objectId), 'Add'));
+    expect(ids).not.toContain(objectControlAddId);
   });
   it('renders the controls for an object and an array with an empty option list, and adds and removes the value', async () => {
     const emptyOptionsSchema: RJSFSchema = {
@@ -2437,7 +2437,6 @@ describe('optionalDataControls', () => {
     const { node, onSubmit, onError } = createFormComponent({
       schema: thingSchema,
       uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
-      initialFormData: { thing: {} },
     });
 
     expect(node.querySelector('#root_thing_a')).toEqual(null);
@@ -2456,11 +2455,10 @@ describe('optionalDataControls', () => {
     const { node, onSubmit, onError } = createFormComponent({
       schema: thingSchema,
       uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
-      initialFormData: { thing: {} },
       noHtml5Validate: true,
     });
 
-    expect(node.querySelector(`#${optionalControlsId('root_thing', 'Add')}`)).not.toEqual(null);
+    expect(node.querySelector(`#${optionalControlsId(besideOptionsId('root_thing'), 'Add')}`)).not.toEqual(null);
     expect(node.querySelector('#root_thing_a')).toEqual(null);
     await submitForm(node, user);
 
@@ -2501,13 +2499,325 @@ describe('optionalDataControls', () => {
       },
     };
     const { node } = createFormComponent({ schema: atLeastOneOf, uiSchema: objectOnUiSchema });
-    expect(node.querySelector(`#${optionalControlsId('root_n', 'Add')}`)).not.toEqual(null);
+    expect(node.querySelector(`#${optionalControlsId(besideOptionsId('root_n'), 'Add')}`)).not.toEqual(null);
+    expect(node.querySelector(`#${optionalControlsId('root_n', 'Add')}`)).toEqual(null);
     expect(node.querySelector('#root_n_a')).toEqual(null);
 
-    // The object's own Add rather than the option's: the option's stores `{}`, which the object reads as still empty (#5427)
     await user.click(elementOf(node, `#${optionalControlsId(besideOptionsId('root_n'), 'Add')}`));
 
     expect(node.querySelector('#root_n_a')).not.toEqual(null);
+    expect(node.querySelector('#root_n_b')).not.toEqual(null);
+    expect(node.querySelector('#root_n__oneof_select')).not.toEqual(null);
+    expect(node.querySelectorAll('.rjsf-remove-optional-data')).toHaveLength(1);
+  });
+
+  it('keeps the Add of an object beside oneOf options whose own uiSchemas turn the controls off', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        n: {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          oneOf: [{ properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+        },
+      },
+    };
+    const off = { 'ui:enableOptionalDataFieldForType': [] };
+    const { node } = createFormComponent({ schema, uiSchema: { ...objectOnUiSchema, n: { oneOf: [off, off] } } });
+    expect(node.querySelector('#root_n_x')).toEqual(null);
+
+    await user.click(elementOf(node, `#${optionalControlsId(besideOptionsId('root_n'), 'Add')}`));
+
+    expect(node.querySelector('#root_n_a')).not.toEqual(null);
+    expect(node.querySelector('#root_n_x')).not.toEqual(null);
+  });
+
+  it('submits past a ui:required field of the option of an object beside oneOf options whose own uiSchemas turn the controls off', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        n: {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          oneOf: [{ properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+        },
+      },
+    };
+    const off = { 'ui:enableOptionalDataFieldForType': [] };
+    const { node, onSubmit, onError } = createFormComponent({
+      schema,
+      uiSchema: { ...objectOnUiSchema, n: { oneOf: [{ ...off, x: { 'ui:required': true } }, off] } },
+      noHtml5Validate: true,
+    });
+    expect(node.querySelector('#root_n_x')).toEqual(null);
+
+    await submitForm(node, user);
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+
+  it('renders nothing of the selected option of an object beside its oneOf options until Add', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        n: {
+          type: 'object',
+          title: 'N',
+          properties: { a: { type: 'string' } },
+          oneOf: [{ title: 'OptA', properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+        },
+      },
+    };
+    const { node } = createFormComponent({
+      schema,
+      uiSchema: { ...objectOnUiSchema, n: { oneOf: [{ 'ui:help': 'HelpA' }, {}] } },
+    });
+    expect(node.querySelector('#root_n')).toEqual(null);
+    expect(node.querySelector('.rjsf-multi-schema')).toEqual(null);
+    expect(node.textContent).not.toContain('OptA');
+    expect(node.textContent).not.toContain('HelpA');
+
+    await user.click(elementOf(node, `#${optionalControlsId(besideOptionsId('root_n'), 'Add')}`));
+
+    expect(node.querySelector('#root_n_x')).not.toEqual(null);
+  });
+
+  it('reports a ui:required field of the option of an object beside oneOf options under a ui:field wrapping SchemaField', async () => {
+    function Wrapper(props: FieldProps) {
+      const { SchemaField } = props.registry.fields;
+      return <SchemaField {...props} />;
+    }
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        n: {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          oneOf: [{ properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+        },
+      },
+    };
+    const off = { 'ui:enableOptionalDataFieldForType': [] };
+    const { node, onSubmit, onError } = createFormComponent({
+      schema,
+      uiSchema: {
+        ...objectOnUiSchema,
+        n: { 'ui:field': Wrapper, oneOf: [{ ...off, x: { 'ui:required': true } }, off] },
+      },
+      noHtml5Validate: true,
+    });
+    expect(node.querySelector('#root_n_x')).not.toEqual(null);
+
+    await submitForm(node, user);
+
+    expect(onError).toHaveBeenCalled();
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  describe('reports a ui:required field of the option of an object beside oneOf options only while the option is on screen', () => {
+    function Wrapper(props: FieldProps) {
+      const { SchemaField } = props.registry.fields;
+      return <SchemaField {...props} />;
+    }
+    const schemaWith = (own: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        n: {
+          type: 'object',
+          ...own,
+          properties: { a: { type: 'string' } },
+          oneOf: [{ properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+        },
+      },
+    });
+    const off = { 'ui:enableOptionalDataFieldForType': [] };
+    it.each<[string, RJSFSchema, UiSchema, boolean, boolean?]>([
+      [
+        "a ui:field of 'ObjectField', which draws the controls beside the options",
+        schemaWith({}),
+        { 'ui:field': 'ObjectField' },
+        false,
+      ],
+      [
+        "a ui:field of 'SchemaField', which plans the field as though none were named",
+        schemaWith({}),
+        { 'ui:field': 'SchemaField' },
+        false,
+      ],
+      [
+        'a ui:field naming no registered field, which is ignored',
+        schemaWith({}),
+        { 'ui:field': 'Unregistered' },
+        false,
+      ],
+      ['a $id naming a registered field that wraps SchemaField', schemaWith({ $id: 'Wrapper' }), {}, true],
+      [
+        'a ui:field wrapping SchemaField that the options give way to, which leaves them to its SchemaField',
+        schemaWith({}),
+        { 'ui:field': 'Wrapper', 'ui:fieldReplacesAnyOrOneOf': true },
+        false,
+      ],
+      [
+        "a ui:field of 'FallbackField' without the fallback UI, which leaves the option its controls",
+        schemaWith({}),
+        { 'ui:field': 'FallbackField' },
+        true,
+      ],
+      [
+        "a ui:field of 'FallbackField' under the fallback UI, which plans the field again",
+        schemaWith({}),
+        { 'ui:field': 'FallbackField' },
+        false,
+        true,
+      ],
+    ])('under %s', async (_, schema, nUiSchema, isOnScreen, useFallbackUiForUnsupportedType = false) => {
+      const { node, onSubmit, onError } = createFormComponent({
+        schema,
+        uiSchema: { ...objectOnUiSchema, n: { ...nUiSchema, oneOf: [{ ...off, x: { 'ui:required': true } }, off] } },
+        fields: { Wrapper },
+        noHtml5Validate: true,
+        useFallbackUiForUnsupportedType,
+      });
+      expect(node.querySelector('#root_n_x') !== null).toBe(isOnScreen);
+
+      await submitForm(node, user);
+
+      expect(onError.mock.calls.length > 0).toBe(isOnScreen);
+      expect(onSubmit.mock.calls.length > 0).toBe(!isOnScreen);
+    });
+  });
+
+  it('keeps an optional object nested in an object both oneOf options share behind its Add button after a switch', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      $defs: {
+        Config: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            advanced: { type: 'object', properties: { level: { type: 'string' } } },
+          },
+        },
+      },
+      properties: {
+        job: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { kind: { type: 'string', const: 'a' }, config: { $ref: '#/$defs/Config' } } },
+            { title: 'B', properties: { kind: { type: 'string', const: 'b' }, config: { $ref: '#/$defs/Config' } } },
+          ],
+        },
+      },
+    };
+    const optionUiSchema = { config: { advanced: { level: { 'ui:required': true } } } };
+    const { node, onChange, onSubmit, onError } = createFormComponent({
+      schema,
+      uiSchema: { ...objectOnUiSchema, job: { oneOf: [optionUiSchema, optionUiSchema] } },
+      initialFormData: { job: { kind: 'a', config: { name: 'x' } } },
+      noHtml5Validate: true,
+    });
+
+    await user.selectOptions(elementOf(node, '#root_job__oneof_select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: { kind: 'b', config: { name: 'x' } } });
+    expect(node.querySelector(`#${optionalControlsId('root_job_config_advanced', 'Add')}`)).not.toEqual(null);
+
+    await submitForm(node, user);
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+
+  it('keeps an optional object in the items of an array both oneOf options share behind its Add button after a switch', async () => {
+    const item: RJSFSchema = {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        opt: { type: 'object', properties: { level: { type: 'string' } } },
+      },
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        job: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { kind: { type: 'string', const: 'a' }, list: { type: 'array', items: item } } },
+            { title: 'B', properties: { kind: { type: 'string', const: 'b' }, list: { type: 'array', items: item } } },
+          ],
+        },
+      },
+    };
+    const optionUiSchema = { list: { items: { opt: { level: { 'ui:required': true } } } } };
+    const { node, onChange, onSubmit, onError } = createFormComponent({
+      schema,
+      uiSchema: { ...objectOnUiSchema, job: { oneOf: [optionUiSchema, optionUiSchema] } },
+      initialFormData: { job: { kind: 'a', list: [{ name: 'x' }] } },
+      noHtml5Validate: true,
+    });
+
+    await user.selectOptions(elementOf(node, '#root_job__oneof_select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: { kind: 'b', list: [{ name: 'x' }] } });
+    expect(node.querySelector(`#${optionalControlsId('root_job_list_0_opt', 'Add')}`)).not.toEqual(null);
+
+    await submitForm(node, user);
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+
+  it('keeps an optional object in an extra key both oneOf options share behind the Add button its additionalProperties uiSchema asks for after a switch', async () => {
+    const map: RJSFSchema = {
+      type: 'object',
+      additionalProperties: {
+        type: 'object',
+        properties: { opt: { type: 'object', properties: { level: { type: 'string' } } } },
+      },
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        job: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { kind: { type: 'string', const: 'a' }, map } },
+            { title: 'B', properties: { kind: { type: 'string', const: 'b' }, map } },
+          ],
+        },
+      },
+    };
+    const optionUiSchema = {
+      map: { additionalProperties: { opt: { 'ui:enableOptionalDataFieldForType': ['object'] } } },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      uiSchema: { job: { oneOf: [optionUiSchema, optionUiSchema] } },
+      initialFormData: { job: { kind: 'a', map: { k: {} } } },
+    });
+
+    await user.selectOptions(elementOf(node, '#root_job__oneof_select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: { kind: 'b', map: { k: {} } } });
+  });
+
+  it('opts an object whose default is {} in on Add and out on Remove (#5427)', async () => {
+    const metaSchema: RJSFSchema = {
+      type: 'object',
+      properties: { meta: { type: 'object', additionalProperties: { type: 'string' } } },
+    };
+    const { node, onChange } = createFormComponent({ schema: metaSchema, uiSchema: objectOnUiSchema });
+
+    await user.click(elementOf(node, `#${optionalControlsId('root_meta', 'Add')}`));
+
+    expect(onChange.mock.lastCall?.[0]).toMatchObject({ formData: { meta: {} }, dirtyFields: { meta: true } });
+    expect(node.querySelector(`#${optionalControlsId('root_meta', 'Add')}`)).toEqual(null);
+
+    await user.click(elementOf(node, `#${optionalControlsId('root_meta', 'Remove')}`));
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({});
+    expect(node.querySelector(`#${optionalControlsId('root_meta', 'Add')}`)).not.toEqual(null);
   });
 });
 

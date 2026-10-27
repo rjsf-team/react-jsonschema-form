@@ -317,6 +317,12 @@ export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
   selectedOption(fieldPath: FieldPath, options: S[], formData: unknown, discriminator?: string): number;
   /** Whether the user expanded the collapsed `$ref` cycle at `fieldPath` */
   isExpanded(fieldPath: FieldPath): boolean;
+  /** Whether the object field at `fieldPath`, offering `anyOf`/`oneOf` options, draws its Optional Data Controls beside
+   * them, which keeps its selected option off screen until Add. `schema` carries the extra-key keywords of the option
+   * shown. Without it, a field whose uiSchema names no `ui:field` does when it has properties of its own or room for
+   * more keys, see `hasOwnContentBesideOptions()`
+   */
+  drawsControlsBesideOptions?(fieldPath: FieldPath, schema: S, uiSchema: GenericObjectType, formData: unknown): boolean;
 }
 
 declare const FIELD_PATH_BRAND: unique symbol;

@@ -44,7 +44,7 @@ import { getByPath } from '../pathUtils.ts';
 import rendersOwnFieldBesideOption from '../rendersOwnFieldBesideOption.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import setOwn from '../setOwn.ts';
-import { isOptionalDataControlsType } from '../shouldRenderOptionalField.ts';
+import { isCollapsedByOptionalDataControls } from '../shouldRenderOptionalField.ts';
 import toConstant from '../toConstant.ts';
 import type {
   CustomMergeAllOf,
@@ -1523,10 +1523,8 @@ function innerItem<S extends StrictRJSFSchema>(
 }
 
 /** The `null` fills to compute the defaults of a property of an object with: `nullFills` itself, or, for an optional
- * object the Optional Data Controls render while it has no value, a copy marked collapsed, see `NullFills.isCollapsed`.
- * No value is what the controls read as none: an empty object counts, as `undefined` and `null` do. Asked of the
- * uiSchema the field renders with, the `ui:definitions` entry of a definition the property references merged in, as
- * `foldView()` merges it for the property's own field
+ * object the Optional Data Controls render collapsed (see `isCollapsedByOptionalDataControls()`), a copy marked
+ * collapsed, see `NullFills.isCollapsed`
  *
  * @param context - The `SchemaContext` the defaults are computed in
  * @param child - The property's field
@@ -1554,16 +1552,18 @@ function nullFillsForProperty<T, S extends StrictRJSFSchema, F extends FormConte
   const isCollapsed =
     nullFills !== undefined &&
     !nullFills.isCollapsed &&
-    !isRequired &&
-    !isFormDataAvailable(formData) &&
     mayHoldNullType(propertySchema, rootSchema) &&
-    isOptionalDataControlsType<T, S, F>(
+    isCollapsedByOptionalDataControls<T, S, F>(
       () => settle(context, { ...child, retrieves: true }, undefined, undefined).schema,
-      uiSchemaDefinitions
-        ? resolveUiSchema<T, S, F>(propertySchema, uiSchema, { rootSchema, uiSchemaDefinitions })
-        : uiSchema,
-      nullFills.globalUiOptions,
-      rootSchema,
+      propertySchema,
+      uiSchema,
+      {
+        uiSchemaDefinitions,
+        globalUiOptions: nullFills.globalUiOptions,
+        rootSchema,
+        required: isRequired === true,
+        formData,
+      },
     );
   return isCollapsed ? { ...nullFills, isCollapsed } : nullFills;
 }

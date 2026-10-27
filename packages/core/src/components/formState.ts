@@ -48,12 +48,14 @@ import {
 import isDevelopment from '../isDevelopment.ts';
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
+import { schemaFieldDrawsControlsBesideOptions } from './fields/SchemaField.tsx';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
 import type { UiStateReader } from './uiState.ts';
 import {
+  asFieldValue,
   createUiState,
   fieldStateOf,
   isPathPrefix,
@@ -901,7 +903,20 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
   // Falsy root values (`false`, `0`, `''`) are valid data, so only `undefined` skips the round trip (#5404).
   const serializedFormData = JSON.stringify(formData);
   const validationFormData = serializedFormData === undefined ? undefined : JSON.parse(serializedFormData);
-  const fieldState = fieldStateOf(context.uiState, schemaUtils, heldPath);
+  // The committed registry's fields, not the props', since whether an option is hidden is a question of what renders
+  const fieldState = fieldStateOf(
+    context.uiState,
+    schemaUtils,
+    heldPath,
+    (fieldPath, fieldSchema, fieldUiSchema, data) =>
+      schemaFieldDrawsControlsBesideOptions<T, S, F>(
+        context.registry,
+        fieldPath,
+        fieldSchema,
+        fieldUiSchema,
+        asFieldValue<T>(data),
+      ),
+  );
 
   // The data handed to `customValidate` carries defaults computed here rather than inside the validator, so they honor
   // the `customMergeAllOf` and `defaultFormStateBehavior` this form was given, which a validator has no way to know.

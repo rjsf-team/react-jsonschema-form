@@ -4,7 +4,9 @@ import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getUiOptions from './getUiOptions.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
+import isFormDataAvailable from './isFormDataAvailable.ts';
 import { isSchemaObject } from './isObject.ts';
+import resolveUiSchema from './resolveUiSchema.ts';
 import { resolveOwnRef } from './schema/retrieveSchema.ts';
 import type {
   FieldPath,
@@ -14,7 +16,9 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
+  UiSchemaDefinitions,
 } from './types.ts';
+import uiBooleanOption from './uiBooleanOption.ts';
 
 /** Returns the type of the field that the Optional Data Controls UI is rendered for. An `anyOf`/`oneOf` schema's type
  * is read from its options as they render: each option written as a `$ref` is resolved against `rootSchema`, and each
@@ -70,7 +74,11 @@ export function getOptionalDataControlsType<S extends StrictRJSFSchema = RJSFSch
  * @param rootSchema - The root schema, see `getOptionalDataControlsType()`
  * @returns - True if the Optional Data Controls UI is enabled for the type of the field, otherwise false
  */
-export function isOptionalDataControlsType<T, S extends StrictRJSFSchema, F extends FormContextType>(
+export function isOptionalDataControlsType<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   schema: S | (() => S),
   uiSchema: UiSchema<T, S, F> | undefined,
   globalUiOptions: GlobalUISchemaOptions | undefined,
@@ -82,6 +90,53 @@ export function isOptionalDataControlsType<T, S extends StrictRJSFSchema, F exte
   }
   const schemaType = getOptionalDataControlsType<S>(typeof schema === 'function' ? schema() : schema, rootSchema);
   return typeof schemaType === 'string' && enableOptionalDataFieldForType.some((val) => val === schemaType);
+}
+
+/** Determines whether the Optional Data Controls render the property of an object collapsed, showing only its Add
+ * button: it holds no data, it is not required, read from its own `ui:required` before the object's `required`, as
+ * `SchemaField` reads it, and `enableOptionalDataFieldForType` turns the controls on for its type. Its uiSchema is the
+ * one its field renders with, the `ui:definitions` entry of a definition it references merged in.
+ *
+ * @param schema - The property's schema, retrieved, or a function retrieving it, called only once the uiSchema turns the
+ *        Optional Data Controls UI on for some type
+ * @param rawSchema - The property's schema as the object declares it, whose `$ref` picks its `ui:definitions` entry
+ * @param uiSchema - The property's own uiSchema, if any
+ * @param options - The registry's `ui:definitions` and global UI options, the root schema, whether the object's
+ *        `required` lists the property, and the property's form data
+ * @returns - True when the property renders collapsed behind its Add button
+ */
+export function isCollapsedByOptionalDataControls<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  schema: S | (() => S),
+  rawSchema: S,
+  uiSchema: UiSchema<T, S, F> | undefined,
+  {
+    uiSchemaDefinitions,
+    globalUiOptions,
+    rootSchema,
+    required,
+    formData,
+  }: {
+    uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
+    globalUiOptions?: GlobalUISchemaOptions;
+    rootSchema: S;
+    required: boolean;
+    formData: unknown;
+  },
+): boolean {
+  if (isFormDataAvailable(formData)) {
+    return false;
+  }
+  const fieldUiSchema = uiSchemaDefinitions
+    ? resolveUiSchema<T, S, F>(rawSchema, uiSchema, { rootSchema, uiSchemaDefinitions })
+    : uiSchema;
+  return (
+    !(uiBooleanOption(getUiOptions<T, S, F>(fieldUiSchema).required) ?? required) &&
+    isOptionalDataControlsType<T, S, F>(schema, fieldUiSchema, globalUiOptions, rootSchema)
+  );
 }
 
 /** Determines whether the field information from the combination of `schema` and `required` along with the

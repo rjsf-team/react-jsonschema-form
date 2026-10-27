@@ -30,6 +30,7 @@ import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './field
 import formDataForNewOption from './formDataForNewOption.ts';
 import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
+import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
 
@@ -285,6 +286,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T>(formData);
+  // The object beside the options keeps everything of its own behind its Add, so the option has nothing to show yet,
+  // whatever its own uiSchema says about the controls
+  const hiddenBehindControlsBeside = use(OptionalControlsBesideContext) === fieldPath && !hasFormData;
 
   const { Widget } = resolveWidget<T, S, F>({ type: 'number' }, widget, widgets);
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
@@ -338,14 +342,19 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       />
     ) : undefined;
 
-  const optionsSchemaField = rendersOption ? (
-    <SelectorsAboveContext value={selectorsBelow}>
-      <TemplateWarnEntryContext value={optionEntry}>
-        <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
-      </TemplateWarnEntryContext>
-    </SelectorsAboveContext>
-  ) : null;
+  const optionsSchemaField =
+    rendersOption && !hiddenBehindControlsBeside ? (
+      <SelectorsAboveContext value={selectorsBelow}>
+        <TemplateWarnEntryContext value={optionEntry}>
+          <SchemaFieldComponent {...props} schema={renderedOption} uiSchema={optionFieldUiSchema} />
+        </TemplateWarnEntryContext>
+      </SelectorsAboveContext>
+    ) : null;
 
+  // A theme frames the selector and option, so with neither there is only an empty box to draw
+  if (!selector && !optionsSchemaField) {
+    return null;
+  }
   return (
     <MultiSchemaFieldTemplate
       id={id}
