@@ -71,7 +71,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 ### Disabling specific items
 
-The `items` function can disable an item, or make it read-only, from the item's data or its index.
+The `items` function can disable an item, or make it read-only, from the item's data.
 Its move, copy and remove buttons are disabled with it:
 
 ```tsx
@@ -80,8 +80,8 @@ const uiSchema: UiSchema = {
 };
 ```
 
-A condition on the item's data follows the item when the list is reordered.
-A condition on the index, `(item, index) => (index === 0 ? { 'ui:disabled': true } : {})`, applies to whichever item is at that position.
+Base the condition on the item's data, which moves with the item, not on its index.
+The other items keep their buttons, so moving one of them past a locked index, or removing one before it, puts another item at that index and the locked one somewhere else, where it can be changed or removed.
 
 ## The `additionalItems` keyword
 
