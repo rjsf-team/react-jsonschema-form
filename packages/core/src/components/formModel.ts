@@ -142,25 +142,27 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
  * @param formElement - The form searched
  * @param exact - The element carrying the field's id, if any
  * @param elementId - The field's id
+ * @param tried - The elements already tried, which aren't tried again
  * @param view - The window of the form
  */
 function focusForId(
   formElement: Element,
   exact: Element | undefined,
   elementId: string,
+  tried: ReadonlySet<Node | null | undefined>,
   view: Window & typeof globalThis,
 ): void {
   if (exact instanceof view.HTMLFieldSetElement) {
     return;
   }
   if (exact) {
-    findElement(exact.querySelectorAll('*'), (element) => takesFocus(element, view));
+    findElement(exact.querySelectorAll('*'), (element) => !tried.has(element) && takesFocus(element, view));
     return;
   }
   const partPrefix = partId(elementId, '');
   findElement(
     formElement.querySelectorAll('input[id], button[id]'),
-    (element) => element.id.startsWith(partPrefix) && takesFocus(element, view),
+    (element) => element.id.startsWith(partPrefix) && !tried.has(element) && takesFocus(element, view),
   );
 }
 
@@ -378,15 +380,17 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // focusable and names no focusable form control, such as a slider's root around its thumb or a group of such
     // checkboxes, leads to the focusable element inside it, as `focusForId()` finds it. Each candidate counts only once
     // focus took, so one that ignores `focus()` hands over to the next, and is tried once, though `namedItem()` matches
-    // the element carrying the id too. A field whose own control can't take focus, being disabled or hidden, leaves
-    // focus where it is rather than sending it to another field. The search stays inside the form, which another form
-    // on the page rendering the same ids would defeat through `getElementById()`, and compares ids as strings, so a
-    // property name holding a selector's syntax needs no escaping
+    // the element carrying the id too and a group's named radios sit inside the wrapper `focusForId()` searches. A
+    // field whose own control can't take focus, being disabled or hidden, leaves focus where it is rather than sending
+    // it to another field. The search stays inside the form, which another form on the page rendering the same ids
+    // would defeat through `getElementById()`, and compares ids as strings, so a property name holding a selector's
+    // syntax needs no escaping
     const exact = findElement(formElement.querySelectorAll('[id]'), (element) => element.id === elementId);
     const named = formElement instanceof view.HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
     const namedControls = named instanceof view.RadioNodeList ? Array.from(named) : [named];
-    if (![...new Set([exact, ...namedControls])].some((element) => takesFocus(element, view))) {
-      focusForId(formElement, exact, elementId, view);
+    const candidates = new Set([exact, ...namedControls]);
+    if (![...candidates].some((element) => takesFocus(element, view))) {
+      focusForId(formElement, exact, elementId, candidates, view);
     }
   };
 

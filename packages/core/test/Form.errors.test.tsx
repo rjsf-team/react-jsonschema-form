@@ -705,6 +705,24 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(second).toHaveFocus();
       });
 
+      it('calls focus() once on each radio of a group none of whose radios takes focus', async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'string', enum: ['a', 'b'] },
+          initialFormData: 'c',
+          uiSchema: { 'ui:widget': 'radio' },
+          focusOnFirstError: true,
+        });
+        const focusSpies = screen.getAllByRole('radio').map((radio) => {
+          const focus = vi.fn();
+          Object.defineProperty(radio, 'focus', { configurable: true, value: focus });
+          return focus;
+        });
+
+        await submitForm(node, user);
+
+        focusSpies.forEach((focus) => expect(focus).toHaveBeenCalledTimes(1));
+      });
+
       it('moves on from an input whose id is a part of the field id that ignores focus() to the next one', async () => {
         const ChoiceWidget = ({ id }: WidgetProps) => (
           <div>
