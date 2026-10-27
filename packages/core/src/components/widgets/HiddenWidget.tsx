@@ -1,4 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { toInputValue } from '@rjsf/utils';
 
 /** The `HiddenWidget` is a widget for rendering a hidden input field.
  *  It is typically used by setting type to "hidden".
@@ -10,7 +11,7 @@ function HiddenWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >({ id, value, htmlName }: WidgetProps<T, S, F>) {
-  return <input type='hidden' id={id} name={htmlName || id} value={typeof value === 'undefined' ? '' : value} />;
+  return <input type='hidden' id={id} name={htmlName || id} value={toInputValue(value)} />;
 }
 
 export default HiddenWidget;

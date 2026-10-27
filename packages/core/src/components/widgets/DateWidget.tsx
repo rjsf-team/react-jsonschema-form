@@ -14,7 +14,7 @@ export default function DateWidget<
 >(props: WidgetProps<T, S, F>) {
   const { onChange, options, registry } = props;
   const { BaseInputTemplate } = getTemplates<T, S, F>(registry, options);
-  const handleChange = useCallback((value: any) => onChange(value || undefined), [onChange]);
+  const handleChange = useCallback((value: unknown) => onChange(value || undefined), [onChange]);
 
   return <BaseInputTemplate type='date' {...props} onChange={handleChange} />;
 }

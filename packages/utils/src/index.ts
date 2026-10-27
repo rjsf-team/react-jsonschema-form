@@ -198,6 +198,7 @@ import toConstant from './toConstant.ts';
 import toDateString from './toDateString.ts';
 import toErrorList from './toErrorList.ts';
 import toErrorSchema from './toErrorSchema.ts';
+import toInputValue from './toInputValue.ts';
 import uiBooleanOption from './uiBooleanOption.ts';
 import unwrapErrorHandler from './unwrapErrorHandler.ts';
 import type { DateElementProps, UseAltDateWidgetResult } from './useAltDateWidgetProps.tsx';
@@ -441,6 +442,7 @@ export {
   toDateString,
   toErrorList,
   toErrorSchema,
+  toInputValue,
   ROOT_FIELD_PATH,
   toFieldPath,
   fieldPathFromList,

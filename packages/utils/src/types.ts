@@ -851,9 +851,9 @@ export interface FieldProps<
    */
   onChange: Bivariant<[newValue: T | undefined, fieldPath: FieldPath, es?: ErrorSchema<T>, id?: string]>;
   /** The input blur event handler; call it with the field id and value */
-  onBlur: (id: string, value: any) => void;
+  onBlur: (id: string, value: unknown) => void;
   /** The input focus event handler; call it with the field id and value */
-  onFocus: (id: string, value: any) => void;
+  onFocus: (id: string, value: unknown) => void;
   /** A boolean value stating if the field should autofocus */
   autofocus?: boolean;
   /** A boolean value stating if the field is disabled */
@@ -1652,7 +1652,7 @@ export interface WidgetProps<
    */
   name: string;
   /** The current value for this widget */
-  value: any;
+  value: unknown;
   /** The required status of this widget. A widget declared `uncheckedIsFalse`, as `CheckboxWidget` is, is required only
    * where the schema demands `true`, since left alone it already holds the `false` a required boolean accepts (#5388)
    */
@@ -1675,13 +1675,13 @@ export interface WidgetProps<
     enumOptions?: EnumOptionsType<S>[];
   };
   /** The input blur event handler; call it with the widget id and value */
-  onBlur: (id: string, value: any) => void;
+  onBlur: (id: string, value: unknown) => void;
   /** The value change event handler; call it with the new value every time it changes, and optionally with an
    * ErrorSchema holding the errors the widget itself raises for that value
    */
-  onChange: Bivariant<[value: any, es?: ErrorSchema<T>, id?: string]>;
+  onChange: Bivariant<[value: unknown, es?: ErrorSchema<T>, id?: string]>;
   /** The input focus event handler; call it with the widget id and value */
-  onFocus: (id: string, value: any) => void;
+  onFocus: (id: string, value: unknown) => void;
   /** The computed label for this widget, as a string */
   label: string;
   /** A boolean value, if true, tells the widget not to draw its label: its field's `presentation` has the template, or a

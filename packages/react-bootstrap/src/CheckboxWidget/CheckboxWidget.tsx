@@ -67,7 +67,7 @@ export default function CheckboxWidget<
             </>
           ) : undefined
         }
-        checked={typeof value === 'undefined' ? false : value}
+        checked={Boolean(value)}
         required={trueValueRequired}
         isInvalid={hasWidgetErrors<T, S, F>(props)}
         disabled={disabled || readonly}

@@ -25,7 +25,7 @@ interface FancyMultiSelectProps {
   /** When provided, renders `items` grouped into these labeled sections instead of one flat list */
   sections?: FancySelectSection[];
   /** Array of selected item values */
-  selected: string[];
+  selected: unknown[];
   /** Callback function when value changes */
   onValueChange?: (value: number[]) => void;
   /** Whether the component should autofocus */

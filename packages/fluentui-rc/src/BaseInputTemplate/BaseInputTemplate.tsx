@@ -11,6 +11,7 @@ import {
   getInputProps,
   getNumericInputTitle,
   labelValue,
+  toInputValue,
   widgetDrawsLabelText,
 } from '@rjsf/utils';
 
@@ -98,7 +99,7 @@ export default function BaseInputTemplate<
           // Due to Fluent UI this does not work correctly
           list: hasExamples ? examplesId(id) : undefined,
         }}
-        value={value || value === 0 ? value : ''}
+        value={String(toInputValue(value || value === 0 ? value : ''))}
         onChange={onChangeOverride ?? handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}

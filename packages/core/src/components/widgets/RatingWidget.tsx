@@ -1,7 +1,7 @@
 import type { FocusEvent } from 'react';
 import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getGroupAttributes } from '@rjsf/utils';
+import { getGroupAttributes, toInputValue } from '@rjsf/utils';
 
 /** The `RatingWidget` component renders a star or heart rating input
  *
@@ -45,7 +45,9 @@ export default function RatingWidget<
   const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
   const min = schema.minimum ?? 0;
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
-  const autofocusIndex = Math.max(Array.from({ length: numStars }, (_, index) => min + index).indexOf(value), 0);
+  const rating = typeof value === 'number' ? value : undefined;
+  const autofocusIndex =
+    rating === undefined ? 0 : Math.max(Array.from({ length: numStars }, (_, index) => min + index).indexOf(rating), 0);
   // React acts on `autoFocus` only for a form control, which a star isn't, so the star takes focus as it mounts, in the
   // same commit phase as `autoFocus` would give it, and not when `ui:autofocus` turns on later. A disabled or read-only
   // rating takes none, as its stars are out of the tab order
@@ -114,7 +116,7 @@ export default function RatingWidget<
     >
       {[...Array(numStars)].map((_, index) => {
         const starValue = min + index;
-        const isFilled = starValue <= value;
+        const isFilled = rating !== undefined && starValue <= rating;
 
         return (
           <span
@@ -145,7 +147,7 @@ export default function RatingWidget<
       <input
         type='hidden'
         name={htmlName || id}
-        value={value || ''}
+        value={toInputValue(value || '')}
         required={required}
         disabled={disabled || readonly}
         aria-hidden='true'

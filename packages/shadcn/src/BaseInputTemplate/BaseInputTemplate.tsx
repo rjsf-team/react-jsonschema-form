@@ -95,7 +95,7 @@ export default function BaseInputTemplate<
         onFocus={handleFocus}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
         <ClearButton onClick={handleClear} registry={registry} />
       )}
       {children}

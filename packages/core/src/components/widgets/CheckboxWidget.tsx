@@ -92,7 +92,7 @@ function CheckboxWidget<
           className={classMap.checkboxInput}
           id={id}
           name={htmlName || id}
-          checked={typeof value === 'undefined' ? false : value}
+          checked={Boolean(value)}
           required={trueValueRequired}
           disabled={disabled || readonly}
           autoFocus={autofocus}

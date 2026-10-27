@@ -1,3 +1,5 @@
+import { toInputValue } from '@rjsf/utils';
+
 import type { Sample } from './Sample.ts';
 
 const widgets: Sample = {
@@ -239,8 +241,8 @@ const widgets: Sample = {
         onChange,
         options,
       }: {
-        value: any;
-        onChange: (value: any) => void;
+        value: unknown;
+        onChange: (value: unknown) => void;
         options: { backgroundColor: string };
       }) => {
         const { backgroundColor } = options;
@@ -249,7 +251,7 @@ const widgets: Sample = {
             className='form-control'
             onChange={(event) => onChange(event.target.value)}
             style={{ backgroundColor }}
-            value={value}
+            value={toInputValue(value)}
           />
         );
       },
@@ -263,21 +265,21 @@ const widgets: Sample = {
         onChange,
         options,
       }: {
-        value: any;
-        onChange: (value: any) => void;
-        options: { enumOptions: { label: string; value: any }[]; backgroundColor: string };
+        value: unknown;
+        onChange: (value: unknown) => void;
+        options: { enumOptions: { label: string; value: unknown }[]; backgroundColor: string };
       }) => {
         const { enumOptions, backgroundColor } = options;
         return (
           <select
             className='form-control'
             style={{ backgroundColor }}
-            value={value}
+            value={toInputValue(value)}
             onChange={(event) => onChange(event.target.value)}
           >
             {enumOptions.map(({ label: enumLabel, value: enumValue }, i) => (
               // oxlint-disable-next-line react/no-array-index-key
-              <option key={i} value={enumValue}>
+              <option key={i} value={toInputValue(enumValue)}>
                 {enumLabel}
               </option>
             ))}

@@ -1,6 +1,6 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes } from '@rjsf/utils';
+import { getControlAttributes, toInputValue } from '@rjsf/utils';
 import { Input } from 'antd';
 
 import useControlState from '../../controlState.ts';
@@ -53,7 +53,7 @@ export default function PasswordWidget<
       placeholder={placeholder}
       readOnly={readonly}
       required={required}
-      value={value || ''}
+      value={toInputValue(value || '')}
       {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );

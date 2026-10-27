@@ -1,6 +1,6 @@
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { FieldProps, RJSFSchema, ThemePresentation, UiSchema, WidgetProps } from '@rjsf/utils';
-import { fieldLabelId, toFieldPath } from '@rjsf/utils';
+import { fieldLabelId, toFieldPath, toInputValue } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
@@ -21,7 +21,7 @@ function fieldLabel(container: HTMLElement, id: string) {
 const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
 
 function CustomWidget({ id, value }: WidgetProps) {
-  return <input type='text' id={id} readOnly value={String(value ?? '')} />;
+  return <input type='text' id={id} readOnly value={String(toInputValue(value))} />;
 }
 
 function renderForm(

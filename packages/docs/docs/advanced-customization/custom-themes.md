@@ -33,7 +33,7 @@ you can essentially redefine the default Form by simply doing `const Form = with
 Example theme with custom widget:
 
 ```tsx
-import { WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
+import { RegistryWidgetsType, toInputValue, WidgetProps } from '@rjsf/utils';
 import type { ThemeProps } from '@rjsf/core';
 
 const MyCustomWidget = (props: WidgetProps) => {
@@ -41,7 +41,7 @@ const MyCustomWidget = (props: WidgetProps) => {
     <input
       type='text'
       className='custom'
-      value={props.value}
+      value={toInputValue(props.value)}
       required={props.required}
       onChange={(event) => props.onChange(event.target.value)}
     />

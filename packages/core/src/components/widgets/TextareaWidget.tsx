@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes } from '@rjsf/utils';
+import { getControlAttributes, toInputValue } from '@rjsf/utils';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -49,7 +49,7 @@ function TextareaWidget<
       id={id}
       name={htmlName || id}
       className={classMap.textarea}
-      value={value || ''}
+      value={toInputValue(value || '')}
       placeholder={placeholder}
       required={required}
       disabled={disabled}

@@ -1,6 +1,6 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, hasWidgetErrors } from '@rjsf/utils';
+import { getControlAttributes, hasWidgetErrors, toInputValue } from '@rjsf/utils';
 import { FormControl, InputGroup } from 'react-bootstrap';
 
 export default function TextareaWidget<
@@ -37,7 +37,7 @@ export default function TextareaWidget<
         placeholder={placeholder}
         disabled={disabled}
         readOnly={readonly}
-        value={value}
+        value={value === undefined ? undefined : toInputValue(value)}
         required={required}
         autoFocus={autofocus}
         rows={options.rows ?? 5}

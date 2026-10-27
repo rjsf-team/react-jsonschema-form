@@ -32,7 +32,7 @@ export default function RangeWidget<
   // A label holding only a required field's `*` would name the slider "star", so one is drawn only with text
   const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const sliderProps = {
-    value,
+    value: typeof value === 'number' ? value : undefined,
     label,
     id,
     name: htmlName || id,
