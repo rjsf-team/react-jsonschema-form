@@ -2524,10 +2524,62 @@ describe('optionalDataControls', () => {
     };
     const off = { 'ui:enableOptionalDataFieldForType': [] };
     const { node } = createFormComponent({ schema, uiSchema: { ...objectOnUiSchema, n: { oneOf: [off, off] } } });
+    expect(node.querySelector('#root_n_x')).toEqual(null);
 
     await user.click(elementOf(node, `#${optionalControlsId(besideOptionsId('root_n'), 'Add')}`));
 
     expect(node.querySelector('#root_n_a')).not.toEqual(null);
+    expect(node.querySelector('#root_n_x')).not.toEqual(null);
+  });
+
+  it('submits past a ui:required field of the option of an object beside oneOf options whose own uiSchemas turn the controls off', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        n: {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          oneOf: [{ properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+        },
+      },
+    };
+    const off = { 'ui:enableOptionalDataFieldForType': [] };
+    const { node, onSubmit, onError } = createFormComponent({
+      schema,
+      uiSchema: { ...objectOnUiSchema, n: { oneOf: [{ ...off, x: { 'ui:required': true } }, off] } },
+      noHtml5Validate: true,
+    });
+    expect(node.querySelector('#root_n_x')).toEqual(null);
+
+    await submitForm(node, user);
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+
+  it('renders nothing of the selected option of an object beside its oneOf options until Add', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        n: {
+          type: 'object',
+          title: 'N',
+          properties: { a: { type: 'string' } },
+          oneOf: [{ title: 'OptA', properties: { x: { type: 'string' } } }, { properties: { y: { type: 'string' } } }],
+        },
+      },
+    };
+    const { node } = createFormComponent({
+      schema,
+      uiSchema: { ...objectOnUiSchema, n: { oneOf: [{ 'ui:help': 'HelpA' }, {}] } },
+    });
+    expect(node.querySelector('#root_n')).toEqual(null);
+    expect(node.textContent).not.toContain('OptA');
+    expect(node.textContent).not.toContain('HelpA');
+
+    await user.click(elementOf(node, `#${optionalControlsId(besideOptionsId('root_n'), 'Add')}`));
+
+    expect(node.querySelector('#root_n_x')).not.toEqual(null);
   });
 
   it('opts an object whose default is {} in on Add and out on Remove (#5427)', async () => {

@@ -15,12 +15,14 @@ import {
   getByPath,
   getPropertySchema,
   getRenderedOptionSchema,
+  getUiOptions,
   getXxxOfKey,
   isFormDataAvailable,
   isOptionalDataControlsType,
   isPlainObject,
   mergeSchemas,
   resolveUiSchema,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
 import { asFieldValue } from '../uiState.ts';
@@ -148,9 +150,7 @@ function withoutDiscardedKeys<D extends GenericObjectType, S extends StrictRJSFS
  * @param data - The data `sanitizeDataForNewSchema()` returned
  * @param formData - The form data associated with the old option
  * @param newOption - The option switched to, with the `required` of the schema holding the options
- * @param [uiSchema] - The new option's own uiSchema
- * @param [uiSchemaDefinitions] - The registry's `ui:definitions`, which a property's uiSchema may come from
- * @param [globalUiOptions] - The form's global UI options
+ * @param uiSchemas - The new option's own uiSchema, the registry's `ui:definitions` and the form's global UI options
  * @returns - `data`, or a copy of it without those keys
  */
 function withoutAddedOptionalObjects<
@@ -163,14 +163,12 @@ function withoutAddedOptionalObjects<
   data: D,
   formData: unknown,
   newOption: S,
-  uiSchema?: UiSchema<T, S, F>,
-  uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
-  globalUiOptions?: GlobalUISchemaOptions,
+  { newOptionUiSchema: uiSchema, uiSchemaDefinitions, globalUiOptions }: OptionUiSchemas<T, S, F>,
 ): D {
   const rootSchema = schemaUtils.getRootSchema();
   const addedKeys = Object.keys(data).filter((key) => {
     const value: unknown = data[key];
-    if (!isPlainObject(value) || Object.keys(value).length > 0 || newOption.required?.includes(key)) {
+    if (!isPlainObject(value) || Object.keys(value).length > 0) {
       return false;
     }
     const oldValue: unknown = getByPath(formData, key);
@@ -178,14 +176,21 @@ function withoutAddedOptionalObjects<
       return false;
     }
     const rawPropertySchema = getPropertySchema<S>(newOption, key);
-    const propertyUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, key);
-    return isOptionalDataControlsType<T, S, F>(
-      () => schemaUtils.retrieveSchema(rawPropertySchema),
-      uiSchemaDefinitions
-        ? resolveUiSchema<T, S, F>(rawPropertySchema, propertyUiSchema, { rootSchema, uiSchemaDefinitions })
-        : propertyUiSchema,
-      globalUiOptions,
-      rootSchema,
+    const ownUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, key);
+    const propertyUiSchema = uiSchemaDefinitions
+      ? resolveUiSchema<T, S, F>(rawPropertySchema, ownUiSchema, { rootSchema, uiSchemaDefinitions })
+      : ownUiSchema;
+    // Required as `SchemaField` reads it, so a `ui:required` object, which renders no controls, keeps its `{}`
+    const required =
+      uiBooleanOption(getUiOptions<T, S, F>(propertyUiSchema).required) ?? newOption.required?.includes(key) === true;
+    return (
+      !required &&
+      isOptionalDataControlsType<T, S, F>(
+        () => schemaUtils.retrieveSchema(rawPropertySchema),
+        propertyUiSchema,
+        globalUiOptions,
+        rootSchema,
+      )
     );
   });
   if (addedKeys.length === 0) {
@@ -320,9 +325,7 @@ export default function formDataForNewOption<
         newFormData,
         formData,
         newOptionForDefaults,
-        uiSchemas.newOptionUiSchema,
-        uiSchemaDefinitions,
-        globalUiOptions,
+        uiSchemas,
       );
     }
     const oldOptionForDefaults = withParentRequired<S>(parentSchema, oldOption);

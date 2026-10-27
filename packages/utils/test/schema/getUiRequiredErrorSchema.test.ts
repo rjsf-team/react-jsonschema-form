@@ -1020,6 +1020,60 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(errors[0].property).toBe('.thing.a');
     });
 
+    it.each<[string, RJSFSchema]>([
+      ['with properties of its own', objectOption],
+      ['with room for more properties', { type: 'object', additionalProperties: { type: 'string' } }],
+    ])(
+      "does not fire for a field of the selected option of an object %s beside the options, whose controls hide the option whatever the option's own uiSchema says",
+      (_, own) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { thing: { ...own, anyOf: [{ properties: { b: { type: 'string' } } }] } },
+        };
+        const uiSchema: UiSchema = {
+          thing: { anyOf: [{ 'ui:enableOptionalDataFieldForType': [], b: { 'ui:required': true } }] },
+        };
+        expect(
+          toErrorList(
+            getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {}, undefined, globalUiOptions),
+          ),
+        ).toEqual([]);
+      },
+    );
+
+    it('fires for a field of the selected option of an open object with no properties of its own whose option closes it, since it then renders the option as its own uiSchema says', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            type: 'object',
+            additionalProperties: true,
+            anyOf: [{ ...objectOption, additionalProperties: false }],
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        thing: { anyOf: [{ 'ui:enableOptionalDataFieldForType': [], a: { 'ui:required': true } }] },
+      };
+      const errors = toErrorList(
+        getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {}, undefined, globalUiOptions),
+      );
+      expect(errors.map(({ property }) => property)).toEqual(['.thing.a']);
+    });
+
+    it('does not fire for a field of the selected option of a closed object with no properties of its own, whose option draws the controls', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { thing: { type: 'object', additionalProperties: false, anyOf: [objectOption] } },
+      };
+      const uiSchema: UiSchema = { thing: { anyOf: [{ a: { 'ui:required': true } }] } };
+      expect(
+        toErrorList(
+          getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {}, undefined, globalUiOptions),
+        ),
+      ).toEqual([]);
+    });
+
     it("still fires for a field of the selected option whose value is {} when the option's own uiSchema makes it ui:required, since a required option renders its fields", () => {
       const schema: RJSFSchema = { type: 'object', properties: { thing: { anyOf: [objectOption] } } };
       const uiSchema: UiSchema = { thing: { anyOf: [{ 'ui:required': true, a: { 'ui:required': true } }] } };

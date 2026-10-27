@@ -1524,7 +1524,7 @@ function innerItem<S extends StrictRJSFSchema>(
 
 /** The `null` fills to compute the defaults of a property of an object with: `nullFills` itself, or, for an optional
  * object the Optional Data Controls render while it has no value, a copy marked collapsed, see `NullFills.isCollapsed`.
- * No value is what the controls read as none: an empty object counts, as `undefined` and `null` do. Asked of the
+ * No value is what the controls read as none: `undefined` or `null`, while an empty object is added. Asked of the
  * uiSchema the field renders with, the `ui:definitions` entry of a definition the property references merged in, as
  * `foldView()` merges it for the property's own field
  *

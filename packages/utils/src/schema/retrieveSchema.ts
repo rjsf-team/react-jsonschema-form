@@ -1181,7 +1181,7 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
  * @param option - The option selected beside it
  * @returns - The schema with the option's extra-key keywords joined to its own
  */
-function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option: S): S {
+export function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option: S): S {
   if (rendersOwnFieldBesideOwnOptions<S>(option)) {
     // The option's own field takes the extra keys of the two, joined as `getRenderedOptionSchema()` renders it, so they
     // render once, in the field that knows which of its own options is selected

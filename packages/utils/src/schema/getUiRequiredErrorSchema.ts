@@ -1,3 +1,4 @@
+import canExpand from '../canExpand.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -45,7 +46,7 @@ import uiBooleanOption from '../uiBooleanOption.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
 import { emptySchema } from './graph/mergePlan.ts';
-import retrieveSchema, { expandRefCycle } from './retrieveSchema.ts';
+import retrieveSchema, { expandRefCycle, withOptionExtraKeys } from './retrieveSchema.ts';
 
 /** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node, and, for an object node, the option
  * itself. An object node's branch merges the whole node into the option, since the walk visits the properties the
@@ -188,22 +189,30 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
   // fields rather than an Add button
   const branchRequired = uiBooleanOption(getUiOptions<T, S, F>(branchUiSchema).required) ?? effectiveRequired;
-  if (
-    path.length > 0 &&
-    !isFormDataAvailable(formData) &&
+  const isOptionControl = () =>
     !branchRequired &&
     isOptionalDataControlsType<T, S, F>(
       option ? () => getRenderedOptionSchema<S>(resolvedSchema, option) : retrieved,
       branchUiSchema,
       globalUiOptions,
       rootSchema,
-    ) &&
+    );
+  if (
+    path.length > 0 &&
+    !isFormDataAvailable(formData) &&
     // An object node also renders its own ObjectField beside the option (see `getFieldComponent()` in `SchemaField`),
-    // showing the properties it shares with the option unless the node is a control that hides them as well
-    (!xxxOf ||
-      !rendersOwnFieldBesideOption<S>(resolvedSchema) ||
-      (!effectiveRequired &&
-        isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions, rootSchema)))
+    // showing the properties it shares with the option unless the node is a control that hides them as well, and only
+    // such a node's branch carries the option
+    (option !== undefined
+      ? !effectiveRequired &&
+        isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions, rootSchema) &&
+        // One with properties of its own, or room for more, draws the controls beside the options, and the selected
+        // option renders nothing until Add, whatever its own uiSchema says, as `SchemaField`'s `isPureUnion` decides,
+        // reading the room for more joined with the option shown
+        (Object.keys(resolvedSchema.properties ?? {}).length > 0 ||
+          canExpand<T, S, F>(schemaContext, withOptionExtraKeys<S>(resolvedSchema, option), uiSchema) ||
+          isOptionControl())
+      : isOptionControl())
   ) {
     return;
   }

@@ -319,6 +319,30 @@ describe('NullField', () => {
       expect(getFormData()).toEqual({ choice: { opt: { n: null } } });
       expect(node.querySelector('#root_choice_opt__optionalRemove')).toBeInTheDocument();
     });
+
+    it('stays in the data an option switch writes where the new option makes it ui:required, which renders no controls', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: {
+          type: 'object',
+          required: ['choice'],
+          properties: {
+            choice: {
+              oneOf: [
+                { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+                { ...holder, title: 'B' },
+              ],
+            },
+          },
+        },
+        uiSchema: { ...uiSchema, choice: { oneOf: [{}, { opt: { 'ui:required': true } }] } },
+        initialFormData: { choice: { a: 'x' } },
+      });
+
+      await user.selectOptions(elementOf(node, '#root_choice__oneof_select'), 'B');
+
+      expect(getFormData()).toEqual({ choice: { opt: { n: null } } });
+      expect(node.querySelector('#root_choice_opt__optionalAdd')).not.toBeInTheDocument();
+    });
   });
 
   describe('a value it is handed as undefined', () => {
