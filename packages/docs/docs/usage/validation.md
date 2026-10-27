@@ -68,7 +68,7 @@ const options = {
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.cjs', options);
 ```
 
-The functions compiled are the ones [`getValidationSchemas()`](../api-reference/utility-functions.md#getvalidationschemassextendsstrictrjsfschemarjsfschema) lists for the schema: the root schema itself, and, for each `if`, `anyOf`/`oneOf` option, discriminator property and dependency condition the form checks, a `$ref` to each place it sits in the root, exported as the function compiled for that part of the root.
+The functions compiled are the ones [`getValidationSchemas()`](../api-reference/utility-functions.md#getvalidationschemass-extends-strictrjsfschema--rjsfschema) lists for the schema: the root schema itself, and, for each `if`, `anyOf`/`oneOf` option, discriminator property and dependency condition the form checks, a `$ref` to each place it sits in the root, exported as the function compiled for that part of the root.
 An option whose `required` scoring has to drop is compiled as a copy without it.
 The list depends on the content of the root schema alone, never on form data, on how `allOf` is merged or on which objects the schema shares.
 A subschema held in several places, as a schema module that reuses one object holds it, is compiled at each place, so the code compiled from such a module serves an equal copy of the schema, such as its JSON, and the other way round.
