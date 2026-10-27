@@ -2290,6 +2290,16 @@ export interface ValidationData<T> {
   errorSchema: ErrorSchema<T>;
 }
 
+/** What `ValidatorType.rawValidation()` returns: the engine's own errors, as `E` from a validator that names its
+ * engine's error type, and the error thrown when validation couldn't run
+ */
+export interface RawValidationResult<E = unknown> {
+  /** The errors the engine reported, if any */
+  errors?: E[];
+  /** The error thrown when the engine couldn't run validation, such as on an invalid schema */
+  validationError?: Error;
+}
+
 /** The interface that describes the validation functions that are provided by a Validator implementation used by the
  * schema utilities.
  */
@@ -2343,7 +2353,7 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
    * @param schema - The schema against which to validate the form data
    * @param formData - The form data to validate
    */
-  rawValidation(schema: S, formData?: unknown): { errors?: unknown[]; validationError?: Error };
+  rawValidation(schema: S, formData?: unknown): RawValidationResult;
   /** An optional function that can be used to reset validator implementation. Useful for clear schemas in the AJV
    * instance for tests.
    */

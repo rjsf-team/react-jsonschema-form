@@ -1,4 +1,5 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import type { ValidationError } from 'ata-validator';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import createPrecompiledValidator from '../src/createPrecompiledValidator.ts';
@@ -14,6 +15,11 @@ const validateFns = loadModule(compileSchemaValidatorsCode(rootSchema));
 const mockedValidator = vi.mocked(ATAPrecompiledValidator);
 
 describe('createPrecompiledValidator()', () => {
+  it("types the errors of rawValidation() as the engine's", () => {
+    expectTypeOf<ReturnType<ReturnType<typeof createPrecompiledValidator>['rawValidation']>['errors']>().toEqualTypeOf<
+      ValidationError[] | undefined
+    >();
+  });
   describe('passing validatorFns and rootSchema to createPrecompiledValidator', () => {
     let custom: any;
     beforeAll(() => {
