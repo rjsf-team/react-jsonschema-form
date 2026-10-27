@@ -19,6 +19,7 @@ import {
 import { Col, Row, Form, Input } from 'antd';
 
 import useControlState from '../../controlState.ts';
+import type { AntdFormContext } from '../../formContext.ts';
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
@@ -65,7 +66,7 @@ export default function WrapIfAdditionalTemplate<
     toolbarAlign = 'top',
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
-  } = registry.formContext;
+  }: AntdFormContext = registry.formContext;
   const { templates, translateString } = registry;
   const control = useControlState<T, S, F>({ disabled, readonly, registry });
   // Button templates are not overridden in the uiSchema

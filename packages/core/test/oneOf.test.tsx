@@ -1139,9 +1139,9 @@ describe('oneOf', () => {
         },
       },
     };
-    const formContext: GenericObjectType = { root: 'root-id', root_userId: 'userId-id' };
+    const formContext: Record<string, string> = { root: 'root-id', root_userId: 'userId-id' };
 
-    function CustomSchemaField(props: FieldProps) {
+    function CustomSchemaField(props: FieldProps<unknown, RJSFSchema, Record<string, string>>) {
       const {
         registry: { formContext },
         id,

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
+import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   getTemplates,
   getUiOptions,
@@ -12,6 +12,7 @@ import {
 } from '@rjsf/utils';
 import { Form } from 'antd';
 
+import type { AntdFormContext } from '../../formContext.ts';
 import stripTrailingColon from '../stripTrailingColon.ts';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -51,7 +52,7 @@ export default function FieldTemplate<
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
     descriptionLocation = 'below',
-  } = formContext as GenericObjectType;
+  }: AntdFormContext = formContext;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
 

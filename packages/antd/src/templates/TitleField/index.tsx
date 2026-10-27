@@ -3,6 +3,7 @@ import type { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } f
 import { Col, Divider, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
 
+import type { AntdFormContext } from '../../formContext.ts';
 import stripTrailingColon from '../stripTrailingColon.ts';
 
 /** The `TitleField` is the template to use to render the title of a field
@@ -15,7 +16,7 @@ export default function TitleField<
   F extends FormContextType = FormContextType,
 >({ id, required, registry, title, optionalDataControl }: TitleFieldProps<T, S, F>) {
   const { formContext } = registry;
-  const { colon = true } = formContext;
+  const { colon = true }: AntdFormContext = formContext;
 
   let labelChildren = title;
   if (colon && typeof title === 'string' && title.trim() !== '') {

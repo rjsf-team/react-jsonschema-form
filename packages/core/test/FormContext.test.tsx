@@ -39,7 +39,9 @@ describe('FormContext', () => {
   });
 
   it('should be passed to TemplateField', () => {
-    function CustomTemplateField({ registry: { formContext } }: FieldTemplateProps) {
+    function CustomTemplateField({
+      registry: { formContext },
+    }: FieldTemplateProps<unknown, RJSFSchema, { foo?: string }>) {
       return <div id={formContext.foo} />;
     }
 
@@ -60,7 +62,9 @@ describe('FormContext', () => {
   });
 
   it('should be passed to ArrayTemplateField', () => {
-    function CustomArrayTemplateField({ registry: { formContext } }: ArrayFieldTemplateProps) {
+    function CustomArrayTemplateField({
+      registry: { formContext },
+    }: ArrayFieldTemplateProps<unknown, RJSFSchema, { foo?: string }>) {
       return <div id={formContext.foo} />;
     }
 
