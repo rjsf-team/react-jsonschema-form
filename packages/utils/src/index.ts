@@ -383,6 +383,7 @@ export {
   guessType,
   hasAdditionalKeyLabel,
   hasByPath,
+  hasOwnContentBesideOptions,
   hasSchemaMarker,
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   hasVisibleErrors,
