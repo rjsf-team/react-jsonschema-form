@@ -111,4 +111,4 @@ For those, keep `rjsf.css` above Tailwind's preflight and beneath your utilities
 ```
 
 State is styled the same way, with a variant on the attribute core sets, such as `fieldLabel: 'block mb-1 data-invalid:text-red-600'` or `checkboxWrapper: 'my-1 data-disabled:opacity-50'`.
-`@rjsf/daisyui` is a fuller example of the keyed rules: it declares a `classMap` and keeps its own templates where its markup differs from core's. `@rjsf/shadcn` is a fuller Tailwind example too, which renders its own templates rather than core's.
+`@rjsf/daisyui` and `@rjsf/shadcn` are fuller examples of the keyed rules: each declares a `classMap` and keeps its own templates where its markup differs from core's.
