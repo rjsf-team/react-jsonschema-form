@@ -112,12 +112,18 @@
   /* Core's `FieldTemplate` lays its parts out on the item's rows, one each, so the toolbox lines up with the control
      however far a wrapping label or description pushes it down. Empty rows take no space, as the gap between them is
      left to the parts' own margins. A description is found by its class or, drawn by a `DescriptionFieldTemplate` of
-     your own, by the id core gives it */
+     your own, by the id core gives it, and the parts only from the field's first child, as one drawn below the control
+     adds no row above it */
   :where(
     .rjsf
       .rjsf-array-item:has(> .rjsf-array-item-toolbox):has(
         > .rjsf-field
-          > :is(.rjsf-field-label, .rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+          > :first-child:is(
+            .rjsf-field-label,
+            .rjsf-field-description,
+            [id$='__description'],
+            [id$='__selectedOptionDescription']
+          )
       )
   ) {
     grid-template-rows: repeat(8, auto);
@@ -128,7 +134,12 @@
     .rjsf
       .rjsf-array-item:has(> .rjsf-array-item-toolbox):has(
         > .rjsf-field
-          > :is(.rjsf-field-label, .rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+          > :first-child:is(
+            .rjsf-field-label,
+            .rjsf-field-description,
+            [id$='__description'],
+            [id$='__selectedOptionDescription']
+          )
       )
       > .rjsf-field
   ) {
@@ -136,13 +147,20 @@
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: subgrid;
     grid-row: 1 / -1;
+    /* The control shares the toolbox's row, so it would otherwise stretch to a taller toolbox */
+    align-items: start;
   }
 
   :where(
     .rjsf
       .rjsf-array-item:has(
         > .rjsf-field
-          > :is(.rjsf-field-label, .rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+          > :first-child:is(
+            .rjsf-field-label,
+            .rjsf-field-description,
+            [id$='__description'],
+            [id$='__selectedOptionDescription']
+          )
       )
   ) {
     --rjsf-control-row: 2;
@@ -153,7 +171,12 @@
     .rjsf
       .rjsf-array-item:has(
         > .rjsf-field
-          > :is(.rjsf-field-label, .rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+          > :first-child:is(
+            .rjsf-field-label,
+            .rjsf-field-description,
+            [id$='__description'],
+            [id$='__selectedOptionDescription']
+          )
           + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
       )
   ) {
@@ -165,7 +188,7 @@
     .rjsf
       .rjsf-array-item:has(
         > .rjsf-field
-          > .rjsf-field-label
+          > .rjsf-field-label:first-child
           + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
           + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
       )
@@ -188,19 +211,21 @@
      control, has the toolbox pushed down past the label it marks the item `data-display-label` for: one line of the
      label's font, which this `<div>` inherits too, and the label's margin */
   :where(
-    .rjsf .rjsf-array-item[data-display-label]:not(:has(> .rjsf-field > .rjsf-field-label)) > .rjsf-array-item-toolbox
+    .rjsf
+      .rjsf-array-item[data-display-label]:not(:has(> .rjsf-field > .rjsf-field-label:first-child))
+      > .rjsf-array-item-toolbox
   ) {
     margin-block-start: calc(1lh + 0.25rem);
   }
 
-  /* A description between them adds a line, which this file gives no margin; `rjsf-theme.css` replaces this for its
+  /* A description between them adds a line, which this file gives no margin; `rjsf-theme.css` sets the offset for its
      own description spacing */
   :where(
     .rjsf
       .rjsf-array-item[data-display-label][data-has-description]:not(
         :has(
           > .rjsf-field
-            > :is(
+            > :first-child:is(
               .rjsf-field-label,
               .rjsf-field-description,
               [id$='__description'],
@@ -210,7 +235,7 @@
       )
       > .rjsf-array-item-toolbox
   ) {
-    margin-block-start: calc(2lh + 0.25rem);
+    margin-block-start: var(--rjsf-toolbox-description-offset, calc(2lh + 0.25rem));
   }
 
   /* The key and, where it holds core's `FieldTemplate` parts, the value lay their parts out on the row's rows, so the
@@ -231,7 +256,7 @@
     .rjsf
       .rjsf-additional-property:has(
         > .rjsf-additional-property-value
-          > :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+          > :first-child:is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
       )
   ) {
     --rjsf-control-row: 2;
@@ -241,7 +266,12 @@
     .rjsf
       .rjsf-additional-property:has(
         > .rjsf-additional-property-value
-          > :is(.rjsf-field-label, .rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+          > :first-child:is(
+            .rjsf-field-label,
+            .rjsf-field-description,
+            [id$='__description'],
+            [id$='__selectedOptionDescription']
+          )
           + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
       )
   ) {
@@ -252,7 +282,7 @@
     .rjsf
       .rjsf-additional-property:has(
         > .rjsf-additional-property-value
-          > .rjsf-field-label
+          > .rjsf-field-label:first-child
           + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
           + :is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
       )
@@ -268,12 +298,25 @@
     .rjsf .rjsf-additional-property-key,
     .rjsf
       .rjsf-additional-property-value:has(
-        > :is(.rjsf-field-label, .rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])
+        > :first-child:is(
+          .rjsf-field-label,
+          .rjsf-field-description,
+          [id$='__description'],
+          [id$='__selectedOptionDescription']
+        )
       )
   ) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: subgrid;
+    /* The key's input shares the control's row, so it would otherwise stretch to a taller control, such as a textarea */
+    align-items: start;
+  }
+
+  /* A grid item stretches to its column, so a button a widget draws beside its control, such as the Clear button,
+     keeps its own width */
+  :where(.rjsf .rjsf-array-item > .rjsf-field > button, .rjsf .rjsf-additional-property-value > button) {
+    justify-self: start;
   }
 
   :where(

@@ -12,12 +12,14 @@ import {
 /** The row of the key, the value and the remove button: `--rjsf-control-row` is the value's control row, past the key's
  * label. The value, the second child, spans every row by its position, so a value of any `FieldTemplate` keeps its
  * column; it is laid out on the row's rows where it is this theme's `FieldTemplate` `<div>` drawing the value's label,
- * and otherwise the last row, `1fr`, takes whatever height it needs past the key's label and input
+ * and otherwise the last row, `1fr`, takes whatever height it needs past the key's label and input. A button drawn beside
+ * the value's control, such as the Clear button, keeps its own width rather than stretching to the column
  */
 const ROW_CLASSES =
   'grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] ' +
   'has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full ' +
-  'has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid';
+  'has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid ' +
+  'has-[>.field-template>label]:[&>.field-template>button]:justify-self-start';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.

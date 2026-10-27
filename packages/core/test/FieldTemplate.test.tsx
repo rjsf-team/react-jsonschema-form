@@ -197,4 +197,42 @@ describe('FieldTemplate', () => {
       expect(container).toBeEmptyDOMElement();
     });
   });
+
+  // jsdom can't measure layout, so these tie `rjsf.css`'s row selectors to core's markup: an element between the row
+  // and the field's parts, or a part out of order, would turn the rows off with no snapshot flagging it
+  describe('the parts rjsf.css counts above the control', () => {
+    const description = ":is(.rjsf-field-description, [id$='__description'], [id$='__selectedOptionDescription'])";
+    const oneOf = [
+      { const: 'a', title: 'A', description: 'About a' },
+      { const: 'b', title: 'B', description: 'About b' },
+    ];
+
+    it("puts an array item's label, description and selected option's description first in its field", () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: { type: 'string', title: 'Item', description: 'About the item', oneOf } },
+        initialFormData: ['a'],
+      });
+
+      expect(
+        node
+          .querySelector('.rjsf-array-item')
+          ?.matches(`:has(> .rjsf-field > .rjsf-field-label:first-child + ${description} + ${description})`),
+      ).toBe(true);
+    });
+
+    it("puts an additional property's value's label and description first, beside the key's label", () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { type: 'string', title: 'Value', description: 'About it' } },
+        initialFormData: { foo: 'x' },
+      });
+
+      expect(
+        node
+          .querySelector('.rjsf-additional-property')
+          ?.matches(
+            `:has(> .rjsf-additional-property-key > .rjsf-field-label):has(> .rjsf-additional-property-value > .rjsf-field-label:first-child + ${description})`,
+          ),
+      ).toBe(true);
+    });
+  });
 });

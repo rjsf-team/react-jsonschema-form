@@ -299,7 +299,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -568,7 +568,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>button]:justify-self-start data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -687,7 +687,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>button]:justify-self-start data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -1315,7 +1315,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>button]:justify-self-start data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -1434,7 +1434,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>button]:justify-self-start data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -1763,7 +1763,7 @@ exports[`object fields > additionalProperties 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -1908,7 +1908,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -2135,7 +2135,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-array"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -2311,7 +2311,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -2463,7 +2463,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -2608,7 +2608,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-object"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -2789,7 +2789,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -3009,7 +3009,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -3333,7 +3333,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -3418,7 +3418,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                 class="wrap-if-additional-template rjsf-field rjsf-field-null rjsf-field-error"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -3756,7 +3756,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -3923,7 +3923,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -4230,7 +4230,7 @@ exports[`object fields > with title and description > show add button and fields
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -4397,7 +4397,7 @@ exports[`object fields > with title and description from both > additionalProper
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -4704,7 +4704,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -5011,7 +5011,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -5156,7 +5156,7 @@ exports[`object fields > with title and description with global label off > addi
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"
@@ -5357,7 +5357,7 @@ exports[`object fields > with title and description with global label off > show
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid"
+                  class="grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2] [&>:nth-child(2)]:row-span-full has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template>button]:justify-self-start"
                 >
                   <div
                     class="rjsf-additional-property-key row-span-full grid grid-rows-subgrid [&>:not(label)]:row-(--rjsf-control-row)"

@@ -21,16 +21,16 @@ import { cn } from '../lib/utils.ts';
  */
 const ROW_CLASSES =
   String.raw`rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] ` +
-  String.raw`has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:2] ` +
-  String.raw`has-[>.rjsf-additional-property-value>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:3] ` +
-  String.raw`has-[>.rjsf-additional-property-value>.rjsf-field-label+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:4]`;
+  String.raw`has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:2] ` +
+  String.raw`has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:3] ` +
+  String.raw`has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:4]`;
 
 /** The value, laid out on the row's rows where it holds core's `FieldTemplate` parts, spaced by a margin under each
  * rather than a gap, which would space the empty rows too, so its control's row starts where the key's input does
  */
 const VALUE_CLASSES =
   String.raw`rjsf-additional-property-value col-span-6 row-span-full grid gap-2 pr-0.5 ` +
-  String.raw`has-[>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:grid-rows-subgrid has-[>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:gap-y-0 has-[>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2`;
+  String.raw`has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2`;
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
