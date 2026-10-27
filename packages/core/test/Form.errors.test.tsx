@@ -676,7 +676,64 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(screen.getByRole('textbox', { name: 'Inner control' })).toHaveFocus();
       });
 
-      it('leaves focus where an element carrying the id passes it on to', async () => {
+      it('calls focus() once on an input that both carries the id and is named after the field', async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'string', minLength: 5 },
+          initialFormData: 'a',
+          focusOnFirstError: true,
+        });
+        const focus = vi.fn();
+        Object.defineProperty(screen.getByRole('textbox'), 'focus', { configurable: true, value: focus });
+
+        await submitForm(node, user);
+
+        expect(focus).toHaveBeenCalledTimes(1);
+      });
+
+      it('moves on from a named radio that ignores focus() to the next one', async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'string', enum: ['a', 'b'] },
+          initialFormData: 'c',
+          uiSchema: { 'ui:widget': 'radio' },
+          focusOnFirstError: true,
+        });
+        const [first, second] = screen.getAllByRole('radio');
+        Object.defineProperty(first, 'focus', { configurable: true, value: vi.fn() });
+
+        await submitForm(node, user);
+
+        expect(second).toHaveFocus();
+      });
+
+      it('moves on from an input whose id is a part of the field id that ignores focus() to the next one', async () => {
+        const ChoiceWidget = ({ id }: WidgetProps) => (
+          <div>
+            <button type='button' id={partId(id, '0')}>
+              First
+            </button>
+            <button type='button' id={partId(id, '1')}>
+              Second
+            </button>
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: { type: 'number', minimum: 5 },
+          uiSchema: { 'ui:widget': 'ChoiceWidget' },
+          widgets: { ChoiceWidget },
+          initialFormData: 1,
+          focusOnFirstError: true,
+        });
+        Object.defineProperty(screen.getByRole('button', { name: 'First' }), 'focus', {
+          configurable: true,
+          value: vi.fn(),
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('button', { name: 'Second' })).toHaveFocus();
+      });
+
+      describe('with an element carrying the id that passes focus on', () => {
         const DelegatingWidget = ({ id }: WidgetProps) => {
           const target = useRef<HTMLInputElement>(null);
           return (
@@ -695,17 +752,32 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             </div>
           );
         };
-        const { node } = createFormComponent({
-          schema: { type: 'string', minLength: 5 },
+        const schema: RJSFSchema = { type: 'string', minLength: 5 };
+        const formProps = {
+          schema,
           initialFormData: 'a',
           uiSchema: { 'ui:widget': 'DelegatingWidget' },
           widgets: { DelegatingWidget },
           focusOnFirstError: true,
+        };
+
+        it('leaves focus where it passes it on to', async () => {
+          const { node } = createFormComponent(formProps);
+
+          await submitForm(node, user);
+
+          expect(screen.getByRole('textbox', { name: 'Inner control' })).toHaveFocus();
         });
 
-        await submitForm(node, user);
+        it('leaves focus where it passes it on to when focus already sits there', async () => {
+          createFormComponent(formProps);
+          const inner = screen.getByRole('textbox', { name: 'Inner control' });
 
-        expect(screen.getByRole('textbox', { name: 'Inner control' })).toHaveFocus();
+          await user.click(inner);
+          await user.keyboard('{Enter}');
+
+          expect(inner).toHaveFocus();
+        });
       });
 
       it('focuses the field in a DOM with no CSS namespace', async () => {

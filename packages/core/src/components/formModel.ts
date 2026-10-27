@@ -90,12 +90,14 @@ function isFocusable(element: Node | null | undefined, view: Window & typeof glo
 
 /** Focuses `element` where `isFocusable()` allows it, and tells whether focus took. An element that CSS hides, that is
  * `inert` or that sits in a closed `<details>` passes `isFocusable()` yet ignores `focus()`, which no selector can tell,
- * so the active element of its document or shadow root is read back instead. Focus that moved anywhere counts, since
- * an element whose focus handler passes focus on, such as a radio group to its checked radio, took it
+ * so whether it received focus is observed instead. Its own `focus` event counts, since an element whose focus handler
+ * passes focus on, such as a radio group to its checked radio, took it even when focus ends where it already was. The
+ * event is caught in the capture phase, ahead of any handler, because a browser skips `focusin` once a `focus` handler
+ * has moved focus elsewhere
  *
  * @param element - The element to focus
  * @param view - The window of the form
- * @returns - True if `element` holds focus afterwards, or focus moved
+ * @returns - True if `element` received focus
  */
 function takesFocus(element: Node | null | undefined, view: Window & typeof globalThis): boolean {
   if (!isFocusable(element, view)) {
@@ -105,9 +107,14 @@ function takesFocus(element: Node | null | undefined, view: Window & typeof glob
   if (!(root instanceof view.Document || root instanceof view.ShadowRoot)) {
     return false;
   }
-  const before = root.activeElement;
+  let received = false;
+  const onFocus = () => {
+    received = true;
+  };
+  element.addEventListener('focus', onFocus, true);
   element.focus();
-  return root.activeElement === element || root.activeElement !== before;
+  element.removeEventListener('focus', onFocus, true);
+  return received || root.activeElement === element;
 }
 
 /** The first of `elements` that `matches`, stopping there rather than copying the whole list to search it
@@ -370,14 +377,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // control, such as shadcn's, keeps its value in a hidden input named after the field too. A wrapper that isn't
     // focusable and names no focusable form control, such as a slider's root around its thumb or a group of such
     // checkboxes, leads to the focusable element inside it, as `focusForId()` finds it. Each candidate counts only once
-    // focus took, so one that ignores `focus()` hands over to the next. A field whose own control can't take focus,
-    // being disabled or hidden, leaves focus where it is rather than sending it to another field. The search stays
-    // inside the form, which another form on the page rendering the same ids would defeat through `getElementById()`,
-    // and compares ids as strings, so a property name holding a selector's syntax needs no escaping
+    // focus took, so one that ignores `focus()` hands over to the next, and is tried once, though `namedItem()` matches
+    // the element carrying the id too. A field whose own control can't take focus, being disabled or hidden, leaves
+    // focus where it is rather than sending it to another field. The search stays inside the form, which another form
+    // on the page rendering the same ids would defeat through `getElementById()`, and compares ids as strings, so a
+    // property name holding a selector's syntax needs no escaping
     const exact = findElement(formElement.querySelectorAll('[id]'), (element) => element.id === elementId);
     const named = formElement instanceof view.HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
     const namedControls = named instanceof view.RadioNodeList ? Array.from(named) : [named];
-    if (![exact, ...namedControls].some((element) => takesFocus(element, view))) {
+    if (![...new Set([exact, ...namedControls])].some((element) => takesFocus(element, view))) {
       focusForId(formElement, exact, elementId, view);
     }
   };
