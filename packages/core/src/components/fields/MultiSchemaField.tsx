@@ -54,8 +54,12 @@ function withoutFieldText<T, S extends StrictRJSFSchema, F extends FormContextTy
   ) {
     return uiSchema;
   }
-  const { 'ui:title': _title, 'ui:description': _description, ...rest } = uiSchema;
-  return { ...rest, [UI_OPTIONS_KEY]: { ...options, title: undefined, description: undefined } };
+  return {
+    ...uiSchema,
+    'ui:title': undefined,
+    'ui:description': undefined,
+    [UI_OPTIONS_KEY]: { ...options, title: undefined, description: undefined },
+  };
 }
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It shows
