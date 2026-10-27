@@ -69,6 +69,20 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 > NOTE: The `items` property in `uiSchema` can also accept a function for dynamic UI schema generation based on array item data. See [Dynamic UI Schema Examples](../api-reference/dynamic-ui-schema-examples.md) for advanced use cases.
 
+### Disabling specific items
+
+The `items` function can disable an item, or make it read-only, from the item's data or its index.
+Its move, copy and remove buttons are disabled with it:
+
+```tsx
+const uiSchema: UiSchema = {
+  items: (item: { locked?: boolean } | undefined) => (item?.locked ? { 'ui:disabled': true } : {}),
+};
+```
+
+A condition on the item's data follows the item when the list is reordered.
+A condition on the index, `(item, index) => (index === 0 ? { 'ui:disabled': true } : {})`, applies to whichever item is at that position.
+
 ## The `additionalItems` keyword
 
 The `additionalItems` keyword allows the user to add additional items of a given schema. For example:

@@ -4833,6 +4833,55 @@ describe('ArrayField', () => {
       const tagInputs = node.querySelectorAll('.rjsf-field-array .rjsf-field-array input[type="text"]');
       expect(tagInputs.length).toBeGreaterThanOrEqual(3); // 2 tags in first item + 1 tag in second item
     });
+
+    describe("locks an item's buttons with the item (#2504)", () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { locked: { type: 'boolean' }, name: { type: 'string' } } },
+      };
+      const formData = [{ locked: true, name: 'a' }, { name: 'b' }, { name: 'c' }];
+      const itemButtons = (node: Element, index: number) => {
+        const item = node.querySelectorAll('.rjsf-array-item')[index];
+        return Array.from(
+          item.querySelectorAll('.rjsf-array-item-move-down, .rjsf-array-item-copy, .rjsf-array-item-remove'),
+        );
+      };
+
+      it.each<[string, UiSchema]>([
+        ['ui:disabled', { items: (_item: unknown, index: number) => (index === 0 ? { 'ui:disabled': true } : {}) }],
+        ['ui:readonly', { items: (_item: unknown, index: number) => (index === 0 ? { 'ui:readonly': true } : {}) }],
+      ])('disables the move, copy and remove buttons of an item its uiSchema gives %s', (_, uiSchema) => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { ...uiSchema, 'ui:options': { copyable: true } },
+          initialFormData: formData,
+        });
+
+        const locked = itemButtons(node, 0);
+        expect(locked).toHaveLength(3);
+        locked.forEach((button) => expect(button).toBeDisabled());
+        itemButtons(node, 1).forEach((button) => expect(button).toBeEnabled());
+      });
+
+      it("locks an item's buttons once a schema readOnly that if/then sets from its data applies", async () => {
+        const conditional: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { locked: { type: 'boolean', title: 'Locked' }, name: { type: 'string' } },
+            if: { properties: { locked: { const: true } }, required: ['locked'] },
+            then: { readOnly: true },
+          },
+        };
+        const { node } = createFormComponent({ schema: conditional, initialFormData: [{ name: 'a' }, { name: 'b' }] });
+        const remove = () => node.querySelectorAll('.rjsf-array-item')[0].querySelector('.rjsf-array-item-remove');
+        expect(remove()).toBeEnabled();
+
+        await user.click(screen.getAllByLabelText('Locked')[0]);
+
+        expect(remove()).toBeDisabled();
+      });
+    });
   });
 
   describe('Array of object items with optional number field', () => {
