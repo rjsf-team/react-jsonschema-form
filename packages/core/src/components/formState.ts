@@ -24,7 +24,6 @@ import {
   deepEqualsUndefinedAsMissing,
   errorSchemaChild,
   getChangedFields,
-  getSchemaType,
   getUiOptions,
   hashObject,
   isObject,
@@ -41,7 +40,6 @@ import {
   fieldPathFromList,
   ERRORS_KEY,
   SCHEMA_KEY,
-  getXxxOfKey,
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
@@ -1740,6 +1738,49 @@ function heldPathOf<T>(change: FieldChange<T>): FieldPathList | undefined {
   return change.isFieldEdit ? (change.editedPath ?? fieldPathToList(change.fieldPath)) : undefined;
 }
 
+/** `derived` with each field `written` holds as `undefined` kept so, unless the derivation filled it with `null`, the one
+ * value a `null` field holds. A field the user cleared, in this change or an earlier one, stays cleared whatever defaults
+ * the derivation merged in (#5125), such as under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'`. Only
+ * the containers whose references differ are walked, and an array index by index, as `written` holds it in the order
+ * the change left it
+ *
+ * @param derived - The data the change derived
+ * @param written - The data the change wrote, before the derivation
+ * @returns - `derived`, sharing every subtree the walk cleared nothing in
+ */
+function keepClears<V>(derived: V, written: unknown): V;
+function keepClears(derived: unknown, written: unknown): unknown {
+  if (derived === written) {
+    return derived;
+  }
+  if (Array.isArray(derived) && Array.isArray(written)) {
+    const items: readonly unknown[] = derived;
+    const writtenItems: readonly unknown[] = written;
+    let kept: unknown[] | undefined;
+    items.forEach((item, index) => {
+      const next = keepClears(item, writtenItems[index]);
+      if (next !== item) {
+        kept ??= [...items];
+        kept[index] = next;
+      }
+    });
+    return kept ?? items;
+  }
+  if (isPlainObject(derived) && isPlainObject(written)) {
+    let kept: GenericObjectType | undefined;
+    for (const [key, value] of Object.entries(derived)) {
+      const wasCleared = Object.hasOwn(written, key) && written[key] === undefined && value !== null;
+      const next = wasCleared ? undefined : keepClears(value, written[key]);
+      if (next !== value) {
+        kept ??= { ...derived };
+        setOwn(kept, key, next);
+      }
+    }
+    return kept ?? derived;
+  }
+  return derived;
+}
+
 /** Applies the data of one `change` to `current`, returning the next state with `current`'s errors. The `newValue` is
  * set at the change's path in the data, which is then run through `deriveFormData()` for any missing defaults and,
  * when the resolved schema changed, sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered
@@ -1780,44 +1821,15 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
   }
 
   if (isObject(formData) || Array.isArray(formData)) {
-    // Tracks if the user cleared a plain (non-oneOf/anyOf) leaf field.
-    // The key is removed twice: once before deriveFormData so the data it derives from
-    // reflects an empty field for conditional schema resolution, and once after so
-    // the user's clear overrides any schema default deriveFormData re-applied (#5125)
-    // and AJV never receives { key: undefined } for type:"string" fields (#4518).
-    let plainLeafWasCleared = false;
-
     if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
       // For additional properties, this key was explicitly removed, so unset it
       unsetByPath(formData, path);
     } else if (!isRootPath) {
-      // Set the new value at its path in the form data.
-      let valueForPath: T | null | undefined = newValue;
-
-      if (newValue === undefined) {
-        const lastSegment = path[path.length - 1];
-        if (typeof lastSegment === 'number') {
-          // Array items: match ArrayField `handleChange` — AJV needs `null`, not undefined.
-          valueForPath = null;
-        } else {
-          const { field: leaf } = current.schemaUtils.findFieldInSchema(current.schema, path, oldFormData);
-          const isOneOfOrAnyOfLeaf = leaf !== undefined && getXxxOfKey<S>(leaf) !== undefined;
-          // oneOf/anyOf and unresolved leaves keep `undefined` so mergeDefaults doesn't
-          // re-apply a branch default when the user clears the widget.
-          // Plain resolved leaves use plainLeafWasCleared instead (see below). A `null` field has nothing to clear:
-          // `null` is the one value it holds, which the defaults fill back in
-          if (!isOneOfOrAnyOfLeaf && leaf !== undefined && getSchemaType(leaf) !== 'null') {
-            plainLeafWasCleared = true;
-          }
-        }
-      }
-
-      if (plainLeafWasCleared) {
-        setByPath(formData, path, undefined);
-      } else {
-        setByPath(formData, path, valueForPath);
-      }
+      // A cleared array item is written as `null`, as ArrayField's `handleChange` writes it, since AJV needs `null`
+      const isArrayItem = typeof path[path.length - 1] === 'number';
+      setByPath(formData, path, newValue === undefined && isArrayItem ? null : newValue);
     }
+    const written = formData;
     // Only the data and its context are derived here; the errors are reconciled below. A root write is sanitized only
     // where it stands for an edit, as the data a `transformChange` writes over one does
     const editedPath = change.editedPath ?? (isRootPath ? undefined : path);
@@ -1833,16 +1845,12 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     );
     formData = derived.formData;
     context = derived.context;
-
-    // Re-set to undefined after merging defaults so the user's clear is preserved in
-    // state (#5125 regression: without this, clearing a second field re-applies the
-    // default to previously-cleared fields). The undefined key is stripped from the
-    // formData copy passed to AJV via JSON.parse(JSON.stringify(...)) so the validator never
-    // sees { [key]: undefined } for type:"string" or patternProperties fields (#4518).
-    if (plainLeafWasCleared && formData) {
-      // `replaceEqualDeep()` may have handed back subtrees of the committed data, and `setByPath()` writes through
-      // every container along the path, so the clear lands on copies of just those containers
-      formData = setByPath(copyAlongPath(formData, path), path, undefined);
+    // A field's own write keeps its clears. Data written from outside, as `transformChange` and `setFieldValue('', data)`
+    // write it, is left to its defaults, as the `transformChange` docs say. The `undefined` a clear leaves is stripped
+    // from the copy the validator gets, so AJV never sees `{ [key]: undefined }` for a `string` field (#4518)
+    const isFieldsOwnWrite = !isRootPath || (change.isFieldEdit === true && change.editedPath === undefined);
+    if (isFieldsOwnWrite) {
+      formData = keepClears(formData, written);
     }
     const { clearedPath } = change;
     if (
