@@ -99,14 +99,14 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   });
 
   it("does not pass ObjectFieldTemplate's grid options on from the global options", () => {
-    const uiSchema0: MantineUiSchema = {
+    const uiSchema: MantineUiSchema = {
       'ui:globalOptions': { gridCols: 2, gridSpacing: 'md', gridVerticalSpacing: 'lg' },
       agree: { 'ui:widget': 'select' },
     };
     const { container } = render(
       <Form
         schema={{ type: 'object', properties: { agree: { type: 'boolean', title: 'Agree' } } }}
-        uiSchema={uiSchema0}
+        uiSchema={uiSchema}
         validator={validator}
       />,
     );
@@ -118,7 +118,7 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   });
 
   it('does not pass on an extension key the form declares, which is meant for its own components', () => {
-    const uiSchema1: MantineUiSchema<{ rowDensity?: number }> = {
+    const uiSchema: MantineUiSchema<{ rowDensity?: number }> = {
       'ui:globalOptions': { rowDensity: 2 },
       agree: { 'ui:widget': 'select' },
     };
@@ -128,7 +128,7 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
           type: 'object',
           properties: { name: { type: 'string' }, agree: { type: 'boolean', title: 'Agree' } },
         }}
-        uiSchema={uiSchema1}
+        uiSchema={uiSchema}
         globalUiOptionsKeys={['rowDensity']}
         validator={validator}
       />,
@@ -140,14 +140,14 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   });
 
   it("passes on a field's own Mantine prop that a declared extension key shares its name with", () => {
-    const uiSchema2: MantineUiSchema<{ variant?: string }> = {
+    const uiSchema: MantineUiSchema<{ variant?: string }> = {
       'ui:globalOptions': { variant: 'compact' },
       name: { 'ui:options': { variant: 'filled' } },
     };
     render(
       <Form
         schema={{ type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } }}
-        uiSchema={uiSchema2}
+        uiSchema={uiSchema}
         globalUiOptionsKeys={['variant']}
         validator={validator}
       />,
@@ -159,7 +159,7 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   });
 
   it("passes an anyOf field's own Mantine prop on to its option selector beside a declared global of the same name", () => {
-    const uiSchema3: MantineUiSchema<{ variant?: string }> = {
+    const uiSchema: MantineUiSchema<{ variant?: string }> = {
       'ui:globalOptions': { variant: 'compact' },
       'ui:options': { variant: 'filled' },
     };
@@ -171,7 +171,7 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
             { title: 'Second', type: 'number' },
           ],
         }}
-        uiSchema={uiSchema3}
+        uiSchema={uiSchema}
         globalUiOptionsKeys={['variant']}
         validator={validator}
       />,

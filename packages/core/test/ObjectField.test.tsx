@@ -1779,7 +1779,7 @@ describe('ObjectField', () => {
 
     it('should keep the value the form mounted with when a property is renamed onto a defaulted schema', async () => {
       // The property was never added here, so there is no seed of the form's to replace: its `0` merely equals what
-      // the schema describing its old name would seed, `0`, `false`, `{}` or defaulted value does
+      // the schema describing its old name would seed, as any `0`, `false`, `{}` or defaulted value does
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'object',
@@ -2531,7 +2531,7 @@ describe('ObjectField', () => {
 
     it('should seed a key unevaluatedProperties describes with the default of the field its widget renders', async () => {
       // `unevaluatedProperties` describes the keys the other keywords leave over, so a key it describes is stubbed with
-      // its `type` list and rendered by the field the widget picks, the same other extra key
+      // its `type` list and rendered by the field the widget picks, the same as any other extra key
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'object',
@@ -4422,7 +4422,7 @@ describe('ObjectField', () => {
 
     it('should seed a null when additionalProperties forbids the only name left to add under', async () => {
       // No free name matches a pattern, so the new property has to go under one `additionalProperties: false` forbids,
-      // which `retrieveSchema()` can only stub as `{ type: 'null' }`: unknown other seed would be a value that field
+      // which `retrieveSchema()` can only stub as `{ type: 'null' }`: any other seed would be a value that field
       // cannot show and nothing in the form could edit away
       const { node, onChange } = createFormComponent({
         schema: {

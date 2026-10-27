@@ -31,7 +31,7 @@ themeTests({ generateTemplates, generateTheme, generateWidgets });
 describe('mantine AnyOfField', () => {
   // This theme declares `description: 'self'` for its option selector, which an optional field with no data doesn't
   // render, so the field's description has to be handed down to the option instead
-  test.each([
+  test.each<[string, RJSFSchema[], 'array' | 'object']>([
     [
       'arrays',
       [
@@ -48,20 +48,17 @@ describe('mantine AnyOfField', () => {
       ],
       'object',
     ],
-  ] as [string, RJSFSchema[], 'array' | 'object'][])(
-    'draws the description of an optional anyOf of %s once while it has no data',
-    (_, anyOf, type) => {
-      render(
-        <WrappedForm
-          schema={{ type: 'object', properties: { tags: { title: 'Tags', description: 'Pick a pet', anyOf } } }}
-          uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: [type] } }}
-          validator={validator}
-        />,
-      );
+  ])('draws the description of an optional anyOf of %s once while it has no data', (_, anyOf, type) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { tags: { title: 'Tags', description: 'Pick a pet', anyOf } } }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: [type] } }}
+        validator={validator}
+      />,
+    );
 
-      expect(screen.getAllByText('Pick a pet')).toHaveLength(1);
-    },
-  );
+    expect(screen.getAllByText('Pick a pet')).toHaveLength(1);
+  });
 });
 
 describe('mantine FieldTemplate', () => {
