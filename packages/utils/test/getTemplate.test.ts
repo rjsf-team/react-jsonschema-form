@@ -356,9 +356,9 @@ describe('a custom entry in TemplatesType', () => {
     ClassTemplate,
     FunctionTemplate,
     MemoTemplate: memo(FunctionTemplate),
-    ForwardRefTemplate: forwardRef<HTMLSpanElement, CustomProps>((props, ref) => {
-      return createElement('span', { ref }, props.label);
-    }),
+    ForwardRefTemplate: forwardRef<HTMLSpanElement, CustomProps>((props, ref) =>
+      createElement('span', { ref }, props.label),
+    ),
     LazyTemplate: lazy(async () => ({ default: FunctionTemplate })),
     CustomGroup: { ClassTemplate, FunctionTemplate },
   };
