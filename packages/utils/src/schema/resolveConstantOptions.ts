@@ -34,7 +34,7 @@ function constantOptions<S extends StrictRJSFSchema>(schema: S, reader: () => Op
   const resolved = xxxOf.options.map((option, index) =>
     isSchemaObject<S>(option) ? resolve(option, xxxOf.key, index) : option,
   );
-  const result: S = isConstantOptionList<S>(resolved, true) ? { ...schema, [xxxOf.key]: resolved } : schema;
+  const result: S = isConstantOptionList<S>(resolved) ? { ...schema, [xxxOf.key]: resolved } : schema;
   resolvedSelects.set(memoKeys, result);
   return result;
 }

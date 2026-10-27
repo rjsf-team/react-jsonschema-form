@@ -1304,7 +1304,7 @@ function chooseOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const isWholeValue = isWholeValueSelect<S>(select);
   const constants = getXxxOfOptions<S>(select)?.options;
   const wholeOptions =
-    isWholeValue && constants !== undefined && isConstantOptionList<S>(constants, true) ? constants : undefined;
+    isWholeValue && constants !== undefined && isConstantOptionList<S>(constants) ? constants : undefined;
   const picksWholeOption = wholeOptions !== undefined;
   // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips,
   // unless it is empty, which counts as no option list here as it does for the keyword read

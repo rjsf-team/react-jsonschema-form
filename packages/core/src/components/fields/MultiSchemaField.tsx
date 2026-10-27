@@ -25,7 +25,7 @@ import {
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
-import { retrievedOptionsOf } from '../uiState.ts';
+import { retrievedOptionListOf } from '../uiState.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
@@ -94,7 +94,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const { schemaUtils } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
   const options = useMemo(
-    () => givenOptions ?? retrievedOptionsOf<T, S, F>(schemaUtils, schema, formData) ?? [],
+    () => givenOptions ?? retrievedOptionListOf<T, S, F>(schemaUtils, schema, formData) ?? [],
     [givenOptions, schemaUtils, schema, formData],
   );
 

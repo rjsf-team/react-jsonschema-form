@@ -92,7 +92,7 @@ function BooleanField<
   // its values
   const altKey = getXxxOfKey<S>(schema);
   const altSchemas = altKey ? schema[altKey] : undefined;
-  if (altKey && isConstantOptionList<S>(altSchemas, true)) {
+  if (altKey && isConstantOptionList<S>(altSchemas)) {
     // A checkbox `SchemaField` defaulted to over several options, rather than one the uiSchema asked for, is there
     // because nothing labels them, which these names were meant to do. A single option keeps its checkbox however it is
     // labelled, so naming it could never show
@@ -105,7 +105,7 @@ function BooleanField<
         const showsOverEnum = showsOptions && Boolean(schema.enum?.length);
         // Dropping the keyword shows the `enum` only when the other keyword wouldn't take its place with constants
         const nextKey = getXxxOfKey<S>({ ...schema, [altKey]: undefined });
-        const enumBehind = !nextKey || !isConstantOptionList<S>(schema[nextKey], true);
+        const enumBehind = !nextKey || !isConstantOptionList<S>(schema[nextKey]);
         const source = showsOverEnum
           ? `it shows its constant \`${altKey}\` options rather than its \`enum\``
           : `its options come from its constant \`${altKey}\``;

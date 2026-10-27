@@ -2505,6 +2505,27 @@ describe('anyOf', () => {
     expectToHaveBeenCalledWithFormData(onChange, { x: 7 }, 'root_x');
   });
 
+  it.each(['anyOf', 'oneOf'])('lists the constant options of a %s field named through ui:field', (key) => {
+    const fieldName = key === 'anyOf' ? 'AnyOfField' : 'OneOfField';
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        x: {
+          [key]: [
+            { const: 'a', title: 'A' },
+            { const: 'b', title: 'B' },
+          ],
+        },
+      },
+    };
+    createFormComponent({
+      schema,
+      uiSchema: { x: { 'ui:field': fieldName, 'ui:fieldReplacesAnyOrOneOf': true } },
+    });
+
+    expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual(['A', 'B']);
+  });
+
   it.each([
     ['no anyOf', {}],
     ['an anyOf that is present but undefined', { anyOf: undefined }],
