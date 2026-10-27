@@ -33,7 +33,7 @@ describe('getRenderedOptionSchema()', () => {
       });
     });
     test('keeps the options, the annotations, the default and the schema document keywords on the parent', () => {
-      const parent: RJSFSchema & { $vocabulary?: Record<string, boolean> } = {
+      const parent: RJSFSchema = {
         $id: 'parent',
         $anchor: 'parent',
         $dynamicAnchor: 'node',

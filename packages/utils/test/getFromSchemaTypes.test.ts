@@ -9,7 +9,8 @@ interface Data {
 describe('getFromSchema type', () => {
   it('resolves explicit type arguments with a schema default to the overload that returns the schema', () => {
     const getSchema = (validator: ValidatorType) =>
-      getFromSchema<Data>({ validator }, {}, {}, 'name', {} as StrictRJSFSchema);
+      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the explicit `<T, S>` arity is what this checks
+      getFromSchema<Data, StrictRJSFSchema>({ validator }, {}, {}, 'name', {} as StrictRJSFSchema);
 
     expectTypeOf(getSchema).returns.toEqualTypeOf<StrictRJSFSchema>();
   });

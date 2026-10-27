@@ -67,8 +67,8 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
  * to say about them. Either keyword spelled `undefined`, as a schema built by spreading tends to spell one, reads as
  * absent the way a validator reads it, so neither hides what the other says.
  *
- * The two are read off a schema typed to declare them: `unevaluatedProperties` is a 2019-09 keyword that `JSONSchema7`
- * does not declare, and the subschema either one holds is an `S` the way every other subschema of an `S` is.
+ * The two are read off a schema typed to hold an `S` in them: the subschema either one holds is an `S` the way every
+ * other subschema of an `S` is.
  *
  * It is exported for `omitExtraData()` rather than for consumers, so that the keys the form renders and seeds through
  * one of these keywords are the keys it keeps.

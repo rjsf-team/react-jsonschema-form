@@ -60,7 +60,8 @@ function takeId(): number {
 }
 
 /** The graph each interned provenance was planned in, which is how a value read back is known to be one */
-const provenanceGraphs = new WeakMap<object, SchemaGraph>();
+// oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
+const provenanceGraphs = new WeakMap<object, SchemaGraph<StrictRJSFSchema>>();
 
 function tableOf(graph: object): InternTable {
   let table = tables.get(graph);

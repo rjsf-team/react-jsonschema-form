@@ -197,7 +197,8 @@ const conditionMemo = new KeyedMemo<boolean>();
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
  * object each time, as an object field's is on every edit, reuse its plan
  */
-const plans = new KeyedMemo<MergePlan>();
+// oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
+const plans = new KeyedMemo<MergePlan<StrictRJSFSchema>>();
 
 /** Returns the keywords of `source` on a schema of the plan's type. A literal or a merge result is not known to be an
  * `S`, so the copy starts as `template`, which is one, with every keyword removed. A `source` that is not an object,
@@ -1079,7 +1080,8 @@ export function ownChains<S extends StrictRJSFSchema = RJSFSchema>(
 
 /** Whether a plan read back from the memo, which holds the plans of every schema type, is one of `graph` */
 function isPlanOf<S extends StrictRJSFSchema>(
-  value: MergePlan | undefined,
+  // oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
+  value: MergePlan<StrictRJSFSchema> | undefined,
   graph: SchemaGraph<S>,
 ): value is MergePlan<S> {
   return value?.graph === graph;

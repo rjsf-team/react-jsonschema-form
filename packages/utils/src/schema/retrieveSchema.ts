@@ -493,7 +493,8 @@ export type OwnRef<S extends StrictRJSFSchema = RJSFSchema> = ResolvedOwnRef<S> 
  * those `resolveMergedOwnRef()` resolved, by graph, `customMergeAllOf`, the node declaring the reference and the schema
  * holding it
  */
-const ownRefs = new KeyedMemo<ResolvedOwnRef>();
+// oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
+const ownRefs = new KeyedMemo<ResolvedOwnRef<StrictRJSFSchema>>();
 
 /** Returns a schema's own `$ref` resolved and marked with it, as a schema an option's `$ref` stands for is scored and
  * validated: the definition overridden by the keywords beside the reference where those only annotate, and otherwise
@@ -845,7 +846,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   };
   const { items, additionalItems } = merged;
   setRows(ITEMS_KEY, Array.isArray(items) ? tuple(items) : item(items, seedsAt(plan, ITEMS_KEY), 'item'));
-  const prefixItems: unknown = Reflect.get(merged, 'prefixItems');
+  const { prefixItems } = merged;
   if (Array.isArray(prefixItems)) {
     Reflect.set(merged, 'prefixItems', tuple(prefixItems));
   }
