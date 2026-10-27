@@ -61,8 +61,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const antdContext: AntdFormContext = formContext;
-  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = antdContext;
+  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 }: AntdFormContext = formContext;
 
   const visibleProperties = properties.filter((e) => !e.hidden);
 

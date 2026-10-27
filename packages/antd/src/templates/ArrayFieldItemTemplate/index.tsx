@@ -25,8 +25,7 @@ export default function ArrayFieldItemTemplate<
   const { children, buttonsProps, displayLabel, hasDescription, hasToolbar, index, registry, uiSchema } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldItemButtonsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  const antdContext: AntdFormContext = registry.formContext;
-  const { rowGutter = 24, toolbarAlign = displayLabel ? 'middle' : 'top' } = antdContext;
+  const { rowGutter = 24, toolbarAlign = displayLabel ? 'middle' : 'top' }: AntdFormContext = registry.formContext;
   const margin = hasDescription ? -8 : 16;
 
   return (

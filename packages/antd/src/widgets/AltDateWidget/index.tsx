@@ -23,8 +23,10 @@ export default function AltDateWidget<
   } = props;
   const { formContext, translateString } = registry;
   const { rowGutter: contextGutter }: AntdFormContext = formContext;
-  // The date parts are spaced by half the gutter, which takes a number
-  const rowGutter = typeof contextGutter === 'number' ? contextGutter : 24;
+  // The date parts are spaced by half the gutter, which takes a number: a `[horizontal, vertical]` pair gives its
+  // horizontal one, and a responsive gutter the default
+  const gutter = Array.isArray(contextGutter) ? contextGutter[0] : contextGutter;
+  const rowGutter = typeof gutter === 'number' ? gutter : 24;
   const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
   // The date parts are a group carrying the field's id, as core's are, named by the template's label, which a `for`
   // can't reach since no part carries that id
