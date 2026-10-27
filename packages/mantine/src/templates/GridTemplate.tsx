@@ -1,3 +1,4 @@
+import type { MantineSpacing, StyleProp } from '@mantine/core';
 import { Container, Grid } from '@mantine/core';
 import type { GridTemplateProps } from '@rjsf/utils';
 
@@ -6,7 +7,16 @@ import type { GridTemplateProps } from '@rjsf/utils';
  *
  * @param props - The GridTemplateProps, including the extra props containing the Mantine grid positioning details
  */
-export default function GridTemplate(props: GridTemplateProps) {
+export default function GridTemplate(
+  props: GridTemplateProps & {
+    /** Whether a row is wrapped in a fluid `Container`, which it is by default */
+    fluid?: boolean;
+    /** The gap between a row's columns, the older name for `gap` */
+    gutter?: StyleProp<MantineSpacing>;
+    /** The gap between a row's columns */
+    gap?: StyleProp<MantineSpacing>;
+  },
+) {
   const { children, column, fluid = true, gutter, gap = gutter, ...rest } = props;
 
   if (column) {

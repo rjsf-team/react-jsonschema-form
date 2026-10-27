@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { GridShim, grid } from '@fluentui/react-migration-v0-v9';
 import type { GridTemplateProps } from '@rjsf/utils';
 
@@ -8,14 +9,24 @@ import type { GridTemplateProps } from '@rjsf/utils';
  *
  * @param props - The GridTemplateProps, including the extra props containing the fluentui-rc grid positioning details
  */
-export default function GridTemplate(props: GridTemplateProps) {
+export default function GridTemplate(
+  props: GridTemplateProps & {
+    /** The column template passed to fluentui's `grid.columns()` */
+    columns?: string;
+    /** The row template passed to fluentui's `grid.rows()` */
+    rows?: string;
+  },
+) {
   const { children, column, columns, rows, style, ...rest } = props;
   if (columns || rows) {
-    // Use the `grid` rows/columns functions to generate the additional grid styling
-    const styles = {
+    // Use the `grid` rows/columns functions to generate the additional grid styling. They're typed as Griffel styles,
+    // which also allow the fallback arrays an inline style can't hold, but build a plain template string
+    const rowTemplate = rows ? grid.rows(rows).gridTemplateRows : undefined;
+    const columnTemplate = columns ? grid.columns(columns).gridTemplateColumns : undefined;
+    const styles: CSSProperties = {
       ...style,
-      ...(rows ? grid.rows(rows) : undefined),
-      ...(columns ? grid.columns(columns) : undefined),
+      ...(typeof rowTemplate === 'string' ? { gridTemplateRows: rowTemplate } : undefined),
+      ...(typeof columnTemplate === 'string' ? { gridTemplateColumns: columnTemplate } : undefined),
     };
     return (
       <GridShim style={styles} {...rest}>
