@@ -10,6 +10,7 @@ import type {
 } from '@mui/material';
 import type {
   FormContextType,
+  GenericObjectType,
   GlobalUISchemaOptionsExtensions,
   ReservedUiOptionName,
   RJSFSchema,
@@ -17,7 +18,6 @@ import type {
   ThemeGlobalUISchemaOptions,
   UIOptionsType,
   UiSchema,
-  GenericObjectType,
 } from '@rjsf/utils';
 import { partId } from '@rjsf/utils';
 
@@ -74,11 +74,11 @@ export function getMuiProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-  P extends GenericObjectType = GenericObjectType,
+  P extends object = GenericObjectType,
 >(options: UIOptionsType<T, S, F>, propsToFilter?: string[], rjsfSlotPropsOnly?: boolean): P {
   const muiProps = (options?.mui as P) || ({} as P);
   if (rjsfSlotPropsOnly) {
-    const { rjsfSlotProps } = muiProps;
+    const rjsfSlotProps: unknown = Reflect.get(muiProps, 'rjsfSlotProps');
     return { rjsfSlotProps } as unknown as P;
   }
   if (propsToFilter) {

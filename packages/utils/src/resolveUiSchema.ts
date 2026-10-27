@@ -15,7 +15,7 @@ function mergeDefinition<T, S extends StrictRJSFSchema, F extends FormContextTyp
   definition: UiSchema<unknown, S, F>,
   localUiSchema: UiSchema<T, S, F>,
 ): UiSchema<T, S, F> {
-  return mergeObjects(definition, localUiSchema) as UiSchema<T, S, F>;
+  return mergeObjects<UiSchema<T, S, F>>(definition, localUiSchema);
 }
 
 /** Returns the name a `ui:definitions` entry for `schema` is keyed by. The marker comes first: a schema resolved from a

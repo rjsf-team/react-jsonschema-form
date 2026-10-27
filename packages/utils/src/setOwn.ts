@@ -1,5 +1,3 @@
-import type { GenericObjectType } from './types.ts';
-
 /** Writes `value` at `key` of a plain object `obj` as an own, enumerable data property. A plain assignment to a
  * JSON-sourced `__proto__` key would reach the prototype setter and re-point `obj`'s prototype instead of adding the
  * key, so that key goes through `Object.defineProperty`. Every other key is assigned, since a definition costs more
@@ -11,7 +9,7 @@ import type { GenericObjectType } from './types.ts';
  * @param key - The key to write, a path segment's array index included
  * @param value - The value to store at `key`
  */
-export default function setOwn(obj: GenericObjectType, key: string | number, value: unknown) {
+export default function setOwn(obj: object, key: string | number, value: unknown) {
   if (key === '__proto__') {
     Object.defineProperty(obj, key, {
       value,
@@ -20,7 +18,6 @@ export default function setOwn(obj: GenericObjectType, key: string | number, val
       configurable: true,
     });
   } else {
-    // oxlint-disable-next-line no-param-reassign
-    obj[key] = value;
+    Reflect.set(obj, key, value);
   }
 }

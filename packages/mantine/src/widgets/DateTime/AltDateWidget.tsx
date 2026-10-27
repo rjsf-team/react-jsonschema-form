@@ -22,7 +22,13 @@ import {
   useAltDateWidgetProps,
 } from '@rjsf/utils';
 
-import { getOwnLabel, useAriaDescribedByProps, useFieldWrapperProps, useShownSuccessId } from '../../utils.tsx';
+import {
+  asInputContainer,
+  getOwnLabel,
+  useAriaDescribedByProps,
+  useFieldWrapperProps,
+  useShownSuccessId,
+} from '../../utils.tsx';
 
 interface AltDatePartProps {
   id: string;
@@ -163,7 +169,9 @@ export default function AltDateWidget<
     () => ({
       success: null,
       ...(isObject(fieldWrapperProps) &&
-        'inputContainer' in fieldWrapperProps && { inputContainer: fieldWrapperProps.inputContainer }),
+        'inputContainer' in fieldWrapperProps && {
+          inputContainer: asInputContainer(fieldWrapperProps.inputContainer),
+        }),
     }),
     [fieldWrapperProps],
   );

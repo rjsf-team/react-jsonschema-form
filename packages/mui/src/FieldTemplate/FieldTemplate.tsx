@@ -25,6 +25,10 @@ export interface FieldTemplateMuiProps extends GenericObjectType {
     /** Props applied to the MUI `Typography` element used for description. */
     fieldTypography?: TypographyProps;
   };
+  /** The `sx` of the MUI `FormControl` wrapping the field */
+  sx?: FormControlProps['sx'];
+  /** The class name of the MUI `FormControl` wrapping the field */
+  className?: string;
 }
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
