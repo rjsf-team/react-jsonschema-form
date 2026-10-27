@@ -8,7 +8,7 @@ import {
   resetLogOnce,
   RJSF_REF_KEY,
 } from '../../../src/index.ts';
-import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
+import type { RJSFMarkedSchema, RJSFSchema, SchemaContext } from '../../../src/index.ts';
 import buildPlan, {
   childSeeds,
   conjunctionOf,
@@ -231,7 +231,7 @@ describe('buildPlan()', () => {
       warn.mockRestore();
     });
     it("re-applies the symbols the merge drops, the field's own before its entries'", () => {
-      const flagged: RJSFSchema = { title: 'flagged', [ADDITIONAL_PROPERTY_FLAG]: true };
+      const flagged: RJSFMarkedSchema = { title: 'flagged', [ADDITIONAL_PROPERTY_FLAG]: true };
       const plan = planOf({
         definitions: { A: { allOf: [flagged, { $ref: D('B') }] }, B: { type: 'string' } },
         $ref: D('A'),

@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '../src/index.ts';
+import type { RJSFMarkedSchema, RJSFSchema } from '../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   EXTRA_KEYS_ELSEWHERE_FLAG,
@@ -33,7 +33,7 @@ describe('getRenderedOptionSchema()', () => {
       });
     });
     test('keeps the options, the annotations, the default and the schema document keywords on the parent', () => {
-      const parent: RJSFSchema = {
+      const parent: RJSFSchema & { $vocabulary?: Record<string, boolean> } = {
         $id: 'parent',
         $anchor: 'parent',
         $dynamicAnchor: 'node',
@@ -359,12 +359,9 @@ describe('getRenderedOptionSchema()', () => {
     test('keeps the symbol markers of an option it reads undefined keys out of, at every level it meets', () => {
       const parent: RJSFSchema = { type: 'array', items: { type: 'string' }, maxItems: 3 };
       const items = { maxLength: 2, [RJSF_REF_KEY]: '#/definitions/item' };
-      const rendered = getRenderedOptionSchema(parent, {
-        items,
-        maxItems: undefined,
-        [RJSF_REF_KEY]: '#/definitions/option',
-      }) as Record<symbol, unknown> & RJSFSchema;
-      expect(rendered[RJSF_REF_KEY]).toBe('#/definitions/option');
+      const option: RJSFMarkedSchema = { items, maxItems: undefined, [RJSF_REF_KEY]: '#/definitions/option' };
+      const rendered = getRenderedOptionSchema(parent, option);
+      expect(Reflect.get(rendered, RJSF_REF_KEY)).toBe('#/definitions/option');
       expect((rendered.items as Record<symbol, unknown>)[RJSF_REF_KEY]).toBe('#/definitions/item');
       expect(rendered.maxItems).toBe(3);
     });

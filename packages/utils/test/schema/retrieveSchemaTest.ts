@@ -1,6 +1,6 @@
 import type { MockInstance } from 'vitest';
 
-import type { RJSFSchema } from '../../src/index.ts';
+import type { RJSFMarkedSchema, RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   EXTRA_KEYS_ELSEWHERE_FLAG,
@@ -144,8 +144,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     const option: RJSFSchema = { $ref: '#/components/schemas/M' };
 
     it('reads a definition no $ref of the root reaches as the form reads it, the keywords beside a chained $ref merged in', () => {
-      const unreached: RJSFSchema = { components };
-      const reached: RJSFSchema = { components, properties: { x: { $ref: '#/components/schemas/M' } } };
+      const unreached: RJSFSchema & { components?: object } = { components };
+      const reached: RJSFSchema & { components?: object } = {
+        components,
+        properties: { x: { $ref: '#/components/schemas/M' } },
+      };
       const expected = {
         type: 'object',
         properties: { b: { type: 'string' }, a: { type: 'string' } },
@@ -721,7 +724,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     it('should `resolve` a bundled draft 2020-12 JSON Schema', () => {
-      const definitions: RJSFSchema = {
+      const definitions: NonNullable<RJSFSchema['$defs']> = {
         'https://jsonschema.dev/schemas/mixins/integer': {
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           $id: 'https://jsonschema.dev/schemas/mixins/integer',
@@ -1289,7 +1292,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             for (let i = 0; i < n; i++) {
               const next: RJSFSchema =
                 i + 1 < n ? { $ref: `#/definitions/d${i + 1}` } : { properties: { leaf: { type: 'string' } } };
-              const props: RJSFSchema = { k: { type: 'string' }, [`v${i}`]: { type: 'string' } };
+              const props: NonNullable<RJSFSchema['properties']> = {
+                k: { type: 'string' },
+                [`v${i}`]: { type: 'string' },
+              };
               if (kind === 'allOf') {
                 definitions[`d${i}`] = { allOf: [{ properties: { [`v${i}`]: { type: 'string' } } }, next] };
               } else if (kind === 'deps') {
@@ -4392,11 +4398,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           rootSchema,
         );
         const collapsed = schemaOf(b.properties?.a);
-        const copy = retrieveSchema(
-          { validator: testValidator },
-          { ...collapsed, [RJSF_REF_CYCLE_KEY]: false },
-          rootSchema,
-        );
+        const uncycled: RJSFMarkedSchema = { ...collapsed, [RJSF_REF_CYCLE_KEY]: false };
+        const copy = retrieveSchema({ validator: testValidator }, uncycled, rootSchema);
         const expanded = retrieveSchema(
           { validator: testValidator },
           expandRefCycle(collapsed, rootSchema),
@@ -4820,7 +4823,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         );
       });
       it('keeps an $id under a keyword that holds no subschemas from moving the base of a $ref beside it (#5529)', () => {
-        const schema: RJSFSchema = {
+        const schema: RJSFSchema & { components?: object } = {
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           $id: 'https://example.com/root.json',
           $defs: { real: { $id: 'n.json', type: 'boolean' }, s: { type: 'string' } },

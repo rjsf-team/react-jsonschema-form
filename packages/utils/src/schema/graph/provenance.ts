@@ -60,7 +60,7 @@ function takeId(): number {
 }
 
 /** The graph each interned provenance was planned in, which is how a value read back is known to be one */
-const provenanceGraphs = new WeakMap<object, SchemaGraph<StrictRJSFSchema>>();
+const provenanceGraphs = new WeakMap<object, SchemaGraph>();
 
 function tableOf(graph: object): InternTable {
   let table = tables.get(graph);

@@ -92,7 +92,7 @@ describe('the data isValid() hands the validation function', () => {
             },
           }),
       });
-    const schema: RJSFSchema = { 'x-seen': true };
+    const schema: RJSFSchema & { 'x-seen'?: boolean } = { 'x-seen': true };
     const formData = { a: 1 };
 
     recording().isValid(schema, formData, schema);
@@ -113,7 +113,7 @@ describe('the data isValid() hands the validation function', () => {
         return true;
       },
     };
-    const schema: RJSFSchema = { type: 'object', 'x-fill': { flag: 'on' }, required: ['flag'] };
+    const schema: RJSFSchema & { 'x-fill'?: object } = { type: 'object', 'x-fill': { flag: 'on' }, required: ['flag'] };
     const extended = customizeValidator({ extenderFn: (ajv) => ajv.addKeyword(fill) });
     const late = customizeValidator();
     const formData = {};
