@@ -1786,13 +1786,15 @@ export interface UISchemaSubmitButtonOptions {
   /** Flag, if `true`, removes the submit button completely from the form */
   norender?: boolean;
   /** Any other props to be passed to the submit button itself */
-  props?: Record<string, unknown> & {
+  props?: (object | Record<string, unknown>) & {
     /** A boolean value stating if the submit button is disabled */
     disabled?: boolean;
     /** The class name for the submit button */
     className?: string;
     /** Called for a click on the submit button, also while the form is pending, when the form cancels the click */
     onClick?: Bivariant<[event: MouseEvent<HTMLElement>]>;
+    /** Called for a click on the submit button in the capture phase */
+    onClickCapture?: Bivariant<[event: MouseEvent<HTMLElement>]>;
   };
 }
 
@@ -1990,7 +1992,7 @@ export type ArrayElement<A> = A extends readonly (infer E)[] ? E : A;
  * exports it for its users to pass as `Checks` (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`), and a consumer of a
  * theme adds their own domain-specific options the same way, unioned into what they pass.
  */
-export interface UiOptionsCheck<When = unknown, Then = Record<string, unknown>> {
+export interface UiOptionsCheck<When = unknown, Then = object> {
   when: When;
   then: Then;
 }
@@ -2006,13 +2008,13 @@ type UnionToMergedKeys<U> = {
 };
 
 /** @internal Whether `Then` declares its own `K` key, as opposed to merely admitting one through a string index
- * signature (as `UiOptionsCheck`'s default `Then = GenericObjectType` does). Without this guard, `Then extends {
- * [K]?: infer W }` matches an index-signature `Then` too - inferring `W` as whatever the index signature's value
- * type is (typically `any`) - so a `UiOptionsCheck` written without a `widget`/`field` key would otherwise silently
- * widen the vocabulary for every field its `when` matches, rather than contributing nothing.
+ * signature (as a `Then` typed `Record<string, unknown>` does). Without this guard, `Then extends { [K]?: infer W }`
+ * matches an index-signature `Then` too - inferring `W` as whatever the index signature's value type is - so a
+ * `UiOptionsCheck` written without a `widget`/`field` key would otherwise silently widen the vocabulary for every
+ * field its `when` matches, rather than contributing nothing.
  *
  * TypeScript has no way to tell "a key admitted only by an index signature" apart from "a key admitted by an index
- * signature that also happens to declare it explicitly", so a `Then` combining the two (e.g. `GenericObjectType &
+ * signature that also happens to declare it explicitly", so a `Then` combining the two (e.g. `Record<string, unknown> &
  * { widget: 'Foo' }`) is treated as declaring neither - a narrow, silent under-inclusion rather than a type error.
  * Not a concern for `Then`s written as an explicit object literal, which is the documented, expected shape.
  */

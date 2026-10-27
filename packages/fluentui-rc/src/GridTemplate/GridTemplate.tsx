@@ -1,6 +1,18 @@
 import type { CSSProperties } from 'react';
-import { GridShim, grid } from '@fluentui/react-migration-v0-v9';
+import { GridShim } from '@fluentui/react-migration-v0-v9';
 import type { GridTemplateProps } from '@rjsf/utils';
+
+/** The CSS template fluentui's `grid.rows()`/`grid.columns()` build: `repeat(n, 1fr)` for a positive number of tracks,
+ * else the template as given. Built here because those functions are typed as Griffel styles, whose fallback arrays an
+ * inline style can't hold
+ *
+ * @param template - The number of equal tracks, or a CSS template
+ * @returns - The CSS template
+ */
+function gridTemplate(template: string | number): string {
+  const tracks = Number(template);
+  return !Number.isNaN(tracks) && tracks > 0 ? `repeat(${template}, 1fr)` : String(template);
+}
 
 /** Renders a `GridTemplate` for fluentui-rc, which is expecting the column sizing information coming in via the
  * `style` by the caller, which are spread directly on the `GridShim` if `columns` or `rows` are provided. Otherwise,
@@ -11,22 +23,18 @@ import type { GridTemplateProps } from '@rjsf/utils';
  */
 export default function GridTemplate(
   props: GridTemplateProps & {
-    /** The column template passed to fluentui's `grid.columns()` */
-    columns?: string;
-    /** The row template passed to fluentui's `grid.rows()` */
-    rows?: string;
+    /** The number of equal columns, or a CSS column template */
+    columns?: string | number;
+    /** The number of equal rows, or a CSS row template */
+    rows?: string | number;
   },
 ) {
   const { children, column, columns, rows, style, ...rest } = props;
   if (columns || rows) {
-    // Use the `grid` rows/columns functions to generate the additional grid styling. They're typed as Griffel styles,
-    // which also allow the fallback arrays an inline style can't hold, but build a plain template string
-    const rowTemplate = rows ? grid.rows(rows).gridTemplateRows : undefined;
-    const columnTemplate = columns ? grid.columns(columns).gridTemplateColumns : undefined;
     const styles: CSSProperties = {
       ...style,
-      ...(typeof rowTemplate === 'string' ? { gridTemplateRows: rowTemplate } : undefined),
-      ...(typeof columnTemplate === 'string' ? { gridTemplateColumns: columnTemplate } : undefined),
+      ...(rows ? { gridTemplateRows: gridTemplate(rows) } : undefined),
+      ...(columns ? { gridTemplateColumns: gridTemplate(columns) } : undefined),
     };
     return (
       <GridShim style={styles} {...rest}>

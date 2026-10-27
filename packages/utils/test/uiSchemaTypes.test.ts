@@ -1,3 +1,5 @@
+import type { ButtonHTMLAttributes } from 'react';
+
 import type {
   GlobalUISchemaOptions,
   StrictUiSchema,
@@ -336,6 +338,31 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
     const ui: Checked = { active: { 'ui:widget': 'ToggleWidget' } };
 
     expect(ui.active?.['ui:widget']).toBe('ToggleWidget');
+  });
+
+  it('accepts a check whose `then` is an interface', () => {
+    interface ToggleThen {
+      widget?: 'ToggleWidget';
+    }
+    type Checked = StrictUiSchema<UiOptionsCheck<boolean, ToggleThen>, { active: boolean }>;
+
+    const ui: Checked = { active: { 'ui:widget': 'ToggleWidget' } };
+    // @ts-expect-error a widget the check doesn't declare
+    const wrong: Checked = { active: { 'ui:widget': 'SliderWidget' } };
+
+    expect(ui.active?.['ui:widget']).toBe('ToggleWidget');
+    expect(wrong.active?.['ui:widget']).toBe('SliderWidget');
+  });
+});
+
+describe('ui:submitButtonOptions', () => {
+  it('takes button props typed by an interface, and a literal with props of its own', () => {
+    const props: ButtonHTMLAttributes<HTMLButtonElement> = { className: 'wide', disabled: true };
+    const typed: UiSchema = { 'ui:submitButtonOptions': { props } };
+    const literal: UiSchema = { 'ui:submitButtonOptions': { props: { 'data-testid': 'submit', disabled: true } } };
+
+    expect(typed['ui:submitButtonOptions']?.props?.className).toBe('wide');
+    expect(literal['ui:submitButtonOptions']?.props?.disabled).toBe(true);
   });
 });
 
