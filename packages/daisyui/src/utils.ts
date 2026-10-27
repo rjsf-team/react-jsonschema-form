@@ -38,13 +38,12 @@ export interface DaisyGlobalUiOptionsKeys {
 }
 
 /** The option names a user's extension may not reuse: RJSF's, the theme's own, and the ones its widgets read that
- * RJSF doesn't reserve, since every field hands its widget the extension keys a form declares. `BaseInputTemplate`
- * reads `multiple`, and `RatingWidget` reads `color`, `size` and `colorGradient`
+ * RJSF doesn't reserve, since every field hands its widget the extension keys a form declares. `RatingWidget` reads
+ * `color`, `size` and `colorGradient`
  */
 type DaisyReservedUiOptionName =
   | ReservedUiOptionName
   | keyof DaisyGlobalUiOptionsKeys
-  | 'multiple'
   | 'color'
   | 'size'
   | 'colorGradient';
@@ -136,16 +135,4 @@ export function getGroupAndOptionProps({ id, label, hideLabel, presentation, rol
       : undefined;
   const { group, option } = getGroupAttributes({ id, presentation }, role, labelId);
   return { group: { id, ...group }, option };
-}
-
-/** Builds the classes of one option of a checkboxes or radio widget: its `label`, and the `text` beside the input.
- *
- * @param disabled - Whether the option is disabled, by the field or by `ui:enumDisabled`
- * @returns - The `className` of the option's `label` element and of the text inside it
- */
-export function getOptionClassNames(disabled: boolean) {
-  return {
-    label: `flex items-center ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} gap-2`,
-    text: disabled ? 'label-text opacity-50' : 'label-text',
-  };
 }

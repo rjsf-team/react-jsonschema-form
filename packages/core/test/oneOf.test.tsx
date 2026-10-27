@@ -3329,6 +3329,66 @@ describe('oneOf', () => {
         expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 2 } } }), 'root_v');
       });
 
+      // The option widgets match an object const by deep equality, as the form data is never the const's own instance
+      it('should render radios of object consts, check the one in the form data and select another', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            v: {
+              oneOf: [
+                { const: { a: 1 }, title: 'One' },
+                { const: { a: 2 }, title: 'Two' },
+              ],
+            },
+          },
+        };
+        const { onChange } = createFormComponent({
+          schema,
+          uiSchema: { v: { 'ui:widget': 'radio', 'ui:options': { optionValueFormat } } },
+          initialFormData: { v: { a: 2 } },
+        });
+
+        const [one, two] = [screen.getByRole('radio', { name: 'One' }), screen.getByRole('radio', { name: 'Two' })];
+        expect(two).toBeChecked();
+        expect(one).not.toBeChecked();
+        expect([one.id, two.id]).toEqual(['root_v__0', 'root_v__1']);
+        await user.click(one);
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 1 } } }), 'root_v');
+      });
+
+      it('should check object consts by value, keep a selection in option order and deselect an equal one', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            v: {
+              type: 'array',
+              uniqueItems: true,
+              items: {
+                oneOf: [
+                  { const: { a: 1 }, title: 'One' },
+                  { const: { a: 2 }, title: 'Two' },
+                ],
+              },
+            },
+          },
+        };
+        const { onChange } = createFormComponent({
+          schema,
+          uiSchema: { v: { 'ui:widget': 'checkboxes', 'ui:options': { optionValueFormat } } },
+          initialFormData: { v: [{ a: 2 }] },
+        });
+
+        expect(screen.getByRole('checkbox', { name: 'Two' })).toBeChecked();
+        expect(screen.getByRole('checkbox', { name: 'One' })).not.toBeChecked();
+        await user.click(screen.getByRole('checkbox', { name: 'One' }));
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { v: [{ a: 1 }, { a: 2 }] } }),
+          'root_v',
+        );
+        await user.click(screen.getByRole('checkbox', { name: 'Two' }));
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: [{ a: 1 }] } }), 'root_v');
+      });
+
       it('should render a select of array and null consts labelled with their JSON', async () => {
         const schema: RJSFSchema = {
           type: 'object',

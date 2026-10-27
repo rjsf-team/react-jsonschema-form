@@ -10,7 +10,7 @@ import type {
 } from '@rjsf/utils';
 import { noop, partId, toFieldPath } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
@@ -2174,5 +2174,23 @@ describe('the errors a field raises for the items of an array', () => {
       { property: '.obj', message: 'whole', stack: '.obj whole' },
       { property: '.obj.__proto__.a', message: 'taken', stack: '.obj.__proto__.a taken' },
     ]);
+  });
+});
+
+// Every theme that renders core's `FieldErrorTemplate` relies on these: the plan counts an empty message when it
+// describes the control by `__error`, so the element must be there for it to find
+describe("a field's own error list", () => {
+  it('keeps the id the control is described by for messages that are all empty, with no bullet', () => {
+    const { node } = createFormComponent({ schema: { type: 'string' }, extraErrors: { __errors: [''] } });
+
+    const errors = elementOf(node, '#root__error', HTMLElement);
+    expect(screen.getByRole('textbox').getAttribute('aria-describedby')).toContain('root__error');
+    expect(within(errors).queryAllByRole('listitem')).toHaveLength(0);
+  });
+
+  it('draws no bullet for an empty message beside another', () => {
+    const { node } = createFormComponent({ schema: { type: 'string' }, extraErrors: { __errors: ['', 'Too short'] } });
+
+    expect(within(elementOf(node, '#root__error', HTMLElement)).getAllByRole('listitem')).toHaveLength(1);
   });
 });

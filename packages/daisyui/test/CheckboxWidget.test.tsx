@@ -132,4 +132,54 @@ describe('CheckboxWidget', () => {
 
     expect(container.querySelector('input[type=checkbox]')).toHaveAccessibleDescription('Whether you agree');
   });
+
+  // The field's own state, as core's `CheckboxWidget` marks them, so a `data-invalid:` variant reaches every description
+  test.each(['checkbox', 'toggle'])(
+    "marks the %s's description and label data-invalid while the field shows errors",
+    (widget) => {
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { flag: { type: 'boolean', title: 'Flag', description: 'About' } } }}
+          uiSchema={{ flag: { 'ui:widget': widget } }}
+          extraErrors={{ flag: { __errors: ['wrong'] } }}
+          validator={validator}
+        />,
+      );
+
+      expect(container.querySelector('#root_flag__description')).toHaveAttribute('data-invalid', 'true');
+      expect(screen.getByRole('checkbox').closest('label')).toHaveAttribute('data-invalid', 'true');
+    },
+  );
+
+  test('leaves its description and label unmarked without errors', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { flag: { type: 'boolean', title: 'Flag', description: 'About' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_flag__description')).not.toHaveAttribute('data-invalid');
+    expect(screen.getByRole('checkbox').closest('label')).not.toHaveAttribute('data-invalid');
+  });
+
+  test("takes its input's classes from the class map's checkboxInput, as a checkboxes field's boxes do", () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            flag: { type: 'boolean', title: 'Flag' },
+            many: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['a'] } },
+          },
+        }}
+        uiSchema={{ flag: { 'ui:widget': 'checkbox' }, many: { 'ui:widget': 'checkboxes' } }}
+        classMap={{ checkboxInput: 'checkbox checkbox-primary' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('checkbox', { name: 'Flag' })).toHaveClass('checkbox', 'checkbox-primary');
+    expect(screen.getByRole('checkbox', { name: 'a' })).toHaveClass('checkbox', 'checkbox-primary');
+  });
 });
