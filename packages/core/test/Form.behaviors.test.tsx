@@ -3527,6 +3527,21 @@ describe('clearing a field with a schema default does not re-apply the default (
       expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: undefined });
     });
 
+    it('fills null back into a cleared field another edit turns into a null field', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { mode: { type: 'string', enum: ['a', 'b'] }, x: { type: 'string' } },
+        if: { properties: { mode: { const: 'b' } }, required: ['mode'] },
+        then: { properties: { x: { type: 'null' } } },
+      };
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { mode: 'a', x: 'q' } });
+
+      await user.clear(elementOf(node, 'input#root_x'));
+      await user.selectOptions(elementOf(node, 'select#root_mode'), 'b');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ mode: 'b', x: null });
+    });
+
     it("fills the new option's default for a field cleared under the old option", async () => {
       const schema: RJSFSchema = {
         type: 'object',

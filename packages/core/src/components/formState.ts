@@ -24,6 +24,7 @@ import {
   deepEqualsUndefinedAsMissing,
   errorSchemaChild,
   getChangedFields,
+  getSchemaType,
   getUiOptions,
   hashObject,
   isObject,
@@ -1739,18 +1740,38 @@ function heldPathOf<T>(change: FieldChange<T>): FieldPathList | undefined {
   return change.isFieldEdit ? (change.editedPath ?? fieldPathToList(change.fieldPath)) : undefined;
 }
 
+/** Whether `container` holds `key` as its own, without a value */
+function holdsUndefined(container: GenericObjectType, key: string): boolean {
+  return Object.hasOwn(container, key) && container[key] === undefined;
+}
+
 /** `derived` with each key `written` holds as `undefined` kept so where `cleared` holds it as `undefined` too: a field
  * cleared, in this change or an earlier one, stays cleared whatever defaults the derivation merged in (#5125), such as
- * under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'`. Only the containers whose references differ are
- * walked, and an array index by index, as `written` holds it in the order the change left it
+ * under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'`. A `null` field has nothing to clear: `null` is
+ * the one value it holds, which the defaults fill back in. Only the containers whose references differ are walked,
+ * and an array index by index, as `written` holds it in the order the change left it
  *
  * @param derived - The data the change derived
  * @param written - The data the change wrote, before the derivation
  * @param cleared - The data whose keys holding `undefined` are clears, laid out as `written` is
+ * @param isNullField - Whether the field at a path holds nothing but `null`, asked only of a clear derived as `null`
+ * @param path - The path of `derived`
  * @returns - `derived`, sharing every subtree the walk cleared nothing in
  */
-function keepClears<V>(derived: V, written: unknown, cleared: unknown): V;
-function keepClears(derived: unknown, written: unknown, cleared: unknown): unknown {
+function keepClears<V>(
+  derived: V,
+  written: unknown,
+  cleared: unknown,
+  isNullField: (path: FieldPathList) => boolean,
+  path: FieldPathList,
+): V;
+function keepClears(
+  derived: unknown,
+  written: unknown,
+  cleared: unknown,
+  isNullField: (path: FieldPathList) => boolean,
+  path: FieldPathList,
+): unknown {
   if (derived === written) {
     return derived;
   }
@@ -1760,7 +1781,7 @@ function keepClears(derived: unknown, written: unknown, cleared: unknown): unkno
     const clearedItems: readonly unknown[] = Array.isArray(cleared) ? cleared : [];
     let kept: unknown[] | undefined;
     items.forEach((item, index) => {
-      const next = keepClears(item, writtenItems[index], clearedItems[index]);
+      const next = keepClears(item, writtenItems[index], clearedItems[index], isNullField, [...path, index]);
       if (next !== item) {
         kept ??= [...items];
         kept[index] = next;
@@ -1772,12 +1793,10 @@ function keepClears(derived: unknown, written: unknown, cleared: unknown): unkno
     const clearedKeys = isPlainObject(cleared) ? cleared : {};
     let kept: GenericObjectType | undefined;
     for (const [key, value] of Object.entries(derived)) {
+      const keyPath = [...path, key];
       const wasCleared =
-        Object.hasOwn(written, key) &&
-        written[key] === undefined &&
-        Object.hasOwn(clearedKeys, key) &&
-        clearedKeys[key] === undefined;
-      const next = wasCleared ? undefined : keepClears(value, written[key], clearedKeys[key]);
+        holdsUndefined(written, key) && holdsUndefined(clearedKeys, key) && !(value === null && isNullField(keyPath));
+      const next = wasCleared ? undefined : keepClears(value, written[key], clearedKeys[key], isNullField, keyPath);
       if (next !== value) {
         kept ??= { ...derived };
         setOwn(kept, key, next);
@@ -1856,11 +1875,15 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     // written from outside, as `setFieldValue()` writes it at any path, is left to its defaults, as the `transformChange`
     // docs say. The `undefined` a clear leaves is stripped from the copy the validator gets, so AJV never sees
     // `{ [key]: undefined }` for a `string` field (#4518)
-    const { editedData } = change;
-    if (change.isFieldEdit === true && change.editedPath === undefined) {
-      formData = keepClears(formData, written, written);
-    } else if (editedData !== undefined) {
-      formData = keepClears(formData, written, editedData);
+    const cleared = change.isFieldEdit === true && change.editedPath === undefined ? written : change.editedData;
+    if (cleared !== undefined) {
+      const { schemaUtils, retrievedSchema } = derived.context;
+      const derivedData = formData;
+      const isNullField = (at: FieldPathList) => {
+        const { field } = schemaUtils.findFieldInSchema(retrievedSchema, at, derivedData);
+        return field !== undefined && getSchemaType<S>(field) === 'null';
+      };
+      formData = keepClears(formData, written, cleared, isNullField, []);
     }
   }
 

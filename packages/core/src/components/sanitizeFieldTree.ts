@@ -190,7 +190,7 @@ function offeredValues<S extends StrictRJSFSchema>(layers: readonly S[]): unknow
   }
   const last = layers[layers.length - 1];
   const options = last && getXxxOfOptions<S>(last)?.options;
-  if (!options || !isConstantOptionList<S>(options)) {
+  if (!isConstantOptionList<S>(options)) {
     return undefined;
   }
   return options.map((option) => toConstant<S>(option));

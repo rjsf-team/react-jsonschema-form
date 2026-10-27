@@ -13,7 +13,7 @@ import {
   fieldPathToList,
   getByPath,
   getValidationTarget,
-  getXxxOfKey,
+  getXxxOfOptions,
   isConstantOptionList,
   isObject,
   isSchemaObject,
@@ -125,12 +125,9 @@ export function retrievedOptionListOf<T, S extends StrictRJSFSchema, F extends F
   view: S,
   formData: T | undefined,
 ): S[] | undefined {
-  const xxxOfKey = getXxxOfKey<S>(view);
-  return xxxOfKey
-    ? view[xxxOfKey]?.map((option) =>
-        schemaUtils.retrieveSchema(isSchemaObject<S>(option) ? option : emptySchema<S>(), formData),
-      )
-    : undefined;
+  return getXxxOfOptions<S>(view)?.options.map((option) =>
+    schemaUtils.retrieveSchema(isSchemaObject<S>(option) ? option : emptySchema<S>(), formData),
+  );
 }
 
 /** The options of a field whose retrieved schema is `view`, each retrieved for `formData`; undefined where it offers
@@ -143,8 +140,7 @@ export function retrievedOptionsOf<T, S extends StrictRJSFSchema, F extends Form
   view: S,
   formData: T | undefined,
 ): S[] | undefined {
-  const xxxOfKey = getXxxOfKey<S>(view);
-  return xxxOfKey && isConstantOptionList<S>(view[xxxOfKey])
+  return isConstantOptionList<S>(getXxxOfOptions<S>(view)?.options)
     ? undefined
     : retrievedOptionListOf<T, S, F>(schemaUtils, view, formData);
 }
