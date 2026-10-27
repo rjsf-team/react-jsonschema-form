@@ -988,14 +988,14 @@ function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S):
  * about the value and giving it the type of the data the property currently holds, so that it renders as a field for
  * that data. Dropping the rest would cost the value its `enum`, `format` or range, leaving a field that neither
  * constrains the value the way the schema does nor offers the other types the schema might allow. The
- * `SUBSCHEMA_KEYWORDS`, `IDENTIFIER_KEYWORDS` and `CONTAINER_KEYWORDS` are not kept, and neither is a `default` of
- * another type than the data, which would re-seed a field of the data's type with a value it cannot hold.
+ * `EXCLUDED_STUB_KEYWORDS` of `schemaKeywords.ts` are not kept, and neither is a `default` of another type than the
+ * data, which would re-seed a field of the data's type with a value it cannot hold.
  *
  * The stub is marked as guessed when the schema puts no constraint on the property at all, i.e. it is `true` or has
- * none of the `VALUE_KEYWORDS` or `SUBSCHEMA_KEYWORDS`. That marker tells the fallback UI the property is free to hold
- * any other type, so a schema that constrains the value must not carry it, or the UI would offer types that schema
- * rejects. Any other keyword — an annotation, an identifier, a container such as `$defs`, or one these lists do not
- * know — leaves the property unconstrained, so an unfamiliar keyword never locks the type in place.
+ * none of the `CONSTRAINING_KEYWORDS`. That marker tells the fallback UI the property is free to hold any other type,
+ * so a schema that constrains the value must not carry it, or the UI would offer types that schema rejects. Any other
+ * keyword — an annotation, an identifier, a container such as `$defs`, or one `CONSTRAINING_KEYWORDS` does not know —
+ * leaves the property unconstrained, so an unfamiliar keyword never locks the type in place.
  *
  * @param formData - The form data held by the additional property
  * @param [subSchema] - The `additionalProperties` schema describing the property, unless it is simply `true`

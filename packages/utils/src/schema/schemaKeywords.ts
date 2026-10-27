@@ -35,8 +35,9 @@ const VALUE_KEYWORDS: string[] = [
 ];
 
 /** The keywords that constrain a value by way of other subschemas. They assert something about the value as surely as
- * the `VALUE_KEYWORDS` do, but they are left out of the stub: an `allOf` naming a type of its own would contradict the
- * type the stub takes from the data and fail to merge on every render, and the validator enforces them either way.
+ * the `VALUE_KEYWORDS` do, but they are left out of the guessed-type stub `retrieveSchema()` builds for an additional
+ * property: an `allOf` naming a type of its own would contradict the type the stub takes from the data and fail to
+ * merge on every render, and the validator enforces them either way.
  */
 const SUBSCHEMA_KEYWORDS: string[] = [
   'allOf',

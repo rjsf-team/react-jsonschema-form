@@ -1,7 +1,7 @@
 import type { StrictRJSFSchema } from '../../types.ts';
 import type { SchemaNode } from './parseSchemaGraph.ts';
 
-/** Returns the keywords of `source` on a schema of the plan's type. A literal or a merge result is not known to be an
+/** Returns the keywords of `source` on a schema of `template`'s type. A literal or a merge result is not known to be an
  * `S`, so the copy starts as `template`, which is one, with every keyword removed. A `source` that is not an object,
  * which only an `allOf` merge with a `false` member returns, has no keywords to copy.
  */
