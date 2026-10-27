@@ -3,6 +3,8 @@ import setOwn from './setOwn.ts';
 import type { GenericObjectType } from './types.ts';
 
 /** Recursively merge deeply nested objects.
+ * The result is typed as the caller's `R`, which is an assertion: nothing checks the merged object against it, so a
+ * caller names only what it knows the merge holds, as it would with an `as`.
  *
  * @param obj1 - The first object to merge
  * @param obj2 - The second object to merge

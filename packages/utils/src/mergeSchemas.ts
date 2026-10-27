@@ -7,6 +7,8 @@ import type { GenericObjectType } from './types.ts';
 /** Recursively merge deeply nested schemas. The difference between `mergeSchemas` and `mergeObjects` is that
  * `mergeSchemas` only concats arrays for values under the 'required' keyword, and when it does, it doesn't include
  * duplicate values.
+ * The result is typed as the caller's `R`, which is an assertion: nothing checks the merged object against it, so a
+ * caller names only what it knows the merge holds, as it would with an `as`.
  *
  * @param obj1 - The first schema object to merge
  * @param obj2 - The second schema object to merge
