@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react';
 import { startTransition, StrictMode, useEffect, useId, useLayoutEffect, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
@@ -623,6 +624,66 @@ describe('ArrayField', () => {
       await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       expect(node.querySelector('.rjsf-array-item')).not.toBeNull();
+    });
+
+    it('appends when the add button passes a second argument to onAddClick', async () => {
+      // Like MUI's ToggleButton `(event, value)`: the extra argument must not be read as an insert index
+      function TwoArgumentButton({ onClick }: { onClick: (event: MouseEvent<HTMLElement>, value: number) => void }) {
+        return (
+          <button type='button' className='rjsf-array-item-add' onClick={(event) => onClick(event, 0)}>
+            Add New
+          </button>
+        );
+      }
+      function TwoArgumentAddTemplate(props: ArrayFieldTemplateProps) {
+        return (
+          <div className='array'>
+            {props.items}
+            <TwoArgumentButton onClick={props.onAddClick} />
+          </div>
+        );
+      }
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: ['foo', 'bar'],
+        templates: { ArrayFieldTemplate: TwoArgumentAddTemplate },
+      });
+
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
+
+      expect(Array.from(node.querySelectorAll('input[type=text]'), (input) => input.getAttribute('value'))).toEqual([
+        'foo',
+        'bar',
+        '',
+      ]);
+    });
+
+    it('moves an item when the template calls onMoveDownItem after dispatch ends', async () => {
+      // React clears the event's `currentTarget` once dispatch ends, before the deferred call runs
+      function DeferredMoveItemTemplate(props: ArrayFieldItemTemplateProps) {
+        const { onMoveDownItem } = props.buttonsProps;
+        return (
+          <div className='rjsf-array-item'>
+            {props.children}
+            <button
+              type='button'
+              className='rjsf-array-item-move-down'
+              onClick={(event) => queueMicrotask(() => onMoveDownItem(event))}
+            >
+              Down
+            </button>
+          </div>
+        );
+      }
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: ['foo', 'bar'],
+        templates: { ArrayFieldItemTemplate: DeferredMoveItemTemplate },
+      });
+
+      await user.click(elementOf(node, '.rjsf-array-item-move-down'));
+
+      await waitFor(() => expectToHaveBeenCalledWithFormData(onChange, ['bar', 'foo'], 'root'));
     });
 
     it('should not provide an add button if length equals maxItems', () => {
