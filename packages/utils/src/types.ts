@@ -58,9 +58,10 @@ export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
  */
 export type RJSFMarkedSchema = StrictRJSFSchema & GenericSymbolObjectType;
 
-/** Alias GenericObjectType as FormContextType to allow us to remap this at some future date
+/** The type of a form's `formContext`, the constraint and default of every `F`: any object, an `interface` included,
+ * which a component reading it narrows or names the keys of
  */
-export type FormContextType = GenericObjectType;
+export type FormContextType = object;
 
 /** The interface for the test ID proxy objects that are returned by the `getTestId` utility function.
  */
