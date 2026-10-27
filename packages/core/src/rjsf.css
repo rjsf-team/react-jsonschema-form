@@ -47,6 +47,12 @@
     margin-block: 0.25rem;
   }
 
+  /* Where the field's parts are grid rows, the group doesn't collapse this margin with the part above it, so that part's
+     own margin spaces the group */
+  :where(.rjsf .rjsf-field-radio-group > :first-child, .rjsf .rjsf-checkboxes > :first-child) {
+    margin-block-start: 0;
+  }
+
   :where(.rjsf .rjsf-checkbox-inline, .rjsf .rjsf-radio-inline) {
     margin-inline-end: var(--rjsf-gap);
   }
@@ -201,10 +207,12 @@
     gap: 0.25rem;
   }
 
-  /* Its column named too, as an item placed by row alone is placed before the field and would take the field's column */
+  /* Its column named too, as an item placed by row alone is placed before the field and would take the field's column.
+     It spans the rows below the control's too, so a toolbox taller than the control takes their height rather than
+     pushing the errors and help down */
   :where(.rjsf .rjsf-array-item > .rjsf-array-item-toolbox) {
     grid-column: 2;
-    grid-row: var(--rjsf-control-row);
+    grid-row: var(--rjsf-control-row) / -1;
   }
 
   /* A `FieldTemplate` of your own, whose parts aren't core's, or a field or widget drawing its own label above its
@@ -319,11 +327,13 @@
     justify-self: start;
   }
 
+  /* Spanning the rows below the control's too, so a key input or button taller than the control doesn't push the
+     value's errors and help down */
   :where(
     .rjsf .rjsf-additional-property-key > :not(.rjsf-field-label),
     .rjsf .rjsf-additional-property > .rjsf-object-property-remove
   ) {
-    grid-row: var(--rjsf-control-row);
+    grid-row: var(--rjsf-control-row) / -1;
   }
 
   :where(.rjsf .rjsf-cyclic-schema) {

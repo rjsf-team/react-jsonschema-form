@@ -29,7 +29,7 @@ const ROW_CLASSES =
  * rather than a gap, which would space the empty rows too, so its control's row starts where the key's input does
  */
 const VALUE_CLASSES =
-  String.raw`rjsf-additional-property-value col-span-6 row-span-full grid gap-2 pr-0.5 ` +
+  String.raw`rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 ` +
   String.raw`has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2`;
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
@@ -86,7 +86,7 @@ export default function WrapIfAdditionalTemplate<
       {/* The key's input and the remove button sit on the value's control row, however far its label or description
           wraps */}
       <div className={ROW_CLASSES}>
-        <div className='rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-(--rjsf-control-row)'>
+        <div className='rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]'>
           {hasKeyLabel && (
             <FieldLabel
               label={keyLabel}
@@ -132,7 +132,7 @@ export default function WrapIfAdditionalTemplate<
         </div>
         <div className={VALUE_CLASSES}>{children}</div>
         {/* The same 2px as the inputs' wrappers, so the button lines up with them */}
-        <div className='grid col-span-1 row-(--rjsf-control-row) pt-0.5'>
+        <div className='grid col-span-1 row-[var(--rjsf-control-row)/-1] pt-0.5'>
           <RemoveButton
             id={buttonId(id, 'remove')}
             iconType='block'
