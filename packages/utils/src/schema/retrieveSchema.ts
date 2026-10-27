@@ -1186,7 +1186,7 @@ export function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(sch
     // The option's own field takes the extra keys of the two, joined as `getRenderedOptionSchema()` renders it, so they
     // render once, in the field that knows which of its own options is selected
     const left = withoutKeys<S>(schema, ...EXTRA_KEY_KEYWORDS);
-    (left as RJSFMarkedSchema)[EXTRA_KEYS_ELSEWHERE_FLAG] = true;
+    Reflect.set(left, EXTRA_KEYS_ELSEWHERE_FLAG, true);
     return left;
   }
   return joinOptionExtraKeys<S>(schema, option);
@@ -1330,7 +1330,7 @@ export function stubExistingAdditionalProperties<
       // A `true`: anything goes, so the property gets a field for the data it holds
       stub = guessedTypeSchema<S>(formData[key]);
     }
-    (stub as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
+    Reflect.set(stub, ADDITIONAL_PROPERTY_FLAG, true);
     setOwn(schema.properties, key, stub);
   }
   return schema;
