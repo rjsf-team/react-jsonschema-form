@@ -19,13 +19,22 @@ const SHADCN_CLASS_MAP: ClassMap = {
   arrayFieldset: 'min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto',
   arrayItemList: 'mb-2',
   // One column unless there is a toolbox, as the gap before an empty one would narrow the field. Top-aligned, so errors
-  // or help under the input don't move the toolbox; past a label, which core marks the item `data-display-label` for,
-  // down to the input: the label's `text-sm leading-none` line, the field's `gap-2` and the `p-0.5` around the theme's
-  // inputs, and past a description between them (`data-has-description`), its `text-sm` line and another `gap-2`. Each
-  // offset assumes a one-line label and description, so a wrapping one sits the toolbox high
+  // or help under the input don't move the toolbox. Core's `FieldTemplate` lays its parts out on the item's rows, one
+  // each, spaced by a margin under each rather than the field's `gap-2`, which would space the empty rows too, and the
+  // toolbox sits on the control's row, `--rjsf-control-row`, past a label, a description or both, however far they
+  // wrap, down the `p-0.5` around the theme's inputs. A `FieldTemplate` of your own, or a field or widget drawing its
+  // own label above its control, has the toolbox pushed down past the label core marks the item `data-display-label`
+  // for: its `text-sm leading-none` line, the field's `gap-2` and the `p-0.5` around the theme's inputs, and past a
+  // description between them (`data-has-description`), its `text-sm` line and another `gap-2`. `String.raw` keeps the
+  // `\_` Tailwind reads as an underscore in a description's id, where a bare `_` would be a space
   arrayItem:
-    'mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 data-display-label:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:[&>.rjsf-array-item-toolbox]:mt-13',
-  arrayItemToolbox: 'flex gap-2',
+    String.raw`mb-2 grid grid-cols-1 has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 ` +
+    String.raw`[--rjsf-control-row:1] has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:2] has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:3] has-[>.rjsf-field>.rjsf-field-label+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:4] ` +
+    String.raw`has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:gap-y-0 ` +
+    String.raw`has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>.rjsf-field]:grid has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>.rjsf-field]:gap-y-0 has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>.rjsf-field>:not(:last-child)]:mb-2 has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>.rjsf-array-item-toolbox]:pt-0.5 ` +
+    String.raw`data-display-label:not-has-[>.rjsf-field>.rjsf-field-label]:[&>.rjsf-array-item-toolbox]:mt-6 data-display-label:data-has-description:not-has-[>.rjsf-field>:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>.rjsf-array-item-toolbox]:mt-13`,
+  // Its column named too, as an item placed by row alone is placed before the field and would take the field's column
+  arrayItemToolbox: 'flex gap-2 col-start-2 row-(--rjsf-control-row)',
   objectFieldset:
     'flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto',
   // Core's `AltDateWidget`, which the theme renders: its parts in one wrapping row, each select a steady width

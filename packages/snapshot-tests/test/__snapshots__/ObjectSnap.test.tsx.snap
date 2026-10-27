@@ -1385,17 +1385,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
               >
                 foo Key
               </label>
-              <div
-                aria-hidden="true"
-                style="visibility: hidden;"
-              >
-                <div
-                  class="rjsf-field-description"
-                  id="root_foo__key__description"
-                >
-                  A description
-                </div>
-              </div>
               <select
                 id="root_foo__key"
                 name="root_foo__key"
@@ -1669,17 +1658,6 @@ exports[`object fields > additionalProperties, description 1`] = `
               >
                 foo Key
               </label>
-              <div
-                aria-hidden="true"
-                style="visibility: hidden;"
-              >
-                <div
-                  class="rjsf-field-description"
-                  id="root_foo__key__description"
-                >
-                  item description
-                </div>
-              </div>
               <input
                 id="root_foo__key"
                 type="text"

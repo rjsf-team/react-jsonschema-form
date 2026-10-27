@@ -143,7 +143,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-object"
@@ -327,7 +327,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-object"
@@ -605,7 +605,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -724,7 +724,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -1738,7 +1738,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-object"
@@ -1922,7 +1922,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                         >
                           <div
                             class="flex-grow rjsf-field rjsf-field-object"
@@ -2200,7 +2200,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -2319,7 +2319,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -7851,7 +7851,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -8692,7 +8692,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(8,auto)] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-start-2 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
