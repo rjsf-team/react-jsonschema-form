@@ -716,7 +716,8 @@ function ArrayFieldItemInner<
     presentation,
     labelPlacement,
     ownUiOptions,
-    deprecatedHandling,
+    disabled: itemDisabled,
+    readonly: itemReadonly,
   } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
   const typeSelectorFirst =
     fieldToRender?.FieldComponent === registry.fields.FallbackField &&
@@ -726,10 +727,6 @@ function ArrayFieldItemInner<
   const displayLabel = typeSelectorFirst
     ? Boolean(presentation?.control) && presentation?.showLabel === true
     : labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
-  // The item and its buttons lock as its `SchemaField` locks its inputs, from the same plan, so a `ui:definitions`
-  // entry, `deprecatedHandling` or an item's own `ui:disabled: false` under a disabled array reach both alike
-  const itemDisabled = (ownUiOptions.disabled ?? disabled) || deprecatedHandling === 'disable';
-  const itemReadonly = Boolean(ownUiOptions.readonly ?? (readonly || itemSchema.readOnly || plannedSchema.readOnly));
   const hasDescription = !!ownUiOptions.description || !!itemSchema.description;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
   const has: Record<string, boolean> = {

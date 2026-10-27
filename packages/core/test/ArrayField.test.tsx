@@ -4847,21 +4847,24 @@ describe('ArrayField', () => {
         );
       };
 
-      it.each<[string, UiSchema]>([
-        ['ui:disabled', { items: (_item: unknown, index: number) => (index === 0 ? { 'ui:disabled': true } : {}) }],
-        ['ui:readonly', { items: (_item: unknown, index: number) => (index === 0 ? { 'ui:readonly': true } : {}) }],
-      ])('disables the move, copy and remove buttons of an item its uiSchema gives %s', (_, uiSchema) => {
-        const { node } = createFormComponent({
-          schema,
-          uiSchema: { ...uiSchema, 'ui:options': { copyable: true } },
-          initialFormData: formData,
-        });
+      it.each(['ui:disabled', 'ui:readonly'])(
+        'disables the move, copy and remove buttons of an item its uiSchema gives %s',
+        (key) => {
+          const { node } = createFormComponent({
+            schema,
+            uiSchema: {
+              items: (_item: unknown, index: number) => (index === 0 ? { [key]: true } : {}),
+              'ui:options': { copyable: true },
+            },
+            initialFormData: formData,
+          });
 
-        const locked = itemButtons(node, 0);
-        expect(locked).toHaveLength(3);
-        locked.forEach((button) => expect(button).toBeDisabled());
-        itemButtons(node, 1).forEach((button) => expect(button).toBeEnabled());
-      });
+          const locked = itemButtons(node, 0);
+          expect(locked).toHaveLength(3);
+          locked.forEach((button) => expect(button).toBeDisabled());
+          itemButtons(node, 1).forEach((button) => expect(button).toBeEnabled());
+        },
+      );
 
       it("locks an item's buttons once a schema readOnly that if/then sets from its data applies", async () => {
         const conditional: RJSFSchema = {
@@ -4888,7 +4891,6 @@ describe('ArrayField', () => {
         $defs: { row: { type: 'object', properties: { name: { type: 'string' } } } },
       };
       const rowData = [{ name: 'a' }, { name: 'b' }];
-      const allItems = (node: Element) => [0, 1].flatMap((index) => itemButtons(node, index));
 
       it.each<[string, RJSFSchema, UiSchema, unknown[]]>([
         ['a static items uiSchema', rowSchema, { items: { 'ui:disabled': true } }, rowData],
@@ -4912,7 +4914,7 @@ describe('ArrayField', () => {
         });
 
         node.querySelectorAll('.rjsf-array-item input').forEach((input) => expect(input).toBeDisabled());
-        const buttons = allItems(node);
+        const buttons = [0, 1].flatMap((index) => itemButtons(node, index));
         expect(buttons.length).toBeGreaterThan(0);
         buttons.forEach((button) => expect(button).toBeDisabled());
       });
