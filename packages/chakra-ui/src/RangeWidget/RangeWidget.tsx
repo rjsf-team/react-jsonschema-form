@@ -52,6 +52,7 @@ export default function RangeWidget<
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
+  const spec = rangeSpec<S>(schema);
   const chakraProps = getChakra(options);
   const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const labelId = getLabelId<T, S, F>(props);
@@ -73,14 +74,15 @@ export default function RangeWidget<
       {...chakraProps}
     >
       <Slider
-        {...rangeSpec<S>(schema)}
+        {...spec}
         id={id}
         // The thumb, which a user focuses, carries the field's id, and is named by the label through
         // `aria-labelledby`, since a `for` can't name it
         ids={{ thumb: () => id, label: labelId }}
         name={htmlName || id}
         disabled={disabled || readonly}
-        value={[value]}
+        // Zag places a thumb with no value at `min`, which is where it stays until the user moves it
+        value={[typeof value === 'number' ? value : (spec.min ?? 0)]}
         onValueChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

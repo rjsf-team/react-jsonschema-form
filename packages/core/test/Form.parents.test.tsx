@@ -1,6 +1,6 @@
 import { Component, createContext, use, useEffect, useLayoutEffect, useState } from 'react';
 import type { ErrorSchema, FieldProps, RJSFSchema, RJSFValidationError, UiSchema, WidgetProps } from '@rjsf/utils';
-import { getTemplates, getUiOptions, noop } from '@rjsf/utils';
+import { getTemplates, getUiOptions, noop, toInputValue } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -290,7 +290,7 @@ describe('a blur in the same event as an edit, under onBlur validation, with a p
             afterBlur?.(onChange);
           }}
         >
-          {`Set from ${String(value ?? '')}`}
+          {`Set from ${String(toInputValue(value))}`}
         </button>
       );
     }
@@ -416,7 +416,7 @@ describe('an edit after another operation in the same event, with a parent passi
     function ActingWidget({ onChange, value }: WidgetProps) {
       return (
         <button type='button' onClick={() => onClick(onChange)}>
-          {`Act from ${String(value ?? '')}`}
+          {`Act from ${String(toInputValue(value))}`}
         </button>
       );
     }
@@ -588,7 +588,7 @@ describe('a widget that sets its value from an Effect as it mounts (#3953)', () 
         onChange('detailed', undefined, id);
       }
     }, [value, onChange, id]);
-    return <span>{value}</span>;
+    return <span>{toInputValue(value)}</span>;
   }
   const uiSchema: UiSchema<Kinds> = { kind: { 'ui:widget': ChoosesDetailedOnMount } };
 
@@ -623,7 +623,7 @@ describe('a widget that sets its value from an Effect as it mounts (#3953)', () 
 
 describe('typing in a custom widget under a parent that renders for every change (#4299)', () => {
   function CustomTextarea({ id, value, onChange }: WidgetProps<Data['name']>) {
-    return <textarea id={id} value={value ?? ''} onChange={(event) => onChange(event.target.value)} />;
+    return <textarea id={id} value={toInputValue(value)} onChange={(event) => onChange(event.target.value)} />;
   }
 
   it('keeps the element, its focus and the caret', async () => {
@@ -671,7 +671,7 @@ describe("a custom upload widget that sets its parent's state before calling onC
             }
           }}
         />
-        <output aria-label='stored name'>{value}</output>
+        <output aria-label='stored name'>{toInputValue(value)}</output>
       </>
     );
   }

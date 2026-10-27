@@ -11,7 +11,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder, optionalControlsId, toFieldPath } from '@rjsf/utils';
+import { ErrorSchemaBuilder, optionalControlsId, toFieldPath, toInputValue } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -52,7 +52,7 @@ describe('Error state consistency when deriving from new props', () => {
       <input
         id={id}
         type='text'
-        value={value ?? ''}
+        value={toInputValue(value)}
         onChange={(event) => onChange(event.target.value, { __errors: [`custom:${event.target.value}`] })}
         onBlur={(event) => onBlur(id, event.target.value)}
       />
@@ -409,7 +409,7 @@ describe('Error state consistency when deriving from new props', () => {
           <input
             id={id}
             type='text'
-            value={value ?? ''}
+            value={toInputValue(value)}
             onChange={(event) => onChange(event.target.value || undefined, { __errors: [message] })}
           />
         ),

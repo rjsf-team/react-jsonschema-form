@@ -1,7 +1,7 @@
 import type { FocusEvent, KeyboardEvent } from 'react';
 import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getGroupAttributes } from '@rjsf/utils';
+import { getGroupAttributes, toInputValue } from '@rjsf/utils';
 
 /** How far each key moves from the focused star, choosing the star it lands on */
 const STAR_KEY_STEPS: Partial<Record<string, number>> = {
@@ -63,7 +63,9 @@ export default function RatingWidget<
   );
   const starValues = Array.from({ length: numStars }, (_, index) => withoutFloatNoise(min + index));
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
-  const tabStopIndex = Math.max(starValues.indexOf(value), 0);
+  const rating = typeof value === 'number' ? value : undefined;
+  const autofocusIndex =
+    rating === undefined ? 0 : Math.max(Array.from({ length: numStars }, (_, index) => min + index).indexOf(rating), 0);
   // React acts on `autoFocus` only for a form control, which a star isn't, so the star takes focus as it mounts, in the
   // same commit phase as `autoFocus` would give it, and not when `ui:autofocus` turns on later. A disabled or read-only
   // rating takes none, as its stars are out of the tab order
@@ -144,8 +146,9 @@ export default function RatingWidget<
         cursor: disabled || readonly ? 'default' : 'pointer',
       }}
     >
-      {starValues.map((starValue, index) => {
-        const isFilled = starValue <= (value ?? -Infinity);
+      {[...Array(numStars)].map((_, index) => {
+        const starValue = min + index;
+        const isFilled = rating !== undefined && starValue <= rating;
 
         return (
           <span
@@ -176,7 +179,7 @@ export default function RatingWidget<
       <input
         type='hidden'
         name={htmlName || id}
-        value={value ?? ''}
+        value={toInputValue(value || '')}
         required={required}
         disabled={disabled || readonly}
         aria-hidden='true'

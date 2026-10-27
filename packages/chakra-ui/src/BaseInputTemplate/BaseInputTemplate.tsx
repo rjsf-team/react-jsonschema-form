@@ -11,6 +11,7 @@ import {
   getNumericInputTitle,
   hasWidgetErrors,
   labelValue,
+  toInputValue,
   widgetDrawsLabelText,
 } from '@rjsf/utils';
 
@@ -77,7 +78,7 @@ export default function BaseInputTemplate<
       <Input
         id={id}
         name={htmlName || id}
-        value={value || value === 0 ? value : ''}
+        value={toInputValue(value || value === 0 ? value : '')}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
@@ -88,7 +89,7 @@ export default function BaseInputTemplate<
         list={hasExamples ? examplesId(id) : undefined}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
         <ClearButton registry={registry} onClick={onClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

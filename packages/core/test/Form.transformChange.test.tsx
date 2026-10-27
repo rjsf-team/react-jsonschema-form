@@ -7,7 +7,7 @@ import type {
   RJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { buttonId } from '@rjsf/utils';
+import { buttonId, toInputValue } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -466,7 +466,7 @@ describe('transformChange', () => {
   describe('rewrites an array add or reorder, and no row hands its instance to another item', () => {
     /** Shows its item, and which instance of the widget shows it: the state a row holds, as focus or a draft would be */
     function InstanceWidget({ id, value }: WidgetProps) {
-      return <input id={id} data-instance={useId()} value={value ?? ''} readOnly />;
+      return <input id={id} data-instance={useId()} value={toInputValue(value)} readOnly />;
     }
     const itemsSchema: RJSFSchema = { type: 'array', items: { type: 'string', default: 'new' } };
     /** Each item shown, with the instance that shows it */

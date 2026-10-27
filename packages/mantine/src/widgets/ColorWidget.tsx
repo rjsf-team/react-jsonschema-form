@@ -1,8 +1,8 @@
 import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { ColorInput } from '@mantine/core';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue, widgetDrawsLabel } from '@rjsf/utils';
+import type { DateElementFormat, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { labelValue, toInputValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
 
@@ -66,7 +66,7 @@ export default function ColorWidget<
     <ColorInput
       id={id}
       name={htmlName || id}
-      value={value || ''}
+      value={String(toInputValue(value || ''))}
       placeholder={placeholder || undefined}
       format={options.colorFormat}
       required={required}

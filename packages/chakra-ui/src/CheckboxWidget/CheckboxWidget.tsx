@@ -70,7 +70,7 @@ export default function CheckboxWidget<
       <Checkbox
         id={id}
         name={htmlName || id}
-        checked={typeof value === 'undefined' ? false : value}
+        checked={Boolean(value)}
         disabled={disabled || readonly}
         onCheckedChange={handleChange}
         onBlur={handleBlur}

@@ -115,7 +115,7 @@ While these errors are retained during validation, it is still preferred for you
 :::
 
 ```tsx
-import { ErrorSchema, RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
+import { ErrorSchema, RegistryWidgetsType, RJSFSchema, toInputValue, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -139,7 +139,7 @@ const CustomTextWidget = function (props: WidgetProps) {
     props.onChange(value, raiseError, id);
   };
 
-  return <input id={id} onChange={raiseErrorOnChange} value={value || ''} />;
+  return <input id={id} onChange={raiseErrorOnChange} value={toInputValue(value || '')} />;
 };
 
 const widgets: RegistryWidgetsType = {
@@ -165,7 +165,7 @@ You can provide your own custom widgets to a uiSchema for the following json dat
 - `array`
 
 ```tsx
-import { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { RJSFSchema, toInputValue, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: Schema = {
@@ -178,7 +178,7 @@ const uiSchema: UiSchema = {
       <input
         type='text'
         className='custom'
-        value={props.value}
+        value={toInputValue(props.value)}
         required={props.required}
         onChange={(event) => props.onChange(event.target.value)}
       />
@@ -195,7 +195,7 @@ The following props are passed to custom widget components:
 - `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema; Provided in support of custom widgets;
 - `schema`: The JSONSchema subschema object for this widget;
 - `uiSchema`: The uiSchema for this widget;
-- `value`: The current value for this widget;
+- `value`: The current value for this widget, typed `unknown` since a widget can be pointed at data of any type. Narrow it before use, for an input with [`toInputValue()`](../api-reference/utility-functions.md#toinputvalue);
 - `placeholder`: The placeholder for the widget, if any;
 - `required`: The required status of this widget. A widget its theme declares `uncheckedIsFalse`, as `@rjsf/core` declares `CheckboxWidget`, is required only where the schema demands `true` when its field renders a `boolean`, since left alone it then holds the `false` `getDefaultFormState()` seeds a required `boolean` with, which the schema accepts. Rendered as another type, as a `type` list's string field renders a switch, it answers nothing unchecked, so it is required as any other widget is;
 - `disabled`: A boolean value stating if the widget is disabled;
@@ -220,7 +220,7 @@ The following props are passed to custom widget components:
 Alternatively, you can register them all at once by passing the `widgets` prop to the `Form` component, and reference their identifier from the `uiSchema`:
 
 ```tsx
-import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
+import { RegistryWidgetsType, RJSFSchema, toInputValue, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const MyCustomWidget = (props: WidgetProps) => {
@@ -228,7 +228,7 @@ const MyCustomWidget = (props: WidgetProps) => {
     <input
       type='text'
       className='custom'
-      value={props.value}
+      value={toInputValue(props.value)}
       required={props.required}
       onChange={(event) => props.onChange(event.target.value)}
     />

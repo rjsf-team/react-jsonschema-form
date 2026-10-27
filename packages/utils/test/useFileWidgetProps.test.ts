@@ -210,4 +210,18 @@ describe('useFileWidgetProps()', () => {
       expect(onChange).toHaveBeenCalledWith(null);
     });
   });
+  test('multiple, a file that could not be read stays in the list without file info', () => {
+    const { result } = renderHook(() => useFileWidgetProps([null, FILE_2_STR], onChange, true));
+    const { filesInfo, handleRemove } = result.current;
+    expect(filesInfo).toEqual([FILE_2_INFO]);
+    handleRemove(1);
+    expect(onChange).toHaveBeenCalledWith([null]);
+  });
+  test('a value that holds no data URL has no files', () => {
+    expect(renderHook(() => useFileWidgetProps('', onChange)).result.current.filesInfo).toEqual([]);
+    expect(renderHook(() => useFileWidgetProps(42, onChange)).result.current.filesInfo).toEqual([]);
+    expect(renderHook(() => useFileWidgetProps([42, FILE_2_STR], onChange, true)).result.current.filesInfo).toEqual([
+      FILE_2_INFO,
+    ]);
+  });
 });
