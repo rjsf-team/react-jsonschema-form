@@ -3534,7 +3534,11 @@ describe('clearing a field with a schema default does not re-apply the default (
         if: { properties: { mode: { const: 'b' } }, required: ['mode'] },
         then: { properties: { x: { type: 'null' } } },
       };
-      const { node, onChange } = createFormComponent({ schema, initialFormData: { mode: 'a', x: 'q' } });
+      const { node, onChange } = createFormComponent({
+        schema,
+        defaultFormStateBehavior,
+        initialFormData: { mode: 'a', x: 'q' },
+      });
 
       await user.clear(elementOf(node, 'input#root_x'));
       await user.selectOptions(elementOf(node, 'select#root_mode'), 'b');
@@ -3588,6 +3592,119 @@ describe('clearing a field with a schema default does not re-apply the default (
       act(() => write(ref));
 
       expect(getFormData()).toEqual({ o: { x: 'X' } });
+    });
+
+    it("fills an ancestor's default into a key an option switch empties", async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            type: 'object',
+            default: { x: 5 },
+            oneOf: [
+              { title: 'A', properties: { x: { type: 'string' } } },
+              { title: 'B', properties: { x: { type: 'number' } } },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        defaultFormStateBehavior,
+        initialFormData: { p: { x: 'abc' } },
+      });
+
+      await user.selectOptions(elementOf(node, 'select#root_p__oneof_select'), 'B');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ p: { x: 5 } });
+    });
+
+    it('resolves the schema for the data a clear leaves', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string', default: 'yes' }, b: { type: 'string' } },
+        if: { properties: { a: { const: 'yes' } }, required: ['a'] },
+        then: { properties: { c: { type: 'string' } }, required: ['c'] },
+      };
+      const { node, onChange } = createFormComponent({ schema, defaultFormStateBehavior, liveValidate: 'onChange' });
+
+      expect(node.querySelector('input#root_c')).toBeInTheDocument();
+
+      await user.clear(elementOf(node, 'input#root_a'));
+      await user.type(elementOf(node, 'input#root_b'), 'x');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: undefined, b: 'x' });
+      expect(node.querySelector('input#root_c')).not.toBeInTheDocument();
+      expect(onChange.mock.lastCall?.[0].errors).toEqual([]);
+    });
+
+    it('keeps an earlier cleared field empty when setFieldValue() writes another field', async () => {
+      const ref = createFormRef();
+      const { node, getFormData } = createFormComponent({
+        ref,
+        schema: {
+          type: 'object',
+          properties: { a: { type: 'string', default: 'A' }, b: { type: 'string' } },
+        },
+        defaultFormStateBehavior,
+      });
+
+      await user.clear(elementOf(node, 'input#root_a'));
+      act(() => handleOf(ref).setFieldValue('b', 'z'));
+
+      expect(getFormData()).toEqual({ a: undefined, b: 'z' });
+      expect(elementOf(node, 'input#root_a')).toHaveValue('');
+    });
+
+    it('fills the default a condition gives a field cleared before the edit that selects it', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { mode: { type: 'string', enum: ['a', 'b'] }, x: { type: 'string' } },
+        if: { properties: { mode: { const: 'b' } }, required: ['mode'] },
+        then: { properties: { x: { default: 'X' } } },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        defaultFormStateBehavior,
+        initialFormData: { mode: 'a', x: 'q' },
+      });
+
+      await user.clear(elementOf(node, 'input#root_x'));
+      await user.selectOptions(elementOf(node, 'select#root_mode'), 'b');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ mode: 'b', x: 'X' });
+    });
+
+    it('keeps a cleared scalar array item empty', async () => {
+      const schema: RJSFSchema = { type: 'array', items: { type: 'string', default: 'x' } };
+      const { node, onChange } = createFormComponent({ schema, defaultFormStateBehavior, initialFormData: ['a'] });
+
+      await user.clear(elementOf(node, 'input#root_0'));
+
+      expect(elementOf(node, 'input#root_0')).toHaveValue('');
+      expect(onChange.mock.lastCall?.[0].formData).toEqual([null]);
+    });
+
+    it('fills null back into a cleared field of an array item another edit turns into a null field', async () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'] }, x: { type: 'string' } },
+          if: { properties: { mode: { const: 'b' } }, required: ['mode'] },
+          then: { properties: { x: { type: 'null' } } },
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        defaultFormStateBehavior,
+        initialFormData: [{ mode: 'a', x: 'q' }],
+      });
+
+      await user.clear(elementOf(node, 'input#root_0_x'));
+      await user.selectOptions(elementOf(node, 'select#root_0_mode'), 'b');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual([{ mode: 'b', x: null }]);
     });
   });
 });
