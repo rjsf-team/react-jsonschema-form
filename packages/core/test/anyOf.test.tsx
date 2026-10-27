@@ -2478,35 +2478,41 @@ describe('anyOf', () => {
     expectToHaveBeenCalledWithFormData(onChange, { val: 'abc' }, 'root_val');
   });
 
+  const namedFields = [
+    ['anyOf', 'AnyOfField'],
+    ['oneOf', 'OneOfField'],
+  ];
+
   // `SchemaField` hands the options only to the field it renders them with, so a field named through `ui:field`
   // retrieves its own
-  it.each(['anyOf', 'oneOf'])('renders and switches the options of a %s field named through ui:field', async (key) => {
-    const fieldName = key === 'anyOf' ? 'AnyOfField' : 'OneOfField';
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        x: {
-          [key]: [
-            { type: 'string', title: 'S' },
-            { type: 'number', title: 'N' },
-          ],
+  it.each(namedFields)(
+    'renders and switches the options of a %s field named through ui:field',
+    async (key, fieldName) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          x: {
+            [key]: [
+              { type: 'string', title: 'S' },
+              { type: 'number', title: 'N' },
+            ],
+          },
         },
-      },
-    };
-    const { node, onChange } = createFormComponent({
-      schema,
-      uiSchema: { x: { 'ui:field': fieldName, 'ui:fieldReplacesAnyOrOneOf': true } },
-    });
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: { x: { 'ui:field': fieldName, 'ui:fieldReplacesAnyOrOneOf': true } },
+      });
 
-    await user.selectOptions(screen.getByRole('combobox'), 'N');
-    await user.type(elementOf(node, 'input#root_x'), '7');
+      await user.selectOptions(screen.getByRole('combobox'), 'N');
+      await user.type(elementOf(node, 'input#root_x'), '7');
 
-    expect(elementOf(node, 'input#root_x')).toHaveAttribute('inputmode', 'decimal');
-    expectToHaveBeenCalledWithFormData(onChange, { x: 7 }, 'root_x');
-  });
+      expect(elementOf(node, 'input#root_x')).toHaveAttribute('inputmode', 'decimal');
+      expectToHaveBeenCalledWithFormData(onChange, { x: 7 }, 'root_x');
+    },
+  );
 
-  it.each(['anyOf', 'oneOf'])('lists the constant options of a %s field named through ui:field', (key) => {
-    const fieldName = key === 'anyOf' ? 'AnyOfField' : 'OneOfField';
+  it.each(namedFields)('lists the constant options of a %s field named through ui:field', (key, fieldName) => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
