@@ -1077,10 +1077,10 @@ const EXCLUDED_STUB_KEYWORDS = new Set<string>([...SUBSCHEMA_KEYWORDS, ...UNSTUB
  * @returns - The copy to build the stub from
  */
 function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): S {
-  const source: object = subSchema;
-  const schema: Record<string, unknown> = { ...source };
+  // The copy reads as a record of keywords while some are dropped, which leaves a schema of the same type
+  const schema = { ...subSchema } as Record<string, unknown>;
   UNSTUBBABLE_KEYWORDS.forEach((keyword) => delete schema[keyword]);
-  return schemaFrom(subSchema, schema);
+  return schema as S;
 }
 
 /** Builds the stub schema for an additional property whose own schema names no type, keeping what that schema says
@@ -1102,8 +1102,8 @@ function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S):
  */
 function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: unknown, subSchema: S = {} as S): S {
   const type = guessType(formData);
-  const source: object = subSchema;
-  const schema: Record<string, unknown> = { ...source };
+  // The copy reads as a record of keywords while some are dropped and the type is set, which leaves a schema
+  const schema = { ...subSchema } as Record<string, unknown>;
   let isConstrained = false;
   Object.entries(subSchema).forEach(([key, value]) => {
     if (CONSTRAINING_KEYWORDS.has(key)) {
@@ -1118,7 +1118,7 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
   if (!isConstrained) {
     Reflect.set(schema, GUESSED_TYPE_FLAG, true);
   }
-  return schemaFrom(subSchema, schema);
+  return schema as S;
 }
 
 /** Builds the stub for an additional property described by `subSchema`, whose `$ref`s are expected to be resolved
@@ -1194,8 +1194,8 @@ function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S,
  * @returns - The schema with the option's extra-key keywords joined to its own
  */
 export function joinOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option: S): S {
-  const source: object = schema;
-  const joined: Record<string, unknown> = { ...source };
+  // The copy reads as a record of keywords while the option's are joined in
+  const joined = { ...schema } as Record<string, unknown>;
   const optionEvaluatesRest = additionalPropertiesKeyword<S>(option) !== undefined;
   for (const keyword of [ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY]) {
     const own: unknown =

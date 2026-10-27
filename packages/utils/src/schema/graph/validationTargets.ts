@@ -494,7 +494,7 @@ function derive<S extends StrictRJSFSchema>(
   };
   const unplaced = (value: unknown, child: NodeId) =>
     pointerTo(graph, child) ?? sub(value, child, undefined, false, KEPT);
-  const rawSchema: object = node.raw;
+  // The schema reads as a record of keywords, each of which is copied
   const {
     [ID_KEY]: _id,
     [REQUIRED_KEY]: required,
@@ -504,7 +504,7 @@ function derive<S extends StrictRJSFSchema>(
     [ELSE_KEY]: otherwise,
     [DEPENDENCIES_KEY]: dependencies,
     ...rest
-  }: Record<string, unknown> = { ...rawSchema };
+  } = node.raw as Record<string, unknown>;
   const copy: Record<string, unknown> = Object.fromEntries(
     Object.entries(rest).map(([key, value]) => [key, pointed(graph, key, value, place, node.baseUri, unplaced)]),
   );

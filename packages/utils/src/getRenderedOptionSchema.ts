@@ -19,7 +19,7 @@ import isObject from './isObject.ts';
 import mergeSchemas from './mergeSchemas.ts';
 import rendersOwnFieldBesideOption, { takesParentExtraKeys } from './rendersOwnFieldBesideOption.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
-import { schemaFrom, withoutKeys } from './schema/graph/mergePlan.ts';
+import { withoutKeys } from './schema/graph/mergePlan.ts';
 import {
   CONTAINER_KEYWORDS,
   EXTRA_KEY_KEYWORDS,
@@ -91,9 +91,7 @@ const POSITIONAL_KEYWORDS = new Set<string>([ITEMS_KEY, 'prefixItems']);
  * @param option - The option
  * @returns - The two met into one schema
  */
-function meetSchemas(parentSchema: object, optionSchema: object): Record<string, unknown> {
-  const parent: Record<string, unknown> = { ...parentSchema };
-  const option: Record<string, unknown> = { ...optionSchema };
+function meetSchemas(parent: Record<string, unknown>, option: Record<string, unknown>): Record<string, unknown> {
   const result: Record<string, unknown> = { ...parent, ...option };
   const takesOptionConditional = CONDITIONAL_KEYWORDS.some((key) => option[key] !== undefined);
   for (const [key, optionValue] of Object.entries(option)) {
@@ -321,7 +319,8 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
     return option;
   }
   if (!rendersOwnField) {
-    return schemaFrom(option, meetSchemas(inherited, option));
+    // The option reads as a record of keywords, and the two met are a schema of the option's type
+    return meetSchemas(inherited, option as Record<string, unknown>) as S;
   }
   // An object parent passes on no bound, so there is none to tighten. An option key holding `undefined`, as one built
   // in code can, declares nothing, as `meetSchemas()` reads it, but `mergeSchemas()` copies it over what was inherited
@@ -332,10 +331,12 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
     }
   }
   if (!takesExtraKeys) {
-    return schemaFrom(option, merged);
+    return merged as S;
   }
-  const stripped: object = withoutKeys<S>(schemaFrom(option, merged), ...EXTRA_KEY_KEYWORDS);
-  const withParentExtraKeys: Record<string, unknown> = { ...stripped };
+  const withParentExtraKeys: Record<string, unknown> = { ...merged };
+  for (const keyword of EXTRA_KEY_KEYWORDS) {
+    delete withParentExtraKeys[keyword];
+  }
   for (const keyword of EXTRA_KEY_KEYWORDS) {
     if (Object.hasOwn(parent, keyword)) {
       withParentExtraKeys[keyword] = Reflect.get(parent, keyword);
@@ -357,7 +358,7 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
   // A parent taking the extra keys of a field above it in turn describes a key by each of the schemas it joins apart
   copyJoinedSchemas(parent, withParentExtraKeys);
   Reflect.set(withParentExtraKeys, DECLARED_ABOVE_KEY, declaredAbove<S>(parent));
-  return joinOptionExtraKeys<S>(schemaFrom(option, withParentExtraKeys), option);
+  return joinOptionExtraKeys<S>(withParentExtraKeys as S, option);
 }
 
 /** Returns the names of the properties `parent` declares, a stub of an extra key aside, and those the fields above it
