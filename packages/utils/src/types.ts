@@ -532,7 +532,7 @@ export type FieldHelpProps<
 };
 
 /** The properties that are passed to a `GridTemplate` */
-export interface GridTemplateProps extends GenericObjectType {
+export interface GridTemplateProps extends Record<string, unknown> {
   /** The contents of the grid template */
   children?: ReactNode;
   /** Optional flag indicating whether the grid element represents a column, necessary for themes which have components
@@ -543,6 +543,10 @@ export interface GridTemplateProps extends GenericObjectType {
    * without one is full width; another theme may read it on its own grid, such as antd's 24 columns, or ignore it
    */
   span?: number;
+  /** The class names to add to the grid element */
+  className?: string;
+  /** The style to apply to the grid element */
+  style?: CSSProperties;
 }
 
 /** The set of `Fields` stored in the `Registry` */
@@ -1776,7 +1780,7 @@ export interface UISchemaSubmitButtonOptions {
   /** Flag, if `true`, removes the submit button completely from the form */
   norender?: boolean;
   /** Any other props to be passed to the submit button itself */
-  props?: GenericObjectType & {
+  props?: Record<string, unknown> & {
     /** A boolean value stating if the submit button is disabled */
     disabled?: boolean;
     /** The class name for the submit button */
@@ -1980,7 +1984,7 @@ export type ArrayElement<A> = A extends readonly (infer E)[] ? E : A;
  * exports it for its users to pass as `Checks` (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`), and a consumer of a
  * theme adds their own domain-specific options the same way, unioned into what they pass.
  */
-export interface UiOptionsCheck<When = unknown, Then = GenericObjectType> {
+export interface UiOptionsCheck<When = unknown, Then = Record<string, unknown>> {
   when: When;
   then: Then;
 }
