@@ -2,12 +2,14 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
+  fieldShowsOwnErrors,
   getControlAttributes,
   getTemplates,
   labelValue,
   schemaRequiresTrueValue,
   getUiOptions,
   getWidgetDescription,
+  joinClassNames,
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
@@ -40,6 +42,10 @@ function CheckboxWidget<
     presentation,
   } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
+  const { classMap } = registry;
+  // The field's own error state, as its wrapper has it, rather than its control's, which is invalid while a field above
+  // shows its errors even where this one hides them
+  const hasErrors = fieldShowsOwnErrors<T, S, F>(props);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
@@ -66,19 +72,24 @@ function CheckboxWidget<
   const description =
     presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (
-    <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
+    <div
+      className={joinClassNames('rjsf-checkbox', classMap.checkboxWrapper, (disabled || readonly) && classMap.disabled)}
+      data-disabled={disabled || readonly || undefined}
+    >
       {description && (
         <DescriptionFieldTemplate
           id={description.id}
           description={description.text}
+          hasErrors={hasErrors}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
         />
       )}
-      <label>
+      <label className={classMap.checkboxLabel} data-invalid={hasErrors || undefined}>
         <input
           type='checkbox'
+          className={classMap.checkboxInput}
           id={id}
           name={htmlName || id}
           checked={typeof value === 'undefined' ? false : value}
@@ -93,7 +104,7 @@ function CheckboxWidget<
         {labelValue(
           <span>
             {label}
-            {trueValueRequired && <span className='required'>*</span>}
+            {trueValueRequired && <span className='rjsf-required'>*</span>}
           </span>,
           !showsLabel,
         )}

@@ -30,7 +30,6 @@ Unit tests for DaisyUI-specific components:
 - `DaisyUIFrameProvider.test.tsx` - Tests iframe theme injection
 - `ToggleWidget.test.tsx` - Tests the DaisyUI toggle component
 - `RatingWidget.test.tsx` - Tests the DaisyUI rating component
-- `ArrayFieldItemTemplate.test.tsx` - Tests card-based UI for array items
 
 ### 3. Helper Functions
 

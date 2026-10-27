@@ -49,28 +49,28 @@ For arrays this is not the case. Defining an array, when a parent also defines a
 
 ## Custom array field buttons
 
-The `ArrayField` component provides a UI to add, copy, remove and reorder array items, and these buttons use [Bootstrap glyphicons](http://getbootstrap.com/components/#glyphicons).
-If you don't use glyphicons but still want to provide your own icons or texts for these buttons, you can easily do so using CSS:
+The `ArrayField` component provides a UI to add, copy, remove and reorder array items, and these buttons carry an inline SVG icon.
+If you want to provide your own icons or texts for these buttons, you can easily do so using CSS:
 
 > NOTE this only applies to the `@rjsf/core` theme
 
 ```css
-i.glyphicon {
+.rjsf-button-icon {
   display: none;
 }
-.btn-add::after {
+.rjsf-btn-add::after {
   content: 'Add';
 }
-.array-item-copy::after {
+.rjsf-array-item-copy::after {
   content: 'Copy';
 }
-.array-item-move-up::after {
+.rjsf-array-item-move-up::after {
   content: 'Move Up';
 }
-.array-item-move-down::after {
+.rjsf-array-item-move-down::after {
   content: 'Move Down';
 }
-.array-item-remove::after {
+.rjsf-array-item-remove::after {
   content: 'Remove';
 }
 ```

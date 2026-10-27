@@ -385,24 +385,14 @@ describe('FieldTemplate', () => {
     const altDate = { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } };
     const dateSchema = { type: 'string' as const, format: 'date' };
 
-    test('associates each of its labels with the control it names', () => {
-      renderForm({ agree: altDate }, { ...dateSchema, title: 'Agree' });
-
-      // daisyui's SelectWidget opens from a real `button`, which `label htmlFor` can associate with. Its `aria-label`
-      // names it, and starts with the field's title so the visible label alone doesn't leave the part out of context
-      for (const type of ['year', 'month', 'day']) {
-        expect(screen.getByLabelText(type)).toBe(screen.getByRole('combobox', { name: `Agree, ${type}` }));
-      }
-    });
-
     test('names the whole group with the field label', () => {
       renderForm({ agree: altDate }, { ...dateSchema, title: 'Agree' });
 
       expect(screen.getByRole('group', { name: 'Agree' })).toBeInTheDocument();
     });
 
-    // A label points at each select whether or not the field has a property name of its own, so a root field — which
-    // has none — has to describe the value its selects display just as a titled property does
+    // Each select is named whether or not the field has a property name of its own, so a root field — which has none —
+    // has to describe the value its selects display just as a titled property does
     describe.each([
       [
         'a titled property',
@@ -413,7 +403,7 @@ describe('FieldTemplate', () => {
       ],
       ['a root field', dateSchema, '2020-05-03', altDate, ''],
     ])('for %s', (_, schema, formData, uiSchema, namePrefix) => {
-      test('names each of its selects with its own label, and shows the value it holds', () => {
+      test('names each of its selects, and shows the value it holds', () => {
         render(<Form schema={schema} uiSchema={uiSchema} initialFormData={formData} validator={validator} />);
 
         // Each select is a combobox named by its `aria-label`, whose contents are its value. Both are spelled out
@@ -650,8 +640,6 @@ describe('FieldTemplate', () => {
 
     test('rejects a user extension of the global options reusing an option name the widgets read', () => {
       expectTypeOf<DaisyGlobalUISchemaOptions<{ myKey?: string }>>().not.toBeNever();
-      // @ts-expect-error `BaseInputTemplate` reads `multiple`
-      expectTypeOf<DaisyGlobalUISchemaOptions<{ multiple?: boolean }>>().not.toBeNever();
       // @ts-expect-error `RatingWidget` reads `size`
       expectTypeOf<DaisyGlobalUISchemaOptions<{ size?: string }>>().not.toBeNever();
     });

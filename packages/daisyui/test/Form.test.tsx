@@ -1,3 +1,4 @@
+import { withTheme } from '@rjsf/core';
 import {
   checkboxLabelTests,
   fallbackDescriptionTests,
@@ -12,7 +13,7 @@ import validator from '@rjsf/validator-ajv8';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import Form, { generateClassMap, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
 const user = userEvent.setup();
 
@@ -50,6 +51,25 @@ function expectReferencesResolve(container: HTMLElement) {
 
 formTests(Form);
 themeTests({ generateTemplates, generateTheme, generateWidgets });
+
+describe('generateClassMap()', () => {
+  test('is the class map generateTheme() carries, a fresh copy on every call', () => {
+    expect(generateClassMap()).toEqual(generateTheme().classMap);
+    expect(generateClassMap()).not.toBe(generateClassMap());
+  });
+
+  test("styles core's components in a Form put together from the theme's templates and widgets", () => {
+    const Composed = withTheme({
+      templates: generateTemplates(),
+      widgets: generateWidgets(),
+      classMap: generateClassMap(),
+    });
+    render(<Composed schema={{ type: 'object', properties: { a: { type: 'string' } } }} validator={validator} />);
+
+    expect(screen.getByRole('textbox')).toHaveClass('input', 'input-bordered', 'w-full');
+    expect(screen.getByRole('button', { name: 'Submit' })).toHaveClass('btn', 'btn-primary');
+  });
+});
 
 describe("daisyui widgets carry their field's plan on the element a user focuses", () => {
   test.each<[string, RJSFSchema, UiSchema]>([

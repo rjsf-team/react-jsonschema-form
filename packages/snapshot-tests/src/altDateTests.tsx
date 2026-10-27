@@ -41,7 +41,7 @@ function getPart(name: string) {
  *
  * These live in their own file rather than alongside `formTests()` because every render advances React's `useId`
  * counter for the rest of the module, so running them there would renumber the ids in that suite's snapshots across
- * all nine themes.
+ * all ten themes.
  *
  * @param Form - The theme's `Form` component
  */

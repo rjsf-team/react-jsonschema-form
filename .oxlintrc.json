@@ -793,7 +793,7 @@
       // they're left out. An override replaces the rule's options, so the root entries are repeated here; a new
       // published package goes in `files`
       "files": [
-        "packages/{antd,chakra-ui,core,daisyui,fluentui-rc,mantine,mui,react-bootstrap,shadcn,utils,validator-ajv8,validator-ata,validator-cfworker}/src/**"
+        "packages/{antd,bootstrap3,chakra-ui,core,daisyui,fluentui-rc,mantine,mui,react-bootstrap,shadcn,utils,validator-ajv8,validator-ata,validator-cfworker}/src/**"
       ],
       "rules": {
         "no-restricted-globals": [

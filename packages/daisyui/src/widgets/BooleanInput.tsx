@@ -2,6 +2,7 @@ import type { ChangeEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
+  fieldShowsOwnErrors,
   getControlAttributes,
   getFieldTypeForWidget,
   getTemplates,
@@ -18,8 +19,8 @@ interface BooleanInputProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > extends WidgetProps<T, S, F> {
-  /** The DaisyUI class for the input itself, which is what makes it look like a checkbox or a switch */
-  inputClassName: string;
+  /** The DaisyUI classes for the input itself, which make it look like a checkbox or a switch, and space it from its text */
+  inputClassName?: string;
   /** The DaisyUI classes for the `<label>` wrapping the input and its text */
   labelClassName: string;
 }
@@ -61,6 +62,8 @@ export default function BooleanInput<
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const description = getWidgetDescription<T, S, F>(props);
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  // The field's own error state, as core's `CheckboxWidget` marks its label and description
+  const hasErrors = fieldShowsOwnErrors<T, S, F>(props);
   // The plan's marker, which `@rjsf/core` works out the same way. Without a plan, a checkbox already answers a boolean
   // whose schema accepts `false`, so a required one of those is marked no more than a field the user has already filled
   // in. That is any field `BooleanField` renders, which seeds it with that `false`, including a `type` list whose widget
@@ -126,6 +129,7 @@ export default function BooleanInput<
         <DescriptionFieldTemplate
           id={description.id}
           description={description.text}
+          hasErrors={hasErrors}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -134,9 +138,8 @@ export default function BooleanInput<
       {hideLabel || !label ? (
         input
       ) : (
-        <label className={labelClassName}>
-          {/* A `<label>` permits only phrasing content, so the input's wrapper cannot be a block element */}
-          <span className='mr-2'>{input}</span>
+        <label className={labelClassName} data-invalid={hasErrors || undefined}>
+          {input}
           <span className='label-text'>
             {label}
             {marksRequired && <RequiredMarker />}

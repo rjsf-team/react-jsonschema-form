@@ -11,7 +11,7 @@ export default function ArrayFieldDescriptionTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: ArrayFieldDescriptionProps<T, S, F>) {
-  const { id, description, registry, schema, uiSchema, presentation } = props;
+  const { id, description, registry, schema, uiSchema, presentation, hasErrors } = props;
   const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   // The plan has already decided whether `ui:label` hides the description
   const { label: displayLabel = true } = options;
@@ -23,6 +23,7 @@ export default function ArrayFieldDescriptionTemplate<
     <DescriptionFieldTemplate
       id={presentation?.description.id ?? descriptionId(id)}
       description={description}
+      hasErrors={hasErrors}
       schema={schema}
       uiSchema={uiSchema}
       registry={registry}

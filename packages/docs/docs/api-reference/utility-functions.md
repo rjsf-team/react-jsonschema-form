@@ -93,7 +93,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
 - onBlur: (id: string, value: any) => void - Callback for the widget's blur event
 - onFocus: (id: string, value: any) => void - Callback for the widget's focus event
-- [className='form-control']: string - Optional class name given to the rendered widget
+- [className]: string - Optional class name given to the rendered widget
 - [autofocus]: boolean - Optional flag, if true, the widget autofocuses
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
@@ -866,6 +866,20 @@ Derives the HTML `name` for `fieldPath` using the `nameGenerator` in `globalForm
 #### Returns
 
 - string | undefined: The name for the field, or undefined when no `nameGenerator` is configured or `fieldPath` is the root
+
+### fieldShowsOwnErrors&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#fieldshowsownerrors}
+
+Whether the field a widget renders shows errors of its own, for the error state of the label and description the widget draws for it: its plan's `errors.own`, the field's own errors as its `ui:hideError` leaves them, whoever draws them, as `SchemaField` marks the field's wrapper.
+Unlike [hasWidgetErrors()](#haswidgeterrors), the control's state, it is off beneath an `anyOf`/`oneOf` option that hides its errors while the field above shows them.
+For a widget rendered without a plan, the two agree, so it falls back to `hasWidgetErrors()`.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'rawErrors' | 'hideError' | 'presentation'> - The widget's `rawErrors`, `hideError` and `presentation`
+
+#### Returns
+
+- boolean: True when the field shows errors of its own
 
 ### findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2341,6 +2355,19 @@ array constant, since `SchemaField` renders a typeless select over such values a
 
 - boolean: True if `schema` is a select whose value is an object or array picked as a whole
 
+### joinClassNames()
+
+Joins the class names of one element into its `className`, leaving out the conditional ones that are `false`, `null`, `undefined` or empty, as in `joinClassNames(classMap.checkboxWrapper, disabled && classMap.disabled)`.
+`@rjsf/core`'s components join their marker classes and their [class map](../advanced-customization/custom-themes.md#class-map) entries with it, and a custom component reading `registry.classMap` can do the same.
+
+#### Parameters
+
+- ...classNames: (string | false | null | undefined)[] - The class names, each a string or a falsy conditional to leave out
+
+#### Returns
+
+- string: The class names present, space separated, `''` where there are none
+
 ### keywordShape()
 
 Classifies one of a schema's own entries by the shape of the subschemas its keyword's value holds: `'map'` for a map of names, which are data, to subschemas, such as `properties`, `'array'` for an array of them, such as `allOf`, `'single'` for one, such as `not`, and `undefined` for a keyword holding data or annotations, such as `const`, `default` or `title`.
@@ -2431,6 +2458,21 @@ If no such value exists, return the `fallback` value.
 #### Returns
 
 - R: The value associated with `toLookup` in the form context or `fallback`
+
+### mergeClassMaps()
+
+Layers class maps key by key, the way `@rjsf/core` layers a theme's `classMap` over its own and the `Form`'s over the theme's.
+An entry that is neither a class nor a function, such as one left `undefined`, `null` from JSON or `false` from a conditional, keeps the class beneath it.
+A function entry is called with the class beneath it, or composed with the function beneath it until a class is there to call them with.
+Code that builds a registry for a themed form outside `Form` layers the theme's map and its own with it before handing them to `buildRegistry()`.
+
+#### Parameters
+
+- ...layers: (FormClassMap | undefined)[] - The class maps to layer, from the bottom; `undefined` entries are skipped
+
+#### Returns
+
+- FormClassMap: The layered class map, whose entries are functions only where no layer beneath gives a class
 
 ### mergeDefaultsWithFormData&lt;T = unknown>()
 
@@ -2897,7 +2939,7 @@ Each part is placed `template` or `self` by its declared owner, `above` when a f
 
 - The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name. It is `above`, under the id and text of the label drawn there, when the template of a field above rendering the same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a second time; a level with no control, such as a container whose label is its own heading, keeps its label only when no field above already draws its text, or else is `above` under the id of the label that does. A label with a control to name takes [fieldLabelId()](#fieldlabelid); a heading takes [titleId()](#titleid), the id every title template renders it under, so a heading kept beneath a label above has an id of its own. A label of its own with a control to name takes [optionLabelId()](#optionlabelid) instead when a field above draws a label under the id it would take, numbered by how many fields above draw one. The control points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the control above was pointed at that label too, since its template may then draw it with no `for`, or when its id isn't the one that label's `for` names. The label's `requiredMarker` follows `required` whether or not there is a control, so a container's heading is marked too, and an `above` label carries the marker of the label drawn above along with its text and id, while the control's own `required` stays this level's.
 - The description and help show where they have text, the description only where `showLabel` allows it, since `ui:label: false` hides both. Text any field above already shows is `above`, as is a part with no text under a field above that shows one. Text is compared with `===`, so an element `ui:help` is matched only by the same element, which an option inheriting its field's `uiSchema` carries; to repeat one in an option's own `uiSchema`, reuse the one element rather than writing the JSX again. Text of its own takes [optionDescriptionId()](#optiondescriptionid) or [optionHelpId()](#optionhelpid) when a field above shows text under the id it would take, numbered by how many fields above show text of their own, so each level's text has an id of its own.
-- The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws, unless it hides them while this field shows its own, which this field then draws.
+- The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws, unless it hides them while this field shows its own, which this field then draws. Beside the messages, `errors.own` says whether the field shows errors of its own, as its `ui:hideError` leaves them, whoever draws them: the error state of its wrapper and of the label and description drawn for it, where the messages may be those of a field above, which [fieldShowsOwnErrors()](#fieldshowsownerrors) reads for a widget.
 - The control is described by the parts that render, here or above, which the plan lists as `describedBy`, and is `aria-invalid` whenever errors show. A field below rendering the same id inherits `describedBy`, so a widget adds the ids of the elements it renders to describe its own control, such as its `examplesId()` list, with [getControlAttributes()](#getcontrolattributes) rather than through the plan.
 - The plan records `showLabel` as resolved, so a widget reads whether `ui:label: false` hides its field's label and description from it. A control whose label it hides, with no label above naming it, takes the label's text as its `aria-label`, since hiding the label is a choice of layout, not of the control's name, or the `aria-label` of the nearest field above rendering the same id whose label is hidden too, as an option's control is named by its field's label while it shows; `getGroupAttributes()` puts it on a group's wrapper. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at the id its plan gives the label: [fieldLabelId()](#fieldlabelid), or [optionLabelId()](#optionlabelid) beneath a label a field above draws under that id.
 
