@@ -4,7 +4,6 @@ import type {
   FieldProps,
   FieldPath,
   FormContextType,
-  GenericObjectType,
   RJSFSchema,
   Registry,
   StrictRJSFSchema,
@@ -64,7 +63,7 @@ export const Operators = {
 } as const;
 export type Operators = (typeof Operators)[keyof typeof Operators];
 
-export interface GridProps extends GenericObjectType {
+export interface GridProps extends Record<string, unknown> {
   /** The optional operator to use when comparing a field's value with the expected value for `GridType.CONDITION`
    */
   operator?: Operators;
@@ -80,7 +79,7 @@ export type GridSchemaType = Partial<Record<GridType, object>>;
 
 /** The types which comprise the possibilities for the `layoutGridSchema` prop
  */
-export type LayoutGridSchemaType = GridSchemaType | GenericObjectType | string;
+export type LayoutGridSchemaType = GridSchemaType | Record<string, unknown> | string;
 
 export interface LayoutGridFieldProps<
   T = unknown,
@@ -110,7 +109,7 @@ interface OneOfOptionsInfoType {
 }
 
 /** Type used to represent a React-based rendering component */
-type RenderComponent = ComponentType<GenericObjectType>;
+type RenderComponent = ComponentType<Record<string, unknown>>;
 
 /** Type used to determine what are the UIComponent and props from the grid schema */
 interface UIComponentPropsType {
@@ -119,7 +118,7 @@ interface UIComponentPropsType {
   /** The render component if specified */
   UIComponent: RenderComponent | null;
   /** Any uiProps associated with the render component */
-  uiProps: GenericObjectType;
+  uiProps: Record<string, unknown>;
   /** The special case where the component is immediately rendered */
   rendered: ReactNode;
 }
@@ -164,7 +163,7 @@ export function computeFieldUiSchema<
   F extends FormContextType = FormContextType,
 >(
   field: string,
-  uiProps: GenericObjectType,
+  uiProps: Record<string, unknown>,
   uiSchema?: UiSchema<T, S, F>,
   schemaReadonly?: boolean,
   forceReadonly?: boolean,
@@ -482,16 +481,16 @@ export function computeUIComponentPropsFromGridSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(registry: Registry<T, S, F>, gridSchema?: string | GenericObjectType): UIComponentPropsType {
+>(registry: Registry<T, S, F>, gridSchema?: string | Record<string, unknown>): UIComponentPropsType {
   let name: string;
   let UIComponent: RenderComponent | null = null;
-  let uiProps: GenericObjectType = {};
+  let uiProps: Record<string, unknown> = {};
   let rendered: ReactNode | undefined;
   if (typeof gridSchema === 'string' || gridSchema === undefined) {
     name = gridSchema ?? '';
   } else {
     const { name: innerName = '', render, ...innerProps } = gridSchema;
-    name = innerName;
+    name = typeof innerName === 'string' ? innerName : '';
     uiProps = innerProps;
     // Transform any `$lookup=` in the uiProps props with the appropriate value
     Object.entries(uiProps).forEach(([key, prop]) => {
@@ -503,7 +502,10 @@ export function computeUIComponentPropsFromGridSchema<
         }
       }
     });
-    UIComponent = getCustomRenderComponent<T, S, F>(render, registry);
+    UIComponent =
+      typeof render === 'string' || isComponentType(render)
+        ? getCustomRenderComponent<T, S, F>(render, registry)
+        : null;
     if (!innerName && UIComponent) {
       rendered = <UIComponent {...innerProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent} />;
     }
@@ -674,7 +676,7 @@ type LayoutGridFieldComponentProps<
   F extends FormContextType = FormContextType,
 > = LayoutGridFieldProps<T, S, F> & {
   /** The string or object that represents the configuration for the grid field */
-  gridSchema?: GenericObjectType | string;
+  gridSchema?: Record<string, unknown> | string;
 };
 
 /** Renders the field described by `gridSchema`. If `gridSchema` is not an object, then is will be assumed

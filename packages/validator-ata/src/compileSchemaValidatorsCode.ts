@@ -1,4 +1,4 @@
-import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   ALL_OF_KEY,
   getByPath,
@@ -65,7 +65,7 @@ const LATER_DIALECTS = new Set([JSON_SCHEMA_DRAFT_2019_09, JSON_SCHEMA_DRAFT_202
 const DRAFT_07_IDS = new Set(['http://json-schema.org/draft-07/schema#', 'http://json-schema.org/draft-07/schema']);
 
 /** Returns the subschemas `schema` holds under its keywords */
-function subschemasOf(schema: GenericObjectType): unknown[] {
+function subschemasOf(schema: Record<string, unknown>): unknown[] {
   const subschemas: unknown[] = [];
   for (const [key, value] of Object.entries(schema)) {
     mapKeyword(key, value, (subschema) => subschemas.push(subschema));
@@ -215,7 +215,7 @@ function locate(resource: Resource, fragment: string, laterDialect: boolean): [u
  * holding no assertion it knows, such as `{ title: 'By email' }`. A `not` is an assertion it knows, so one that always
  * holds is added where the schema has none, unless it holds a `$ref`, which ata compiles only on its own.
  */
-function compilable(schema: unknown): GenericObjectType {
+function compilable(schema: unknown): Record<string, unknown> {
   if (schema === false) {
     return { not: {} };
   }
@@ -269,9 +269,9 @@ function readRoot(rootSchema: object): RootReading {
  * @returns - The document
  */
 function standalone(
-  schema: GenericObjectType,
+  schema: Record<string, unknown>,
   { container, dialect, draft07, laterDialect, root, resources }: RootReading,
-): GenericObjectType {
+): Record<string, unknown> {
   const names = new Map<unknown, Map<string, string>>();
   const pending: [string, unknown, Resource][] = [];
   let count = 0;
@@ -326,7 +326,7 @@ function standalone(
     return { ...siblings, [ALL_OF_KEY]: [...(Array.isArray(allOf) ? allOf : []), reference] };
   };
   const document = compilable(rewrite(schema, root));
-  const carried: GenericObjectType = {};
+  const carried: Record<string, unknown> = {};
   for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
     const [name, value, base] = next;
     carried[name] = compilable(rewrite(value, base));

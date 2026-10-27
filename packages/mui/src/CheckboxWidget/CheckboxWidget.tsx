@@ -2,7 +2,7 @@ import type { CheckboxProps } from '@mui/material/Checkbox';
 import Checkbox from '@mui/material/Checkbox';
 import type { FormControlLabelProps } from '@mui/material/FormControlLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   getControlAttributes,
   getTemplates,
@@ -15,7 +15,7 @@ import {
 import { getMuiProps, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the CheckboxWidget. */
-export interface CheckboxWidgetMuiProps extends GenericObjectType {
+export interface CheckboxWidgetMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the CheckboxWidget. */
   rjsfSlotProps?: {
     /** Props applied to the individual `Checkbox` component. */

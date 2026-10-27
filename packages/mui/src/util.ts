@@ -17,7 +17,6 @@ import type {
   ThemeGlobalUISchemaOptions,
   UIOptionsType,
   UiSchema,
-  GenericObjectType,
 } from '@rjsf/utils';
 import { partId } from '@rjsf/utils';
 
@@ -26,7 +25,7 @@ type SxArray = Extract<SxProps<Theme>, readonly unknown[]>;
 /** The options this theme reads from `ui:globalOptions`, beyond the ones RJSF reads */
 export interface MuiGlobalUiOptionsKeys {
   /** The props for the MUI components every field renders, as in a field's `ui:options` */
-  mui?: GenericObjectType;
+  mui?: Record<string, unknown>;
 }
 
 /** The `ui:globalOptions` this theme reads, plus a user's own `UserExtensions` */
@@ -74,11 +73,11 @@ export function getMuiProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-  P extends GenericObjectType = GenericObjectType,
+  P extends object = Record<string, unknown>,
 >(options: UIOptionsType<T, S, F>, propsToFilter?: string[], rjsfSlotPropsOnly?: boolean): P {
   const muiProps = (options?.mui as P) || ({} as P);
   if (rjsfSlotPropsOnly) {
-    const { rjsfSlotProps } = muiProps;
+    const rjsfSlotProps: unknown = Reflect.get(muiProps, 'rjsfSlotProps');
     return { rjsfSlotProps } as unknown as P;
   }
   if (propsToFilter) {

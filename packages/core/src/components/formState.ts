@@ -3,7 +3,6 @@ import type {
   FieldPath,
   FieldPathList,
   FormContextType,
-  GenericObjectType,
   StrictRJSFSchema,
   RJSFSchema,
   SchemaContext,
@@ -116,7 +115,7 @@ function markChanged(changed: unknown, baseline: unknown): unknown {
     );
   }
   if (isPlainObject(changed) && isPlainObject(baseline)) {
-    const marks: GenericObjectType = {};
+    const marks: Record<string, unknown> = {};
     for (const key of new Set([...Object.keys(changed), ...Object.keys(baseline)])) {
       const mark = markMember(changed, baseline, key);
       if (mark !== undefined) {
@@ -153,7 +152,7 @@ function markWhole(value: unknown): unknown {
     return value.map(markWhole);
   }
   if (isPlainObject(value) && Object.keys(value).length > 0) {
-    const marks: GenericObjectType = {};
+    const marks: Record<string, unknown> = {};
     Object.entries(value).forEach(([key, member]) => setOwn(marks, key, markWhole(member)));
     return marks;
   }
@@ -193,7 +192,7 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
   if (Array.isArray(data) ? !hasByPath(data, key) : data !== undefined && !isPlainObject(data)) {
     return undefined;
   }
-  let container: GenericObjectType = isPlainObject(marks) ? marks : {};
+  let container: object = isPlainObject(marks) ? marks : {};
   if (Array.isArray(data)) {
     container = Array.isArray(marks) ? marks : Array.from({ length: data.length });
   }
@@ -794,7 +793,7 @@ function emptyValuesOf(uiSchema: unknown): unknown {
   if (!isPlainObject(uiSchema) && !Array.isArray(uiSchema)) {
     return undefined;
   }
-  const found: GenericObjectType = {};
+  const found: Record<string, unknown> = {};
   // Read the way `getDefaultFormState()` reads it, so the two cannot disagree about where an `emptyValue` is
   const { emptyValue } = Array.isArray(uiSchema) ? {} : getUiOptions(uiSchema as UiSchema);
   if (emptyValue !== undefined) {
@@ -1482,7 +1481,7 @@ function withKeysMoved(data: unknown, changed: unknown, path: FieldPathList, new
     });
     moved = items;
   } else if (isPlainObject(held) && isPlainObject(newHeld)) {
-    const properties: GenericObjectType = {};
+    const properties: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(held)) {
       const newKey = newKeyOf(key);
       if (newKey !== undefined) {

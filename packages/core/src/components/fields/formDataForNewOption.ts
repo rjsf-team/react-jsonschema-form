@@ -1,6 +1,5 @@
 import type {
   FormContextType,
-  GenericObjectType,
   GlobalUISchemaOptions,
   RJSFSchema,
   SchemaUtilsType,
@@ -107,7 +106,7 @@ function optionDeclaresValueFor<
  * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`
  * @returns - `data`, or a copy of it without the discarded keys
  */
-function withoutDiscardedKeys<D extends GenericObjectType, S extends StrictRJSFSchema = RJSFSchema>(
+function withoutDiscardedKeys<D extends Record<string, unknown>, S extends StrictRJSFSchema = RJSFSchema>(
   data: D,
   oldOption?: S,
   newOption?: S,
@@ -148,7 +147,8 @@ function fieldWithOnlyOption<T, S extends StrictRJSFSchema, F extends FormContex
   if (!parentSchema || !xxxOfKey) {
     return undefined;
   }
-  const ownUiSchema: GenericObjectType | undefined = optionUiSchema && { [xxxOfKey]: [optionUiSchema] };
+  const emptyUiSchema: UiSchema<T, S, F> = {};
+  const ownUiSchema = optionUiSchema && Object.assign(emptyUiSchema, { [xxxOfKey]: [optionUiSchema] });
   return {
     schema: { ...parentSchema, [xxxOfKey]: [option] },
     uiSchema: withGlobalUiOptions<T, S, F>(ownUiSchema, globalUiOptions),

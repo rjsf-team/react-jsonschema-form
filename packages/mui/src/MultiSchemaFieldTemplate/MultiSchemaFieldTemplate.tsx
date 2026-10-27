@@ -2,19 +2,13 @@ import type { BoxProps } from '@mui/material/Box';
 import Box from '@mui/material/Box';
 import type { FormControlProps } from '@mui/material/FormControl';
 import FormControl from '@mui/material/FormControl';
-import type {
-  FormContextType,
-  GenericObjectType,
-  MultiSchemaFieldTemplateProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { FormContextType, MultiSchemaFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the MultiSchemaFieldTemplate. */
-export interface MultiSchemaFieldTemplateMuiProps extends GenericObjectType {
+export interface MultiSchemaFieldTemplateMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the MultiSchemaFieldTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the wrapper `Box` container. */

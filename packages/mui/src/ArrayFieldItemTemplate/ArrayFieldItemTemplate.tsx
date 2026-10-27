@@ -5,19 +5,13 @@ import type { GridProps } from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
 import type { PaperProps } from '@mui/material/Paper';
 import Paper from '@mui/material/Paper';
-import type {
-  ArrayFieldItemTemplateProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  GenericObjectType,
-} from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getUiOptions, getTemplates } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the ArrayFieldItemTemplate. */
-export interface ArrayFieldItemTemplateMuiProps extends GenericObjectType {
+export interface ArrayFieldItemTemplateMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the ArrayFieldItemTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the outermost `Grid` container. */

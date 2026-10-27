@@ -4,13 +4,13 @@ import type { ListProps } from '@mui/material/List';
 import List from '@mui/material/List';
 import type { ListItemProps } from '@mui/material/ListItem';
 import ListItem from '@mui/material/ListItem';
-import type { FieldErrorProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { errorId, getUiOptions } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldErrorTemplate. */
-export interface FieldErrorTemplateMuiProps extends GenericObjectType {
+export interface FieldErrorTemplateMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the FieldErrorTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the `List` container holding the errors. */

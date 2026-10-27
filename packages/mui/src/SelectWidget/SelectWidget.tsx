@@ -5,14 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import type { SelectProps as MuiSelectProps } from '@mui/material/Select';
 import type { TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
-import type {
-  FormContextType,
-  GenericObjectType,
-  IndexedEnumOptionType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
@@ -34,7 +27,7 @@ import {
 import { describeByHelperText, getMuiProps, helperTextSlot, inputLabelId, withSlotProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the SelectWidget. */
-export interface SelectWidgetMuiProps extends GenericObjectType {
+export interface SelectWidgetMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the SelectWidget. */
   rjsfSlotProps?: {
     /** Props applied to the `InputLabel` element. */

@@ -7,13 +7,7 @@ import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputL
 import type { TextFieldOwnerState, TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
 import { SchemaExamples } from '@rjsf/core';
-import type {
-  BaseInputTemplateProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   examplesId,
   getControlAttributes,
@@ -33,7 +27,7 @@ type HtmlInputAttributes = React.InputHTMLAttributes<HTMLInputElement | HTMLText
 /** Properties available for the MUI `ui:options` of the BaseInputTemplate.
  *  Unlike RJSF templates, `slotProps` here maps directly to MUI's native `TextField` `slotProps`,
  *  enabling type-safe customization of the underlying MUI sub-components. */
-export interface BaseInputTemplateMuiProps extends GenericObjectType {
+export interface BaseInputTemplateMuiProps extends Record<string, unknown> {
   /** Native MUI `TextField` slotProps for targeting specific sub-components. */
   slotProps?: {
     /** Props applied to the base native HTML `<input>` or `<textarea>` element, as an object or as MUI's

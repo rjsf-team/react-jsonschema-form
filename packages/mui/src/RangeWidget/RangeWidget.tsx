@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import FormLabel from '@mui/material/FormLabel';
 import type { SliderProps } from '@mui/material/Slider';
 import Slider from '@mui/material/Slider';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   getControlAttributes,
   getLabelId,
@@ -16,7 +16,7 @@ import {
 import { getMuiProps, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the RangeWidget. */
-export interface RangeWidgetMuiProps extends GenericObjectType {
+export interface RangeWidgetMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the RangeWidget. */
   rjsfSlotProps?: {
     /** Props applied to the MUI `Slider` component. */

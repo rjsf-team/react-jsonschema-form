@@ -13,13 +13,13 @@ import type { PaperProps } from '@mui/material/Paper';
 import Paper from '@mui/material/Paper';
 import type { TypographyProps } from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
-import type { ErrorListProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { TranslatableString, getUiOptions } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the ErrorList. */
-export interface ErrorListMuiProps extends GenericObjectType {
+export interface ErrorListMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the ErrorList. */
   rjsfSlotProps?: {
     /** Props applied to the outermost `Paper` component. */

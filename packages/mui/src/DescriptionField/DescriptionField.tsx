@@ -1,19 +1,13 @@
 import type { TypographyProps } from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
 import { RichDescription } from '@rjsf/core';
-import type {
-  DescriptionFieldProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the DescriptionField. */
-export interface DescriptionFieldMuiProps extends GenericObjectType {
+export interface DescriptionFieldMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the DescriptionField. */
   rjsfSlotProps?: {
     /** Props applied to the `Typography` element used for the description. */

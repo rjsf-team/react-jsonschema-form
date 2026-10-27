@@ -6,7 +6,6 @@ import type {
   FieldPath,
   FieldProps,
   FormContextType,
-  GenericObjectType,
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
@@ -458,7 +457,7 @@ export default function ObjectField<
         return;
       }
       const data = readData();
-      const properties: GenericObjectType = isObject(data) ? data : {};
+      const properties: Record<string, unknown> = isObject(data) ? data : {};
       for (const key of keys) {
         if (seededProperties.current.has(key) && !deepEquals(properties[key], seededProperties.current.get(key))) {
           seededProperties.current.delete(key);
@@ -812,8 +811,8 @@ export default function ObjectField<
       if (oldKey !== newKey) {
         const currentFormData = readData();
         const actualNewKey = getAvailableKey(newKey, currentFormData);
-        const newFormData: GenericObjectType = {
-          ...(currentFormData as GenericObjectType),
+        const newFormData: Record<string, unknown> = {
+          ...(currentFormData as Record<string, unknown>),
         };
         // The seed the add button wrote was picked for a name the user had not picked yet, so a property still holding
         // it takes the one the schema describing its new name seeds instead: a `New Value` string left under a name a
@@ -834,7 +833,7 @@ export default function ObjectField<
         const newKeyOf = (key: string) => (key === oldKey ? actualNewKey : key);
         const renamedObj = Object.fromEntries(
           Object.entries(newFormData).map(([key, value]) => [newKeyOf(key), value]),
-        ) as GenericObjectType & T;
+        ) as Record<string, unknown> & T;
 
         // The errors the form holds under the old name describe the property, so they go to its new name with it
         sentFormData.current = renamedObj;

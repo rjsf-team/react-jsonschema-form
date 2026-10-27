@@ -1,4 +1,5 @@
 import type { Theme } from '@mui/material';
+import type { RJSFSchema } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../src/util.ts';
 
@@ -10,7 +11,7 @@ describe('getMuiProps', () => {
         variant: 'filled',
       },
     };
-    const result = getMuiProps(options);
+    const result = getMuiProps<unknown, RJSFSchema, object, typeof options.mui>(options);
     expect(result.rjsfSlotProps.fieldErrorList.dense).toBe(true);
     expect(result.variant).toBe('filled');
   });

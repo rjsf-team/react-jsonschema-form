@@ -6,13 +6,13 @@ import type { GridProps } from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
 import type { TypographyProps } from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
-import type { FormContextType, GenericObjectType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the TitleField. */
-export interface TitleFieldMuiProps extends GenericObjectType {
+export interface TitleFieldMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the TitleField. */
   rjsfSlotProps?: {
     /** Props applied to the `Box` wrapper. */

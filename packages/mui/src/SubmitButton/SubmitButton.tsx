@@ -2,13 +2,13 @@ import type { BoxProps } from '@mui/material/Box';
 import Box from '@mui/material/Box';
 import type { ButtonProps } from '@mui/material/Button';
 import Button from '@mui/material/Button';
-import type { GenericObjectType, FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps } from '@rjsf/utils';
 import { getSubmitButtonOptions, getUiOptions } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the SubmitButton. */
-export interface SubmitButtonMuiProps extends GenericObjectType {
+export interface SubmitButtonMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the SubmitButton. */
   rjsfSlotProps?: {
     /** Props applied to the `Box` wrapper. */

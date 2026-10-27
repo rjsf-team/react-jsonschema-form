@@ -1,12 +1,6 @@
 import type { GridProps } from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
-import type {
-  FormContextType,
-  GenericObjectType,
-  ObjectFieldTemplateProps,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   descriptionId,
   getTemplates,
@@ -19,7 +13,7 @@ import {
 import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the ObjectFieldTemplate. */
-export interface ObjectFieldTemplateMuiProps extends GenericObjectType {
+export interface ObjectFieldTemplateMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the ObjectFieldTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the outermost `Grid` container wrapping all object properties. */

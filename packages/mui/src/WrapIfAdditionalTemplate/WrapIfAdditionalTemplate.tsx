@@ -2,13 +2,7 @@ import type { CSSProperties } from 'react';
 import type { GridProps } from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import type {
-  GenericObjectType,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WrapIfAdditionalTemplateProps,
-} from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   additionalKeyId,
@@ -22,7 +16,7 @@ import {
 
 import { computeSxProps, getMuiProps, inputLabelId } from '../util.ts';
 /** Properties available for the `rjsfSlotProps` target of the WrapIfAdditionalTemplate. */
-export interface WrapIfAdditionalTemplateMuiProps extends GenericObjectType {
+export interface WrapIfAdditionalTemplateMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the WrapIfAdditionalTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the outermost `Grid` container. */

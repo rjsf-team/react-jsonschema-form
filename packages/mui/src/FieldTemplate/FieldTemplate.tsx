@@ -3,7 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import type { TypographyProps } from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
-import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   getTemplates,
   getUiOptions,
@@ -17,7 +17,7 @@ import {
 import { getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldTemplate. */
-export interface FieldTemplateMuiProps extends GenericObjectType {
+export interface FieldTemplateMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the FieldTemplate. */
   rjsfSlotProps?: {
     /** Props applied to the MUI `FormControl` wrapping the field. */
@@ -25,6 +25,10 @@ export interface FieldTemplateMuiProps extends GenericObjectType {
     /** Props applied to the MUI `Typography` element used for description. */
     fieldTypography?: TypographyProps;
   };
+  /** The `sx` of the MUI `FormControl` wrapping the field */
+  sx?: FormControlProps['sx'];
+  /** The class name of the MUI `FormControl` wrapping the field */
+  className?: string;
 }
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field

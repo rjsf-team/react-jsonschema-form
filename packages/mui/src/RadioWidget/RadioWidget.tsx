@@ -6,7 +6,7 @@ import type { RadioProps } from '@mui/material/Radio';
 import Radio from '@mui/material/Radio';
 import type { RadioGroupProps } from '@mui/material/RadioGroup';
 import RadioGroup from '@mui/material/RadioGroup';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
   enumOptionsAutofocusIndex,
@@ -21,7 +21,7 @@ import {
 import { getMuiProps, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the RadioWidget. */
-export interface RadioWidgetMuiProps extends GenericObjectType {
+export interface RadioWidgetMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the RadioWidget. */
   rjsfSlotProps?: {
     /** Props applied to the `RadioGroup` component. */

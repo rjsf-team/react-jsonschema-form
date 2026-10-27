@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import type { FormGroupProps } from '@mui/material/FormGroup';
 import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
-import type { FormContextType, GenericObjectType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
@@ -23,7 +23,7 @@ import {
 import { getMuiProps, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the CheckboxesWidget. */
-export interface CheckboxesWidgetMuiProps extends GenericObjectType {
+export interface CheckboxesWidgetMuiProps extends Record<string, unknown> {
   /** RJSF-specific slot props for targeting child elements of the CheckboxesWidget. */
   rjsfSlotProps?: {
     /** Props applied to the `FormGroup` container. */
