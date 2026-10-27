@@ -1,4 +1,4 @@
-import type { MouseEvent, SyntheticEvent } from 'react';
+import type { SyntheticEvent } from 'react';
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { callWithDeferredThrow } from '@rjsf/utils';
@@ -16,13 +16,23 @@ function documentOf(element: Element | null) {
   return element?.ownerDocument ?? document;
 }
 
-/** Whether the focus is on an element, going by the document that element is in.
+/** The element holding the focus, going by the root `element` is in: the shadow root of a form rendered in one, whose
+ * document's `activeElement` is the shadow host rather than anything inside it.
+ *
+ * @param element - An element of the form
+ * @returns - The focused element in that root, or `null` for an element that is in no document yet
+ */
+function activeElementOf(element: Element) {
+  return (element.getRootNode() as Partial<DocumentOrShadowRoot>).activeElement ?? null;
+}
+
+/** Whether the focus is on an element, going by the root that element is in.
  *
  * @param element - The element to look for the focus on
  * @returns - Whether `element` holds the focus
  */
 function hasFocus(element: Element | null) {
-  return element !== null && documentOf(element).activeElement === element;
+  return element !== null && activeElementOf(element) === element;
 }
 
 /** The window of the document above, which is the only way to a viewport and to the events that belong to one.
@@ -30,7 +40,7 @@ function hasFocus(element: Element | null) {
  * @param element - An element of the form
  * @returns - That element's window, falling back to this one for a document with no browsing context of its own
  */
-export function windowOf(element: Element | null) {
+function windowOf(element: Element | null) {
   return documentOf(element).defaultView ?? window;
 }
 
@@ -186,9 +196,9 @@ interface UseDatePickerProps<V> {
   onBlur?: (id: string, value: unknown) => void;
 }
 
-/** Runs the popup behind both picker widgets: the state it holds while it is open, every way out of it, and which of
- * those ways stores what it holds. Shared so the one that gains a behavior does not leave the other behind — the two
- * differ only in what their popup renders and how they format what it holds.
+/** Runs the popup behind both picker widgets: the state it holds while it is open, where it is placed, every way out of
+ * it, and which of those ways stores what it holds. Shared so the one that gains a behavior does not leave the other
+ * behind — the two differ only in what their popup renders and how they format what it holds.
  *
  * Closing stores the date only where the user chose one. Merely opening the popup and dismissing it is not an edit,
  * and a field whose stored value is a date-time this widget reads as a day would otherwise have that day written back
@@ -216,6 +226,9 @@ export function useDatePicker<V>({
   // hears focus and blur in turn however many of the ways in and out of the popup see the same one: opening it and the
   // trigger's own focus event, closing it and the trigger's own blur event
   const isFocusReported = useRef(false);
+  // Whether the open popup is hidden while its trigger is out of view, which a close then stores nothing from: the user
+  // can no longer see the date it holds
+  const isHidden = useRef(false);
   // A new object for every new value, where `initialDate` alone is `undefined` for every empty one: a value the parent
   // replaces and then restores must not revive a draft made against it
   const basis = useMemo(() => ({ date: initialDate }), [initialDate]);
@@ -285,8 +298,9 @@ export function useDatePicker<V>({
     }
   }, [reportFocus]);
 
-  /** Close the popup, storing the date it holds, which every way out of it but Escape does. Blur is reported from the
-   * close Effect rather than here, so the parent's update to `value` is in hand before the consumer hears about it
+  /** Close the popup, storing the date it holds, which every way out of it but Escape does, unless it is hidden. Blur is
+   * reported from the close Effect rather than here, so the parent's update to `value` is in hand before the consumer
+   * hears about it
    *
    * @param [isPressElsewhere=false] - Whether the close is a press elsewhere, which moves the focus only once this
    *          returns, if it does: a trigger that still holds the focus is then left to report its own loss of it
@@ -295,7 +309,9 @@ export function useDatePicker<V>({
     (isPressElsewhere = false) => {
       pendingClose.current = { reportBlur, isPressElsewhere };
       setIsOpen(false);
-      commitDate();
+      if (!isHidden.current) {
+        commitDate();
+      }
     },
     [commitDate, reportBlur],
   );
@@ -308,7 +324,7 @@ export function useDatePicker<V>({
     // and focus would fall to the document body, losing a keyboard user their place in the form. It moves before the
     // blur is reported, so whatever takes it afterwards keeps it, as the consumer's `onBlur` can
     const popup = containerRef.current;
-    if (popup?.contains(documentOf(popup).activeElement)) {
+    if (popup?.contains(activeElementOf(popup))) {
       triggerRef.current?.focus();
     }
     pendingClose.current = { reportBlur, isPressElsewhere: false };
@@ -361,22 +377,175 @@ export function useDatePicker<V>({
         latestCancel.current();
       }
     };
-    const handlePressOutside = (e: MouseEvent | globalThis.MouseEvent) => {
-      if (containerRef.current?.contains(e.target as Node) || pressOpensThePopup(e.target, triggerRef.current)) {
+    let handledPress: Event | undefined;
+    const handlePressOutside = (e: Event) => {
+      // Once per press, which the trigger's shadow root sees before the document does
+      if (e === handledPress) {
+        return;
+      }
+      handledPress = e;
+      // The node pressed rather than `e.target`, which a listener on the document sees as the shadow host of a form
+      // rendered in a shadow root, and so as a press outside the popup wherever in that form it lands
+      const [target] = e.composedPath();
+      if (containerRef.current?.contains(target as Node) || pressOpensThePopup(target, triggerRef.current)) {
         return;
       }
       latestClose.current(true);
     };
     // The document the form is in rather than this module's: neither a press nor a key inside a framed form reaches
-    // ours, which would leave Done and the trigger as the only ways out of the popup
+    // ours, which would leave Done and the trigger as the only ways out of the popup. Presses are heard on the
+    // trigger's root as well, since the `composedPath()` a listener outside a closed shadow root sees stops at its host
     const doc = documentOf(triggerRef.current);
+    const root = triggerRef.current?.getRootNode() ?? doc;
     doc.addEventListener('keydown', handleEscape);
+    root.addEventListener('mousedown', handlePressOutside);
     doc.addEventListener('mousedown', handlePressOutside);
     return () => {
       doc.removeEventListener('keydown', handleEscape);
+      root.removeEventListener('mousedown', handlePressOutside);
       doc.removeEventListener('mousedown', handlePressOutside);
     };
   }, [isOpen, latestCancel, latestClose]);
+
+  // Place the popup just below its trigger, or above it where it would run off the bottom of the viewport and fits
+  // there, or else as low as it fits whole, and moved left where it would run off the right of the viewport. It is
+  // in the top layer, so a scrolling panel or dialog around the field doesn't clip it, which leaves it to follow the
+  // trigger itself, and a scroll of the page can't bring into view a part of it that runs off the bottom. A layout
+  // Effect, so the popup each opening mounts is shown and in place before the browser first paints it; it then measures
+  // the trigger and itself again once a frame while it is open. That notices every way the trigger can move, a scroll
+  // of the page or of a panel around the field, a resize, or content above the field growing, as an error list or an
+  // image that loads does, and every change to its own size, as a month with another number of weeks makes. Measured
+  // in the frame's own callback, the layout read is the one the browser computes for that frame anyway, and writing a
+  // style the popup already has invalidates nothing, so a frame in which nothing moved costs no layout of its own
+  useLayoutEffect(() => {
+    const popup = containerRef.current;
+    const trigger = triggerRef.current;
+    if (!isOpen || !popup || !trigger) {
+      return () => {};
+    }
+    const win = windowOf(trigger);
+    // Without native popovers, as before Safari 17 and Chrome 114, in jsdom, which hides a popover it can't show, and
+    // where a polyfill provides `showPopover()` but can't provide the top layer, the popup stays in the field's flow
+    // just below its trigger, positioned against the field's wrapper and stacked under app chrome at `z-index: 100`,
+    // scrolling with it and clipped by what clips it. Fixed there, a transformed ancestor such as daisyUI's modal box
+    // would still be what places, scales and clips it, and a part of it the box clips would be out of reach of the
+    // box's scroll. As wide as the field there, it is kept at least as wide as its contents, so a column narrower than
+    // the calendar's week doesn't scroll that week sideways. Told by the `:popover-open` selector, which a polyfill
+    // can't add to the browser's own CSS, and by `showPopover()`, which a DOM shim that knows the selector can lack
+    if (!win.CSS?.supports('selector(:popover-open)') || typeof popup.showPopover !== 'function') {
+      popup.style.position = 'absolute';
+      popup.style.marginTop = '5px';
+      popup.style.zIndex = '100';
+      popup.style.minWidth = 'min-content';
+      return () => {};
+    }
+    // A Strict Mode remount runs this again on a popup that is still showing, as the attribute set just before showing
+    // it says
+    if (!popup.hasAttribute('popover')) {
+      popup.setAttribute('popover', 'manual');
+      popup.showPopover();
+    }
+    // As the browser's own popover styles make it, but which a stylesheet's rule for the popup would win over: the
+    // `top` and `left` written below are viewport coordinates
+    popup.style.position = 'fixed';
+    // Scrolling within the height cap written below, so a viewport shorter than the popup still reaches its Done
+    // button, without a scroll past either end scrolling the page, which would take the trigger out of view and hide
+    // the popup the user is scrolling. Not in the field's flow, where nothing caps its height and its overflow stays
+    // `visible`
+    popup.style.overflowY = 'auto';
+    popup.style.overscrollBehavior = 'contain';
+    // The trigger is measured against the viewport of the window the form is in, so that is the one to keep inside
+    // of. Its client box less its scrollbars is the root element's, or in a quirks-mode document, where the root's is the
+    // whole page, the body's. Told by `compatMode` rather than `scrollingElement`, which is null in a quirks-mode
+    // document whose body scrolls
+    const doc = documentOf(trigger);
+    const client = doc.compatMode === 'BackCompat' ? doc.body : doc.documentElement;
+    // A known `top` and `left` to start from, which `place()` compares with where the browser draws the popup
+    popup.style.top = '0px';
+    popup.style.left = '0px';
+    const place = () => {
+      // Under CSS `zoom` on an ancestor, the popup's `top`, `left` and sizes are drawn at that scale, while the
+      // viewport and client rects are measured as drawn, so those are divided by it. It is how much wider the popup is
+      // drawn than its computed width, rounded, as that width is serialized to six significant digits: either that
+      // error or `offsetWidth`'s whole pixels would have a fractional width change the scale it is written with
+      const drawn = popup.getBoundingClientRect();
+      const scale = Math.round((drawn.width / parseFloat(win.getComputedStyle(popup).width)) * 1e4) / 1e4 || 1;
+      // Of that box, the part the user sees: an on-screen keyboard, by default in Chrome on Android, or a pinch zoom
+      // shrinks and moves only the visual viewport, leaving the client box the popup is fixed in as it was
+      const visual = win.visualViewport;
+      const viewTop = Math.max(0, visual?.offsetTop ?? 0) / scale;
+      const viewLeft = Math.max(0, visual?.offsetLeft ?? 0) / scale;
+      const viewBottom = Math.min(client.clientHeight, visual ? visual.offsetTop + visual.height : Infinity) / scale;
+      const viewRight = Math.min(client.clientWidth, visual ? visual.offsetLeft + visual.width : Infinity) / scale;
+      // Not `100vh`, which takes in a horizontal scrollbar along the bottom of the viewport. The width replaces only
+      // `w-full`, so the popup's own `max-width` still applies, and the popup scrolls whatever no longer fits it
+      popup.style.maxHeight = `${viewBottom - viewTop}px`;
+      popup.style.width = `${viewRight - viewLeft}px`;
+      const rect = trigger.getBoundingClientRect();
+      // Chrome and Firefox measure client rects from the layout viewport the popup is fixed in, but WebKit measures
+      // them from the visual viewport (https://bugs.webkit.org/show_bug.cgi?id=257375), which a pinch zoom moves away
+      // from it. How far the popup is drawn from its own `top` and `left` is that shift, in whichever browser. Rounded
+      // to whole pixels, since it also holds the browser's sub-pixel snapping of that `top` and `left`, which would
+      // otherwise feed into the next frame's and have a trigger at a fractional offset rewrite them every frame
+      const shiftY = Math.round(parseFloat(popup.style.top) - drawn.top / scale);
+      const shiftX = Math.round(parseFloat(popup.style.left) - drawn.left / scale);
+      const { offsetWidth: width, offsetHeight: height } = popup;
+      const above = rect.top / scale + shiftY - 5 - height;
+      const below = rect.bottom / scale + shiftY + 5;
+      // Kept inside both edges of the visible box after choosing a side, as a trigger outside of it, such as one an
+      // on-screen keyboard covers, would otherwise take the popup out of it too
+      const y = Math.max(
+        viewTop,
+        Math.min(below + height > viewBottom && above >= viewTop ? above : below, viewBottom - height),
+      );
+      // A 20px gutter at the right edge, narrowed to whatever room is left by a popup about as wide as the viewport
+      const x = Math.max(viewLeft, Math.min(rect.left / scale + shiftX, viewRight - 20 - width));
+      popup.style.top = `${y}px`;
+      popup.style.left = `${x}px`;
+    };
+    let frame = 0;
+    const follow = () => {
+      place();
+      frame = win.requestAnimationFrame(follow);
+    };
+    follow();
+    // A scrolling panel clips the trigger but not the fixed popup, which is hidden while none of the trigger shows
+    // rather than left floating over whatever is at its place, and stops following it until it shows again, placed
+    // before it does. Hidden, it can't hold the focus, which would fall to the document body and leave Tab to start
+    // the page over, so the focus goes to the trigger first, without scrolling it back into the view the user
+    // scrolled it out of, and the trigger losing it closes the popup. It goes there from the body too, where Safari
+    // leaves it after a press on a day. Focus already on another element is the user having left the field, as Tab
+    // past Done does, so the popup closes instead, storing nothing, as Escape does: it would otherwise stay open,
+    // hidden with nothing left to close it. The observer doesn't exist outside a browser, such as in a consumer's
+    // jsdom tests
+    const sight =
+      'IntersectionObserver' in win
+        ? new win.IntersectionObserver((entries) => {
+            const isInSight = entries[entries.length - 1].isIntersecting;
+            isHidden.current = !isInSight;
+            if (!isInSight) {
+              win.cancelAnimationFrame(frame);
+              frame = 0;
+              // A shadow root's `activeElement` is null while the focus is outside it
+              const focused = activeElementOf(popup) ?? doc.activeElement;
+              if (focused && focused !== doc.body && focused !== trigger && !popup.contains(focused)) {
+                latestCancel.current();
+              } else {
+                trigger.focus({ preventScroll: true });
+              }
+            } else if (!frame) {
+              follow();
+            }
+            popup.style.visibility = isInSight ? '' : 'hidden';
+          })
+        : undefined;
+    sight?.observe(trigger);
+    return () => {
+      win.cancelAnimationFrame(frame);
+      sight?.disconnect();
+      isHidden.current = false;
+    };
+  }, [isOpen, latestCancel]);
 
   /** Take a date the user chose in the popup, which is what makes closing it store one
    *
@@ -421,13 +590,16 @@ export function useDatePicker<V>({
   );
 
   /** Report blur on the trigger, unless the popup is open: the focus has moved into it, which the field still holds,
-   * and each way out of the popup reports the blur for itself
+   * and each way out of the popup reports the blur for itself. A hidden popup can't take the focus, so the trigger
+   * losing it then is the user leaving the field, which closes the popup they can't see, storing nothing, as Escape does
    */
   const handleBlur = useCallback(() => {
     if (!isOpen) {
       reportBlur();
+    } else if (isHidden.current) {
+      closePicker();
     }
-  }, [isOpen, reportBlur]);
+  }, [closePicker, isOpen, reportBlur]);
 
   /** Close the popup from its Done button, returning focus to the trigger it was opened from — unconditionally, where
    * Escape returns it only from inside the popup: a browser that does not focus a button on click, as Safari does not,

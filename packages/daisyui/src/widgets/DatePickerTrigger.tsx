@@ -2,7 +2,7 @@ import type { KeyboardEvent, ReactNode, RefObject, SyntheticEvent } from 'react'
 import { useCallback, useEffect, useRef } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { FieldPresentation, FormContextType, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FieldPresentation, FormContextType, Registry, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes, getControlFallbackName, TranslatableString } from '@rjsf/utils';
 
 /** The name a picker's trigger falls back to where no label names it, which the dialog it opens takes too: the field's
@@ -156,22 +156,62 @@ export default function DatePickerTrigger({
   );
 }
 
-interface DatePickerDialogProps {
+interface DatePickerPopupProps {
   /** The popup's id, which the trigger's `aria-controls` points at while it is open */
   id: string;
   /** The name from `getDatePickerName()`, which the trigger falls back to as well */
   name: string;
+  /** The ref `useDatePicker()` positions the popup through and tells a press inside it from one outside by */
+  containerRef: RefObject<HTMLDivElement | null>;
+  /** The registry's `translateString`, for the Done button's label */
+  translateString: Registry['translateString'];
+  /** Closes the popup from its Done button */
+  onDone: () => void;
+  /** What the widget picks a date with */
   children: ReactNode;
 }
 
-/** The dialog both picker widgets open their calendar in, which their trigger controls, named as the trigger is
+/** The popup both picker widgets open from their trigger: the dialog the trigger controls, named as the trigger is, and
+ * the Done button under the widget's own contents. Shared so a change to the frame around a picker reaches both.
  *
- * @param props - The popup's id, the name it shares with the trigger, and its contents
+ * `useDatePicker()` shows it as a manual popover, in the top layer, so neither a modal dialog the form is in nor an
+ * ancestor that clips or transforms it, as daisyUI's scrolling modal box does both, covers, clips or offsets it, and
+ * in a browser without native popovers, one with only a polyfill's included, it keeps it in the field's flow instead,
+ * so the hook sets the `position` and stacking each of those needs, and the scrolling the first does. Its `max-width`
+ * is inline rather than a class: the width `useDatePicker()` writes is the viewport's, and a consumer whose Tailwind
+ * build doesn't scan this package gets none of its classes. The `right`, `bottom`, `margin`, `padding` and `color` undo
+ * the browser's own popover styles, which pin a popover to all four edges of the viewport, pad it and recolor its
+ * text, where no Tailwind preflight resets them. Its `box-sizing`, also left to preflight otherwise, keeps its border
+ * inside the width and the height cap that `useDatePicker()` fits to the viewport
+ *
+ * @param props - The popup's id and name, the ref to attach, the Done handler and its label, and its contents
  */
-export function DatePickerDialog({ id, name, children }: DatePickerDialogProps) {
+export function DatePickerPopup({ id, name, containerRef, translateString, onDone, children }: DatePickerPopupProps) {
   return (
-    <div id={id} role='dialog' aria-label={name}>
+    // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- its click handler is no interaction: it only keeps a press inside the popup from the handlers around the field
+    <div
+      ref={containerRef}
+      id={id}
+      role='dialog'
+      aria-label={name}
+      className='date-picker-popup w-full bg-base-100 border border-base-300 shadow-lg rounded-box'
+      style={{
+        right: 'auto',
+        bottom: 'auto',
+        margin: 0,
+        padding: 0,
+        boxSizing: 'border-box',
+        maxWidth: '20rem',
+        color: 'inherit',
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
       {children}
+      <div className='p-3 flex justify-end border-t border-base-300'>
+        <button type='button' className='btn btn-sm btn-primary' onClick={onDone}>
+          {translateString(TranslatableString.DoneLabel)}
+        </button>
+      </div>
     </div>
   );
 }

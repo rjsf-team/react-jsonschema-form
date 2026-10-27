@@ -1,12 +1,13 @@
 import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
 import DateWidget from '../src/widgets/DateWidget/DateWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 import pinTimeZone from './helpers/pinTimeZone.ts';
+import stubViewport, { rectAt } from './helpers/stubViewport.ts';
 
 const user = userEvent.setup();
 
@@ -588,6 +589,40 @@ describe('DateWidget', () => {
       expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
     });
 
+    // A listener on the document sees a press inside a shadow root as one on its host, which is neither in the popup
+    // nor the trigger, so a press on a day would close the popup on the way down and one on the trigger reopen it. In
+    // a closed one, even the `composedPath()` that listener sees starts at the host
+    test.each(['open', 'closed'] as const)(
+      'stays open for a press inside it, and is closed by one on the trigger, in a form rendered in a shadow root in %s mode',
+      async (mode) => {
+        const host = document.body.appendChild(document.createElement('div'));
+        onTestFinished(() => host.remove());
+        const shadowRoot = host.attachShadow({ mode });
+        const container = shadowRoot.appendChild(document.createElement('div'));
+        const onChange = vi.fn();
+        render(
+          <Form
+            schema={dateSchema}
+            initialFormData={{ birthday: '2020-05-03' }}
+            validator={validator}
+            onChange={onChange}
+          />,
+          { container },
+        );
+        const trigger = within(container).getByRole('combobox', { name: 'Birthday' });
+
+        await user.click(trigger);
+        await user.click(within(container).getByRole('button', { name: /May 17th/ }));
+        expect(within(container).getByRole('dialog', { name: 'Birthday' })).toBeInTheDocument();
+        onChange.mockClear();
+        await user.click(trigger);
+
+        expect(within(container).queryByRole('dialog')).not.toBeInTheDocument();
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
+      },
+    );
+
     test('is named by its placeholder where it has no label', () => {
       const { container } = render(
         <Form schema={schema} uiSchema={{ 'ui:placeholder': 'Pick a day' }} validator={validator} />,
@@ -636,20 +671,7 @@ describe('DateWidget', () => {
   });
 
   describe('the calendar it places', () => {
-    /** A trigger 20px high whose bottom edge is `bottom` pixels down the viewport */
-    function triggerRect(bottom: number): DOMRect {
-      return {
-        x: 10,
-        y: bottom - 20,
-        width: 90,
-        height: 20,
-        top: bottom - 20,
-        right: 100,
-        bottom,
-        left: 10,
-        toJSON() {},
-      };
-    }
+    stubViewport();
 
     test('is in place before the day a key opens it onto takes the focus', async () => {
       render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />);
@@ -669,25 +691,26 @@ describe('DateWidget', () => {
       expect(topAtDayFocus).toBe('5px');
     });
 
-    test('follows the trigger when an element around the field scrolls', async () => {
-      render(
-        <div data-testid='panel'>
-          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />
-        </div>,
-      );
+    test('follows the trigger once a frame, however it moved, with no scroll or resize to say so', async () => {
+      render(<DateWidget {...makeWidgetMockProps({ value: '2020-05-03', schema, autofocus: false })} />);
       const trigger = screen.getByRole('combobox');
       let bottom = 50;
-      vi.spyOn(trigger, 'getBoundingClientRect').mockImplementation(() => triggerRect(bottom));
+      const measure = vi
+        .spyOn(trigger, 'getBoundingClientRect')
+        .mockImplementation(() => rectAt(bottom - 20, 10, 90, 20));
       await user.click(trigger);
-      const popup = screen.getByText('Done').closest<HTMLElement>('.date-picker-popup');
+      // Taken to be hidden, as jsdom's own stylesheet hides a popover that the stubbed `showPopover()` doesn't show
+      const popup = screen.getByRole('dialog', { hidden: true });
       expect(popup).toHaveStyle({ top: '55px' });
+      measure.mockClear();
 
+      // As a scroll of a panel around the field moves it, or an error list appearing above the field, which fires no
+      // event at all
       bottom = 10;
-      // user-event has no scrolling. A browser dispatches a scroll at the element that scrolled, without bubbling, as
-      // `fireEvent.scroll` does
-      fireEvent.scroll(screen.getByTestId('panel'));
+      await new Promise(requestAnimationFrame);
 
       expect(popup).toHaveStyle({ top: '15px' });
+      expect(measure).toHaveBeenCalledTimes(1);
     });
   });
 
