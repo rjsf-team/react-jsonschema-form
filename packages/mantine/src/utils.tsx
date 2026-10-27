@@ -21,7 +21,6 @@ import {
 import type {
   ControlAttributes,
   FormContextType,
-  GenericObjectType,
   Registry,
   ReservedUiOptionName,
   RJSFSchema,
@@ -206,8 +205,8 @@ export function cleanupOptions<
   const extraKeySet = 'has' in extraKeys ? extraKeys : new Set(extraKeys);
   const { globalUiOptions } = registry;
   // Read only once a key the globals hold reaches the check, since a form's globals rarely hold one
-  let ownOptions: GenericObjectType | undefined;
-  const result: GenericObjectType = {};
+  let ownOptions: Record<string, unknown> | undefined;
+  const result: Record<string, unknown> = {};
   for (const key in options) {
     if (
       !strippedOptionNames.has(key) &&
@@ -221,7 +220,8 @@ export function cleanupOptions<
       result[key] = options[key];
     }
   }
-  return result;
+  // The single deliberate cast here: `result` holds the keys of `options` that `CleanedOptions` keeps, with their values
+  return result as CleanedOptions<O>;
 }
 
 /**
@@ -296,12 +296,26 @@ const themeComponentNames = {
 
 export type AriaInputComponentName = keyof typeof themeComponentNames;
 
-function asObject(value: unknown): GenericObjectType | undefined {
+function asObject(value: unknown): Record<string, unknown> | undefined {
   return isObject(value) ? value : undefined;
 }
 
+/** Whether `value` is an `inputContainer`, the function Mantine calls with an input to render the element around it */
+function isInputContainer(value: unknown): value is NonNullable<InputWrapperProps['inputContainer']> {
+  return typeof value === 'function';
+}
+
+/** Returns `value` when it is an `inputContainer`, see `isInputContainer()`, else `undefined`
+ *
+ * @param value - The `inputContainer` an option or the theme gives
+ * @returns - The `inputContainer`, or `undefined`
+ */
+export function asInputContainer(value: unknown): InputWrapperProps['inputContainer'] {
+  return isInputContainer(value) ? value : undefined;
+}
+
 /** The id `ownProps` give an element, or `fallback` where they give none */
-function ownIdOr(ownProps: GenericObjectType | undefined, fallback: string): string {
+function ownIdOr(ownProps: Record<string, unknown> | undefined, fallback: string): string {
   const ownId: unknown = ownProps?.id;
   return typeof ownId === 'string' && ownId ? ownId : fallback;
 }
@@ -360,8 +374,8 @@ export function GroupOptions({
   optionProps,
   children,
 }: {
-  optionProps: GenericObjectType;
-  children: (optionProps: GenericObjectType) => ReactNode;
+  optionProps: Record<string, unknown>;
+  children: (optionProps: Record<string, unknown>) => ReactNode;
 }): ReactNode {
   const shownSuccessId = use(GroupSuccessIdContext);
   const describedOptionProps = useMemo(
@@ -385,10 +399,10 @@ interface AriaContainerOptions {
   labelId?: string;
   idsLabel: boolean;
   ownLabelProps?: unknown;
-  ownErrorProps?: GenericObjectType;
-  ownSuccessProps?: GenericObjectType;
+  ownErrorProps?: Record<string, unknown>;
+  ownSuccessProps?: Record<string, unknown>;
   ownContainer?: unknown;
-  wrapperObject?: GenericObjectType;
+  wrapperObject?: Record<string, unknown>;
   before?: ReactNode;
   after?: ReactNode;
   successOnOptions?: boolean;
@@ -466,7 +480,7 @@ function useAriaContainerProps({
   ]);
 }
 
-function pickOptions(options: GenericObjectType, names: readonly string[]) {
+function pickOptions(options: Record<string, unknown>, names: readonly string[]) {
   return Object.fromEntries(names.map((name) => [name, options[name]]));
 }
 
@@ -488,7 +502,8 @@ function withoutRootSlot(value: unknown): unknown {
  * a string.
  */
 function noStyle(name: string) {
-  const type = (STYLE_PROPS_DATA as GenericObjectType)[name]?.type;
+  const data: unknown = Reflect.get(STYLE_PROPS_DATA, name);
+  const type = isObject(data) ? data.type : undefined;
   return type === 'color' || type === 'textColor' ? '' : null;
 }
 
@@ -498,10 +513,10 @@ function noStyle(name: string) {
  * `defaultProps`, so those the theme sets are given values that render nothing.
  */
 function withOwnRootProps(
-  wrapperProps: GenericObjectType,
-  wrapperDefaults: GenericObjectType,
-  ownWrapperProps: GenericObjectType = {},
-): GenericObjectType {
+  wrapperProps: Record<string, unknown>,
+  wrapperDefaults: Record<string, unknown>,
+  ownWrapperProps: Record<string, unknown> = {},
+): Record<string, unknown> {
   const {
     rest: { className: _className, style: _style, mod: _mod, ...rest },
   } = extractStyleProps(wrapperProps);
@@ -635,11 +650,21 @@ export function useFieldWrapperProps<
   );
   // `Input.Wrapper` would size its title, description and errors by the `size` in `__stylesApiProps`, the top-level
   // props, rather than by its own, which a `wrapperProps.size` may have replaced
-  const { __stylesApiProps: _stylesApiProps, id: _id, ...mantineWrapperProps } = inputWrapperProps as GenericObjectType;
+  const inputWrapperObject: object = inputWrapperProps;
+  const {
+    __stylesApiProps: _stylesApiProps,
+    id: _id,
+    ...mantineWrapperProps
+  }: Record<string, unknown> = {
+    ...inputWrapperObject,
+  };
   // Resolved as `Input.Wrapper` resolves them, since some are read or replaced here. `useInputProps` leaves
   // `labelElement` with the input, while this wrapper takes it.
-  const wrapperDefaults = useProps<GenericObjectType>('InputWrapper', {}, {});
-  const resolved: GenericObjectType = { ...wrapperDefaults, ...filterProps({ labelElement, ...mantineWrapperProps }) };
+  const wrapperDefaults = useProps<Record<string, unknown>>('InputWrapper', {}, {});
+  const resolved: Record<string, unknown> = {
+    ...wrapperDefaults,
+    ...filterProps({ labelElement, ...mantineWrapperProps }),
+  };
   // The widget's inputs apply the theme's root element props to the wrappers they render
   const wrapperProps = containerOnInputs
     ? withOwnRootProps(resolved, wrapperDefaults, asObject(options.wrapperProps))
@@ -650,7 +675,7 @@ export function useFieldWrapperProps<
   return {
     wrapperProps: {
       ...wrapperProps,
-      inputContainer: containerOnInputs ? renderChildren : wrapperProps.inputContainer,
+      inputContainer: containerOnInputs ? renderChildren : asInputContainer(wrapperProps.inputContainer),
       label: labelValue(label || undefined, hideLabel, false),
       labelProps: { ...asObject(resolved.labelProps), id: titleId(id), htmlFor: undefined },
       required,
@@ -660,7 +685,7 @@ export function useFieldWrapperProps<
       errorProps: { ...asObject(resolved.errorProps), id: errorId(id) },
       successProps: { ...ownSuccessProps, id: successId },
     },
-    inputWrapperOrder: resolved.inputWrapperOrder as unknown,
+    inputWrapperOrder: resolved.inputWrapperOrder,
     invalid: !!error,
     successId,
     slotlessErrors: getSlotlessErrors<T, S, F>(widgetProps, resolved.inputWrapperOrder),
@@ -687,7 +712,7 @@ export function useFieldWrapperProps<
 export function useAriaDescribedByProps(
   component: AriaInputComponentName,
   id: string,
-  options: GenericObjectType,
+  options: Record<string, unknown>,
   {
     describedBy,
     alsoDescribedBy,
@@ -696,11 +721,15 @@ export function useAriaDescribedByProps(
   }: {
     describedBy?: string;
     alsoDescribedBy?: string;
-    wrapperOverrides?: GenericObjectType;
+    wrapperOverrides?: Record<string, unknown>;
     slotlessErrors?: (inputWrapperOrder: unknown) => ReactNode;
   },
 ) {
-  const props = useProps<GenericObjectType>(themeComponentNames[component], {}, pickOptions(options, inputPickedKeys));
+  const props = useProps<Record<string, unknown>>(
+    themeComponentNames[component],
+    {},
+    pickOptions(options, inputPickedKeys),
+  );
   const wrapperObject = useMemo(
     () => (wrapperOverrides ? { ...asObject(props.wrapperProps), ...wrapperOverrides } : asObject(props.wrapperProps)),
     [props.wrapperProps, wrapperOverrides],
@@ -709,7 +738,7 @@ export function useAriaDescribedByProps(
   // then resolves from `InputWrapper`'s theme `defaultProps`
   const fromWrapper = (name: string): unknown =>
     wrapperObject && name in wrapperObject ? wrapperObject[name] : props[name];
-  const resolved = useProps<GenericObjectType>(
+  const resolved = useProps<Record<string, unknown>>(
     'InputWrapper',
     {},
     Object.fromEntries(inputOptionKeys.map((name) => [name, fromWrapper(name)])),
@@ -801,11 +830,11 @@ export function useGroupAriaProps<
   const { id, required, options } = widgetProps;
   const hideLabel = !widgetDrawsLabel<T, S, F>(widgetProps);
   const label = getOwnLabel<T, S, F>(widgetProps);
-  const props = useProps<GenericObjectType>(component, {}, pickOptions(options, inputPickedKeys));
+  const props = useProps<Record<string, unknown>>(component, {}, pickOptions(options, inputPickedKeys));
   const wrapperObject = asObject(props.wrapperProps);
   // A group spreads its own props after `wrapperProps`, the reverse of an input, then `Input.Wrapper` falls back to
   // `InputWrapper`'s theme `defaultProps`
-  const resolved = useProps<GenericObjectType>(
+  const resolved = useProps<Record<string, unknown>>(
     'InputWrapper',
     {},
     Object.fromEntries(

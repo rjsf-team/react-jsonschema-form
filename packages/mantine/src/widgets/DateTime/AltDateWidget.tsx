@@ -4,7 +4,6 @@ import type {
   DateElementProp,
   DateObject,
   FormContextType,
-  GenericObjectType,
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
@@ -21,12 +20,18 @@ import {
   useAltDateWidgetProps,
 } from '@rjsf/utils';
 
-import { getOwnLabel, useAriaDescribedByProps, useFieldWrapperProps, useShownSuccessId } from '../../utils.tsx';
+import {
+  asInputContainer,
+  getOwnLabel,
+  useAriaDescribedByProps,
+  useFieldWrapperProps,
+  useShownSuccessId,
+} from '../../utils.tsx';
 
 interface AltDatePartProps {
   id: string;
   part: DateElementProp;
-  ariaDescribedByProps: GenericObjectType;
+  ariaDescribedByProps: Record<string, unknown>;
   disabled?: boolean;
   autofocus?: boolean;
   required?: boolean;
@@ -101,7 +106,7 @@ interface AltDatePartsProps extends Omit<AltDatePartProps, 'part' | 'ariaDescrib
   /** The ids its field's plan describes each part by */
   describedBy?: string;
   inputContainer: unknown;
-  wrapperOverrides: GenericObjectType;
+  wrapperOverrides: Record<string, unknown>;
   fieldSuccessId: string;
 }
 
@@ -158,7 +163,9 @@ export default function AltDateWidget<
     () => ({
       success: null,
       ...(isObject(fieldWrapperProps) &&
-        'inputContainer' in fieldWrapperProps && { inputContainer: fieldWrapperProps.inputContainer }),
+        'inputContainer' in fieldWrapperProps && {
+          inputContainer: asInputContainer(fieldWrapperProps.inputContainer),
+        }),
     }),
     [fieldWrapperProps],
   );
