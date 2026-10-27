@@ -1,4 +1,4 @@
-import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import type { ChangeEvent, FocusEvent, InputHTMLAttributes, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
@@ -17,7 +17,12 @@ export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: BaseInputTemplateProps<T, S, F>) {
+>(
+  props: BaseInputTemplateProps<T, S, F> & {
+    /** Props to spread on the input along with the ones the schema derives, of which a `pattern` or `inputMode` wins */
+    extraProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
+  },
+) {
   const {
     id,
     htmlName,

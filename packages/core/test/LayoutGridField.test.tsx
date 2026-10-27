@@ -658,14 +658,14 @@ const DEFAULT_ID = 'test-id';
 
 // Stringify the FieldProps, minus the registry, hasFormData and optionalObjectNode in the uiSchema
 // The registry causes an infinite loop and hasFormData & optionalObjectNode are tested elsewhere
-function stringifyProps(props: Partial<FieldProps>) {
+function stringifyProps(props: Pick<Partial<FieldProps>, 'uiSchema' | 'registry'> & Record<string, unknown>) {
   const { uiSchema, registry, ...otherProps } = props;
   const { ...otherUIOptions } = getUiOptions(uiSchema);
   return sortedJSONStringify({ ...otherProps, otherUIOptions });
 }
 
 // Render a strong with the props stringified
-function TestRenderer({ 'data-testid': testId, ...props }: Readonly<FieldProps>) {
+function TestRenderer({ 'data-testid': testId, ...props }: Readonly<FieldProps & { 'data-testid'?: string }>) {
   return <strong data-testid={testId}>{stringifyProps(props)}</strong>;
 }
 
@@ -674,7 +674,7 @@ function TestRenderer({ 'data-testid': testId, ...props }: Readonly<FieldProps>)
 const testRendererElement = <TestRenderer />;
 
 // Render a div with the props stringified in a span, also render an input to test the onXXXX callbacks
-function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProps>) {
+function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProps & { 'data-testid'?: string }>) {
   const { fieldPath, id, formData, onChange, onBlur, onFocus, uiSchema } = props;
   // Special test case that will pass an error schema into on change to allow coverage
   const error = hasByPath(uiSchema, PASSES_EXTRA_ERROR_KEY) ? EXTRA_ERROR : undefined;
@@ -1847,7 +1847,6 @@ describe('LayoutGridField', () => {
       layoutGridSchema: {
         [GridType.ROW]: { className: ColumnWidth6, children: GRID_CHILDREN },
       },
-      isNested: true,
       registry: sampleSchemaRegistry,
     });
     render(<LayoutGridField {...props} />);

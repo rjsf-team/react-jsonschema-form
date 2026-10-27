@@ -844,7 +844,6 @@ export interface FieldProps<
   F extends FormContextType = FormContextType,
 >
   extends
-    GenericObjectType,
     RJSFBaseProps<T, S, F>,
     Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
   /** The `FieldPath` identifying this field in the form */
@@ -890,6 +889,26 @@ export interface FieldProps<
    * `FieldTemplate` and `WrapIfAdditionalTemplate`, and the field it renders
    */
   keyNotAllowed?: boolean;
+  /** For an `additionalProperties` property, the callback `ObjectField` hands `SchemaField` to rename its key, which
+   * `SchemaField` hands its `FieldTemplate`
+   */
+  onKeyRename?: (newKey: string) => void;
+  /** For an `additionalProperties` property, the callback that renames its key to the value of the blurred input */
+  onKeyRenameBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+  /** For an `additionalProperties` property, the callback that removes it */
+  onRemoveProperty?: () => void;
+  /** For an `additionalProperties` property, the key names it can be renamed to, when the parent schema's
+   * `propertyNames` lists them
+   */
+  propertyNamesEnum?: string[];
+  /** For an `additionalProperties` property, whether the user renamed its key, which keeps its label the key */
+  wasPropertyKeyModified?: boolean;
+  /** For an array item, its index in the array, which `ArrayField` hands the item's field */
+  index?: number;
+  /** For a `oneOf`/`anyOf` field, the option schemas `SchemaField` retrieved for its data, which it hands the
+   * `AnyOfField` or `OneOfField` it renders
+   */
+  options?: S[];
   /** The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids,
    * and the attributes its control carries. Set on the field `SchemaField` renders, not on the `SchemaField` itself,
    * which builds it. Its `'self'` is this field's, so hand it to a widget only when the field leaves its parts to that
@@ -1257,15 +1276,19 @@ export type FieldTemplateProps<
   formData?: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
   onChange: FieldProps<T, S, F>['onChange'];
-  /** Callback used to handle the changing of an additional property key's name with the new value
+  /** Callback used to handle the changing of an additional property key's name with the new value. Undefined for a
+   * field that isn't an additional property
    */
-  onKeyRename: (newKey: string) => void;
+  onKeyRename?: (newKey: string) => void;
   /** Callback used to handle the changing of an additional property key's name when the input is blurred. The event's
-   * target's value will be used as the new value. Its a wrapper callback around `onKeyRename`
+   * target's value will be used as the new value. Its a wrapper callback around `onKeyRename`. Undefined for a field
+   * that isn't an additional property
    */
-  onKeyRenameBlur: (event: FocusEvent<HTMLInputElement>) => void;
-  /** Callback used to handle the removal of the additionalProperty */
-  onRemoveProperty: () => void;
+  onKeyRenameBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+  /** Callback used to handle the removal of the additionalProperty. Undefined for a field that isn't an additional
+   * property
+   */
+  onRemoveProperty?: () => void;
   /** The key names an `additionalProperties` property is allowed to be renamed to, derived from the parent schema's
    * `propertyNames.enum` and narrowed to the names its siblings have not already taken. Undefined when the parent
    * schema does not constrain its property names
@@ -1284,7 +1307,10 @@ export type FallbackFieldProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = FieldProps<T, S, F>;
+> = FieldProps<T, S, F> & {
+  /** Why the field is unsupported, shown in place of the default message that names the schema's `type` */
+  reason?: string;
+};
 
 /**
  * The properties that are passed to a `FallbackFieldTemplate` implementation
@@ -1650,7 +1676,6 @@ export interface WidgetProps<
   F extends FormContextType = FormContextType,
 >
   extends
-    GenericObjectType,
     RJSFBaseProps<T, S, F>,
     Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
   /** The generated id for this widget, used to provide unique `name`s and `id`s for the HTML field elements rendered by
@@ -1675,6 +1700,14 @@ export interface WidgetProps<
   hideError?: boolean;
   /** A boolean value stating if the widget should autofocus */
   autofocus?: boolean;
+  /** The errors of the field the widget renders, which `MultiSchemaField` hands its option selector */
+  errorSchema?: ErrorSchema<T>;
+  /** For an `AltDateWidget`, whether it renders the time parts too, as `AltDateTimeWidget` has it do */
+  time?: boolean;
+  /** The value for the `autocomplete` attribute of the widget's input, which `MultiSchemaField` gives its option
+   * selector from `ui:autocomplete`
+   */
+  autocomplete?: HTMLInputElement['autocomplete'];
   /** The placeholder for the widget, if any */
   placeholder?: string;
   /** A map of UI Options passed as a prop to the component, including the optional `enumOptions`
@@ -1738,12 +1771,17 @@ export interface BaseInputTemplateProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> extends WidgetProps<T, S, F> {
+>
+  extends WidgetProps<T, S, F>, Record<string, unknown> {
   /** A `BaseInputTemplate` implements a default `onChange` handler that it passes to the HTML input component to handle
    * the `ChangeEvent`. Sometimes a widget may need to handle the `ChangeEvent` using custom logic. If that is the case,
    * that widget should provide its own handler via this prop.
    */
   onChangeOverride?: (event: ChangeEvent<HTMLInputElement>) => void;
+  /** The `type` of the input, which the widgets rendering a `BaseInputTemplate` set, such as `'number'` or `'date'` */
+  type?: string;
+  /** A `pattern` the widget sets on the input, which takes the place of the one the schema derives */
+  pattern?: string;
 }
 
 /** The type that defines the props used by the Submit button */
