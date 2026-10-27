@@ -3,12 +3,13 @@ import type {
   ChangeEvent,
   Component,
   ComponentType,
+  CSSProperties,
   FocusEvent,
   HTMLAttributes,
   MouseEvent,
   ReactElement,
   ReactNode,
-  StyleHTMLAttributes,
+  SyntheticEvent,
 } from 'react';
 import type { JSONSchema7 } from 'json-schema';
 
@@ -342,7 +343,7 @@ export interface RJSFValidationError {
    * ([see doc](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#error-parameters)
    * for more info)
    */
-  params?: any;
+  params?: Record<string, unknown>;
   /** A string in Javascript property accessor notation to the data path of the field with the error. For example,
    * `.name` or `['first-name']`
    */
@@ -1180,7 +1181,7 @@ export type FieldTemplateProps<
   /** A string containing the base CSS classes, merged with any custom ones defined in your uiSchema */
   classNames?: string;
   /** An object containing the style as defined in the `uiSchema` */
-  style?: StyleHTMLAttributes<any>;
+  style?: CSSProperties;
   /** The computed label for this field, as a string */
   label: string;
   /** The name of this field's property in its parent object, carrying none of the decoration `label` may have picked
@@ -1393,15 +1394,15 @@ export type ArrayFieldItemButtonsTemplateProps<
   /** A number stating the total number `items` in the array */
   totalItems: number;
   /** Callback function that adds a new item below this item */
-  onAddItem: (event?: any) => void;
+  onAddItem: (event?: SyntheticEvent<HTMLElement>) => void;
   /** Callback function that copies this item below itself */
-  onCopyItem: (event?: any) => void;
+  onCopyItem: (event?: SyntheticEvent<HTMLElement>) => void;
   /** Callback function that moves the item up one spot in the list */
-  onMoveUpItem: (event?: any) => void;
+  onMoveUpItem: (event?: SyntheticEvent<HTMLElement>) => void;
   /** Callback function that moves the item down one spot in the list */
-  onMoveDownItem: (event?: any) => void;
+  onMoveDownItem: (event?: SyntheticEvent<HTMLElement>) => void;
   /** Callback function that removes the item from the list */
-  onRemoveItem: (event?: any) => void;
+  onRemoveItem: (event?: SyntheticEvent<HTMLElement>) => void;
   /** A boolean value stating if the array item is read-only */
   readonly?: boolean;
   /** Props to spread onto each of the item's buttons, holding a key only for the buttons the item can show. Set when
@@ -1517,7 +1518,7 @@ export type ArrayFieldTemplateProps<
   /** An array of React elements representing the items in the array */
   items: ReactElement[];
   /** A function that adds a new item to the end of the array */
-  onAddClick: (event?: any) => void;
+  onAddClick: (event?: SyntheticEvent<HTMLElement>) => void;
 };
 
 /** The properties of each element in the ObjectFieldTemplateProps.properties array */
@@ -1868,7 +1869,7 @@ type UIOptionsDeclaredType<
     /** Any classnames that the user wants to be applied to a field in the ui */
     classNames?: string;
     /** Any custom style that the user wants to apply to a field in the ui, applied on the same element as classNames */
-    style?: StyleHTMLAttributes<any>;
+    style?: CSSProperties;
     /** We know that for title, it will be a string, if it is provided */
     title?: string;
     /** We know that for description, it will be a string, if it is provided */
@@ -1980,7 +1981,7 @@ export type ArrayElement<A> = A extends readonly (infer E)[] ? E : A;
  * exports it for its users to pass as `Checks` (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`), and a consumer of a
  * theme adds their own domain-specific options the same way, unioned into what they pass.
  */
-export interface UiOptionsCheck<When = any, Then = GenericObjectType> {
+export interface UiOptionsCheck<When = unknown, Then = GenericObjectType> {
   when: When;
   then: Then;
 }
@@ -2076,7 +2077,7 @@ type CommonUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> =
     title?: string;
     description?: string;
     classNames?: string;
-    style?: StyleHTMLAttributes<any>;
+    style?: CSSProperties;
     autofocus?: boolean;
     disabled?: boolean;
     readonly?: boolean;
