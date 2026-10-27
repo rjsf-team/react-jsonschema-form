@@ -25,8 +25,8 @@ import type { ErrorObject } from 'ajv';
 
 import type { SuppressDuplicateFilteringType } from './types.ts';
 
-export interface RawValidationErrorsType<Result = any> {
-  errors?: Result[];
+export interface RawValidationErrorsType {
+  errors?: ErrorObject[];
   validationError?: Error;
 }
 
@@ -211,7 +211,7 @@ export default function processRawValidationErrors<
   F extends FormContextType = FormContextType,
 >(
   context: SchemaContext<S, F>,
-  rawErrors: RawValidationErrorsType<ErrorObject>,
+  rawErrors: RawValidationErrorsType,
   formData: T | undefined,
   schema: S,
   customValidate?: CustomValidator<T, S, F>,
