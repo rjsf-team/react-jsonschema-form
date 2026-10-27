@@ -59,23 +59,25 @@ CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the 
 
 ## Changelog
 
-A PR that changes anything a user of a published package can notice adds an entry to the changelog.
-Append it as the last bullet under the heading of each package whose users notice the change, in the upcoming release at the top of the file.
+A PR that changes anything a user of a published package can notice adds an entry to the changelog for each change users notice, so a PR that fixes one thing and adds another adds two.
+Append each as the last bullet under the heading of each package whose users notice the change, in the upcoming release at the top of the file.
 If the top heading is dated, that release has shipped: add an undated heading for the next version above it.
-A change that belongs to no single package, such as a new Node or React requirement, goes once under `Dev / docs / playground` instead.
+A change that belongs to no single package, such as a new Node or React requirement, goes once under `All packages` instead.
 If the change needs a bigger semver bump than that release's heading names, update the heading.
 A change to a package's peer dependency range goes under that package, and so does a dependency bump that changes what its users get, such as a fix or a new minimum version.
-Tests, CI, refactors, docs fixes, playground changes and dependency bumps users can't notice need no entry, and neither does a fix to a change that isn't released yet: edit that change's entry instead.
+Tests, CI, refactors, docs changes, playground changes and dependency bumps users can't notice need no entry, and neither does a change to something that isn't released yet: edit that change's entry instead, keeping its PR link and adding yours after it.
 
 Write the entry for someone deciding whether to upgrade, who won't open the PR:
 
 - Start with `Add`, `Change`, `Deprecate`, `Fix` or `Remove`, and name the component, prop or export a user meets, in backticks.
-- Say what users notice, not how the code does it. A fix names what went wrong for them: "Fix `ArrayField` dropping the last item's errors when an item is removed".
-- Leave the reasoning, the alternatives and the edge cases to the PR description, and end the entry with a link to the PR and to the issue it fixes, if any.
-- Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and link the [upgrade guide](#upgrade-guide) section that says what to change.
+  Use `Fix` when the old behavior was wrong for users and `Change` when it worked as intended but now works differently.
+- Say what users notice, not how the code does it, and leave out internal helpers, hooks and concepts users never meet. A fix names what went wrong for them: "Fix `ArrayField` dropping the last item's errors when an item is removed".
+- Leave the reasoning, the alternatives, the edge cases and related issues to the PR description.
+- End the entry with its PR and then each issue it fixes, as in `([#5305](https://github.com/rjsf-team/react-jsonschema-form/pull/5305), [#4666](https://github.com/rjsf-team/react-jsonschema-form/issues/4666))`: a PR's link has `pull`, an issue's has `issues`.
+- Start a breaking change with `**BREAKING CHANGE:**` followed by the verb, as in `**BREAKING CHANGE:** Remove …`, say what now happens, and end the text with `See [the upgrade guide](…)`, linking the [upgrade guide](#upgrade-guide) section that says what to change.
   Link it on the docs site, as in `https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/vN.x%20upgrade%20guide#<section>`, since the entry is also copied into a GitHub Release, where relative paths don't resolve.
-- A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower type.
-- Aim for a sentence or two, about 200 characters. If it can't be both short and clear, keep it clear.
+- A change is breaking if users have to change their code, styles or tests to keep what they had, including a different default, generated `id` or class name, or a narrower or reshaped type, such as an `enum` becoming a union type. A type-only break gets an upgrade guide section too.
+- Aim for a sentence or two, about 200 characters of text, not counting link URLs. If it can't be both short and clear, keep it clear.
 
 For example, instead of an entry that explains the implementation:
 
@@ -83,7 +85,11 @@ For example, instead of an entry that explains the implementation:
 
 write what users see:
 
-> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450))
+> Fix `ObjectFieldTemplate` giving a property no column span when `formContext.colSpan` has no valid entry for it ([#5450](https://github.com/rjsf-team/react-jsonschema-form/pull/5450), [#5447](https://github.com/rjsf-team/react-jsonschema-form/issues/5447))
+
+A breaking entry has the same shape:
+
+> **BREAKING CHANGE:** Change an additional property's key input id from `root_foo-key` to `root_foo__key`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#ids-cant-collide-or-split-an-id-list-breaking-change) ([#5626](https://github.com/rjsf-team/react-jsonschema-form/pull/5626))
 
 ## Upgrade guide
 
