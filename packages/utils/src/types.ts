@@ -54,10 +54,8 @@ export type StrictRJSFSchema = JSONSchema7;
  */
 export type RJSFSchema = StrictRJSFSchema;
 
-/** Allow for more flexible schemas (i.e. draft-2019) than the strict JSONSchema7 with special marking added by
- * `retrieveSchema()`
- */
-export type RJSFMarkedSchema = StrictRJSFSchema & GenericSymbolObjectType;
+/** A schema with the symbol markers `retrieveSchema()` adds, such as `ADDITIONAL_PROPERTY_FLAG` and `RJSF_REF_KEY` */
+export type RJSFMarkedSchema = StrictRJSFSchema & Record<symbol, boolean | string>;
 
 /** The type of a form's `formContext`, the constraint and default of every `F`: any object, an `interface` included,
  * which a component reading it narrows or names the keys of
@@ -2161,10 +2159,20 @@ export type UiSchemaDefinitions<
  */
 type UiSchemaFieldMembers<T> = Exclude<Extract<NonNullable<T>, object>, readonly unknown[] | AtomicValue>;
 
+/** Marks the data of a nested field of unknown data, whose entry is unconstrained */
+declare const openFieldData: unique symbol;
+type OpenFieldData = typeof openFieldData;
+
+/** Whether `V` is the `OpenFieldData` marker itself. `never` extends every type, so it is ruled out first */
+type IsOpenFieldData<V> = [V] extends [never] ? false : [V] extends [OpenFieldData] ? true : false;
+
 /** The data whose keys become the nested per-field entries of a `UiSchema` for data of type `T`. Data of an unknown
- * type keeps every field name open; an array nests through `items` rather than by index; a leaf has no nested fields.
+ * type keeps every field name open, each holding `OpenFieldData`; an array nests through `items` rather than by index;
+ * a leaf has no nested fields.
  */
-type UiSchemaChildData<T> = unknown extends T ? GenericObjectType : UnionMembersMerged<UiSchemaFieldMembers<T>>;
+type UiSchemaChildData<T> = unknown extends T
+  ? Record<string, OpenFieldData>
+  : UnionMembersMerged<UiSchemaFieldMembers<T>>;
 
 /** The keys of `X` that name form fields. A method is not a field, and mapping one would also break assignability
  * for every uiSchema literal, since an object literal's apparent type carries `Object.prototype`'s methods.
@@ -2186,11 +2194,11 @@ type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullab
  * also covers the `ui:` keys, whose values aren't uiSchemas
  */
 type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
-  IsAny<V> extends true ? unknown : UiSchema<V, S, F>;
+  IsAny<V> extends true ? unknown : IsOpenFieldData<V> extends true ? unknown : UiSchema<V, S, F>;
 
 /** A nested field entry of a `StrictUiSchema`, unconstrained for unknown data the same way as `UiSchemaChild` */
 type StrictUiSchemaChild<Checks extends UiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
-  IsAny<V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
+  IsAny<V> extends true ? unknown : IsOpenFieldData<V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
 
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`. It accepts any `ui:widget`/`ui:field` name and any `ui:`-prefixed option; `StrictUiSchema` is
