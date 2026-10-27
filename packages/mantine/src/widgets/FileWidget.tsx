@@ -74,7 +74,7 @@ export default function FileWidget<
       name={htmlName || id}
       value={multiple ? selectedFiles : (selectedFiles[0] ?? null)}
       placeholder={placeholder || undefined}
-      accept={options.accept ? String(options.accept) : undefined}
+      accept={typeof options.accept === 'string' && options.accept ? options.accept : undefined}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}

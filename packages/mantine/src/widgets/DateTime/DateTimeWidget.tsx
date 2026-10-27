@@ -18,14 +18,10 @@ export default function DateTimeWidget<
 >(props: WidgetProps<T, S, F>) {
   const { schema } = props;
   const defaultValueFormat = schema.format === 'iso-date-time' ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD HH:mm:ss';
-  const { valueFormat = defaultValueFormat, displayFormat, ...otherOptions } = props.options;
+  const { valueFormat: optionValueFormat, displayFormat: optionDisplayFormat, ...otherOptions } = props.options;
+  const valueFormat = typeof optionValueFormat === 'string' ? optionValueFormat : defaultValueFormat;
+  const displayFormat =
+    typeof optionDisplayFormat === 'string' && optionDisplayFormat ? optionDisplayFormat : valueFormat;
 
-  return (
-    <DateTimeInput
-      {...props}
-      options={otherOptions}
-      valueFormat={valueFormat}
-      displayFormat={displayFormat || valueFormat}
-    />
-  );
+  return <DateTimeInput {...props} options={otherOptions} valueFormat={valueFormat} displayFormat={displayFormat} />;
 }
