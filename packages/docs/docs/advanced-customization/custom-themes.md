@@ -127,6 +127,29 @@ A declaration states what the theme's templates and widgets do.
 
 The theme's declarations are layered part by part over `@rjsf/core`'s, and the `Form`'s [`presentation`](../api-reference/form-props.md#presentation) prop over the theme's, by [`mergeThemePresentation()`](../api-reference/utility-functions.md#mergethemepresentation), so each layer declares only the parts it changes.
 
+### Class map
+
+A theme's **classMap** is a `ClassMap` of the class names its CSS framework needs on the elements `@rjsf/core` renders, so a theme built on a CSS framework styles core's components rather than copying them.
+It has one key per element rather than per concept, since frameworks put a concept's class on different elements: Bootstrap 3 puts `checkbox` on the `<div>` around a checkbox and its label, `checkboxWrapper`, while daisyUI puts it on the `<input>`.
+The one key named after a state, `disabled`, is added to a checkbox or radio option that is disabled or read-only beside its own key's, since Bootstrap 3's CSS selects `.checkbox.disabled`.
+`ClassMap` in `@rjsf/utils` lists the keys and the element each one reaches.
+
+```tsx
+import type { ThemeProps } from '@rjsf/core';
+
+const ThemeObject: ThemeProps = {
+  classMap: {
+    input: 'input input-bordered',
+    select: 'select select-bordered',
+    checkboxWrapper: 'form-control',
+    submitButton: 'btn btn-primary',
+  },
+};
+```
+
+`@rjsf/core` gives its elements no class of its own beyond their `rjsf-` markers, which always render, so a key's value is the class the element carries beside its marker, and a key the `Form`'s `classMap` gives replaces the theme's.
+`withTheme()` layers the `Form`'s [`classMap`](../api-reference/form-props.md#classmap) prop over the theme's, key by key, with [`mergeClassMaps()`](../api-reference/utility-functions.md#mergeclassmaps), and `buildRegistry()` layers that over `@rjsf/core`'s empty one; the merged `MergedClassMap` is `registry.classMap`, which a custom component reads its classes from: every key is present, `undefined` where no layer gives the element a class, so reading it onto a `className` renders no `class` attribute.
+
 ### Global UI options
 
 A theme whose widgets or templates read an option of their own from [`ui:globalOptions`](../api-reference/uiSchema.md#uiglobaloptions), as `@rjsf/mui` reads `mui`, declares its key as `globalUiOptionsKeys`.

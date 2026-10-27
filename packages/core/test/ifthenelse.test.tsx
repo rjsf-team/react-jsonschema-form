@@ -292,10 +292,10 @@ describe('conditional items', () => {
 
     // The zipcode field exists, but not as an additional property
     expect(node.querySelector('input#root_zipcode')).not.toBeNull();
-    expect(node.querySelector('div.form-additional input#root_zipcode')).toBeNull();
+    expect(node.querySelector('.rjsf-additional-property input#root_zipcode')).toBeNull();
 
     // The "otherKey" field exists as an additional property
-    expect(node.querySelector('div.form-additional input#root_otherKey')).not.toBeNull();
+    expect(node.querySelector('.rjsf-additional-property input#root_otherKey')).not.toBeNull();
   });
 
   it('re-resolves the conditional branch when a field with a default is cleared', async () => {

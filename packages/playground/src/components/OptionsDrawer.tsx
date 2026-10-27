@@ -1,6 +1,10 @@
-import type { ButtonHTMLAttributes, Dispatch, PropsWithChildren, RefObject, SetStateAction } from 'react';
+import type { Dispatch, RefObject, SetStateAction } from 'react';
 import { useCallback } from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Drawer from '@mui/material/Drawer';
+import Typography from '@mui/material/Typography';
 import type { FormProps, FormRef, IChangeEvent } from '@rjsf/core';
 import Form from '@rjsf/core';
 import type { DefaultFormStateBehavior, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
@@ -12,27 +16,7 @@ import CopyLink from './CopyLink.tsx';
 import RawValidatorTest from './RawValidatorTest.tsx';
 import ValidatorSelector from './ValidatorSelector.tsx';
 
-export const DRAWER_WIDTH = '28rem';
-
-type HeaderButtonProps = {
-  title: string;
-  onClick: () => void;
-} & ButtonHTMLAttributes<HTMLButtonElement>;
-
-function HeaderButton({ title, onClick, children, ...buttonProps }: PropsWithChildren<HeaderButtonProps>) {
-  return (
-    <button
-      type='button'
-      className='btn btn-default'
-      title={title}
-      onClick={onClick}
-      {...buttonProps}
-      style={{ marginRight: '5px' }}
-    >
-      {children}
-    </button>
-  );
-}
+export const DRAWER_WIDTH = '280px';
 
 function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: RefObject<FormRef | null> }) {
   const submitClick = useCallback(() => {
@@ -46,18 +30,20 @@ function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: RefObject<Fo
   }, [playGroundFormRef]);
   return (
     <>
-      <span className='control-label'>Programmatic</span>
-      <div className='btn-group'>
-        <HeaderButton title='Click me to submit the form programmatically.' onClick={submitClick}>
+      <Typography variant='subtitle2' component='p'>
+        Programmatic
+      </Typography>
+      <ButtonGroup size='small'>
+        <Button title='Click me to submit the form programmatically.' onClick={submitClick}>
           Submit
-        </HeaderButton>
-        <HeaderButton title='Click me to validate the form programmatically.' onClick={validateClick}>
+        </Button>
+        <Button title='Click me to validate the form programmatically.' onClick={validateClick}>
           Validate
-        </HeaderButton>
-        <HeaderButton title='Click me to reset the form programmatically.' onClick={resetClick}>
+        </Button>
+        <Button title='Click me to reset the form programmatically.' onClick={resetClick}>
           Reset
-        </HeaderButton>
-      </div>
+        </Button>
+      </ButtonGroup>
     </>
   );
 }
@@ -424,8 +410,10 @@ export default function OptionsDrawer({
   const drawerSx = { width: DRAWER_WIDTH, p: 1 };
   return (
     <Drawer open variant='permanent' anchor='right' sx={drawerSx} slotProps={{ paper: { sx: drawerSx } }}>
-      <OptionsButtons playGroundFormRef={playGroundFormRef} />
-      <CopyLink shareURL={shareURL} onShare={onShare} />
+      <Box sx={{ display: 'inline-flex', flexDirection: 'column', alignSelf: 'start' }}>
+        <OptionsButtons playGroundFormRef={playGroundFormRef} />
+        <CopyLink shareURL={shareURL} onShare={onShare} />
+      </Box>
       <Form
         key={`options-${loadKey}`}
         idPrefix='rjsf_options'

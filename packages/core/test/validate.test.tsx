@@ -31,7 +31,7 @@ describe('Validation', () => {
 
         expect(onSubmit).not.toHaveBeenCalled();
         expect(onError).toHaveBeenCalledOnce();
-        expect(Array.from(node.querySelectorAll('.errors li')).map((error) => error.textContent)).toEqual([
+        expect(Array.from(node.querySelectorAll('.rjsf-errors li')).map((error) => error.textContent)).toEqual([
           'boolean schema is false',
           'must match "then" schema',
         ]);
@@ -79,8 +79,8 @@ describe('Validation', () => {
         });
 
         it('should render errors', () => {
-          expect(node.querySelectorAll('.errors li')).toHaveLength(1);
-          expect(node.querySelector('.errors li')).toHaveTextContent("must have required property 'foo'");
+          expect(node.querySelectorAll('.rjsf-errors li')).toHaveLength(1);
+          expect(node.querySelector('.rjsf-errors li')).toHaveTextContent("must have required property 'foo'");
         });
       });
 
@@ -113,8 +113,10 @@ describe('Validation', () => {
         });
 
         it('should render errors', () => {
-          expect(node.querySelectorAll('.errors li')).toHaveLength(1);
-          expect(node.querySelector('.errors li')).toHaveTextContent('.foo must NOT have fewer than 10 characters');
+          expect(node.querySelectorAll('.rjsf-errors li')).toHaveLength(1);
+          expect(node.querySelector('.rjsf-errors li')).toHaveTextContent(
+            '.foo must NOT have fewer than 10 characters',
+          );
         });
 
         it('should trigger the onError handler', () => {
@@ -428,7 +430,7 @@ describe('Validation', () => {
         });
 
         it('should not render error list if showErrorList prop true', () => {
-          expect(node.querySelectorAll('.errors li')).toHaveLength(0);
+          expect(node.querySelectorAll('.rjsf-errors li')).toHaveLength(0);
         });
 
         it('should trigger onError call', () => {
@@ -449,8 +451,8 @@ describe('Validation', () => {
           const { node: bottomNode } = createFormComponent({ schema, initialFormData: {}, showErrorList: 'bottom' });
           await submitForm(bottomNode, user, true);
 
-          expect(bottomNode.firstElementChild).not.toHaveClass('errors');
-          expect(bottomNode.lastElementChild).toHaveClass('errors');
+          expect(bottomNode.firstElementChild).not.toHaveClass('rjsf-errors');
+          expect(bottomNode.lastElementChild).toHaveClass('rjsf-errors');
         });
       });
     });
@@ -549,7 +551,7 @@ describe('Validation', () => {
         await submitForm(node, user);
       });
       it('should be used to validate schema', async () => {
-        expect(node.querySelectorAll('.errors li')).toHaveLength(1);
+        expect(node.querySelectorAll('.rjsf-errors li')).toHaveLength(1);
         expect(onError).toHaveBeenLastCalledWith([
           {
             message: 'must match pattern "\\d+"',
@@ -566,7 +568,7 @@ describe('Validation', () => {
         const input = node.querySelector('input')!;
         await user.clear(input);
         await user.type(input, '1234');
-        expect(node.querySelectorAll('.errors li')).toHaveLength(0);
+        expect(node.querySelectorAll('.rjsf-errors li')).toHaveLength(0);
         expect(onError).not.toHaveBeenCalled();
       });
     });

@@ -1,6 +1,7 @@
 import type { ThemeProps } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, ThemePresentation } from '@rjsf/utils';
 
+import { generateClassMap } from '../classMap.ts';
 import { createTemplates } from '../Templates/index.ts';
 import { createWidgets } from '../Widgets/index.ts';
 
@@ -12,7 +13,12 @@ function createPresentation(): ThemePresentation {
 }
 
 function createTheme() {
-  return { templates: createTemplates(), widgets: createWidgets(), presentation: createPresentation() };
+  return {
+    templates: createTemplates(),
+    widgets: createWidgets(),
+    presentation: createPresentation(),
+    classMap: generateClassMap(),
+  };
 }
 
 export function generateTheme<

@@ -68,6 +68,8 @@ describe('SchemaField', () => {
         templates: defaultRegistry.templates,
         widgets: defaultRegistry.widgets,
         presentation: mergeThemePresentation(defaultRegistry.presentation),
+        // Core's empty map merges to a map of `undefined`s, which `toEqual` reads as no keys
+        classMap: {},
         rootSchema: schema,
         formContext: {},
         schemaUtils,
@@ -110,6 +112,8 @@ describe('SchemaField', () => {
         templates: defaultRegistry.templates,
         widgets: defaultRegistry.widgets,
         presentation: mergeThemePresentation(defaultRegistry.presentation),
+        // Core's empty map merges to a map of `undefined`s, which `toEqual` reads as no keys
+        classMap: {},
         rootSchema: schema,
         formContext: {},
         schemaUtils,
@@ -198,7 +202,7 @@ describe('SchemaField', () => {
         schema: { type: 'invalid' },
       });
 
-      expect(node.querySelector('.unsupported-field')).toHaveTextContent('Unknown field type invalid');
+      expect(node.querySelector('.rjsf-unsupported-field')).toHaveTextContent('Unknown field type invalid');
     });
 
     it('should be able to be overwritten with a custom UnsupportedField component', () => {
@@ -1646,7 +1650,7 @@ describe('SchemaField', () => {
         'ui:globalOptions': { deprecatedHandling: 'hide' },
       };
       const { node } = createFormComponent({ schema, uiSchema });
-      const hiddenFields = node.querySelectorAll('.hidden');
+      const hiddenFields = node.querySelectorAll('[hidden]');
       expect(hiddenFields.length).toBe(1);
     });
 
@@ -1663,7 +1667,7 @@ describe('SchemaField', () => {
         uiSchema: { 'ui:widget': 'radio' },
         widgets: { RadioWidget },
       });
-      expect(node.querySelector('.control-label')).not.toBeInTheDocument();
+      expect(node.querySelector('.rjsf-field-label')).not.toBeInTheDocument();
       expect(node).not.toHaveTextContent('(deprecated)');
       expect(recordWidgetLabel).toHaveBeenLastCalledWith('');
     });
@@ -1758,7 +1762,7 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll(':scope > .form-group > div > .error-detail .text-danger');
+      const matches = node.querySelectorAll(':scope > .rjsf-field > div > .rjsf-error-detail .rjsf-error');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('container');
     });
@@ -1772,7 +1776,7 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
+      const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-error');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('test');
     });
@@ -1804,7 +1808,7 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
+      const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-error');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('test');
     });
@@ -1841,7 +1845,7 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
+      const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-error');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent('test');
     });
@@ -1857,10 +1861,10 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
+      const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-error');
       expect(matches).toHaveLength(0);
 
-      const customMatches = node.querySelectorAll(':scope .form-group .form-group .custom-field-error');
+      const customMatches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .custom-field-error');
       expect(customMatches[0]).toHaveTextContent('test');
     });
 
@@ -1881,10 +1885,10 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
+      const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-error');
       expect(matches).toHaveLength(0);
 
-      const customMatches = node.querySelectorAll(':scope .form-group .form-group .custom-field-error');
+      const customMatches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .custom-field-error');
       expect(customMatches[0]).toHaveTextContent('test');
     });
 
@@ -1923,7 +1927,7 @@ describe('SchemaField', () => {
 
         await submitForm(node, user);
 
-        const matches = node.querySelectorAll(':scope > .form-group > div > .error-detail .text-danger');
+        const matches = node.querySelectorAll(':scope > .rjsf-field > div > .rjsf-error-detail .rjsf-error');
         expect(matches).toHaveLength(0);
       });
 
@@ -1936,7 +1940,7 @@ describe('SchemaField', () => {
 
         await submitForm(node, user);
 
-        const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
+        const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-error');
         expect(matches).toHaveLength(0);
       });
 
@@ -2007,7 +2011,7 @@ describe('SchemaField', () => {
 
         await submitForm(node, user);
 
-        const matches = node.querySelectorAll(':scope > .form-group > div > .error-detail .text-danger');
+        const matches = node.querySelectorAll(':scope > .rjsf-field > div > .rjsf-error-detail .rjsf-error');
         expect(matches).toHaveLength(0);
       });
 
@@ -2021,7 +2025,7 @@ describe('SchemaField', () => {
         await submitForm(node, user);
 
         // The framed root shows its own error as its `ui:hideError` leaves it, drawing it after its child's
-        const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
+        const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-error');
         expect([...matches].map(({ textContent }) => textContent)).toEqual(['test', 'container']);
       });
 
@@ -2042,7 +2046,7 @@ describe('SchemaField', () => {
         await submitForm(node, user);
 
         // The framed root shows its own error as its `ui:hideError` leaves it, drawing it after its child's
-        const matches = node.querySelectorAll(':scope .form-group .form-group .text-danger');
+        const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-error');
         expect([...matches].map(({ textContent }) => textContent)).toEqual(['test', 'container']);
       });
     });
@@ -2108,7 +2112,7 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll(':scope .form-group .form-group .help-block');
+      const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-field-help');
       expect(matches).toHaveLength(1);
       expect(matches[0]).toHaveTextContent(helpText);
     });
@@ -2123,10 +2127,10 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll(':scope .form-group .form-group .help-block');
+      const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-field-help');
       expect(matches).toHaveLength(0);
 
-      const customMatches = node.querySelectorAll(':scope .form-group .form-group .custom-field-help');
+      const customMatches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .custom-field-help');
       expect(customMatches[0]).toHaveTextContent(helpText);
     });
 
@@ -2143,10 +2147,10 @@ describe('SchemaField', () => {
 
       await submitForm(node, user);
 
-      const matches = node.querySelectorAll(':scope .form-group .form-group .help-block');
+      const matches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .rjsf-field-help');
       expect(matches).toHaveLength(0);
 
-      const customMatches = node.querySelectorAll(':scope .form-group .form-group .custom-field-help');
+      const customMatches = node.querySelectorAll(':scope .rjsf-field .rjsf-field .custom-field-help');
       expect(customMatches[0]).toHaveTextContent(helpText);
     });
   });
@@ -2172,7 +2176,7 @@ describe('SchemaField', () => {
         },
       });
 
-      const field = node.querySelector(':scope .form-group .form-group .field-description')!;
+      const field = node.querySelector(':scope .rjsf-field .rjsf-field .rjsf-field-description')!;
 
       expect(field).toContainHTML('<strong>bold</strong>');
       expect(field).toContainHTML('<em>italic</em>');
@@ -2190,7 +2194,7 @@ describe('SchemaField', () => {
         },
       });
 
-      const field = node.querySelector(':scope .form-group .form-group .field-description')!;
+      const field = node.querySelector(':scope .rjsf-field .rjsf-field .rjsf-field-description')!;
 
       expect(field).not.toContainHTML('<strong>bold</strong>');
       expect(field).not.toContainHTML('<em>italic</em>');

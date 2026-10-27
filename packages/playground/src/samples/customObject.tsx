@@ -27,6 +27,7 @@ function ObjectFieldTemplate<
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
+          outsideFieldset
         />
       )}{' '}
       {description}

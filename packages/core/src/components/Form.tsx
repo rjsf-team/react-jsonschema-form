@@ -24,13 +24,21 @@ import type {
   SubmitButtonProps,
   TemplatesType,
   ThemePresentation,
+  FormClassMap,
   UiSchema,
   ValidatorType,
   DefaultFormStateBehavior,
   CustomMergeAllOf,
   NameGeneratorFunction,
 } from '@rjsf/utils';
-import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI_OPTIONS_KEY } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  joinClassNames,
+  ROOT_FIELD_PATH,
+  SUBMIT_BTN_OPTIONS_KEY,
+  UI_OPTIONS_KEY,
+} from '@rjsf/utils';
 import { useFormStatus } from 'react-dom';
 
 import isDevelopment from '../isDevelopment.ts';
@@ -119,6 +127,11 @@ export interface FormProps<
    * which are layered over `core`'s
    */
   presentation?: ThemePresentation;
+  /** The class names of the elements `@rjsf/core` renders, by element, layered over the theme's `classMap`,
+   * which is layered over `@rjsf/core`'s. A class given here replaces the theme's class for that element, and a
+   * function is called with the class beneath to extend it, the theme's, or `@rjsf/core`'s where the theme gives none
+   */
+  classMap?: FormClassMap;
   /** The keys of the extensions to `ui:globalOptions` the form's own widgets, fields and templates read, beyond the
    * ones RJSF reads there, added to the ones the theme declares. The registry's `globalUiOptions` hold only those, so
    * every field hands them to its widget and templates along with RJSF's own. A key that is an option name RJSF reads
@@ -580,7 +593,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   return (
     <FormDataContext value={model}>
       <FormTag
-        className={className || 'rjsf'}
+        className={joinClassNames('rjsf', className)}
         id={id}
         name={name}
         method={method}

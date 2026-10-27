@@ -26,7 +26,7 @@ describe('resolveFieldPresentation()', () => {
       label: { text: 'Foo', by: 'template', id: `${ID}__label`, requiredMarker: true },
       description: { text: 'Describes foo', by: 'template', id: `${ID}__description` },
       help: { text: 'Helps with foo', by: 'template', id: `${ID}__help` },
-      errors: { messages: ['is required'], by: 'template', id: `${ID}__error` },
+      errors: { messages: ['is required'], by: 'template', id: `${ID}__error`, own: true },
       describedBy: [`${ID}__error`, `${ID}__description`, `${ID}__help`],
       showLabel: true,
       control: {
@@ -45,7 +45,7 @@ describe('resolveFieldPresentation()', () => {
       label: { text: '', by: 'none', id: `${ID}__label`, requiredMarker: false },
       description: { text: '', by: 'none', id: `${ID}__description` },
       help: { text: undefined, by: 'none', id: `${ID}__help` },
-      errors: { messages: [], by: 'none', id: `${ID}__error` },
+      errors: { messages: [], by: 'none', id: `${ID}__error`, own: false },
       describedBy: [],
       showLabel: true,
       control: { id: ID, attributes: {} },
@@ -139,7 +139,7 @@ describe('resolveFieldPresentation()', () => {
   describe('errors', () => {
     it('shows no errors under hideError, and leaves the control valid', () => {
       const plan = resolve({ errors: ['is required'], hideError: true });
-      expect(plan.errors).toEqual({ messages: [], by: 'none', id: `${ID}__error` });
+      expect(plan.errors).toEqual({ messages: [], by: 'none', id: `${ID}__error`, own: false });
       expect(plan.control?.attributes).toEqual({});
     });
   });
@@ -420,6 +420,7 @@ describe('resolveFieldPresentation()', () => {
         messages: ['should match exactly one schema'],
         by: 'above',
         id: `${ID}__error`,
+        own: true,
       });
       expect(plan.control?.attributes['aria-invalid']).toBe(true);
       expect(plan.describedBy[0]).toBe(`${ID}__error`);
@@ -427,9 +428,15 @@ describe('resolveFieldPresentation()', () => {
 
     it('draws its own errors where the field above hides them, and is described by them and invalid', () => {
       const plan = resolve({ inherited: resolve({ errors: ['hidden'], hideError: true }), errors: ['is required'] });
-      expect(plan.errors).toEqual({ messages: ['is required'], by: 'template', id: `${ID}__error` });
+      expect(plan.errors).toEqual({ messages: ['is required'], by: 'template', id: `${ID}__error`, own: true });
       expect(plan.control?.attributes['aria-invalid']).toBe(true);
       expect(plan.describedBy[0]).toBe(`${ID}__error`);
+    });
+
+    it('shows no errors of its own where it hides them, though its control is invalid by the errors above', () => {
+      const plan = resolve({ inherited: above, errors: ['is required'], hideError: true });
+      expect(plan.errors).toMatchObject({ by: 'above', own: false });
+      expect(plan.control?.attributes['aria-invalid']).toBe(true);
     });
 
     it('is valid when it hides its errors as the field above does, or has none to show', () => {

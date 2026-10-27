@@ -9,6 +9,7 @@ import {
   createFormComponent,
   createFormRef,
   elementOf,
+  errorListMessages,
   expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   handleOf,
@@ -91,7 +92,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelector('.field-description')).toHaveTextContent('bar');
+      expect(node.querySelector('.rjsf-field-description')).toHaveTextContent('bar');
     });
 
     it('should assign a default value', () => {
@@ -300,7 +301,7 @@ describe('StringField', () => {
         initialFormData: 'x',
       });
 
-      await user.click(node.querySelector('button.btn-clear')!);
+      await user.click(node.querySelector('button.rjsf-btn-clear')!);
 
       expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
     });
@@ -312,7 +313,7 @@ describe('StringField', () => {
         initialFormData: 'x',
       });
 
-      await user.click(node.querySelector('button.btn-clear')!);
+      await user.click(node.querySelector('button.rjsf-btn-clear')!);
 
       expectToHaveBeenCalledWithFormData(onChange, 'default', 'root');
     });
@@ -398,7 +399,7 @@ describe('StringField', () => {
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessageContent = node.querySelector('#root__error .text-danger');
+      const errorMessageContent = node.querySelector('#root__error .rjsf-error');
       expect(errorMessageContent).toHaveTextContent('must be string');
 
       act(() => handleOf(ref).setFieldValue('', 'hello'));
@@ -419,7 +420,7 @@ describe('StringField', () => {
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessageContent = node.querySelector('#root__error .text-danger');
+      const errorMessageContent = node.querySelector('#root__error .rjsf-error');
       expect(errorMessageContent).toHaveTextContent('Value must be "test"');
     });
 
@@ -451,7 +452,7 @@ describe('StringField', () => {
 
       let errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessageContent = node.querySelector('#root__error .text-danger');
+      const errorMessageContent = node.querySelector('#root__error .rjsf-error');
       expect(errorMessageContent).toHaveTextContent('Value must be "test"');
 
       await user.clear(inputs[0]);
@@ -472,12 +473,12 @@ describe('StringField', () => {
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       await user.type(inputs[0], 'hello');
 
-      expect(node.querySelectorAll('.panel-danger.errors li')).toHaveLength(1);
+      expect(errorListMessages(node)).toHaveLength(1);
 
       await user.clear(inputs[0]);
       await user.type(inputs[0], 'test');
 
-      expect(node.querySelectorAll('.panel-danger.errors li')).toHaveLength(0);
+      expect(errorListMessages(node)).toHaveLength(0);
     });
 
     it('raise an error and check if the error is displayed using custom text widget', async () => {
@@ -493,7 +494,7 @@ describe('StringField', () => {
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
-      const errorMessageContent = node.querySelector('#root__error .text-danger');
+      const errorMessageContent = node.querySelector('#root__error .rjsf-error');
       expect(errorMessageContent).toHaveTextContent('Value must be "test"');
     });
 
@@ -1821,7 +1822,7 @@ describe('StringField', () => {
         });
 
         const buttonLabels = [].map.call(
-          node.querySelectorAll('button.btn-now, button.btn-clear'),
+          node.querySelectorAll('button.rjsf-btn-now, button.rjsf-btn-clear'),
           (x: HTMLElement) => x.textContent,
         );
         expect(buttonLabels).toEqual(['Now', 'Clear']);
@@ -1836,7 +1837,7 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('button.btn-now')!);
+        await user.click(node.querySelector('button.rjsf-btn-now')!);
 
         const formValue = onChange.mock.lastCall![0].formData;
         // Test that the two DATETIMEs are within 5 seconds of each other.
@@ -1854,8 +1855,8 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('button.btn-now')!);
-        await user.click(node.querySelector('button.btn-clear')!);
+        await user.click(node.querySelector('button.rjsf-btn-now')!);
+        await user.click(node.querySelector('button.rjsf-btn-clear')!);
 
         expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
       });
@@ -2271,7 +2272,7 @@ describe('StringField', () => {
         });
 
         const buttonLabels = [].map.call(
-          node.querySelectorAll('button.btn-now, button.btn-clear'),
+          node.querySelectorAll('button.rjsf-btn-now, button.rjsf-btn-clear'),
           (x: HTMLElement) => x.textContent,
         );
         expect(buttonLabels).toEqual(['Now', 'Clear']);
@@ -2286,7 +2287,7 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('button.btn-now')!);
+        await user.click(node.querySelector('button.rjsf-btn-now')!);
 
         const expected = toDateString(parseDateString(new Date().toJSON()), false);
 
@@ -2302,8 +2303,8 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        await user.click(node.querySelector('button.btn-now')!);
-        await user.click(node.querySelector('button.btn-clear')!);
+        await user.click(node.querySelector('button.rjsf-btn-now')!);
+        await user.click(node.querySelector('button.rjsf-btn-clear')!);
 
         expectToHaveBeenCalledWithFormData(onChange, undefined, 'root');
       });
@@ -2338,7 +2339,7 @@ describe('StringField', () => {
           focusOnFirstError: true,
         });
 
-        const buttons = node.querySelectorAll('button.btn-now, button.btn-clear');
+        const buttons = node.querySelectorAll('button.rjsf-btn-now, button.rjsf-btn-clear');
         expect(buttons).toHaveLength(2);
         buttons.forEach((button) => expect(button).toBeDisabled());
         // Clicking the submit button would move focus onto it, which is what this checks nothing else does
@@ -2382,7 +2383,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelector('.field-description')).toHaveTextContent('baz');
+      expect(node.querySelector('.rjsf-field-description')).toHaveTextContent('baz');
     });
 
     it('should assign a default value', async () => {
@@ -2517,7 +2518,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelector('.field-description')).toHaveTextContent('baz');
+      expect(node.querySelector('.rjsf-field-description')).toHaveTextContent('baz');
     });
 
     it('should assign a default value', async () => {
@@ -2874,7 +2875,7 @@ describe('StringField', () => {
         initialFormData: formData,
       });
 
-      const preview = node.querySelector<HTMLImageElement>('img.file-preview');
+      const preview = node.querySelector<HTMLImageElement>('img.rjsf-file-preview');
       expect(preview).toBeInTheDocument();
       expect(preview).toHaveAttribute('src', formData);
     });
@@ -2892,7 +2893,7 @@ describe('StringField', () => {
         initialFormData: formData,
       });
 
-      const download = node.querySelector<HTMLLinkElement>('a.file-download');
+      const download = node.querySelector<HTMLLinkElement>('a.rjsf-file-download');
       expect(download).toBeInTheDocument();
       expect(download).toHaveAttribute('href', formData);
       expect(download).toHaveTextContent(TranslatableString.PreviewLabel);

@@ -1,5 +1,12 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getArrayDescription, getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
+import {
+  getArrayDescription,
+  getTemplates,
+  getUiOptions,
+  buttonId,
+  titleDrawsOptionalDataControl,
+  joinClassNames,
+} from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -14,6 +21,7 @@ export default function ArrayFieldTemplate<
     canAdd,
     className,
     disabled,
+    hasErrors,
     id,
     uiSchema,
     items,
@@ -34,8 +42,9 @@ export default function ArrayFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
+  const { classMap } = registry;
   return (
-    <fieldset className={className} id={id}>
+    <fieldset className={joinClassNames(className, classMap.arrayFieldset) || undefined} id={id}>
       <ArrayFieldTitleTemplate
         id={id}
         title={title}
@@ -48,13 +57,14 @@ export default function ArrayFieldTemplate<
       <ArrayFieldDescriptionTemplate
         id={id}
         description={shownDescription}
+        hasErrors={hasErrors}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
         presentation={presentation}
       />
       {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-      <div className='row array-item-list'>{items}</div>
+      <div className={joinClassNames('rjsf-array-item-list', classMap.arrayItemList)}>{items}</div>
       {canAdd && (
         <AddButton
           id={buttonId(id, 'add')}
