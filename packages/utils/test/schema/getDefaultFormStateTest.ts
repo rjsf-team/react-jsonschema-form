@@ -125,6 +125,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         getDefaultFormState({ validator: testValidator }, { schema: null as unknown as RJSFSchema }),
       ).toThrow('Invalid schema:');
     });
+    it('reports a schema that is a circular array or a BigInt, which JSON.stringify() would throw for', () => {
+      const circular: unknown[] = [];
+      circular.push(circular);
+      expect(() =>
+        getDefaultFormState({ validator: testValidator }, { schema: circular as unknown as RJSFSchema }),
+      ).toThrow('Invalid schema:');
+      expect(() =>
+        getDefaultFormState({ validator: testValidator }, { schema: BigInt(1) as unknown as RJSFSchema }),
+      ).toThrow('Invalid schema: 1');
+    });
 
     describe('object schemas', () => {
       describe('schema with a ref', () => {

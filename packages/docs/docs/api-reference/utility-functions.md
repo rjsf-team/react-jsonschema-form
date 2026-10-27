@@ -2576,7 +2576,7 @@ Recursively merge deeply nested objects.
 
 #### Returns
 
-- R: A new object that is the merge of the two given objects, typed as the `R` its caller passes as a type argument, `GenericObjectType` by default
+- R: A new object that is the merge of the two given objects, typed as the `R` its caller passes as a type argument, `GenericObjectType` by default. `R` is an assertion: nothing checks the merged object against it, so name only what you know the merge holds, as you would with an `as`
 
 ### mergeSchemas()
 
@@ -2590,7 +2590,7 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 
 #### Returns
 
-- R: The merged schema object, typed as the `R` its caller passes as a type argument, `GenericObjectType` by default
+- R: The merged schema object, typed as the `R` its caller passes as a type argument, `GenericObjectType` by default. `R` is an assertion: nothing checks the merged object against it, so name only what you know the merge holds, as you would with an `as`
 
 ### mergeThemePresentation()
 

@@ -651,14 +651,7 @@ export function useFieldWrapperProps<
   );
   // `Input.Wrapper` would size its title, description and errors by the `size` in `__stylesApiProps`, the top-level
   // props, rather than by its own, which a `wrapperProps.size` may have replaced
-  const inputWrapperObject: object = inputWrapperProps;
-  const {
-    __stylesApiProps: _stylesApiProps,
-    id: _id,
-    ...mantineWrapperProps
-  }: GenericObjectType = {
-    ...inputWrapperObject,
-  };
+  const { __stylesApiProps: _stylesApiProps, id: _id, ...mantineWrapperProps } = inputWrapperProps;
   // Resolved as `Input.Wrapper` resolves them, since some are read or replaced here. `useInputProps` leaves
   // `labelElement` with the input, while this wrapper takes it.
   const wrapperDefaults = useProps<GenericObjectType>('InputWrapper', {}, {});

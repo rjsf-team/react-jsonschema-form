@@ -2591,7 +2591,8 @@ export default function getDefaultFormState<
   }: GetDefaultFormStateProps<T, S, F>,
 ): T | T[] | null | undefined {
   if (!isObject(theSchema)) {
-    throw new Error(`Invalid schema: ${JSON.stringify(theSchema)}`);
+    // oxlint-disable-next-line typescript/no-base-to-string -- `JSON.stringify()` would throw for a circular array or a BigInt
+    throw new Error(`Invalid schema: ${String(theSchema)}`);
   }
   const root = rootSchema ?? theSchema;
   // The root is resolved as `retrieveSchema()` resolves it, its `allOf` merged and the extra keys of its data stubbed

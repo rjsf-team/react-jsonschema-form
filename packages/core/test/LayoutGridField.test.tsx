@@ -1485,6 +1485,13 @@ describe('LayoutGridField', () => {
         UIComponent: null,
       });
     });
+    test('gridSchema names its field by a number, as a JSON layout can', () => {
+      expect(computeUIComponentPropsFromGridSchema(registry, { name: 5 })).toEqual({
+        name: '5',
+        uiProps: {},
+        UIComponent: null,
+      });
+    });
     test('gridSchema contains name and looked up placeholder', () => {
       const gridSchema = {
         name: 'foo',
