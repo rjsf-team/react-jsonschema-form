@@ -373,6 +373,7 @@ render(<Form schema={schema} validator={validator} customValidate={customValidat
 > - The `customValidate()` function is called **after** the JSON schema validation.
 > - The `customValidate()` function is passed the `uiSchema` as the third argument. This allows the `customValidate()` function to be able to derive additional information from it for generating errors.
 > - The `customValidate()` function is passed the `errorSchema` as the fourth argument. This allows the `customValidate()` function to be able to access errors raised by JSON schema validation.
+> - The `customValidate()` function must be pure, with no side effects such as logging or setting state, since it can run more than once for a change. The same applies to `transformErrors()`.
 
 ## Custom error messages
 

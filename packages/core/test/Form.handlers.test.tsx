@@ -1,12 +1,12 @@
-import { createRef, useEffect } from 'react';
-import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { StrictMode, createRef, startTransition, useEffect, useLayoutEffect, useState } from 'react';
+import type { ErrorSchema, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { act, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import type Form from '../src/index.ts';
 import type { FormProps, IChangeEvent } from '../src/index.ts';
+import Form from '../src/index.ts';
 import { expectToHaveBeenCalledWithFormData, submitForm, describeRepeated } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -212,6 +212,315 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       expect(formData).toEqual({ foo: 'bar2', baz: 'blah2' });
       // There will be 3 ids, undefined for the setting of the defaults and then the two updated components
       expect(ids).toEqual([undefined, 'root_foo', 'root_baz']);
+    });
+    describe('many changes in one event', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+          baz: { type: 'string' },
+        },
+      };
+      const burstWidget = (count: number) =>
+        function BurstWidget({ onChange }: WidgetProps) {
+          return (
+            <button
+              type='button'
+              onClick={() => {
+                for (let i = 1; i <= count; i++) {
+                  onChange(`value ${i}`);
+                }
+              }}
+            >
+              burst
+            </button>
+          );
+        };
+
+      it('should not throw and should keep the last value after many changes to one field', async () => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': burstWidget(200) } },
+        });
+
+        onChange.mockClear();
+
+        await user.click(node.querySelector('button')!);
+
+        await waitFor(() => expect(onChange).toHaveBeenCalledTimes(200));
+        expectToHaveBeenCalledWithFormData(onChange, { foo: 'value 200' }, 'root_foo');
+      });
+      it('should still report a burst of 40 changes before the event returns', () => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          uiSchema: { foo: { 'ui:widget': burstWidget(40) } },
+        });
+
+        onChange.mockClear();
+
+        // fireEvent, since user-event finishes a click asynchronously and this checks the burst lands before it returns
+        fireEvent.click(node.querySelector('button')!);
+
+        expect(onChange).toHaveBeenCalledTimes(40);
+        expectToHaveBeenCalledWithFormData(onChange, { foo: 'value 40' }, 'root_foo');
+      });
+      it('should not throw and should report every change after many changes to different fields', async () => {
+        const ref = createRef<Form>();
+        const { onChange } = createFormComponent({ ref, schema });
+        onChange.mockClear();
+
+        await act(async () => {
+          for (let i = 1; i <= 60; i++) {
+            ref.current!.setFieldValue(i % 2 ? 'foo' : 'baz', `value ${i}`);
+          }
+        });
+
+        await waitFor(() => expect(onChange).toHaveBeenCalledTimes(60));
+        expect(onChange.mock.calls.map(([, id]) => id)).toEqual(
+          Array.from({ length: 60 }, (_, i) => (i % 2 ? 'root_baz' : 'root_foo')),
+        );
+        expectToHaveBeenCalledWithFormData(onChange, { foo: 'value 59', baz: 'value 60' }, 'root_baz');
+      });
+      it('should live validate the last value of a burst', async () => {
+        const shortLast = Array.from({ length: 60 }, (_, i) => (i === 59 ? 'a' : 'abc'));
+        const longLast = Array.from({ length: 60 }, (_, i) => (i === 59 ? 'abc' : 'a'));
+        const sendWidget = (values: string[]) =>
+          function SendWidget({ onChange }: WidgetProps) {
+            return (
+              <button type='button' onClick={() => values.forEach((value) => onChange(value))}>
+                send
+              </button>
+            );
+          };
+        const minLengthSchema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+        const errorsAfter = async (values: string[]) => {
+          const { node, onChange } = createFormComponent({
+            schema: minLengthSchema,
+            liveValidate: true,
+            uiSchema: { foo: { 'ui:widget': sendWidget(values) } },
+          });
+          onChange.mockClear();
+          await user.click(node.querySelector('button')!);
+          expect(onChange).toHaveBeenCalledTimes(values.length);
+          return onChange.mock.lastCall![0].errors.map(({ property }: { property: string }) => property);
+        };
+
+        expect(await errorsAfter(shortLast)).toEqual(['.foo']);
+        expect(await errorsAfter(longLast)).toEqual([]);
+      });
+    });
+    it('should keep the form mounted and taking changes when a change throws', () => {
+      vi.useFakeTimers();
+      try {
+        const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          customValidate: (formData, errors) => {
+            if (formData?.foo === 'boom') {
+              throw new Error('customValidate failed');
+            }
+            return errors;
+          },
+        });
+        onChange.mockClear();
+
+        // fireEvent throughout, since user-event waits on timers, which hang under the fake timers flushing the rethrow
+        fireEvent.change(node.querySelector('#root_foo')!, { target: { value: 'boom' } });
+
+        expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
+        expect(onChange).not.toHaveBeenCalled();
+
+        fireEvent.change(node.querySelector('#root_foo')!, { target: { value: 'fine' } });
+
+        expect(node.isConnected).toBe(true);
+        expectToHaveBeenCalledWithFormData(onChange, { foo: 'fine' }, 'root_foo');
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+    it('should keep the changes before the last change of a burst when that change throws', () => {
+      vi.useFakeTimers();
+      try {
+        const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+        const SendWidget = ({ onChange, value }: WidgetProps) => (
+          <>
+            <output>{value}</output>
+            <button type='button' onClick={() => ['value 1', 'value 2', 'boom'].forEach((v) => onChange(v))}>
+              send
+            </button>
+          </>
+        );
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          uiSchema: { foo: { 'ui:widget': SendWidget } },
+          customValidate: (formData, errors) => {
+            if (formData?.foo === 'boom') {
+              throw new Error('customValidate failed');
+            }
+            return errors;
+          },
+        });
+        onChange.mockClear();
+
+        // fireEvent, since user-event waits on timers, which hang under the fake timers flushing the rethrow
+        fireEvent.click(node.querySelector('button')!);
+
+        expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
+        expect(onChange.mock.calls.map(([event]) => event.formData.foo)).toEqual(['value 1', 'value 2']);
+        expect(node.querySelector('output')!.textContent).toBe('value 2');
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+    it('should not keep the custom errors of a change that throws', () => {
+      vi.useFakeTimers();
+      try {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'string' }, baz: { type: 'string' }, qux: { type: 'string' } },
+        };
+        const raisingWidget = (value: string, error: string) =>
+          function RaisingWidget({ onChange, id }: WidgetProps) {
+            return (
+              <button
+                type='button'
+                id={`${id}_raise`}
+                onClick={() => onChange(value, { __errors: [error] } as ErrorSchema)}
+              >
+                raise
+              </button>
+            );
+          };
+        let isTransformFailing = false;
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          uiSchema: {
+            foo: { 'ui:widget': raisingWidget('boom', 'raised on foo') },
+            baz: { 'ui:widget': raisingWidget('kept', 'raised on baz') },
+          },
+          transformErrors: (errors) => {
+            if (isTransformFailing) {
+              throw new Error('transformErrors failed');
+            }
+            return errors;
+          },
+        });
+
+        // fireEvent throughout, since user-event waits on timers, which hang under the fake timers flushing the rethrow
+        fireEvent.click(node.querySelector('#root_baz_raise')!);
+        isTransformFailing = true;
+        fireEvent.click(node.querySelector('#root_foo_raise')!);
+        expect(() => vi.runOnlyPendingTimers()).toThrow('transformErrors failed');
+        isTransformFailing = false;
+        onChange.mockClear();
+        fireEvent.change(node.querySelector('#root_qux')!, { target: { value: 'fine' } });
+
+        expectToHaveBeenCalledWithFormData(onChange, { baz: 'kept', qux: 'fine' }, 'root_qux');
+        expect(onChange.mock.lastCall![0].errors.map(({ message }: { message: string }) => message)).toEqual([
+          'raised on baz',
+        ]);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+    it('should keep a custom error when the change clearing it throws', () => {
+      vi.useFakeTimers();
+      try {
+        const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, qux: { type: 'string' } } };
+        const FooWidget = ({ onChange }: WidgetProps) => (
+          <>
+            <button
+              type='button'
+              id='raise'
+              onClick={() => onChange('raised', { __errors: ['raised on foo'] } as ErrorSchema)}
+            >
+              raise
+            </button>
+            <button type='button' id='edit' onClick={() => onChange('boom')}>
+              edit
+            </button>
+          </>
+        );
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          uiSchema: { foo: { 'ui:widget': FooWidget } },
+          customValidate: (formData, errors) => {
+            if (formData?.foo === 'boom') {
+              throw new Error('customValidate failed');
+            }
+            return errors;
+          },
+        });
+
+        // fireEvent throughout, since user-event waits on timers, which hang under the fake timers flushing the rethrow
+        fireEvent.click(node.querySelector('#raise')!);
+        fireEvent.click(node.querySelector('#edit')!);
+        expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
+        onChange.mockClear();
+        fireEvent.change(node.querySelector('#root_qux')!, { target: { value: 'fine' } });
+
+        expectToHaveBeenCalledWithFormData(onChange, { foo: 'raised', qux: 'fine' }, 'root_qux');
+        expect(onChange.mock.lastCall![0].errors.map(({ message }: { message: string }) => message)).toEqual([
+          'raised on foo',
+        ]);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+    it('should live validate the changes before the last change of a burst when that change throws', () => {
+      vi.useFakeTimers();
+      try {
+        const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+        const SendWidget = ({ onChange }: WidgetProps) => (
+          <button type='button' onClick={() => ['a', 'boom'].forEach((v) => onChange(v))}>
+            send
+          </button>
+        );
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          uiSchema: { foo: { 'ui:widget': SendWidget } },
+          customValidate: (formData, errors) => {
+            if (formData?.foo === 'boom') {
+              throw new Error('customValidate failed');
+            }
+            return errors;
+          },
+        });
+        onChange.mockClear();
+
+        // fireEvent, since user-event waits on timers, which hang under the fake timers flushing the rethrow
+        fireEvent.click(node.querySelector('button')!);
+
+        expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
+        const [lastEvent, lastId] = onChange.mock.lastCall!;
+        expect(lastId).toBeUndefined();
+        expect(lastEvent.formData).toEqual({ foo: 'a' });
+        expect(lastEvent.errors.map(({ property }: { property: string }) => property)).toEqual(['.foo']);
+        expect(node.querySelectorAll('#root_foo__error li')).toHaveLength(1);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+    it('should last report both changes when a change in a transition commits after a later urgent one', async () => {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, baz: { type: 'string' } } };
+      const ref = createRef<Form>();
+      const { onChange } = createFormComponent({ ref, schema });
+      onChange.mockClear();
+
+      await act(async () => {
+        startTransition(() => ref.current!.setFieldValue('foo', 'in transition'));
+        ref.current!.setFieldValue('baz', 'urgent');
+      });
+
+      expect(onChange.mock.calls.map(([event]) => event.formData)).toEqual([
+        { baz: 'urgent' },
+        { foo: 'in transition', baz: 'urgent' },
+      ]);
     });
     it('should modify an allOf field when the defaults are set', async () => {
       const schema: RJSFSchema = {
@@ -1135,5 +1444,354 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
       expect(onError).toHaveBeenCalledTimes(1);
     });
+  });
+});
+
+// Each of these renders `Form` itself, through a parent, so the variants `describeRepeated` adds would not apply
+describe('Form change handler under a parent', () => {
+  it('should report the errors it shows when a StrictMode rerun of a change gets different errors', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    let runs = 0;
+    const onChange = vi.fn();
+    const { container } = render(
+      <StrictMode>
+        <Form
+          schema={schema}
+          validator={customizeValidator<GenericObjectType>()}
+          liveValidate
+          showErrorList={false}
+          customValidate={(_, errors) => {
+            runs += 1;
+            errors.foo?.addError(`run ${runs}`);
+            return errors;
+          }}
+          onChange={onChange}
+        />
+      </StrictMode>,
+    );
+
+    await user.type(container.querySelector('#root_foo')!, 'x');
+
+    const shown = Array.from(container.querySelectorAll('#root_foo__error li'), (item) => item.textContent);
+    expect(onChange.mock.lastCall![0].errors.map(({ message }: { message: string }) => message)).toEqual(shown);
+  });
+  it('should keep the custom error another field raised when a field whose custom error was cleared changes again', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { foo: { type: 'string', minLength: 3 }, baz: { type: 'string' } },
+    };
+    const ReplaceWidget = ({ onChange }: WidgetProps) => (
+      <button type='button' id='replace' onClick={() => onChange('a', { __errors: ['custom on foo'] } as ErrorSchema)}>
+        replace
+      </button>
+    );
+    const RaiseWidget = ({ onChange }: WidgetProps) => (
+      <>
+        <button type='button' id='raise' onClick={() => onChange('x', { __errors: ['custom on baz'] } as ErrorSchema)}>
+          raise
+        </button>
+        <button type='button' id='edit' onClick={() => onChange('y')}>
+          edit
+        </button>
+      </>
+    );
+    const onChange = vi.fn();
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ foo: { 'ui:widget': ReplaceWidget }, baz: { 'ui:widget': RaiseWidget } }}
+        validator={customizeValidator<GenericObjectType>()}
+        formData={{ foo: 'a' }}
+        onChange={onChange}
+      />,
+    );
+
+    await submitForm(container, user);
+    await user.click(container.querySelector('#raise')!);
+    await user.click(container.querySelector('#edit')!);
+    await user.click(container.querySelector('#replace')!);
+    await user.click(container.querySelector('#edit')!);
+
+    expect(onChange.mock.lastCall![0].errorSchema.foo.__errors).toEqual(['custom on foo']);
+  });
+  it('should merge in the custom errors a change raised under noValidate once validation is turned on', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, baz: { type: 'string' } } };
+    const RaiseWidget = ({ onChange }: WidgetProps) => (
+      <button type='button' id='raise' onClick={() => onChange('x', { __errors: ['custom on foo'] } as ErrorSchema)}>
+        raise
+      </button>
+    );
+    const onChange = vi.fn();
+    const props = {
+      schema,
+      uiSchema: { foo: { 'ui:widget': RaiseWidget } },
+      validator: customizeValidator<GenericObjectType>(),
+      onChange,
+    };
+    // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what the custom errors must survive
+    const { container, rerender } = render(<Form {...props} noValidate />);
+
+    await user.click(container.querySelector('#raise')!);
+    rerender(<Form {...props} />);
+    await user.type(container.querySelector('#root_baz')!, 'fine');
+
+    expect(onChange.mock.lastCall![0].errors.map(({ message }: { message: string }) => message)).toEqual([
+      'custom on foo',
+    ]);
+  });
+  it('should report every change of a burst to a form controlled by its parent and a widget that copies its value', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string', default: 'foo' },
+        baz: { type: 'string', default: 'baz' },
+      },
+    };
+    const reported: string[] = [];
+    function BurstWidget({ onChange, value }: WidgetProps) {
+      const [, setCopy] = useState(value);
+      useLayoutEffect(() => {
+        setCopy(value);
+      }, [value]);
+      return (
+        <button
+          type='button'
+          onClick={() => {
+            for (let i = 1; i <= 300; i++) {
+              onChange(`value ${i}`);
+            }
+          }}
+        >
+          burst
+        </button>
+      );
+    }
+    function Parent() {
+      const [formData, setFormData] = useState<GenericObjectType | undefined>({});
+      return (
+        <Form
+          schema={schema}
+          uiSchema={{ foo: { 'ui:widget': BurstWidget } }}
+          validator={customizeValidator<GenericObjectType>()}
+          liveValidate
+          formData={formData}
+          onChange={(e) => {
+            reported.push(e.formData!.foo);
+            setFormData(e.formData);
+          }}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+    reported.length = 0;
+
+    await user.click(container.querySelector('button')!);
+
+    await waitFor(() => {
+      expect(reported).toHaveLength(300);
+    });
+    expect(reported[299]).toBe('value 300');
+  });
+  it('should apply a change with the props the parent set in the same event', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+    const TypeWidget = ({ onChange, registry }: WidgetProps) => (
+      <button
+        type='button'
+        onClick={() => {
+          registry.formContext.enableLiveValidate();
+          onChange('a');
+        }}
+      >
+        type
+      </button>
+    );
+    const onChange = vi.fn();
+    function Parent() {
+      const [liveValidate, setLiveValidate] = useState(false);
+      return (
+        <Form
+          schema={schema}
+          uiSchema={{ foo: { 'ui:widget': TypeWidget } }}
+          validator={customizeValidator<GenericObjectType>()}
+          formContext={{ enableLiveValidate: () => setLiveValidate(true) }}
+          liveValidate={liveValidate}
+          onChange={onChange}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('button')!);
+
+    expect(onChange.mock.lastCall![0].errors.map(({ property }: { property: string }) => property)).toEqual(['.foo']);
+  });
+  it('should apply a change with the schema the parent set in the same event', async () => {
+    const fooSchema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const barSchema: RJSFSchema = {
+      type: 'object',
+      properties: { foo: { type: 'string' }, bar: { type: 'string', default: 'bar default', minLength: 20 } },
+    };
+    const TypeWidget = ({ onChange, registry }: WidgetProps) => (
+      <button
+        type='button'
+        onClick={() => {
+          registry.formContext.addBar();
+          onChange('a');
+        }}
+      >
+        type
+      </button>
+    );
+    const onChange = vi.fn();
+    function Parent() {
+      const [schema, setSchema] = useState(fooSchema);
+      return (
+        <Form
+          schema={schema}
+          uiSchema={{ foo: { 'ui:widget': TypeWidget } }}
+          validator={customizeValidator<GenericObjectType>()}
+          formContext={{ addBar: () => setSchema(barSchema) }}
+          omitExtraData
+          liveOmit
+          liveValidate
+          onChange={onChange}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('button')!);
+
+    const changeEvent = onChange.mock.calls.find(([, id]) => id === 'root_foo');
+    expect(changeEvent).toBeDefined();
+    const [event] = changeEvent!;
+    expect(event.formData).toEqual({ foo: 'a', bar: 'bar default' });
+    expect(event.schema).toEqual(barSchema);
+    expect(event.errors.map(({ property }: { property: string }) => property)).toEqual(['.bar']);
+  });
+  it('should not show a custom error raised under noValidate when the parent passes the data back', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const RaiseWidget = ({ onChange }: WidgetProps) => (
+      <button type='button' onClick={() => onChange('x', { __errors: ['custom on foo'] } as ErrorSchema)}>
+        raise
+      </button>
+    );
+    function Parent() {
+      const [formData, setFormData] = useState<GenericObjectType | undefined>({});
+      return (
+        <Form
+          schema={schema}
+          uiSchema={{ foo: { 'ui:widget': RaiseWidget } }}
+          validator={customizeValidator<GenericObjectType>()}
+          // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what must hide the custom error
+          noValidate
+          formData={formData}
+          onChange={(e) => setFormData(e.formData)}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelectorAll('.error-detail li, .panel.errors li')).toHaveLength(0);
+  });
+  it('should report the extraErrors the parent set in the same event as a change', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const TypeWidget = ({ onChange, registry }: WidgetProps) => (
+      <button
+        type='button'
+        onClick={() => {
+          registry.formContext.raiseExtra();
+          onChange('a');
+        }}
+      >
+        type
+      </button>
+    );
+    const onChange = vi.fn();
+    function Parent() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(undefined);
+      return (
+        <Form
+          schema={schema}
+          uiSchema={{ foo: { 'ui:widget': TypeWidget } }}
+          validator={customizeValidator<GenericObjectType>()}
+          formContext={{
+            raiseExtra: () => setExtraErrors({ foo: { __errors: ['extra on foo'] } } as unknown as ErrorSchema),
+          }}
+          extraErrors={extraErrors}
+          onChange={onChange}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('button')!);
+
+    const changeEvent = onChange.mock.calls.find(([, id]) => id === 'root_foo');
+    expect(changeEvent).toBeDefined();
+    expect(changeEvent![0].errors.map(({ message }: { message: string }) => message)).toEqual(['extra on foo']);
+  });
+  it('should report each change of a burst with the errors from before the burst, not those of a later change', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+    const SendWidget = ({ onChange }: WidgetProps) => (
+      <button type='button' onClick={() => ['abcd', 'a'].forEach((v) => onChange(v))}>
+        send
+      </button>
+    );
+    const onChange = vi.fn();
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ foo: { 'ui:widget': SendWidget } }}
+        validator={customizeValidator<GenericObjectType>()}
+        liveValidate
+        onChange={onChange}
+      />,
+    );
+    onChange.mockClear();
+
+    await user.click(container.querySelector('button')!);
+
+    const reported = onChange.mock.calls.map(([event]) => [
+      event.formData.foo,
+      event.errors.map(({ property }: { property: string }) => property),
+    ]);
+    expect(reported).toEqual([
+      ['abcd', []],
+      ['a', ['.foo']],
+    ]);
+  });
+  it('should not show a custom error raised under noValidate on blur or when extraErrors change', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const RaiseWidget = ({ id, onChange, onBlur }: WidgetProps) => (
+      <>
+        <button type='button' id='raise' onClick={() => onChange('x', { __errors: ['custom on foo'] } as ErrorSchema)}>
+          raise
+        </button>
+        <button type='button' id='blur' onClick={() => onBlur(id, 'x')}>
+          blur
+        </button>
+      </>
+    );
+    const props = {
+      schema,
+      uiSchema: { foo: { 'ui:widget': RaiseWidget } },
+      validator: customizeValidator<GenericObjectType>(),
+      liveValidate: 'onBlur' as const,
+    };
+    // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what must hide the custom error
+    const { container, rerender } = render(<Form {...props} noValidate />);
+
+    await user.click(container.querySelector('#raise')!);
+    await user.click(container.querySelector('#blur')!);
+    expect(container).not.toHaveTextContent('custom on foo');
+
+    const extraErrors = { foo: { __errors: ['extra on foo'] } } as unknown as ErrorSchema;
+    // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what must hide the custom error
+    rerender(<Form {...props} noValidate extraErrors={extraErrors} />);
+    expect(container).toHaveTextContent('extra on foo');
+    expect(container).not.toHaveTextContent('custom on foo');
   });
 });

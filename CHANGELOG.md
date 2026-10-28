@@ -22,6 +22,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `markdown-to-jsx` from `^9.8.2` to `^9.10.3` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
 - Fixed `Form` failing validation with `must be boolean` (or the matching type error) when the root `formData` is a falsy value such as `false`, `0` or `''`. Only `undefined` is now treated as missing before validating, fixing [#5404](https://github.com/rjsf-team/react-jsonschema-form/issues/5404)
+- Fix `Form` crashing with `Maximum update depth exceeded` when a widget or `setFieldValue()` calls `onChange` more than about 50 times in one event ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631), [#5532](https://github.com/rjsf-team/react-jsonschema-form/issues/5532))
+- Fix `Form` ignoring later changes after a change whose `customValidate` or `transformErrors` throws. The form keeps its state and the error is rethrown from a timeout ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
+- **Potentially breaking change:** Change `setFieldValue()` so a throw from `customValidate` or `transformErrors` is rethrown from a timeout, so a `try`/`catch` around `setFieldValue()` no longer catches it ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
+- Change `liveOmit` on change to no longer call the deprecated `Form` method `omitExtraData()`, so a subclass overriding it only affects blur and submit ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
+- **Potentially breaking change:** Change `customValidate`, `transformErrors` and the validator to run while `Form` renders a change, so they must be pure: they can run more than once per change, and must not set another component's state ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
+- **Potentially breaking change:** Remove the undocumented `Form` members `pendingChanges` and `processPendingChange()` ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
 
 ## @rjsf/shadcn
 
