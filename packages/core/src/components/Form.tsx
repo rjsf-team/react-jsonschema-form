@@ -462,18 +462,9 @@ export default class Form<
         errors: state.schemaValidationErrors || [],
         errorSchema: state.schemaValidationErrorSchema || {},
       };
-      let { errors, errorSchema } = baseErrors;
-      if (props.extraErrors) {
-        ({ errors, errorSchema } = validationDataMerge<T>(baseErrors, props.extraErrors));
-      }
-      if (state.customErrors) {
-        ({ errors, errorSchema } = validationDataMerge<T>(
-          { errors, errorSchema },
-          state.customErrors.ErrorSchema,
-          true,
-        ));
-      }
-      return { prevExtraErrors: props.extraErrors, errors, errorSchema };
+      // oxlint-disable-next-line typescript/no-deprecated
+      const merged = Form.mergeErrors<T>(baseErrors, props.extraErrors, state.customErrors, props.noValidate);
+      return { prevExtraErrors: props.extraErrors, ...merged };
     }
     return null;
   }
@@ -859,7 +850,13 @@ export default class Form<
           errorSchema = schemaValidationErrorSchema;
         }
       }
-      const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, props.extraErrors, state.customErrors);
+      const mergedErrors = Form.mergeErrors<T>(
+        { errorSchema, errors },
+        props.extraErrors,
+        state.customErrors,
+        // oxlint-disable-next-line typescript/no-deprecated
+        props.noValidate,
+      );
       errors = mergedErrors.errors;
       errorSchema = mergedErrors.errorSchema;
     }
@@ -956,11 +953,13 @@ export default class Form<
     return null;
   }
 
-  /** Merges any `extraErrors` or `customErrors` into the given `schemaValidation` object, returning the result
+  /** Merges any `extraErrors` or `customErrors` into the given `schemaValidation` object, returning the result. Custom
+   * errors are left out under `noValidate`; they stay in the state so they show again once validation is turned on.
    *
    * @param schemaValidation - The `ValidationData` object into which additional errors are merged
    * @param [extraErrors] - The extra errors from the props
    * @param [customErrors] - The customErrors from custom components
+   * @param [noValidate] - The `noValidate` prop
    * @return - The `extraErrors` and `customErrors` merged into the `schemaValidation`
    * @private
    */
@@ -968,6 +967,7 @@ export default class Form<
     schemaValidation: ValidationData<T>,
     extraErrors?: FormProps['extraErrors'],
     customErrors?: ErrorSchemaBuilder,
+    noValidate?: boolean,
   ): ValidationData<T> {
     let { errorSchema, errors } = schemaValidation;
     if (extraErrors) {
@@ -975,7 +975,7 @@ export default class Form<
       errorSchema = merged.errorSchema;
       errors = merged.errors;
     }
-    if (customErrors) {
+    if (customErrors && !noValidate) {
       const merged = validationDataMerge({ errors, errorSchema }, customErrors.ErrorSchema, true);
       errorSchema = merged.errorSchema;
       errors = merged.errors;
@@ -1022,7 +1022,8 @@ export default class Form<
     }
     const schemaValidationErrors = errors;
     const schemaValidationErrorSchema = errorSchema;
-    const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, extraErrors, customErrors);
+    // oxlint-disable-next-line typescript/no-deprecated
+    const mergedErrors = Form.mergeErrors<T>({ errorSchema, errors }, extraErrors, customErrors, props.noValidate);
     return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
   }
 
@@ -1079,7 +1080,8 @@ export default class Form<
    * defers the validation of the changes before it until that lane commits. When React rebases an urgent change onto a
    * transition it reruns the change without its callback, so a throw in that rerun drops the change unreported, and a
    * transition change that commits after a later urgent one was reported reports the whole committed state under its
-   * own id, later changes in that lane included.
+   * own id, later changes in that lane included. Only changes are tracked for this, so a transition change that commits
+   * under an urgent update of another kind, such as a `reset()`, reports its own data although the reset replaced it.
    *
    * @param newValue - The new form data from a change to a field
    * @param path - The path to the change into which to set the formData
@@ -1095,7 +1097,6 @@ export default class Form<
           props: FormProps<T, S, F>;
           isLast: boolean;
           result: FormState<T, S, F> | null;
-          changed?: FormState<T, S, F>;
           error?: unknown;
         }
       | undefined;
@@ -1110,11 +1111,11 @@ export default class Form<
         try {
           const state = this.processChange({ newValue, path, newErrorSchema, id }, isLast, prevState, props);
           const result = state as FormState<T, S, F>;
-          outcome = { prevState, props, isLast, result, changed: { ...prevState, ...state } };
+          outcome = { prevState, props, isLast, result };
         } catch (error) {
           const validation = isLast ? this.validateBeforeThrow(prevState, props) : undefined;
           const result = (validation ?? null) as FormState<T, S, F> | null;
-          outcome = { prevState, props, isLast, result, error, changed: validation && { ...prevState, ...validation } };
+          outcome = { prevState, props, isLast, result, error };
         }
         return outcome.result;
       },
@@ -1122,19 +1123,25 @@ export default class Form<
         if (!outcome) {
           return;
         }
-        const { changed, error } = outcome;
+        const { result, error, prevState, props } = outcome;
         const isThrown = 'error' in outcome;
         outcome = undefined;
         // A change that threw reports the validation of the changes before it, without its own id, since the data
         // does not hold it
         const reportedId: [id?: string] = isThrown ? [] : [id];
-        if (changed) {
+        if (result) {
           if (changeNumber < this.lastReportedChange) {
             // React rebased the later changes already reported onto this one, so only the committed state holds both
             this.reportChange(toIChangeEvent(this.state), ...reportedId);
           } else {
             this.lastReportedChange = changeNumber;
-            this.reportChange(toIChangeEvent(changed), ...reportedId);
+            // React applies `getDerivedStateFromProps` after the batch's updaters, so what it adds, such as new
+            // `extraErrors`, is applied here too, while later changes of the batch stay out of this one's event
+            const changed = { ...prevState, ...result };
+            this.reportChange(
+              toIChangeEvent({ ...changed, ...Form.getDerivedStateFromProps(props, changed) }),
+              ...reportedId,
+            );
           }
         }
         if (isThrown) {

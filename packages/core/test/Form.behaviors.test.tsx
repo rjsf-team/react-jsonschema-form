@@ -249,6 +249,28 @@ describe('Form omitExtraData and liveOmit', () => {
     );
   });
 
+  it('should not omit data on change with omitExtraData=true and liveOmit unset', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+        bar: { type: 'string' },
+      },
+    };
+    const formData = { foo: 'foo', baz: 'baz' };
+    const { node, onChange } = createFormComponent({ schema, formData, omitExtraData: true });
+
+    await user.clear(node.querySelector('#root_foo')!);
+    await user.type(node.querySelector('#root_foo')!, 'foobar');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: { foo: 'foobar', baz: 'baz' },
+      }),
+      'root_foo',
+    );
+  });
+
   it('should not omit data on change with omitExtraData=true and liveOmit=false', async () => {
     const omitExtraData = true;
     const liveOmit = false;

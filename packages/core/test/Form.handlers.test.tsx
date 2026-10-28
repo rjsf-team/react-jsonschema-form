@@ -1669,4 +1669,129 @@ describe('Form change handler under a parent', () => {
     expect(event.schema).toEqual(barSchema);
     expect(event.errors.map(({ property }: { property: string }) => property)).toEqual(['.bar']);
   });
+  it('should not show a custom error raised under noValidate when the parent passes the data back', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const RaiseWidget = ({ onChange }: WidgetProps) => (
+      <button type='button' onClick={() => onChange('x', { __errors: ['custom on foo'] } as ErrorSchema)}>
+        raise
+      </button>
+    );
+    function Parent() {
+      const [formData, setFormData] = useState<GenericObjectType | undefined>({});
+      return (
+        <Form
+          schema={schema}
+          uiSchema={{ foo: { 'ui:widget': RaiseWidget } }}
+          validator={customizeValidator<GenericObjectType>()}
+          // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what must hide the custom error
+          noValidate
+          formData={formData}
+          onChange={(e) => setFormData(e.formData)}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelectorAll('.error-detail li, .panel.errors li')).toHaveLength(0);
+  });
+  it('should report the extraErrors the parent set in the same event as a change', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const TypeWidget = ({ onChange, registry }: WidgetProps) => (
+      <button
+        type='button'
+        onClick={() => {
+          registry.formContext.raiseExtra();
+          onChange('a');
+        }}
+      >
+        type
+      </button>
+    );
+    const onChange = vi.fn();
+    function Parent() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(undefined);
+      return (
+        <Form
+          schema={schema}
+          uiSchema={{ foo: { 'ui:widget': TypeWidget } }}
+          validator={customizeValidator<GenericObjectType>()}
+          formContext={{
+            raiseExtra: () => setExtraErrors({ foo: { __errors: ['extra on foo'] } } as unknown as ErrorSchema),
+          }}
+          extraErrors={extraErrors}
+          onChange={onChange}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('button')!);
+
+    const changeEvent = onChange.mock.calls.find(([, id]) => id === 'root_foo');
+    expect(changeEvent).toBeDefined();
+    expect(changeEvent![0].errors.map(({ message }: { message: string }) => message)).toEqual(['extra on foo']);
+  });
+  it('should report each change of a burst with the errors from before the burst, not those of a later change', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+    const SendWidget = ({ onChange }: WidgetProps) => (
+      <button type='button' onClick={() => ['abcd', 'a'].forEach((v) => onChange(v))}>
+        send
+      </button>
+    );
+    const onChange = vi.fn();
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ foo: { 'ui:widget': SendWidget } }}
+        validator={customizeValidator<GenericObjectType>()}
+        liveValidate
+        onChange={onChange}
+      />,
+    );
+    onChange.mockClear();
+
+    await user.click(container.querySelector('button')!);
+
+    const reported = onChange.mock.calls.map(([event]) => [
+      event.formData.foo,
+      event.errors.map(({ property }: { property: string }) => property),
+    ]);
+    expect(reported).toEqual([
+      ['abcd', []],
+      ['a', ['.foo']],
+    ]);
+  });
+  it('should not show a custom error raised under noValidate on blur or when extraErrors change', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const RaiseWidget = ({ id, onChange, onBlur }: WidgetProps) => (
+      <>
+        <button type='button' id='raise' onClick={() => onChange('x', { __errors: ['custom on foo'] } as ErrorSchema)}>
+          raise
+        </button>
+        <button type='button' id='blur' onClick={() => onBlur(id, 'x')}>
+          blur
+        </button>
+      </>
+    );
+    const props = {
+      schema,
+      uiSchema: { foo: { 'ui:widget': RaiseWidget } },
+      validator: customizeValidator<GenericObjectType>(),
+      liveValidate: 'onBlur' as const,
+    };
+    // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what must hide the custom error
+    const { container, rerender } = render(<Form {...props} noValidate />);
+
+    await user.click(container.querySelector('#raise')!);
+    await user.click(container.querySelector('#blur')!);
+    expect(container).not.toHaveTextContent('custom on foo');
+
+    const extraErrors = { foo: { __errors: ['extra on foo'] } } as unknown as ErrorSchema;
+    // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what must hide the custom error
+    rerender(<Form {...props} noValidate extraErrors={extraErrors} />);
+    expect(container).toHaveTextContent('extra on foo');
+    expect(container).not.toHaveTextContent('custom on foo');
+  });
 });
