@@ -678,6 +678,8 @@ export default class Form<
    * @param [shouldSanitize=false] - Optional flag, if true, means that we should attempt to sanitize formData
    * @param [prevState=this.state] - The state the new one is derived from, which a `setState` updater passes since
    *          `this.state` does not yet hold the updates queued before it
+   * @param [fallbackProps=this.props] - The props read where `props` lacks one, which a `setState` updater sets to the
+   *          props it was handed, since `this.props` are those of the render before
    * @returns - The new state for the `Form`
    */
   getStateFromProps(
@@ -689,24 +691,25 @@ export default class Form<
     skipLiveValidate = false,
     shouldSanitize = false,
     prevState: FormState<T, S, F> | undefined = this.state,
+    fallbackProps: FormProps<T, S, F> = this.props,
   ): FormState<T, S, F> {
     const state: FormState<T, S, F> = prevState || {};
-    const schema = 'schema' in props ? props.schema : this.props.schema;
-    const validator = 'validator' in props ? props.validator : this.props.validator;
-    const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
-    const isUncontrolled = props.formData === undefined && this.props.formData === undefined;
+    const schema = 'schema' in props ? props.schema : fallbackProps.schema;
+    const validator = 'validator' in props ? props.validator : fallbackProps.validator;
+    const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : fallbackProps.uiSchema!) || {};
+    const isUncontrolled = props.formData === undefined && fallbackProps.formData === undefined;
     const edit = typeof inputFormData !== 'undefined';
-    const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
+    const liveValidate = 'liveValidate' in props ? props.liveValidate : fallbackProps.liveValidate;
     // oxlint-disable-next-line typescript/no-deprecated
     const mustValidate = edit && !props.noValidate && liveValidate;
     const experimental_defaultFormStateBehavior =
       'experimental_defaultFormStateBehavior' in props
         ? props.experimental_defaultFormStateBehavior
-        : this.props.experimental_defaultFormStateBehavior;
+        : fallbackProps.experimental_defaultFormStateBehavior;
     const experimental_customMergeAllOf =
       'experimental_customMergeAllOf' in props
         ? props.experimental_customMergeAllOf
-        : this.props.experimental_customMergeAllOf;
+        : fallbackProps.experimental_customMergeAllOf;
     let { schemaUtils, hasNestedConditionalSchema } = state;
     if (
       !schemaUtils ||
@@ -1071,7 +1074,9 @@ export default class Form<
    * batch's updaters in order, each to the result of the one before, so changes made close together do not overwrite
    * one another, and they commit together, so any number of them is one update rather than one nested in the commit of
    * the last. A change that throws, from `customValidate` or `transformErrors` say, leaves the state as it was and is
-   * rethrown from a timeout, since the updater runs while React renders, where a throw would unmount the form.
+   * rethrown from a timeout, since the updater runs while React renders, where a throw would unmount the form. Live
+   * validation runs once per batch, for its last change, so a change in a later lane, such as one in a transition,
+   * defers the validation of the changes before it until that lane commits.
    *
    * @param newValue - The new form data from a change to a field
    * @param path - The path to the change into which to set the formData
@@ -1081,36 +1086,55 @@ export default class Form<
   onChange = (newValue: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
     this.changeCount += 1;
     const changeNumber = this.changeCount;
-    let outcome: { changed?: FormState<T, S, F>; error?: unknown } | undefined;
+    let outcome:
+      | {
+          prevState: FormState<T, S, F>;
+          props: FormProps<T, S, F>;
+          isLast: boolean;
+          result: FormState<T, S, F> | null;
+          changed?: FormState<T, S, F>;
+          error?: unknown;
+        }
+      | undefined;
     this.setState(
       (prevState, props) => {
         const isLast = changeNumber === this.changeCount;
-        outcome = undefined;
+        // React reruns an updater with the same arguments, under `StrictMode` say, and commits the first result, so the
+        // rerun returns that result rather than building new objects that differ from what is committed and reported
+        if (outcome?.prevState === prevState && outcome.props === props && outcome.isLast === isLast) {
+          return outcome.result;
+        }
         try {
           const state = this.processChange({ newValue, path, newErrorSchema, id }, isLast, prevState, props);
-          outcome = { changed: { ...prevState, ...state } };
-          return state as FormState<T, S, F>;
+          const result = state as FormState<T, S, F>;
+          outcome = { prevState, props, isLast, result, changed: { ...prevState, ...state } };
         } catch (error) {
           const validation = isLast ? this.validateBeforeThrow(prevState, props) : undefined;
-          outcome = { error, changed: validation && { ...prevState, ...validation } };
-          return (validation ?? null) as FormState<T, S, F> | null;
+          const result = (validation ?? null) as FormState<T, S, F> | null;
+          outcome = { prevState, props, isLast, result, error, changed: validation && { ...prevState, ...validation } };
         }
+        return outcome.result;
       },
       () => {
         if (!outcome) {
           return;
         }
         const { changed, error } = outcome;
+        const isThrown = 'error' in outcome;
+        outcome = undefined;
+        // A change that threw reports the validation of the changes before it, without its own id, since the data
+        // does not hold it
+        const reportedId: [id?: string] = isThrown ? [] : [id];
         if (changed) {
           if (changeNumber < this.lastReportedChange) {
             // React rebased the later changes already reported onto this one, so only the committed state holds both
-            this.reportChange(toIChangeEvent(this.state), id);
+            this.reportChange(toIChangeEvent(this.state), ...reportedId);
           } else {
             this.lastReportedChange = changeNumber;
-            this.reportChange(toIChangeEvent(changed), id);
+            this.reportChange(toIChangeEvent(changed), ...reportedId);
           }
         }
-        if ('error' in outcome) {
+        if (isThrown) {
           setTimeout(() => {
             throw error;
           });
@@ -1256,6 +1280,7 @@ export default class Form<
         true,
         shouldSanitize,
         prevState,
+        props,
       );
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;

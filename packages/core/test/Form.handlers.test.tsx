@@ -1,4 +1,4 @@
-import { createRef, startTransition, useEffect, useLayoutEffect, useState } from 'react';
+import { StrictMode, createRef, startTransition, useEffect, useLayoutEffect, useState } from 'react';
 import type { ErrorSchema, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
@@ -281,7 +281,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         );
         expectToHaveBeenCalledWithFormData(onChange, { foo: 'value 59', baz: 'value 60' }, 'root_baz');
       });
-      it('should live validate the last value of a burst', () => {
+      it('should live validate the last value of a burst', async () => {
         const shortLast = Array.from({ length: 60 }, (_, i) => (i === 59 ? 'a' : 'abc'));
         const longLast = Array.from({ length: 60 }, (_, i) => (i === 59 ? 'abc' : 'a'));
         const sendWidget = (values: string[]) =>
@@ -293,21 +293,20 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
             );
           };
         const minLengthSchema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
-        const errorsAfter = (values: string[]) => {
+        const errorsAfter = async (values: string[]) => {
           const { node, onChange } = createFormComponent({
             schema: minLengthSchema,
             liveValidate: true,
             uiSchema: { foo: { 'ui:widget': sendWidget(values) } },
           });
           onChange.mockClear();
-          // fireEvent, so the whole burst is applied before the assertions below
-          fireEvent.click(node.querySelector('button')!);
+          await user.click(node.querySelector('button')!);
           expect(onChange).toHaveBeenCalledTimes(values.length);
           return onChange.mock.lastCall![0].errors.map(({ property }: { property: string }) => property);
         };
 
-        expect(errorsAfter(shortLast)).toEqual(['.foo']);
-        expect(errorsAfter(longLast)).toEqual([]);
+        expect(await errorsAfter(shortLast)).toEqual(['.foo']);
+        expect(await errorsAfter(longLast)).toEqual([]);
       });
     });
     it('should keep the form mounted and taking changes when a change throws', () => {
@@ -498,7 +497,8 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         fireEvent.click(node.querySelector('button')!);
 
         expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
-        const [lastEvent] = onChange.mock.lastCall!;
+        const [lastEvent, lastId] = onChange.mock.lastCall!;
+        expect(lastId).toBeUndefined();
         expect(lastEvent.formData).toEqual({ foo: 'a' });
         expect(lastEvent.errors.map(({ property }: { property: string }) => property)).toEqual(['.foo']);
         expect(node.querySelectorAll('#root_foo__error li')).toHaveLength(1);
@@ -1449,6 +1449,33 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
 // Each of these renders `Form` itself, through a parent, so the variants `describeRepeated` adds would not apply
 describe('Form change handler under a parent', () => {
+  it('should report the errors it shows when a StrictMode rerun of a change gets different errors', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    let runs = 0;
+    const onChange = vi.fn();
+    const { container } = render(
+      <StrictMode>
+        <Form
+          schema={schema}
+          validator={customizeValidator<GenericObjectType>()}
+          liveValidate
+          showErrorList={false}
+          customValidate={(_, errors) => {
+            runs += 1;
+            errors.foo?.addError(`run ${runs}`);
+            return errors;
+          }}
+          onChange={onChange}
+        />
+      </StrictMode>,
+    );
+
+    // fireEvent, so the change commits before reading what it shows
+    fireEvent.change(container.querySelector('#root_foo')!, { target: { value: 'x' } });
+
+    const shown = Array.from(container.querySelectorAll('#root_foo__error li'), (item) => item.textContent);
+    expect(onChange.mock.lastCall![0].errors.map(({ message }: { message: string }) => message)).toEqual(shown);
+  });
   it('should keep the custom error another field raised when a field whose custom error was cleared changes again', () => {
     const schema: RJSFSchema = {
       type: 'object',
