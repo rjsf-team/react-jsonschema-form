@@ -26,7 +26,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Fix `Form` ignoring later changes after a change whose `customValidate` or `transformErrors` throws. The form keeps its state and the error is rethrown from a timeout ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
 - **Potentially breaking change:** Change `setFieldValue()` so a throw from `customValidate` or `transformErrors` is rethrown from a timeout, so a `try`/`catch` around `setFieldValue()` no longer catches it ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
 - Change `liveOmit` on change to no longer call the deprecated `Form` method `omitExtraData()`, so a subclass overriding it only affects blur and submit ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
-- Change `customValidate`, `transformErrors` and the validator to run while `Form` renders a change, so they must be pure: they can run more than once per change ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
+- **Potentially breaking change:** Change `customValidate`, `transformErrors` and the validator to run while `Form` renders a change, so they must be pure: they can run more than once per change, and must not set another component's state ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
+- **Potentially breaking change:** Remove the undocumented `Form` members `pendingChanges` and `processPendingChange()` ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
 
 ## @rjsf/shadcn
 

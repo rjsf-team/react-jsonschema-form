@@ -1076,7 +1076,10 @@ export default class Form<
    * the last. A change that throws, from `customValidate` or `transformErrors` say, leaves the state as it was and is
    * rethrown from a timeout, since the updater runs while React renders, where a throw would unmount the form. Live
    * validation runs once per batch, for its last change, so a change in a later lane, such as one in a transition,
-   * defers the validation of the changes before it until that lane commits.
+   * defers the validation of the changes before it until that lane commits. When React rebases an urgent change onto a
+   * transition it reruns the change without its callback, so a throw in that rerun drops the change unreported, and a
+   * transition change that commits after a later urgent one was reported reports the whole committed state under its
+   * own id, later changes in that lane included.
    *
    * @param newValue - The new form data from a change to a field
    * @param path - The path to the change into which to set the formData
@@ -1207,8 +1210,9 @@ export default class Form<
     const { newValue, path, newErrorSchema } = change;
     // oxlint-disable-next-line typescript/no-deprecated
     const { extraErrors, omitExtraData, liveOmit, noValidate, disabled, readonly } = props;
-    const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema } = prevState;
-    let { customErrors, retrievedSchema } = prevState;
+    const { formData: oldFormData, fieldPathId, schemaValidationErrorSchema } = prevState;
+    let { customErrors, retrievedSchema, schemaUtils, schema } = prevState;
+    let schemaState: Partial<FormState<T, S, F>> = {};
     // Use the un-merged AJV-only schema as the base for re-merging extraErrors. Mirrors the
     // pattern in getStateFromProps/getDerivedStateFromProps and avoids the duplication that
     // happened when state.errorSchema (already containing merged extraErrors) was passed in.
@@ -1284,6 +1288,20 @@ export default class Form<
       );
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
+      if (newState.schemaUtils !== schemaUtils) {
+        // The parent changed what the schema utils are built from in the same batch, so the rest of the change, and the
+        // state it reports, use the schema the defaults just came from
+        ({ schemaUtils, schema } = newState);
+        const { registry, hasNestedConditionalSchema, uiSchema } = newState;
+        schemaState = {
+          schemaUtils,
+          schema,
+          registry,
+          hasNestedConditionalSchema,
+          uiSchema,
+          fieldPathId: newState.fieldPathId,
+        };
+      }
 
       // Re-set to undefined after merging defaults so the user's clear is preserved in
       // state (#5125 regression: without this, clearing a second field re-applies the
@@ -1296,7 +1314,7 @@ export default class Form<
     }
 
     const mustValidate = Form.isLiveValidatedOnChange(props);
-    let state: Partial<FormState<T, S, F>> = { formData, retrievedSchema };
+    let state: Partial<FormState<T, S, F>> = { ...schemaState, formData, retrievedSchema };
     let newFormData = formData;
 
     if (omitExtraData === true && (liveOmit === true || liveOmit === 'onChange')) {
