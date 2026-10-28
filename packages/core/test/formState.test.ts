@@ -1,6 +1,7 @@
 import { toFieldPath } from '@rjsf/utils';
 
-import { copyAlongPath, shareData, toFormStatus } from '../src/components/formState.ts';
+import { copyAlongPath } from '../src/components/dataPaths.ts';
+import { shareData, toFormStatus } from '../src/components/formState.ts';
 
 describe('copyAlongPath()', () => {
   it('copies the containers along the path and shares everything off it', () => {
