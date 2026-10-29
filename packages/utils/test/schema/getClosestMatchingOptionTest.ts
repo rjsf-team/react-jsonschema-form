@@ -1,6 +1,6 @@
 import type { RJSFSchema, SchemaUtilsType } from '../../src/index.ts';
 import { createSchemaUtils, getByPath, getClosestMatchingOption } from '../../src/index.ts';
-import { calculateIndexScore } from '../../src/schema/getClosestMatchingOption.ts';
+import { calculateIndexScore, findClosestMatchingOption } from '../../src/schema/getClosestMatchingOption.ts';
 import {
   oneOfData,
   oneOfSchema,
@@ -296,6 +296,33 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       // Use the schemaUtils to verify the discriminator prop gets passed
       const schemaUtils = createSchemaUtils(testValidator, schema);
       expect(schemaUtils.getClosestMatchingOption(formData, options, 0, 'code')).toEqual(1);
+    });
+  });
+  describe('findClosestMatchingOption', () => {
+    beforeEach(() => {
+      // Drop any mocked validity left over by an earlier test
+      testValidator.reset?.();
+    });
+    const stringA: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+    it('returns no index but the first best index when the options tie', () => {
+      expect(findClosestMatchingOption(testValidator, oneOfSchema, { a: 'x' }, [stringA, stringA])).toEqual({
+        index: undefined,
+        bestIndex: 0,
+      });
+      expect(getClosestMatchingOption(testValidator, oneOfSchema, { a: 'x' }, [stringA, stringA], 1)).toEqual(1);
+      expect(getClosestMatchingOption(testValidator, oneOfSchema, { a: 'x' }, [stringA, stringA])).toEqual(0);
+    });
+    it('returns the index of the option with the best score', () => {
+      const stringAB: RJSFSchema = { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } };
+      expect(findClosestMatchingOption(testValidator, oneOfSchema, { a: 'x', b: 'y' }, [stringA, stringAB])).toEqual({
+        index: 1,
+        bestIndex: 1,
+      });
+    });
+    it('returns no index when no option scores above zero', () => {
+      expect(
+        findClosestMatchingOption(testValidator, oneOfSchema, undefined, [{ type: 'string' }, { type: 'number' }]),
+      ).toEqual({ index: undefined, bestIndex: undefined });
     });
   });
 }
