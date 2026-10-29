@@ -7,7 +7,13 @@ import type { Mock } from 'vitest';
 import type { FormProps } from '../src/index.ts';
 import Form from '../src/index.ts';
 import type { NoValFormProps, RerenderType } from './testUtils.tsx';
-import { expectToHaveBeenCalledWithFormData, renderNode, submitForm, describeRepeated } from './testUtils.tsx';
+import {
+  createFormComponent,
+  expectToHaveBeenCalledWithFormData,
+  renderNode,
+  submitForm,
+  describeRepeated,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -605,5 +611,40 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       expectToHaveBeenCalledWithFormData(onChange, { name: 'x' }, 'root_name');
       expect(onChange.mock.lastCall![0].formData).not.toHaveProperty('pet');
     });
+  });
+});
+
+describe('Form state updates of a oneOf with a conditional (#5567)', () => {
+  it('keeps what was entered for the selected option when typing makes another option score higher', async () => {
+    // Typing `x` after `Bob` lowers A's score, as its default no longer matches, so B's `extra` then scores higher.
+    // The user did not switch option, so A's `a1` is kept and shown again once the `x` is deleted
+    const schema: RJSFSchema = {
+      oneOf: [
+        {
+          title: 'A',
+          type: 'object',
+          properties: { name: { type: 'string', default: 'Bob' }, a1: { type: 'string' } },
+        },
+        {
+          title: 'B',
+          type: 'object',
+          properties: { name: { type: 'string' }, extra: { type: 'string' } },
+          allOf: [
+            { if: { properties: { name: { const: 'Cat' } } }, then: { properties: { food: { type: 'string' } } } },
+          ],
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({
+      ref: createRef(),
+      schema,
+      formData: { name: 'Bob', a1: 'hello', extra: 'e' },
+    });
+
+    await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'x');
+    expectToHaveBeenCalledWithFormData(onChange, { name: 'Bobx', a1: 'hello', extra: 'e' }, 'root_name');
+
+    await user.type(node.querySelector<HTMLInputElement>('#root_name')!, '{Backspace}');
+    expectToHaveBeenCalledWithFormData(onChange, { name: 'Bob', a1: 'hello', extra: 'e' }, 'root_name');
   });
 });

@@ -1801,8 +1801,11 @@ Sanitize the `data` associated with the `oldSchema` so it is considered appropri
 If the new schema does not contain any properties, then `undefined` is returned to clear all the form data.
 The exception is a new schema that is not an array and has the same `oneOf`/`anyOf` options as the old schema, such as a root `oneOf` that is not resolved to an option.
 Its data is sanitized against the selected option: the option the `data` singles out by a discriminator, as the only valid option or by the best score, or else the option the `oldData` singled out.
-It is sanitized from the option the `oldData` singled out, so the fields of another option the `oldData` matched are cleared.
-When there is no `oldData`, when neither singles out an option, or when the selected option has nothing to sanitize against (such as a free-form object or a scalar option), the data is returned as is.
+It is sanitized from the selected option resolved against the `oldData`, so what a conditional declared only for the `oldData` is cleared.
+When the data moved to another option because a field that identifies the option the `oldData` singled out changed (its discriminator, or a property with a `const` or a single-value `enum`), it is sanitized from that option instead, so its fields are cleared.
+A score that flips while typing, such as a `default` that no longer matches, is no such switch: the old option's fields are kept, and only the fields its own conditional declared for the `oldData` alone, which the selected option does not declare, are cleared.
+The properties the `oldSchema` declares itself, such as through a root conditional that no longer applies, are cleared unless the selected option declares them (or, when no option is selected, unless any option declares them).
+When there is no `oldData`, when neither singles out an option, or when the selected option has nothing to sanitize against (such as a free-form object, a scalar option or an array option with tuple or no `items`), the data is otherwise returned as is.
 An `undefined` `data` stays `undefined` rather than being sanitized against an option.
 Due to the nature of schemas, this sanitization happens recursively for nested objects of data.
 Also, any properties in the old schema that are non-existent in the new schema are set to `undefined`.
