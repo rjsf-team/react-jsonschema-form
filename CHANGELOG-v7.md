@@ -419,7 +419,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `onAddClick` inserting the new item at the start of the array, or at a number's index, when the button it is passed to calls `onClick` with a second argument, such as MUI's `ToggleButton` ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked and focuses it, as a number does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
+- Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars, and for a `stars` option or schema `maximum` that isn't a whole number, which now rounds down ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 
 ## @rjsf/daisyui
 
@@ -535,7 +535,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change `DateWidget`'s and `DateTimeWidget`'s popup to one `.date-picker-popup` dialog placed by inline styles, which scrolling panels, modals and short viewports no longer clip, offset or put out of reach. See [`@rjsf/daisyui`'s date and label markup changed](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#rjsfdaisyuis-date-and-label-markup-changed-breaking-change) ([#5633](https://github.com/rjsf-team/react-jsonschema-form/pull/5633), [#5396](https://github.com/rjsf-team/react-jsonschema-form/issues/5396))
 - Fix `DateWidget`'s and `DateTimeWidget`'s popup closing on a press inside it, such as on a day, in a form rendered in a shadow root ([#5633](https://github.com/rjsf-team/react-jsonschema-form/pull/5633), [#5396](https://github.com/rjsf-team/react-jsonschema-form/issues/5396))
 - **BREAKING CHANGE:** Remove the undocumented `src/styles.css` and the `tailwindcss` dependency only it used; an app that loaded the file by its path loads Tailwind and daisyUI from its own stylesheet. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#rjsfdaisyui-no-longer-ships-srcstylescss-or-depends-on-tailwindcss-breaking-change) ([#5674](https://github.com/rjsf-team/react-jsonschema-form/pull/5674), [#5599](https://github.com/rjsf-team/react-jsonschema-form/issues/5599))
-- Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars, and use the default size and color for a `size` or `color` option that isn't a string ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
+- Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars, and for a `stars` option or schema `maximum` that isn't a whole number, which now rounds down, and use the default size and color for a `size` or `color` option that isn't a string ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 
 ## @rjsf/fluentui-rc
 

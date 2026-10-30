@@ -14,6 +14,25 @@ describe('RatingWidget', () => {
     expect(getAllByRole('radio')).toHaveLength(5);
   });
 
+  test.each([
+    ['a `stars` option', {}, { stars: 2.5 }],
+    ['a schema `maximum`', { maximum: 2.5 }, {}],
+  ])('rounds down %s that is not a whole number, rather than crashing the form', (_, schema, options) => {
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ schema: { type: 'number', ...schema }, options })} />,
+    );
+
+    expect(getAllByRole('radio')).toHaveLength(2);
+  });
+
+  test('uses the default size and color for a `size` or `color` option that is not a string', () => {
+    const jsonOptions: Record<string, unknown> = { size: 5, color: true };
+    const { getAllByRole, getByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getByRole('radiogroup')).toHaveClass('rating gap-1', { exact: true });
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-orange-400');
+  });
+
   test('renders with default props (value=0)', () => {
     const { asFragment } = render(
       <RatingWidget

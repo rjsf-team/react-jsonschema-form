@@ -118,11 +118,10 @@ export default function RatingWidget<
   return (
     <div className='form-control w-full'>
       <div className={`rating gap-1 ${sizeClass}`} {...groupProps}>
-        {[...Array(numStars)].map((_, index) => {
+        {Array.from({ length: numStars }, (_, index) => {
           const starValue = min + index;
           return (
             <input
-              // oxlint-disable-next-line react/no-array-index-key
               key={index}
               type='radio'
               name={htmlName || id}
