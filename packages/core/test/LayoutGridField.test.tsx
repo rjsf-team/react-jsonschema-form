@@ -1527,6 +1527,18 @@ describe('LayoutGridField', () => {
         rendered: <TestRenderer data-testid={LayoutGridField.TEST_IDS.uiComponent} fullWidth />,
       });
     });
+    test('gridSchema contains a render and a name that is neither a string nor a number, read as no name', () => {
+      const gridSchema = { name: { field: 'foo' }, fullWidth: true, render: TestRenderer };
+      expect(computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
+        name: '',
+        uiProps: {
+          fullWidth: true,
+        },
+        UIComponent: TestRenderer,
+        // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
+        rendered: <TestRenderer data-testid={LayoutGridField.TEST_IDS.uiComponent} fullWidth />,
+      });
+    });
   });
   test('renders nothing when there is no uiSchema', () => {
     const props = getProps();
