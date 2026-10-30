@@ -44,7 +44,7 @@ export default function RatingWidget<
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
   const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
   const min = schema.minimum ?? 0;
-  // A rating stored as a numeric string fills its stars too, as the comparison with the raw value always did
+  // A string field can store the rating, as a numeric string
   const numericValue = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
   const rating = typeof numericValue === 'number' && Number.isFinite(numericValue) ? numericValue : undefined;
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
