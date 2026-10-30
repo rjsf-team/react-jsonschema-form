@@ -1,3 +1,5 @@
+import type { ValidationError } from 'ata-validator';
+
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import defaultValidator from '../src/index.ts';
@@ -5,6 +7,12 @@ import ATAValidator from '../src/validator.ts';
 import { CUSTOM_OPTIONS } from './harness/testData.ts';
 
 describe('customizeValidator()', () => {
+  it("types the errors of rawValidation() as the engine's", () => {
+    expectTypeOf<ReturnType<ReturnType<typeof customizeValidator>['rawValidation']>['errors']>().toEqualTypeOf<
+      ValidationError[] | undefined
+    >();
+  });
+
   it('default export is an ATAValidator instance', () => {
     expect(defaultValidator).toBeInstanceOf(ATAValidator);
   });

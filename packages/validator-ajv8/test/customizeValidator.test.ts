@@ -1,3 +1,5 @@
+import type { ErrorObject } from 'ajv';
+
 import type { Localizer } from '../src/index.ts';
 import defaultValidator, { customizeValidator } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
@@ -6,6 +8,11 @@ import { CUSTOM_OPTIONS } from './harness/testData.ts';
 vi.mock('../src/validator');
 
 describe('customizeValidator()', () => {
+  it("types the errors of rawValidation() as the engine's", () => {
+    expectTypeOf<ReturnType<ReturnType<typeof customizeValidator>['rawValidation']>['errors']>().toEqualTypeOf<
+      ErrorObject[] | undefined
+    >();
+  });
   it('defaultValidator was created', () => {
     expect(defaultValidator).toBeInstanceOf(AJV8Validator);
   });
