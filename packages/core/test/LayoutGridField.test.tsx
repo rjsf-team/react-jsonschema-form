@@ -17,7 +17,6 @@ import {
   DISCRIMINATOR_PATH,
   ErrorSchemaBuilder,
   getUiOptions,
-  isObject,
   LOOKUP_MAP_NAME,
   ONE_OF_KEY,
   PROPERTIES_KEY,
@@ -1921,12 +1920,11 @@ describe('LayoutGridField', () => {
       field: fieldName,
       value: null,
     };
-    const fieldUiSchema = sampleUISchema[fieldName];
     const props = getProps({
       schema: SAMPLE_SCHEMA,
       uiSchema: {
         ...sampleUISchema,
-        [fieldName]: { ...(isObject(fieldUiSchema) ? fieldUiSchema : {}), [PASSES_EXTRA_ERROR_KEY]: true },
+        [fieldName]: { ...sampleUISchema[fieldName], [PASSES_EXTRA_ERROR_KEY]: true },
       },
       formData: { [fieldName]: 'foo' },
       layoutGridSchema: {
