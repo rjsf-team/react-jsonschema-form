@@ -1997,7 +1997,9 @@ type UIOptionsDeclaredType<
     accept?: string | string[];
     /** The number of stars a `RatingWidget` shows, from 1 to 5, when the schema has no `maximum` */
     stars?: number;
-    /** The first and last year an `AltDateWidget` offers, as `[first, last]` */
+    /** The first and last year an `AltDateWidget` offers, as `[first, last]`, both counted from the current year when
+     * neither is positive
+     */
     yearsRange?: number[];
     /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
