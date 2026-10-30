@@ -33,7 +33,7 @@ Creates a `ValidatorType<S, F>` backed by `@cfworker/json-schema`.
 
 #### Returns
 
-- `ValidatorType<S, F>`: the customized validator implementation
+- `CFWorkerValidator<S, F>`: the customized validator implementation
 
 ```ts
 import { customizeValidator } from '@rjsf/validator-cfworker';
