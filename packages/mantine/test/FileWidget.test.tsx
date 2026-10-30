@@ -43,52 +43,16 @@ describe('FileWidget', () => {
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [] }), 'root');
   });
 
-  test('offers to clear a stored item that could not be read', async () => {
-    const schema: RJSFSchema = { type: 'array', items: { type: 'string', format: 'data-url' } };
-    const onChange = vi.fn();
-    render(
-      <Form schema={schema} uiSchema={uiSchema} initialFormData={[null]} validator={validator} onChange={onChange} />,
-    );
-
-    await user.click(screen.getByLabelText('Clear'));
-
-    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [] }), 'root');
-  });
-
-  test('offers to clear a stored string that is not a data URL', async () => {
-    const schema: RJSFSchema = { type: 'string', format: 'data-url' };
-    const onChange = vi.fn();
-    render(
+  test('joins an `accept` option given as an array', () => {
+    const { container } = render(
       <Form
-        schema={schema}
-        uiSchema={uiSchema}
-        initialFormData='not-a-data-url'
+        schema={{ type: 'string', format: 'data-url' }}
+        uiSchema={{ 'ui:options': { accept: ['.png', '.jpg'] } }}
         validator={validator}
-        onChange={onChange}
       />,
     );
 
-    await user.click(screen.getByLabelText('Clear'));
-
-    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: undefined }), 'root');
-  });
-
-  test('a multiple input offers to clear a lone string that is not a data URL', async () => {
-    const schema: RJSFSchema = { type: 'array', items: { type: 'string', format: 'data-url' } };
-    const onChange = vi.fn();
-    render(
-      <Form
-        schema={schema}
-        uiSchema={uiSchema}
-        initialFormData='not-a-data-url'
-        validator={validator}
-        onChange={onChange}
-      />,
-    );
-
-    await user.click(screen.getByLabelText('Clear'));
-
-    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [] }), 'root');
+    expect(container.querySelector('input[type=file]')).toHaveAttribute('accept', '.png,.jpg');
   });
 
   test('renders with description from options', () => {

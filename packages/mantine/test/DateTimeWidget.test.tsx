@@ -79,13 +79,13 @@ describe('DateTimeWidget', () => {
 
   test('uses the default formats for a `valueFormat` or `displayFormat` option that is not a string', async () => {
     const onChange = vi.fn();
-    const { getByRole } = renderWidget({
+    const { container } = renderWidget({
       onChange,
       schema: { type: 'string', format: 'iso-date-time' },
       options: { valueFormat: 5, displayFormat: true },
     });
 
-    const input = getByRole('textbox');
+    const input = container.querySelector<HTMLInputElement>('input#root')!;
     await user.click(input);
     await user.paste('2024-01-01T10:30:00');
 
