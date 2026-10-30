@@ -157,7 +157,7 @@ function Editor() {
 
 ## Change form data programmatically
 
-Use `setFieldValue(path, value)` to edit a field. The path can be a dotted string or an array of path segments. Use `''` or `[]` to replace the complete value, and pass `undefined` to clear a field.
+Use `setFieldValue(path, value)` to edit a field. The path can be a dotted string or an array of path segments. Use `''` or `[]` to replace the complete value, and pass `undefined` to clear a field. Under [`mergeDefaultsIntoFormData`](../api-reference/form-props.md#mergedefaultsintoformdata) `'useDefaultIfFormDataUndefined'`, a field with a `default` gets it back instead.
 
 ```tsx
 // Change one field.
