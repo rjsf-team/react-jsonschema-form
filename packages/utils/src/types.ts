@@ -889,19 +889,19 @@ export interface FieldProps<
    * `FieldTemplate` and `WrapIfAdditionalTemplate`, and the field it renders
    */
   keyNotAllowed?: boolean;
-  /** For an `additionalProperties` property, the callback `ObjectField` hands `SchemaField` to rename its key, which
-   * `SchemaField` hands its `FieldTemplate`
+  /** The callback `ObjectField` hands the `SchemaField` of every property it renders, additional or not, to rename its
+   * key, which `SchemaField` hands its `FieldTemplate`
    */
   onKeyRename?: (newKey: string) => void;
-  /** For an `additionalProperties` property, the callback that renames its key to the value of the blurred input */
+  /** The callback `ObjectField` hands every property it renders to rename its key to the value of the blurred input */
   onKeyRenameBlur?: (event: FocusEvent<HTMLInputElement>) => void;
-  /** For an `additionalProperties` property, the callback that removes it */
+  /** The callback `ObjectField` hands every property it renders to remove it */
   onRemoveProperty?: () => void;
   /** For an `additionalProperties` property, the key names it can be renamed to, when the parent schema's
    * `propertyNames` lists them
    */
   propertyNamesEnum?: string[];
-  /** For an `additionalProperties` property, whether the user renamed its key, which keeps its label the key */
+  /** For a property `ObjectField` renders, whether the user renamed its key, which keeps its label the key */
   wasPropertyKeyModified?: boolean;
   /** For an array item, its index in the array, which `ArrayField` hands the item's field */
   index?: number;
@@ -1277,16 +1277,16 @@ export type FieldTemplateProps<
   /** The value change event handler; Can be called with a new value to change the value for this field */
   onChange: FieldProps<T, S, F>['onChange'];
   /** Callback used to handle the changing of an additional property key's name with the new value. Undefined for a
-   * field that isn't an additional property
+   * field `ObjectField` doesn't render, such as the root or an array item
    */
   onKeyRename?: FieldProps<T, S, F>['onKeyRename'];
   /** Callback used to handle the changing of an additional property key's name when the input is blurred. The event's
    * target's value will be used as the new value. Its a wrapper callback around `onKeyRename`. Undefined for a field
-   * that isn't an additional property
+   * `ObjectField` doesn't render, such as the root or an array item
    */
   onKeyRenameBlur?: FieldProps<T, S, F>['onKeyRenameBlur'];
-  /** Callback used to handle the removal of the additionalProperty. Undefined for a field that isn't an additional
-   * property
+  /** Callback used to handle the removal of the additionalProperty. Undefined for a field `ObjectField` doesn't render,
+   * such as the root or an array item
    */
   onRemoveProperty?: FieldProps<T, S, F>['onRemoveProperty'];
   /** The key names an `additionalProperties` property is allowed to be renamed to, derived from the parent schema's
@@ -1779,7 +1779,7 @@ export interface BaseInputTemplateProps<
   onChangeOverride?: (event: ChangeEvent<HTMLInputElement>) => void;
   /** The `type` of the input, which the widgets rendering a `BaseInputTemplate` set, such as `'number'` or `'date'` */
   type?: string;
-  /** A `pattern` the widget sets on the input, which takes the place of the one the schema derives */
+  /** A `pattern` for the input, which core's `BaseInputTemplate` puts in place of the one the schema derives */
   pattern?: string;
   /** The file types a file input accepts, which `FileWidget` sets from its `accept` option */
   accept?: string;
