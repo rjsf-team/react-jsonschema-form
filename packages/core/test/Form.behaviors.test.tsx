@@ -3454,6 +3454,10 @@ describe('clearing a field with a schema default does not re-apply the default (
 
   describe("under 'useDefaultIfFormDataUndefined'", () => {
     const defaultFormStateBehavior = { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' } as const;
+    const SCALAR_OPTIONS: RJSFSchema[] = [
+      { title: 'S', type: 'string' },
+      { title: 'N', type: 'number' },
+    ];
 
     it('keeps an earlier cleared field empty while other fields change, until the user fills it', async () => {
       const schema: RJSFSchema = {
@@ -3618,6 +3622,32 @@ describe('clearing a field with a schema default does not re-apply the default (
 
       expect(onChange.mock.lastCall?.[0].formData).toEqual({ p: { x: 5 } });
     });
+
+    it.each<[string, RJSFSchema, unknown, string, unknown]>([
+      [
+        'a property',
+        { type: 'object', properties: { p: { default: 7, oneOf: SCALAR_OPTIONS } } },
+        { p: 'abc' },
+        'select#root_p__oneof_select',
+        { p: 7 },
+      ],
+      [
+        'an array item',
+        { type: 'array', items: { default: 7, oneOf: SCALAR_OPTIONS } },
+        ['abc'],
+        'select#root_0__oneof_select',
+        [7],
+      ],
+    ])(
+      "fills an ancestor's default into %s an option switch leaves empty",
+      async (_, schema, data, selector, filled) => {
+        const { node, onChange } = createFormComponent({ schema, defaultFormStateBehavior, initialFormData: data });
+
+        await user.selectOptions(elementOf(node, selector), 'N');
+
+        expect(onChange.mock.lastCall?.[0].formData).toEqual(filled);
+      },
+    );
 
     it('resolves the schema for the data a clear leaves', async () => {
       const schema: RJSFSchema = {
