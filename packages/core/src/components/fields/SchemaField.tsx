@@ -40,6 +40,7 @@ import {
   GUESSED_TYPE_FLAG,
   guessType,
   hasOwnContentBesideOptions,
+  hasSchemaMarker,
   isComponentType,
   isConstant,
   isConstantOptionList,
@@ -57,7 +58,6 @@ import {
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
   uiBooleanOption,
-  hasSchemaMarker,
 } from '@rjsf/utils';
 
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';

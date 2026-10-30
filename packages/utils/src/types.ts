@@ -439,8 +439,8 @@ type ChildKeys<D> = D extends unknown ? keyof D : never;
 /** The child data every member of `D` holds at `key`, for the members that have one */
 type ChildAt<D, K extends PropertyKey> = D extends unknown ? (K extends keyof D ? D[K] : never) : never;
 
-/** Whether `V` is the marker type `M` itself, rather than merely assignable to it. `never` extends every type, so it is
- * ruled out first
+/** Whether `V` is the marker type `M`, which only the marker itself is assignable to. `never` extends every type, so
+ * it is ruled out first
  */
 type IsMarker<V, M> = [V] extends [never] ? false : [V] extends [M] ? true : false;
 
@@ -2189,7 +2189,7 @@ type UiSchemaChildData<T> = unknown extends T
  * covers the `ui:` keys, whose values aren't uiSchemas, so its entries can't be the loose `UiSchema` a field declared
  * `unknown` gets
  */
-type OpenIndex<D> = { [K in keyof D]: string extends K ? (unknown extends D[K] ? OpenFieldData : D[K]) : D[K] };
+type OpenIndex<D> = { [K in keyof D]: [string, unknown] extends [K, D[K]] ? OpenFieldData : D[K] };
 
 /** The keys of `X` that name form fields. A method is not a field, and mapping one would also break assignability
  * for every uiSchema literal, since an object literal's apparent type carries `Object.prototype`'s methods.

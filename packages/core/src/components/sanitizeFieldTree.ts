@@ -10,6 +10,7 @@ import {
   getRenderedOptionSchema,
   getXxxOfOptions,
   GUESSED_TYPE_FLAG,
+  hasSchemaMarker,
   isConstantOptionList,
   isObject,
   isPlainObject,
@@ -19,7 +20,6 @@ import {
   RJSF_REF_CYCLE_KEY,
   setOwn,
   toConstant,
-  hasSchemaMarker,
 } from '@rjsf/utils';
 
 import type { FieldEdit, KeyMove } from './formState.ts';

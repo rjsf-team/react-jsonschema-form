@@ -21,13 +21,13 @@ import {
   fieldPathEndsWithIndex,
   getDescribedControlAttributes,
   getUiOptions,
+  hasSchemaMarker,
   isCustomWidget,
   isFixedItems,
   ITEMS_KEY,
   resolveDefaultWidget,
   UI_GLOBAL_OPTIONS_KEY,
   uiBooleanOption,
-  hasSchemaMarker,
 } from '@rjsf/utils';
 
 import { getFirstOption, getSelectorField, resolveSelectorWidget } from './layoutMultiSchemaFieldSelector.ts';
