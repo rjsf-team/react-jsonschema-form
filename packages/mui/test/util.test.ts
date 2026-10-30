@@ -54,6 +54,10 @@ describe('getMuiProps', () => {
     expect(result.variant).toBeUndefined();
     expect(result.sx).toBeUndefined();
   });
+
+  it('should find no rjsfSlotProps in a mui option that is not an object', () => {
+    expect(getMuiProps({ mui: true }, undefined, true)).toEqual({ rjsfSlotProps: undefined });
+  });
 });
 
 describe('computeSxProps', () => {
