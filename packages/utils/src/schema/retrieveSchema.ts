@@ -829,9 +829,8 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       Reflect.set(merged, keyword, value);
     }
   };
-  const { items, additionalItems } = merged;
+  const { items, additionalItems, prefixItems } = merged;
   setRows(ITEMS_KEY, Array.isArray(items) ? tuple(items) : item(items, seedsAt(plan, ITEMS_KEY), 'item'));
-  const { prefixItems } = merged;
   if (Array.isArray(prefixItems)) {
     Reflect.set(merged, 'prefixItems', tuple(prefixItems));
   }
