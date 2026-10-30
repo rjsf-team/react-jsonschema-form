@@ -4926,7 +4926,10 @@ describe('ArrayField', () => {
 
         const inputs = node.querySelectorAll('.rjsf-array-item input');
         expect(inputs).toHaveLength(2);
-        inputs.forEach((input) => expect(input).toBeEnabled());
+        inputs.forEach((input) => {
+          expect(input).toBeEnabled();
+          expect(input).not.toHaveAttribute('readonly');
+        });
         const buttons = itemButtons(node, 0);
         expect(buttons).toHaveLength(3);
         buttons.forEach((button) => expect(button).toBeEnabled());
@@ -4962,7 +4965,10 @@ describe('ArrayField', () => {
 
           const inputs = node.querySelectorAll('.rjsf-array-item input');
           expect(inputs).toHaveLength(2);
-          inputs.forEach((input) => expect(input).toBeEnabled());
+          inputs.forEach((input) => {
+            expect(input).toBeEnabled();
+            expect(input).not.toHaveAttribute('readonly');
+          });
           const buttons = itemButtons(node, 0);
           expect(buttons).toHaveLength(3);
           buttons.forEach((button) => expect(button).toBeDisabled());
