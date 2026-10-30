@@ -51,6 +51,7 @@ describe('UiSchema type', () => {
       additionalProperties: { zip: { 'ui:placeholder': 'Zip' } },
     };
 
+    expectTypeOf<NonNullable<Known['additionalProperties']>>().toEqualTypeOf<UiSchema>();
     expect(open.additionalProperties?.city).toBeDefined();
     expect([indexed, wrong]).toHaveLength(2);
   });
