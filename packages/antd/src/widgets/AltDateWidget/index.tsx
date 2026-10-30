@@ -24,7 +24,7 @@ export default function AltDateWidget<
   const { formContext, translateString } = registry;
   const { rowGutter: contextGutter }: AntdFormContext = formContext;
   // The date parts are spaced by half the gutter, which takes a number: a `[horizontal, vertical]` pair gives its
-  // horizontal one, and a responsive gutter the default
+  // horizontal one, and a responsive or string gutter the default
   const gutter = Array.isArray(contextGutter) ? contextGutter[0] : contextGutter;
   const rowGutter = typeof gutter === 'number' ? gutter : 24;
   const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);

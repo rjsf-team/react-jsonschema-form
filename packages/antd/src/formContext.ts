@@ -7,7 +7,7 @@ import type { ColProps, FormProps, RowProps } from 'antd';
 export interface AntdFormContext {
   /** Whether a label ends in a colon, which it does unless this is `false` */
   colon?: boolean;
-  /** The columns an object's property spans, for every property or by its widget or field name */
+  /** The columns an object's property spans, for every property or by its widget name, field name or schema type */
   colSpan?: number | Record<string, number>;
   /** Where a field's description is shown */
   descriptionLocation?: 'below' | 'tooltip';
@@ -19,10 +19,10 @@ export interface AntdFormContext {
   readonlyAsDisabled?: boolean;
   /** The gutter between the columns of a row */
   rowGutter?: RowProps['gutter'];
-  /** The vertical alignment of an array item's toolbar */
+  /** The vertical alignment of an array item's toolbar, or of an additional property's row */
   toolbarAlign?: RowProps['align'];
   /** The `Col` props of a field's control */
   wrapperCol?: ColProps;
-  /** The style of a field's control */
+  /** The style of a field's antd `Form.Item`, which holds its label and control */
   wrapperStyle?: CSSProperties;
 }
