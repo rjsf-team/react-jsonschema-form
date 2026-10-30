@@ -1,3 +1,5 @@
+import type { GenericObjectType } from './types.ts';
+
 /** Writes `value` at `key` of a plain object `obj` as an own, enumerable data property. A plain assignment to a
  * JSON-sourced `__proto__` key would reach the prototype setter and re-point `obj`'s prototype instead of adding the
  * key, so that key goes through `Object.defineProperty`. Every other key is assigned, since a definition costs more
@@ -18,6 +20,9 @@ export default function setOwn(obj: object, key: string | number, value: unknown
       configurable: true,
     });
   } else {
-    Reflect.set(obj, key, value);
+    // The one deliberate cast here: `obj` is the plain object or array the caller holds. `Reflect.set()` needs no cast,
+    // but costs several times an assignment on this hot path and reports a frozen `obj` by returning `false`
+    // oxlint-disable-next-line no-param-reassign
+    (obj as GenericObjectType)[key] = value;
   }
 }
