@@ -84,17 +84,8 @@ describe('validationDataMerge()', () => {
   });
   describe('prevent duplicates lists the additional errors the merged errorSchema keeps', () => {
     const message = 'must have required property';
-    const additional = (path: string[]): ErrorSchema => {
-      const schema: ErrorSchema = {};
-      let node: Record<string, unknown> = schema;
-      path.forEach((key) => {
-        const child: Record<string, unknown> = {};
-        node[key] = child;
-        node = child;
-      });
-      node[ERRORS_KEY] = [message];
-      return schema;
-    };
+    const additional = (path: string[]) =>
+      path.reduceRight<ErrorSchema>((child, key) => ({ [key]: child }), { [ERRORS_KEY]: [message] });
     const existingAt = (property: string | undefined) => ({ property, message, stack: `${property} ${message}` });
     // The `ValidationData` a validator returns: the `errorSchema` built from the `errors` by `toErrorSchema()`
     const validated = (...errors: RJSFValidationError[]): ValidationData<unknown> => ({
