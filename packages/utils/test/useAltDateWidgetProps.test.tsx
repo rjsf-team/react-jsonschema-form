@@ -121,6 +121,12 @@ describe('useAltDateWidgetProps()', () => {
     vi.useRealTimers();
     vi.mocked(PROPS.onChange).mockClear();
   });
+  test('clearing a part with no value leaves the date incomplete', () => {
+    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, value: DATE_STR }));
+    act(() => result.current.handleChange('month'));
+    expect(PROPS.onChange).not.toHaveBeenCalled();
+    expect(result.current.elements.find(({ type }) => type === 'month')?.value).toBeUndefined();
+  });
   test.each([
     ['month', 'an empty string', ''],
     ['day', 'an empty string', ''],
