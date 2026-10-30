@@ -43,6 +43,18 @@ describe('FileWidget', () => {
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [] }), 'root');
   });
 
+  test('joins an `accept` option given as an array', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'data-url' }}
+        uiSchema={{ 'ui:options': { accept: ['.png', '.jpg'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input[type=file]')).toHaveAttribute('accept', '.png,.jpg');
+  });
+
   test('renders with description from options', () => {
     const options = { description: 'Test description' };
     const uiOptions = { ...uiSchema, 'ui:options': options };
