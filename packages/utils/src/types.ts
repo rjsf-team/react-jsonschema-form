@@ -1785,7 +1785,9 @@ export interface UISchemaSubmitButtonOptions {
   submitText?: string;
   /** Flag, if `true`, removes the submit button completely from the form */
   norender?: boolean;
-  /** Any other props to be passed to the submit button itself */
+  /** Any other props to be passed to the submit button itself. `object` takes a value typed by an interface, which has
+   * no index signature, and `Record` lets an object literal carry props that aren't declared here
+   */
   props?: (object | Record<string, unknown>) & {
     /** A boolean value stating if the submit button is disabled */
     disabled?: boolean;
