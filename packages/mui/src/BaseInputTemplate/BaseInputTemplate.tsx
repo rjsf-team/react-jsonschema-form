@@ -22,6 +22,7 @@ import {
   getNumericInputTitle,
   hasWidgetErrors,
   labelValue,
+  toInputValue,
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
@@ -191,7 +192,7 @@ export default function BaseInputTemplate<
           ),
         }}
         {...rest}
-        value={value || value === 0 ? value : ''}
+        value={toInputValue(value || value === 0 ? value : '')}
         error={hasWidgetErrors<T, S, F>(props)}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}

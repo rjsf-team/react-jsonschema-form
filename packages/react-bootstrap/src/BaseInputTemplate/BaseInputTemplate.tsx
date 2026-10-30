@@ -9,6 +9,7 @@ import {
   getInputProps,
   getNumericInputTitle,
   hasWidgetErrors,
+  toInputValue,
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
@@ -77,7 +78,7 @@ export default function BaseInputTemplate<
     readOnly: readonly,
     list: hasExamples ? examplesId(id) : undefined,
     ...inputProps,
-    value: value || value === 0 ? value : '',
+    value: toInputValue(value || value === 0 ? value : ''),
     onChange: onChangeOverride ?? handleChange,
     onBlur: handleBlur,
     onFocus: handleFocus,
