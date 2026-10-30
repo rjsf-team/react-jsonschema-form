@@ -200,12 +200,15 @@ If you are doing something like the following to create a new theme based on `@r
 
 ```tsx
 import React from 'react';
-import { WidgetProps } from '@rjsf/utils';
+import type { TextFieldProps } from '@mui/material/TextField';
+import { SlotComponent, WidgetProps } from '@rjsf/utils';
 import { type ThemeProps, withTheme } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
-import { Theme } from '@rjsf/mui';
+import { type MuiBaseInputTemplateProps, Theme } from '@rjsf/mui';
 
-const OldBaseInputTemplate = Theme.templates.BaseInputTemplate;
+// `BaseInputTemplateProps` doesn't declare `TextField`'s `size`, so the template is read typed with it
+const OldBaseInputTemplate: SlotComponent<MuiBaseInputTemplateProps & Pick<TextFieldProps, 'size'>> =
+  Theme.templates.BaseInputTemplate;
 
 // Force the underlying `TextField` component to always use size="small"
 function MyBaseInputTemplate(props: WidgetProps) {
@@ -229,10 +232,11 @@ Then you would use the new `generateTheme()` and `generateForm()` functions as f
 
 ```tsx
 import React from 'react';
-import { WidgetProps } from '@rjsf/utils';
+import type { TextFieldProps } from '@mui/material/TextField';
+import { SlotComponent, WidgetProps } from '@rjsf/utils';
 import { type ThemeProps, withTheme } from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { Templates, generateTheme } from '@rjsf/mui';
+import { type MuiBaseInputTemplateProps, Templates, generateTheme } from '@rjsf/mui';
 
 interface FormData {
   foo?: string;
@@ -255,7 +259,9 @@ interface FormContext {
 
 const Theme: ThemeProps<FormData, MySchema, FormContext> = generateTheme<FormData, MySchema, FormContext>();
 
-const OldBaseInputTemplate = Templates.BaseInputTemplate;
+const OldBaseInputTemplate: SlotComponent<
+  MuiBaseInputTemplateProps<FormData, MySchema, FormContext> & Pick<TextFieldProps, 'size'>
+> = Templates.BaseInputTemplate;
 
 // Force the underlying `TextField` component to always use size="small"
 function MyBaseInputTemplate(props: WidgetProps<FormData, MySchema, FormContext>) {
