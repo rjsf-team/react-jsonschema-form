@@ -612,7 +612,7 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       it('scores the options of a list a merge rebuilt in the resource by the $ref each holds there', () => {
         // `k` conjoins the list `l` names with the list beside it, which makes each option of `l` anew; the root defines
         // an `s` of its own and no `t`
-        const definitions: NonNullable<RJSFSchema['$defs']> = {
+        const definitions: Record<string, RJSFSchema> = {
           s: { type: 'object', properties: { q: { type: 'string' } }, required: ['q'] },
           t: { type: 'object', properties: { r: { type: 'string' } }, required: ['r'] },
           l: { anyOf: [{ $ref: '#/$defs/s' }, { $ref: '#/$defs/t' }] },

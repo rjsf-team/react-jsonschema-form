@@ -725,7 +725,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     it('should `resolve` a bundled draft 2020-12 JSON Schema', () => {
-      const definitions: NonNullable<RJSFSchema['$defs']> = {
+      const definitions: Record<string, RJSFSchema> = {
         'https://jsonschema.dev/schemas/mixins/integer': {
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           $id: 'https://jsonschema.dev/schemas/mixins/integer',
@@ -1293,10 +1293,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             for (let i = 0; i < n; i++) {
               const next: RJSFSchema =
                 i + 1 < n ? { $ref: `#/definitions/d${i + 1}` } : { properties: { leaf: { type: 'string' } } };
-              const props: NonNullable<RJSFSchema['properties']> = {
-                k: { type: 'string' },
-                [`v${i}`]: { type: 'string' },
-              };
+              const props: Record<string, RJSFSchema> = { k: { type: 'string' }, [`v${i}`]: { type: 'string' } };
               if (kind === 'allOf') {
                 definitions[`d${i}`] = { allOf: [{ properties: { [`v${i}`]: { type: 'string' } } }, next] };
               } else if (kind === 'deps') {

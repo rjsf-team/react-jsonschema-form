@@ -3,9 +3,6 @@ import type { GenericObjectType, RJSFMarkedSchema, RJSFSchema } from '../../src/
 import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, getDisplayLabel } from '../../src/index.ts';
 import type { TestValidatorType } from './types.ts';
 
-const OBJECT_ADDITIONAL: RJSFMarkedSchema = { type: 'object', [ADDITIONAL_PROPERTY_FLAG]: true };
-const ARRAY_ADDITIONAL: RJSFMarkedSchema = { type: 'array', [ADDITIONAL_PROPERTY_FLAG]: true };
-
 export default function getDisplayLabelTest(testValidator: TestValidatorType) {
   describe('getDisplayLabel()', () => {
     it('with global uiSchema "label" set to true', () => {
@@ -36,7 +33,8 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
       expect(getDisplayLabel({ validator: testValidator }, { type: 'object' })).toEqual(false);
     });
     it('object type from additionalProperty', () => {
-      expect(getDisplayLabel({ validator: testValidator }, OBJECT_ADDITIONAL)).toEqual(true);
+      const schema: RJSFMarkedSchema = { type: 'object', [ADDITIONAL_PROPERTY_FLAG]: true };
+      expect(getDisplayLabel({ validator: testValidator }, schema)).toEqual(true);
     });
     it('object type with constant options', () => {
       expect(
@@ -126,7 +124,8 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
     });
     describe('array type', () => {
       it('added by additionalProperty', () => {
-        expect(getDisplayLabel({ validator: testValidator }, ARRAY_ADDITIONAL, {})).toEqual(true);
+        const schema: RJSFMarkedSchema = { type: 'array', [ADDITIONAL_PROPERTY_FLAG]: true };
+        expect(getDisplayLabel({ validator: testValidator }, schema, {})).toEqual(true);
       });
       it('items', () => {
         expect(getDisplayLabel({ validator: testValidator }, { type: 'array', items: { type: 'string' } }, {})).toEqual(
