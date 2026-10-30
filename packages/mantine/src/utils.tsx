@@ -297,7 +297,12 @@ const themeComponentNames = {
 
 export type AriaInputComponentName = keyof typeof themeComponentNames;
 
-function asObject(value: unknown): GenericObjectType | undefined {
+/** Returns `value` when it is an object, else `undefined`
+ *
+ * @param value - The value an option or the theme gives
+ * @returns - The object, or `undefined`
+ */
+export function asObject(value: unknown): GenericObjectType | undefined {
   return isObject(value) ? value : undefined;
 }
 
@@ -503,8 +508,7 @@ function withoutRootSlot(value: unknown): unknown {
  * a string.
  */
 function noStyle(name: string) {
-  const data: unknown = Reflect.get(STYLE_PROPS_DATA, name);
-  const type = isObject(data) ? data.type : undefined;
+  const type = asObject(Reflect.get(STYLE_PROPS_DATA, name))?.type;
   return type === 'color' || type === 'textColor' ? '' : null;
 }
 
@@ -655,10 +659,7 @@ export function useFieldWrapperProps<
   // Resolved as `Input.Wrapper` resolves them, since some are read or replaced here. `useInputProps` leaves
   // `labelElement` with the input, while this wrapper takes it.
   const wrapperDefaults = useProps<GenericObjectType>('InputWrapper', {}, {});
-  const resolved: GenericObjectType = {
-    ...wrapperDefaults,
-    ...filterProps({ labelElement, ...mantineWrapperProps }),
-  };
+  const resolved: GenericObjectType = { ...wrapperDefaults, ...filterProps({ labelElement, ...mantineWrapperProps }) };
   // The widget's inputs apply the theme's root element props to the wrappers they render
   const wrapperProps = containerOnInputs
     ? withOwnRootProps(resolved, wrapperDefaults, asObject(options.wrapperProps))

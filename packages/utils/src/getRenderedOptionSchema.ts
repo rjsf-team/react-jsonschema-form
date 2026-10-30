@@ -336,7 +336,7 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
   if (!takesExtraKeys) {
     return merged as S;
   }
-  const withParentExtraKeys: GenericObjectType = { ...merged };
+  const withParentExtraKeys = merged;
   for (const keyword of EXTRA_KEY_KEYWORDS) {
     if (Object.hasOwn(parent, keyword)) {
       withParentExtraKeys[keyword] = Reflect.get(parent, keyword);

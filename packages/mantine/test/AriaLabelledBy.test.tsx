@@ -346,6 +346,8 @@ describe('aria-labelledby', () => {
     titleOptionSources.map((source) => [widget, source, role, schema] as [string, string, string, RJSFSchema]),
   );
 
+  type ContainerCaseOptions = GenericObjectType & { 'ui:label'?: boolean };
+
   function themedForm(components: MantineThemeComponents, schema: RJSFSchema, uiSchema: UiSchema, formProps = {}) {
     return (
       <MantineProvider theme={createTheme({ components })}>
@@ -653,9 +655,9 @@ describe('aria-labelledby', () => {
         [
           ['a hidden label', { title: 'A title' }, { 'ui:label': false }],
           ['a label left out of inputWrapperOrder', { title: 'A title' }, { inputWrapperOrder: orderWithoutLabel }],
-        ] as [string, RJSFSchema, Record<string, unknown> & { 'ui:label'?: boolean }][]
+        ] as [string, RJSFSchema, ContainerCaseOptions][]
       ).map(([labelCase, titleSchema, options]) => [widget, labelCase, role, { ...schema, ...titleSchema }, options]),
-    ) as [string, string, string, RJSFSchema, Record<string, unknown> & { 'ui:label'?: boolean }][],
+    ) as [string, string, string, RJSFSchema, ContainerCaseOptions][],
   )(
     '%s widget renders inside a single-child inputContainer, such as a Tooltip, with %s',
     (widget, _, role, schema, options) => {

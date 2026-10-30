@@ -1084,10 +1084,7 @@ const EXCLUDED_STUB_KEYWORDS = new Set<string>([...SUBSCHEMA_KEYWORDS, ...UNSTUB
  * @returns - The copy to build the stub from
  */
 function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): S {
-  // The copy reads as a record of keywords while some are dropped, which leaves a schema of the same type
-  const schema = { ...subSchema } as GenericObjectType;
-  UNSTUBBABLE_KEYWORDS.forEach((keyword) => delete schema[keyword]);
-  return schema as S;
+  return withoutKeys<S>(subSchema, ...UNSTUBBABLE_KEYWORDS);
 }
 
 /** Builds the stub schema for an additional property whose own schema names no type, keeping what that schema says

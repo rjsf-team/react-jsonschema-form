@@ -12,10 +12,17 @@ import type {
 } from '@mantine/core';
 import { Slider, Input, useProps } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, isObject, rangeSpec, titleId, widgetDrawsLabel } from '@rjsf/utils';
+import { getControlAttributes, rangeSpec, titleId, widgetDrawsLabel } from '@rjsf/utils';
 
 import type { OwnKeys } from '../utils.tsx';
-import { cleanupOptions, getOwnLabel, useFieldWrapperProps, useHiddenTitle, useShownSuccessId } from '../utils.tsx';
+import {
+  asObject,
+  cleanupOptions,
+  getOwnLabel,
+  useFieldWrapperProps,
+  useHiddenTitle,
+  useShownSuccessId,
+} from '../utils.tsx';
 
 /** The Mantine input and `InputWrapper` props `Slider` doesn't take, which it would pass on to its root element as
  * unknown attributes
@@ -135,7 +142,7 @@ export default function RangeWidget<
     'Slider',
     {},
     {
-      thumbProps: isObject(options.thumbProps) ? options.thumbProps : undefined,
+      thumbProps: asObject(options.thumbProps),
       thumbLabel: typeof options.thumbLabel === 'string' ? options.thumbLabel : undefined,
     },
   );
