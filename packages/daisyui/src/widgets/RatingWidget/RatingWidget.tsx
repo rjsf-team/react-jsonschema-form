@@ -129,25 +129,27 @@ export default function RatingWidget<
   return (
     <div className='form-control w-full'>
       <div className={`rating gap-1 ${sizeClass}`} {...groupProps}>
-        {starValues.map((starValue, index) => (
-          <input
-            // oxlint-disable-next-line react/no-array-index-key
-            key={index}
-            type='radio'
-            name={htmlName || id}
-            value={starValue}
-            checked={rating === starValue}
-            onChange={handleChange}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            className={`mask ${maskClass} ${getColorClass(index)}`}
-            disabled={disabled || readonly}
-            required={required}
-            autoFocus={autofocus && starValue === autofocusValue}
-            aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
-            {...optionAttributes}
-          />
-        ))}
+        {Array.from({ length: numStars }, (_, index) => {
+          const starValue = min + index;
+          return (
+            <input
+              key={index}
+              type='radio'
+              name={htmlName || id}
+              value={starValue}
+              checked={rating === starValue}
+              onChange={handleChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              className={`mask ${maskClass} ${getColorClass(index)}`}
+              disabled={disabled || readonly}
+              required={required}
+              autoFocus={autofocus && starValue === autofocusValue}
+              aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
+              {...optionAttributes}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -154,12 +154,12 @@ export default function RatingWidget<
         cursor: disabled || readonly ? 'default' : 'pointer',
       }}
     >
-      {starValues.map((starValue, index) => {
+      {Array.from({ length: numStars }, (_, index) => {
+        const starValue = min + index;
         const isFilled = rating !== undefined && starValue <= rating;
 
         return (
           <span
-            // oxlint-disable-next-line react/no-array-index-key
             key={index}
             ref={index === tabStopIndex ? autofocusStar : undefined}
             onClick={() => handleStarClick(starValue)}
