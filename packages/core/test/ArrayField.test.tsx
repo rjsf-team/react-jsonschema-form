@@ -658,6 +658,25 @@ describe('ArrayField', () => {
       ]);
     });
 
+    it('keeps onAddClick the same function across renders', async () => {
+      // core's memoized IconButton takes it as `onClick`, so a new function would re-render the add button on every edit
+      const onAddClicks = new Set<ArrayFieldTemplateProps['onAddClick']>();
+      function RecordingTemplate(props: ArrayFieldTemplateProps) {
+        onAddClicks.add(props.onAddClick);
+        return <div className='array'>{props.items}</div>;
+      }
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: ['foo'],
+        templates: { ArrayFieldTemplate: RecordingTemplate },
+      });
+
+      await user.type(elementOf(node, 'input[type=text]'), 'x');
+
+      expectToHaveBeenCalledWithFormData(onChange, ['foox'], 'root_0');
+      expect(onAddClicks.size).toBe(1);
+    });
+
     it('moves an item when the template calls onMoveDownItem after dispatch ends', async () => {
       // React clears the event's `currentTarget` once dispatch ends, before the deferred call runs
       function DeferredMoveItemTemplate(props: ArrayFieldItemTemplateProps) {

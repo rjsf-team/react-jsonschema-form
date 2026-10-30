@@ -854,6 +854,8 @@ interface InternalArrayFieldProps<
   keyedFormData: KeyedFormDataType<T>[];
   /** The callback used to handle the adding of an item at the given index (or the end, if missing) */
   handleAddItem: (event: ArrayButtonEvent, index?: number) => void;
+  /** The callback published as `onAddClick`, which adds an item at the end */
+  handleAppendItem: (event: ArrayButtonEvent) => void;
   /** The callback used to handle the copying of the item at the given index, below itself */
   handleCopyItem: (event: ArrayButtonEvent, index: number) => void;
   /** The callback used to handle removing an item at the given index */
@@ -889,6 +891,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     onChange,
     keyedFormData,
     handleAddItem,
+    handleAppendItem,
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
@@ -961,7 +964,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     disabled,
     id,
     uiSchema,
-    onAddClick: (event) => handleAddItem(event),
+    onAddClick: handleAppendItem,
     readonly,
     hideError,
     required,
@@ -1005,6 +1008,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     keyedFormData,
     onChange,
     handleAddItem,
+    handleAppendItem,
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
@@ -1094,7 +1098,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       };
       return <ArrayFieldItem key={key} {...itemProps} />;
     }),
-    onAddClick: (event) => handleAddItem(event),
+    onAddClick: handleAppendItem,
     readonly,
     hideError,
     required,
@@ -1316,6 +1320,13 @@ export default function ArrayField<
     [registry, schema, uiSchema, commitRows, readRows, newRowId],
   );
 
+  /** The published `onAddClick`, taking only the event, since a button's `onClick` may pass a second argument, which
+   * `handleAddItem()` would read as the index
+   *
+   * @param event - The event for the click
+   */
+  const handleAppendItem = useCallback((event: ArrayButtonEvent) => handleAddItem(event), [handleAddItem]);
+
   /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of
    * keyed form data at the `index` into the next position in the state, and then returning `onChange()` with the plain
    * form data converted from the keyed data
@@ -1454,6 +1465,7 @@ export default function ArrayField<
     ...props,
     schema: arraySchema,
     handleAddItem,
+    handleAppendItem,
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
