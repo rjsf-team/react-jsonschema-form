@@ -140,7 +140,7 @@ export interface UseAltDateWidgetResult {
   /** The list of `DateElementProp` data to render for the `AltDateWidget` */
   elements: DateElementProp[];
   /** The callback that handles the changing of DateElement components */
-  handleChange: (property: keyof DateObject, value: unknown) => void;
+  handleChange: (property: keyof DateObject, value?: unknown) => void;
   /** The callback that will clear the `AltDateWidget` when a button is clicked */
   handleClear: (event: MouseEvent) => void;
   /** The callback that will set the `AltDateWidget` to NOW when a button is clicked */
@@ -174,7 +174,7 @@ export default function useAltDateWidgetProps<
   const buttonsDisabled = disabled || readonly;
 
   const handleChange = useCallback(
-    (property: keyof DateObject, newValue: unknown) => {
+    (property: keyof DateObject, newValue?: unknown) => {
       const nextState = {
         ...state,
         // A select that reports its cleared choice as `null`, through an `emptyValue` of `null`, picks nothing either
