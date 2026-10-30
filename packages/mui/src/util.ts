@@ -10,7 +10,6 @@ import type {
 } from '@mui/material';
 import type {
   FormContextType,
-  GenericObjectType,
   GlobalUISchemaOptionsExtensions,
   ReservedUiOptionName,
   RJSFSchema,
@@ -18,6 +17,7 @@ import type {
   ThemeGlobalUISchemaOptions,
   UIOptionsType,
   UiSchema,
+  GenericObjectType,
 } from '@rjsf/utils';
 import { partId } from '@rjsf/utils';
 
