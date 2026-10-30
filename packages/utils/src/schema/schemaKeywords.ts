@@ -71,8 +71,8 @@ export const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
 /** The keywords describing an object's extra keys */
 export const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY];
 
-/** Every keyword that constrains the value, for the reasons the first two lists above give. They are only ever
- * consulted together, once per key a schema holds, so they are consulted as one.
+/** Every keyword that constrains the value, for the reasons `VALUE_KEYWORDS` and `SUBSCHEMA_KEYWORDS` give. They are
+ * only ever consulted together, once per key a schema holds, so they are consulted as one.
  */
 const CONSTRAINING_KEYWORDS = new Set<string>([...VALUE_KEYWORDS, ...SUBSCHEMA_KEYWORDS]);
 
@@ -87,12 +87,13 @@ export function constrainsValue(keyword: string): boolean {
   return CONSTRAINING_KEYWORDS.has(keyword);
 }
 
-/** The keywords no stub carries, whatever the stub keeps of the rest, for the reasons the two lists above give: both
- * reasons are about building a stub once per property key, not about what the stub then says of the value.
+/** The keywords no stub carries, whatever the stub keeps of the rest, for the reasons `IDENTIFIER_KEYWORDS` and
+ * `CONTAINER_KEYWORDS` give: both reasons are about building a stub once per property key, not about what the stub then
+ * says of the value.
  */
 export const UNSTUBBABLE_KEYWORDS = new Set<string>([...IDENTIFIER_KEYWORDS, ...CONTAINER_KEYWORDS]);
 
-/** Every keyword a guessed-type stub leaves out, for the reasons the three lists above give. They are only ever
- * consulted together, and once per property key, so they are consulted as one.
+/** Every keyword a guessed-type stub leaves out, for the reasons `SUBSCHEMA_KEYWORDS` and `UNSTUBBABLE_KEYWORDS` give.
+ * They are only ever consulted together, and once per property key, so they are consulted as one.
  */
 export const EXCLUDED_STUB_KEYWORDS = new Set<string>([...SUBSCHEMA_KEYWORDS, ...UNSTUBBABLE_KEYWORDS]);
