@@ -286,7 +286,7 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 
 - `className`: The className string.
 - `disabled`: Whether the array item's buttons are disabled, by the array's lock or the item's own. Its inputs can stay enabled, under an item's `ui:disabled: false`.
-- `canAdd`: A boolean value stating whether a new item can be added below this one, which is when `onAddItem` acts. It is false on a disabled or read-only array.
+- `canAdd`: A boolean value stating whether new elements can be added to the array.
 - `hasCopy`: A boolean value stating whether the array item can be copied.
 - `hasMoveDown`: A boolean value stating whether the array item can be moved down.
 - `hasMoveUp`: A boolean value stating whether the array item can be moved up.
@@ -791,8 +791,6 @@ To take control over the inner organization of each field (each form row), you c
 
 A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
-To keep an array item's buttons and an additional property's key input level with the field's control, see [Lining up a custom `FieldTemplate`](../usage/themes.md#lining-up-a-custom-fieldtemplate).
-
 ```tsx
 import { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -882,7 +880,8 @@ The following props are passed to a custom field template component:
 ## GridTemplate
 
 The `GridTemplate` is the template that renders a theme dependent Grid for either a row or column.
-While it has only two explicit properties, it extends the `GenericObjectTemplate` in order to support passing any of the properties associated with a Grid implementation for any theme.
+While it declares only a few properties, it takes any other prop too, in order to support passing any of the properties associated with a Grid implementation for any theme.
+A prop it doesn't declare reads back as `unknown`, so a template that reads one declares it on its own props, as in `GridTemplateProps & { gap?: number }`.
 If you want to customize how grids are rendered you can.
 
 ```tsx
@@ -898,7 +897,7 @@ const schema: RJSFSchema = {
 };
 
 function GridTemplate(props: FieldHelpProps) {
-  const { children, column, className, fieldId, ...rest } = props;
+  const { children, column, className, ...rest } = props;
   return (
     <Grid2 item={column} {...rest} className={`${className} my-custom-grid-styling`}>
       {children}
@@ -913,8 +912,9 @@ The following props are passed to the `GridTemplate`:
 
 - `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
-- `span`: Optional number of twelfths of a row a column spans, which every theme's `GridTemplate` converts to its own grid
-- `fieldId`: For a column, the id of the first field it holds; for a row, or a column holding no field of its own, the id of the field whose layout grid holds it. It's for naming the row or column in a warning; keep it off the element you render
+- `span`: Optional number of the 12 tracks a column spans in the `core` theme's grid; a column without one is full width
+- `className`: Optional class names to add to the grid element
+- `style`: Optional style to apply to the grid element
 
 ## MarkdownTemplate
 
@@ -1273,7 +1273,6 @@ The following props are passed to each `UnsupportedFieldTemplate`:
 
 The `WrapIfAdditionalTemplate` is used by the `FieldTemplate` to conditionally render additional controls if `additionalProperties` or `patternProperties` are present in the schema.
 You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or behavior of user-controlled `additionalProperties` and `patternProperties`.
-Core's lays the key, the value and the remove button out on shared grid rows, so the key's input sits level with the value's; see [Lining up a custom `FieldTemplate`](../usage/themes.md#lining-up-a-custom-fieldtemplate).
 
 ```tsx
 import { ADDITIONAL_PROPERTY_FLAG, additionalKeyId, RJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
@@ -1535,67 +1534,3 @@ const registry = { templates: { CustomArrayFieldTemplate } };
 // Use the custom template in the uiSchema
 const uiSchema: UiSchema = { 'ui:ArrayFieldTemplate': 'CustomArrayFieldTemplate' };
 ```
-
-### Reading a custom template back
-
-RJSF doesn't know the props of a template you register under your own name, so one read back from `registry.templates`, `getTemplate()` or `getTemplates()` under that name has props of type `never` and can't be rendered as it is. Name its props with `isComponentType()`, which also checks that it is a component:
-
-```tsx
-import { getTemplate, isComponentType, Registry } from '@rjsf/utils';
-import { MyTemplateProps } from './MyTemplate';
-
-function renderMyTemplate(registry: Registry, props: MyTemplateProps) {
-  const MyTemplate = getTemplate('MyTemplate', registry);
-  if (!isComponentType<MyTemplateProps>(MyTemplate)) {
-    return null;
-  }
-  return <MyTemplate {...props} />;
-}
-```
-
-For a template in a group of your own, narrow the group first, since `isComponentType()` is false for it, then name the props on the member. A `typeof` check alone isn't enough to find the group, because what `memo()`, `forwardRef()` and `lazy()` return is an object too:
-
-```tsx
-const MyGroup = getTemplate('MyGroup', registry);
-if (typeof MyGroup !== 'object' || isComponentType(MyGroup)) {
-  return null;
-}
-const { MyTemplate } = MyGroup;
-if (!isComponentType<MyTemplateProps>(MyTemplate)) {
-  return null;
-}
-return <MyTemplate {...props} />;
-```
-
-A custom template written inline with no type on its `props` parameter takes `never` from the same entry, so give it one: `templates={{ MyTemplate: (props: MyTemplateProps) => <div>{props.title}</div> }}`.
-
-### Typing a set of templates
-
-`PartialTemplatesType` types a set of templates, as the `templates` prop of `Form` and a theme's `templates` take: it checks each template RJSF declares, such as `FieldTemplate`, against its own props, takes any of the `ButtonTemplates` on their own, and takes your own templates and groups of them beside those:
-
-```tsx
-import { PartialTemplatesType } from '@rjsf/utils';
-import MyFieldTemplate from './MyFieldTemplate';
-import MySubmitButton from './MySubmitButton';
-import MyTemplate from './MyTemplate';
-
-const templates: PartialTemplatesType = {
-  FieldTemplate: MyFieldTemplate,
-  ButtonTemplates: { SubmitButton: MySubmitButton },
-  MyTemplate,
-};
-```
-
-`Partial<TemplatesType>`, as every theme's `generateTemplates()` returns, checks the declared templates too, but `Partial` reaches only the top level, so a `ButtonTemplates` entry in it has to hold every button.
-
-`TemplatesType` is two exported types put together: `DeclaredTemplatesType` holds the templates RJSF declares, and `CustomTemplateEntries` is the string index signature for your own. `Omit` with literal keys on `TemplatesType` or `PartialTemplatesType`, which has the same signature, such as `Omit<TemplatesType, 'ButtonTemplates'>`, collapses to that signature and checks none of the declared templates, so omit from `DeclaredTemplatesType` instead, and add `CustomTemplateEntries` when the type holds your own templates too. That signature takes a key you omitted unchecked, so declare it again with the type you want, such as a set that has to hold a `FieldTemplate`:
-
-```ts
-import { CustomTemplateEntries, DeclaredTemplatesType } from '@rjsf/utils';
-
-type MyTemplates = Partial<Omit<DeclaredTemplatesType, 'FieldTemplate'>> & {
-  FieldTemplate: DeclaredTemplatesType['FieldTemplate'];
-} & CustomTemplateEntries;
-```
-
-`Pick` keeps the templates it picks checked.
