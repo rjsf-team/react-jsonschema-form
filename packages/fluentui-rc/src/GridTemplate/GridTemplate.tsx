@@ -10,8 +10,7 @@ import type { GridTemplateProps } from '@rjsf/utils';
  * @returns - The CSS template
  */
 function gridTemplate(template: string | number): string {
-  const tracks = Number(template);
-  return !Number.isNaN(tracks) && tracks > 0 ? `repeat(${template}, 1fr)` : String(template);
+  return Number(template) > 0 ? `repeat(${template}, 1fr)` : String(template);
 }
 
 /** Renders a `GridTemplate` for fluentui-rc, which is expecting the column sizing information coming in via the
