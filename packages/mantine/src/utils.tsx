@@ -316,7 +316,7 @@ function isInputContainer(value: unknown): value is NonNullable<InputWrapperProp
  * @param value - The `inputContainer` an option or the theme gives
  * @returns - The `inputContainer`, or `undefined`
  */
-export function asInputContainer(value: unknown): InputWrapperProps['inputContainer'] {
+function asInputContainer(value: unknown): InputWrapperProps['inputContainer'] {
   return isInputContainer(value) ? value : undefined;
 }
 
