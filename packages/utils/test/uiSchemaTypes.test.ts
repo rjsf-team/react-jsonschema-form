@@ -291,6 +291,18 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
     expect(bad).toBeDefined();
   });
 
+  it('leaves the entries open, and the named options closed, for data whose index signature holds unknown values', () => {
+    type Checked = StrictUiSchema<ExampleChecks, Record<string, unknown>>;
+
+    const ui: Checked = { 'ui:title': 'Open', 'ui:undeclared': true, foo: { 'ui:title': 'Foo' } };
+    // @ts-expect-error a name no Checks member declares is still rejected
+    const bad: Checked = { 'ui:widget': 'NotAWidget' };
+
+    expectTypeOf(ui.foo).toBeUnknown();
+    expect(ui.foo).toEqual({ 'ui:title': 'Foo' });
+    expect(bad).toBeDefined();
+  });
+
   it('rejects form data passed where Checks goes', () => {
     // @ts-expect-error TS2344, Data is not a UiOptionsCheck; Checks comes before the form data
     type Swapped = StrictUiSchema<Data>;
