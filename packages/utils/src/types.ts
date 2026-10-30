@@ -1279,16 +1279,16 @@ export type FieldTemplateProps<
   /** Callback used to handle the changing of an additional property key's name with the new value. Undefined for a
    * field that isn't an additional property
    */
-  onKeyRename?: (newKey: string) => void;
+  onKeyRename?: FieldProps<T, S, F>['onKeyRename'];
   /** Callback used to handle the changing of an additional property key's name when the input is blurred. The event's
    * target's value will be used as the new value. Its a wrapper callback around `onKeyRename`. Undefined for a field
    * that isn't an additional property
    */
-  onKeyRenameBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+  onKeyRenameBlur?: FieldProps<T, S, F>['onKeyRenameBlur'];
   /** Callback used to handle the removal of the additionalProperty. Undefined for a field that isn't an additional
    * property
    */
-  onRemoveProperty?: () => void;
+  onRemoveProperty?: FieldProps<T, S, F>['onRemoveProperty'];
   /** The key names an `additionalProperties` property is allowed to be renamed to, derived from the parent schema's
    * `propertyNames.enum` and narrowed to the names its siblings have not already taken. Undefined when the parent
    * schema does not constrain its property names
