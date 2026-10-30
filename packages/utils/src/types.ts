@@ -2140,9 +2140,9 @@ type UnionMembersMerged<T> = {
 /** The data an `additionalProperties` key holds: what `T`'s index signature declares, or `unknown` when it has none */
 type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullable<T>[string] : unknown;
 
-/** A nested field entry. For unknown data the entry is unconstrained, as the open index signature it replaces was, and
- * reads back as `unknown`: the loose `UiSchema` can't stand in, since the string index signature it would sit under
- * also covers the `ui:` keys, whose values aren't uiSchemas
+/** A nested field entry. For unknown data the entry is unconstrained and reads back as `unknown`: the loose `UiSchema`
+ * can't stand in, since the string index signature it would sit under also covers the `ui:` keys, whose values aren't
+ * uiSchemas
  */
 type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? unknown : UiSchema<V, S, F>;
