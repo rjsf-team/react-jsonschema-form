@@ -4,10 +4,10 @@ import type {
   FieldPathList,
   FormContextType,
   GenericObjectType,
+  StrictRJSFSchema,
   RJSFSchema,
   SchemaContext,
   SchemaUtilsType,
-  StrictRJSFSchema,
   UiSchema,
   ValidationData,
 } from '@rjsf/utils';

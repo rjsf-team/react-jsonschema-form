@@ -1,12 +1,12 @@
 import type { ComponentType, ReactNode } from 'react';
 import { useCallback, useMemo } from 'react';
 import type {
-  FieldPath,
   FieldProps,
+  FieldPath,
   FormContextType,
   GenericObjectType,
-  Registry,
   RJSFSchema,
+  Registry,
   StrictRJSFSchema,
   UiSchema,
 } from '@rjsf/utils';
