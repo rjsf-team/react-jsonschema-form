@@ -47,7 +47,7 @@ export default function BaseInputTemplate<
   const control = useControlState<T, S, F>({ disabled, readonly, registry });
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const handleNumberChange = (nextValue: number | null) => onChange(nextValue ?? options.emptyValue);
+  const handleNumberChange = (nextValue: unknown) => onChange(nextValue ?? options.emptyValue);
 
   const handleTextChange =
     onChangeOverride ??
@@ -72,9 +72,9 @@ export default function BaseInputTemplate<
   // receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
   const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
 
-  // A numeric string shows too, as a string field that `ui:inputType: 'number'` renders here stores one
-  const parsedValue = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
-  const numberValue = typeof parsedValue === 'number' && !Number.isNaN(parsedValue) ? parsedValue : undefined;
+  // A string is handed over as it is, as a string field that `ui:inputType: 'number'` renders here stores one, and
+  // `InputNumber` keeps the digits a conversion to a number would round
+  const numberValue = typeof value === 'number' || typeof value === 'string' ? value : undefined;
 
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
