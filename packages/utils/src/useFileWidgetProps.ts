@@ -127,13 +127,12 @@ export default function useFileWidgetProps(
   multiple = false,
 ): UseFileWidgetPropsResult {
   const stored = useMemo(() => storedItems(value), [value]);
-  const values = useMemo(() => (multiple ? stored : []), [stored, multiple]);
   const { filesInfo, itemIndexes } = useMemo(() => extractFileInfo(stored), [stored]);
 
   const handleChange = useCallback(
     async (files: FileList | File[]) => {
       if (files.length === 0) {
-        // An empty selection is a cleared input, not an empty append; `values.concat()` below would silently keep the
+        // An empty selection is a cleared input, not an empty append; `stored.concat()` below would silently keep the
         // existing files
         onChange(multiple ? [] : undefined);
         return;
@@ -141,24 +140,24 @@ export default function useFileWidgetProps(
       const filesInfoEvent = await processFiles(files);
       const newValue = filesInfoEvent.map((fileInfo) => fileInfo.dataURL || null);
       if (multiple) {
-        onChange(values.concat(...newValue));
+        onChange(stored.concat(...newValue));
       } else {
         onChange(newValue[0]);
       }
     },
-    [values, multiple, onChange],
+    [stored, multiple, onChange],
   );
   const handleRemove = useCallback(
     (index: number) => {
       if (multiple) {
         // `index` counts the files shown, which skip the items that aren't readable
         const itemIndex = itemIndexes[index];
-        onChange(values.filter((_, i: number) => i !== itemIndex));
+        onChange(stored.filter((_, i: number) => i !== itemIndex));
       } else {
         onChange(undefined);
       }
     },
-    [values, itemIndexes, multiple, onChange],
+    [stored, itemIndexes, multiple, onChange],
   );
 
   return { filesInfo, handleChange, handleRemove };
