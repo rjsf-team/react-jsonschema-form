@@ -58,16 +58,14 @@ export default function RatingWidget<
   );
 
   const min = schema.minimum ?? 0;
-  const numStars = Math.floor(
-    Math.max(Math.min(withoutFloatNoise((schema.maximum ?? Infinity) - min + 1), stars, 5), 1),
-  );
-  const starValues = Array.from({ length: numStars }, (_, index) => withoutFloatNoise(min + index));
-  // The checked star, as `RadioWidget` gives it its checked radio, else the first
   // A rating stored as a numeric string fills its stars too, as the comparison with the raw value always did
   const numericValue = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
   const rating = typeof numericValue === 'number' && Number.isFinite(numericValue) ? numericValue : undefined;
-  const autofocusIndex =
-    rating === undefined ? 0 : Math.max(Array.from({ length: numStars }, (_, index) => min + index).indexOf(rating), 0);
+  // The checked star, as `RadioWidget` gives it its checked radio, else the first
+  const autofocusIndex = Math.max(
+    Array.from({ length: numStars }, (_, index) => min + index).findIndex((starValue) => starValue === rating),
+    0,
+  );
   // React acts on `autoFocus` only for a form control, which a star isn't, so the star takes focus as it mounts, in the
   // same commit phase as `autoFocus` would give it, and not when `ui:autofocus` turns on later. A disabled or read-only
   // rating takes none, as its stars are out of the tab order
