@@ -92,42 +92,42 @@ const POSITIONAL_KEYWORDS = new Set<string>([ITEMS_KEY, 'prefixItems']);
  * @param option - The option
  * @returns - The two met into one schema
  */
-function meetSchemas(parent: object, option: object): GenericObjectType {
-  const result: GenericObjectType = { ...parent, ...option };
-  const takesOptionConditional = CONDITIONAL_KEYWORDS.some((key) => Reflect.get(option, key) !== undefined);
-  for (const [key, optionValue] of Object.entries(option)) {
+function meetSchemas(parent: GenericObjectType, option: object): GenericObjectType {
+  // The copy reads as a record of keywords whatever the option's type, and as an empty one for a boolean option
+  const declared: GenericObjectType = { ...option };
+  const result: GenericObjectType = { ...parent, ...declared };
+  const takesOptionConditional = CONDITIONAL_KEYWORDS.some((key) => declared[key] !== undefined);
+  for (const [key, optionValue] of Object.entries(declared)) {
     if (optionValue === undefined) {
       // A key holding `undefined`, as one built in code does for a limit left unset, declares nothing
       if (Object.hasOwn(parent, key)) {
-        result[key] = Reflect.get(parent, key);
+        result[key] = parent[key];
       } else {
         delete result[key];
       }
     } else if (Object.hasOwn(parent, key) && !CONDITIONAL_KEYWORDS.includes(key)) {
-      result[key] = meetKeyword(key, Reflect.get(parent, key), optionValue);
+      result[key] = meetKeyword(key, parent[key], optionValue);
     }
   }
   // A single `items` schema applies to every item, so beside a tuple it also describes the items past it, which the
   // tuple's `additionalItems` describes. A tuple declaring no `additionalItems` is one `ArrayField` offers no Add for,
   // so it gets none here either
-  const parentItems: unknown = Reflect.get(parent, ITEMS_KEY);
-  const optionItems: unknown = Reflect.get(option, ITEMS_KEY);
-  const parentAdditionalItems: unknown = Reflect.get(parent, 'additionalItems');
-  const optionAdditionalItems: unknown = Reflect.get(option, 'additionalItems');
+  const parentItems = parent[ITEMS_KEY];
+  const optionItems = declared[ITEMS_KEY];
   if (
     Array.isArray(parentItems) &&
-    parentAdditionalItems !== undefined &&
+    parent.additionalItems !== undefined &&
     optionItems !== undefined &&
     optionItems !== true &&
     !Array.isArray(optionItems)
   ) {
-    result.additionalItems = meetSubschema(parentAdditionalItems, optionItems);
-  } else if (isObject(parentItems) && Array.isArray(optionItems) && optionAdditionalItems !== undefined) {
-    result.additionalItems = meetSubschema(parentItems, optionAdditionalItems);
+    result.additionalItems = meetSubschema(parent.additionalItems, optionItems);
+  } else if (isObject(parentItems) && Array.isArray(optionItems) && declared.additionalItems !== undefined) {
+    result.additionalItems = meetSubschema(parentItems, declared.additionalItems);
   }
   if (takesOptionConditional) {
     for (const key of CONDITIONAL_KEYWORDS) {
-      if (Reflect.get(option, key) === undefined) {
+      if (declared[key] === undefined) {
         delete result[key];
       }
     }
