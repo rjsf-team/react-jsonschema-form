@@ -1802,8 +1802,8 @@ function keepClears(derived: unknown, written: unknown, cleared: unknown): unkno
 /** The data whose clears `change` keeps, laid out as `written`, the data it wrote; see `keepClears()`. A field's own
  * edit keeps the committed data's clears and its own: a container it writes, as an option switch writes one, keeps
  * only the clears the committed data held there, under the keys the edit moved them to, since the `undefined` a switch
- * leaves is for the defaults to fill. Data written from outside, as `setFieldValue()` writes
- * it, is left to its defaults, and the clears elsewhere stay. A `transformChange` rewrite keeps those its edit kept
+ * leaves is for the defaults to fill. Data written from outside, as `setFieldValue()` writes it, is left to its
+ * defaults, and the clears elsewhere stay. A `transformChange` rewrite keeps those its edit kept
  *
  * @param change - The change
  * @param committed - The data before the change
@@ -1908,7 +1908,6 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
       const isArrayItem = typeof path[path.length - 1] === 'number';
       setByPath(formData, path, newValue === undefined && isArrayItem ? null : newValue);
     }
-    const written = formData;
     // Only the data and its context are derived here; the errors are reconciled below. A root write is sanitized only
     // where it stands for an edit, as the data a `transformChange` writes over one does. The `undefined` a clear leaves
     // is stripped from the copy the validator gets, so AJV never sees `{ [key]: undefined }` for a `string` field
@@ -1921,7 +1920,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
         isSanitized: editedPath !== undefined && !disabled && !readonly,
         edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
         heldPath: heldPathOf(change),
-        clears: clearsOf(change, oldFormData, written, path),
+        clears: clearsOf(change, oldFormData, formData, path),
       },
       props,
     );
