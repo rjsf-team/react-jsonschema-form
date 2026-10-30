@@ -27,7 +27,7 @@ export type AdditionalPropertyKeySelectProps<
    */
   propertyNamesEnum: string[];
   /** Callback used to rename the property to the newly selected key name, which a template hands on from its
-   * `FieldTemplateProps`, where it is undefined for a field that isn't an additional property
+   * `FieldTemplateProps`, where it is undefined for a field `ObjectField` doesn't render
    */
   onKeyRename?: (newKey: string) => void;
   /** The attributes the errors its row shows give the key, from `getAdditionalKeyAttributes()` */

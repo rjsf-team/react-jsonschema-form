@@ -66,13 +66,13 @@ that label where `hideLabel` leaves it to the select, or else names the select b
 - label: string - The computed label for the key, as a string
 - value: string - The current key of the property, which is the selected option
 - propertyNamesEnum: string[] - The key names the property is allowed to take
-- onKeyRename: (newKey: string) => void - Callback used to rename the property to the newly selected key name
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
 - [className]: string - Optional class name given to the rendered widget, for a theme that styles the key control itself
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [errorAttributes]: Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'> - Optional attributes the errors its row shows give the key, from [getAdditionalKeyAttributes()](#getadditionalkeyattributes)
 - [hideLabel]: boolean - Optional flag, if true, the widget renders no label of its own, for themes that render one themselves
 - [labelledByTemplate]: boolean - Optional flag, if true, the template draws the key's label beside the widget, with a `for` naming its `id`, so the widget is given no `aria-label` over it
+- [onKeyRename]: (newKey: string) => void - Optional callback used to rename the property to the newly selected key name
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
 - [required]: boolean - Optional flag, if true, the widget is required
 
