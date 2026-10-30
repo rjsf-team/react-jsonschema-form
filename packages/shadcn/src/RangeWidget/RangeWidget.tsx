@@ -30,12 +30,12 @@ const allowedProps = [
  * A range widget component that renders a slider for number input. The slider's thumb, the element a user focuses,
  * carries the field's id and plan
  * @param {object} props - The widget properties
- * @param {number} props.value - The current value of the range
+ * @param {unknown} props.value - The current value of the range
  * @param {boolean} props.readonly - Whether the widget is read-only
  * @param {boolean} props.disabled - Whether the widget is disabled
  * @param {object} props.options - Additional options for the widget
  * @param props.schema - The JSON schema for this field
- * @param {(value: any) => void} props.onChange - Callback for when the value changes
+ * @param {(value: unknown) => void} props.onChange - Callback for when the value changes
  * @param props.onBlur - Callback for when the thumb loses focus
  * @param props.onFocus - Callback for when the thumb gains focus
  * @param {string} props.id - The unique identifier for the widget

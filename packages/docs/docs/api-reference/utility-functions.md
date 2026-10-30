@@ -113,7 +113,7 @@ Without its field's plan, `hideLabel` turns it off as well, and it renders under
 #### Props
 
 - id: string - The id of the widget, from which the description's own id is derived
-- value: any - The currently selected value, matched against the `enumOptions` to find the option
+- value: unknown - The currently selected value, matched against the `enumOptions` to find the option
 - options: WidgetProps['options'] - The widget's options, whose `enumOptions` carry each option's schema
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `DescriptionFieldTemplate` is resolved
 - [uiSchema]: UiSchema&lt;T, S, F> - The uiSchema for the field, read for the `label` option
