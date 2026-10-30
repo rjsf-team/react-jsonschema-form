@@ -74,7 +74,7 @@ export const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES
 /** Every keyword that constrains the value, for the reasons the first two lists above give. They are only ever
  * consulted together, once per key a schema holds, so they are consulted as one.
  */
-export const CONSTRAINING_KEYWORDS = new Set<string>([...VALUE_KEYWORDS, ...SUBSCHEMA_KEYWORDS]);
+const CONSTRAINING_KEYWORDS = new Set<string>([...VALUE_KEYWORDS, ...SUBSCHEMA_KEYWORDS]);
 
 /** Whether `keyword` of a schema constrains the value it describes, directly or by way of other subschemas. `type` does
  * not count, nor does an annotation, an identifier, a container such as `$defs`, a `discriminator` or any keyword

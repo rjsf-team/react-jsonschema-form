@@ -11,7 +11,7 @@ import {
   holdsDeclaredKey,
   scoringTarget,
 } from './graph/validationTargets.ts';
-import { CONSTRAINING_KEYWORDS } from './schemaKeywords.ts';
+import { constrainsValue } from './schemaKeywords.ts';
 
 /** An option as matching reads it: the node it stands for, or a boolean option given as one */
 export type OptionNode<S extends StrictRJSFSchema = RJSFSchema> = AdoptedSchema<S> | boolean;
@@ -65,7 +65,7 @@ function statedValues<S extends StrictRJSFSchema = RJSFSchema>(
   if (Array.isArray(enumValues)) {
     return [enumValues];
   }
-  const constrains = Object.keys(raw).some((key) => CONSTRAINING_KEYWORDS.has(key));
+  const constrains = Object.keys(raw).some(constrainsValue);
   return constrains || !typeAllows(raw.type, value) ? undefined : [];
 }
 

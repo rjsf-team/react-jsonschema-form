@@ -66,12 +66,7 @@ import { childField, collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
 import { schemaFrom, schemaOfBoolean } from './graph/schemaFrom.ts';
 import { pointerTo, withVariantId } from './graph/validationTargets.ts';
-import {
-  CONSTRAINING_KEYWORDS,
-  EXCLUDED_STUB_KEYWORDS,
-  EXTRA_KEY_KEYWORDS,
-  UNSTUBBABLE_KEYWORDS,
-} from './schemaKeywords.ts';
+import { constrainsValue, EXCLUDED_STUB_KEYWORDS, EXTRA_KEY_KEYWORDS, UNSTUBBABLE_KEYWORDS } from './schemaKeywords.ts';
 
 /** Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies`
  * and patterns merged in for the `rawFormData`, and the extra keys of that data stubbed among its `properties`. The
@@ -992,9 +987,9 @@ function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S):
  * data, which would re-seed a field of the data's type with a value it cannot hold.
  *
  * The stub is marked as guessed when the schema puts no constraint on the property at all, i.e. it is `true` or has
- * none of the `CONSTRAINING_KEYWORDS`. That marker tells the fallback UI the property is free to hold any other type,
+ * no keyword `constrainsValue()` accepts. That marker tells the fallback UI the property is free to hold any other type,
  * so a schema that constrains the value must not carry it, or the UI would offer types that schema rejects. Any other
- * keyword — an annotation, an identifier, a container such as `$defs`, or one `CONSTRAINING_KEYWORDS` does not know —
+ * keyword — an annotation, an identifier, a container such as `$defs`, or one `constrainsValue()` does not know —
  * leaves the property unconstrained, so an unfamiliar keyword never locks the type in place.
  *
  * @param formData - The form data held by the additional property
@@ -1006,7 +1001,7 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
   const schema: GenericObjectType = { ...subSchema };
   let isConstrained = false;
   Object.entries(subSchema).forEach(([key, value]) => {
-    if (CONSTRAINING_KEYWORDS.has(key)) {
+    if (constrainsValue(key)) {
       isConstrained = true;
     }
     const isForeignDefault = key === 'default' && guessType(value) !== type;
