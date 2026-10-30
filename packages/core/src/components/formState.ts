@@ -1802,8 +1802,9 @@ function keepClears(derived: unknown, written: unknown, cleared: unknown): unkno
 /** The data whose clears `change` keeps, laid out as `written`, the data it wrote; see `keepClears()`. A field's own
  * edit keeps the committed data's clears and its own: a container it writes, as an option switch writes one, keeps
  * only the clears the committed data held there, under the keys the edit moved them to, since the `undefined` a switch
- * leaves is for the defaults to fill. Data written from outside, as `setFieldValue()` writes it, is left to its
- * defaults, and the clears elsewhere stay. A `transformChange` rewrite keeps those its edit kept
+ * leaves is for the defaults to fill. A switch that leaves the field itself without a value, as one between scalar
+ * options does, and data written from outside, as `setFieldValue()` writes it, are left to their defaults, and the
+ * clears elsewhere stay. A `transformChange` rewrite keeps those its edit kept
  *
  * @param change - The change
  * @param committed - The data before the change
@@ -1815,7 +1816,9 @@ function clearsOf<T>(change: FieldChange<T>, committed: T | undefined, written: 
   if (change.editedPath) {
     return change.editedData;
   }
-  if (!change.isFieldEdit) {
+  const { newValue, newKeyOf } = change;
+  const writesContainer = isObject(newValue) || Array.isArray(newValue);
+  if (!change.isFieldEdit || (newKeyOf && !writesContainer)) {
     if (path.length === 0) {
       return undefined;
     }
@@ -1823,8 +1826,7 @@ function clearsOf<T>(change: FieldChange<T>, committed: T | undefined, written: 
     unsetByPath(elsewhere, path);
     return elsewhere;
   }
-  const { newValue, newKeyOf } = change;
-  if (!isObject(newValue) && !Array.isArray(newValue)) {
+  if (!writesContainer) {
     return written;
   }
   const committedAtPath = getAt<unknown>(committed, path);
