@@ -78,7 +78,7 @@ export function getMuiProps<
 >(options: UIOptionsType<T, S, F>, propsToFilter?: string[], rjsfSlotPropsOnly?: boolean): P {
   const muiProps = (options?.mui as P) || ({} as P);
   if (rjsfSlotPropsOnly) {
-    const rjsfSlotProps: unknown = Reflect.get(muiProps, 'rjsfSlotProps');
+    const { rjsfSlotProps }: { rjsfSlotProps?: unknown } = muiProps;
     return { rjsfSlotProps } as unknown as P;
   }
   if (propsToFilter) {
