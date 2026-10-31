@@ -311,15 +311,6 @@ function isInputContainer(value: unknown): value is NonNullable<InputWrapperProp
   return typeof value === 'function';
 }
 
-/** Returns `value` when it is an `inputContainer`, see `isInputContainer()`, else `undefined`
- *
- * @param value - The `inputContainer` an option or the theme gives
- * @returns - The `inputContainer`, or `undefined`
- */
-function asInputContainer(value: unknown): InputWrapperProps['inputContainer'] {
-  return isInputContainer(value) ? value : undefined;
-}
-
 /** The id `ownProps` give an element, or `fallback` where they give none */
 function ownIdOr(ownProps: GenericObjectType | undefined, fallback: string): string {
   const ownId: unknown = ownProps?.id;
@@ -667,10 +658,11 @@ export function useFieldWrapperProps<
   const error = getWidgetError<T, S, F>(widgetProps);
   const ownSuccessProps = asObject(resolved.successProps);
   const successId = ownIdOr(ownSuccessProps, partId(id, 'success'));
+  const ownInputContainer = isInputContainer(wrapperProps.inputContainer) ? wrapperProps.inputContainer : undefined;
   return {
     wrapperProps: {
       ...wrapperProps,
-      inputContainer: containerOnInputs ? renderChildren : asInputContainer(wrapperProps.inputContainer),
+      inputContainer: containerOnInputs ? renderChildren : ownInputContainer,
       label: labelValue(label || undefined, hideLabel, false),
       labelProps: { ...asObject(resolved.labelProps), id: titleId(id), htmlFor: undefined },
       required,
