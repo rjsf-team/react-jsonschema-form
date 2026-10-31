@@ -1,5 +1,5 @@
 import { createRef, useRef, useState } from 'react';
-import type { RJSFSchema } from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
@@ -423,7 +423,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       const outerOnSubmit = vi.fn();
       const innerRef = createRef<HTMLDivElement>();
 
-      const ArrayTemplateWithForm = (_props: FormProps) => {
+      const ArrayTemplateWithForm = (_props: ArrayFieldTemplateProps) => {
         const innerFormProps = {
           validator,
           schema: {},

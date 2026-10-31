@@ -220,6 +220,10 @@ const mockFileReader = {
 describe('ArrayField', () => {
   // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
   const CustomComponent = (props: WidgetProps) => <div id='custom'>{props.rawErrors}</div>;
+  const CustomArrayTemplate = (props: ArrayFieldTemplateProps) => (
+    // oxlint-disable-next-line typescript/no-deprecated -- the test pins that this deprecated prop still arrives
+    <div id='custom'>{props.rawErrors}</div>
+  );
 
   const CustomSelectComponent = (props: WidgetProps) => (
     <select>
@@ -484,7 +488,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({
         schema,
         templates: {
-          ArrayFieldTemplate: CustomComponent,
+          ArrayFieldTemplate: CustomArrayTemplate,
         },
         initialFormData: [1],
         liveValidate: 'onChange',
@@ -1952,7 +1956,7 @@ describe('ArrayField', () => {
     });
 
     it('should pass rawErrors down to every level of custom widgets', async () => {
-      const CustomItem = (props: FieldProps) => <div id='custom-item'>{props.children}</div>;
+      const CustomItem = (props: ArrayFieldItemTemplateProps) => <div id='custom-item'>{props.children}</div>;
       const CustomTemplate = (props: ArrayFieldTemplateProps) => (
         <div id='custom'>
           {props.items}
