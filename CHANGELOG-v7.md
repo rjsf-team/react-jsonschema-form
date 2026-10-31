@@ -60,7 +60,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Fix `ObjectFieldTemplate` giving a column to a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget: it now leaves the property out, as it does one with its own `ui:widget: 'hidden'`. See [`@rjsf/antd` and `@rjsf/mantine` leave out a property hidden by `deprecatedHandling` or `ui:definitions`](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#rjsfantd-and-rjsfmantine-leave-out-a-property-hidden-by-deprecatedhandling-or-uidefinitions-breaking-change) ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `AltDateWidget` computing a `NaN` gutter for a `formContext.rowGutter` that isn't a number: it spaces its date parts by half the horizontal gutter of a `[horizontal, vertical]` pair, and by the default for any other ([#5686](https://github.com/rjsf-team/react-jsonschema-form/pull/5686))
-- Export `AntdFormContext`, the `formContext` options the antd theme reads, and list them all in the antd docs ([#5686](https://github.com/rjsf-team/react-jsonschema-form/pull/5686))
+- Add the `AntdFormContext` type, the `formContext` options the antd theme reads, and list them all in the antd docs ([#5686](https://github.com/rjsf-team/react-jsonschema-form/pull/5686))
 
 ## @rjsf/bootstrap3
 
