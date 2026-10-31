@@ -27,7 +27,7 @@ import type { ValidationError } from 'ata-validator';
 import type { SuppressDuplicateFilteringType } from './types.ts';
 
 /** The raw validation results of the engine, before conversion into RJSF's error formats */
-export type RawValidationErrorsType<E = ValidationError> = RawValidationResult<E>;
+export type RawValidationErrorsType = RawValidationResult<ValidationError>;
 
 /** Filters duplicate errors from `anyOf`/`oneOf` schema paths according to
  * the `suppressDuplicateFiltering` flag. Mirrors the `@rjsf/validator-ajv8`

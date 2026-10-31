@@ -27,7 +27,7 @@ import type { ErrorObject } from 'ajv';
 import type { SuppressDuplicateFilteringType } from './types.ts';
 
 /** The raw validation results of the engine, before conversion into RJSF's error formats */
-export type RawValidationErrorsType<E = ErrorObject> = RawValidationResult<E>;
+export type RawValidationErrorsType = RawValidationResult<ErrorObject>;
 
 /** Filters duplicate errors from `anyOf`/`oneOf` schema paths according to the `suppressDuplicateFiltering` flag.
  *
