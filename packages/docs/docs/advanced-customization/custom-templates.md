@@ -297,7 +297,7 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 - `onRemoveItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that removes the item from the list.
 - `onMoveUpItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that moves the item up one spot in the list
 - `onMoveDownItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that moves the item down one spot in the list
-- `readonly`: A boolean value stating if the array item is read-only.
+- `readonly`: Whether the array item's buttons are read-only, by the array's lock or the item's own. Its inputs can stay editable, under an item's `ui:readonly: false`.
 - `itemButtonProps`: Props to spread onto each of the item's buttons, keyed by `copy`, `moveDown`, `moveUp` and `remove`, with a key only for the buttons the item can show. Set when the array's [`itemLabel`](../json-schema/arrays.md#itemlabel-option) option names the item, to title the buttons after it, such as `Remove report.pdf`; otherwise undefined. A template that renders its own buttons can spread them too, as in `<button {...itemButtonProps?.remove} onClick={onRemoveItem}>`.
 - `schema`: The schema object for this array item.
 - `style`: The optional style to pass to all of the buttons
