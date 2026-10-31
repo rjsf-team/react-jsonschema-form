@@ -28,7 +28,7 @@ const mockFileReader = {
 } as unknown as FileReader;
 
 function StringFieldTest(props: FieldProps) {
-  const onChangeTest = (newFormData: any, path: FieldPath, errorSchema?: ErrorSchema, id?: string) => {
+  const onChangeTest = (newFormData: unknown, path: FieldPath, errorSchema?: ErrorSchema, id?: string) => {
     const value = newFormData;
     let raiseError = errorSchema;
     if (value !== 'test') {

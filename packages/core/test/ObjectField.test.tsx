@@ -40,7 +40,7 @@ import { TextWidgetTest } from './TextWidgetTest.tsx';
 const user = userEvent.setup();
 
 const ObjectFieldTest = (props: FieldProps) => {
-  const onChangeTest = (newFormData: any, path: FieldPath, errorSchema?: ErrorSchema, id?: string) => {
+  const onChangeTest = (newFormData: unknown, path: FieldPath, errorSchema?: ErrorSchema, id?: string) => {
     let newErrorSchema = errorSchema;
     if (newFormData !== 'test') {
       newErrorSchema = {

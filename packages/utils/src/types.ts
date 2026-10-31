@@ -408,6 +408,7 @@ type ArrayLength = typeof arrayLength;
  * distributes, so a union-typed value (a `oneOf`/`anyOf` property, say) contributes the children of every member it
  * can hold. `any` and `unknown` say nothing about what the data holds, so they contribute unconstrained children.
  */
+// oxlint-disable-next-line typescript/no-explicit-any -- an unknown value's children are unconstrained nodes; with `unknown` the index signature would also have to hold `__errors`, so every untyped read would need narrowing
 type ErrorTreeChildData<V> = unknown extends V ? Record<string, any> : ChildDataOf<NonNullable<V>>;
 
 /** The child data one member of a value type contributes. `V` is naked so the conditional distributes over a union.
@@ -441,7 +442,9 @@ type IsArrayLength<V> = [V] extends [never] ? false : [V] extends [ArrayLength] 
 
 /** A child error node. `any` short-circuits so that data of an unconstrained type keeps an unconstrained node, and the
  * `ArrayLength` an array's `length` holds becomes `never` */
-type ErrorTreeChild<V, Node> = IsAny<V> extends true ? any : IsArrayLength<V> extends true ? never : ErrorTree<V, Node>;
+type ErrorTreeChild<V, Node> =
+  // oxlint-disable-next-line typescript/no-explicit-any -- see `ErrorTreeChildData`: an unconstrained child node stays `any`
+  IsAny<V> extends true ? any : IsArrayLength<V> extends true ? never : ErrorTree<V, Node>;
 
 /** The recursive error tree for data of type `V`, carrying `Node` at every level.
  *

@@ -21,7 +21,7 @@ import Form from '../src/index.ts';
 const enumSchema: RJSFSchema = { type: 'string', enum: ['a', 'b'] };
 
 // Each widget, with the Mantine input it renders, whose theme `defaultProps` the widget resolves as that input does
-const inputs: [string, ComponentType<any>, RJSFSchema, UiSchema?][] = [
+const inputs: [string, ComponentType<{ label: string; error: string }>, RJSFSchema, UiSchema?][] = [
   ['TextInput', TextInput, { type: 'string' }],
   ['NumberInput', NumberInput, { type: 'number' }],
   ['Textarea', Textarea, { type: 'string' }, { 'ui:widget': 'textarea' }],

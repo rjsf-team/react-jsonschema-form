@@ -47,30 +47,30 @@ describe('deepEquals()', () => {
   });
 
   it('does not stack-overflow on self-referential objects', () => {
-    const a: any = { foo: 1 };
+    const a: Record<string, unknown> = { foo: 1 };
     a.self = a;
-    const b: any = { foo: 1 };
+    const b: Record<string, unknown> = { foo: 1 };
     b.self = b;
     expect(() => deepEquals(a, b)).not.toThrow();
     expect(deepEquals(a, b)).toBe(true);
   });
 
   it('detects differences in self-referential objects', () => {
-    const a: any = { foo: 1 };
+    const a: Record<string, unknown> = { foo: 1 };
     a.self = a;
-    const b: any = { foo: 2 };
+    const b: Record<string, unknown> = { foo: 2 };
     b.self = b;
     expect(deepEquals(a, b)).toBe(false);
   });
 
   it('does not stack-overflow on mutually-referential objects', () => {
-    const a1: any = { name: 'a' };
-    const a2: any = { name: 'b' };
+    const a1: Record<string, unknown> = { name: 'a' };
+    const a2: Record<string, unknown> = { name: 'b' };
     a1.partner = a2;
     a2.partner = a1;
 
-    const b1: any = { name: 'a' };
-    const b2: any = { name: 'b' };
+    const b1: Record<string, unknown> = { name: 'a' };
+    const b2: Record<string, unknown> = { name: 'b' };
     b1.partner = b2;
     b2.partner = b1;
 
@@ -79,9 +79,9 @@ describe('deepEquals()', () => {
   });
 
   it('does not stack-overflow on cyclic arrays', () => {
-    const a: any[] = [1];
+    const a: unknown[] = [1];
     a.push(a);
-    const b: any[] = [1];
+    const b: unknown[] = [1];
     b.push(b);
     expect(() => deepEquals(a, b)).not.toThrow();
     expect(deepEquals(a, b)).toBe(true);

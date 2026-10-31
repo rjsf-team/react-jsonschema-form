@@ -15,7 +15,7 @@ import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
 
-const extraErrors = { __errors: ['An error'] } as ErrorSchema;
+const extraErrors: ErrorSchema = { __errors: ['An error'] };
 
 function renderField(schema: RJSFSchema, uiSchema: UiSchema = {}) {
   return render(
@@ -186,7 +186,7 @@ describe('aria-describedby', () => {
             { properties: { b: { type: 'string' } }, required: ['b'] },
           ],
         }}
-        formData={{}}
+        initialFormData={{}}
         validator={validator}
         showErrorList={false}
         noHtml5Validate
@@ -614,16 +614,14 @@ describe('aria-describedby', () => {
           },
         }}
         validator={validator}
-        extraErrors={
-          {
-            list: { __errors: ['List error'] },
-            obj: { __errors: ['Obj error'] },
-            tags: { __errors: ['Tags error'] },
-            files: { __errors: ['Files error'] },
-            custom: { __errors: ['Custom error'] },
-            text: { __errors: ['Text error'] },
-          } as ErrorSchema
-        }
+        extraErrors={{
+          list: { __errors: ['List error'] },
+          obj: { __errors: ['Obj error'] },
+          tags: { __errors: ['Tags error'] },
+          files: { __errors: ['Files error'] },
+          custom: { __errors: ['Custom error'] },
+          text: { __errors: ['Text error'] },
+        }}
         showErrorList={false}
       />,
     );
@@ -664,7 +662,7 @@ describe('aria-describedby', () => {
         <WrappedForm
           schema={{ type: 'object', ...schema }}
           validator={validator}
-          extraErrors={{ __errors: ['Own error'] } as ErrorSchema}
+          extraErrors={{ __errors: ['Own error'] }}
           showErrorList={false}
         />,
       );
@@ -684,7 +682,7 @@ describe('aria-describedby', () => {
         <WrappedForm
           schema={{ type: 'object', properties: { foo: { oneOf: [option, { type: 'number' }] } } }}
           validator={validator}
-          extraErrors={{ foo: { __errors: ['Own error'] } } as ErrorSchema}
+          extraErrors={{ foo: { __errors: ['Own error'] } }}
           showErrorList={false}
         />,
       );
@@ -706,7 +704,7 @@ describe('aria-describedby', () => {
         }}
         uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }}
         validator={validator}
-        extraErrors={{ foo: { __errors: ['Own error'] } } as ErrorSchema}
+        extraErrors={{ foo: { __errors: ['Own error'] } }}
         showErrorList={false}
       />,
     );
@@ -726,7 +724,7 @@ describe('aria-describedby', () => {
           schema={{ type: 'object', properties: { x: schema } }}
           uiSchema={{ x: uiSchema }}
           validator={validator}
-          extraErrors={{ x: { __errors: ['X error'] } } as ErrorSchema}
+          extraErrors={{ x: { __errors: ['X error'] } }}
           showErrorList={false}
         />,
       );
@@ -744,7 +742,7 @@ describe('aria-describedby', () => {
         schema={{ type: 'string' }}
         uiSchema={{ 'ui:options': { inputWrapperOrder: ['label', 'input'] } }}
         validator={validator}
-        extraErrors={{ __errors: ['An error'] } as ErrorSchema}
+        extraErrors={{ __errors: ['An error'] }}
         showErrorList={false}
       />,
     );
@@ -796,7 +794,7 @@ describe('aria-describedby', () => {
           oneOf: [{ properties: { list: { type: 'array', items: { type: 'string' } } } }],
         }}
         validator={validator}
-        extraErrors={{ list: { __errors: ['List error'] } } as ErrorSchema}
+        extraErrors={{ list: { __errors: ['List error'] } }}
         showErrorList={false}
       />,
     );
@@ -813,7 +811,7 @@ describe('aria-describedby', () => {
         fields={{ OwnErrorsField }}
         presentation={{ fields: { OwnErrorsField: { errors: 'self' } } }}
         validator={validator}
-        extraErrors={{ __errors: ['Own error'] } as ErrorSchema}
+        extraErrors={{ __errors: ['Own error'] }}
         showErrorList={false}
       />,
     );
@@ -859,7 +857,7 @@ describe('aria-describedby', () => {
           oneOf: [{ 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['inner'] }] } }],
         }}
         validator={validator}
-        extraErrors={{ inner: { __errors: ['Inner error'] } } as ErrorSchema}
+        extraErrors={{ inner: { __errors: ['Inner error'] } }}
         showErrorList={false}
       />,
     );
@@ -877,7 +875,7 @@ describe('aria-describedby', () => {
         }}
         uiSchema={{ 'ui:field': 'ObjectField', 'ui:fieldReplacesAnyOrOneOf': true }}
         validator={validator}
-        extraErrors={{ __errors: ['Own error'] } as ErrorSchema}
+        extraErrors={{ __errors: ['Own error'] }}
         showErrorList={false}
       />,
     );
@@ -903,7 +901,7 @@ describe('aria-describedby', () => {
             },
           },
         }}
-        formData={{ region: 'DE' }}
+        initialFormData={{ region: 'DE' }}
         validator={validator}
       />,
     );
@@ -927,7 +925,7 @@ describe('aria-describedby', () => {
           },
         }}
         uiSchema={{ region: { 'ui:description': 'Where you live' } }}
-        formData={{ region: 'a' }}
+        initialFormData={{ region: 'a' }}
         validator={validator}
       />,
     );
@@ -962,7 +960,7 @@ describe('aria-describedby', () => {
           },
         }}
         uiSchema={{ region: { ...fieldUiSchema, oneOf: [{}, { 'ui:description': 'Inner desc' }] } }}
-        formData={{ region: 'a' }}
+        initialFormData={{ region: 'a' }}
         validator={validator}
       />,
     );
@@ -987,7 +985,7 @@ describe('aria-describedby', () => {
           },
         }}
         uiSchema={{ x: { 'ui:description': 'Field desc' } }}
-        formData={{ x: true }}
+        initialFormData={{ x: true }}
         validator={validator}
       />,
     );
@@ -1012,7 +1010,7 @@ describe('aria-describedby', () => {
     };
     const selectorDescribedBy = (uiSchema: UiSchema) => {
       const { container, unmount } = render(
-        <WrappedForm schema={schema} uiSchema={uiSchema} formData={{ region: 'a' }} validator={validator} />,
+        <WrappedForm schema={schema} uiSchema={uiSchema} initialFormData={{ region: 'a' }} validator={validator} />,
       );
       const describedBy = container.querySelector('#root_region__oneof_select')!.getAttribute('aria-describedby');
       unmount();
@@ -1044,7 +1042,7 @@ describe('aria-describedby', () => {
           },
         }}
         uiSchema={{ region: { 'ui:widget': 'range', 'ui:description': 'Where you live', oneOf: [{}, {}] } }}
-        formData={{ region: 'a' }}
+        initialFormData={{ region: 'a' }}
         validator={validator}
       />,
     );

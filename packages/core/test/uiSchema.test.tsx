@@ -637,7 +637,7 @@ describe('uiSchema', () => {
   });
 
   describe('ui:focus', () => {
-    function shouldFocus(schema: RJSFSchema, uiSchema: UiSchema, selector = 'input', formData?: any) {
+    function shouldFocus(schema: RJSFSchema, uiSchema: UiSchema, selector = 'input', formData?: unknown) {
       const props: GenericObjectType = {
         validator,
         schema,

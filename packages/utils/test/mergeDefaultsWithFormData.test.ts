@@ -54,7 +54,7 @@ describe('mergeDefaultsWithFormData()', () => {
 
   it('shouldn`t mutate the provided objects', () => {
     const obj1 = { a: 1 };
-    mergeDefaultsWithFormData<any>(obj1, { b: 2 });
+    mergeDefaultsWithFormData<object>(obj1, { b: 2 });
     expect(obj1).toEqual({ a: 1 });
   });
 
@@ -163,7 +163,7 @@ describe('mergeDefaultsWithFormData()', () => {
       },
       c: 3,
     };
-    expect(mergeDefaultsWithFormData<any>(obj1, obj2)).toEqual(expected);
+    expect(mergeDefaultsWithFormData<object>(obj1, obj2)).toEqual(expected);
   });
 
   it('should recursively merge deeply nested objects, including extra array data', () => {
@@ -198,7 +198,7 @@ describe('mergeDefaultsWithFormData()', () => {
       },
       c: 3,
     };
-    expect(mergeDefaultsWithFormData<any>(obj1, obj2, true)).toEqual(expected);
+    expect(mergeDefaultsWithFormData<object>(obj1, obj2, true)).toEqual(expected);
   });
 
   it('should recursively merge File objects', () => {
@@ -221,15 +221,16 @@ describe('mergeDefaultsWithFormData()', () => {
   });
 
   it('should not merge a scalar default into object formData as index keys', () => {
-    expect(mergeDefaultsWithFormData<any>('x', { b: 2 })).toEqual({ b: 2 });
+    // oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- `<unknown>` keeps `T` from being inferred from the scalar, array or null default alone
+    expect(mergeDefaultsWithFormData<unknown>('x', { b: 2 })).toEqual({ b: 2 });
   });
 
   it('should not merge an array default into object formData as index keys', () => {
-    expect(mergeDefaultsWithFormData<any>([1, 2], { b: 2 })).toEqual({ b: 2 });
+    expect(mergeDefaultsWithFormData<object>([1, 2], { b: 2 })).toEqual({ b: 2 });
   });
 
   it('should not merge a nested array default into nested object formData as index keys', () => {
-    expect(mergeDefaultsWithFormData<any>({ a: [1, 2] }, { a: { x: 1 } })).toEqual({ a: { x: 1 } });
+    expect(mergeDefaultsWithFormData<object>({ a: [1, 2] }, { a: { x: 1 } })).toEqual({ a: { x: 1 } });
   });
 
   describe('test with overrideFormDataWithDefaults set to true', () => {
@@ -347,7 +348,7 @@ describe('mergeDefaultsWithFormData()', () => {
         },
         c: 2,
       };
-      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+      expect(mergeDefaultsWithFormData<object>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
     it('should recursively merge deeply nested objects, including extra array data', () => {
@@ -384,13 +385,13 @@ describe('mergeDefaultsWithFormData()', () => {
         c: 2,
         d: 4,
       };
-      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+      expect(mergeDefaultsWithFormData<object>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
     it('should deeply merge an array that sits under an object key', () => {
       const defaults = { outer: { rows: [{ name: 'Name', grade: 'A' }] } };
       const formData = { outer: { rows: [{ name: 'Name' }] } };
-      expect(mergeDefaultsWithFormData<any>(defaults, formData, true, false, true)).toEqual({
+      expect(mergeDefaultsWithFormData<object>(defaults, formData, true, false, true)).toEqual({
         outer: { rows: [{ name: 'Name', grade: 'A' }] },
       });
     });
@@ -412,7 +413,8 @@ describe('mergeDefaultsWithFormData()', () => {
       ['null', null],
       ['number', 5],
     ])('should keep object formData over a %s default', (_, defaults) => {
-      expect(mergeDefaultsWithFormData<any>(defaults, { b: 2 }, true, false, true)).toEqual({ b: 2 });
+      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- `<unknown>` keeps `T` from being inferred from the scalar, array or null default alone
+      expect(mergeDefaultsWithFormData<unknown>(defaults, { b: 2 }, true, false, true)).toEqual({ b: 2 });
     });
 
     it.each([
@@ -420,7 +422,7 @@ describe('mergeDefaultsWithFormData()', () => {
       ['number', { a: 5 }],
       ['array', { a: [1, 2] }],
     ])('should keep nested object formData over a nested %s default', (_, defaults) => {
-      expect(mergeDefaultsWithFormData<any>(defaults, { a: { x: 1 } }, true, false, true)).toEqual({ a: { x: 1 } });
+      expect(mergeDefaultsWithFormData<object>(defaults, { a: { x: 1 } }, true, false, true)).toEqual({ a: { x: 1 } });
     });
 
     it.each([

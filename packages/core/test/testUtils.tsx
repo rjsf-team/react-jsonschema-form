@@ -1,6 +1,6 @@
 import type { ComponentType, ReactNode, RefObject } from 'react';
 import { Activity, createRef, useEffect, useState } from 'react';
-import type { GenericObjectType, ValidatorType, WidgetProps } from '@rjsf/utils';
+import type { ValidatorType, WidgetProps } from '@rjsf/utils';
 import { toInputValue } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, fireEvent } from '@testing-library/react';
@@ -211,7 +211,7 @@ export function TransformingParent<T>({
   );
 }
 
-export function renderNode(Component: ComponentType<any>, props: GenericObjectType) {
+export function renderNode<P extends object>(Component: ComponentType<P>, props: P) {
   const { container } = render(<Component {...props} />);
   const node = container.firstElementChild;
   return { node };
@@ -312,7 +312,7 @@ export function getSelectedOptionValue(selectNode: HTMLSelectElement) {
   return selectedOptions;
 }
 
-export function expectToHaveBeenCalledWithFormData(mock: any, formData: any, secondValue?: string | true) {
+export function expectToHaveBeenCalledWithFormData(mock: Mock, formData: unknown, secondValue?: string | true) {
   const secondParam = typeof secondValue === 'boolean' ? expect.objectContaining({ type: 'submit' }) : secondValue;
   if (secondParam !== undefined) {
     expect(mock).toHaveBeenLastCalledWith(expect.objectContaining({ formData }), secondParam);
