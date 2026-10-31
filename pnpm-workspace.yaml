@@ -24,7 +24,6 @@ packageExtensions:
 virtualStoreType: global
 
 minimumReleaseAgeExclude:
-  - vite@8.3.2
   - ata-validator@1.56.0
   - '@ata-validator/native-darwin-arm64@1.56.0'
   - '@ata-validator/native-darwin-x64@1.56.0'
