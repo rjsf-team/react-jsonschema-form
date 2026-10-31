@@ -63,6 +63,8 @@ export type CoreUiOptionsChecks =
         autocapitalize?: HTMLInputElement['autocapitalize'];
         emptyValue?: string;
         filePreview?: boolean;
+        accept?: string | string[];
+        yearsRange?: number[];
         inline?: boolean;
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
