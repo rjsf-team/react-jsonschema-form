@@ -423,6 +423,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked and focuses it, as a number does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Treat a `LayoutGridField` cell whose `name` is neither a string nor a number as a cell without one, so its `render` component renders where nothing did ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
+- **BREAKING CHANGE:** Change the values of the exported `GridProps` and of an object `LayoutGridSchemaType` from `any` to `unknown`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 
 ## @rjsf/daisyui
 

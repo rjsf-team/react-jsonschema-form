@@ -2564,7 +2564,7 @@ When merging defaults and form data, we want to merge in this specific way:
 
 - T | undefined: The resulting merged form data with defaults
 
-### mergeObjects()
+### mergeObjects&lt;R extends object = GenericObjectType>() {#mergeobjects}
 
 Recursively merge deeply nested objects.
 
@@ -2578,7 +2578,7 @@ Recursively merge deeply nested objects.
 
 - R: A new object that is the merge of the two given objects, typed as the `R` its caller passes as a type argument, `GenericObjectType` by default. `R` is an assertion: nothing checks the merged object against it, so name only what you know the merge holds, as you would with an `as`
 
-### mergeSchemas()
+### mergeSchemas&lt;R extends object = GenericObjectType>() {#mergeschemas}
 
 Recursively merge deeply nested schemas.
 The difference between mergeSchemas and mergeObjects is that mergeSchemas only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values. NOTE: Uses shallow comparison for the duplicate checking.
