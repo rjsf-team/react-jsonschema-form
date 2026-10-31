@@ -110,7 +110,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `disabled`: A boolean value stating if the array is disabled.
 - `id`: The id of the field in the hierarchy.
 - `items`: An array of React nodes representing the items in the array.
-- `onAddClick: (event?) => void`: A function that adds a new item to the end of the array.
+- `onAddClick: (event?: SyntheticEvent<HTMLElement>) => void`: A function that adds a new item to the end of the array.
 - `readonly`: A boolean value stating if the array is read-only.
 - `required`: A boolean value stating if the array is required.
 - `hideError`: A boolean value stating if the field is hiding its errors.
@@ -292,11 +292,11 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 - `id`: The id of the field in the hierarchy.
 - `index`: A number stating the index the array item occurs in `items`.
 - `totalItems`: A number stating the total number `items` in the array.
-- `onAddItem: event?) => void`: Callback function that adds a new item below this item.
-- `onCopyItem: (event?) => void`: Callback function that copies this item below itself.
-- `onRemoveItem: (event?) => void`: Callback function that removes the item from the list.
-- `onMoveUpItem: (event?) => void`: Callback function that moves the item up one spot in the list
-- `onMoveDownItem: (event?) => void`: Callback function that moves the item down one spot in the list
+- `onAddItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that adds a new item below this item.
+- `onCopyItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that copies this item below itself.
+- `onRemoveItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that removes the item from the list.
+- `onMoveUpItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that moves the item up one spot in the list
+- `onMoveDownItem: (event?: SyntheticEvent<HTMLElement>) => void`: Callback function that moves the item down one spot in the list
 - `readonly`: Whether the array item's buttons are read-only, by the array's lock or the item's own. Its inputs can stay editable, under an item's `ui:readonly: false`.
 - `itemButtonProps`: Props to spread onto each of the item's buttons, keyed by `copy`, `moveDown`, `moveUp` and `remove`, with a key only for the buttons the item can show. Set when the array's [`itemLabel`](../json-schema/arrays.md#itemlabel-option) option names the item, to title the buttons after it, such as `Remove report.pdf`; otherwise undefined. A template that renders its own buttons can spread them too, as in `<button {...itemButtonProps?.remove} onClick={onRemoveItem}>`.
 - `schema`: The schema object for this array item.
@@ -847,7 +847,7 @@ The following props are passed to a custom field template component:
 - `fieldPath`: The `FieldPath` string identifying where this field's data lives, such as `friends[0].firstName`.
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget, as the `for` that [`templateLabelFor()`](../api-reference/utility-functions.md#templatelabelfor) gives, which is none where the field's plan names a group of controls through `aria-labelledby`.
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
-- `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
+- `style`: The `CSSProperties` set by the field's [`ui:style`](../api-reference/uiSchema.md#style) option.
 - `label`: The computed label for this field, as a string.
 - `keyName`: The name of this field's property in its parent object, carrying none of the decoration `label` may have picked up — a `ui:title`, or the marker a `deprecated` schema adds.
   The key of an `additionalProperties` property is this rather than its `label`, so renaming one reads and writes the real key.
@@ -1319,7 +1319,7 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
-- `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
+- `style`: The `CSSProperties` set by the field's [`ui:style`](../api-reference/uiSchema.md#style) option.
 - `label`: The computed label for this field, as a string.
 - `presentation`: The field's plan. Whether to label the key input is [`hasAdditionalKeyLabel()`](../api-reference/utility-functions.md#hasadditionalkeylabel): wherever the value's label is drawn, by the template or the value's own component.
 - `hasErrors`: Whether the field shows its own errors, as `ui:hideError` leaves them, which the `FieldTemplate` hands on from its own `hasErrors`. Core's `WrapIfAdditionalTemplate` takes its error class from it alone, so a `FieldTemplate` that lists the props it forwards one by one includes it.

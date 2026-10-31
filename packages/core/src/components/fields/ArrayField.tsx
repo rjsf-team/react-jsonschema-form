@@ -1,4 +1,3 @@
-import type { MouseEvent } from 'react';
 import { memo, useCallback, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   ArrayFieldItemButtonProps,
@@ -55,6 +54,9 @@ import {
 } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import { useSchemaFieldPlan } from './SchemaField.tsx';
+
+/** The array buttons' event, taken from the published handler type so the internal handlers can't drift from it */
+type ArrayButtonEvent = Parameters<ArrayFieldTemplateProps['onAddClick']>[0];
 
 /** A row's stable React `key`, and its `order`: when the row was added, relative to the other rows of its array */
 interface RowId {
@@ -634,10 +636,10 @@ function ArrayFieldItemInner<
   onFocus: FieldProps<T[], S, F>['onFocus'];
   onChange: FieldProps<T[], S, F>['onChange'];
   totalItems: number;
-  handleAddItem: (event: MouseEvent, index?: number) => void;
-  handleCopyItem: (event: MouseEvent, index: number) => void;
-  handleRemoveItem: (event: MouseEvent, index: number) => void;
-  handleReorderItems: (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => void;
+  handleAddItem: (event: ArrayButtonEvent, index?: number) => void;
+  handleCopyItem: (event: ArrayButtonEvent, index: number) => void;
+  handleRemoveItem: (event: ArrayButtonEvent, index: number) => void;
+  handleReorderItems: (event: ArrayButtonEvent, index: number, newIndex: number) => void;
 }) {
   const {
     itemKey,
@@ -770,31 +772,31 @@ function ArrayFieldItemInner<
   }, [copyTitle, moveDownTitle, moveUpTitle, removeTitle]);
 
   const onAddItem = useCallback(
-    (event: MouseEvent) => {
+    (event: ArrayButtonEvent) => {
       handleAddItem(event, index + 1);
     },
     [handleAddItem, index],
   );
   const onCopyItem = useCallback(
-    (event: MouseEvent) => {
+    (event: ArrayButtonEvent) => {
       handleCopyItem(event, index);
     },
     [handleCopyItem, index],
   );
   const onRemoveItem = useCallback(
-    (event: MouseEvent) => {
+    (event: ArrayButtonEvent) => {
       handleRemoveItem(event, index);
     },
     [handleRemoveItem, index],
   );
   const onMoveUpItem = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
+    (event: ArrayButtonEvent) => {
       handleReorderItems(event, index, index - 1);
     },
     [handleReorderItems, index],
   );
   const onMoveDownItem = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
+    (event: ArrayButtonEvent) => {
       handleReorderItems(event, index, index + 1);
     },
     [handleReorderItems, index],
@@ -850,13 +852,15 @@ interface InternalArrayFieldProps<
   /** The `formData` items paired with their stable React keys */
   keyedFormData: KeyedFormDataType<T>[];
   /** The callback used to handle the adding of an item at the given index (or the end, if missing) */
-  handleAddItem: (event: MouseEvent, index?: number) => void;
+  handleAddItem: (event: ArrayButtonEvent, index?: number) => void;
+  /** The callback published as `onAddClick`, which adds an item at the end */
+  handleAppendItem: (event: ArrayButtonEvent) => void;
   /** The callback used to handle the copying of the item at the given index, below itself */
-  handleCopyItem: (event: MouseEvent, index: number) => void;
+  handleCopyItem: (event: ArrayButtonEvent, index: number) => void;
   /** The callback used to handle removing an item at the given index */
-  handleRemoveItem: (event: MouseEvent, index: number) => void;
+  handleRemoveItem: (event: ArrayButtonEvent, index: number) => void;
   /** The callback used to handle reordering an item at the given index to its newIndex */
-  handleReorderItems: (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => void;
+  handleReorderItems: (event: ArrayButtonEvent, index: number, newIndex: number) => void;
 }
 
 /** Renders a normal array without any limitations of length
@@ -886,6 +890,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     onChange,
     keyedFormData,
     handleAddItem,
+    handleAppendItem,
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
@@ -958,7 +963,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     disabled,
     id,
     uiSchema,
-    onAddClick: handleAddItem,
+    onAddClick: handleAppendItem,
     readonly,
     hideError,
     required,
@@ -1002,6 +1007,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     keyedFormData,
     onChange,
     handleAddItem,
+    handleAppendItem,
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
@@ -1091,7 +1097,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       };
       return <ArrayFieldItem key={key} {...itemProps} />;
     }),
-    onAddClick: handleAddItem,
+    onAddClick: handleAppendItem,
     readonly,
     hideError,
     required,
@@ -1292,7 +1298,7 @@ export default function ArrayField<
    * @param [index] - The optional index at which to add the new data
    */
   const handleAddItem = useCallback(
-    (event: MouseEvent, index?: number) => {
+    (event: ArrayButtonEvent, index?: number) => {
       if (event) {
         event.preventDefault();
       }
@@ -1313,6 +1319,13 @@ export default function ArrayField<
     [registry, schema, uiSchema, commitRows, readRows, newRowId],
   );
 
+  /** The published `onAddClick`, taking only the event, since a button's `onClick` may pass a second argument, which
+   * `handleAddItem()` would read as the index
+   *
+   * @param event - The event for the click
+   */
+  const handleAppendItem = useCallback((event: ArrayButtonEvent) => handleAddItem(event), [handleAddItem]);
+
   /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of
    * keyed form data at the `index` into the next position in the state, and then returning `onChange()` with the plain
    * form data converted from the keyed data
@@ -1320,7 +1333,7 @@ export default function ArrayField<
    * @param index - The index at which the copy button is clicked
    */
   const handleCopyItem = useCallback(
-    (event: MouseEvent, index: number) => {
+    (event: ArrayButtonEvent, index: number) => {
       if (event) {
         event.preventDefault();
       }
@@ -1352,7 +1365,7 @@ export default function ArrayField<
    * @param index - The index at which the remove button is clicked
    */
   const handleRemoveItem = useCallback(
-    (event: MouseEvent, index: number) => {
+    (event: ArrayButtonEvent, index: number) => {
       if (event) {
         event.preventDefault();
       }
@@ -1376,10 +1389,12 @@ export default function ArrayField<
    * @param newIndex - The index to where the item is to be moved
    */
   const handleReorderItems = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => {
+    (event: ArrayButtonEvent, index: number, newIndex: number) => {
       if (event) {
         event.preventDefault();
-        event.currentTarget.blur();
+        // React clears `currentTarget` once dispatch ends, so a template calling this after an `await` passes none
+        const target: HTMLElement | null = event.currentTarget;
+        target?.blur();
       }
       const rows = readRows();
       if (index >= rows.length) {
@@ -1449,6 +1464,7 @@ export default function ArrayField<
     ...props,
     schema: arraySchema,
     handleAddItem,
+    handleAppendItem,
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
