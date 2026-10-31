@@ -19,8 +19,9 @@ import {
   titleDrawsOptionalDataControl,
 } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
-import type { RowProps } from 'antd';
 import classNames from 'classnames';
+
+import type { AntdFormContext } from '../../formContext.ts';
 
 /** Whether `span` is a span antd's `Col` renders, which is a whole number of its 24 grid columns */
 function isColSpan(span: unknown): span is number {
@@ -60,12 +61,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const antdContext: {
-    colSpan?: number | Record<string, number>;
-    labelAlign?: string;
-    rowGutter?: RowProps['gutter'];
-  } = formContext;
-  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = antdContext;
+  const { colSpan = 24, labelAlign = 'right', rowGutter = 24 }: AntdFormContext = formContext;
 
   const visibleProperties = properties.filter((e) => !e.hidden);
 

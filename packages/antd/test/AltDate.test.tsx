@@ -8,6 +8,23 @@ altDateTests(Form);
 
 describe("antd's AltDateWidget", () => {
   it.each([
+    ['a number', 10, '-2.5px', '5px'],
+    ['the horizontal one of a [horizontal, vertical] pair', [8, 8], '-2px', '4px'],
+    ['the default for a responsive gutter', { xs: 8, md: 16 }, '-6px', '12px'],
+  ])("spaces the date parts by half the formContext's rowGutter: %s", (_, rowGutter, margin, gap) => {
+    render(
+      <Form
+        schema={{ type: 'string', format: 'date' }}
+        uiSchema={{ 'ui:widget': 'alt-date' }}
+        validator={validator}
+        formContext={{ rowGutter }}
+      />,
+    );
+
+    // antd's `Row` turns its `[horizontal, vertical]` gutter into these
+    expect(screen.getByRole('group').style).toMatchObject({ marginInline: margin, rowGap: gap });
+  });
+  it.each([
     ['alt-date', 'year'],
     ['alt-datetime', 'hour'],
   ])(

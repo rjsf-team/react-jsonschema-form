@@ -477,7 +477,7 @@ describe('Validation', () => {
         registry: {
           formContext: { className },
         },
-      }: ErrorListProps) => (
+      }: ErrorListProps<unknown, RJSFSchema, { className?: string }>) => (
         <div>
           <div className='CustomErrorList'>{errors.length} custom</div>
           <div className='ErrorSchema'>{errorSchema.__errors?.[0]}</div>
