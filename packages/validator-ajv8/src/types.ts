@@ -1,12 +1,4 @@
-import type {
-  Bivariant,
-  CustomMergeAllOf,
-  FormContextType,
-  RawValidationResult,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '@rjsf/utils';
+import type { Bivariant, CustomMergeAllOf, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import type { Options, ErrorObject, Ajv } from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
 
@@ -75,13 +67,3 @@ export interface CompiledValidateFunction extends Bivariant<[data: unknown], boo
 /** The definition of precompiled validator functions
  */
 export type ValidatorFunctions = Record<string, CompiledValidateFunction>;
-
-/** The validator `createPrecompiledValidator()` returns: a `ValidatorType` whose `rawValidation()` reports Ajv's own
- * `ErrorObject`s
- */
-export interface PrecompiledValidatorType<
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
-> extends ValidatorType<S, F> {
-  rawValidation(schema: S, formData?: unknown): RawValidationResult<ErrorObject>;
-}
