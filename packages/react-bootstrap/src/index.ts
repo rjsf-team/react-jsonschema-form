@@ -1,6 +1,5 @@
 import Form from './Form/index.ts';
 
-export type { BootstrapBaseInputTemplateProps } from './BaseInputTemplate/BaseInputTemplate.tsx';
 export { default as Form, generateForm } from './Form/index.ts';
 export { default as Templates, generateTemplates } from './Templates/index.ts';
 export { default as Theme, generateTheme } from './Theme/index.ts';
