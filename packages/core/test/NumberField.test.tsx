@@ -569,6 +569,24 @@ describe('NumberField', () => {
     }
   });
 
+  describe('A widget reporting a non-string value', () => {
+    it('stores the number the value converts to, as asNumber() converts it', async () => {
+      const ToggleWidget = ({ onChange }: WidgetProps) => (
+        <button type='button' onClick={() => onChange(true)}>
+          On
+        </button>
+      );
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'number' },
+        uiSchema: { 'ui:widget': ToggleWidget },
+      });
+
+      await user.click(elementOf(node, 'button[type=button]'));
+
+      expectToHaveBeenCalledWithFormData(onChange, 1, 'root');
+    });
+  });
+
   describe('SelectWidget', () => {
     it('should render a number field', () => {
       const { node } = createFormComponent({

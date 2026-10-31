@@ -1,11 +1,11 @@
-import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { RJSFSchema, SlotComponent, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
 import { duplicateIds } from '../../../testing/duplicateIds.ts';
 import { elementOf } from '../../../testing/elementOf.ts';
 import type { BaseInputTemplateMuiProps } from '../src/BaseInputTemplate/BaseInputTemplate.tsx';
-import type { UiSchema as MuiUiSchema } from '../src/index.ts';
+import type { MuiBaseInputTemplateProps, UiSchema as MuiUiSchema } from '../src/index.ts';
 import Form from '../src/index.ts';
 
 describe('MUI Theme-Specific Props', () => {
@@ -350,7 +350,7 @@ describe('MUI Theme-Specific Props', () => {
 
   it("should keep the formHelperText slot props a custom widget gives BaseInputTemplate as MUI's (ownerState) => props", () => {
     function HintedWidget(props: WidgetProps) {
-      const { BaseInputTemplate } = props.registry.templates;
+      const BaseInputTemplate: SlotComponent<MuiBaseInputTemplateProps> = props.registry.templates.BaseInputTemplate;
       return <BaseInputTemplate {...props} slotProps={{ formHelperText: () => ({ className: 'hint' }) }} />;
     }
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };

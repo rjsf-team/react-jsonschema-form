@@ -128,6 +128,23 @@ describe('AdditionalPropertyKeySelect', () => {
     expect(baseProps.onKeyRename).toHaveBeenCalledWith('b');
   });
 
+  it('keeps the selection without throwing when it has no rename callback', async () => {
+    const { container } = render(<AdditionalPropertyKeySelect {...baseProps} onKeyRename={undefined} />);
+    const select = elementOf(container, '#root_a__key');
+    // React reports an error thrown in a handler as a window `error` event rather than rejecting user-event's promise
+    const onWindowError = vi.fn((event: Event) => event.preventDefault());
+    window.addEventListener('error', onWindowError);
+
+    try {
+      await user.selectOptions(select, 'b');
+    } finally {
+      window.removeEventListener('error', onWindowError);
+    }
+
+    expect(onWindowError).not.toHaveBeenCalled();
+    expect(select).toHaveValue('a');
+  });
+
   it.each([
     ['the empty value of a cleared selection', ''],
     ['an undefined value', undefined],

@@ -51,6 +51,27 @@ export interface BaseInputTemplateMuiProps extends GenericObjectType {
 
 const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
 
+/** The props mui's `BaseInputTemplate` takes: the shared `BaseInputTemplateProps`, and the `TextField` props that mui's
+ * own widgets, or a custom widget, pass it through the registry's `BaseInputTemplate`, typed by reading that template as
+ * a `SlotComponent<MuiBaseInputTemplateProps>`
+ */
+export type MuiBaseInputTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = BaseInputTemplateProps<T, S, F> &
+  Pick<BaseInputTemplateMuiProps, 'slotProps'> &
+  Partial<Pick<TextFieldProps, 'size' | 'variant' | 'helperText'>> & {
+    /** Props for MUI's `InputLabel`, under the name MUI's `TextField` once took them by */
+    InputLabelProps?: Partial<MuiInputLabelProps>;
+    /** Props for MUI's `Input`, under the name MUI's `TextField` once took them by */
+    InputProps?: Partial<MuiInputProps>;
+    /** Renders a `<textarea>`, as mui's `TextareaWidget` has the template do */
+    multiline?: boolean;
+    /** The number of rows of a `multiline` input */
+    rows?: string | number;
+  };
+
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
  * It can be customized/overridden for other themes or individual implementations as needed.
@@ -61,7 +82,7 @@ export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: BaseInputTemplateProps<T, S, F>) {
+>(props: MuiBaseInputTemplateProps<T, S, F>) {
   const {
     id,
     name, // remove this from textFieldProps
@@ -141,7 +162,7 @@ export default function BaseInputTemplate<
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
-  const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type)
+  const DisplayInputLabelProps = TYPES_THAT_SHRINK_LABEL.includes(type ?? '')
     ? { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps, shrink: true }
     : { ...slotProps?.inputLabel, ...muiSlotProps?.inputLabel, ...InputLabelProps };
   const handleClear = useCallback(

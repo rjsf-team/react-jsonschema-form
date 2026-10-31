@@ -655,6 +655,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change the ids of an additional property's key input to `root_foo__key` (was `root_foo-key`), a success message to `root_when__success`, and an input's label and description to `root_when__wrapperLabel` and `root_when__wrapperDescription` (was `root_when-label` and `root_when-description`). See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#ids-cant-collide-or-split-an-id-list-breaking-change) ([#5626](https://github.com/rjsf-team/react-jsonschema-form/pull/5626))
 - **BREAKING CHANGE:** Fix `ObjectFieldTemplate` giving a grid cell to a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget: it now leaves the property out, as it does one with its own `ui:widget: 'hidden'`. See [`@rjsf/antd` and `@rjsf/mantine` leave out a property hidden by `deprecatedHandling` or `ui:definitions`](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#rjsfantd-and-rjsfmantine-leave-out-a-property-hidden-by-deprecatedhandling-or-uidefinitions-breaking-change) ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Use the default `valueFormat` and `displayFormat` of `DateWidget` and `DateTimeWidget` for an option that isn't a string ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/mui
 
@@ -705,6 +706,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change an additional property's key input id to `root_foo__key` (was `root_foo-key`) and its label's to `root_foo__key__inputLabel` (was MUI's `root_foo-key-label`). See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#ids-cant-collide-or-split-an-id-list-breaking-change) ([#5626](https://github.com/rjsf-team/react-jsonschema-form/pull/5626))
 - **BREAKING CHANGE:** Change the id of the `ui:options.mui.helperText` that `BaseInputTemplate` and `SelectWidget` render to `root_foo__helperText` (was `root_foo-helper-text`) and of their label to `root_foo__inputLabel` (was `root_foo-label`). See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#ids-cant-collide-or-split-an-id-list-breaking-change) ([#5626](https://github.com/rjsf-team/react-jsonschema-form/pull/5626))
 - Fix `ObjectFieldTemplate` leaving an empty grid cell for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
+- Add `MuiBaseInputTemplateProps`, the props mui's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes mui's own props to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/react-bootstrap
 
@@ -749,6 +751,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `TextareaWidget`'s `options` to be type-checked as `WidgetProps['options']`, where `rows` is a `number`, rather than `any` ([#5488](https://github.com/rjsf-team/react-jsonschema-form/pull/5488))
 - Fix `ObjectFieldTemplate` leaving a gap for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Add `BootstrapBaseInputTemplateProps`, the props the theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes `extraProps` to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/shadcn
 
@@ -826,6 +829,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `altDateList`, `altDateListItem`, `altDateNowButton` and `altDateClearButton` to the theme's `classMap`, so core's `AltDateWidget` renders its parts in one wrapping row with outline Now and Clear buttons ([#5641](https://github.com/rjsf-team/react-jsonschema-form/pull/5641), [#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 - Fix `ObjectFieldTemplate` leaving a gap for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Add `ShadcnBaseInputTemplateProps`, the props the theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes `extraProps` to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/snapshot-tests
 
@@ -1151,6 +1155,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `useFileWidgetProps()`'s `handleRemove` removing the wrong file when an earlier item of a multiple value isn't a readable data URL, such as the `null` stored for a file that couldn't be read: it now takes the index of the file in `filesInfo`, as every theme passes it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useAltDateWidgetProps()` reading a date part cleared to `null`, as a select with an `emptyValue` of `null` reports it, as a picked `0`, which built a date with a day, month or year of `0` ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - **BREAKING CHANGE:** Change the undeclared props of `GridTemplateProps` from `any` to `unknown`, declaring `className` and `style`, and `ui:submitButtonOptions.props` from `GenericObjectType` to any object, of which only the declared `disabled`, `className`, `onClick` and `onClickCapture` read back. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
+- **BREAKING CHANGE:** Remove the open index signature from `FieldProps`, `WidgetProps` and `BaseInputTemplateProps`, which now declare the props RJSF passes, so a field or widget declares any prop of its own. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- **BREAKING CHANGE:** Make `onKeyRename`, `onKeyRenameBlur` and `onRemoveProperty` optional in `FieldTemplateProps` and `WrapIfAdditionalTemplateProps`, as they are undefined for a field `ObjectField` doesn't render, such as the root or an array item. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/validator-ajv8
 
