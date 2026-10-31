@@ -4679,7 +4679,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const a = schemaUtils.retrieveSchema(schemaOf(c.properties?.a), 's');
         const handedOut = (a.anyOf ?? []).map(schemaOf);
         const raw = root.$defs?.child;
-        const rawOptions = isObject(raw) && isObject(raw.properties?.a) ? (raw.properties.a.anyOf ?? []) : [];
+        const rawOptions =
+          isSchemaObject(raw) && isSchemaObject(raw.properties?.a) ? (raw.properties.a.anyOf ?? []) : [];
         expect(schemaUtils.getClosestMatchingOption('s', handedOut, 1)).toBe(0);
         expect(schemaUtils.getClosestMatchingOption('s', rawOptions.map(schemaOf), 1)).toBe(0);
       });

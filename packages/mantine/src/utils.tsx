@@ -221,7 +221,8 @@ export function cleanupOptions<
       result[key] = options[key];
     }
   }
-  return result;
+  // The single deliberate cast here: `result` holds the keys of `options` that `CleanedOptions` keeps, with their values
+  return result as CleanedOptions<O>;
 }
 
 /**
@@ -296,8 +297,18 @@ const themeComponentNames = {
 
 export type AriaInputComponentName = keyof typeof themeComponentNames;
 
-function asObject(value: unknown): GenericObjectType | undefined {
+/** Returns `value` when it is an object, else `undefined`
+ *
+ * @param value - The value an option or the theme gives
+ * @returns - The object, or `undefined`
+ */
+export function asObject(value: unknown): GenericObjectType | undefined {
   return isObject(value) ? value : undefined;
+}
+
+/** Whether `value` is an `inputContainer`, the function Mantine calls with an input to render the element around it */
+function isInputContainer(value: unknown): value is NonNullable<InputWrapperProps['inputContainer']> {
+  return typeof value === 'function';
 }
 
 /** The id `ownProps` give an element, or `fallback` where they give none */
@@ -488,7 +499,7 @@ function withoutRootSlot(value: unknown): unknown {
  * a string.
  */
 function noStyle(name: string) {
-  const type = (STYLE_PROPS_DATA as GenericObjectType)[name]?.type;
+  const type = asObject(Reflect.get(STYLE_PROPS_DATA, name))?.type;
   return type === 'color' || type === 'textColor' ? '' : null;
 }
 
@@ -635,7 +646,7 @@ export function useFieldWrapperProps<
   );
   // `Input.Wrapper` would size its title, description and errors by the `size` in `__stylesApiProps`, the top-level
   // props, rather than by its own, which a `wrapperProps.size` may have replaced
-  const { __stylesApiProps: _stylesApiProps, id: _id, ...mantineWrapperProps } = inputWrapperProps as GenericObjectType;
+  const { __stylesApiProps: _stylesApiProps, id: _id, ...mantineWrapperProps } = inputWrapperProps;
   // Resolved as `Input.Wrapper` resolves them, since some are read or replaced here. `useInputProps` leaves
   // `labelElement` with the input, while this wrapper takes it.
   const wrapperDefaults = useProps<GenericObjectType>('InputWrapper', {}, {});
@@ -647,10 +658,11 @@ export function useFieldWrapperProps<
   const error = getWidgetError<T, S, F>(widgetProps);
   const ownSuccessProps = asObject(resolved.successProps);
   const successId = ownIdOr(ownSuccessProps, partId(id, 'success'));
+  const ownInputContainer = isInputContainer(wrapperProps.inputContainer) ? wrapperProps.inputContainer : undefined;
   return {
     wrapperProps: {
       ...wrapperProps,
-      inputContainer: containerOnInputs ? renderChildren : wrapperProps.inputContainer,
+      inputContainer: containerOnInputs ? renderChildren : ownInputContainer,
       label: labelValue(label || undefined, hideLabel, false),
       labelProps: { ...asObject(resolved.labelProps), id: titleId(id), htmlFor: undefined },
       required,
@@ -660,7 +672,7 @@ export function useFieldWrapperProps<
       errorProps: { ...asObject(resolved.errorProps), id: errorId(id) },
       successProps: { ...ownSuccessProps, id: successId },
     },
-    inputWrapperOrder: resolved.inputWrapperOrder as unknown,
+    inputWrapperOrder: resolved.inputWrapperOrder,
     invalid: !!error,
     successId,
     slotlessErrors: getSlotlessErrors<T, S, F>(widgetProps, resolved.inputWrapperOrder),

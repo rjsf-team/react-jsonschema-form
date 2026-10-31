@@ -1,5 +1,5 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, hashForSchema, mergeSchemas, noop, retrieveSchema } from '@rjsf/utils';
+import { ErrorSchemaBuilder, hashForSchema, isObject, mergeSchemas, noop, retrieveSchema } from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
@@ -478,8 +478,10 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
   };
   // Merges the `allOf` the way the default merge does, plus a title, so the resolved root schema differs from the
   // default resolution of the same root schema
-  const customMergeAllOf = ({ allOf, ...rest }: RJSFSchema) =>
-    ({ ...(mergeSchemas(rest, allOf![0] as RJSFSchema) as RJSFSchema), title: 'Custom merge' }) as RJSFSchema;
+  const customMergeAllOf = ({ allOf, ...rest }: RJSFSchema): RJSFSchema => {
+    const [first] = allOf ?? [];
+    return { ...mergeSchemas<RJSFSchema>(rest, isObject(first) ? first : {}), title: 'Custom merge' };
+  };
 
   it('accepts the root schema the form resolved with the customMergeAllOf it was constructed with', () => {
     const validator = new AJV8PrecompiledValidator(

@@ -1,4 +1,4 @@
-import type { ComponentType, JSXElementConstructor, ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import { useCallback, useMemo } from 'react';
 import type {
   FieldProps,
@@ -450,7 +450,7 @@ export function getCustomRenderComponent<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(render: string | JSXElementConstructor<never>, registry: Registry<T, S, F>): RenderComponent | null {
+>(render: unknown, registry: Registry<T, S, F>): RenderComponent | null {
   const customRenderer = lookUpRender<T, S, F>(render, registry);
   return isComponentType<unknown>(customRenderer) ? customRenderer : null;
 }
@@ -491,7 +491,8 @@ export function computeUIComponentPropsFromGridSchema<
     name = gridSchema ?? '';
   } else {
     const { name: innerName = '', render, ...innerProps } = gridSchema;
-    name = innerName;
+    // A JSON layout can name a field by a number, which names the same property as its string
+    name = typeof innerName === 'string' || typeof innerName === 'number' ? String(innerName) : '';
     uiProps = innerProps;
     // Transform any `$lookup=` in the uiProps props with the appropriate value
     Object.entries(uiProps).forEach(([key, prop]) => {
@@ -504,7 +505,7 @@ export function computeUIComponentPropsFromGridSchema<
       }
     });
     UIComponent = getCustomRenderComponent<T, S, F>(render, registry);
-    if (!innerName && UIComponent) {
+    if (!name && UIComponent) {
       rendered = <UIComponent {...innerProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent} />;
     }
   }

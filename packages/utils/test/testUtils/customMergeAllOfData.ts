@@ -1,4 +1,4 @@
-import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
+import type { RJSFSchema } from '../../src/index.ts';
 import { isObject, mergeSchemas } from '../../src/index.ts';
 
 /** Merges a schema's `allOf` entries into it, which is what a `customMergeAllOf` that merges at all has to do before
@@ -8,11 +8,11 @@ import { isObject, mergeSchemas } from '../../src/index.ts';
  * @param schema - The schema whose `allOf` entries are to be merged into it
  * @returns - The schema with its `allOf` merged in and the keyword dropped
  */
-function mergeAllOfEntries(schema: RJSFSchema): GenericObjectType {
+function mergeAllOfEntries(schema: RJSFSchema): RJSFSchema {
   const { allOf = [], ...rest } = schema;
   // A boolean subschema constrains nothing this merge has to carry over
-  return allOf.reduce<GenericObjectType>(
-    (acc, subSchema) => (isObject(subSchema) ? mergeSchemas(acc, subSchema) : acc),
+  return allOf.reduce<RJSFSchema>(
+    (acc, subSchema) => (isObject(subSchema) ? mergeSchemas<RJSFSchema>(acc, subSchema) : acc),
     rest,
   );
 }
@@ -53,6 +53,8 @@ export function titleChoiceMergeAllOf(schema: RJSFSchema): RJSFSchema {
   if (!isObject(choice) || !Array.isArray(choice.oneOf)) {
     return merged;
   }
-  const oneOf = choice.oneOf.filter(isObject).map((option) => ({ ...option, title: `Option ${option.const}` }));
+  const oneOf = choice.oneOf
+    .filter(isObject)
+    .map((option) => ({ ...option, title: `Option ${JSON.stringify(option.const)}` }));
   return { ...merged, properties: { ...merged.properties, choice: { ...choice, oneOf } } };
 }

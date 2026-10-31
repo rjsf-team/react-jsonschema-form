@@ -11,11 +11,18 @@ import type {
   StylesApiProps,
 } from '@mantine/core';
 import { Slider, Input, useProps } from '@mantine/core';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes, rangeSpec, titleId, widgetDrawsLabel } from '@rjsf/utils';
 
 import type { OwnKeys } from '../utils.tsx';
-import { cleanupOptions, getOwnLabel, useFieldWrapperProps, useHiddenTitle, useShownSuccessId } from '../utils.tsx';
+import {
+  asObject,
+  cleanupOptions,
+  getOwnLabel,
+  useFieldWrapperProps,
+  useHiddenTitle,
+  useShownSuccessId,
+} from '../utils.tsx';
 
 /** The Mantine input and `InputWrapper` props `Slider` doesn't take, which it would pass on to its root element as
  * unknown attributes
@@ -69,7 +76,7 @@ interface FieldSliderProps extends Omit<SliderProps, 'thumbProps'> {
   /** The label its field's plan names the thumb by, one drawn elsewhere, as by the template */
   labelledBy?: string;
   // Mantine's `Thumb` also reads a `thumbLabel` from it, which `SliderProps` doesn't type
-  thumbProps?: GenericObjectType;
+  thumbProps?: SliderProps['thumbProps'] & { thumbLabel?: string };
   successId: string;
   invalid: boolean;
 }
@@ -131,10 +138,13 @@ export default function RangeWidget<
   const { 'aria-labelledby': labelledBy, 'aria-describedby': describedBy } = getControlAttributes<T, S, F>(props);
   // The slider is named by `titleId(id)`, so the title is kept, hidden, when Mantine doesn't render it
   const hiddenTitle = useHiddenTitle(id, label, hideLabel, inputWrapperOrder);
-  const { thumbProps, thumbLabel } = useProps<GenericObjectType>(
+  const { thumbProps, thumbLabel } = useProps<Pick<FieldSliderProps, 'thumbProps' | 'thumbLabel'>>(
     'Slider',
     {},
-    { thumbProps: options.thumbProps, thumbLabel: options.thumbLabel },
+    {
+      thumbProps: asObject(options.thumbProps),
+      thumbLabel: typeof options.thumbLabel === 'string' ? options.thumbLabel : undefined,
+    },
   );
 
   const handleChange = useCallback(

@@ -1,4 +1,5 @@
 import type { Theme } from '@mui/material';
+import type { RJSFSchema } from '@rjsf/utils';
 
 import { computeSxProps, getMuiProps } from '../src/util.ts';
 
@@ -10,7 +11,7 @@ describe('getMuiProps', () => {
         variant: 'filled',
       },
     };
-    const result = getMuiProps(options);
+    const result = getMuiProps<unknown, RJSFSchema, object, typeof options.mui>(options);
     expect(result.rjsfSlotProps.fieldErrorList.dense).toBe(true);
     expect(result.variant).toBe('filled');
   });
@@ -52,6 +53,10 @@ describe('getMuiProps', () => {
     expect(result.rjsfSlotProps).toEqual({ arrayPaper: { elevation: 10 } });
     expect(result.variant).toBeUndefined();
     expect(result.sx).toBeUndefined();
+  });
+
+  it('should find no rjsfSlotProps in a mui option that is not an object', () => {
+    expect(getMuiProps({ mui: true }, undefined, true)).toEqual({ rjsfSlotProps: undefined });
   });
 });
 

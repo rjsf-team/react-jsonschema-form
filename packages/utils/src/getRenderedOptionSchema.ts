@@ -92,10 +92,12 @@ const POSITIONAL_KEYWORDS = new Set<string>([ITEMS_KEY, 'prefixItems']);
  * @param option - The option
  * @returns - The two met into one schema
  */
-function meetSchemas(parent: GenericObjectType, option: GenericObjectType): GenericObjectType {
-  const result: GenericObjectType = { ...parent, ...option };
-  const takesOptionConditional = CONDITIONAL_KEYWORDS.some((key) => option[key] !== undefined);
-  for (const [key, optionValue] of Object.entries(option)) {
+function meetSchemas(parent: GenericObjectType, option: object): GenericObjectType {
+  // The copy reads as a record of keywords whatever the option's type, and as an empty one for a boolean option
+  const declared: GenericObjectType = { ...option };
+  const result: GenericObjectType = { ...parent, ...declared };
+  const takesOptionConditional = CONDITIONAL_KEYWORDS.some((key) => declared[key] !== undefined);
+  for (const [key, optionValue] of Object.entries(declared)) {
     if (optionValue === undefined) {
       // A key holding `undefined`, as one built in code does for a limit left unset, declares nothing
       if (Object.hasOwn(parent, key)) {
@@ -111,7 +113,7 @@ function meetSchemas(parent: GenericObjectType, option: GenericObjectType): Gene
   // tuple's `additionalItems` describes. A tuple declaring no `additionalItems` is one `ArrayField` offers no Add for,
   // so it gets none here either
   const parentItems = parent[ITEMS_KEY];
-  const optionItems = option[ITEMS_KEY];
+  const optionItems = declared[ITEMS_KEY];
   if (
     Array.isArray(parentItems) &&
     parent.additionalItems !== undefined &&
@@ -120,12 +122,12 @@ function meetSchemas(parent: GenericObjectType, option: GenericObjectType): Gene
     !Array.isArray(optionItems)
   ) {
     result.additionalItems = meetSubschema(parent.additionalItems, optionItems);
-  } else if (isObject(parentItems) && Array.isArray(optionItems) && option.additionalItems !== undefined) {
-    result.additionalItems = meetSubschema(parentItems, option.additionalItems);
+  } else if (isObject(parentItems) && Array.isArray(optionItems) && declared.additionalItems !== undefined) {
+    result.additionalItems = meetSubschema(parentItems, declared.additionalItems);
   }
   if (takesOptionConditional) {
     for (const key of CONDITIONAL_KEYWORDS) {
-      if (option[key] === undefined) {
+      if (declared[key] === undefined) {
         delete result[key];
       }
     }
@@ -320,6 +322,7 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
     return option;
   }
   if (!rendersOwnField) {
+    // The option reads as a record of keywords, and the two met are a schema of the option's type
     return meetSchemas(inherited, option) as S;
   }
   // An object parent passes on no bound, so there is none to tighten. An option key holding `undefined`, as one built
@@ -333,10 +336,12 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
   if (!takesExtraKeys) {
     return merged as S;
   }
-  const withParentExtraKeys: GenericObjectType = withoutKeys<S>(merged as S, ...EXTRA_KEY_KEYWORDS);
+  const withParentExtraKeys = merged;
   for (const keyword of EXTRA_KEY_KEYWORDS) {
     if (Object.hasOwn(parent, keyword)) {
       withParentExtraKeys[keyword] = Reflect.get(parent, keyword);
+    } else {
+      delete withParentExtraKeys[keyword];
     }
   }
   // The option's field offers the add button in the parent's field's place, so it takes the parent's bounds on the

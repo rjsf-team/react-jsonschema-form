@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { MantineThemeComponents } from '@mantine/core';
 import { createTheme, MantineProvider, STYLE_PROPS_DATA, Tooltip } from '@mantine/core';
 import type { FormValidation, GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { titleId } from '@rjsf/utils';
@@ -345,7 +346,9 @@ describe('aria-labelledby', () => {
     titleOptionSources.map((source) => [widget, source, role, schema] as [string, string, string, RJSFSchema]),
   );
 
-  function themedForm(components: GenericObjectType, schema: RJSFSchema, uiSchema: UiSchema, formProps = {}) {
+  type ContainerCaseOptions = GenericObjectType & { 'ui:label'?: boolean };
+
+  function themedForm(components: MantineThemeComponents, schema: RJSFSchema, uiSchema: UiSchema, formProps = {}) {
     return (
       <MantineProvider theme={createTheme({ components })}>
         <Form schema={schema} uiSchema={uiSchema} validator={validator} {...formProps} />
@@ -357,7 +360,7 @@ describe('aria-labelledby', () => {
    * `InputWrapper` or `Input` `defaultProps`, as `source` names
    */
   function titledForm(widget: string, schema: RJSFSchema, source: string, props: GenericObjectType, formProps = {}) {
-    const componentsBySource: Record<string, GenericObjectType> = {
+    const componentsBySource: Record<string, MantineThemeComponents> = {
       theme: { InputWrapper: { defaultProps: props } },
       'Input theme': { Input: { defaultProps: props } },
     };
@@ -514,8 +517,14 @@ describe('aria-labelledby', () => {
             },
           ],
         ] as [string, GenericObjectType][]
-      ).map(([source, props]) => [widget, source, Object.keys(props).join(', '), schema, props]),
-    ) as [string, string, string, RJSFSchema, GenericObjectType][],
+      ).map(([source, props]): [string, string, string, RJSFSchema, GenericObjectType] => [
+        widget,
+        source,
+        Object.keys(props).join(', '),
+        schema,
+        props,
+      ]),
+    ),
   )(
     '%s widget applies root props from the %s (%s) once, to the wrapper of each input that renders one',
     (widget, source, _, schema, props) => {
@@ -646,9 +655,9 @@ describe('aria-labelledby', () => {
         [
           ['a hidden label', { title: 'A title' }, { 'ui:label': false }],
           ['a label left out of inputWrapperOrder', { title: 'A title' }, { inputWrapperOrder: orderWithoutLabel }],
-        ] as [string, RJSFSchema, GenericObjectType][]
+        ] as [string, RJSFSchema, ContainerCaseOptions][]
       ).map(([labelCase, titleSchema, options]) => [widget, labelCase, role, { ...schema, ...titleSchema }, options]),
-    ) as [string, string, string, RJSFSchema, GenericObjectType][],
+    ) as [string, string, string, RJSFSchema, ContainerCaseOptions][],
   )(
     '%s widget renders inside a single-child inputContainer, such as a Tooltip, with %s',
     (widget, _, role, schema, options) => {

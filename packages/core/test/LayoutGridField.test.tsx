@@ -1485,6 +1485,13 @@ describe('LayoutGridField', () => {
         UIComponent: null,
       });
     });
+    test('gridSchema names its field by a number, as a JSON layout can', () => {
+      expect(computeUIComponentPropsFromGridSchema(registry, { name: 5 })).toEqual({
+        name: '5',
+        uiProps: {},
+        UIComponent: null,
+      });
+    });
     test('gridSchema contains name and looked up placeholder', () => {
       const gridSchema = {
         name: 'foo',
@@ -1510,6 +1517,18 @@ describe('LayoutGridField', () => {
     });
     test('gridSchema contains other props and a render, no name', () => {
       const gridSchema = { fullWidth: true, render: TestRenderer };
+      expect(computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
+        name: '',
+        uiProps: {
+          fullWidth: true,
+        },
+        UIComponent: TestRenderer,
+        // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
+        rendered: <TestRenderer data-testid={LayoutGridField.TEST_IDS.uiComponent} fullWidth />,
+      });
+    });
+    test('gridSchema contains a render and a name that is neither a string nor a number, read as no name', () => {
+      const gridSchema = { name: { field: 'foo' }, fullWidth: true, render: TestRenderer };
       expect(computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
         name: '',
         uiProps: {
@@ -1942,7 +1961,7 @@ describe('LayoutGridField', () => {
     expect(fields[1]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
     // Test onChange and value in the input
     const input = within(fields[0]).getByRole('textbox');
-    expect(input).toHaveValue((props.formData as GenericObjectType)[fieldName]);
+    expect(input).toHaveValue((props.formData as Record<string, string>)[fieldName]);
     await userEvent.type(input, '!');
     expect(props.onChange).toHaveBeenCalledWith('foo!', fieldPath, EXTRA_ERROR, fieldId);
   });

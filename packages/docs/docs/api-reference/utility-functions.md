@@ -2564,33 +2564,33 @@ When merging defaults and form data, we want to merge in this specific way:
 
 - T | undefined: The resulting merged form data with defaults
 
-### mergeObjects()
+### mergeObjects&lt;R extends object = GenericObjectType>() {#mergeobjects}
 
 Recursively merge deeply nested objects.
 
 #### Parameters
 
-- obj1: GenericObjectType - The first object to merge
-- obj2: GenericObjectType - The second object to merge
+- obj1: object - The first object to merge
+- obj2: object - The second object to merge
 - [concatArrays=false]: boolean | "preventDuplicates" - Optional flag that, when true, will cause arrays to be concatenated. Use "preventDuplicates" to merge arrays in a manner that prevents any duplicate entries from being merged.
 
 #### Returns
 
-@returns - A new object that is the merge of the two given objects
+- R: A new object that is the merge of the two given objects, typed as the `R` its caller passes as a type argument, `GenericObjectType` by default. `R` is an assertion: nothing checks the merged object against it, so name only what you know the merge holds, as you would with an `as`
 
-### mergeSchemas()
+### mergeSchemas&lt;R extends object = GenericObjectType>() {#mergeschemas}
 
 Recursively merge deeply nested schemas.
 The difference between mergeSchemas and mergeObjects is that mergeSchemas only concats arrays for values under the 'required' keyword, and when it does, it doesn't include duplicate values. NOTE: Uses shallow comparison for the duplicate checking.
 
 #### Parameters
 
-- obj1: GenericObjectType - The first object to merge
-- obj2: GenericObjectType - The second object to merge
+- obj1: object - The first object to merge
+- obj2: object - The second object to merge
 
 #### Returns
 
-- GenericObjectType: The merged schema object
+- R: The merged schema object, typed as the `R` its caller passes as a type argument, `GenericObjectType` by default. `R` is an assertion: nothing checks the merged object against it, so name only what you know the merge holds, as you would with an `as`
 
 ### mergeThemePresentation()
 
@@ -3189,7 +3189,7 @@ A plain assignment to a `__proto__` key, which JSON-sourced data can hold, would
 
 #### Parameters
 
-- obj: GenericObjectType - The object to write to
+- obj: object - The object to write to
 - key: string | number - The key to write, a path segment's array index included
 - value: unknown - The value to store at `key`
 

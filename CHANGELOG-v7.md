@@ -426,6 +426,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked and focuses it, as a number does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars, and for a `stars` option or schema `maximum` that isn't a whole number, which now rounds down ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
+- Treat a `LayoutGridField` cell whose `name` is neither a string nor a number as a cell without one, so its `render` component renders where nothing did ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
+- **BREAKING CHANGE:** Change the values of the exported `GridProps` and of an object `LayoutGridSchemaType` from `any` to `unknown`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
+- Change a `LayoutGridField` cell with a `name` of `0` to look up field `'0'`, where it rendered its `render` component as a cell without a name ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 
 ## @rjsf/daisyui
 
@@ -660,6 +663,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Fix `ObjectFieldTemplate` giving a grid cell to a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget: it now leaves the property out, as it does one with its own `ui:widget: 'hidden'`. See [`@rjsf/antd` and `@rjsf/mantine` leave out a property hidden by `deprecatedHandling` or `ui:definitions`](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#rjsfantd-and-rjsfmantine-leave-out-a-property-hidden-by-deprecatedhandling-or-uidefinitions-breaking-change) ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Use the default `valueFormat` and `displayFormat` of `DateWidget` and `DateTimeWidget` for an option that isn't a string ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Leave out a `ui:options` value of the wrong shape instead of handing it to Mantine: a `thumbProps` that isn't an object and a `thumbLabel` that isn't a string on `RangeWidget`, and an `inputContainer` that isn't a function ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 
 ## @rjsf/mui
 
@@ -711,6 +715,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change the id of the `ui:options.mui.helperText` that `BaseInputTemplate` and `SelectWidget` render to `root_foo__helperText` (was `root_foo-helper-text`) and of their label to `root_foo__inputLabel` (was `root_foo-label`). See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#ids-cant-collide-or-split-an-id-list-breaking-change) ([#5626](https://github.com/rjsf-team/react-jsonschema-form/pull/5626))
 - Fix `ObjectFieldTemplate` leaving an empty grid cell for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Add `MuiBaseInputTemplateProps`, the props mui's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes mui's own props to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- **BREAKING CHANGE:** Change the values of the `mui` option in the exported `UiSchema` and `MuiGlobalUiOptionsKeys` from `any` to `unknown`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 
 ## @rjsf/react-bootstrap
 
@@ -1169,6 +1174,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change `RJSFMarkedSchema` to a schema with the symbol markers `retrieveSchema()` adds, without the `any` index for other keys. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
 - Add `hasSchemaMarker()`, which reads a marker such as `ADDITIONAL_PROPERTY_FLAG` off a schema, a boolean subschema included ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
 - **BREAKING CHANGE:** Change the nested entries of a `UiSchema` for data whose index signature holds `unknown` values, such as `Record<string, unknown>`, from `UiSchema<unknown>` to `unknown`, so its `ui:` keys type-check. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
+- **BREAKING CHANGE:** Change `GenericObjectType` from `Record<string, any>` to `Record<string, unknown>`, so a value read from one, such as one `isObject()` narrows, needs narrowing. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
+- **BREAKING CHANGE:** Change `mergeObjects()` and `mergeSchemas()` to take any objects and return `GenericObjectType`, or the type their caller passes as a type argument. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
+- **BREAKING CHANGE:** Remove `GenericSymbolObjectType`, which nothing uses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 
 ## @rjsf/validator-ajv8
 

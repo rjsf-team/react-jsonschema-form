@@ -18,7 +18,7 @@ import './jsonSchemaAugmentation.ts';
 /** The representation of any generic object type, usually used as an intersection on other types to make them more
  * flexible in the properties they support (i.e. anything else)
  */
-export type GenericObjectType = Record<string, any>;
+export type GenericObjectType = Record<string, unknown>;
 
 /** A callback whose parameters are checked bivariantly, the way React checks event handlers, so a props type carrying
  * one stays covariant in `T`, and an implementation may declare narrower parameters than the callback's own.
@@ -38,11 +38,6 @@ declare class SlotComponentClass<P> extends Component<object> {
  * component annotated as a `ComponentType` or `FunctionComponent` fits too.
  */
 export type SlotComponent<P> = Bivariant<[props: P], ReactNode | Promise<ReactNode>> | typeof SlotComponentClass<P>;
-
-/** The representation of any generic object type, usually used as an intersection on other types to make them more
- * flexible in the properties they support (i.e. anything else) AND symbol markers with a value of string or boolean
- */
-export type GenericSymbolObjectType = GenericObjectType & Record<symbol, boolean | string>;
 
 /** Map the JSONSchema7 to our own type so that we can easily bump to a more recent version at some future date and only
  * have to update this one type.

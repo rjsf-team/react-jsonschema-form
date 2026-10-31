@@ -74,11 +74,11 @@ export function getMuiProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-  P extends GenericObjectType = GenericObjectType,
+  P extends object = GenericObjectType,
 >(options: UIOptionsType<T, S, F>, propsToFilter?: string[], rjsfSlotPropsOnly?: boolean): P {
   const muiProps = (options?.mui as P) || ({} as P);
   if (rjsfSlotPropsOnly) {
-    const { rjsfSlotProps } = muiProps;
+    const { rjsfSlotProps }: { rjsfSlotProps?: unknown } = muiProps;
     return { rjsfSlotProps } as unknown as P;
   }
   if (propsToFilter) {
