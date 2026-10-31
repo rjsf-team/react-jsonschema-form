@@ -13,7 +13,7 @@ dayjs.extend(customParseFormat);
 
 const FORMAT_OPTIONS = new Set(['valueFormat', 'displayFormat']);
 
-const dateParser = (input: string | undefined, format?: string) => {
+const dateParser = (input: string | undefined, format: string) => {
   if (!input) {
     return null;
   }
