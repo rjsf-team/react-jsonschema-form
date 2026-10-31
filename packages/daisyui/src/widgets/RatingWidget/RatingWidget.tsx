@@ -45,10 +45,10 @@ export default function RatingWidget<
   const { stars = 5, shape = 'star', color, size, colorGradient = false } = options;
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5), or 5 for one that isn't a number, as a
-  // JSON uiSchema can hold
-  const numStars = schema.maximum
-    ? Math.min(schema.maximum, 5)
-    : Math.min(Math.max(Number.isFinite(stars) ? stars : 5, 1), 5);
+  // JSON uiSchema can hold, rounded down to the stars that render
+  const numStars = Math.floor(
+    schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(Number.isFinite(stars) ? stars : 5, 1), 5),
+  );
   const min = schema.minimum ?? 0;
 
   // Generate shape class

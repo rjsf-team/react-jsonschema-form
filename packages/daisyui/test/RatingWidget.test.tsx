@@ -25,6 +25,14 @@ describe('RatingWidget', () => {
     expect(getAllByRole('radio')).toHaveLength(2);
   });
 
+  test('autofocuses the first star for a value beyond the stars left by rounding down', () => {
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ autofocus: true, value: 2, options: { stars: 2.5 } })} />,
+    );
+
+    expect(getAllByRole('radio')[0]).toHaveFocus();
+  });
+
   test('uses the default size and color for a `size` or `color` option that is not a string', () => {
     const jsonOptions: Record<string, unknown> = { size: 5, color: true };
     const { getAllByRole, getByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
