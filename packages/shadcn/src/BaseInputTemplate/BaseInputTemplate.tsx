@@ -15,6 +15,18 @@ import {
 import { Input } from '../components/ui/input.tsx';
 import { cn } from '../lib/utils.ts';
 
+/** The props this theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes
+ * `extraProps` to
+ */
+export type ShadcnBaseInputTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = BaseInputTemplateProps<T, S, F> & {
+  /** Props to spread on the input along with the ones the schema derives, of which a `pattern` or `inputMode` wins */
+  extraProps?: InputHTMLAttributes<HTMLInputElement>;
+};
+
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
  * It can be customized/overridden for other themes or individual implementations as needed.
@@ -25,12 +37,7 @@ export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  props: BaseInputTemplateProps<T, S, F> & {
-    /** Props to spread on the input along with the ones the schema derives, of which a `pattern` or `inputMode` wins */
-    extraProps?: InputHTMLAttributes<HTMLInputElement>;
-  },
-) {
+>(props: ShadcnBaseInputTemplateProps<T, S, F>) {
   const {
     id,
     htmlName,

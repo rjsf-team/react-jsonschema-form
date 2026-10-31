@@ -60,7 +60,8 @@ export type MuiBaseInputTemplateProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > = BaseInputTemplateProps<T, S, F> &
-  Pick<BaseInputTemplateMuiProps, 'slotProps'> & {
+  Pick<BaseInputTemplateMuiProps, 'slotProps'> &
+  Partial<Pick<TextFieldProps, 'size' | 'variant' | 'helperText'>> & {
     /** Props for MUI's `InputLabel`, under the name MUI's `TextField` once took them by */
     InputLabelProps?: Partial<MuiInputLabelProps>;
     /** Props for MUI's `Input`, under the name MUI's `TextField` once took them by */

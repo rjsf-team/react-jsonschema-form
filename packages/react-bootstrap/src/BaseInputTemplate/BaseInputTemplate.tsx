@@ -13,16 +13,23 @@ import {
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
+/** The props this theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes
+ * `extraProps` to
+ */
+export type BootstrapBaseInputTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = BaseInputTemplateProps<T, S, F> & {
+  /** Props to spread on the input along with the ones the schema derives, of which a `pattern` or `inputMode` wins */
+  extraProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
+};
+
 export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  props: BaseInputTemplateProps<T, S, F> & {
-    /** Props to spread on the input along with the ones the schema derives, of which a `pattern` or `inputMode` wins */
-    extraProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
-  },
-) {
+>(props: BootstrapBaseInputTemplateProps<T, S, F>) {
   const {
     id,
     htmlName,

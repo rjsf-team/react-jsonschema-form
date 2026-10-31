@@ -750,6 +750,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `TextareaWidget`'s `options` to be type-checked as `WidgetProps['options']`, where `rows` is a `number`, rather than `any` ([#5488](https://github.com/rjsf-team/react-jsonschema-form/pull/5488))
 - Fix `ObjectFieldTemplate` leaving a gap for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Add `BootstrapBaseInputTemplateProps`, the props the theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes `extraProps` to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/shadcn
 
@@ -827,6 +828,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `altDateList`, `altDateListItem`, `altDateNowButton` and `altDateClearButton` to the theme's `classMap`, so core's `AltDateWidget` renders its parts in one wrapping row with outline Now and Clear buttons ([#5641](https://github.com/rjsf-team/react-jsonschema-form/pull/5641), [#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616))
 - Fix `ObjectFieldTemplate` leaving a gap for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Add `ShadcnBaseInputTemplateProps`, the props the theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes `extraProps` to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/snapshot-tests
 
