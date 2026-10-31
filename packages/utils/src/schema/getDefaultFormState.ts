@@ -1756,6 +1756,24 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       onNullFill?.();
     }
   }
+  // The loop above only rebuilds the const's keys the schema declares, so the rest are taken from `defaults`, which
+  // holds the const, or the `ui:initialValue` that takes priority over it, unless the form data already has the key.
+  // `initialDefaultsGenerated` skips it so a key the user removed isn't added back, as for additional properties
+  if (
+    isObject(parentConst) &&
+    isObject(defaults) &&
+    !initialDefaultsGenerated &&
+    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    typeof (parentConst as GenericObjectType).$data !== 'string'
+  ) {
+    const keepsFormData = (key: string) =>
+      shouldMergeDefaultsIntoFormData && Object.hasOwn(formData, key) && formData[key] !== undefined;
+    Object.keys(parentConst)
+      .filter(
+        (key) => !Object.hasOwn(schema.properties ?? {}, key) && Object.hasOwn(defaults, key) && !keepsFormData(key),
+      )
+      .forEach((key) => setOwn(computed, key, ownValue(getByPath(defaults, key))));
+  }
   // An `allOf` or `if` the field's plan left unmerged still brings its properties into the field rendered for it
   if (
     !view.field.retrieves &&
