@@ -200,14 +200,13 @@ If you are doing something like the following to create a new theme based on `@r
 
 ```tsx
 import React from 'react';
-import type { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponent, WidgetProps } from '@rjsf/utils';
 import { type ThemeProps, withTheme } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 import { type MuiBaseInputTemplateProps, Theme } from '@rjsf/mui';
 
-// `BaseInputTemplateProps` doesn't declare `TextField`'s `size`, so the template is read typed with it
-const OldBaseInputTemplate: SlotComponent<MuiBaseInputTemplateProps & Pick<TextFieldProps, 'size'>> =
+// `BaseInputTemplateProps` doesn't declare `TextField`'s `size`, which `MuiBaseInputTemplateProps` does
+const OldBaseInputTemplate: SlotComponent<MuiBaseInputTemplateProps> =
   Theme.templates.BaseInputTemplate;
 
 // Force the underlying `TextField` component to always use size="small"
@@ -232,7 +231,6 @@ Then you would use the new `generateTheme()` and `generateForm()` functions as f
 
 ```tsx
 import React from 'react';
-import type { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponent, WidgetProps } from '@rjsf/utils';
 import { type ThemeProps, withTheme } from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
@@ -260,7 +258,7 @@ interface FormContext {
 const Theme: ThemeProps<FormData, MySchema, FormContext> = generateTheme<FormData, MySchema, FormContext>();
 
 const OldBaseInputTemplate: SlotComponent<
-  MuiBaseInputTemplateProps<FormData, MySchema, FormContext> & Pick<TextFieldProps, 'size'>
+  MuiBaseInputTemplateProps<FormData, MySchema, FormContext>
 > = Templates.BaseInputTemplate;
 
 // Force the underlying `TextField` component to always use size="small"
