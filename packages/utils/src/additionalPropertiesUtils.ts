@@ -2,7 +2,7 @@ import { ALL_OF_KEY, EXTRA_KEYS_ELSEWHERE_FLAG, UNEVALUATED_PROPERTIES_KEY } fro
 import getSchemaType from './getSchemaType.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
-import { schemaFrom } from './schema/graph/mergePlan.ts';
+import { schemaFrom } from './schema/graph/schemaFrom.ts';
 import { JOINED_SCHEMAS_KEY } from './schemaMarkers.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from './types.ts';
 

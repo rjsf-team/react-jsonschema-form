@@ -38,7 +38,7 @@ import useReadFieldData from '../../hooks/useReadFieldData.ts';
 import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
-import { moveOfItems } from '../formState.ts';
+import { moveOfItems } from '../keyMove.ts';
 import { rendersTypeSelector } from './FallbackField.tsx';
 import {
   ARRAY_MODE_DEFAULT_WIDGETS,

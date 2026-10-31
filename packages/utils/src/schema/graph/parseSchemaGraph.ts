@@ -16,7 +16,7 @@ import isObject, { isSchemaObject } from '../../isObject.ts';
 import { DECLARED_ABOVE_KEY, JOINED_SCHEMAS_KEY } from '../../schemaMarkers.ts';
 import { isSubschemaKeyword, keywordShape, normalizeUri, resolveUri } from '../../schemaUri.ts';
 import type { RJSFSchema, StrictRJSFSchema } from '../../types.ts';
-import { schemaFrom } from './mergePlan.ts';
+import { schemaFrom } from './schemaFrom.ts';
 
 /** A subschema's handle in a `SchemaGraph`. Plans, ref paths and provenance compare subschemas by it, so two spellings
  * of a `$ref` that reach the same subschema are one target.

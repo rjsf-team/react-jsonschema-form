@@ -2,7 +2,7 @@ import { use, useCallback } from 'react';
 import type { FieldPath } from '@rjsf/utils';
 
 import FormDataContext from '../components/FormDataContext.ts';
-import type { AnnouncedMove, MoveOutcome } from '../components/formState.ts';
+import type { AnnouncedMove, MoveOutcome } from '../components/keyMove.ts';
 
 /** Sends a change that moves the keys of the array or object at `fieldPath`, see `FormDataAccess.sendMove()`. A move
  * may name a path of its own for a change sent below `fieldPath`, as a property's removal is sent at the property's

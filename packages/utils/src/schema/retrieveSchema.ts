@@ -52,20 +52,21 @@ import buildPlan, {
   conjoinDefinition,
   conjunctionOf,
   refDefinition,
-  schemaFrom,
-  schemaOfBoolean,
   seedsAt,
   tupleSeeds,
   withoutKeys,
 } from './graph/mergePlan.ts';
 import type { MergePlan, OptionRequest, PlanInput, PlanPolicy, Seed, Seeding } from './graph/mergePlan.ts';
+import nodeOfSchema from './graph/nodeOfSchema.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { AdoptedSchema, NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
 import type { GuardChain, Provenance } from './graph/provenance.ts';
 import { childField, collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
+import { schemaFrom, schemaOfBoolean } from './graph/schemaFrom.ts';
 import { pointerTo, withVariantId } from './graph/validationTargets.ts';
+import { constrainsValue, EXCLUDED_STUB_KEYWORDS, EXTRA_KEY_KEYWORDS, UNSTUBBABLE_KEYWORDS } from './schemaKeywords.ts';
 
 /** Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies`
  * and patterns merged in for the `rawFormData`, and the extra keys of that data stubbed among its `properties`. The
@@ -405,22 +406,6 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
     options.map((node) => ({ graph, node })),
     discriminator,
   );
-}
-
-/** Returns the node `schema` stands for: the subschema of `rootSchema` it is, or the field `retrieveSchema()` handed it
- * out as, or, for a schema with no place in the root, the schema itself, parsed beside the root
- *
- * @param schema - The schema
- * @param rootSchema - The root schema
- * @returns - The node and the graph holding it
- */
-export function nodeOfSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): AdoptedSchema<S> {
-  const graph = parseSchemaGraph<S>(rootSchema);
-  const stamped = readProvenance<S>(schema, graph);
-  if (stamped !== undefined && isHandedOut(schema) && stamped.seeds.length === 1) {
-    return { graph: stamped.graph, node: stamped.seeds[0].node };
-  }
-  return graph.adopt(schema);
 }
 
 /** Returns the schema a validator checks `schema` with as the subschema it stands for: a `{ $ref }` naming its place in
@@ -974,102 +959,6 @@ export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchem
   return undefined;
 }
 
-/** The keywords that constrain a value of a given type without naming the type itself. A typeless `additionalProperties`
- * subschema carrying any of them constrains the property it describes, so the property is not free to hold any type.
- */
-const VALUE_KEYWORDS: string[] = [
-  'enum',
-  'const',
-  'format',
-  'minLength',
-  'maxLength',
-  'pattern',
-  'minimum',
-  'maximum',
-  'exclusiveMinimum',
-  'exclusiveMaximum',
-  'multipleOf',
-  'items',
-  'prefixItems',
-  'additionalItems',
-  'contains',
-  'minContains',
-  'maxContains',
-  'minItems',
-  'maxItems',
-  'uniqueItems',
-  'properties',
-  'patternProperties',
-  'additionalProperties',
-  'propertyNames',
-  'required',
-  'dependentRequired',
-  'minProperties',
-  'maxProperties',
-];
-
-/** The keywords that constrain a value by way of other subschemas. They assert something about the value as surely as
- * the `VALUE_KEYWORDS` do, but they are left out of the stub: an `allOf` naming a type of its own would contradict the
- * type the stub takes from the data and fail to merge on every render, and the validator enforces them either way.
- */
-const SUBSCHEMA_KEYWORDS: string[] = [
-  'allOf',
-  'anyOf',
-  'oneOf',
-  'not',
-  'if',
-  'then',
-  'else',
-  'dependencies',
-  'dependentSchemas',
-  'unevaluatedItems',
-  'unevaluatedProperties',
-  '$ref',
-  '$dynamicRef',
-  '$recursiveRef',
-];
-
-/** The keywords that identify a subschema rather than describe a value. The stub is built once per property, so
- * copying them would give every sibling property the same identifier — and an `$id` naming a registered field would
- * route them all to it.
- */
-export const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor', '$schema', '$vocabulary'];
-
-/** The keywords that hold other subschemas for a `$ref` to name rather than describe a value. The stub drops the
- * `$ref` that would reach them, so copying them into every property would hand each one an unreachable copy that
- * `hashForSchema()` and `deepEquals()` then walk on every render.
- */
-export const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
-
-/** The keywords describing an object's extra keys */
-export const EXTRA_KEY_KEYWORDS = [ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY];
-
-/** Every keyword that constrains the value, for the reasons the first two lists above give. They are only ever
- * consulted together, once per key a schema holds, so they are consulted as one.
- */
-export const CONSTRAINING_KEYWORDS = new Set<string>([...VALUE_KEYWORDS, ...SUBSCHEMA_KEYWORDS]);
-
-/** Whether `keyword` of a schema constrains the value it describes, directly or by way of other subschemas. `type` does
- * not count, nor does an annotation, an identifier, a container such as `$defs`, a `discriminator` or any keyword
- * outside JSON Schema's validation vocabulary, such as an `x-` extension: none of those rejects a value
- *
- * @param keyword - The keyword
- * @returns - True when the keyword constrains the value
- */
-export function constrainsValue(keyword: string): boolean {
-  return CONSTRAINING_KEYWORDS.has(keyword);
-}
-
-/** The keywords no stub carries, whatever the stub keeps of the rest, for the reasons the two lists above give: both
- * reasons are about building a stub once per property key, not about what the stub then says of the value.
- */
-const UNSTUBBABLE_KEYWORDS = new Set<string>([...IDENTIFIER_KEYWORDS, ...CONTAINER_KEYWORDS]);
-
-/** Every keyword a guessed-type stub leaves out, for the reasons the three lists above give. They are only ever
- * consulted together, and once per property key, so they are consulted as one.
- */
-const EXCLUDED_STUB_KEYWORDS = new Set<string>([...SUBSCHEMA_KEYWORDS, ...UNSTUBBABLE_KEYWORDS]);
-
 /** Returns the copy of `subSchema` that a stub stands for one property with, without the keywords that identify the
  * subschema or hold others rather than describe the value. It is for the stub whose type the subschema only implies,
  * which is the form's own reading of what that one property holds rather than the subschema as it was written: a field
@@ -1094,14 +983,14 @@ function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S):
  * about the value and giving it the type of the data the property currently holds, so that it renders as a field for
  * that data. Dropping the rest would cost the value its `enum`, `format` or range, leaving a field that neither
  * constrains the value the way the schema does nor offers the other types the schema might allow. The
- * `SUBSCHEMA_KEYWORDS`, `IDENTIFIER_KEYWORDS` and `CONTAINER_KEYWORDS` are not kept, and neither is a `default` of
- * another type than the data, which would re-seed a field of the data's type with a value it cannot hold.
+ * `EXCLUDED_STUB_KEYWORDS` of `schemaKeywords.ts` are not kept, and neither is a `default` of another type than the
+ * data, which would re-seed a field of the data's type with a value it cannot hold.
  *
  * The stub is marked as guessed when the schema puts no constraint on the property at all, i.e. it is `true` or has
- * none of the `VALUE_KEYWORDS` or `SUBSCHEMA_KEYWORDS`. That marker tells the fallback UI the property is free to hold
- * any other type, so a schema that constrains the value must not carry it, or the UI would offer types that schema
- * rejects. Any other keyword — an annotation, an identifier, a container such as `$defs`, or one these lists do not
- * know — leaves the property unconstrained, so an unfamiliar keyword never locks the type in place.
+ * no keyword `constrainsValue()` accepts. That marker tells the fallback UI the property is free to hold any other type,
+ * so a schema that constrains the value must not carry it, or the UI would offer types that schema rejects. Any other
+ * keyword — an annotation, an identifier, a container such as `$defs`, or one `constrainsValue()` does not know —
+ * leaves the property unconstrained, so an unfamiliar keyword never locks the type in place.
  *
  * @param formData - The form data held by the additional property
  * @param [subSchema] - The `additionalProperties` schema describing the property, unless it is simply `true`
@@ -1112,7 +1001,7 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
   const schema: GenericObjectType = { ...subSchema };
   let isConstrained = false;
   Object.entries(subSchema).forEach(([key, value]) => {
-    if (CONSTRAINING_KEYWORDS.has(key)) {
+    if (constrainsValue(key)) {
       isConstrained = true;
     }
     const isForeignDefault = key === 'default' && guessType(value) !== type;

@@ -21,9 +21,9 @@ import { getByPath } from '../../pathUtils.ts';
 import { keywordShape } from '../../schemaUri.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import KeyedMemo from './keyedMemo.ts';
-import { booleanSchema, schemaFrom } from './mergePlan.ts';
 import { childPointer, isRootPointer } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
+import { booleanSchema, schemaFrom } from './schemaFrom.ts';
 
 /** The suffix `withVariantId()` adds to an `$id`, matched at the end so deriving a variant of a variant replaces it
  * rather than stacking another one on
