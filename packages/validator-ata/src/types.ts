@@ -1,12 +1,4 @@
-import type {
-  Bivariant,
-  CustomMergeAllOf,
-  FormContextType,
-  RawValidationResult,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '@rjsf/utils';
+import type { Bivariant, CustomMergeAllOf, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import type { ValidationError, Validator, ValidatorOptions } from 'ata-validator';
 
 /** Custom format checker. Receives a string and returns true when the value
@@ -87,13 +79,3 @@ export interface CompiledValidateFunction extends Bivariant<[data: unknown], boo
 }
 
 export type ValidatorFunctions = Record<string, CompiledValidateFunction>;
-
-/** The validator `createPrecompiledValidator()` returns: a `ValidatorType` whose `rawValidation()` reports
- * ata-validator's own `ValidationError`s
- */
-export interface PrecompiledValidatorType<
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
-> extends ValidatorType<S, F> {
-  rawValidation(schema: S, formData?: unknown): RawValidationResult<ValidationError>;
-}
