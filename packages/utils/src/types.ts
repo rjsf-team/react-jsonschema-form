@@ -1409,7 +1409,7 @@ export type ArrayFieldItemButtonsTemplateProps<
   onMoveDownItem: (event?: SyntheticEvent<HTMLElement>) => void;
   /** Callback function that removes the item from the list */
   onRemoveItem: (event?: SyntheticEvent<HTMLElement>) => void;
-  /** A boolean value stating if the array item is read-only */
+  /** Whether the array item's buttons are read-only, by the array's lock or the item's own; its inputs can stay editable, under an item's `ui:readonly: false` */
   readonly?: boolean;
   /** Props to spread onto each of the item's buttons, holding a key only for the buttons the item can show. Set when
    * the array's `ui:options.itemLabel` names the item, to give the buttons titles such as `Remove report.pdf`;
