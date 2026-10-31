@@ -11,7 +11,9 @@ import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps 
 // This plugin is needed to support the parsing of date and time values in the `DateWidget` and `DateTimeWidget`
 dayjs.extend(customParseFormat);
 
-const dateParser = (input: string | undefined, format?: string) => {
+const FORMAT_OPTIONS = new Set(['valueFormat', 'displayFormat']);
+
+const dateParser = (input: string | undefined, format: string) => {
   if (!input) {
     return null;
   }
@@ -56,10 +58,8 @@ export default function DateTimeInput<
   F extends FormContextType = FormContextType,
 >(
   props: WidgetProps<T, S, F> & {
-    /** The dayjs format the value is stored in */
-    valueFormat?: string;
-    /** The dayjs format the value is shown in */
-    displayFormat?: string;
+    /** The dayjs format the value is stored in, without a `valueFormat` option */
+    defaultValueFormat: string;
   },
 ) {
   const {
@@ -76,14 +76,16 @@ export default function DateTimeInput<
     onChange,
     onBlur,
     onFocus,
-    valueFormat,
-    displayFormat,
+    defaultValueFormat,
     schema,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const valueFormat = typeof options.valueFormat === 'string' ? options.valueFormat : defaultValueFormat;
+  const displayFormat =
+    typeof options.displayFormat === 'string' && options.displayFormat ? options.displayFormat : valueFormat;
 
   const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
-  const themeProps = cleanupOptions(options, props);
+  const themeProps = cleanupOptions(options, props, FORMAT_OPTIONS);
 
   const handleChange = useCallback(
     (nextValue: DateStringValue | null) => {
