@@ -878,7 +878,8 @@ The following props are passed to a custom field template component:
 ## GridTemplate
 
 The `GridTemplate` is the template that renders a theme dependent Grid for either a row or column.
-While it has only two explicit properties, it extends the `GenericObjectTemplate` in order to support passing any of the properties associated with a Grid implementation for any theme.
+While it declares only a few properties, it takes any other prop too, in order to support passing any of the properties associated with a Grid implementation for any theme.
+A prop it doesn't declare reads back as `unknown`, so a template that reads one declares it on its own props, as in `GridTemplateProps & { gap?: number }`.
 If you want to customize how grids are rendered you can.
 
 ```tsx
@@ -910,6 +911,8 @@ The following props are passed to the `GridTemplate`:
 - `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
 - `span`: Optional number of the 12 tracks a column spans in the `core` theme's grid; a column without one is full width
+- `className`: Optional class names to add to the grid element
+- `style`: Optional style to apply to the grid element
 
 ## MarkdownTemplate
 
