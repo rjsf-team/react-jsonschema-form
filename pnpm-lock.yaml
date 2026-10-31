@@ -770,6 +770,9 @@ importers:
 
   packages/utils:
     dependencies:
+      '@types/json-schema':
+        specifier: ^7.0.15
+        version: 7.0.15
       '@x0k/json-schema-merge':
         specifier: ^1.1.0
         version: 1.1.0
@@ -780,9 +783,6 @@ importers:
         specifier: '>=19'
         version: 19.3.0
     devDependencies:
-      '@types/json-schema':
-        specifier: ^7.0.15
-        version: 7.0.15
       deep-freeze-es6:
         specifier: ^5.0.0
         version: 5.0.0
