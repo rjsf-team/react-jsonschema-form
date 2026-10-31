@@ -9,7 +9,7 @@ import type {
   Widget,
   WidgetProps,
 } from '../src/index.ts';
-import { getUiOptions, noop } from '../src/index.ts';
+import { getUiOptions, isObject, noop } from '../src/index.ts';
 
 const uiSchema: UiSchema = {
   widgetText: {
@@ -59,6 +59,12 @@ const results: Record<string, UIOptionsType> = {
   },
 };
 
+/** One case of `uiSchema`, whose entries an untyped uiSchema reads back as `unknown` */
+function uiSchemaCase(name: string): UiSchema {
+  const value = uiSchema[name];
+  return isObject(value) ? value : {};
+}
+
 describe('getUiOptions()', () => {
   let consoleErrorSpy: MockInstance;
   beforeAll(() => {
@@ -78,25 +84,25 @@ describe('getUiOptions()', () => {
     expect(getUiOptions(null as any, globalOptions)).toEqual(globalOptions);
   });
   it('returns array object as options', () => {
-    expect(getUiOptions(uiSchema.arrayObject, globalOptions)).toEqual(results.arrayObject);
+    expect(getUiOptions(uiSchemaCase('arrayObject'), globalOptions)).toEqual(results.arrayObject);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
   it('returns widget text as options', () => {
-    expect(getUiOptions(uiSchema.widgetText)).toEqual(results.widgetText);
+    expect(getUiOptions(uiSchemaCase('widgetText'))).toEqual(results.widgetText);
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
   it('returns widget object as empty, with error', () => {
-    expect(getUiOptions(uiSchema.widgetObject)).toEqual(results.widgetObject);
+    expect(getUiOptions(uiSchemaCase('widgetObject'))).toEqual(results.widgetObject);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Setting options via ui:widget object is no longer supported, use ui:options instead',
     );
   });
   it('returns options object as options', () => {
-    expect(getUiOptions(uiSchema.optionsObject)).toEqual(results.optionsObject);
+    expect(getUiOptions(uiSchemaCase('optionsObject'))).toEqual(results.optionsObject);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });
   it('returns multiple options as options', () => {
-    expect(getUiOptions(uiSchema.multiOptions)).toEqual(results.multiOptions);
+    expect(getUiOptions(uiSchemaCase('multiOptions'))).toEqual(results.multiOptions);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });
   it('leaves a global required out, since ui:required is a field option alone (#5527)', () => {

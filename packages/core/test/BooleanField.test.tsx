@@ -377,9 +377,10 @@ describe('BooleanField', () => {
   });
 
   it('should pass uiSchema to custom widget', () => {
-    const CustomCheckboxWidget = ({ uiSchema }: WidgetProps) => (
-      <div id='custom-ui-option-value'>{uiSchema?.custom_field_key['ui:options'].test}</div>
-    );
+    const CustomCheckboxWidget = ({ uiSchema }: WidgetProps) => {
+      const ui: UiSchema<{ custom_field_key?: unknown }> | undefined = uiSchema;
+      return <div id='custom-ui-option-value'>{String(ui?.custom_field_key?.['ui:options']?.test)}</div>;
+    };
 
     const { node } = createFormComponent({
       schema: {

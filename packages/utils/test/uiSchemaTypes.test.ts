@@ -51,6 +51,7 @@ describe('UiSchema type', () => {
       additionalProperties: { zip: { 'ui:placeholder': 'Zip' } },
     };
 
+    expectTypeOf<NonNullable<Known['additionalProperties']>>().toEqualTypeOf<UiSchema>();
     expect(open.additionalProperties?.city).toBeDefined();
     expect([indexed, wrong]).toHaveLength(2);
   });
@@ -119,7 +120,8 @@ describe('UiSchema type', () => {
   it('leaves a field whose type says nothing about its data unconstrained', () => {
     const ui: Known = { loose: { nested: { 'ui:title': 'Nested' } } };
 
-    expect(ui.loose?.nested?.['ui:title']).toBe('Nested');
+    expectTypeOf(ui.loose?.nested).toBeUnknown();
+    expect(ui.loose?.nested).toEqual({ 'ui:title': 'Nested' });
   });
 
   it('keeps the ui: namespace open for theme and application directives', () => {
@@ -128,10 +130,11 @@ describe('UiSchema type', () => {
     expect(ui['ui:myTheme:thing']).toBe(42);
   });
 
-  it('leaves an untyped uiSchema as permissive as it has always been', () => {
+  it('accepts any key in an untyped uiSchema and reads nested entries back as unknown', () => {
     const ui: UiSchema = { whatever: 1, nested: { deeper: { 'ui:widget': 'text' } }, 'ui:wigdet': 'typo' };
 
-    expect(ui.nested.deeper['ui:widget']).toBe('text');
+    expectTypeOf(ui.nested).toBeUnknown();
+    expect(ui.nested).toEqual({ deeper: { 'ui:widget': 'text' } });
   });
 
   it('rejects a field name the data does not have', () => {
