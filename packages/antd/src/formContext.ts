@@ -5,7 +5,9 @@ import type { ColProps, FormProps, RowProps } from 'antd';
  * through this type, which names the options they look for
  */
 export interface AntdFormContext {
-  /** Whether a label ends in a colon, which it does unless this is `false` */
+  /** Whether antd draws its colon after a label, replacing one the label ends in, unless this is `false`. antd hides
+   * its colon on a label above its control, where the default `labelCol` puts it
+   */
   colon?: boolean;
   /** The columns an object's property spans, for every property or by its widget name, field name or schema type */
   colSpan?: number | Record<string, number>;

@@ -25,8 +25,8 @@ Setting `{readonlyAsDisabled: false}` on the formContext will make the antd them
 
 These are the `formContext` properties that you can modify to adjust the `antd` presentation. `AntdFormContext`, exported from `@rjsf/antd`, types them, to pass as the `F` type argument of `generateForm()` or to extend with your own:
 
-- `colon`: Whether a label ends in a colon, defaults to true
-- `colSpan`: The columns of antd's 24-column grid an object's property spans, for every property or as a record keyed by its widget name, field name or schema type, defaults to 24
+- `colon`: Whether antd draws its colon after a label, replacing one the label ends in, defaults to true; antd hides its colon on a label above its control, where the default `labelCol` puts it
+- `colSpan`: The columns of antd's 24-column grid an object's property spans, for every property or as a record keyed by its widget name, field name or schema type, defaults to 24; a record gives a property with no entry 24 columns if it is the only visible property, an object, an array or a textarea, and 12 otherwise
 - `descriptionLocation`: Where to display the description, either 'below' or 'tooltip', defaults to 'below'
 - `labelAlign`: The alignment of the labels of objects and arrays, either 'left' or 'right', defaults to 'right'
 - `labelCol`: The antd `Col` props of a field's label, defaults to `{ span: 24 }`
