@@ -428,6 +428,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 ### disabled
 
 The `ui:disabled` uiSchema directive will disable all child widgets from a given field.
+On an array item, it disables the item's move, copy and remove buttons too, see [Disabling specific items](../json-schema/arrays.md#disabling-specific-items).
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
 
@@ -942,6 +943,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 ### readonly
 
 The `ui:readonly` uiSchema directive will mark all child widgets from a given field as read-only. This is equivalent to setting the `readOnly` property in the schema.
+On an array item, either one disables the item's move, copy and remove buttons too, see [Disabling specific items](../json-schema/arrays.md#disabling-specific-items).
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
 
