@@ -2163,7 +2163,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         },
       );
 
-      it.each<[string, RJSFSchema, GenericObjectType, GenericObjectType]>([
+      it.each<[string, Record<string, RJSFSchema>, GenericObjectType, GenericObjectType]>([
         ['at the top', { b: ENUM_WITH_DEFAULT }, { b: 'zz' }, { b: 'x' }],
         [
           'one level down',

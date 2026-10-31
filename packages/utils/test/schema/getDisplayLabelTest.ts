@@ -1,5 +1,5 @@
 /* oxlint-disable typescript/no-deprecated -- this file tests the deprecated `getDisplayLabel()` */
-import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
+import type { GenericObjectType, RJSFMarkedSchema, RJSFSchema } from '../../src/index.ts';
 import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, getDisplayLabel } from '../../src/index.ts';
 import type { TestValidatorType } from './types.ts';
 
@@ -33,9 +33,8 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
       expect(getDisplayLabel({ validator: testValidator }, { type: 'object' })).toEqual(false);
     });
     it('object type from additionalProperty', () => {
-      expect(
-        getDisplayLabel({ validator: testValidator }, { type: 'object', [ADDITIONAL_PROPERTY_FLAG]: true }),
-      ).toEqual(true);
+      const schema: RJSFMarkedSchema = { type: 'object', [ADDITIONAL_PROPERTY_FLAG]: true };
+      expect(getDisplayLabel({ validator: testValidator }, schema)).toEqual(true);
     });
     it('object type with constant options', () => {
       expect(
@@ -125,9 +124,8 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
     });
     describe('array type', () => {
       it('added by additionalProperty', () => {
-        expect(
-          getDisplayLabel({ validator: testValidator }, { type: 'array', [ADDITIONAL_PROPERTY_FLAG]: true }, {}),
-        ).toEqual(true);
+        const schema: RJSFMarkedSchema = { type: 'array', [ADDITIONAL_PROPERTY_FLAG]: true };
+        expect(getDisplayLabel({ validator: testValidator }, schema, {})).toEqual(true);
       });
       it('items', () => {
         expect(getDisplayLabel({ validator: testValidator }, { type: 'array', items: { type: 'string' } }, {})).toEqual(

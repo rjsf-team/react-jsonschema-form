@@ -400,6 +400,10 @@ describe('getInputProps', () => {
       vi.resetModules();
     });
   });
+  it("sets no min or max from an Ajv `$data` reference, which names another value's bound", () => {
+    const schema: RJSFSchema = { formatMinimum: { $data: '1/start' }, formatMaximum: { $data: '1/end' } };
+    expect(getInputProps(schema, 'date')).toEqual({ type: 'date' });
+  });
   it('returns min from formatMinimum when defaultType is date', () => {
     const schema: RJSFSchema = { formatMinimum: '2020-01-01' };
     expect(getInputProps(schema, 'date')).toEqual({ type: 'date', min: '2020-01-01' });

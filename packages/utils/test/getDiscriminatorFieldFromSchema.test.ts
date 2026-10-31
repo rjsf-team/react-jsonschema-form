@@ -4,6 +4,7 @@ import type { RJSFSchema } from '../src/index.ts';
 import { getDiscriminatorFieldFromSchema, noop } from '../src/index.ts';
 
 const PROPERTY_NAME = 'testProp';
+// @ts-expect-error: TS2322, a `propertyName` that isn't a string is what these cases check
 const BAD_DISCRIMINATOR: RJSFSchema = { discriminator: { propertyName: 5 } };
 const GOOD_DISCRIMINATOR: RJSFSchema = { discriminator: { propertyName: PROPERTY_NAME } };
 

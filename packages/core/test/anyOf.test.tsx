@@ -1983,7 +1983,11 @@ describe('anyOf', () => {
     });
     it('warns when discriminator.propertyName is not a string', () => {
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
-      const badSchema = { ...schema, discriminator: { propertyName: 5 } };
+      const badSchema: RJSFSchema = {
+        ...schema,
+        // @ts-expect-error: TS2322, a `propertyName` that isn't a string is what this case checks
+        discriminator: { propertyName: 5 },
+      };
       const { node } = createFormComponent({
         schema: badSchema,
       });

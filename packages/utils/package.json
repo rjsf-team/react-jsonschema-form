@@ -29,11 +29,11 @@
     "react": ">=19"
   },
   "dependencies": {
+    "@types/json-schema": "^7.0.15",
     "@x0k/json-schema-merge": "^1.1.0",
     "fast-equals": "^6.0.4"
   },
   "devDependencies": {
-    "@types/json-schema": "^7.0.15",
     "deep-freeze-es6": "^5.0.0"
   },
   "publishConfig": {

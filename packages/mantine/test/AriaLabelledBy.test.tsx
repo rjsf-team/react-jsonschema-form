@@ -702,23 +702,26 @@ describe('aria-labelledby', () => {
     expect(error.querySelectorAll('br')).toHaveLength(1);
   });
 
+  const descriptionCases: [string, RJSFSchema][] = [
+    ['text', { type: 'string' }],
+    ['textarea', { type: 'string' }],
+    ['password', { type: 'string' }],
+    ['color', { type: 'string' }],
+    ['file', { type: 'string', format: 'data-url' }],
+    ['date', { type: 'string' }],
+    ['time', { type: 'string' }],
+    ['select', enumSchema],
+    ['radio', enumSchema],
+    ['checkboxes', checkboxesSchema],
+  ];
   test.each(
-    (
-      [
-        ['text', { type: 'string' }],
-        ['textarea', { type: 'string' }],
-        ['password', { type: 'string' }],
-        ['color', { type: 'string' }],
-        ['file', { type: 'string', format: 'data-url' }],
-        ['date', { type: 'string' }],
-        ['time', { type: 'string' }],
-        ['select', enumSchema],
-        ['radio', enumSchema],
-        ['checkboxes', checkboxesSchema],
-      ] as [string, RJSFSchema][]
-    ).flatMap(([widget, schema]) =>
-      ['ui:options', 'ui:options.wrapperProps', 'theme'].map((source) => [widget, source, schema]),
-    ) as [string, string, RJSFSchema][],
+    descriptionCases.flatMap(([widget, schema]) =>
+      ['ui:options', 'ui:options.wrapperProps', 'theme'].map((source): [string, string, RJSFSchema] => [
+        widget,
+        source,
+        schema,
+      ]),
+    ),
   )(
     '%s widget applies descriptionProps from the %s to its description, rendered as a div',
     (widget, source, schema) => {

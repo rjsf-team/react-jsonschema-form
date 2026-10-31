@@ -2,6 +2,7 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { createSchemaUtils } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
+import type { WithOpenApiComponents } from '../../../testing/openApiSchema.ts';
 import nestedResourceTests, { mergedResourceViewTests } from '../../utils/test/testUtils/nestedResourceTests.ts';
 import pointerValidationTests, {
   sharedObjectValidationTests,
@@ -604,7 +605,7 @@ describe('compileSchemaValidatorsCode', () => {
     expect(() => compileSchemaValidatorsCode(rootSchema)).not.toThrow();
   });
   test('reads a $ref below an $id under a container no keyword names against the resource around the container', () => {
-    const rootSchema: RJSFSchema = {
+    const rootSchema: WithOpenApiComponents<RJSFSchema> = {
       components: {
         schemas: {
           X: { $id: 'http://example.com/y.json', type: 'object', properties: { k: { $ref: '#/definitions/s' } } },

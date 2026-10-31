@@ -122,11 +122,12 @@ export default function getInputProps<
 
   // For date/time input types, propagate formatMinimum/formatMaximum to min/max
   if (['date', 'datetime-local', 'time', 'week', 'month'].includes(inputProps.type)) {
-    if (schema.formatMinimum !== undefined) {
-      inputProps.min = schema.formatMinimum as string;
+    // A `$data` reference names another value, which the input can't show as its bound
+    if (typeof schema.formatMinimum === 'string') {
+      inputProps.min = schema.formatMinimum;
     }
-    if (schema.formatMaximum !== undefined) {
-      inputProps.max = schema.formatMaximum as string;
+    if (typeof schema.formatMaximum === 'string') {
+      inputProps.max = schema.formatMaximum;
     }
   }
 

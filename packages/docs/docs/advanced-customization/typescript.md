@@ -112,6 +112,29 @@ render(<Form<any, MySchema> schema={schema} validator={validator} />, document.g
 
 > NOTE: using this `Ajv typing system` has not been tested extensively with RJSF, so use carefully
 
+#### Keywords of your own
+
+`RJSFSchema` is the `JSONSchema7` of `@types/json-schema`, which `@rjsf/utils` augments with the later-draft, OpenAPI and Ajv keywords RJSF reads.
+Declare a keyword RJSF doesn't read the same way, so that it type-checks at every depth of a schema:
+
+```ts
+import { RJSFSchema } from '@rjsf/utils';
+
+declare module 'json-schema' {
+  interface JSONSchema7 {
+    'x-group'?: string;
+  }
+}
+
+const schema: RJSFSchema = { type: 'object', properties: { phone: { type: 'string', 'x-group': 'contact' } } };
+```
+
+The module has to resolve from your own code, to the copy `@rjsf/utils` uses.
+A package manager that doesn't hoist `@types/json-schema`, as pnpm doesn't by default, reports TS2664 (`Invalid module name in augmentation`) until your project lists it among its own dependencies.
+
+The file also has to be a module, with an `import` or an `export`, as the example is.
+In a file with neither, such as a `.d.ts` of its own, `declare module` replaces `json-schema` instead of adding to it, and TypeScript reports TS2353 on `type` and every other keyword until you add `export {};`.
+
 ### F
 
 The generic `F` is used to represent the type of the `formContext` property passed into `Form`.
