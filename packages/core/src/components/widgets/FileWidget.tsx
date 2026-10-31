@@ -114,7 +114,7 @@ function FileWidget<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         required={value ? false : required} // this turns off HTML required validation when a value exists
         onChangeOverride={handleOnChangeEvent}
         value=''
-        accept={Array.isArray(options.accept) ? options.accept.join(',') : options.accept}
+        accept={options.accept ? String(options.accept) : undefined}
       />
       <FilesInfo<T, S, F>
         filesInfo={filesInfo}
