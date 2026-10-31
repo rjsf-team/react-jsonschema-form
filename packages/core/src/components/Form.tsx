@@ -118,7 +118,13 @@ export interface FormProps<
   /** The dictionary of registered fields in the form */
   fields?: RegistryFieldsType<Uninferred<T>, S, F>;
   /** The dictionary of registered templates in the form; Partial allows a subset to be provided beyond the defaults */
-  templates?: Partial<Omit<TemplatesType<Uninferred<T>, S, F>, 'ButtonTemplates'>> & {
+  templates?: {
+    [K in keyof TemplatesType<Uninferred<T>, S, F> as K extends 'ButtonTemplates' ? never : K]?: TemplatesType<
+      Uninferred<T>,
+      S,
+      F
+    >[K];
+  } & {
     ButtonTemplates?: Partial<TemplatesType<Uninferred<T>, S, F>['ButtonTemplates']>;
   };
   /** The dictionary of registered widgets in the form */
