@@ -10,6 +10,7 @@ import {
   getRenderedOptionSchema,
   getXxxOfOptions,
   GUESSED_TYPE_FLAG,
+  hasSchemaMarker,
   isConstantOptionList,
   isObject,
   isPlainObject,
@@ -134,7 +135,7 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const rootSchema = schemaUtils.getRootSchema();
   const data = asFieldValue<T>(value);
   let schema = raw;
-  if (Reflect.get(schema, RJSF_REF_CYCLE_KEY)) {
+  if (hasSchemaMarker(schema, RJSF_REF_CYCLE_KEY)) {
     if (!uiState.isExpanded(fieldPathFromList(path))) {
       return [];
     }

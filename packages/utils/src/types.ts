@@ -55,10 +55,10 @@ export type StrictRJSFSchema = JSONSchema7;
  */
 export type RJSFSchema = StrictRJSFSchema;
 
-/** Allow for more flexible schemas (i.e. draft-2019) than the strict JSONSchema7 with special marking added by
- * `retrieveSchema()`
+/** A schema with the boolean and string symbol markers `retrieveSchema()` adds, such as `ADDITIONAL_PROPERTY_FLAG` and
+ * `RJSF_REF_KEY`
  */
-export type RJSFMarkedSchema = StrictRJSFSchema & GenericSymbolObjectType;
+export type RJSFMarkedSchema = StrictRJSFSchema & Record<symbol, boolean | string>;
 
 /** The type of a form's `formContext`, the constraint and default of every `F`: any object, an `interface` included,
  * which a component reading it narrows or names the keys of
@@ -2144,10 +2144,10 @@ type CommonUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> =
 /** @internal The closed vocabulary of a `StrictUiSchema`: `ui:widget`/`ui:field` narrowed to only the names `Checks`
  * declares for the field's type, and the `ui:` namespace closed to just the options it declares plus
  * `CommonUiOptions`: for a known form-data type, every other key, including a typo like `ui:wigdet`, becomes a type
- * error instead of only failing at runtime. For an unknown one, such as a `ui:definitions` entry's, `ui:options` stays
- * closed to `Checks` but an undeclared `ui:` key is left open. `@rjsf/utils` has no built-in vocabulary of its own to
- * always include here - a theme's `Checks` union (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`) is meant to be unioned
- * in by whoever passes `Checks`.
+ * error instead of only failing at runtime. For an unknown one, such as a `ui:definitions` entry's, or one whose index
+ * signature holds `unknown` values, `ui:options` stays closed to `Checks` but an undeclared `ui:` key is left open.
+ * `@rjsf/utils` has no built-in vocabulary of its own to always include here - a theme's `Checks` union (e.g.
+ * `@rjsf/core`'s `CoreUiOptionsChecks`) is meant to be unioned in by whoever passes `Checks`.
  */
 type StrictUiVocabulary<T, S extends StrictRJSFSchema, F extends FormContextType, Checks> = MakeUIType<
   CommonUiOptions<T, S, F>
@@ -2174,7 +2174,7 @@ type UiSchemaFieldMembers<T> = Exclude<Extract<NonNullable<T>, object>, readonly
 /** The data whose keys become the nested per-field entries of a `UiSchema` for data of type `T`. Data of an unknown
  * type keeps every field name open; an array nests through `items` rather than by index; a leaf has no nested fields.
  */
-type UiSchemaChildData<T> = unknown extends T ? GenericObjectType : UnionMembersMerged<UiSchemaFieldMembers<T>>;
+type UiSchemaChildData<T> = unknown extends T ? Record<string, unknown> : UnionMembersMerged<UiSchemaFieldMembers<T>>;
 
 /** The keys of `X` that name form fields. A method is not a field, and mapping one would also break assignability
  * for every uiSchema literal, since an object literal's apparent type carries `Object.prototype`'s methods.
@@ -2191,16 +2191,21 @@ type UnionMembersMerged<T> = {
 /** The data an `additionalProperties` key holds: what `T`'s index signature declares, or `unknown` when it has none */
 type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullable<T>[string] : unknown;
 
+/** Whether a nested entry is unconstrained: `any` data, or a string index holding `unknown`, which also covers the `ui:`
+ * keys, whose values aren't uiSchemas. A field declared `unknown` isn't one, and keeps its loose `UiSchema`
+ */
+type IsOpenEntry<K, V> = IsAny<V> extends true ? true : [string, unknown] extends [K, V] ? true : false;
+
 /** A nested field entry. For unknown data the entry is unconstrained and reads back as `unknown`: the loose `UiSchema`
  * can't stand in, since the string index signature it would sit under also covers the `ui:` keys, whose values aren't
  * uiSchemas
  */
-type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
-  IsAny<V> extends true ? unknown : UiSchema<V, S, F>;
+type UiSchemaChild<K, V, S extends StrictRJSFSchema, F extends FormContextType> =
+  IsOpenEntry<K, V> extends true ? unknown : UiSchema<V, S, F>;
 
 /** A nested field entry of a `StrictUiSchema`, unconstrained for unknown data the same way as `UiSchemaChild` */
-type StrictUiSchemaChild<Checks extends UiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
-  IsAny<V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
+type StrictUiSchemaChild<Checks extends UiOptionsCheck, K, V, S extends StrictRJSFSchema, F extends FormContextType> =
+  IsOpenEntry<K, V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
 
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`. It accepts any `ui:widget`/`ui:field` name and any `ui:`-prefixed option; `StrictUiSchema` is
@@ -2214,7 +2219,7 @@ export type UiSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > = {
-  [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<UiSchemaChildData<T>[K], S, F>;
+  [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<K, UiSchemaChildData<T>[K], S, F>;
 } & MakeUIType<UIOptionsType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> } & {
     /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
      * Registry for use everywhere.
@@ -2278,7 +2283,7 @@ export type StrictUiSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > = {
-  [K in keyof UiSchemaChildData<T>]?: StrictUiSchemaChild<Checks, UiSchemaChildData<T>[K], S, F>;
+  [K in keyof UiSchemaChildData<T>]?: StrictUiSchemaChild<Checks, K, UiSchemaChildData<T>[K], S, F>;
 } & StrictUiVocabulary<T, S, F, Checks> & {
     /** As `UiSchema`'s `ui:globalOptions` */
     'ui:globalOptions'?: GlobalUISchemaOptions;
