@@ -64,10 +64,8 @@ export type CoreUiOptionsChecks =
         emptyValue?: string;
         accept?: string;
         filePreview?: boolean;
-        format?: DateElementFormat;
-        hideClearButton?: boolean;
-        hideNowButton?: boolean;
-        yearsRange?: readonly [number, number];
+        accept?: string | string[];
+        yearsRange?: number[];
         inline?: boolean;
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
