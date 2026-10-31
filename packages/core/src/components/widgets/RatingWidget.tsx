@@ -42,7 +42,10 @@ export default function RatingWidget<
   );
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
-  const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
+  // A `stars` that isn't a number, as a JSON uiSchema can hold, shows the default 5
+  const numStars = schema.maximum
+    ? Math.min(schema.maximum, 5)
+    : Math.min(Math.max(Number.isFinite(stars) ? stars : 5, 1), 5);
   const min = schema.minimum ?? 0;
   // A string field can store the rating, as a numeric string
   const numericValue = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
@@ -118,13 +121,12 @@ export default function RatingWidget<
         cursor: disabled || readonly ? 'default' : 'pointer',
       }}
     >
-      {[...Array(numStars)].map((_, index) => {
+      {Array.from({ length: numStars }, (_, index) => {
         const starValue = min + index;
         const isFilled = rating !== undefined && starValue <= rating;
 
         return (
           <span
-            // oxlint-disable-next-line react/no-array-index-key
             key={index}
             ref={index === autofocusIndex ? autofocusStar : undefined}
             onClick={() => handleStarClick(starValue)}

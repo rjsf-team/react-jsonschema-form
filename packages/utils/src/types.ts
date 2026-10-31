@@ -730,14 +730,11 @@ export type ReservedUiOptionName =
   | 'fieldReplacesAnyOrOneOf'
   | 'enumOptions'
   | OverridableTemplateName
-  | 'accept'
   | 'expandable'
   | 'format'
   | 'hideClearButton'
   | 'hideNowButton'
-  | 'shape'
-  | 'stars'
-  | 'yearsRange';
+  | 'shape';
 
 /** Checks the keys an extension of `GlobalUISchemaOptions` adds: each one also in `Reserved` is mapped to `never`, so
  * an extension declaring one doesn't satisfy it, and so is an extension with a string index signature, which would
@@ -1883,7 +1880,7 @@ type MakeUIType<Type> = {
 };
 
 /** The per-field template overrides `ui:options` supports, i.e. all the properties of `TemplatesType` except
- * "ButtonTemplates". Shared by `UIOptionsBaseType` (the open, unnarrowed vocabulary) and `CommonUiOptions` (the
+ * "ButtonTemplates". Shared by `UIOptionsType` (the open, unnarrowed vocabulary) and `CommonUiOptions` (the
  * closed vocabulary's always-available common options), so the two lists can't drift apart.
  */
 type UIOptionsTemplateOverrides<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
@@ -1905,7 +1902,7 @@ type UIOptionsTemplateOverrides<T, S extends StrictRJSFSchema, F extends FormCon
 >;
 
 /** This type represents all the known supported options in the `ui:options` property, without the open vocabulary
- * `UIOptionsBaseType` adds, so that their names can be listed as `ReservedUiOptionName`. It also contains all the
+ * `UIOptionsType` adds, so that their names can be listed as `ReservedUiOptionName`. It also contains all the
  * properties, optionally, of `TemplatesType` except "ButtonTemplates"
  */
 type UIOptionsDeclaredType<
@@ -1996,28 +1993,32 @@ type UIOptionsDeclaredType<
     rows?: number;
     /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
     submitButtonOptions?: UISchemaSubmitButtonOptions;
+    /** The file types a `FileWidget` accepts: a comma-separated list, or an array of them */
+    accept?: string | string[];
+    /** The number of stars a `RatingWidget` shows, from 1 to 5, when the schema has no `maximum` */
+    stars?: number;
+    /** The first and last year an `AltDateWidget` offers, as `[first, last]`, both counted from the current year when
+     * neither is positive
+     */
+    yearsRange?: number[];
     /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */
     widget?: Widget<T, S, F> | string;
   };
 
-/** This type represents all the known supported options in the `ui:options` property, kept separate in order to
- * remap the keys. Its `GenericObjectType` leaves the vocabulary open to any option a theme or custom component reads,
- * which is also what gives `UiSchema` its `ui:${string}` keys once remapped
+/** The type that represents the Options potentially provided by `ui:options`. Its string index leaves the vocabulary
+ * open to any option a theme or custom component reads, typed `unknown` until it is checked, which is also what gives
+ * `UiSchema` its `ui:${string}` keys once remapped
  */
-type UIOptionsBaseType<
+export interface UIOptionsType<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = UIOptionsDeclaredType<T, S, F> & GenericObjectType;
-
-/** The type that represents the Options potentially provided by `ui:options` */
-export type UIOptionsType<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
-> = UIOptionsBaseType<T, S, F> & Record<string, unknown>;
+> extends UIOptionsDeclaredType<T, S, F> {
+  // oxlint-disable-next-line typescript/consistent-indexed-object-style -- an interface: intersecting a `Record` instead makes the checker hang
+  [option: string]: unknown;
+}
 
 /**
  * A utility type that extracts the element type from an array type.
@@ -2117,7 +2118,7 @@ interface UiOptionsComponentPart<T, S extends StrictRJSFSchema, F extends FormCo
 
 /** @internal Common `ui:*` options valid on any field regardless of its type, kept separate from a `Checks` union
  * since they aren't type-specific vocabulary - available whenever `Checks` narrows the vocabulary, same as they
- * always are through `UIOptionsBaseType` when it doesn't. Includes the same per-field template overrides and
+ * always are through `UIOptionsType` when it doesn't. Includes the same per-field template overrides and
  * `GlobalUISchemaOptions` keys the open vocabulary carries, since those are also type-agnostic and unrecoverable
  * through `Checks` otherwise.
  */
@@ -2211,7 +2212,7 @@ export type UiSchema<
   F extends FormContextType = FormContextType,
 > = {
   [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<UiSchemaChildData<T>[K], S, F>;
-} & MakeUIType<UIOptionsBaseType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> } & {
+} & MakeUIType<UIOptionsType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> } & {
     /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
      * Registry for use everywhere.
      */

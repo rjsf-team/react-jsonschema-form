@@ -16,6 +16,16 @@ interface ReferencesFormData {
 }
 
 describe('CoreUiOptionsChecks', () => {
+  it('accepts the options `UIOptionsType` declares for a file and an alt-date string field', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { upload: string; born: string }>;
+    const ui: Checked = {
+      upload: { 'ui:widget': 'FileWidget', 'ui:options': { accept: ['.png', '.jpg'] } },
+      born: { 'ui:widget': 'AltDateWidget', 'ui:options': { yearsRange: [1900, 2000] } },
+    };
+
+    expect(ui.upload?.['ui:widget']).toBe('FileWidget');
+  });
+
   it("narrows ui:widget/ui:field/ui:options to @rjsf/core's real widget and field names", () => {
     type Checked = StrictUiSchema<CoreUiOptionsChecks, ReferencesFormData>;
 

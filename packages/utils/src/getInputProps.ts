@@ -139,7 +139,7 @@ export default function getInputProps<
   }
 
   if (options.accept) {
-    inputProps.accept = options.accept as string;
+    inputProps.accept = String(options.accept);
   }
 
   return inputProps;

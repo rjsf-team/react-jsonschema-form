@@ -42,17 +42,20 @@ export default function RatingWidget<
     options,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
-  const { stars = 5, shape = 'star', color = 'orange', size = 'md', colorGradient = false } = options;
+  const { stars = 5, shape = 'star', color, size, colorGradient = false } = options;
 
-  // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
-  const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
+  // Use schema.maximum if provided, otherwise use stars option (limited to 1-5), or 5 for one that isn't a number, as a
+  // JSON uiSchema can hold, rounded down to the stars that render
+  const numStars = Math.floor(
+    schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(Number.isFinite(stars) ? stars : 5, 1), 5),
+  );
   const min = schema.minimum ?? 0;
 
   // Generate shape class
   const maskClass = shape === 'heart' ? 'mask-heart' : 'mask-star-2';
 
   // Generate size class
-  const sizeClass = size === 'md' ? '' : `rating-${size}`;
+  const sizeClass = typeof size === 'string' && size !== 'md' ? `rating-${size}` : '';
 
   /** Handles change events from radio inputs */
   const handleChange = useCallback(
@@ -91,7 +94,7 @@ export default function RatingWidget<
    */
   const getColorClass = (index: number): string => {
     if (!colorGradient) {
-      return `bg-${color}-400`;
+      return `bg-${typeof color === 'string' ? color : 'orange'}-400`;
     }
 
     // For gradient effect, use different colors based on position
@@ -115,11 +118,10 @@ export default function RatingWidget<
   return (
     <div className='form-control w-full'>
       <div className={`rating gap-1 ${sizeClass}`} {...groupProps}>
-        {[...Array(numStars)].map((_, index) => {
+        {Array.from({ length: numStars }, (_, index) => {
           const starValue = min + index;
           return (
             <input
-              // oxlint-disable-next-line react/no-array-index-key
               key={index}
               type='radio'
               name={htmlName || id}
