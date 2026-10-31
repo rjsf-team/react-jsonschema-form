@@ -2863,8 +2863,8 @@ describe('oneOf', () => {
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(0);
     });
-    // It renders the choice between the options, which with none has nothing to choose
-    it('should be disabled, whatever ui:disabled says, when there are no options', () => {
+    // An empty oneOf offers no choice to render, so the field is the schema without it, enabled as any field is (#5365)
+    it('is not disabled when there are no options', () => {
       const recordDisabled = vi.fn<(disabled: boolean | undefined) => void>();
       function CustomField({ disabled }: FieldProps) {
         recordDisabled(disabled);
@@ -2872,10 +2872,10 @@ describe('oneOf', () => {
       }
       createFormComponent({
         schema: { oneOf: [] },
-        uiSchema: { 'ui:field': CustomField, 'ui:fieldReplacesAnyOrOneOf': true, 'ui:disabled': false },
+        uiSchema: { 'ui:field': CustomField, 'ui:fieldReplacesAnyOrOneOf': true },
       });
 
-      expect(recordDisabled).toHaveBeenLastCalledWith(true);
+      expect(recordDisabled).toHaveBeenLastCalledWith(false);
     });
   });
 

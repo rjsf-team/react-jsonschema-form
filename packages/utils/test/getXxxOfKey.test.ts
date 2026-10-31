@@ -14,11 +14,14 @@ describe('getXxxOfKey()', () => {
   it('returns oneOf when the anyOf is empty and the oneOf is not', () => {
     expect(getXxxOfKey({ anyOf: [], oneOf: [{ const: 'b' }] })).toBe('oneOf');
   });
-  it('returns anyOf when both lists are empty', () => {
-    expect(getXxxOfKey({ anyOf: [], oneOf: [] })).toBe('anyOf');
-  });
-  it('returns an empty anyOf when there is no oneOf', () => {
-    expect(getXxxOfKey({ anyOf: [] })).toBe('anyOf');
+  // A key with nothing under it, or an empty list, offers nothing to choose between, so it reads as absent (#5365)
+  it.each<[string, RJSFSchema]>([
+    ['both lists are empty', { anyOf: [], oneOf: [] }],
+    ['the anyOf is empty and there is no oneOf', { anyOf: [] }],
+    ['the oneOf is empty', { oneOf: [] }],
+    ['both keys are present but undefined', { anyOf: undefined, oneOf: undefined }],
+  ])('returns undefined when %s', (_, schema) => {
+    expect(getXxxOfKey(schema)).toBeUndefined();
   });
   it('returns undefined without either keyword', () => {
     expect(getXxxOfKey({ type: 'string' })).toBeUndefined();

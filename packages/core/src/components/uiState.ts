@@ -13,7 +13,7 @@ import {
   fieldPathToList,
   getByPath,
   getValidationTarget,
-  getXxxOfKey,
+  getXxxOfOptions,
   isConstantOptionList,
   isObject,
   isSchemaObject,
@@ -117,6 +117,29 @@ function emptySchema(): StrictRJSFSchema {
   return EMPTY_SCHEMA;
 }
 
+/** `options`, each retrieved for `formData` */
+function retrieveEach<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  options: readonly S[],
+  formData: T | undefined,
+): S[] {
+  return options.map((option) =>
+    schemaUtils.retrieveSchema(isSchemaObject<S>(option) ? option : emptySchema<S>(), formData),
+  );
+}
+
+/** The options of a field whose retrieved schema is `view`, each retrieved for `formData`, constants included;
+ * undefined where it offers none. An `AnyOfField` or `OneOfField` named through `ui:field` renders these
+ */
+export function retrievedOptionListOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  view: S,
+  formData: T | undefined,
+): S[] | undefined {
+  const options = getXxxOfOptions<S>(view)?.options;
+  return options && retrieveEach<T, S, F>(schemaUtils, options, formData);
+}
+
 /** The options of a field whose retrieved schema is `view`, each retrieved for `formData`; undefined where it offers
  * none, or only constants, which a select renders instead. `SchemaField` retrieves the options it renders with this,
  * where its `uiSchema` lets them render; the sanitize walk, which reads no `uiSchema`, takes them as rendered wherever
@@ -127,14 +150,10 @@ export function retrievedOptionsOf<T, S extends StrictRJSFSchema, F extends Form
   view: S,
   formData: T | undefined,
 ): S[] | undefined {
-  const xxxOfKey = getXxxOfKey<S>(view);
-  const list = xxxOfKey ? view[xxxOfKey] : undefined;
-  if (!list || isConstantOptionList<S>(list, true)) {
-    return undefined;
-  }
-  return list.map((option) =>
-    schemaUtils.retrieveSchema(isSchemaObject<S>(option) ? option : emptySchema<S>(), formData),
-  );
+  const options = getXxxOfOptions<S>(view)?.options;
+  return !options || isConstantOptionList<S>(options)
+    ? undefined
+    : retrieveEach<T, S, F>(schemaUtils, options, formData);
 }
 
 /** Whether `keyword` of an option, with `value`, can tell data apart by what it holds at `property`. `properties` and

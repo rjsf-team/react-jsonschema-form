@@ -190,7 +190,7 @@ function offeredValues<S extends StrictRJSFSchema>(layers: readonly S[]): unknow
   }
   const last = layers[layers.length - 1];
   const options = last && getXxxOfOptions<S>(last)?.options;
-  if (!options || !isConstantOptionList<S>(options, true)) {
+  if (!isConstantOptionList<S>(options)) {
     return undefined;
   }
   return options.map((option) => toConstant<S>(option));
@@ -215,9 +215,10 @@ function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declare
   };
 }
 
-/** Re-judges a value whose field's constraints changed. A value equal to the default the old schema declared for it
- * is that schema's, so it becomes the new schema's default; a value of another type, or one the new `const` or `enum`
- * rejects, is replaced as `sanitizeDataForNewSchema()` replaces it, or dropped.
+/** Re-judges a value whose field's constraints changed. A cleared property is dropped, for the defaults to fill. A value
+ * equal to the default the old schema declared for it is that schema's, so it becomes the new schema's default; a value
+ * of another type, or one the new `const` or `enum` rejects, is replaced as `sanitizeDataForNewSchema()` replaces it,
+ * or dropped.
  *
  * @returns - The value to hold, `DROP` to remove it, or `undefined` to keep it and judge what it holds
  */
@@ -233,6 +234,11 @@ function judge<S extends StrictRJSFSchema>(
   const now = constraintsOf(newLayers, newDefault);
   if (deepEquals(before, now)) {
     return undefined;
+  }
+  // A clear is the user's for the field as it was, so once the field changes it gives way to the new field's defaults,
+  // as a field that never held a value takes them
+  if (value === undefined && !isItem) {
+    return DROP;
   }
   if (oldDefault !== undefined && newDefault !== undefined && deepEquals(oldDefault, value)) {
     return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
@@ -305,7 +311,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { oldRaw, newRaw, oldValue, newValue, oldInherited, newInherited, isItem, hasOld, oldRetrieved, newRetrieved } =
     pair;
   const edited = isEdited(ctx, path);
-  if (oldRaw === undefined || !hasOld || (newValue === undefined && !isItem)) {
+  // A property holding `undefined` is a clear, which is judged as the field around it changes
+  const isClear = newValue === undefined && !isItem;
+  if (oldRaw === undefined || (isClear ? edited : !hasOld)) {
     return newValue;
   }
   // Nothing a field's subtree is built from differs, so neither does the subtree

@@ -2467,6 +2467,90 @@ describe('anyOf', () => {
     await user.click(elementOf(node, '#root_root_child__expand'));
     expect(elementOf(node, '#root_root_child__title')).toHaveTextContent('child');
   });
+
+  it.each(['anyOf', 'oneOf'])('renders a string whose %s is empty as a text input (#5365)', async (key) => {
+    const schema: RJSFSchema = { type: 'object', properties: { val: { type: 'string', [key]: [] } } };
+    const { node, onChange } = createFormComponent({ schema });
+
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    await user.type(elementOf(node, 'input#root_val'), 'abc');
+
+    expectToHaveBeenCalledWithFormData(onChange, { val: 'abc' }, 'root_val');
+  });
+
+  const namedFields = [
+    ['anyOf', 'AnyOfField'],
+    ['oneOf', 'OneOfField'],
+  ];
+
+  // `SchemaField` hands the options only to the field it renders them with, so a field named through `ui:field`
+  // retrieves its own
+  it.each(namedFields)(
+    'renders and switches the options of a %s field named through ui:field',
+    async (key, fieldName) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          x: {
+            [key]: [
+              { type: 'string', title: 'S' },
+              { type: 'number', title: 'N' },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: { x: { 'ui:field': fieldName, 'ui:fieldReplacesAnyOrOneOf': true } },
+      });
+
+      await user.selectOptions(screen.getByRole('combobox'), 'N');
+      await user.type(elementOf(node, 'input#root_x'), '7');
+
+      expect(elementOf(node, 'input#root_x')).toHaveAttribute('inputmode', 'decimal');
+      expectToHaveBeenCalledWithFormData(onChange, { x: 7 }, 'root_x');
+    },
+  );
+
+  it.each(namedFields)('lists the constant options of a %s field named through ui:field', (key, fieldName) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        x: {
+          [key]: [
+            { const: 'a', title: 'A' },
+            { const: 'b', title: 'B' },
+          ],
+        },
+      },
+    };
+    createFormComponent({
+      schema,
+      uiSchema: { x: { 'ui:field': fieldName, 'ui:fieldReplacesAnyOrOneOf': true } },
+    });
+
+    expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual(['A', 'B']);
+  });
+
+  it.each([
+    ['no anyOf', {}],
+    ['an anyOf that is present but undefined', { anyOf: undefined }],
+    ['an empty anyOf', { anyOf: [] }],
+  ])("clears a field with %s, under 'useDefaultIfFormDataUndefined' (#5365)", async (_, options) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { val: { type: 'string', default: 'v', ...options } },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+    });
+
+    await user.clear(elementOf(node, 'input#root_val'));
+
+    expect(elementOf(node, 'input#root_val')).toHaveValue('');
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ val: undefined });
+  });
 });
 
 describe('anyOf with a precompiled validator', () => {

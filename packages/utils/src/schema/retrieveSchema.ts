@@ -723,7 +723,7 @@ function resolvedConstantOptions<S extends StrictRJSFSchema>(
   const options = xxxOf.options.map((option) =>
     isSchemaObject<S>(option) ? resolveOwnRef<S>(option, rootSchema) : option,
   );
-  return isConstantOptionList<S>(options, true) ? { key: xxxOf.key, options } : undefined;
+  return isConstantOptionList<S>(options) ? { key: xxxOf.key, options } : undefined;
 }
 
 function buildView<S extends StrictRJSFSchema, F extends FormContextType>(

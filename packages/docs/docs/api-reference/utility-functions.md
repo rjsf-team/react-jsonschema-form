@@ -1957,7 +1957,9 @@ Gets the type whose field renders a widget for a schema, matching the widget's a
 
 ### getXxxOfKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the keyword whose options are rendered for the `schema`. `anyOf` wins when a schema carries both keywords, unless its list is empty and the `oneOf`'s is not.
+Returns the keyword whose options are rendered for the `schema`. Only a non-empty array offers options: a keyword left
+`undefined` by a schema assembled in code, or holding an empty list, describes nothing to choose between, so the schema
+reads as one without it and is handled through its own type. `anyOf` wins when both keywords offer options.
 Every reader of the options (`isSelect()`, `optionsList()`, `sanitizeDataForNewSchema()`, `findFieldInSchema()` and
 the fields in `@rjsf/core`) goes through it, so they all agree on the one list that is on screen.
 
@@ -1967,7 +1969,7 @@ the fields in `@rjsf/core`) goes through it, so they all agree on the one list t
 
 #### Returns
 
-- `'anyOf'` | `'oneOf'` | undefined: `anyOf` or `oneOf` when that keyword holds an array, otherwise `undefined`
+- `'anyOf'` | `'oneOf'` | undefined: `anyOf` or `oneOf` when that keyword holds a non-empty array, otherwise `undefined`
 
 ### getXxxOfOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2213,36 +2215,35 @@ This happens when either the schema has an `enum` array with a single value or t
 ### isConstantOptionList&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Checks whether `options` is a list of constant schemas (see `isConstant()`), the shape of an `anyOf` or `oneOf` rendered
-as a select. An empty list passes unless `nonEmpty` is set, since every one of its options is vacuously a constant but
-it offers nothing to select.
+as a select. An empty list passes, since every one of its options is vacuously a constant; a list read through
+`getXxxOfKey()` is never empty.
 
 #### Parameters
 
 - options: unknown - The `anyOf` or `oneOf` list, or anything else
-- [nonEmpty=false]: boolean - Whether an empty list is rejected
 
 #### Returns
 
-- boolean: True if `options` is an array whose every entry is a constant schema object, and which has at least one entry
-  when `nonEmpty` is set
+- boolean: True if `options` is an array whose every entry is a constant schema object
 
 ### isConstantSelect&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Checks whether the value of `schema` is picked from a list of constants, whatever its `type`: an `enum`, or an
 `anyOf`/`oneOf` of constants read from the keyword `getXxxOfKey()` picks. An `object` or `array` schema that passes is a
 select for its whole value (see `isWholeValueSelect()`) rather than a container whose contents are edited, pruned or
-sanitized. An empty list offers no option, so it passes only when `allowEmpty` is set, which is how `isSelect()` checks a schema; an empty `enum`
-otherwise leaves the `anyOf`/`oneOf` to decide. Unlike `isSelect()`, `schema` is not resolved first.
+sanitized. An empty `enum` offers no option, so it passes only when `allowEmpty` is set, which is how `isSelect()` checks
+a schema, and otherwise leaves the `anyOf`/`oneOf` to decide. An empty `anyOf`/`oneOf` is no option list at all (see
+`getXxxOfKey()`), so it never passes. Unlike `isSelect()`, `schema` is not resolved first.
 
 #### Parameters
 
 - schema: S - The already-resolved schema to check
-- [allowEmpty=false]: boolean - Whether an empty `enum` or `anyOf`/`oneOf` counts as a select
+- [allowEmpty=false]: boolean - Whether an empty `enum` counts as a select
 
 #### Returns
 
 - boolean: True if `schema` offers a list of constant values to choose from, which is non-empty unless `allowEmpty` is
-  set
+  set and the list is an `enum`
 
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -3874,7 +3875,7 @@ Checks to see if the `schema` combination represents a multi-select
 
 ### isSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Checks to see if the `schema` combination represents a select: an `enum`, or an `anyOf`/`oneOf` whose options are all constants (see `isConstantOptionList()`).
+Checks to see if the `schema` combination represents a select: an `enum`, empty or not, or a non-empty `anyOf`/`oneOf` whose options are all constants (see `isConstantOptionList()`).
 When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey()`), as it is in `optionsList()`.
 
 #### Parameters
