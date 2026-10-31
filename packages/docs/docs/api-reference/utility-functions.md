@@ -3511,7 +3511,7 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 
 - value: unknown - The current value of the `FileWidget`: a data URL or a list of them, anything else holding no files
 - onChange: (value?: unknown) => void - The onChange handler for the `FileWidget`, given the stored items as they are, so an item that isn't a data URL is kept
-- [multiple=false] - Flag indicating whether the control supports multiple selections
+- [multiple=false]: boolean - Flag indicating whether the control supports multiple selections
 
 #### Returns
 
