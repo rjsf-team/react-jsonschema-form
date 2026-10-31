@@ -1382,7 +1382,7 @@ export type ArrayFieldItemButtonsTemplateProps<
   className?: string;
   /** Any optional style attributes */
   style?: ButtonHTMLAttributes<HTMLButtonElement>['style'];
-  /** A boolean value stating if the array item is disabled */
+  /** Whether the array item's buttons are disabled, by the array's lock or the item's own; its inputs can stay enabled, under an item's `ui:disabled: false` */
   disabled?: boolean;
   /** A boolean value stating whether new items can be added to the array */
   canAdd: boolean;
@@ -1408,7 +1408,7 @@ export type ArrayFieldItemButtonsTemplateProps<
   onMoveDownItem: (event?: any) => void;
   /** Callback function that removes the item from the list */
   onRemoveItem: (event?: any) => void;
-  /** A boolean value stating if the array item is read-only */
+  /** Whether the array item's buttons are read-only, by the array's lock or the item's own; its inputs can stay editable, under an item's `ui:readonly: false` */
   readonly?: boolean;
   /** Props to spread onto each of the item's buttons, holding a key only for the buttons the item can show. Set when
    * the array's `ui:options.itemLabel` names the item, to give the buttons titles such as `Remove report.pdf`;
@@ -1437,7 +1437,7 @@ export type ArrayFieldItemTemplateProps<
   buttonsProps: ArrayFieldItemButtonsTemplateProps<T, S, F>;
   /** The className string */
   className: string;
-  /** A boolean value stating if the array item is disabled */
+  /** Whether the array item's buttons are disabled, by the array's lock or the item's own; its inputs can stay enabled, under an item's `ui:disabled: false` */
   disabled?: boolean;
   /** A boolean value stating whether the array item has a toolbar */
   hasToolbar: boolean;
@@ -1445,7 +1445,7 @@ export type ArrayFieldItemTemplateProps<
   index: number;
   /** A number stating the total number `items` in the array */
   totalItems: number;
-  /** A boolean value stating if the array item is read-only */
+  /** Whether the array item's buttons are read-only, by the array's lock or the item's own; its inputs can stay editable, under an item's `ui:readonly: false` */
   readonly?: boolean;
   /** A stable, unique key for the array item */
   itemKey: string;

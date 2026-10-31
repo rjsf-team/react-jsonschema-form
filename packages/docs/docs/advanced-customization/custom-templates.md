@@ -224,12 +224,12 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `children`: The html for the item's content.
 - `buttonsProps`: The props to pass to the `ArrayFieldItemButtonTemplate`.
 - `className`: The className string.
-- `disabled`: A boolean value stating if the array item is disabled.
+- `disabled`: Whether the array item's buttons are disabled, by the array's lock or the item's own. Its inputs can stay enabled, under an item's `ui:disabled: false`.
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
 - `totalItems`: A number stating the total number `items` in the array.
 - `itemKey`: A stable, unique key for the array item.
-- `readonly`: A boolean value stating if the array item is read-only.
+- `readonly`: Whether the array item's buttons are read-only, by the array's lock or the item's own. Its inputs can stay editable, under an item's `ui:readonly: false`.
 - `schema`: The schema object for this array item.
 - `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
@@ -283,7 +283,7 @@ render(
 The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 
 - `className`: The className string.
-- `disabled`: A boolean value stating if the array item is disabled.
+- `disabled`: Whether the array item's buttons are disabled, by the array's lock or the item's own. Its inputs can stay enabled, under an item's `ui:disabled: false`.
 - `canAdd`: A boolean value stating whether new elements can be added to the array.
 - `hasCopy`: A boolean value stating whether the array item can be copied.
 - `hasMoveDown`: A boolean value stating whether the array item can be moved down.
@@ -297,7 +297,7 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 - `onRemoveItem: (event?) => void`: Callback function that removes the item from the list.
 - `onMoveUpItem: (event?) => void`: Callback function that moves the item up one spot in the list
 - `onMoveDownItem: (event?) => void`: Callback function that moves the item down one spot in the list
-- `readonly`: A boolean value stating if the array item is read-only.
+- `readonly`: Whether the array item's buttons are read-only, by the array's lock or the item's own. Its inputs can stay editable, under an item's `ui:readonly: false`.
 - `itemButtonProps`: Props to spread onto each of the item's buttons, keyed by `copy`, `moveDown`, `moveUp` and `remove`, with a key only for the buttons the item can show. Set when the array's [`itemLabel`](../json-schema/arrays.md#itemlabel-option) option names the item, to title the buttons after it, such as `Remove report.pdf`; otherwise undefined. A template that renders its own buttons can spread them too, as in `<button {...itemButtonProps?.remove} onClick={onRemoveItem}>`.
 - `schema`: The schema object for this array item.
 - `style`: The optional style to pass to all of the buttons

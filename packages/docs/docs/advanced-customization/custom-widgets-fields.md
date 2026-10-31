@@ -518,6 +518,7 @@ Such a replacement keeps the two in step itself: hide the field through the `uiS
 Everything that was mentioned above for a `Custom SchemaField` applies, but this is only used to render the Array item `children` that are then passed to the `ArrayFieldItemTemplate`.
 By default, `ArraySchemaField` is not actually implemented in the `fields` list since `ArrayField` falls back to `SchemaField` if `ArraySchemaField` is not provided.
 If you want to customize how the individual items for an array are rendered, provide your implementation of `ArraySchemaField` as a `fields` override.
+An item's move, copy and remove buttons follow how `SchemaField` reads `ui:disabled`, `ui:readonly` and `readOnly`, so a field that treats them differently leaves its inputs and those buttons out of step.
 
 ```tsx
 import { RJSFSchema, UiSchema, FieldProps, RegistryFieldsType } from '@rjsf/utils';
