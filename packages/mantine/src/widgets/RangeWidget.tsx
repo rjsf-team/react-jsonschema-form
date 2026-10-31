@@ -167,7 +167,7 @@ export default function RangeWidget<
           describedBy={describedBy}
           labelledBy={labelledBy ?? (label ? titleId(id) : undefined)}
           name={htmlName || id}
-          value={value}
+          value={typeof value === 'number' ? value : undefined}
           max={max}
           min={min}
           step={step}

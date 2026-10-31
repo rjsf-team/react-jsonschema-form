@@ -1,6 +1,6 @@
 import { createRef, StrictMode, useEffect, useState } from 'react';
 import type { FieldProps, FieldTemplateProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { descriptionId, noop, toFieldPath } from '@rjsf/utils';
+import { descriptionId, noop, toFieldPath, toInputValue } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import validator, { createPrecompiledValidator } from '@rjsf/validator-ajv8';
 import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
@@ -795,7 +795,7 @@ describe('anyOf', () => {
       return (
         <select
           id={id}
-          value={String(value ?? '')}
+          value={String(toInputValue(value))}
           onChange={({ target }) => {
             const chosen = target.value;
             setTimeout(() => onChange(chosen), 0);

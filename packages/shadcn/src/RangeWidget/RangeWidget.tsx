@@ -1,7 +1,7 @@
 import type { KeyboardEvent } from 'react';
 import { useEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, hasWidgetErrors, rangeSpec } from '@rjsf/utils';
+import { getControlAttributes, hasWidgetErrors, rangeSpec, toInputValue } from '@rjsf/utils';
 
 import type { SliderProps } from '../components/ui/slider.tsx';
 import { Slider } from '../components/ui/slider.tsx';
@@ -30,12 +30,12 @@ const allowedProps = [
  * A range widget component that renders a slider for number input. The slider's thumb, the element a user focuses,
  * carries the field's id and plan
  * @param {object} props - The widget properties
- * @param {number} props.value - The current value of the range
+ * @param {unknown} props.value - The current value of the range
  * @param {boolean} props.readonly - Whether the widget is read-only
  * @param {boolean} props.disabled - Whether the widget is disabled
  * @param {object} props.options - Additional options for the widget
  * @param props.schema - The JSON schema for this field
- * @param {(value: any) => void} props.onChange - Callback for when the value changes
+ * @param {(value: unknown) => void} props.onChange - Callback for when the value changes
  * @param props.onBlur - Callback for when the thumb loses focus
  * @param props.onFocus - Callback for when the thumb gains focus
  * @param {string} props.id - The unique identifier for the widget
@@ -93,6 +93,9 @@ export default function RangeWidget<
   const min: number = typeof uiProps.min === 'number' ? uiProps.min : (spec.min ?? 0);
   const { max, step } = spec;
   const isEmpty = value === undefined || value === null;
+  // A numeric string counts as its number, and anything else that isn't a number is drawn at the minimum
+  const numericValue = Number(value);
+  const drawnValue = isEmpty || Number.isNaN(numericValue) ? min : numericValue;
   // Radix reports only a value that changes, and an empty range draws its thumb at its minimum, so a press or a key
   // that leaves the thumb there commits the minimum itself, as moving a native range's thumb to its minimum would.
   // Only one that began on the slider does, so a release dragged in from elsewhere commits nothing
@@ -166,7 +169,7 @@ export default function RangeWidget<
         min={min}
         max={max}
         step={step}
-        value={[isEmpty ? min : (value as number)]}
+        value={[drawnValue]}
         {...uiProps}
         onValueChange={handleChange}
         onPointerDown={startInteraction}
@@ -184,7 +187,7 @@ export default function RangeWidget<
           className: cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }),
         }}
       />
-      {value}
+      {toInputValue(value)}
     </>
   );
 }

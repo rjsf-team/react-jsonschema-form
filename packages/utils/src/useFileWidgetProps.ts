@@ -21,7 +21,7 @@ export interface UseFileWidgetPropsResult {
   filesInfo: FileInfoType[];
   /** The callback handler to pass to the onChange of the input */
   handleChange: (files: FileList | File[]) => void | Promise<void>;
-  /** The callback handler to pass in order to delete a file */
+  /** The callback handler to pass in order to delete a file, given its index in `filesInfo` */
   handleRemove: (index: number) => void;
 }
 
@@ -75,32 +75,41 @@ async function processFiles(files: FileList | File[]) {
   return Promise.all(Array.from(files).map(processFile));
 }
 
-/** Extracts the file information from the data URLs
+/** Extracts the file information from the items a `FileWidget` value stores, skipping an item that isn't a readable
+ * data URL, such as the `null` stored for a file that couldn't be read
  *
- * @param dataURLs - The information about the files
- * @returns - The list of `FileInfoType` objects extracted from the data urls
+ * @param items - The stored items
+ * @returns - The `FileInfoType` of each readable item, and the index in `items` each one came from
  */
-function extractFileInfo(dataURLs: string[]): FileInfoType[] {
-  return dataURLs.reduce<FileInfoType[]>((acc, dataURL) => {
-    if (!dataURL) {
-      return acc;
+function extractFileInfo(items: unknown[]): { filesInfo: FileInfoType[]; itemIndexes: number[] } {
+  const filesInfo: FileInfoType[] = [];
+  const itemIndexes: number[] = [];
+  items.forEach((dataURL, index) => {
+    if (typeof dataURL !== 'string' || dataURL === '') {
+      return;
     }
     try {
       const { blob, name } = dataURItoBlob(dataURL);
-      return [
-        ...acc,
-        {
-          dataURL,
-          name,
-          size: blob.size,
-          type: blob.type,
-        },
-      ];
+      filesInfo.push({ dataURL, name, size: blob.size, type: blob.type });
+      itemIndexes.push(index);
     } catch {
       // Invalid dataURI, so just ignore it.
-      return acc;
     }
-  }, []);
+  });
+  return { filesInfo, itemIndexes };
+}
+
+/** The items a `FileWidget` value stores: the list a multiple value holds, kept as it is so an edit never drops an item
+ * it can't read, or a single data URL as a list of one
+ *
+ * @param value - The current value of the `FileWidget`
+ * @returns - The stored items
+ */
+function storedItems(value: unknown): unknown[] {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  return typeof value === 'string' && value !== '' ? [value] : [];
 }
 
 /** Hook which encapsulates the logic needed to read and convert a `value` of `File` or `File[]` into the
@@ -113,25 +122,17 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
  * @returns - The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
  */
 export default function useFileWidgetProps(
-  value: string | string[] | undefined | null,
-  onChange: (value?: string | null | (string | null)[]) => void,
+  value: unknown,
+  onChange: (value?: unknown) => void,
   multiple = false,
 ): UseFileWidgetPropsResult {
-  const values: (string | null)[] = useMemo(() => {
-    if (multiple && value) {
-      return Array.isArray(value) ? value : [value];
-    }
-    return [];
-  }, [value, multiple]);
-  const filesInfo = useMemo(
-    () => (Array.isArray(value) ? extractFileInfo(value) : extractFileInfo([value || ''])),
-    [value],
-  );
+  const stored = useMemo(() => storedItems(value), [value]);
+  const { filesInfo, itemIndexes } = useMemo(() => extractFileInfo(stored), [stored]);
 
   const handleChange = useCallback(
     async (files: FileList | File[]) => {
       if (files.length === 0) {
-        // An empty selection is a cleared input, not an empty append; `values.concat()` below would silently keep the
+        // An empty selection is a cleared input, not an empty append; `stored.concat()` below would silently keep the
         // existing files
         onChange(multiple ? [] : undefined);
         return;
@@ -139,23 +140,24 @@ export default function useFileWidgetProps(
       const filesInfoEvent = await processFiles(files);
       const newValue = filesInfoEvent.map((fileInfo) => fileInfo.dataURL || null);
       if (multiple) {
-        onChange(values.concat(...newValue));
+        onChange(stored.concat(...newValue));
       } else {
         onChange(newValue[0]);
       }
     },
-    [values, multiple, onChange],
+    [stored, multiple, onChange],
   );
   const handleRemove = useCallback(
     (index: number) => {
       if (multiple) {
-        const newValue = values.filter((_, i: number) => i !== index);
-        onChange(newValue);
+        // `index` counts the files shown, which skip the items that aren't readable
+        const itemIndex = itemIndexes[index];
+        onChange(stored.filter((_, i: number) => i !== itemIndex));
       } else {
         onChange(undefined);
       }
     },
-    [values, multiple, onChange],
+    [stored, itemIndexes, multiple, onChange],
   );
 
   return { filesInfo, handleChange, handleRemove };

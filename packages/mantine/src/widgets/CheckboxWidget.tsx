@@ -89,7 +89,7 @@ export default function CheckboxWidget<
         disabled={disabled || readonly}
         required={trueValueRequired}
         autoFocus={autofocus}
-        checked={typeof value === 'undefined' ? false : value === 'true' || value}
+        checked={Boolean(value)}
         onChange={handleCheckboxChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

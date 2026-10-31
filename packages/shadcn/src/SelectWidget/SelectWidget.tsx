@@ -34,12 +34,12 @@ import { cn } from '../lib/utils.ts';
 /** Splits `groupedOptions` into the `FancySelectSection` list consumed by `FancySelect`/`FancyMultiSelect`: one
  * section per `ui:options.optgroups` group, plus a trailing unheaded section for any ungrouped options.
  */
-function toSections<S extends StrictRJSFSchema = RJSFSchema>(
+function toSections<V, S extends StrictRJSFSchema = RJSFSchema>(
   groupedOptions: GroupedEnumOptionsType<S>[],
-  toItem: (option: IndexedEnumOptionType<S>) => FancySelectItem,
-): FancySelectSection[] {
-  const sections: FancySelectSection[] = [];
-  const ungrouped: FancySelectItem[] = [];
+  toItem: (option: IndexedEnumOptionType<S>) => FancySelectItem<V>,
+): FancySelectSection<V>[] {
+  const sections: FancySelectSection<V>[] = [];
+  const ungrouped: FancySelectItem<V>[] = [];
   groupedOptions.forEach((item) => {
     if (isEnumOptionsGroup<S>(item)) {
       sections.push({ label: item.label, items: item.options.map(toItem) });
@@ -96,20 +96,22 @@ export default function SelectWidget<
     onBlur,
   });
 
-  const toFancyItem = (option: IndexedEnumOptionType<S>): FancySelectItem => ({
-    value: multiple ? option.value : domValues[option.index],
+  // A single select's items are valued by their DOM values, which are what `FancySelect` selects by, and a multiple
+  // select's by the option values `FancyMultiSelect` compares the selection with
+  const toItem = <V,>(option: IndexedEnumOptionType<S>, itemValue: V): FancySelectItem<V> => ({
+    value: itemValue,
     label: option.label,
     index: option.index,
     disabled: option.disabled,
   });
+  const toDomValueItem = (option: IndexedEnumOptionType<S>) => toItem(option, domValues[option.index] ?? '');
+  const toOptionValueItem = (option: IndexedEnumOptionType<S>) => toItem(option, option.value);
 
   // `optgroups` is presentational, so `items` stays in enum order: the fancy selects derive their current selection by
   // filtering `items`, so that order reaches the array written to formData. Grouping is applied to `sections`, which
   // is what the popup actually renders.
-  const items = flattenGroupedOptions<S>(groupEnumOptions<S>(enumOptions, undefined, enumDisabled)).map(toFancyItem);
-  const sections = optgroups
-    ? toSections<S>(groupEnumOptions<S>(enumOptions, optgroups, enumDisabled), toFancyItem)
-    : undefined;
+  const enumOrder = flattenGroupedOptions<S>(groupEnumOptions<S>(enumOptions, undefined, enumDisabled));
+  const groups = optgroups ? groupEnumOptions<S>(enumOptions, optgroups, enumDisabled) : undefined;
 
   const {
     'aria-label': ariaLabel,
@@ -130,8 +132,8 @@ export default function SelectWidget<
       {!multiple ? (
         <FancySelect
           id={id}
-          items={items}
-          sections={sections}
+          items={enumOrder.map(toDomValueItem)}
+          sections={groups && toSections(groups, toDomValueItem)}
           selected={enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '')}
           onValueChange={(selectedValue) => {
             onChange(enumOptionValueDecoder<S>(selectedValue, enumOptions, optionValueFormat, optEmptyValue));
@@ -160,9 +162,9 @@ export default function SelectWidget<
           required={required}
           multiple
           className={cnClassName}
-          items={items}
-          sections={sections}
-          selected={value}
+          items={enumOrder.map(toOptionValueItem)}
+          sections={groups && toSections(groups, toOptionValueItem)}
+          selected={Array.isArray(value) ? value : []}
           onValueChange={(indexes) => {
             // `FancyMultiSelect` reports the selected options by index whatever the `optionValueFormat`, so they're
             // resolved as indexes rather than decoded as DOM values

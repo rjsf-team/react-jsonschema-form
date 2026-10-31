@@ -7,7 +7,7 @@ import type {
   SubmitButtonProps,
   WidgetProps,
 } from '@rjsf/utils';
-import { getExampleSuggestions } from '@rjsf/utils';
+import { getExampleSuggestions, toInputValue } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -346,7 +346,7 @@ describe('render stability across sibling fields', () => {
         onTemplateRender();
         return (
           <>
-            <input id={id} value={value ?? ''} onChange={(event) => onChange(event.target.value)} />
+            <input id={id} value={toInputValue(value)} onChange={(event) => onChange(event.target.value)} />
             <SchemaExamples id={id} schema={schema} suggestions={suggestions} />
           </>
         );

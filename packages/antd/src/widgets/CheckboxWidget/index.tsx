@@ -52,7 +52,7 @@ export default function CheckboxWidget<
   return (
     <Checkbox
       autoFocus={autofocus}
-      checked={typeof value === 'undefined' ? false : value}
+      checked={Boolean(value)}
       disabled={control.disabled}
       id={id}
       name={htmlName || id}

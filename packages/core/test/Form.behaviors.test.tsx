@@ -15,6 +15,7 @@ import {
   dotNotationNameGenerator,
   optionalControlsId,
   toFieldPath,
+  toInputValue,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -1521,7 +1522,7 @@ describe('Committing a handler result', () => {
     const renderedValues: unknown[] = [];
     function RecordingWidget(props: WidgetProps<string>) {
       renderedValues.push(props.value);
-      return <input value={props.value ?? ''} onChange={(event) => props.onChange(event.target.value)} />;
+      return <input value={toInputValue(props.value)} onChange={(event) => props.onChange(event.target.value)} />;
     }
     function Parent() {
       const [formData, setFormData] = useState<string | undefined>('');

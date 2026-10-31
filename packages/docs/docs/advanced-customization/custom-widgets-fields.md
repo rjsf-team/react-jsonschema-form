@@ -115,7 +115,7 @@ While these errors are retained during validation, it is still preferred for you
 :::
 
 ```tsx
-import { ErrorSchema, RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
+import { ErrorSchema, RegistryWidgetsType, RJSFSchema, toInputValue, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -139,7 +139,7 @@ const CustomTextWidget = function (props: WidgetProps) {
     props.onChange(value, raiseError, id);
   };
 
-  return <input id={id} onChange={raiseErrorOnChange} value={value || ''} />;
+  return <input id={id} onChange={raiseErrorOnChange} value={toInputValue(value || '')} />;
 };
 
 const widgets: RegistryWidgetsType = {
@@ -165,7 +165,7 @@ You can provide your own custom widgets to a uiSchema for the following json dat
 - `array`
 
 ```tsx
-import { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { RJSFSchema, toInputValue, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: Schema = {
@@ -178,7 +178,7 @@ const uiSchema: UiSchema = {
       <input
         type='text'
         className='custom'
-        value={props.value}
+        value={toInputValue(props.value)}
         required={props.required}
         onChange={(event) => props.onChange(event.target.value)}
       />
@@ -195,7 +195,7 @@ The following props are passed to custom widget components:
 - `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema; Provided in support of custom widgets;
 - `schema`: The JSONSchema subschema object for this widget;
 - `uiSchema`: The uiSchema for this widget;
-- `value`: The current value for this widget;
+- `value`: The current value for this widget, typed `unknown` since a widget can be pointed at data of any type. Narrow it before use, for an input with [`toInputValue()`](../api-reference/utility-functions.md#toinputvalue);
 - `placeholder`: The placeholder for the widget, if any;
 - `required`: The required status of this widget. A widget its theme declares `uncheckedIsFalse`, as `@rjsf/core` declares `CheckboxWidget`, is required only where the schema demands `true` when its field renders a `boolean`, since left alone it then holds the `false` `getDefaultFormState()` seeds a required `boolean` with, which the schema accepts. Rendered as another type, as a `type` list's string field renders a switch, it answers nothing unchecked, so it is required as any other widget is;
 - `disabled`: A boolean value stating if the widget is disabled;
@@ -220,7 +220,7 @@ The following props are passed to custom widget components:
 Alternatively, you can register them all at once by passing the `widgets` prop to the `Form` component, and reference their identifier from the `uiSchema`:
 
 ```tsx
-import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
+import { RegistryWidgetsType, RJSFSchema, toInputValue, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const MyCustomWidget = (props: WidgetProps) => {
@@ -228,7 +228,7 @@ const MyCustomWidget = (props: WidgetProps) => {
     <input
       type='text'
       className='custom'
-      value={props.value}
+      value={toInputValue(props.value)}
       required={props.required}
       onChange={(event) => props.onChange(event.target.value)}
     />
@@ -416,7 +416,7 @@ A field component will always be passed the following props:
 - `rawErrors`: An array of strings listing the field's own error messages, which `errorSchema` doesn't hold. It carries them whatever `hideError` says, so that a field can render them its own way. It is unset for a field rendered beside a `oneOf`/`anyOf` option selector, which is given the errors instead. Deprecated, and kept through v7 for a field rendered without a plan: read [`getErrorsToDraw()`](../api-reference/utility-functions.md#geterrorstodraw) for the messages the field draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and `presentation.errors.messages.length > 0` for an error state, instead. Beside an option selector, where `rawErrors` is unset, `presentation.errors.messages` keeps the field's errors, which its template draws, so the field shows as invalid along with the selector;
 - `presentation`: The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids, and the attributes its control carries. Its `'self'` is the field's, so pass it to a widget the field renders only when the field leaves its parts to that widget, as one declaring `WIDGET_FIELD_PRESENTATION` does; a widget reads `'self'` as its own, so a field that draws its label and spreads its props into a widget would see the label drawn twice. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
 - `hideError`: A boolean value stating if the field is hiding its errors, set by the [`ui:hideError`](../api-reference/uiSchema.md#hideerror) uiSchema directive
-- `onChange`: The field change event handler; called with the updated field value, the `FieldPath` of the value (the root of the form is `''`), an optional ErrorSchema holding the errors the field itself raises (not the `errorSchema` prop) and the optional id of the field being changed
+- `onChange`: The field change event handler; called with the value at the `FieldPath` it names, which is this field's own value or one nested inside it (the root of the form is `''`), an optional ErrorSchema holding the errors the field itself raises (not the `errorSchema` prop) and the optional id of the field being changed
 - `onBlur`: The input blur event handler; call it with the field id and value;
 - `onFocus`: The input focus event handler; call it with the field id and value;
 

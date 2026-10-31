@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Label, Textarea, makeStyles } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, labelValue, widgetDrawsLabelText } from '@rjsf/utils';
+import { getControlAttributes, labelValue, toInputValue, widgetDrawsLabelText } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   label: {
@@ -65,7 +65,7 @@ export default function TextareaWidget<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        value={value || value === 0 ? value : ''}
+        value={String(toInputValue(value || value === 0 ? value : ''))}
         onChange={onChangeOverride || handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}

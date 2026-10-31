@@ -77,7 +77,7 @@ export default function OptionalDataControlsField<
           // the empty container itself, of the type shouldRenderOptionalField() rendered the controls for
           newFormData = getOptionalDataControlsType<S>(schema, registry.rootSchema) === 'array' ? [] : {};
         }
-        onChange(newFormData as T, fieldPath);
+        onChange(newFormData, fieldPath);
       };
     }
   }

@@ -1,6 +1,6 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes } from '@rjsf/utils';
+import { getControlAttributes, toInputValue } from '@rjsf/utils';
 import { Input } from 'antd';
 
 import useControlState from '../../controlState.ts';
@@ -62,7 +62,7 @@ export default function TextareaWidget<
       required={required}
       rows={options.rows ?? 4}
       style={INPUT_STYLE}
-      value={value}
+      value={value === undefined ? undefined : toInputValue(value)}
       {...extraProps}
       {...getControlAttributes<T, S, F>({ id, presentation })}
     />

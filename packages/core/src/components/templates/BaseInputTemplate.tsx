@@ -8,6 +8,7 @@ import {
   getInputProps,
   getNumericInputTitle,
   getSchemaType,
+  toInputValue,
 } from '@rjsf/utils';
 
 import SchemaExamples from '../SchemaExamples.tsx';
@@ -74,9 +75,9 @@ export default function BaseInputTemplate<
   const schemaType = getSchemaType(schema);
   let inputValue;
   if (schemaType === 'number' || schemaType === 'integer') {
-    inputValue = value || value === 0 ? value : '';
+    inputValue = toInputValue(value || value === 0 ? value : '');
   } else {
-    inputValue = value ?? '';
+    inputValue = toInputValue(value);
   }
 
   const handleChange = useCallback(
@@ -124,7 +125,7 @@ export default function BaseInputTemplate<
         onFocus={handleFocus}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && inputValue && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(inputValue) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

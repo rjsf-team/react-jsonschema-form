@@ -23,6 +23,7 @@ import {
   getVisibleErrors,
   isPlainObject,
   noop,
+  toInputValue,
   TranslatableString,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -205,7 +206,7 @@ const ArrayFieldTest = (props: FieldProps<unknown[]>) => {
         __errors: ['Value must be "Appie"'],
       };
     }
-    props.onChange(newFormData as unknown[], path, newErrorSchema, id);
+    props.onChange(newFormData, path, newErrorSchema, id);
   };
   return <ArrayField {...props} onChange={onChangeTest} />;
 };
@@ -405,6 +406,15 @@ describe('ArrayField', () => {
         },
       });
       expect(node.querySelector('div[hidden] > fieldset')).toBeInTheDocument();
+    });
+
+    it('renders a hidden multi-select as its items joined with commas, as a native submit sends them', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['a', 'b', 'c'] } },
+        uiSchema: { 'ui:widget': 'hidden' },
+        initialFormData: ['a', 'b'],
+      });
+      expect(node.querySelector('input[type=hidden]')).toHaveValue('a,b');
     });
 
     it('should render a customized title', () => {
@@ -5395,7 +5405,7 @@ describe('ArrayField', () => {
     describe('should not hand a row to another item when the form keeps other data than the change sent', () => {
       /** Shows its item, and which instance of the widget shows it: the state a row holds, as focus or a draft would be */
       function InstanceWidget({ id, value }: WidgetProps) {
-        return <input id={id} data-instance={useId()} value={value ?? ''} readOnly />;
+        return <input id={id} data-instance={useId()} value={toInputValue(value)} readOnly />;
       }
       /** Each item shown, with the instance that shows it */
       const shown = (node: Element) =>

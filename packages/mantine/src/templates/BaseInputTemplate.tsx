@@ -9,6 +9,7 @@ import {
   getExampleSuggestions,
   getInputProps,
   labelValue,
+  toInputValue,
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
@@ -122,7 +123,7 @@ export default function BaseInputTemplate<
       type='text'
       {...ariaDescribedByProps}
       {...descriptionProps}
-      value={value ?? ''}
+      value={toInputValue(value)}
       min={typeof min === 'number' ? min : undefined}
       max={typeof max === 'number' ? max : undefined}
     />
@@ -134,14 +135,14 @@ export default function BaseInputTemplate<
       {...themeProps}
       {...ariaDescribedByProps}
       {...descriptionProps}
-      value={value ?? ''}
+      value={toInputValue(value)}
     />
   );
 
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}

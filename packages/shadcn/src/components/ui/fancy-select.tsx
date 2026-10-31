@@ -10,9 +10,9 @@ import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
 /**
  * Represents an item in the fancy select dropdown
  */
-export interface FancySelectItem {
+export interface FancySelectItem<V = unknown> {
   /** The value of the item */
-  value: any;
+  value: V;
   /** The display label for the item */
   label: string;
   /** The index position of the item */
@@ -25,11 +25,11 @@ export interface FancySelectItem {
  * Represents a labeled section (an `<optgroup>` equivalent) of items in the dropdown. A section without a `label`
  * renders as a plain, unheaded group, used for options that aren't part of any `ui:options.optgroups` group.
  */
-export interface FancySelectSection {
+export interface FancySelectSection<V = unknown> {
   /** The section's heading, omitted for an unlabeled group */
   label?: string;
   /** The items belonging to this section */
-  items: FancySelectItem[];
+  items: FancySelectItem<V>[];
 }
 
 /** The React key for the unheaded section. `toSections()` emits at most one of them, always last, so a constant key
@@ -44,14 +44,14 @@ export const UNGROUPED_SECTION_KEY = 'ungrouped';
 interface FancySelectInterface {
   /** The id given to the combobox that opens the dropdown, so a label can point at it */
   id?: string;
-  /** Array of items to display in the dropdown */
-  items: FancySelectItem[] | undefined;
+  /** Array of items to display in the dropdown, each valued by the string it is selected by */
+  items: FancySelectItem<string>[] | undefined;
   /** When provided, renders `items` grouped into these labeled sections instead of one flat list */
-  sections?: FancySelectSection[];
+  sections?: FancySelectSection<string>[];
   /** Currently selected item value */
   selected: string;
   /** Callback function when value changes */
-  onValueChange?: (value: any) => void;
+  onValueChange?: (value: string) => void;
   /** Whether the component should autofocus */
   autoFocus?: boolean;
   /** Accessible name given to the combobox that opens the dropdown, for a select that no label points at, since a
@@ -85,8 +85,8 @@ interface FancySelectInterface {
  * @param item - The item
  * @returns - Its trimmed value
  */
-function cmdkValue(item: FancySelectItem) {
-  return String(item.value).trim();
+function cmdkValue(item: FancySelectItem<string>) {
+  return item.value.trim();
 }
 
 /** The option cmdk renders for a value it holds, found by the `data-value` it gives the option, since it keeps the
@@ -180,7 +180,7 @@ export function FancySelect({
   };
   const highlightedItem = items?.find((candidate) => cmdkValue(candidate) === highlighted);
   // Choosing the option the select already holds reports no change, as a native select's doesn't
-  const choose = (item: FancySelectItem | undefined) => {
+  const choose = (item: FancySelectItem<string> | undefined) => {
     if (item && !item.disabled && item.value !== selected) {
       onValueChange?.(item.value);
     }
@@ -221,13 +221,13 @@ export function FancySelect({
     onBlur?.(e);
   };
 
-  function renderItem(item: FancySelectItem) {
+  function renderItem(item: FancySelectItem<string>) {
     return (
       <CommandItem
         disabled={item.disabled}
         ref={item.value === selected ? selectedRef : undefined}
         key={item.value}
-        value={String(item.value)}
+        value={item.value}
         onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();

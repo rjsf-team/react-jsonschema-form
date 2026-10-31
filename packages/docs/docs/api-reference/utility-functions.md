@@ -86,15 +86,15 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 
 #### Props
 
-- value: any - The value currently selected for this element, or `undefined` for none, as `getDateElementProps()` gives it; a `-1`, as a `DateObject` holds an unset part, is handed to the `SelectWidget` as `undefined` too
+- value: number | undefined - The value currently selected for this element, or `undefined` for none, as `getDateElementProps()` gives it; a `-1`, as a `DateObject` holds an unset part, is handed to the `SelectWidget` as `undefined` too
 - [name]: string - Deprecated and ignored: the element takes [dateElementId()](#dateelementid) as its name
 - rootId: string - The id of the field, from which the element derives its own id with [dateElementId()](#dateelementid)
-- select: (property: keyof DateObject, value: any) => void - Records a value for one property of the `DateObject`
+- select: (property: keyof DateObject, value: unknown) => void - Records a value for one property of the `DateObject`
 - type: DateElementProp['type'] - Which element this is, e.g. `year`, `month` or `day`
 - range: DateElementProp['range'] - The inclusive range of values the element offers
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
-- onBlur: (id: string, value: any) => void - Callback for the widget's blur event
-- onFocus: (id: string, value: any) => void - Callback for the widget's focus event
+- onBlur: (id: string, value: unknown) => void - Callback for the widget's blur event
+- onFocus: (id: string, value: unknown) => void - Callback for the widget's focus event
 - [className]: string - Optional class name given to the rendered widget
 - [autofocus]: boolean - Optional flag, if true, the widget autofocuses
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
@@ -113,7 +113,7 @@ Without its field's plan, `hideLabel` turns it off as well, and it renders under
 #### Props
 
 - id: string - The id of the widget, from which the description's own id is derived
-- value: any - The currently selected value, matched against the `enumOptions` to find the option
+- value: unknown - The currently selected value, matched against the `enumOptions` to find the option
 - options: WidgetProps['options'] - The widget's options, whose `enumOptions` carry each option's schema
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `DescriptionFieldTemplate` is resolved
 - [uiSchema]: UiSchema&lt;T, S, F> - The uiSchema for the field, read for the `label` option
@@ -3390,6 +3390,19 @@ Appends `segment` to `parentPath`, returning the `FieldPath` of the child field.
 
 - FieldPath: The `FieldPath` of the field
 
+### toInputValue()
+
+Turns a widget's `value`, which can hold anything, into what an input's `value` prop accepts.
+A string or a number is kept, so a numeric input stays numeric, a boolean or a bigint is stringified and an array joined with commas the way React renders them, so a hidden multi-select still submits its items, and anything else, `undefined` and `null` included, becomes an empty string.
+
+#### Parameters
+
+- value: unknown - The widget's value
+
+#### Returns
+
+- string | number: The value for an input's `value` prop
+
 ### toPath()
 
 Converts a dotted path string, such as the `property` of a validation error, into its list of path segments.
@@ -3496,13 +3509,13 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 
 #### Parameters
 
-- value: string | string[] | undefined | null - The current value of the `FileWidget`
-- onChange: (value?: string | null | (string | null)[]) => void - The onChange handler for the `FileWidget`
+- value: unknown - The current value of the `FileWidget`: a data URL or a list of them, anything else holding no files
+- onChange: (value?: unknown) => void - The onChange handler for the `FileWidget`, given the stored items as they are, so an item that isn't a data URL is kept
 - [multiple=false]: boolean - Flag indicating whether the control supports multiple selections
 
 #### Returns
 
-- UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
+- UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation, whose `handleRemove` takes the index of a file in its `filesInfo`
 
 ### useOptionFocusHandlers&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

@@ -210,4 +210,24 @@ describe('useFileWidgetProps()', () => {
       expect(onChange).toHaveBeenCalledWith(null);
     });
   });
+  test('multiple, a file that could not be read stays in the list without file info', () => {
+    const { result } = renderHook(() => useFileWidgetProps([null, FILE_2_STR], onChange, true));
+    const { filesInfo, handleRemove } = result.current;
+    expect(filesInfo).toEqual([FILE_2_INFO]);
+    // The index of the file shown, as each theme's remove button passes it
+    handleRemove(0);
+    expect(onChange).toHaveBeenCalledWith([null]);
+  });
+  test('multiple, an item that is not a data URL is kept when another file is removed', () => {
+    const { result } = renderHook(() => useFileWidgetProps([42, FILE_1_STR, FILE_2_STR], onChange, true));
+    result.current.handleRemove(0);
+    expect(onChange).toHaveBeenCalledWith([42, FILE_2_STR]);
+  });
+  test('a value that holds no data URL has no files', () => {
+    expect(renderHook(() => useFileWidgetProps('', onChange)).result.current.filesInfo).toEqual([]);
+    expect(renderHook(() => useFileWidgetProps(42, onChange)).result.current.filesInfo).toEqual([]);
+    expect(renderHook(() => useFileWidgetProps([42, FILE_2_STR], onChange, true)).result.current.filesInfo).toEqual([
+      FILE_2_INFO,
+    ]);
+  });
 });

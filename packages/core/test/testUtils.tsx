@@ -1,6 +1,7 @@
 import type { ComponentType, ReactNode, RefObject } from 'react';
 import { Activity, createRef, useEffect, useState } from 'react';
 import type { GenericObjectType, ValidatorType, WidgetProps } from '@rjsf/utils';
+import { toInputValue } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -63,7 +64,7 @@ export function createRetainingWidget() {
     useEffect(() => {
       changes.set(id, onChange);
     }, [id, onChange]);
-    return <span>{String(value ?? '')}</span>;
+    return <span>{String(toInputValue(value))}</span>;
   }
   const change = (id: string, value: unknown) => {
     const onChange = changes.get(id);
