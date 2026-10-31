@@ -22,6 +22,8 @@ declare module 'json-schema' {
     $dynamicAnchor?: string;
     /** A reference resolved in the dynamic scope, to the schema whose `$dynamicAnchor` it names (draft 2020-12) */
     $dynamicRef?: string;
+    /** Whether this schema is a target of `$recursiveRef` in the dynamic scope (draft 2019-09) */
+    $recursiveAnchor?: boolean;
     /** A reference resolved in the dynamic scope of the schemas marked `$recursiveAnchor` (draft 2019-09) */
     $recursiveRef?: string;
     /** The vocabularies a meta-schema uses, by URI, each `true` when it is required (draft 2019-09) */

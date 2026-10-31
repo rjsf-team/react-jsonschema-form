@@ -1165,6 +1165,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `useAltDateWidgetProps()` reading a date part cleared to `null`, as a select with an `emptyValue` of `null` reports it, as a picked `0`, which built a date with a day, month or year of `0` ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - **BREAKING CHANGE:** Change `RJSFSchema` from `JSONSchema7 & Record<string, any>` to `JSONSchema7`, which `@rjsf/utils` now augments, globally, with the later-draft, OpenAPI and Ajv keywords RJSF reads, so a schema with keywords of its own declares them by augmenting `JSONSchema7` too. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 - Fix `getInputProps()` setting `min` and `max` to `[object Object]` when `formatMinimum` or `formatMaximum` is an Ajv `$data` reference ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Fix `RJSFSchema` checking nothing where a package manager doesn't hoist `@types/json-schema`, which is now a dependency of `@rjsf/utils` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/validator-ajv8
 
