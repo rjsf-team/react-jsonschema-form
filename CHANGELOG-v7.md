@@ -424,6 +424,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Treat a `LayoutGridField` cell whose `name` is neither a string nor a number as a cell without one, so its `render` component renders where nothing did ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 - **BREAKING CHANGE:** Change the values of the exported `GridProps` and of an object `LayoutGridSchemaType` from `any` to `unknown`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
+- Change a `LayoutGridField` cell with a `name` of `0` to look up field `'0'`, where it rendered its `render` component as a cell without a name ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 
 ## @rjsf/daisyui
 
@@ -1173,6 +1174,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `useAltDateWidgetProps()` reading a date part cleared to `null`, as a select with an `emptyValue` of `null` reports it, as a picked `0`, which built a date with a day, month or year of `0` ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - **BREAKING CHANGE:** Change `GenericObjectType` from `Record<string, any>` to `Record<string, unknown>`, so a value read from one, such as one `isObject()` narrows, needs narrowing. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 - **BREAKING CHANGE:** Change `mergeObjects()` and `mergeSchemas()` to take any objects and return `GenericObjectType`, or the type their caller passes as a type argument. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
+- **BREAKING CHANGE:** Remove `GenericSymbolObjectType`, which nothing uses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 
 ## @rjsf/validator-ajv8
 
