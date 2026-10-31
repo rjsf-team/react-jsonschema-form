@@ -1242,8 +1242,7 @@ function SchemaFieldRender<
     templateEntry.label,
   );
 
-  const disabled = Boolean(ownUiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
-  const readonly = Boolean(ownUiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
+  const disabled = plannedDisabled || deprecatedHandling === 'disable';
   if (
     uiRequired === false &&
     required &&
