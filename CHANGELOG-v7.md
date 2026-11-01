@@ -419,7 +419,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `onMoveUpItem` and `onMoveDownItem` throwing and leaving the item where it was when a template calls them after the click event has finished dispatching, such as after an `await` ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 - Fix `onAddClick` inserting the new item at the start of the array, or at a number's index, when the button it is passed to calls `onClick` with a second argument, such as MUI's `ToggleButton` ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 - Fix `onMoveUpItem` and `onMoveDownItem` moving an item its button can't, such as the first item up or a fixed tuple item, when a template calls them directly ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
-- **BREAKING CHANGE:** Change the `templates` prop of `Form` to check a declared template against its own props, where it accepted any component. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
+- **BREAKING CHANGE:** Change the `templates` prop of `Form`, and a theme's `templates` passed to `withTheme()`, to check a declared template against its own props, where it accepted any component. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
 
 ## @rjsf/daisyui
 
