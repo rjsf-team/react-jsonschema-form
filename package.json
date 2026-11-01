@@ -49,7 +49,7 @@
     "nx": "23.2.1",
     "oxfmt": "^0.55.0",
     "oxlint": "^1.70.0",
-    "oxlint-tsgolint": "^0.23.0",
+    "oxlint-tsgolint": "^7.0.2005",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "rimraf": "^6.1.3",
