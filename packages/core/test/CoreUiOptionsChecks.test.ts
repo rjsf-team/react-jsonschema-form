@@ -26,6 +26,13 @@ describe('CoreUiOptionsChecks', () => {
     expect(ui.upload?.['ui:widget']).toBe('FileWidget');
   });
 
+  it('accepts `accept` for a multiple file field', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { files: string[] }>;
+    const ui: Checked = { files: { 'ui:widget': 'FileWidget', 'ui:options': { accept: ['.pdf'] } } };
+
+    expect(ui.files?.['ui:options']?.accept).toEqual(['.pdf']);
+  });
+
   it("narrows ui:widget/ui:field/ui:options to @rjsf/core's real widget and field names", () => {
     type Checked = StrictUiSchema<CoreUiOptionsChecks, ReferencesFormData>;
 

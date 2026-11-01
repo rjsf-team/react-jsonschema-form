@@ -279,6 +279,16 @@ describe('RatingWidget numeric strings', () => {
     expect(screen.getByRole('radio', { name: '3 stars' })).toBeChecked();
   });
 
+  it('reads a numeric-string `stars` option as its number', () => {
+    createFormComponent({
+      schema: { type: 'number' },
+      // @ts-expect-error `stars` is a number, which the type can only ask of a uiSchema written in TypeScript
+      uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': { stars: '3' } },
+    });
+
+    expect(screen.getAllByRole('radio')).toHaveLength(3);
+  });
+
   it('shows the default 5 stars for a `stars` option that is not a number, as a JSON uiSchema can hold', () => {
     createFormComponent({
       schema: { type: 'number' },

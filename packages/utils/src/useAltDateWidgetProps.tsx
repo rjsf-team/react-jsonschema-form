@@ -227,7 +227,7 @@ export default function useAltDateWidgetProps<
       getDateElementProps(
         state,
         time,
-        yearsRange ? [yearsRange[0], yearsRange[1]] : undefined,
+        yearsRange && yearsRange.length >= 2 ? [yearsRange[0], yearsRange[1]] : undefined,
         isDateElementFormat(format) ? format : undefined,
       ),
     [state, time, yearsRange, format],

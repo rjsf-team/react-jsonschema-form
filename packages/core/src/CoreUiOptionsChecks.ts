@@ -147,7 +147,7 @@ export type CoreUiOptionsChecks =
         copyable?: boolean;
         itemLabel?: string;
         inline?: boolean;
-        accept?: string;
+        accept?: string | string[];
         filePreview?: boolean;
         placeholder?: string;
         emptyValue?: unknown[];

@@ -122,6 +122,14 @@ describe('useAltDateWidgetProps()', () => {
     vi.useRealTimers();
     vi.mocked(PROPS.onChange).mockClear();
   });
+  test('falls back to the default years for a `yearsRange` with one entry', () => {
+    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: { yearsRange: [1990] } }));
+
+    const years = result.current.elements.find(({ type }) => type === 'year');
+    expect(years?.range).toEqual(
+      getDateElementProps(parseDateString(), false).find(({ type }) => type === 'year')?.range,
+    );
+  });
   test('clearing a part with no value leaves the date incomplete', () => {
     const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, value: DATE_STR }));
     act(() => result.current.handleChange('month'));

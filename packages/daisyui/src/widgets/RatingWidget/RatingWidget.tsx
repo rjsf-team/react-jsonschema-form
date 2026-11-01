@@ -49,10 +49,13 @@ export default function RatingWidget<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { stars = 5, shape = 'star', color, size, colorGradient = false } = options;
 
-  // Use schema.maximum if provided, otherwise use stars option (limited to 1-5), or 5 for one that isn't a number, as a
-  // JSON uiSchema can hold, rounded down to the stars that render
+  // A JSON uiSchema can hold `stars` as a numeric string, which reads as its number, or as anything else, which shows
+  // the default 5
+  const starsOption: unknown = stars;
+  const starCount = Number(starsOption);
+  // Use schema.maximum if provided, otherwise use stars option (limited to 1-5), rounded down to the stars that render
   const numStars = Math.floor(
-    schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(Number.isFinite(stars) ? stars : 5, 1), 5),
+    schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(Number.isFinite(starCount) ? starCount : 5, 1), 5),
   );
   const min = schema.minimum ?? 0;
   const storesString = numericWidgetStoresString<S>(schema, value);
