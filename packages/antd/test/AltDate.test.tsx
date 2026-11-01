@@ -10,6 +10,8 @@ describe("antd's AltDateWidget", () => {
   it.each([
     ['a number', 10, '-2.5px', '5px'],
     ['the horizontal one of a [horizontal, vertical] pair', [8, 8], '-2px', '4px'],
+    ['a numeric string', '16', '-4px', '8px'],
+    ['the default for a CSS length', '1rem', '-6px', '12px'],
     ['the default for a responsive gutter', { xs: 8, md: 16 }, '-6px', '12px'],
   ])("spaces the date parts by half the formContext's rowGutter: %s", (_, rowGutter, margin, gap) => {
     render(

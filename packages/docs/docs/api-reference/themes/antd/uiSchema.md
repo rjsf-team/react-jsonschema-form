@@ -31,7 +31,7 @@ These are the `formContext` properties that you can modify to adjust the `antd` 
 - `labelAlign`: The alignment of the labels of objects and arrays, either 'left' or 'right', defaults to 'right'
 - `labelCol`: The antd `Col` props of a field's label, defaults to `{ span: 24 }`
 - `readonlyAsDisabled`: Whether to make the antd theme treat readOnly fields as disabled, defaults to true
-- `rowGutter`: The gutter between the columns of a row, as antd's `Row` takes it, defaults to 24; an `AltDateWidget` spaces its date parts by half a number or a pair's horizontal number, and by half the default for any other gutter
+- `rowGutter`: The gutter between the columns of a row, as antd's `Row` takes it, defaults to 24; an `AltDateWidget` spaces its date parts by half a number, a numeric string or a pair's horizontal number, and by half the default for any other gutter
 - `toolbarAlign`: The vertical alignment of an array item's toolbar, or of an additional property's row, as antd's `Row` takes it, defaults to 'middle' for an array item with a label and 'top' otherwise
 - `wrapperCol`: The antd `Col` props of a field's control, defaults to `{ span: 24 }`
 - `wrapperStyle`: The style of a field's antd `Form.Item`, which holds its label and control
