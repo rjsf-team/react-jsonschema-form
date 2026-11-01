@@ -15,22 +15,23 @@ import { Separator } from '../components/ui/separator.tsx';
 import { cn } from '../lib/utils.ts';
 
 /** The row of the key, the value and the remove button: `--rjsf-control-row` is the value's control row, past the key's
- * label, the value's description or both. A value of any other `FieldTemplate` spans every row, and the last row, `1fr`,
- * takes whatever height it needs past the key's label and input. `String.raw` keeps the `\_` Tailwind reads as an
- * underscore in a description's id, where a bare `_` would be a space
+ * label, the value's description or both; not a selected option's description, which the theme's `SelectWidget` draws
+ * inside its own wrapper. A value of any other `FieldTemplate` spans every row, and the last row, `1fr`, takes whatever
+ * height it needs past the key's label and input. `String.raw` keeps the `\_` Tailwind reads as an underscore in a
+ * description's id, where a bare `_` would be a space
  */
 const ROW_CLASSES =
   String.raw`rjsf-additional-property grid grid-cols-12 grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] ` +
-  String.raw`has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:2] ` +
-  String.raw`has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:3] ` +
-  String.raw`has-[>.rjsf-additional-property-value>.rjsf-field-label:first-child+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])+:is(.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[--rjsf-control-row:4]`;
+  String.raw`has-[>.rjsf-additional-property-key>.rjsf-field-label]:[--rjsf-control-row:2] has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-description,[id$=\_\_description])]:[--rjsf-control-row:2] ` +
+  String.raw`has-[>.rjsf-additional-property-value>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description])+:is(.rjsf-field-description,[id$=\_\_description])]:[--rjsf-control-row:3]`;
 
 /** The value, laid out on the row's rows where it holds core's `FieldTemplate` parts, spaced by a margin under each
- * rather than a gap, which would space the empty rows too, so its control's row starts where the key's input does
+ * rather than a gap, which would space the empty rows too, so its control's row starts where the key's input does. Its
+ * label breaks a long word, as the key's does, so neither runs into the next column
  */
 const VALUE_CLASSES =
-  String.raw`rjsf-additional-property-value col-span-6 row-span-full grid items-start gap-2 pr-0.5 ` +
-  String.raw`has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description],[id$=\_\_selectedOptionDescription])]:[&>:not(:last-child)]:mb-2`;
+  String.raw`rjsf-additional-property-value col-span-6 row-span-full grid grid-cols-1 items-start gap-2 pr-0.5 [&>.rjsf-field-label]:[overflow-wrap:anywhere] ` +
+  String.raw`has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\_\_description])]:[&>:not(:last-child)]:mb-2`;
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -86,13 +87,13 @@ export default function WrapIfAdditionalTemplate<
       {/* The key's input and the remove button sit on the value's control row, however far its label or description
           wraps */}
       <div className={ROW_CLASSES}>
-        <div className='rjsf-additional-property-key col-span-5 row-span-full grid grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]'>
+        <div className='rjsf-additional-property-key col-span-5 row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(:last-child)]:mb-2 [&>:not(.rjsf-field-label)]:row-[var(--rjsf-control-row)/-1]'>
           {hasKeyLabel && (
             <FieldLabel
               label={keyLabel}
               required={required}
               id={keyId}
-              className={cn('rjsf-field-label text-muted-foreground', classMap.fieldLabel)}
+              className={cn('rjsf-field-label text-muted-foreground [overflow-wrap:anywhere]', classMap.fieldLabel)}
               invalid={keyAttributes['aria-invalid']}
             />
           )}

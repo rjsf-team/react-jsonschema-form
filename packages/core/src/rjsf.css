@@ -302,6 +302,14 @@
     grid-row: 1 / -1;
   }
 
+  /* A long unbroken key or title, such as a `snake_case` one, breaks rather than running over the next column's label */
+  :where(
+    .rjsf .rjsf-additional-property-key > .rjsf-field-label,
+    .rjsf .rjsf-additional-property-value > .rjsf-field-label
+  ) {
+    overflow-wrap: anywhere;
+  }
+
   :where(
     .rjsf .rjsf-additional-property-key,
     .rjsf

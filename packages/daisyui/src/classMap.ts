@@ -28,7 +28,7 @@ const DAISYUI_CLASS_MAP: ClassMap = {
   errorListItems: 'list-disc list-inside text-red-600',
   // Top-aligned, so errors or help under the input don't move the toolbox. This theme's `FieldTemplate` draws only its
   // label above the control, so with a label the item lays the field's parts out on its rows, one each, through the two
-  // `<div>`s around them, and the toolbox sits on the second, the control's, however far the label wraps. A button drawn
+  // `<div>`s around them, and the toolbox sits on the second, the control's, however tall the label is. A button drawn
   // beside the control, such as the Clear button, keeps its own width rather than stretching to the column. A
   // `FieldTemplate` of your own has the toolbox pushed down past the label core marks the item `data-display-label` for
   arrayItem:
