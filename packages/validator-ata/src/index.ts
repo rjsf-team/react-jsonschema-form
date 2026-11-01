@@ -3,6 +3,7 @@ import customizeValidator from './customizeValidator.ts';
 
 export { customizeValidator, createPrecompiledValidator };
 export { default as ATAValidator } from './validator.ts';
+export type { default as ATAPrecompiledValidator } from './precompiledValidator.ts';
 export type * from './types.ts';
 
 // Annotated pure so a bundler can drop it: an app that imports only
