@@ -418,6 +418,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change `ArrayFieldItemTemplate`'s `disabled` and `readonly` to the same values as its buttons, the item's lock as well as the array's. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-disabled-or-read-only-array-item-disables-its-own-buttons-breaking-change) ([#5676](https://github.com/rjsf-team/react-jsonschema-form/pull/5676), [#2504](https://github.com/rjsf-team/react-jsonschema-form/issues/2504))
 - Fix `onMoveUpItem` and `onMoveDownItem` throwing and leaving the item where it was when a template calls them after the click event has finished dispatching, such as after an `await` ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 - Fix `onAddClick` inserting the new item at the start of the array, or at a number's index, when the button it is passed to calls `onClick` with a second argument, such as MUI's `ToggleButton` ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
+- Fix `onMoveUpItem` and `onMoveDownItem` moving an item its button can't, such as the first item up or a fixed tuple item, when a template calls them directly ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 
 ## @rjsf/daisyui
 

@@ -5724,6 +5724,60 @@ describe('ArrayField', () => {
       },
     );
 
+    describe('should leave an item where it is when a direct call moves it where its button could not', () => {
+      function UnguardedMoveItemTemplate(props: ArrayFieldItemTemplateProps) {
+        const { onMoveUpItem, onMoveDownItem } = props.buttonsProps;
+        return (
+          <div className='rjsf-array-item'>
+            {props.children}
+            <button type='button' onClick={() => onMoveUpItem()}>
+              {`Move ${props.index} up`}
+            </button>
+            <button type='button' onClick={() => onMoveDownItem()}>
+              {`Move ${props.index} down`}
+            </button>
+          </div>
+        );
+      }
+
+      it.each([
+        { button: 'Move 0 up', caseName: 'above the first item' },
+        { button: 'Move 2 down', caseName: 'below the last item' },
+      ])('$caseName', async ({ button }) => {
+        const { onChange, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          initialFormData: ['a', 'b', 'c'],
+          templates: { ArrayFieldItemTemplate: UnguardedMoveItemTemplate },
+        });
+        onChange.mockClear();
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(['a', 'b', 'c']);
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      it.each([
+        { button: 'Move 1 up', caseName: 'a fixed tuple item up' },
+        { button: 'Move 2 up', caseName: 'the first additional item into the tuple' },
+        { button: 'Move 0 down', caseName: 'a fixed tuple item down' },
+      ])('$caseName', async ({ button }) => {
+        const { getFormData } = createFormComponent({
+          schema: {
+            type: 'array',
+            items: [{ type: 'string' }, { type: 'string' }],
+            additionalItems: { type: 'string' },
+          },
+          initialFormData: ['a', 'b', 'c', 'd'],
+          templates: { ArrayFieldItemTemplate: UnguardedMoveItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(['a', 'b', 'c', 'd']);
+      });
+    });
+
     it('should add no item when a move after a remove names an index the remove took away', async () => {
       const { node, onChange, getFormData } = createFormComponent({
         schema,

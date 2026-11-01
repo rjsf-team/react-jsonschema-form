@@ -792,15 +792,19 @@ function ArrayFieldItemInner<
   );
   const onMoveUpItem = useCallback(
     (event: ArrayButtonEvent) => {
-      handleReorderItems(event, index, index - 1);
+      if (canMoveUp) {
+        handleReorderItems(event, index, index - 1);
+      }
     },
-    [handleReorderItems, index],
+    [canMoveUp, handleReorderItems, index],
   );
   const onMoveDownItem = useCallback(
     (event: ArrayButtonEvent) => {
-      handleReorderItems(event, index, index + 1);
+      if (canMoveDown) {
+        handleReorderItems(event, index, index + 1);
+      }
     },
-    [handleReorderItems, index],
+    [canMoveDown, handleReorderItems, index],
   );
 
   const templateProps = {
@@ -1398,7 +1402,7 @@ export default function ArrayField<
         target?.blur();
       }
       const rows = readRows();
-      if (index >= rows.length) {
+      if (index >= rows.length || newIndex < 0 || newIndex >= rows.length) {
         return;
       }
 
