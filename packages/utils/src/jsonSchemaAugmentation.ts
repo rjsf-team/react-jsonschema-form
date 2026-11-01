@@ -36,6 +36,14 @@ declare module 'json-schema' {
     dependentSchemas?: Record<string, JSONSchema7Definition>;
     /** The property whose value selects the `oneOf`/`anyOf` option (OpenAPI) */
     discriminator?: { propertyName: string; mapping?: Record<string, string> };
+    /** The date or time the value must be before, for a `format` that has an order, or Ajv's `$data` reference to one
+     * when Ajv runs with `$data` (Ajv's `ajv-formats`)
+     */
+    formatExclusiveMaximum?: string | { $data: string };
+    /** The date or time the value must be after, for a `format` that has an order, or Ajv's `$data` reference to one
+     * when Ajv runs with `$data` (Ajv's `ajv-formats`)
+     */
+    formatExclusiveMinimum?: string | { $data: string };
     /** The latest date or time the value may hold, for a `format` that has an order, or Ajv's `$data` reference to one
      * when Ajv runs with `$data` (Ajv's `ajv-formats`)
      */

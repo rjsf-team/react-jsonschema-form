@@ -8,13 +8,14 @@ import type { RangeSpecType, RJSFSchema, StrictRJSFSchema } from './types.ts';
  */
 export default function rangeSpec<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
   const spec: RangeSpecType = {};
-  if (schema.multipleOf) {
+  // The `typeof` checks are for Ajv's `$data`, whose reference names another value that an input can't show as its bound
+  if (typeof schema.multipleOf === 'number' && schema.multipleOf !== 0) {
     spec.step = schema.multipleOf;
   }
-  if (schema.minimum || schema.minimum === 0) {
+  if (typeof schema.minimum === 'number') {
     spec.min = schema.minimum;
   }
-  if (schema.maximum || schema.maximum === 0) {
+  if (typeof schema.maximum === 'number') {
     spec.max = schema.maximum;
   }
   return spec;

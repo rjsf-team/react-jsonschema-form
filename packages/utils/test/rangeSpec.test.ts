@@ -11,6 +11,11 @@ describe('rangeSpec()', () => {
       max: 2,
     });
   });
+  it("sets nothing from an Ajv `$data` reference, which names another value's bound", () => {
+    const reference = { $data: '1/low' };
+    // @ts-expect-error `minimum`, `maximum` and `multipleOf` are numbers, but Ajv with `$data` takes a reference too
+    expect(rangeSpec({ minimum: reference, maximum: reference, multipleOf: reference })).toEqual({});
+  });
   it('returns an partial range spec when the schema contains zero range info', () => {
     expect(rangeSpec({ multipleOf: 0, minimum: 0, maximum: 0 })).toEqual({
       min: 0,
