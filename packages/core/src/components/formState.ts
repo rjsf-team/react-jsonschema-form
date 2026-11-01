@@ -1124,7 +1124,8 @@ interface DeriveDataOptions {
   /** The option selections to settle under, in place of the state's own, as for the baseline, see `baselineUiState` */
   uiState?: UiStateReader;
   /** The data holding the clears this pass keeps, laid out as the data it settles, see `keepClears()`. They are kept
-   * by every fill, so the schema each round resolves describes the data with its clears
+   * by every fill, so the schema each round resolves describes the data with its clears. A disabled or read-only form
+   * keeps none: it isn't sanitized, and only the sanitize lets a clear give way once its field changes
    */
   clears?: unknown;
 }
@@ -1408,7 +1409,8 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
 ): FormState<T, S, F> {
   // A schema change sanitizes the data for the new schema's tree, as an edit does for the tree it leads to, and leaves
   // the data of a disabled or read-only form as it is, as an edit there does
-  const options = { isSanitized: !props.disabled && !props.readonly };
+  const isSanitized = !props.disabled && !props.readonly;
+  const options = { isSanitized, clears: isSanitized ? current?.formData : undefined };
   const { formData, context, areSchemaUtilsReused } = deriveFormData(current, inputFormData, options, props);
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   const baseline = current ? rederiveBaseline(current, formData, options, props, context.schemaUtils) : formData;
@@ -1476,6 +1478,7 @@ function rederiveBaseline<T, S extends StrictRJSFSchema, F extends FormContextTy
     baseline,
     {
       ...options,
+      clears: undefined,
       uiState: withSelectionsHeldFor(current.uiState, current.baselineUiState, (at) => getAt(baseline, at)),
     },
     props,
@@ -1591,37 +1594,9 @@ function clearsOf<T>(change: FieldChange<T>, committed: T | undefined, written: 
   if (!writesContainer) {
     return written;
   }
-  const committedAtPath = getAt<unknown>(committed, path);
-  const before = newKeyOf ? movedKeys(committedAtPath, newKeyOf) : committedAtPath;
+  // An array also keeps what the change added, so a copied item keeps the clears of the row it copies
+  const before = getAt<unknown>(newKeyOf ? withKeysMoved(committed, written, path, newKeyOf) : committed, path);
   return path.length === 0 ? before : setByPath(copyAlongPath(written, path), path, before);
-}
-
-/** What the array or object `container` holds, each value under the key `newKeyOf` moved it to, and without the values
- * it moved nowhere
- */
-function movedKeys(container: unknown, newKeyOf: KeyMove): unknown {
-  if (Array.isArray(container)) {
-    const items: readonly unknown[] = container;
-    const moved: unknown[] = [];
-    items.forEach((item, index) => {
-      const newKey = newKeyOf(String(index));
-      if (newKey !== undefined) {
-        moved[Number(newKey)] = item;
-      }
-    });
-    return moved;
-  }
-  if (!isPlainObject(container)) {
-    return container;
-  }
-  const moved: GenericObjectType = {};
-  for (const [key, value] of Object.entries(container)) {
-    const newKey = newKeyOf(key);
-    if (newKey !== undefined) {
-      setOwn(moved, newKey, value);
-    }
-  }
-  return moved;
 }
 
 /** Applies the data of one `change` to `current`, returning the next state with `current`'s errors. The `newValue` is
@@ -1684,7 +1659,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
         isSanitized: editedPath !== undefined && !disabled && !readonly,
         edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
         heldPath: heldPathOf(change),
-        clears: clearsOf(change, oldFormData, formData, path),
+        clears: disabled || readonly ? undefined : clearsOf(change, oldFormData, formData, path),
       },
       props,
     );

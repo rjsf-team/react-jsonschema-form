@@ -468,6 +468,15 @@ describe('anyOf', () => {
     );
   });
 
+  it('keeps the ids of the anyOf a field is named on when the list is empty', () => {
+    const { node } = createFormComponent({
+      schema: { anyOf: [] },
+      uiSchema: { 'ui:field': 'AnyOfField' },
+    });
+
+    expect(node.querySelector('select')).toHaveAttribute('id', 'root__anyof_select');
+  });
+
   it('should clear previous data when changing options', async () => {
     const schema: RJSFSchema = {
       type: 'object',

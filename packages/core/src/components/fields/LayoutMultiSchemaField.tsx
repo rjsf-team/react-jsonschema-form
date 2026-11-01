@@ -5,6 +5,7 @@ import {
   setByPath,
   getOptionUiSchema,
   fieldPathToName,
+  ANY_OF_KEY,
   ONE_OF_KEY,
   getUiOptions,
   getXxxOfKey,
@@ -88,7 +89,8 @@ export default function LayoutMultiSchemaField<
   const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
   const uiSchema = useMemo(() => omitFieldDirectives<T, S, F>(namingUiSchema), [namingUiSchema]);
-  const keyword = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
+  // A field named on an empty list keeps that list's ids and uiSchema, as there is no option to read them from
+  const keyword = getXxxOfKey<S>(schema) ?? (Array.isArray(schema[ANY_OF_KEY]) ? ANY_OF_KEY : ONE_OF_KEY);
   const enumOptions = useMemo(
     () => computeEnumOptions(schema, schemaUtils, uiSchema, formData),
     [schema, schemaUtils, uiSchema, formData],
