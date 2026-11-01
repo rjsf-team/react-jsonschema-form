@@ -17,7 +17,7 @@ import { Form } from 'react-bootstrap';
 /** The props this theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes
  * `extraProps` to
  */
-type BootstrapBaseInputTemplateProps<
+export type BootstrapBaseInputTemplateProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,

@@ -19,7 +19,7 @@ import { cn } from '../lib/utils.ts';
 /** The props this theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes
  * `extraProps` to
  */
-type ShadcnBaseInputTemplateProps<
+export type ShadcnBaseInputTemplateProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
