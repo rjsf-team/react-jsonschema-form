@@ -227,4 +227,15 @@ describe('SelectWidget', () => {
     await screen.findByRole('combobox', { name: 'When, year' });
     expect(container.querySelector('label')).not.toBeInTheDocument();
   });
+
+  // Fluent's own 250px minimum would push the dropdown out of a narrower layout grid column
+  test("lets the dropdown shrink below Fluent's minimum width, keeping its own className", () => {
+    const { container } = render(
+      <SelectWidget {...makeWidgetMockProps({ className: 'my-select', options: { enumOptions } })} />,
+    );
+
+    const dropdown = container.querySelector('.fui-Dropdown');
+    expect(dropdown).toHaveClass('form-control', 'my-select');
+    expect(dropdown).toHaveStyle({ minWidth: '0px' });
+  });
 });

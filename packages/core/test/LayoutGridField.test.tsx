@@ -6,6 +6,7 @@ import type {
   FieldPathList,
   FieldProps,
   GenericObjectType,
+  GridTemplateProps,
   Registry,
   RJSFSchema,
   UiSchema,
@@ -52,7 +53,7 @@ import LayoutGridField, {
 } from '../src/components/fields/LayoutGridField.tsx';
 import { getTestRegistry } from '../src/testing.ts';
 import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData.ts';
-import { setupConsoleWarnSuppression } from './testUtils.tsx';
+import { createFormComponent, setupConsoleWarnSuppression } from './testUtils.tsx';
 
 const ColumnWidth3 = 'col-xs-3';
 const ColumnWidth4 = 'col-xs-4';
@@ -1998,5 +1999,42 @@ describe('LayoutGridField', () => {
     expect(layoutMultiSchemaField).not.toBeInTheDocument();
     expect(row).not.toBeInTheDocument();
     expect(col).not.toBeInTheDocument();
+  });
+});
+
+describe('a span on a ui:row', () => {
+  // Every theme's GridTemplate reads a span on a column only, so a row's would otherwise vanish without a sign why
+  const consoleWarnSuppression = setupConsoleWarnSuppression();
+  const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+  const gridUiSchema = (rowProps: GenericObjectType): UiSchema => ({
+    'ui:field': 'LayoutGridField',
+    'ui:layoutGrid': { 'ui:row': { ...rowProps, children: [{ 'ui:col': { span: 6, children: ['name'] } }] } },
+  });
+
+  test('warns that it is ignored', () => {
+    createFormComponent({ schema, uiSchema: gridUiSchema({ span: 6 }) });
+    expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
+      'span on a ui:row in "root" is ignored, since span sizes a ui:col or ui:columns rather than a row.',
+    );
+  });
+  test("keeps it from a custom GridTemplate's row", () => {
+    const rowProps: GenericObjectType[] = [];
+    function RecordingGridTemplate({ children, column, ...props }: GridTemplateProps) {
+      if (!column) {
+        rowProps.push(props);
+      }
+      return <div>{children}</div>;
+    }
+    createFormComponent({
+      schema,
+      uiSchema: gridUiSchema({ span: 6, className: 'my-row' }),
+      templates: { GridTemplate: RecordingGridTemplate },
+    });
+    expect(rowProps).toEqual([expect.objectContaining({ className: 'my-row' })]);
+    expect(rowProps[0]).not.toHaveProperty('span');
+  });
+  test("doesn't warn about a column's span", () => {
+    createFormComponent({ schema, uiSchema: gridUiSchema({}) });
+    expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
   });
 });

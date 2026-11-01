@@ -3,7 +3,7 @@ import type { FormProps } from '@rjsf/core';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { LOOKUP_MAP_NAME } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 export interface GridRenderCustomOptions {
   ColumnWidthAll: object;
@@ -504,4 +504,33 @@ export function gridTests(Form: ComponentType<FormProps>, customOptions: GridRen
       expect(asFragment()).toMatchSnapshot();
     });
   });
+}
+
+/** Renders a `LayoutGridField` of one row holding one column, with `colProps` on the `ui:col` and `rowProps` on the
+ * `ui:row`, so a theme's tests can check how its `GridTemplate` reads them
+ *
+ * @param Form - The theme's `Form`
+ * @param colProps - The props for the `ui:col`
+ * @param [rowProps] - The props for the `ui:row`
+ * @returns - The rendered row and column elements
+ */
+export function renderGridColumn(Form: ComponentType<FormProps>, colProps: object, rowProps: object = {}) {
+  const uiSchema: UiSchema = {
+    'ui:field': 'LayoutGridField',
+    'ui:layoutGrid': {
+      'ui:row': {
+        ...rowProps,
+        id: 'grid-row',
+        children: [{ 'ui:col': { ...colProps, 'data-testid': 'grid-column', children: ['name'] } }],
+      },
+    },
+  };
+  const { container } = render(
+    <Form
+      schema={{ type: 'object', properties: { name: { type: 'string' } } }}
+      uiSchema={uiSchema}
+      validator={validator}
+    />,
+  );
+  return { row: container.querySelector('#grid-row'), column: screen.getByTestId('grid-column') };
 }

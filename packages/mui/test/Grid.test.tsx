@@ -1,12 +1,13 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { gridTests, renderGridColumn } from '@rjsf/snapshot-tests';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import Form from '../src/index.ts';
 
 gridTests(Form, {
-  ColumnWidthAll: { size: 12 },
-  ColumnWidth4: { size: 4 },
-  ColumnWidth6: { size: 6 },
-  ColumnWidth8: { size: 8 },
+  ColumnWidthAll: { span: 12 },
+  ColumnWidth4: { span: 4 },
+  ColumnWidth6: { span: 6 },
+  ColumnWidth8: { span: 8 },
   Row2Columns: { spacing: 2 },
   Row3Columns: { spacing: 2 },
   ComplexUiSchema: {
@@ -237,4 +238,20 @@ gridTests(Form, {
       },
     },
   },
+});
+
+describe('GridTemplate span', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  test("sets a column's span as its size, half steps included", () => {
+    expect(renderGridColumn(Form, { span: 4.5 }).column).toHaveClass('MuiGrid-grid-xs-4.5');
+  });
+  test("prefers a column's own size", () => {
+    const { column } = renderGridColumn(Form, { span: 4, size: 6 });
+    expect(column).toHaveClass('MuiGrid-grid-xs-6');
+    expect(column).not.toHaveClass('MuiGrid-grid-xs-4');
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` in "root" is ignored, since the column has a `size` of its own',
+    );
+  });
 });

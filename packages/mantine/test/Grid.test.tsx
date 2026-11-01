@@ -1,5 +1,6 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { gridTests, renderGridColumn } from '@rjsf/snapshot-tests';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import WrappedForm from './WrappedForm.tsx';
 
 gridTests(WrappedForm, {
@@ -212,4 +213,19 @@ gridTests(WrappedForm, {
       },
     },
   },
+});
+
+describe('GridTemplate span', () => {
+  // `LayoutGridField` warns about the row's span, which would otherwise land on the DOM unexplained
+  setupConsoleWarnSuppression();
+
+  test("keeps a row's span off the element", () => {
+    expect(renderGridColumn(WrappedForm, {}, { span: 6 }).row).not.toHaveAttribute('span');
+  });
+  test("takes a column's half-step span natively", () => {
+    renderGridColumn(WrappedForm, { span: 4.5 });
+    // 4.5 of mantine's 12 columns, in the flex basis `Grid.Col` writes into its own `<style>`
+    const styles = Array.from(document.querySelectorAll('style'), (style) => style.textContent).join('');
+    expect(styles).toContain('calc(37.5%');
+  });
 });

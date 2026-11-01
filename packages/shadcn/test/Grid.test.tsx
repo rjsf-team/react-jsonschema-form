@@ -1,12 +1,13 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { gridTests, renderGridColumn } from '@rjsf/snapshot-tests';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import Form from '../src/index.ts';
 
 gridTests(Form, {
-  ColumnWidthAll: { className: 'col-span-12' },
-  ColumnWidth4: { className: 'col-span-4' },
-  ColumnWidth6: { className: 'col-span-6' },
-  ColumnWidth8: { className: 'col-span-8' },
+  ColumnWidthAll: { span: 12 },
+  ColumnWidth4: { span: 4 },
+  ColumnWidth6: { span: 6 },
+  ColumnWidth8: { span: 8 },
   Row2Columns: { className: 'grid grid-cols-12 gap-4 col-span-12' },
   Row3Columns: { className: 'grid grid-cols-12 gap-4 col-span-12' },
   ComplexUiSchema: {
@@ -203,4 +204,35 @@ gridTests(Form, {
       },
     },
   },
+});
+
+describe('GridTemplate span', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  test("sets a column's span as its gridColumn", () => {
+    expect(renderGridColumn(Form, { span: 4 }).column).toHaveStyle({ gridColumn: 'span 4 / span 4' });
+  });
+  test("prefers a column's own col-span class", () => {
+    const { column } = renderGridColumn(Form, { span: 4, className: 'md:col-span-6' });
+    expect(column).toHaveClass('md:col-span-6');
+    expect(column.style.gridColumn).toBe('');
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` in "root" is ignored, since the column has a `col-span-*` class of its own',
+    );
+  });
+  test('lays a row without grid-cols out on 12 tracks, a column without a span across all of them', () => {
+    expect(renderGridColumn(Form, {}).row).toHaveClass('grid-cols-12', '[:where(&)>*]:col-span-full');
+  });
+  test('leaves a row with grid-cols of its own to it', () => {
+    const { row } = renderGridColumn(Form, {}, { className: 'grid-cols-3' });
+    expect(row).toHaveClass('grid-cols-3');
+    expect(row).not.toHaveClass('grid-cols-12');
+    expect(row).not.toHaveClass('[:where(&)>*]:col-span-full');
+  });
+  test('warns that a half step is not a whole number', () => {
+    renderGridColumn(Form, { span: 4.5 });
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` of 4.5 in "root" is not a whole number, which this theme\'s grid needs',
+    );
+  });
 });

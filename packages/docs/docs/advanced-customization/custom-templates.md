@@ -896,7 +896,7 @@ const schema: RJSFSchema = {
 };
 
 function GridTemplate(props: FieldHelpProps) {
-  const { children, column, className, ...rest } = props;
+  const { children, column, className, fieldId, ...rest } = props;
   return (
     <Grid2 item={column} {...rest} className={`${className} my-custom-grid-styling`}>
       {children}
@@ -911,7 +911,8 @@ The following props are passed to the `GridTemplate`:
 
 - `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
-- `span`: Optional number of the 12 tracks a column spans in the `core` theme's grid; a column without one is full width
+- `span`: Optional number of twelfths of a row a column spans, which every theme's `GridTemplate` converts to its own grid
+- `fieldId`: The id of the field whose layout grid holds the row or column, for naming it in a warning; keep it off the element you render
 
 ## MarkdownTemplate
 

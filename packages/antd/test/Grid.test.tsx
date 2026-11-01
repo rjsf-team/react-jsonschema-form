@@ -1,12 +1,13 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { gridTests, renderGridColumn } from '@rjsf/snapshot-tests';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import Form from '../src/index.ts';
 
 gridTests(Form, {
-  ColumnWidthAll: { xs: 24 },
-  ColumnWidth4: { xs: 8 },
-  ColumnWidth6: { xs: 12 },
-  ColumnWidth8: { xs: 16 },
+  ColumnWidthAll: { span: 12 },
+  ColumnWidth4: { span: 4 },
+  ColumnWidth6: { span: 6 },
+  ColumnWidth8: { span: 8 },
   ComplexUiSchema: {
     'ui:field': 'LayoutGridField',
     'ui:layoutGrid': {
@@ -230,4 +231,29 @@ gridTests(Form, {
       },
     },
   },
+});
+
+describe('GridTemplate span', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  test("doubles a column's span into antd's 24ths", () => {
+    expect(renderGridColumn(Form, { span: 4 }).column).toHaveClass('ant-col-8');
+  });
+  test('takes a half step as an odd 24th', () => {
+    expect(renderGridColumn(Form, { span: 4.5 }).column).toHaveClass('ant-col-9');
+  });
+  test('rounds a span to the nearest 24th', () => {
+    expect(renderGridColumn(Form, { span: 4.3 }).column).toHaveClass('ant-col-9');
+  });
+  test('warns about a span over 12, which only a pre-v7 24ths span can be', () => {
+    renderGridColumn(Form, { span: 16 });
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` of 16 in "root" is more than 12: `span` counts twelfths of a row, ' +
+        "where antd's counted 24ths before v7, so halve it",
+    );
+  });
+  test('does not warn about a span of 12 or under', () => {
+    renderGridColumn(Form, { span: 12 });
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
+  });
 });

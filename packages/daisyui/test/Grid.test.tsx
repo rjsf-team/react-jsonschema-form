@@ -1,12 +1,13 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { gridTests, renderGridColumn } from '@rjsf/snapshot-tests';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import Form from '../src/index.ts';
 
 gridTests(Form, {
-  ColumnWidthAll: { xs: 24 },
-  ColumnWidth4: { xs: 8 },
-  ColumnWidth6: { xs: 12 },
-  ColumnWidth8: { xs: 16 },
+  ColumnWidthAll: { span: 12 },
+  ColumnWidth4: { span: 4 },
+  ColumnWidth6: { span: 6 },
+  ColumnWidth8: { span: 8 },
   ComplexUiSchema: {
     'ui:field': 'LayoutGridField',
     'ui:layoutGrid': {
@@ -133,4 +134,37 @@ gridTests(Form, {
       },
     },
   },
+});
+
+describe('GridTemplate span', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  test("sets a column's span as its flex basis, half steps included", () => {
+    expect(renderGridColumn(Form, { span: 4.5 }).column).toHaveStyle({
+      flex: '0 0 calc((100% + 1rem) * 4.5 / 12 - 1rem)',
+    });
+  });
+  test("prefers a column's own flex style", () => {
+    expect(renderGridColumn(Form, { span: 4, style: { flex: '1 1 auto' } }).column).toHaveStyle({ flex: '1 1 auto' });
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` in "root" is ignored, since the column has a width of its own',
+    );
+  });
+  test("leaves a column's span off beside a flexBasis style of its own", () => {
+    const { column } = renderGridColumn(Form, { span: 4, style: { flexBasis: '200px' } });
+    expect(column).toHaveAttribute('style', 'flex-basis: 200px;');
+  });
+  test("leaves a column's span off beside a basis or width class of its own", () => {
+    const { column } = renderGridColumn(Form, { span: 4, className: 'md:basis-1/2' });
+    expect(column).toHaveClass('md:basis-1/2');
+    expect(column).not.toHaveAttribute('style');
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` in "root" is ignored, since the column has a width of its own',
+    );
+  });
+  test("keeps a column's span beside a max-w class, which caps its width without setting it", () => {
+    const { column } = renderGridColumn(Form, { span: 4, className: 'max-w-sm' });
+    expect(column).toHaveStyle({ flex: '0 0 calc((100% + 1rem) * 4 / 12 - 1rem)' });
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
+  });
 });

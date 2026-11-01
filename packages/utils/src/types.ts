@@ -545,8 +545,13 @@ export interface GridTemplateProps extends GenericObjectType {
    * for Rows vs Columns. NOTE: This is falsy by default when not specified
    */
   column?: boolean;
-  /** How many of a row's tracks a column spans. Core's `GridTemplate` reads it on its 12-track grid, where a column
-   * without one is full width; another theme may read it on its own grid, such as antd's 24 columns, or ignore it
+  /** The id of the field whose layout grid holds this row or column, which a theme names in the warnings it logs and
+   * keeps off the element it renders
+   */
+  fieldId?: string;
+  /** How many twelfths of a row a column spans, which every theme's `GridTemplate` converts to its own grid. A theme's
+   * own width prop, such as mui's `size`, wins over it. Half steps, such as `4.5`, work where the theme's grid supports
+   * them: natively in antd (as 24ths), mui and mantine, and in daisyui; the other themes need whole numbers
    */
   span?: number;
 }

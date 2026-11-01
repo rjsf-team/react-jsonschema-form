@@ -598,13 +598,13 @@ function LayoutGridCol<
   F extends FormContextType = FormContextType,
 >(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
-  const { registry, uiSchema } = layoutGridFieldProps;
+  const { registry, uiSchema, id } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMN, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (
-    <GridTemplate column data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col} {...gridProps}>
+    <GridTemplate column fieldId={id} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col} {...gridProps}>
       <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
     </GridTemplate>
   );
@@ -623,7 +623,7 @@ function LayoutGridColumns<
 >(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
 
-  const { registry, uiSchema } = layoutGridFieldProps;
+  const { registry, uiSchema, id } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMNS, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
@@ -631,6 +631,7 @@ function LayoutGridColumns<
   return children.map((child) => (
     <GridTemplate
       column
+      fieldId={id}
       key={`column-${hashObject(child)}`}
       data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
       {...gridProps}
@@ -653,13 +654,20 @@ function LayoutGridRow<
 >(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
 
-  const { registry, uiSchema } = layoutGridFieldProps;
+  const { registry, uiSchema, id, fieldPath } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.ROW, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const { span, ...rowGridProps } = gridProps;
+  if (span !== undefined) {
+    logOnce(
+      `span on a ui:row in ${fieldLabelForLog(id, fieldPath)} is ignored, since span sizes a ui:col or ui:columns ` +
+        'rather than a row.',
+    );
+  }
 
   return (
-    <GridTemplate {...gridProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.row}>
+    <GridTemplate fieldId={id} {...rowGridProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.row}>
       <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
     </GridTemplate>
   );

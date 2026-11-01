@@ -6260,7 +6260,7 @@ exports[`Three even column grid > renders person and address in three columns, n
         >
           <div
             class="flex-grow"
-            xs="24"
+            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-object"
@@ -6289,7 +6289,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6330,7 +6330,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6365,7 +6365,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6406,7 +6406,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6474,7 +6474,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="16"
+            style="flex: 0 0 calc(-1rem + 0.6666666666666666*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-array"
@@ -6613,7 +6613,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6654,7 +6654,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6689,7 +6689,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6730,7 +6730,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7640,7 +7640,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem));"
           />
         </div>
       </div>
@@ -7673,7 +7673,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
         >
           <div
             class="flex-grow"
-            xs="24"
+            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-object"
@@ -7702,7 +7702,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7743,7 +7743,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7778,7 +7778,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7819,7 +7819,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7887,7 +7887,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="24"
+            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-array"
@@ -8026,7 +8026,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -8067,7 +8067,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -8102,7 +8102,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -8143,7 +8143,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem));"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -9053,7 +9053,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="24"
+            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem));"
           />
         </div>
       </div>

@@ -5209,7 +5209,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                 >
                   <div
-                    class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-object"
@@ -5252,7 +5252,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -5312,7 +5312,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -5371,7 +5371,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -5431,7 +5431,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -5517,7 +5517,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-16 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-16 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-array"
@@ -5700,7 +5700,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -5760,7 +5760,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -5819,7 +5819,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -5879,7 +5879,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -5974,7 +5974,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   />
                 </div>
               </div>
@@ -6022,7 +6022,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                 >
                   <div
-                    class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-object"
@@ -6065,7 +6065,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -6125,7 +6125,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -6184,7 +6184,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -6244,7 +6244,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -6330,7 +6330,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-array"
@@ -6513,7 +6513,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -6573,7 +6573,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -6632,7 +6632,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -6692,7 +6692,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   >
                     <div
                       class="rjsf-field rjsf-field-string"
@@ -6787,7 +6787,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </div>
                   </div>
                   <div
-                    class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                   />
                 </div>
               </div>
