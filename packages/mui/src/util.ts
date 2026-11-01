@@ -19,7 +19,7 @@ import type {
   UiSchema,
   GenericObjectType,
 } from '@rjsf/utils';
-import { partId } from '@rjsf/utils';
+import { isObject, partId } from '@rjsf/utils';
 
 type SxArray = Extract<SxProps<Theme>, readonly unknown[]>;
 
@@ -76,7 +76,7 @@ export function getMuiProps<
   F extends FormContextType = FormContextType,
   P extends object = GenericObjectType,
 >(options: UIOptionsType<T, S, F>, propsToFilter?: string[], rjsfSlotPropsOnly?: boolean): P {
-  const muiProps = (options?.mui as P) || ({} as P);
+  const muiProps = isObject(options?.mui) ? (options.mui as P) : ({} as P);
   if (rjsfSlotPropsOnly) {
     const { rjsfSlotProps }: { rjsfSlotProps?: unknown } = muiProps;
     return { rjsfSlotProps } as unknown as P;

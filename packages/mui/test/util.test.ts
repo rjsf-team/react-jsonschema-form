@@ -4,6 +4,9 @@ import type { RJSFSchema } from '@rjsf/utils';
 import { computeSxProps, getMuiProps } from '../src/util.ts';
 
 describe('getMuiProps', () => {
+  it('returns no props for a `mui` option that is not an object', () => {
+    expect(getMuiProps({ mui: 'outlined' })).toEqual({});
+  });
   it('should extract mui props from uiOptions', () => {
     const options = {
       mui: {
