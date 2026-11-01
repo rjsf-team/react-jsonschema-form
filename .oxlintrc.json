@@ -69,7 +69,7 @@
     "import/no-absolute-path": "error",
     "import/no-amd": "error",
     "import/no-anonymous-default-export": ["error", { "allowArray": true, "allowObject": true }],
-    "import/no-cycle": "off",
+    "import/no-cycle": "error",
     "import/no-duplicates": "error",
     "import/no-dynamic-require": "error",
     "import/no-empty-named-blocks": "error",

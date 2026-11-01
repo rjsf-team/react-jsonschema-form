@@ -1,6 +1,8 @@
 import type { JSONSchema7Type } from 'json-schema';
 
-import { CONST_KEY, getSchemaType, isObject } from './index.ts';
+import { CONST_KEY } from './constants.ts';
+import getSchemaType from './getSchemaType.ts';
+import isObject from './isObject.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /**

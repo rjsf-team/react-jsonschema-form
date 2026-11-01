@@ -1,7 +1,8 @@
 import { createContext } from 'react';
 import type { FieldPath } from '@rjsf/utils';
 
-import type { AnnouncedMove, BlurTouch, MoveOutcome } from './formState.ts';
+import type { BlurTouch } from './formState.ts';
+import type { AnnouncedMove, MoveOutcome } from './keyMove.ts';
 
 /** Private event access for container fields, which read the form's current data at their path, edits made since the
  * form last rendered included, instead of the data they rendered

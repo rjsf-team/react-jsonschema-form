@@ -20,9 +20,10 @@ import {
 } from '@rjsf/utils';
 
 import isDevelopment from '../isDevelopment.ts';
+import { copyAlongPath, getAt, isPathPrefix } from './dataPaths.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { AnnouncedMove, BlurTouch, ExtraDataOmission, FieldBlur, FieldChange, MoveOutcome } from './formState.ts';
+import type { BlurTouch, ExtraDataOmission, FieldBlur, FieldChange } from './formState.ts';
 import {
   applyBlur,
   applyChangeToData,
@@ -30,14 +31,10 @@ import {
   applyReset,
   applySubmit,
   applyValidation,
-  copyAlongPath,
-  getAt,
   deriveState,
   freezeFormData,
   isBlurValidated,
   isLiveValidated,
-  keyMoveOf,
-  moveFateOf,
   omitExtraDataOf,
   seedOf,
   shareState,
@@ -48,7 +45,9 @@ import {
   withMarksSettled,
 } from './formState.ts';
 import type { RJSFFormStatus } from './IChangeEvent.ts';
-import { asFieldValue, fieldStateOf, isPathPrefix } from './uiState.ts';
+import { keyMoveOf, moveFateOf } from './keyMove.ts';
+import type { AnnouncedMove, MoveOutcome } from './keyMove.ts';
+import { asFieldValue, fieldStateOf } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
 const HELD_SCALARS_LIMIT = 100;

@@ -69,7 +69,6 @@ import buildPlan, {
   childSeeds,
   declaresKeyword,
   ownChains,
-  schemaFrom,
   seedsAt,
   seedsKey,
   tupleSeeds,
@@ -92,6 +91,7 @@ import { readProvenance, rootProvenance } from './graph/provenance.ts';
 import type { Provenance } from './graph/provenance.ts';
 import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
+import { schemaFrom } from './graph/schemaFrom.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import { resolveDeclaredConstantOptions } from './resolveConstantOptions.ts';
 import retrieveSchema, {

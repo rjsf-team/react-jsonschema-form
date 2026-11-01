@@ -1,6 +1,6 @@
 import { REF_KEY } from './constants.ts';
 import KeyedMemo from './schema/graph/keyedMemo.ts';
-import { schemaFrom } from './schema/graph/mergePlan.ts';
+import { schemaFrom } from './schema/graph/schemaFrom.ts';
 import { resolveOwnRef } from './schema/retrieveSchema.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 

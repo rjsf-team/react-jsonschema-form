@@ -21,9 +21,11 @@ import {
   toConstant,
 } from '@rjsf/utils';
 
-import type { FieldEdit, KeyMove } from './formState.ts';
+import { isPathPrefix } from './dataPaths.ts';
+import type { FieldEdit } from './formState.ts';
+import type { KeyMove } from './keyMove.ts';
 import type { UiStateReader } from './uiState.ts';
-import { asFieldValue, isPathPrefix, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
+import { asFieldValue, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 
 /** What the tree diff needs that does not change as it descends */
 interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> {

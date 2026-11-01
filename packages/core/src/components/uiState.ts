@@ -9,7 +9,6 @@ import type {
 import {
   constrainsValue,
   deepEquals,
-  fieldPathFromList,
   fieldPathToList,
   getByPath,
   getValidationTarget,
@@ -21,7 +20,9 @@ import {
   REQUIRED_KEY,
 } from '@rjsf/utils';
 
-import type { KeyMove, MoveFate } from './formState.ts';
+import { isPathPrefix } from './dataPaths.ts';
+import { movedPath, movedPaths } from './keyMove.ts';
+import type { KeyMove, MoveFate } from './keyMove.ts';
 
 /** The option selected for a field's option list, and the field's data it holds for, see `useOptionSelection()` */
 export interface OptionSelection {
@@ -212,29 +213,6 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
   };
 }
 
-/** `paths` with each moved as `movedPath()` moves it, without those under a key that went */
-export function movedPaths(paths: ReadonlySet<FieldPath>, container: FieldPathList, newKeyOf: KeyMove): Set<FieldPath> {
-  return new Set([...paths].flatMap((path) => movedPath(path, container, newKeyOf) ?? []));
-}
-
-/** The new path of `path` once the keys of the array or object at `container` moved as `newKeyOf` says, undefined for
- * one under a key that went, and `path` itself for one outside `container`
- */
-function movedPath(path: FieldPath, container: FieldPathList, newKeyOf: KeyMove): FieldPath | undefined {
-  const segments = fieldPathToList(path);
-  if (segments.length === container.length || !isPathPrefix(container, segments)) {
-    return path;
-  }
-  const key = segments[container.length];
-  const newKey = newKeyOf(String(key));
-  if (newKey === undefined) {
-    return undefined;
-  }
-  const moved = [...segments];
-  moved[container.length] = typeof key === 'number' ? Number(newKey) : newKey;
-  return fieldPathFromList(moved);
-}
-
 /** The entries, kept by path, that hold after a move at `container` that `transformChange` rewrote, key by key as
  * `fateOf` says of each: an entry of `moved` under a key holding what the move put there, or outside the container,
  * stays, one of `unmoved`, the entries before the move, under a key holding what it held before comes back, and any
@@ -258,17 +236,6 @@ export function settledEntries<E>(
     ...[...moved].filter((entry) => fateAt(entry) === 'moved'),
     ...[...unmoved].filter((entry) => fateAt(entry) === 'unmoved'),
   ];
-}
-
-/** Whether `prefix` addresses `path` itself or a container holding it, comparing the segments the way `toPath()` spells
- * them, so a numeric array index and its string form are the same segment
- *
- * @param prefix - The path that may lead into `path`
- * @param path - The path being addressed
- * @returns - True when every segment of `prefix` opens `path`
- */
-export function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
-  return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
 }
 
 /** Makes each of `selections` hold for the data `dataAt` gives at its field, or for none where the field holds other
