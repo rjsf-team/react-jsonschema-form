@@ -9,9 +9,9 @@ import type {
   Widget,
   WidgetProps,
 } from '../src/index.ts';
-import { getUiOptions, isObject, noop } from '../src/index.ts';
+import { getUiOptions, noop } from '../src/index.ts';
 
-const uiSchema: UiSchema = {
+const uiSchema = {
   widgetText: {
     'ui:widget': 'select',
   },
@@ -59,10 +59,9 @@ const results: Record<string, UIOptionsType> = {
   },
 };
 
-/** One case of `uiSchema`, whose entries an untyped uiSchema reads back as `unknown` */
-function uiSchemaCase(name: string): UiSchema {
-  const value = uiSchema[name];
-  return isObject(value) ? value : {};
+/** One case of `uiSchema`. Two cases hold shapes the type forbids on purpose, so the fixture can't carry `UiSchema` itself */
+function uiSchemaCase(name: keyof typeof uiSchema) {
+  return uiSchema[name] as UiSchema;
 }
 
 describe('getUiOptions()', () => {
