@@ -103,16 +103,30 @@ function optionDeclaresValueFor<
   return isPlainObject(optionDefault) && Object.hasOwn(optionDefault, key);
 }
 
-/** Whether two options' schemas for a property describe the same field, so a clear of it carries over a switch */
+/** The default `option`'s own `default` object gives `key` */
+function optionDefaultFor<S extends StrictRJSFSchema>(option: S | undefined, key: string): unknown {
+  const optionDefault = option?.[DEFAULT_KEY];
+  return isPlainObject(optionDefault) && Object.hasOwn(optionDefault, key) ? optionDefault[key] : undefined;
+}
+
+/** Whether two options' schemas for `key` describe the same field, so a clear of it carries over a switch */
 function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schemaUtils: SchemaUtilsType<T, S, F>,
-  oldProperty: unknown,
-  newProperty: unknown,
+  key: string,
+  oldOption: S | undefined,
+  newOption: S | undefined,
 ): boolean {
+  const oldProperty = getByPath(oldOption?.properties, key);
+  const newProperty = getByPath(newOption?.properties, key);
   return (
     !isSchemaObject<S>(oldProperty) ||
     !isSchemaObject<S>(newProperty) ||
-    hasSameConstraints<S>(schemaUtils.retrieveSchema(oldProperty), schemaUtils.retrieveSchema(newProperty))
+    hasSameConstraints<S>(
+      schemaUtils.retrieveSchema(oldProperty),
+      schemaUtils.retrieveSchema(newProperty),
+      optionDefaultFor<S>(oldOption, key),
+      optionDefaultFor<S>(newOption, key),
+    )
   );
 }
 
@@ -146,7 +160,7 @@ function withoutDiscardedKeys<
       data[key] === undefined &&
       Object.hasOwn(oldProperties, key) &&
       (Object.hasOwn(newProperties, key)
-        ? !holdsSameField(schemaUtils, getByPath(oldProperties, key), getByPath(newProperties, key))
+        ? !holdsSameField(schemaUtils, key, oldOption, newOption)
         : !declaresProperty<S>(parentProperties, key)),
   );
   if (discardedKeys.length === 0) {

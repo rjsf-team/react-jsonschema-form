@@ -213,10 +213,20 @@ function isSameType(oldType: unknown, newType: unknown): boolean {
  *
  * @param oldField - The field's schema before the change
  * @param newField - The field's schema after the change
+ * @param oldInherited - The default the schema above `oldField` declares for it
+ * @param newInherited - The default the schema above `newField` declares for it
  * @returns - Whether a value of the field keeps its standing
  */
-export function hasSameConstraints<S extends StrictRJSFSchema>(oldField: S, newField: S): boolean {
-  return deepEquals(constraintsOf([oldField], oldField.default), constraintsOf([newField], newField.default));
+export function hasSameConstraints<S extends StrictRJSFSchema>(
+  oldField: S,
+  newField: S,
+  oldInherited: unknown,
+  newInherited: unknown,
+): boolean {
+  return deepEquals(
+    constraintsOf([oldField], oldField.default ?? oldInherited),
+    constraintsOf([newField], newField.default ?? newInherited),
+  );
 }
 
 /** What a field's value is judged by: the keywords whose change can make the value one the field no longer holds */
@@ -235,6 +245,7 @@ function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declare
  * of another type, or one the new `const` or `enum` rejects, is replaced as `sanitizeDataForNewSchema()` replaces it,
  * or dropped.
  *
+ * @param acceptsNull - Whether the field's new schema holds `null`, asked only of a `null` item
  * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
  *   judge what it holds
  */
@@ -245,6 +256,7 @@ function judge<S extends StrictRJSFSchema>(
   oldDefault: unknown,
   newDefault: unknown,
   isItem: boolean,
+  acceptsNull: () => boolean,
 ): unknown {
   const before = constraintsOf(oldLayers, oldDefault);
   const now = constraintsOf(newLayers, newDefault);
@@ -256,8 +268,8 @@ function judge<S extends StrictRJSFSchema>(
   if (value === undefined && !isItem) {
     return DROP;
   }
-  // A cleared item is `null`, whose row stays for the new default to fill
-  if (value === null && isItem && newDefault !== undefined) {
+  // A cleared item is `null`, whose row stays for the new default to fill. A `null` the item holds is a value, not a clear
+  if (value === null && isItem && newDefault !== undefined && !acceptsNull()) {
     return UNSET;
   }
   if (oldDefault !== undefined && newDefault !== undefined && deepEquals(oldDefault, value)) {
@@ -354,7 +366,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const newDefault = newOwnDefault ?? newInherited;
   // The edited value and the values holding it are the user's
   if (!edited) {
-    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem);
+    const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
+    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull);
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
     }

@@ -3513,6 +3513,87 @@ describe('clearing a field with a schema default does not re-apply the default (
         expect(onChange.mock.lastCall?.[0].formData).toEqual({ p: { x: 5 } });
       });
 
+      it('gives way when an option switch changes the default the option declares for its field', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            p: {
+              type: 'object',
+              oneOf: [
+                { title: 'A', properties: { x: { type: 'string' } } },
+                { title: 'B', default: { x: 'B' }, properties: { x: { type: 'string' } } },
+              ],
+            },
+          },
+        };
+        const { node, onChange } = createFormComponent({ schema, initialFormData: { p: { x: 'typed' } } });
+
+        await user.clear(elementOf(node, 'input#root_p_x'));
+        await user.selectOptions(elementOf(node, 'select#root_p__oneof_select'), 'B');
+
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ p: { x: 'B' } });
+      });
+
+      it('fills a setFieldValue() undefined whose default arrives in a later round', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            a: { type: 'string' },
+            flag: { type: 'boolean' },
+            other: { type: 'string' },
+          },
+          allOf: [
+            {
+              if: { properties: { a: { const: 'q' } }, required: ['a'] },
+              else: { properties: { flag: { default: true } } },
+            },
+            {
+              if: { properties: { flag: { const: true } }, required: ['flag'] },
+              then: { properties: { a: { default: 'x' }, other: { enum: ['new'] } } },
+            },
+          ],
+        };
+        const ref = createFormRef();
+        createFormComponent({ ref, schema, defaultFormStateBehavior, initialFormData: { a: 'q', other: 'old' } });
+
+        act(() => handleOf(ref).setFieldValue('a', undefined));
+
+        expect(handleOf(ref).getFormData()).toEqual({ a: 'x', flag: true, other: 'new' });
+      });
+
+      describe('a null array item whose item default changes', () => {
+        const schemaOf = (itemType: RJSFSchema['type']): RJSFSchema => ({
+          type: 'object',
+          properties: { flag: { type: 'boolean' }, list: { type: 'array', items: { type: itemType, default: 'x' } } },
+          if: { properties: { flag: { const: true } }, required: ['flag'] },
+          then: { properties: { list: { type: 'array', items: { type: itemType, default: 'y' } } } },
+        });
+
+        it('stays when the item accepts null', async () => {
+          const { node, onChange } = createFormComponent({
+            schema: schemaOf(['string', 'null']),
+            initialFormData: { flag: false, list: [null, 'b'] },
+          });
+
+          await user.click(elementOf(node, 'input#root_flag'));
+
+          expect(onChange.mock.lastCall?.[0].formData.list).toEqual([null, 'b']);
+        });
+
+        it('takes the new default when the item rejects null', async () => {
+          const { node, onChange } = createFormComponent({
+            schema: schemaOf('string'),
+            defaultFormStateBehavior,
+            initialFormData: { flag: false, list: ['a', 'b'] },
+          });
+
+          await user.clear(elementOf(node, 'input#root_list_0'));
+          await user.click(elementOf(node, 'input#root_flag'));
+
+          expect(onChange.mock.lastCall?.[0].formData.list).toEqual(['y', 'b']);
+        });
+      });
+
       it('keeps the row of a cleared array item when its type changes, for the new default to fill', async () => {
         const schema: RJSFSchema = {
           type: 'object',

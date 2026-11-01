@@ -1199,8 +1199,6 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     return clears === undefined ? filled : keepClears(filled, data, clears);
   };
   let formData = fill(inputFormData, options.clears);
-  // The sanitize below writes no clear of its own, so every clear a later round's data holds is one the pass kept
-  const refill = (data: T | undefined) => fill(data, options.clears === undefined ? undefined : data);
   const treeOf = (data: T | undefined): FieldTree<T, S, F> => ({
     schemaUtils,
     formData: data,
@@ -1221,14 +1219,14 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       }
       const hash = hashObject({ formData: sanitized });
       if (seen.includes(hash)) {
-        formData = refill(sanitized);
+        formData = fill(sanitized, options.clears);
         break;
       }
       seen.push(hash);
       previous = tree;
       // Only the first round diffs against the data before the move: every later one diffs against data already moved
       roundEdit = edit && { path: edit.path };
-      formData = refill(sanitized);
+      formData = fill(sanitized, options.clears);
       tree = treeOf(formData);
     }
   }

@@ -5,17 +5,14 @@ import {
   setByPath,
   getOptionUiSchema,
   fieldPathToName,
-  ANY_OF_KEY,
-  ONE_OF_KEY,
   getUiOptions,
-  getXxxOfKey,
   toFieldPath,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
-import { getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
+import { getWidgetErrorProps, getWidgetLabelProps, optionsKeywordOf } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import {
   computeEnumOptions,
@@ -89,8 +86,7 @@ export default function LayoutMultiSchemaField<
   const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
   const uiSchema = useMemo(() => omitFieldDirectives<T, S, F>(namingUiSchema), [namingUiSchema]);
-  // A field named on an empty list keeps that list's ids and uiSchema, as there is no option to read them from
-  const keyword = getXxxOfKey<S>(schema) ?? (Array.isArray(schema[ANY_OF_KEY]) ? ANY_OF_KEY : ONE_OF_KEY);
+  const keyword = optionsKeywordOf<S>(schema);
   const enumOptions = useMemo(
     () => computeEnumOptions(schema, schemaUtils, uiSchema, formData),
     [schema, schemaUtils, uiSchema, formData],

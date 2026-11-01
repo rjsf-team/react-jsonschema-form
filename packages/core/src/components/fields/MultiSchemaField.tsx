@@ -10,11 +10,8 @@ import {
   getTemplates,
   getUiOptions,
   getValidationTarget,
-  getXxxOfKey,
   isFormDataAvailable,
   logOnce,
-  ANY_OF_KEY,
-  ONE_OF_KEY,
   optionSelectorId,
   resolveWidget,
   selectOptionUiSchema,
@@ -28,7 +25,7 @@ import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import { retrievedOptionListOf } from '../uiState.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
-import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
+import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps, optionsKeywordOf } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
@@ -107,8 +104,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     getDiscriminatorFieldFromSchema<S>(schema),
   );
 
-  // A field named on an empty list keeps that list's ids and uiSchema, as there is no option to read them from
-  const xxxOfKey = getXxxOfKey<S>(schema) ?? (Array.isArray(schema[ANY_OF_KEY]) ? ANY_OF_KEY : ONE_OF_KEY);
+  const xxxOfKey = optionsKeywordOf<S>(schema);
   const selectorsAbove = useSelectorsAbove(id);
   const selectorDepth = selectorsAbove[xxxOfKey] + 1;
   const fieldId = optionSelectorId(id, xxxOfKey, selectorDepth);
