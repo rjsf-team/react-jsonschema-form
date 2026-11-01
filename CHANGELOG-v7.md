@@ -424,7 +424,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change the `templates` prop of `Form`, and a theme's `templates` passed to `withTheme()`, to check a declared template against its own props, where it accepted any component. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
 - **BREAKING CHANGE:** Change the `templates` prop of `Form` to check a declared template against its own props, where it accepted any component. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked and focuses it, as a number does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked, focuses it and is written back as a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/daisyui
 
