@@ -19,6 +19,8 @@ import {
   getXxxOfKey,
   GUESSED_TYPE_FLAG,
   guessType,
+  hasSchemaMarker,
+  hasWidget,
   JSON_SCHEMA_TYPES,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
@@ -384,8 +386,8 @@ function FallbackUiField<
   // the value would take the key it is stored under with it. That is the cleared state of whichever type the selector
   // is on, not evidence of a `string`, so a selection the user just made must survive it: reading it as data of
   // another type would put the selector back on `string` and leave the other types out of reach from a cleared value
-  const isAdditionalEntry = isAdditionalPropertySchema(schema) || isEntryPath;
-  const isClearedProperty = emptiesToNothing && isAdditionalEntry && (formData as unknown) === '';
+  const isClearedProperty =
+    emptiesToNothing && hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) && (formData as unknown) === '';
   const isEmptyValue = formData === undefined || isClearedProperty;
   const isSelectionUsable =
     types.includes(selectedType) &&

@@ -642,7 +642,7 @@ function getFieldComponent<
   // one type, which is the choice the selector is there to make, so `getValueUiSchema()` carries it down instead.
   // A schema with a guessed type still gets the selector whatever the widget is: it lists no types for such a control
   // to handle, so the widget renders within it for the chosen one
-  const hasGuessedType = GUESSED_TYPE_FLAG in schema;
+  const hasGuessedType = hasSchemaMarker(schema, GUESSED_TYPE_FLAG);
   const isNamedWidget = !widget || typeof widget === 'string';
   const mayDivert = globalFormOptions.useFallbackUiForUnsupportedType && !isSelectSchema;
   const optionsTakeOverSelector =

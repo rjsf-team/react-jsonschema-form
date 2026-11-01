@@ -2268,8 +2268,9 @@ type UnionMembersMerged<T> = {
 /** The data an `additionalProperties` key holds: what `T`'s index signature declares, or `unknown` when it has none */
 type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullable<T>[string] : unknown;
 
-/** Whether a nested entry is unconstrained: `any` data, or a string index holding `unknown`, which also covers the `ui:`
- * keys, whose values aren't uiSchemas. A field declared `unknown` isn't one, and keeps its loose `UiSchema`
+/** Whether a nested entry is unconstrained: `any` data, or a string index holding any type `unknown` is assignable to,
+ * such as `unknown` itself or `{} | null | undefined`, which also covers the `ui:` keys, whose values aren't uiSchemas.
+ * A field declared `unknown` isn't one, and keeps its loose `UiSchema`
  */
 type IsOpenEntry<K, V> = IsAny<V> extends true ? true : [string, unknown] extends [K, V] ? true : false;
 

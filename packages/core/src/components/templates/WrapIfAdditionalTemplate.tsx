@@ -6,8 +6,7 @@ import {
   buttonId,
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
-  isAdditionalKeyDisabled,
-  isAdditionalRemoveDisabled,
+  hasSchemaMarker,
   joinClassNames,
   TranslatableString,
 } from '@rjsf/utils';
@@ -52,7 +51,7 @@ export default function WrapIfAdditionalTemplate<
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const keyId = additionalKeyId(id);
-  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const additional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
 
   if (!additional) {
     return (

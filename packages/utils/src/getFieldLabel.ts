@@ -1,6 +1,7 @@
 import { ADDITIONAL_PROPERTY_FLAG } from './constants.ts';
 import { TranslatableString } from './enums.ts';
 import getDeprecatedHandling from './getDeprecatedHandling.ts';
+import hasSchemaMarker from './hasSchemaMarker.ts';
 import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema, UIOptionsType } from './types.ts';
 
 /** Where a field's label can come from besides its schema and `uiSchema` */
@@ -37,7 +38,7 @@ export default function getFieldLabel<
   { name = '', title, unresolvedSchema }: FieldLabelSources<S> = {},
 ): string {
   const label =
-    ADDITIONAL_PROPERTY_FLAG in schema
+    wasPropertyKeyModified || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG)
       ? name
       : uiOptions.title || unresolvedSchema?.title || schema.title || title || name;
   return label && getDeprecatedHandling<T, S, F>(schema, uiOptions) === 'label'

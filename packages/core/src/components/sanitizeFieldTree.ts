@@ -184,7 +184,7 @@ function keywordOf<S extends StrictRJSFSchema>(layers: readonly S[], keyword: st
 
 /** A type guessed from an extra key's data describes the data rather than the schema, so it is no type */
 function typeOf<S extends StrictRJSFSchema>(layers: readonly S[]): unknown {
-  return layers.some((layer) => GUESSED_TYPE_FLAG in layer) ? undefined : keywordOf(layers, 'type');
+  return layers.some((layer) => hasSchemaMarker(layer, GUESSED_TYPE_FLAG)) ? undefined : keywordOf(layers, 'type');
 }
 
 /** The values a field offers: its `enum`, or the constants of options that are all constants */
