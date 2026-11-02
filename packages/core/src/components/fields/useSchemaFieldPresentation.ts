@@ -21,6 +21,7 @@ import {
   getSchemaType,
   getUiOptions,
   getXxxOfKey,
+  isConstantSelect,
   ITEMS_KEY,
   resolveFieldPresentation,
   schemaRequiresTrueValue,
@@ -84,9 +85,10 @@ export interface SchemaFieldPresentationInputs<
 /** How the label of a field rendering its `anyOf`/`oneOf` options reaches the control the selected option renders
  * under the field's id: by its `for`, unless the option renders no control there, as an object, a `null` or an array of
  * items does, or one a `for` can't name, as the group of an alt-date's parts is, so the label names it through
- * `aria-labelledby` instead (#5578). An option naming a `ui:field`, options of its own or no type with a field of its
- * own keeps the `for`, unresolved here: options of its own may show an object, and an untyped option may render nothing
- * under the field's id, either of which leaves the `for` naming no control (#5709)
+ * `aria-labelledby` instead (#5578). An option rendering options of its own is named that way too, since the option it
+ * shows may be an object, whose `<fieldset>` a `for` can't name, and a control it shows is named by the label all the
+ * same. An option naming a `ui:field` or no type with a field of its own keeps the `for`, unresolved here: an untyped
+ * option may render nothing under the field's id, which leaves the `for` naming no control (#5709)
  *
  * @param registry - The registry, whose `fields` and `presentation` are read
  * @param schema - The schema of the field rendering the options
@@ -113,10 +115,13 @@ function selectedOptionLabelledBy<
   }
   const rendered = getRenderedOptionSchema<S>(schema, option);
   const optionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, index);
+  // A `oneOf`/`anyOf` of constants is a select, rendered as one control, rather than options of its own
+  if (getXxxOfKey<S>(rendered) && !isConstantSelect<S>(rendered, true)) {
+    return 'aria-labelledby';
+  }
   const type = getSchemaType<S>(rendered);
   if (
     getUiOptions<T, S, F>(optionUiSchema).field ||
-    getXxxOfKey<S>(rendered) ||
     typeof type !== 'string' ||
     !Object.hasOwn(COMPONENT_TYPES, type)
   ) {

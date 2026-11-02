@@ -1012,6 +1012,63 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBeUndefined();
   });
+
+  describe('an option rendering options of its own', () => {
+    const nested = (inner: RJSFSchema[]): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        pet: {
+          title: 'Pet',
+          anyOf: [
+            { title: 'Inner', anyOf: inner },
+            { title: 'Other', type: 'object', properties: { b: { type: 'number' } } },
+          ],
+        },
+      },
+    });
+
+    it("draws no for while its object option shows, since a for can't name the fieldset", () => {
+      const { node } = createFormComponent({
+        schema: nested([
+          { type: 'object', properties: { a: { type: 'string' } } },
+          { type: 'object', properties: { c: { type: 'string' } } },
+        ]),
+        initialFormData: { pet: { a: 'x' } },
+      });
+
+      expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
+    });
+
+    it('names a control its option shows through aria-labelledby', () => {
+      const { node } = createFormComponent({
+        schema: nested([{ type: 'string' }, { type: 'number' }]),
+        initialFormData: { pet: 'x' },
+      });
+
+      const input = node.querySelector('input#root_pet');
+      expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
+      expect(input).toHaveAttribute('aria-labelledby', expect.stringContaining(fieldLabelId('root_pet')));
+      expect(input).toHaveAccessibleName(expect.stringContaining('Pet'));
+    });
+  });
+
+  it('keeps the for while an option that is a select of constants shows', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          pet: {
+            title: 'Pet',
+            anyOf: [{ type: 'string', oneOf: [{ const: 'a' }, { const: 'b' }] }, { type: 'number' }],
+          },
+        },
+      },
+      initialFormData: { pet: 'a' },
+    });
+
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).toHaveAttribute('for', 'root_pet');
+    expect(node.querySelector('select#root_pet')).toHaveAccessibleName('Pet');
+  });
 });
 
 describe('a fallback field with no control for a label to name', () => {
