@@ -104,7 +104,7 @@ export default function NativeSelectWidget<
           onFocus={handleFocus}
           autoFocus={autofocus}
           value={formValue}
-          {...widgetAriaProps(props, drawsLabel)}
+          {...widgetAriaProps(props)}
         >
           {showPlaceholderOption ? (
             <option value='' disabled hidden>

@@ -33,16 +33,13 @@ export type WidgetAriaPropsInput<
  *
  * @param props - The widget's props, of which `id`, `presentation`, `aria-label`, `aria-describedby`, `label`,
  *   `placeholder` and those `SelectedOptionDescription` reads are used
- * @param [namedByWidget=false] - Whether the widget names the control itself, by a label it draws, as
- *   `widgetDrawsLabelText()` says for one that draws its field's label, or by an `aria-label` of its own, so it takes
- *   no fallback name
  * @returns - The `aria-label` and the attributes to spread on the focused element
  */
 export default function widgetAriaProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: WidgetAriaPropsInput<T, S, F>, namedByWidget = false): Omit<ControlAttributes, 'required'> {
+>(props: WidgetAriaPropsInput<T, S, F>): Omit<ControlAttributes, 'required'> {
   const { 'aria-label': ariaLabel, 'aria-describedby': callerDescribedBy, presentation } = props;
   const selected = getSelectedOptionDescription<T, S, F>(props);
   const addedDescribedBy = [...(callerDescribedBy?.split(' ') ?? []), ...(selected ? [selected.id] : [])];
@@ -52,6 +49,6 @@ export default function widgetAriaProps<
       : getControlAttributes<T, S, F>(props, addedDescribedBy);
   return {
     ...attributes,
-    'aria-label': getControlAriaLabel<T, S, F>(props, ariaLabel || attributes['aria-label'], namedByWidget),
+    'aria-label': getControlAriaLabel<T, S, F>(props, ariaLabel || attributes['aria-label']),
   };
 }

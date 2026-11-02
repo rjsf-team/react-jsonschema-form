@@ -1,4 +1,6 @@
+import { TranslatableString } from './enums.ts';
 import getControlAttributes from './getControlAttributes.ts';
+import getControlFallbackName from './getControlFallbackName.ts';
 import type { ControlAttributes, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
 /** The role of the element wrapping a group of controls: `radiogroup` for radios, `group` for anything else */
@@ -18,7 +20,12 @@ export type GroupRole = 'radiogroup' | 'group';
  * the widget the label, so a widget can pass it whether or not it draws one: a hidden label, or one the template draws
  * with a `for`, leaves the group pointing at no label the widget doesn't draw. Without a plan the caller is trusted.
  *
- * @param props - The widget's `id` and `presentation`
+ * A `radiogroup` no label names, such as an untitled field's or option selector's, is named as an untitled select is,
+ * by its `label`, its `placeholder` or `TranslatableString.RadioGroupName`, where its caller hands it the `registry` to
+ * translate with. A group of stars, such as `RatingWidget`'s, hands it none, since its stars name the choices alone.
+ *
+ * @param props - The widget's `id` and `presentation`, and for a group of radios its `label`, `placeholder` and
+ *   `registry`
  * @param role - The role of the group's wrapper
  * @param [drawnLabelId] - The id of the label the widget draws for the group itself, where it draws one
  * @returns - `group`, the `role` and attributes for the group's wrapper, and `option`, those for each control in it
@@ -28,7 +35,8 @@ export default function getGroupAttributes<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  props: Pick<WidgetProps<T, S, F>, 'id' | 'presentation'>,
+  props: Pick<WidgetProps<T, S, F>, 'id' | 'presentation'> &
+    Partial<Pick<WidgetProps<T, S, F>, 'label' | 'placeholder' | 'registry'>>,
   role: GroupRole,
   drawnLabelId?: string,
 ): {
@@ -41,16 +49,21 @@ export default function getGroupAttributes<
     'aria-invalid': invalid,
     ...described
   } = getControlAttributes<T, S, F>(props);
-  const { presentation } = props;
+  const { presentation, label = '', placeholder, registry } = props;
   const drawsOwnLabel = presentation ? presentation.label.by === 'self' : true;
   const labelledBy = plannedLabelledBy || (drawsOwnLabel ? drawnLabelId : undefined);
+  const name =
+    ariaLabel ||
+    (!labelledBy && role === 'radiogroup' && registry
+      ? getControlFallbackName<T, S, F>({ label, placeholder, registry }, TranslatableString.RadioGroupName)
+      : undefined);
   const invalidAttribute = invalid && { 'aria-invalid': invalid };
   const groupTakesInvalid = role === 'radiogroup';
   return {
     group: {
       role,
       ...(labelledBy && { 'aria-labelledby': labelledBy }),
-      ...(ariaLabel && { 'aria-label': ariaLabel }),
+      ...(name && { 'aria-label': name }),
       ...(groupTakesInvalid && invalidAttribute),
     },
     option: { ...described, ...(!groupTakesInvalid && invalidAttribute) },

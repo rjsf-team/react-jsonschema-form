@@ -348,6 +348,52 @@ describe('the plan SchemaField builds', () => {
       expect(node.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
     });
 
+    it('is named by a fallback when its field has no title (#5586)', () => {
+      const { node } = createFormComponent({
+        schema: {
+          oneOf: [
+            { type: 'string', title: 'Text' },
+            { type: 'number', title: 'Num' },
+          ],
+        },
+        initialFormData: 'a',
+      });
+
+      expect(node.querySelector('#root__oneof_select')).toHaveAccessibleName('Select ...');
+    });
+
+    it('is named by its placeholder when its field has no title', () => {
+      const { node } = createFormComponent({
+        schema: {
+          oneOf: [
+            { type: 'string', title: 'Text' },
+            { type: 'number', title: 'Num' },
+          ],
+        },
+        uiSchema: { 'ui:placeholder': 'Pick a kind' },
+        initialFormData: 'a',
+      });
+
+      expect(node.querySelector('#root__oneof_select')).toHaveAccessibleName('Pick a kind');
+    });
+
+    it('is a radiogroup named by a fallback when its field has no title', () => {
+      const { node } = createFormComponent({
+        schema: {
+          oneOf: [
+            { type: 'string', title: 'Text' },
+            { type: 'number', title: 'Num' },
+          ],
+        },
+        uiSchema: { 'ui:widget': 'radio' },
+        initialFormData: 'a',
+      });
+
+      const group = node.querySelector('#root__oneof_select');
+      expect(group).toHaveAttribute('role', 'radiogroup');
+      expect(group).toHaveAccessibleName('Choose an option');
+    });
+
     it("is named by the label the field's template draws, and described by the parts that render", () => {
       const { node } = createFormComponent({
         schema,

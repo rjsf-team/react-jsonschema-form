@@ -1,4 +1,4 @@
-import { selectNameTests } from '@rjsf/snapshot-tests';
+import { controlNameTests } from '@rjsf/snapshot-tests';
 
 import NativeSelectWidget from '../src/NativeSelectWidget/NativeSelectWidget.tsx';
 import WrappedForm from './WrappedForm.tsx';
@@ -6,4 +6,4 @@ import WrappedForm from './WrappedForm.tsx';
 describe.each([
   ['SelectWidget', {}],
   ['NativeSelectWidget', { SelectWidget: NativeSelectWidget }],
-])('chakra-ui %s', (_, widgets) => selectNameTests(WrappedForm, widgets));
+])('chakra-ui %s', (_, widgets) => controlNameTests(WrappedForm, widgets));

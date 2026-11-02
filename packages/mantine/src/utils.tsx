@@ -812,11 +812,13 @@ export function useGroupAriaProps<
       inputOptionKeys.map((name) => [name, props[name] !== undefined ? props[name] : wrapperObject?.[name]]),
     ),
   );
-  const shownLabel = labelValue(label, hideLabel, false);
-  const hiddenLabel = useHiddenTitle(id, label, hideLabel, resolved.inputWrapperOrder);
   // The label the widget draws, shown or hidden, where the plan names the group by no other
   const role = component === 'RadioGroup' ? 'radiogroup' : 'group';
   const { group, option } = getGroupAttributes<T, S, F>(widgetProps, role, label ? titleId(id) : undefined);
+  const shownLabel = labelValue(label, hideLabel, false);
+  // A `radiogroup` no label names is named by the hidden title, as one whose label is hidden is, since the group takes
+  // its name from the `InputWrapper` context's `labelId` rather than an `aria-label`
+  const hiddenLabel = useHiddenTitle(id, label ?? group['aria-label'], hideLabel || !label, resolved.inputWrapperOrder);
   const labelledBy = group['aria-labelledby'] ?? (hiddenLabel ? titleId(id) : undefined);
   const ownSuccessProps = asObject(resolved.successProps);
   const containerProps = useAriaContainerProps({
