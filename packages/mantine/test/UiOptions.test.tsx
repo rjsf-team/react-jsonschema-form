@@ -30,8 +30,14 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   it('leaves an optional field optional under a global required option, which rjsf ignores', () => {
     render(
       <Form
-        schema={{ type: 'object', properties: { agree: { type: 'boolean', title: 'Agree' } } }}
-        uiSchema={{ 'ui:globalOptions': { required: true }, agree: { 'ui:widget': 'select' } }}
+        schema={{
+          type: 'object',
+          properties: { agree: { type: 'boolean', title: 'Agree' } },
+        }}
+        uiSchema={{
+          'ui:globalOptions': { required: true },
+          agree: { 'ui:widget': 'select' },
+        }}
         validator={validator}
       />,
     );
@@ -84,7 +90,12 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
       <Form
         schema={{ type: 'string', format: 'date' }}
         uiSchema={{
-          'ui:options': { yearsRange: [2000, 2030], format: 'MDY', hideNowButton: true, hideClearButton: true },
+          'ui:options': {
+            yearsRange: [2000, 2030],
+            format: 'MDY',
+            hideNowButton: true,
+            hideClearButton: true,
+          },
         }}
         validator={validator}
       />,
@@ -99,9 +110,16 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   it("does not pass ObjectFieldTemplate's grid options on from the global options", () => {
     const { container } = render(
       <Form
-        schema={{ type: 'object', properties: { agree: { type: 'boolean', title: 'Agree' } } }}
+        schema={{
+          type: 'object',
+          properties: { agree: { type: 'boolean', title: 'Agree' } },
+        }}
         uiSchema={{
-          'ui:globalOptions': { gridCols: 2, gridSpacing: 'md', gridVerticalSpacing: 'lg' },
+          'ui:globalOptions': {
+            gridCols: 2,
+            gridSpacing: 'md',
+            gridVerticalSpacing: 'lg',
+          },
           agree: { 'ui:widget': 'select' },
         }}
         validator={validator}
@@ -119,9 +137,15 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
       <Form
         schema={{
           type: 'object',
-          properties: { name: { type: 'string' }, agree: { type: 'boolean', title: 'Agree' } },
+          properties: {
+            name: { type: 'string' },
+            agree: { type: 'boolean', title: 'Agree' },
+          },
         }}
-        uiSchema={{ 'ui:globalOptions': { rowDensity: 2 }, agree: { 'ui:widget': 'select' } }}
+        uiSchema={{
+          'ui:globalOptions': { rowDensity: 2 },
+          agree: { 'ui:widget': 'select' },
+        }}
         globalUiOptionsKeys={['rowDensity']}
         validator={validator}
       />,
@@ -135,8 +159,14 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   it("passes on a field's own Mantine prop that a declared extension key shares its name with", () => {
     render(
       <Form
-        schema={{ type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } }}
-        uiSchema={{ 'ui:globalOptions': { variant: 'compact' }, name: { 'ui:options': { variant: 'filled' } } }}
+        schema={{
+          type: 'object',
+          properties: { name: { type: 'string' }, other: { type: 'string' } },
+        }}
+        uiSchema={{
+          'ui:globalOptions': { variant: 'compact' },
+          name: { 'ui:options': { variant: 'filled' } },
+        }}
         globalUiOptionsKeys={['variant']}
         validator={validator}
       />,
@@ -156,12 +186,34 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
             { title: 'Second', type: 'number' },
           ],
         }}
-        uiSchema={{ 'ui:globalOptions': { variant: 'compact' }, 'ui:options': { variant: 'filled' } }}
+        uiSchema={{
+          'ui:globalOptions': { variant: 'compact' },
+          'ui:options': { variant: 'filled' },
+        }}
         globalUiOptionsKeys={['variant']}
         validator={validator}
       />,
     );
 
     expect(container.querySelector('#root__anyof_select')).toHaveAttribute('data-variant', 'filled');
+  });
+
+  it("sizes a date-time field's time picker as its date input when the size is a global option", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'date-time' }}
+        uiSchema={{ 'ui:globalOptions': { size: 'lg' } }}
+        globalUiOptionsKeys={['size']}
+        validator={validator}
+      />,
+    );
+
+    const [dateInputSize, timePickerSize, ...rest] = Array.from(
+      container.querySelectorAll('.mantine-Input-wrapper'),
+      (wrapper) => wrapper.getAttribute('data-size'),
+    );
+    expect(rest).toHaveLength(0);
+    expect(dateInputSize).not.toBeNull();
+    expect(timePickerSize).toBe(dateInputSize);
   });
 });
