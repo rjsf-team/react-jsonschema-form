@@ -185,4 +185,18 @@ describe('RatingWidget', () => {
     expect(radios.length).toBeGreaterThan(0);
     radios.forEach((radio) => expect(radio).toHaveAttribute('name', 'root[stars]'));
   });
+
+  test('reads a rating stored as a numeric string, and writes a string back', async () => {
+    const onChange = vi.fn();
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ value: '3', schema: { type: 'string' }, onChange })} />,
+    );
+    const stars = getAllByRole('radio');
+
+    expect(stars[3]).toBeChecked();
+
+    await user.click(stars[4]);
+
+    expect(onChange).toHaveBeenCalledWith('4');
+  });
 });

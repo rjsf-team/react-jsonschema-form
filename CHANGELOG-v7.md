@@ -61,6 +61,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `InputNumber` to show a numeric string, which a `number` field holds only as invalid data ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `RangeWidget` drawing a numeric string, and posting it, at its minimum ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/bootstrap3
 
@@ -136,7 +137,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `ObjectFieldTemplate` leaving an empty grid cell for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change an empty `RangeWidget` to leave its name out of a native form submit, since its thumb only sits at the minimum, and to commit that minimum when a press or a key leaves the thumb there ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change an empty `RangeWidget` to leave its name out of a native form submit, and to commit its minimum when a press or a key leaves the thumb there ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/core
 
@@ -669,7 +670,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Fix `ObjectFieldTemplate` giving a grid cell to a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget: it now leaves the property out, as it does one with its own `ui:widget: 'hidden'`. See [`@rjsf/antd` and `@rjsf/mantine` leave out a property hidden by `deprecatedHandling` or `ui:definitions`](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#rjsfantd-and-rjsfmantine-leave-out-a-property-hidden-by-deprecatedhandling-or-uidefinitions-breaking-change) ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change `FileWidget` to hand `FileInput` the `File`s it stores instead of their data URLs, counting an item that can't be read, so the clear button shows for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change `FileWidget` to show the clear button for a stored file, including one that can't be read ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/mui
 

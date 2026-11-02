@@ -87,3 +87,18 @@ describe('RangeWidget', () => {
     expect(handle).toHaveAccessibleDescription(/must be < 1/);
   });
 });
+
+describe('antd RangeWidget value', () => {
+  it('draws and posts a numeric string at its number', () => {
+    render(
+      <Form
+        schema={{ type: 'number', minimum: 0, maximum: 10 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+        initialFormData='7'
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '7');
+  });
+});
