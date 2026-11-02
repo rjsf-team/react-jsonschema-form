@@ -117,9 +117,10 @@
 
   /* Core's `FieldTemplate` lays its parts out on the item's rows, one each, so the toolbox lines up with the control
      however far a wrapping label or description pushes it down. Empty rows take no space, as the gap between them is
-     left to the parts' own margins. A description is found by its class or, drawn by a `DescriptionFieldTemplate` of
-     your own, by the id core gives it, and the parts only from the field's first child, as one drawn below the control
-     adds no row above it */
+     left to the parts' own margins, and the last, `1fr`, takes any height past the parts', such as a taller toolbox's
+     or a stretched item's, which `auto` rows would share out between the parts. A description is found by its class
+     or, drawn by a `DescriptionFieldTemplate` of your own, by the id core gives it, and the parts only from the field's
+     first child, as one drawn below the control adds no row above it */
   :where(
     .rjsf
       .rjsf-array-item:has(> .rjsf-array-item-toolbox):has(
@@ -132,7 +133,7 @@
           )
       )
   ) {
-    grid-template-rows: repeat(8, auto);
+    grid-template-rows: repeat(7, auto) 1fr;
     row-gap: 0;
   }
 

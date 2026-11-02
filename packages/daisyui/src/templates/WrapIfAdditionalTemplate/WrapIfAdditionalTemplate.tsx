@@ -20,13 +20,15 @@ const ROW_CLASSES =
 /** The value, which spans every row, so a value of any `FieldTemplate` keeps its column. It is laid out on the row's rows
  * where it is this theme's `FieldTemplate` `<div>` drawing the value's label, and otherwise the last row, `1fr`, takes
  * whatever height it needs past the key's label and input. A button drawn beside the value's control, such as the Clear
- * button, keeps its own width rather than stretching to the column
+ * button, keeps its own width rather than stretching to the column. The rows don't collapse margins, so the part above a
+ * description drops its bottom margin, as does a description ending it, and the description's top margin spaces them
  */
 const VALUE_CLASSES =
   'rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] ' +
   'has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid ' +
   'has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start ' +
-  'has-[>.field-template>label]:[&>.field-template>button]:justify-self-start';
+  'has-[>.field-template>label]:[&>.field-template>button]:justify-self-start ' +
+  'has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
