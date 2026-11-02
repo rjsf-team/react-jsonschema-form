@@ -3,21 +3,19 @@ import setOwn from './setOwn.ts';
 import type { GenericObjectType } from './types.ts';
 
 /** Recursively merge deeply nested objects.
- * The result is typed as the caller's `R`, which is an assertion: nothing checks the merged object against it, so a
- * caller names only what it knows the merge holds, as it would with an `as`.
  *
  * @param obj1 - The first object to merge
  * @param obj2 - The second object to merge
  * @param [concatArrays=false] - Optional flag that, when true, will cause arrays to be concatenated. Use
  *          "preventDuplicates" to merge arrays in a manner that prevents any duplicate entries from being merged.
  *          NOTE: Uses shallow comparison for the duplicate checking.
- * @returns - A new object that is the merge of the two given objects, typed as the `R` the caller declares
+ * @returns - A new object that is the merge of the two given objects
  */
-export default function mergeObjects<R extends object = GenericObjectType>(
+export default function mergeObjects(
   obj1: object,
   obj2: object,
   concatArrays: boolean | 'preventDuplicates' = false,
-): R {
+): GenericObjectType {
   // These two are read by key for each key of each merge, where `Reflect.get()` would cost more and throw on a primitive
   // a JS caller passes
   const first = obj1 as GenericObjectType;
@@ -45,5 +43,5 @@ export default function mergeObjects<R extends object = GenericObjectType>(
     { ...obj1 },
   ); // Prevent mutation of source object.
   // The single deliberate cast here: the merged object is trusted to be the `R` the caller declared
-  return result as R;
+  return result;
 }

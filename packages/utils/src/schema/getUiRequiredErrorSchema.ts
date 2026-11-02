@@ -96,7 +96,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   if (!rendersOwnFieldBesideOption<S>(schema)) {
     return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema };
   }
-  return { schema: mergeSchemas<S>(remaining, option), option, uiSchema: optionUiSchema };
+  return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema };
 }
 
 /** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution. A fixed (tuple) schema's
@@ -313,7 +313,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * The function form of `uiSchema.items` can't be inspected statically — it may return a fragment containing
  * `ui:required` for some item — so it's treated as though it might, rather than silently skipping the walk.
  */
-function hasUiRequiredOption<T, S extends StrictRJSFSchema, F extends FormContextType>(node: unknown): boolean {
+function hasUiRequiredOption<S extends StrictRJSFSchema, F extends FormContextType>(node: unknown): boolean {
   if (typeof node === 'function') {
     return true;
   }
@@ -328,9 +328,9 @@ function hasUiRequiredOption<T, S extends StrictRJSFSchema, F extends FormContex
       return false;
     }
     if (Array.isArray(value)) {
-      return value.some((entry) => hasUiRequiredOption<T, S, F>(entry));
+      return value.some((entry) => hasUiRequiredOption<S, F>(entry));
     }
-    return hasUiRequiredOption<T, S, F>(value);
+    return hasUiRequiredOption<S, F>(value);
   });
 }
 
@@ -357,9 +357,9 @@ function computeMightHaveUiRequired<T, S extends StrictRJSFSchema, F extends For
   uiSchemaDefinitions: UiSchemaDefinitions<S, F> | undefined,
 ): boolean {
   const scan = () =>
-    hasUiRequiredOption<T, S, F>(uiSchema) ||
+    hasUiRequiredOption<S, F>(uiSchema) ||
     (uiSchemaDefinitions !== undefined &&
-      Object.values(uiSchemaDefinitions).some((fragment) => hasUiRequiredOption<T, S, F>(fragment)));
+      Object.values(uiSchemaDefinitions).some((fragment) => hasUiRequiredOption<S, F>(fragment)));
   if (!isObject(uiSchema)) {
     return scan();
   }

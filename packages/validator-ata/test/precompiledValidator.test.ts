@@ -522,7 +522,7 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
   // default resolution of the same root schema
   const customMergeAllOf = ({ allOf, ...rest }: RJSFSchema): RJSFSchema => {
     const [first] = allOf ?? [];
-    return { ...mergeSchemas<RJSFSchema>(rest, isObject(first) ? first : {}), title: 'Custom merge' };
+    return { ...mergeSchemas(rest, isObject(first) ? first : {}), title: 'Custom merge' };
   };
 
   it('accepts the root schema the form resolved with the customMergeAllOf it was constructed with', () => {

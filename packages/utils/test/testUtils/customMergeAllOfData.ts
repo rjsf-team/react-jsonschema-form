@@ -11,10 +11,7 @@ import { isObject, mergeSchemas } from '../../src/index.ts';
 function mergeAllOfEntries(schema: RJSFSchema): RJSFSchema {
   const { allOf = [], ...rest } = schema;
   // A boolean subschema constrains nothing this merge has to carry over
-  return allOf.reduce<RJSFSchema>(
-    (acc, subSchema) => (isObject(subSchema) ? mergeSchemas<RJSFSchema>(acc, subSchema) : acc),
-    rest,
-  );
+  return allOf.reduce<RJSFSchema>((acc, subSchema) => (isObject(subSchema) ? mergeSchemas(acc, subSchema) : acc), rest);
 }
 
 /** The `oneOf` options that `titleChoiceMergeAllOf()` rewrites, as a schema parsed with the default merge leaves them */

@@ -1,4 +1,3 @@
-import type { RJSFSchema } from '../src/index.ts';
 import { mergeSchemas } from '../src/index.ts';
 
 describe('mergeSchemas()', () => {
@@ -127,7 +126,7 @@ describe('mergeSchemas()', () => {
 
   it('keeps a __proto__ property of the second object as an own key', () => {
     const obj2 = JSON.parse('{"properties":{"__proto__":{"type":"string"}}}');
-    const result = mergeSchemas<RJSFSchema>({ properties: { a: { type: 'string' } } }, obj2);
+    const result = mergeSchemas({ properties: { a: { type: 'string' } } }, obj2);
     expect(Object.hasOwn(result.properties ?? {}, '__proto__')).toBe(true);
     expect(Object.getPrototypeOf(result.properties)).toBe(Object.prototype);
   });

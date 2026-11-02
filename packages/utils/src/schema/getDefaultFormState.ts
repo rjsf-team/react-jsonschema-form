@@ -339,7 +339,7 @@ interface ComputeDefaultsProps<
  */
 function withDefaultOf<S extends StrictRJSFSchema>(parent: S, renderedOption: S): S {
   return DEFAULT_KEY in parent
-    ? mergeSchemas<S>({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption)
+    ? (mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) as S)
     : renderedOption;
 }
 
@@ -1414,7 +1414,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const offered = isSchemaObject<S>(listed) ? offeredOption<S>(view, key, index, listed) : undefined;
     const declared = offered?.graph.node(offered.node);
     const rendered = rendersOwnField
-      ? mergeSchemas<S>(remaining, option)
+      ? (mergeSchemas(remaining, option) as S)
       : withDefaultOf(
           remaining,
           renderOption<S>(

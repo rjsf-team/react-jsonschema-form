@@ -7,14 +7,12 @@ import type { GenericObjectType } from './types.ts';
 /** Recursively merge deeply nested schemas. The difference between `mergeSchemas` and `mergeObjects` is that
  * `mergeSchemas` only concats arrays for values under the 'required' keyword, and when it does, it doesn't include
  * duplicate values.
- * The result is typed as the caller's `R`, which is an assertion: nothing checks the merged object against it, so a
- * caller names only what it knows the merge holds, as it would with an `as`.
  *
  * @param obj1 - The first schema object to merge
  * @param obj2 - The second schema object to merge
- * @returns - The merged schema object, typed as the `R` the caller declares
+ * @returns - The merged schema object
  */
-export default function mergeSchemas<R extends object = GenericObjectType>(obj1: object, obj2: object): R {
+export default function mergeSchemas(obj1: object, obj2: object): GenericObjectType {
   const acc: GenericObjectType = { ...obj1 }; // Prevent mutation of source object.
   // These two are read by key for each key of each merge, where `Reflect.get()` would cost more and throw on a primitive
   // a JS caller passes
@@ -45,6 +43,5 @@ export default function mergeSchemas<R extends object = GenericObjectType>(obj1:
   for (const sym of Object.getOwnPropertySymbols(obj2)) {
     Reflect.set(result, sym, Reflect.get(obj2, sym));
   }
-  // The single deliberate cast here: the merged object is trusted to be the `R` the caller declared
-  return result as R;
+  return result;
 }

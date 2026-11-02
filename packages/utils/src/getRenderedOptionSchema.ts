@@ -89,8 +89,9 @@ const POSITIONAL_KEYWORDS = new Set<string>([ITEMS_KEY, 'prefixItems']);
  * @returns - The two met into one schema
  */
 function meetSchemas(parent: GenericObjectType, option: object): GenericObjectType {
-  // The copy reads as a record of keywords whatever the option's type, and as an empty one for a boolean option
-  const declared: GenericObjectType = { ...option };
+  // An `as` rather than a copy, since this runs for every nested subschema of every rendered option: an index read on a
+  // boolean option gives `undefined`, and spreading or listing its entries gives nothing, so it reads as no keywords
+  const declared = option as GenericObjectType;
   const result: GenericObjectType = { ...parent, ...declared };
   const takesOptionConditional = CONDITIONAL_KEYWORDS.some((key) => declared[key] !== undefined);
   for (const [key, optionValue] of Object.entries(declared)) {
@@ -318,7 +319,7 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
     return option;
   }
   if (!rendersOwnField) {
-    // The option reads as a record of keywords, and the two met are a schema of the option's type
+    // The two met are a schema of the option's type
     return meetSchemas(inherited, option) as S;
   }
   // An object parent passes on no bound, so there is none to tighten. An option key holding `undefined`, as one built
@@ -332,31 +333,30 @@ export function renderOption<S extends StrictRJSFSchema>(parent: S, option: S): 
   if (!takesExtraKeys) {
     return merged as S;
   }
-  const withParentExtraKeys = merged;
   for (const keyword of EXTRA_KEY_KEYWORDS) {
     if (Object.hasOwn(parent, keyword)) {
-      withParentExtraKeys[keyword] = Reflect.get(parent, keyword);
+      merged[keyword] = Reflect.get(parent, keyword);
     } else {
-      delete withParentExtraKeys[keyword];
+      delete merged[keyword];
     }
   }
   // The option's field offers the add button in the parent's field's place, so it takes the parent's bounds on the
   // object's keys too, which a value has to meet beside the option's own: the stricter `maxProperties`, and both
   // `propertyNames`
   if (typeof parent.maxProperties === 'number') {
-    withParentExtraKeys.maxProperties =
+    merged.maxProperties =
       typeof option.maxProperties === 'number'
         ? Math.min(parent.maxProperties, option.maxProperties)
         : parent.maxProperties;
   }
   const propertyNames = conjoin(parent.propertyNames, option.propertyNames);
   if (propertyNames !== undefined) {
-    withParentExtraKeys.propertyNames = propertyNames;
+    merged.propertyNames = propertyNames;
   }
   // A parent taking the extra keys of a field above it in turn describes a key by each of the schemas it joins apart
-  copyJoinedSchemas(parent, withParentExtraKeys);
-  Reflect.set(withParentExtraKeys, DECLARED_ABOVE_KEY, declaredAbove<S>(parent));
-  return joinOptionExtraKeys<S>(withParentExtraKeys as S, option);
+  copyJoinedSchemas(parent, merged);
+  Reflect.set(merged, DECLARED_ABOVE_KEY, declaredAbove<S>(parent));
+  return joinOptionExtraKeys<S>(merged as S, option);
 }
 
 /** Returns the names of the properties `parent` declares, a stub of an extra key aside, and those the fields above it

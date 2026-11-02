@@ -1,9 +1,10 @@
 import { getTestRegistry } from '@rjsf/core/testing';
 import { toFieldPath } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
 import FieldTemplate from '../src/FieldTemplate/FieldTemplate.tsx';
-import { generateTemplates } from '../src/index.ts';
+import Form, { generateTemplates } from '../src/index.ts';
 
 describe('FieldTemplate rendered without a plan, as outside SchemaField', () => {
   function renderTemplate(displayLabel: boolean) {
@@ -42,5 +43,36 @@ describe('FieldTemplate rendered without a plan, as outside SchemaField', () => 
   it('draws no description where displayLabel turns the label off', () => {
     const { container } = renderTemplate(false);
     expect(container.querySelector('#root_foo__description')).toBeNull();
+  });
+});
+
+describe('FieldTemplate', () => {
+  it("keeps the slot's sx and className when the root option leaves them unset", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'string' }}
+        uiSchema={{
+          'ui:options': { mui: { rjsfSlotProps: { fieldFormControl: { sx: { mt: 4 }, className: 'slot' } } } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('.MuiFormControl-root.slot')).toBeInTheDocument();
+    expect(container.querySelector('.slot')).toHaveStyle({ marginTop: '32px' });
+  });
+
+  it("joins the root option's className with the slot's", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'string' }}
+        uiSchema={{
+          'ui:options': { mui: { className: 'root', rjsfSlotProps: { fieldFormControl: { className: 'slot' } } } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('.slot.root')).toBeInTheDocument();
   });
 });
