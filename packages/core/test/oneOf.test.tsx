@@ -2931,6 +2931,33 @@ describe('oneOf', () => {
       }
     });
 
+    it("keeps a clear both options declare the same way through a switch, under 'useDefaultIfFormDataUndefined'", async () => {
+      const declared = { x: { type: 'string', default: 'D' } } as const;
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            type: 'object',
+            oneOf: [
+              { title: 'A', properties: declared },
+              { title: 'B', properties: declared },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: { p: { x: 'typed' } },
+        defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+      });
+
+      await user.clear(node.querySelector('input#root_p_x') as HTMLInputElement);
+      await user.selectOptions(node.querySelector('select#root_p__oneof_select') as HTMLSelectElement, 'B');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ p: { x: undefined } });
+      expect(node.querySelector('input#root_p_x')).toHaveValue('');
+    });
+
     it('should handle undefined boolean fields correctly when switching oneOf options', async () => {
       const schema: RJSFSchema = {
         type: 'object',

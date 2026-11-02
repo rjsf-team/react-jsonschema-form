@@ -25,6 +25,7 @@ import {
   resolveUiSchema,
 } from '@rjsf/utils';
 
+import keepClears from '../keepClears.ts';
 import { hasSameConstraints } from '../sanitizeFieldTree.ts';
 import { asFieldValue } from '../uiState.ts';
 import { declaresProperty, isAdditionalPropertySchema, withGlobalUiOptions } from './fieldWidgetUtils.ts';
@@ -621,20 +622,22 @@ export default function formDataForNewOption<
     // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
     // so that only the root objects themselves are created without adding undefined children properties. With
     // nothing carried over it is the same call the option's own defaults came from, so reuse those
+    const carriedOver = newFormData;
     newFormData =
-      newFormData === undefined
+      carriedOver === undefined
         ? defaultsForNewOption()
         : (schemaUtils.getDefaultFormState(
             newOptionForDefaults,
-            newFormData,
+            carriedOver,
             'excludeObjectChildren',
             undefined,
             newOptionUiSchema,
             uiSchemaDefinitions,
           ) as T);
-    // The defaults add a key back for each property the option declares, which would read as the clear carried over
+    // The defaults add a key back for each property the option declares, which would read as the clear carried over,
+    // and `useDefaultIfFormDataUndefined` fills a clear that was carried over, which `Form` can no longer tell was one
     if (isPlainObject(newFormData)) {
-      newFormData = removeDiscardedKeys(newFormData);
+      newFormData = keepClears(removeDiscardedKeys(newFormData), carriedOver, carriedOver);
     }
   }
   return newFormData;

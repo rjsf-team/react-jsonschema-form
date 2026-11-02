@@ -47,6 +47,7 @@ import { copyAlongPath, getAt, isPathPrefix, replaceErrorSchemaNode } from './da
 import { schemaFieldDrawsControlsBesideOptions } from './fields/SchemaField.tsx';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
+import keepClears from './keepClears.ts';
 import { keyMoveOf, moveErrorKeys, moveErrorSchemaKeys, movedPaths, withKeysMoved } from './keyMove.ts';
 import type { ContainerKeyMove, KeyMove, MoveFate } from './keyMove.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
@@ -1510,58 +1511,6 @@ function heldPathOf<T>(change: FieldChange<T>): FieldPathList | undefined {
   return change.isFieldEdit ? (change.editedPath ?? fieldPathToList(change.fieldPath)) : undefined;
 }
 
-/** Whether `container` holds `key` as its own, without a value */
-function holdsUndefined(container: GenericObjectType, key: string): boolean {
-  return Object.hasOwn(container, key) && container[key] === undefined;
-}
-
-/** `derived` with each clear that both `written` and `cleared` hold kept: a field cleared, in this change or an earlier
- * one, stays cleared whatever defaults the derivation merged in (#5125), such as under
- * `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'`. A cleared property is an own key holding `undefined`,
- * and a cleared array item is `null`, as a cleared item is written. Only the containers whose references differ are
- * walked, and an array index by index, as `written` holds it in the order the change left it
- *
- * @param derived - The data the derivation filled
- * @param written - The data the derivation filled it from
- * @param cleared - The data whose clears are kept, laid out as `written` is
- * @returns - `derived`, sharing every subtree the walk cleared nothing in
- */
-function keepClears<V>(derived: V, written: unknown, cleared: unknown): V;
-function keepClears(derived: unknown, written: unknown, cleared: unknown): unknown {
-  if (derived === written) {
-    return derived;
-  }
-  if (Array.isArray(derived) && Array.isArray(written)) {
-    const items: readonly unknown[] = derived;
-    const writtenItems: readonly unknown[] = written;
-    const clearedItems: readonly unknown[] = Array.isArray(cleared) ? cleared : [];
-    let kept: unknown[] | undefined;
-    items.forEach((item, index) => {
-      const wasCleared = writtenItems[index] === null && clearedItems[index] === null;
-      const next = wasCleared ? null : keepClears(item, writtenItems[index], clearedItems[index]);
-      if (next !== item) {
-        kept ??= [...items];
-        kept[index] = next;
-      }
-    });
-    return kept ?? items;
-  }
-  if (isPlainObject(derived) && isPlainObject(written)) {
-    const clearedKeys = isPlainObject(cleared) ? cleared : {};
-    let kept: GenericObjectType | undefined;
-    for (const [key, value] of Object.entries(derived)) {
-      const wasCleared = holdsUndefined(written, key) && holdsUndefined(clearedKeys, key);
-      const next = wasCleared ? undefined : keepClears(value, written[key], clearedKeys[key]);
-      if (next !== value) {
-        kept ??= { ...derived };
-        setOwn(kept, key, next);
-      }
-    }
-    return kept ?? derived;
-  }
-  return derived;
-}
-
 /** The data whose clears `change` keeps, laid out as `written`, the data it wrote; see `keepClears()`. A field's own
  * edit keeps the committed data's clears and its own: a container it writes, as an option switch writes one, keeps
  * only the clears the committed data held there, under the keys the edit moved them to, since the `undefined` a switch
@@ -1617,8 +1566,9 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
   const { newValue, fieldPath } = change;
   // The single place where a `FieldPath` is parsed back into segments for writing into the formData
   const path = fieldPathToList(fieldPath);
-  const { omitExtraData, liveOmit, disabled, readonly } = props;
+  const { omitExtraData, liveOmit, disabled, readonly, defaultFormStateBehavior } = props;
   const { formData: oldFormData } = current;
+  const fillsOverClears = defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
   // The derivation below hands back the context for the data it settled on, resolved schema included, so committing
   // whatever it returns is what keeps state's resolved schema and the utilities that resolved it in step.
   let context: RenderContext<T, S, F> = current;
@@ -1657,7 +1607,8 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
         isSanitized: editedPath !== undefined && !disabled && !readonly,
         edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
         heldPath: heldPathOf(change),
-        clears: disabled || readonly ? undefined : clearsOf(change, oldFormData, formData, path),
+        // Only this mode's fill replaces an own `undefined`, so under the others there is nothing to keep on a keystroke
+        clears: fillsOverClears && !disabled && !readonly ? clearsOf(change, oldFormData, formData, path) : undefined,
       },
       props,
     );
