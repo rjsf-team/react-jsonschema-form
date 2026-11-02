@@ -26,6 +26,13 @@ describe('CoreUiOptionsChecks', () => {
     expect(ui.upload?.['ui:widget']).toBe('FileWidget');
   });
 
+  it('accepts a RatingWidget and its `stars` for a number field', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { score: number }>;
+    const ui: Checked = { score: { 'ui:widget': 'RatingWidget', 'ui:options': { stars: 3 } } };
+
+    expect(ui.score?.['ui:widget']).toBe('RatingWidget');
+  });
+
   it('accepts `accept` for a multiple file field', () => {
     type Checked = StrictUiSchema<CoreUiOptionsChecks, { files: string[] }>;
     const ui: Checked = { files: { 'ui:widget': 'FileWidget', 'ui:options': { accept: ['.pdf'] } } };

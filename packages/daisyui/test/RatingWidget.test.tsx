@@ -16,12 +16,15 @@ describe('RatingWidget', () => {
     expect(getAllByRole('radio')).toHaveLength(3);
   });
 
-  test('shows the default 5 stars for a `stars` option that is not a number, as a JSON uiSchema can hold', () => {
-    const jsonOptions: Record<string, unknown> = { stars: 'five' };
-    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+  test.each(['five', null, true, '', [4]])(
+    'shows the default 5 stars for a `stars` option of %j, as a JSON uiSchema can hold',
+    (stars) => {
+      const jsonOptions: Record<string, unknown> = { stars };
+      const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
 
-    expect(getAllByRole('radio')).toHaveLength(5);
-  });
+      expect(getAllByRole('radio')).toHaveLength(5);
+    },
+  );
 
   test.each([
     ['a `stars` option', {}, { stars: 2.5 }],

@@ -2060,8 +2060,10 @@ type UIOptionsDeclaredType<
     submitButtonOptions?: UISchemaSubmitButtonOptions;
     /** The file types a `FileWidget` accepts: a comma-separated list, or an array of them */
     accept?: string | string[];
-    /** The number of stars a `RatingWidget` shows, from 1 to 5, when the schema has no `maximum` */
-    stars?: number;
+    /** The number of stars a `RatingWidget` shows, from 1 to 5, when the schema has no `maximum`; a numeric string reads
+     * as its number
+     */
+    stars?: number | string;
     /** The first and last year an `AltDateWidget` offers, as `[first, last]`, both counted from the current year when
      * neither is positive
      */

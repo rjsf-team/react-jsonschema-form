@@ -50,9 +50,9 @@ export default function RatingWidget<
   const { stars = 5, shape = 'star', color, size, colorGradient = false } = options;
 
   // A JSON uiSchema can hold `stars` as a numeric string, which reads as its number, or as anything else, which shows
-  // the default 5
-  const starsOption: unknown = stars;
-  const starCount = Number(starsOption);
+  // the default 5, where `Number()` alone reads `null`, `''`, `true` and `[4]` as numbers
+  const starCount =
+    typeof stars === 'number' || (typeof stars === 'string' && stars.trim() !== '') ? Number(stars) : NaN;
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5), rounded down to the stars that render
   const numStars = Math.floor(
     schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(Number.isFinite(starCount) ? starCount : 5, 1), 5),

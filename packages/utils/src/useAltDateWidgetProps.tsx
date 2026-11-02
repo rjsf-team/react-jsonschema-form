@@ -30,6 +30,11 @@ function readyForChange(state: DateObject) {
   return Object.values(state).every((value) => value !== -1);
 }
 
+/** Whether a `yearsRange` entry is a year `dateRangeOptions()` can count from */
+function isYear(year: unknown): year is number {
+  return typeof year === 'number' && Number.isFinite(year);
+}
+
 /** The Props for the `DateElement` component */
 export type DateElementProps<
   T = unknown,
@@ -222,15 +227,17 @@ export default function useAltDateWidgetProps<
   );
 
   const { yearsRange, format } = options;
+  const [firstYear, lastYear]: unknown[] = yearsRange ?? [];
   const elements = useMemo(
     () =>
       getDateElementProps(
         state,
         time,
-        yearsRange && yearsRange.length >= 2 ? [yearsRange[0], yearsRange[1]] : undefined,
+        // A JSON uiSchema can hold anything here, and `dateRangeOptions()` loops over the range, adding to its start
+        isYear(firstYear) && isYear(lastYear) ? [firstYear, lastYear] : undefined,
         isDateElementFormat(format) ? format : undefined,
       ),
-    [state, time, yearsRange, format],
+    [state, time, firstYear, lastYear, format],
   );
   return { elements, handleChange, handleClear, handleSetNow, buttonsDisabled };
 }

@@ -130,6 +130,19 @@ describe('useAltDateWidgetProps()', () => {
       getDateElementProps(parseDateString(), false).find(({ type }) => type === 'year')?.range,
     );
   });
+  test.each([
+    ['numeric strings', ['1990', '2030']],
+    ['null', [null, 2030]],
+    ['NaN', [1990, Number.NaN]],
+  ])('falls back to the default years for a `yearsRange` holding %s', (_, yearsRange) => {
+    const jsonOptions: Record<string, unknown> = { yearsRange };
+    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: jsonOptions }));
+
+    const years = result.current.elements.find(({ type }) => type === 'year');
+    expect(years?.range).toEqual(
+      getDateElementProps(parseDateString(), false).find(({ type }) => type === 'year')?.range,
+    );
+  });
   test('clearing a part with no value leaves the date incomplete', () => {
     const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, value: DATE_STR }));
     act(() => result.current.handleChange('month'));

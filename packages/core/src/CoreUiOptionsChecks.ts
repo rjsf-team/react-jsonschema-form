@@ -89,6 +89,7 @@ export type CoreUiOptionsChecks =
           | WidgetAliasFor<'number'>;
         field?: 'NumberField';
         placeholder?: string;
+        stars?: number | string;
         inputType?: string;
         autocomplete?: HTMLInputElement['autocomplete'];
         autocapitalize?: HTMLInputElement['autocapitalize'];
