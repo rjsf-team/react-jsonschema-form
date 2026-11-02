@@ -790,21 +790,24 @@ function ArrayFieldItemInner<
     },
     [handleRemoveItem, index],
   );
+  // What decides each move button, so a template calling these from its own control can't do what the button can't
+  const movesUp = has.moveUp && !lockedDisabled && !lockedReadonly;
+  const movesDown = has.moveDown && !lockedDisabled && !lockedReadonly;
   const onMoveUpItem = useCallback(
     (event: ArrayButtonEvent) => {
-      if (canMoveUp) {
+      if (movesUp) {
         handleReorderItems(event, index, index - 1);
       }
     },
-    [canMoveUp, handleReorderItems, index],
+    [movesUp, handleReorderItems, index],
   );
   const onMoveDownItem = useCallback(
     (event: ArrayButtonEvent) => {
-      if (canMoveDown) {
+      if (movesDown) {
         handleReorderItems(event, index, index + 1);
       }
     },
-    [canMoveDown, handleReorderItems, index],
+    [movesDown, handleReorderItems, index],
   );
 
   const templateProps = {
@@ -1397,12 +1400,13 @@ export default function ArrayField<
     (event: ArrayButtonEvent, index: number, newIndex: number) => {
       if (event) {
         event.preventDefault();
-        // React clears `currentTarget` once dispatch ends, so a template calling this after an `await` passes none
+        // React clears `currentTarget` once dispatch ends, so a template calling this after an `await` passes the event
+        // with a `null` one
         const target: HTMLElement | null = event.currentTarget;
         target?.blur();
       }
       const rows = readRows();
-      if (index >= rows.length || newIndex < 0 || newIndex >= rows.length) {
+      if (index >= rows.length || newIndex >= rows.length) {
         return;
       }
 

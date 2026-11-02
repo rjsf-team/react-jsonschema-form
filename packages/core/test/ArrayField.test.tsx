@@ -5724,7 +5724,7 @@ describe('ArrayField', () => {
       },
     );
 
-    describe('should leave an item where it is when a direct call moves it where its button could not', () => {
+    describe('should move an item from a direct call only where its button could', () => {
       function UnguardedMoveItemTemplate(props: ArrayFieldItemTemplateProps) {
         const { onMoveUpItem, onMoveDownItem } = props.buttonsProps;
         return (
@@ -5776,6 +5776,72 @@ describe('ArrayField', () => {
 
         expect(getFormData()).toEqual(['a', 'b', 'c', 'd']);
       });
+
+      it.each([
+        { button: 'Move 1 up', expected: ['b', 'a', 'c'] },
+        { button: 'Move 1 down', expected: ['a', 'c', 'b'] },
+      ])('$button where the button can', async ({ button, expected }) => {
+        const { getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          initialFormData: ['a', 'b', 'c'],
+          templates: { ArrayFieldItemTemplate: UnguardedMoveItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(expected);
+      });
+
+      it.each([
+        { caseName: 'ui:orderable: false', uiOptions: { 'ui:orderable': false } },
+        { caseName: 'a read-only array', uiOptions: { 'ui:readonly': true } },
+        { caseName: 'a disabled array', uiOptions: { 'ui:disabled': true } },
+      ])('not under $caseName', async ({ uiOptions }) => {
+        const { onChange, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          uiSchema: uiOptions,
+          initialFormData: ['a', 'b', 'c'],
+          templates: { ArrayFieldItemTemplate: UnguardedMoveItemTemplate },
+        });
+        onChange.mockClear();
+
+        await user.click(screen.getByRole('button', { name: 'Move 1 up' }));
+        await user.click(screen.getByRole('button', { name: 'Move 1 down' }));
+
+        expect(getFormData()).toEqual(['a', 'b', 'c']);
+        expect(onChange).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should report one change when a move down after a remove has no row left to move to', async () => {
+      function RemoveThenMoveDownItemTemplate(props: ArrayFieldItemTemplateProps) {
+        const { onRemoveItem, onMoveDownItem } = props.buttonsProps;
+        return (
+          <div className='rjsf-array-item'>
+            {props.children}
+            <button
+              type='button'
+              onClick={() => {
+                onRemoveItem();
+                onMoveDownItem();
+              }}
+            >
+              {`Remove ${props.index}, then move it down`}
+            </button>
+          </div>
+        );
+      }
+      const { onChange, getFormData } = createFormComponent({
+        schema,
+        initialFormData: ['a', 'b', 'c'],
+        templates: { ArrayFieldItemTemplate: RemoveThenMoveDownItemTemplate },
+      });
+      onChange.mockClear();
+
+      await user.click(screen.getByRole('button', { name: 'Remove 1, then move it down' }));
+
+      expect(getFormData()).toEqual(['a', 'c']);
+      expect(onChange).toHaveBeenCalledTimes(1);
     });
 
     it('should add no item when a move after a remove names an index the remove took away', async () => {
