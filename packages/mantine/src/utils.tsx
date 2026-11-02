@@ -313,8 +313,6 @@ function withLabelId(labelProps: unknown, id: string) {
   return { ...ownProps, id: ownIdOr(ownProps, partId(id, 'wrapperLabel')) };
 }
 
-type InputContainer = (children: ReactNode) => ReactNode;
-
 const inputBaseThemeNames = ['InputBase', 'Input', 'InputWrapper'];
 const wrapperThemeNames = ['Input', 'InputWrapper'];
 
@@ -478,7 +476,7 @@ function useAriaContainerProps({
         successOnOptions={successOnOptions}
       >
         {before}
-        {typeof ownContainer === 'function' ? (ownContainer as InputContainer)(children) : children}
+        {isInputContainer(ownContainer) ? ownContainer(children) : children}
         {after}
       </InputWrapperAriaProvider>
     ),

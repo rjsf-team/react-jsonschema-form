@@ -16,12 +16,16 @@ import type { GenericObjectType } from './types.ts';
  */
 export default function mergeSchemas<R extends object = GenericObjectType>(obj1: object, obj2: object): R {
   const acc: GenericObjectType = { ...obj1 }; // Prevent mutation of source object.
+  // These two are read by key for each key of each merge, where `Reflect.get()` would cost more and throw on a primitive
+  // a JS caller passes
+  const first = obj1 as GenericObjectType;
+  const second = obj2 as GenericObjectType;
   const result = Object.keys(obj2).reduce((accumulator, key) => {
     // Only an own member of `obj1` takes part, so a JSON-sourced `__proto__` or `toString` key doesn't read an
     // inherited member
     const hasLeft = Object.hasOwn(obj1, key);
-    const left: unknown = hasLeft ? Reflect.get(obj1, key) : undefined,
-      right: unknown = Reflect.get(obj2, key);
+    const left = hasLeft ? first[key] : undefined,
+      right = second[key];
     if (hasLeft && isObject(right)) {
       setOwn(accumulator, key, mergeSchemas(isObject(left) ? left : {}, right));
     } else if (

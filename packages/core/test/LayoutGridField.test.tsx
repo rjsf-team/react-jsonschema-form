@@ -1541,6 +1541,19 @@ describe('LayoutGridField', () => {
       });
     });
   });
+  test('renders the field a number names in a cell, as a JSON layout can', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { 5: { type: 'string' } } };
+    const props = getProps({ schema, formData: {}, layoutGridSchema: { name: 5 } });
+    render(<LayoutGridField {...props} />);
+
+    expect(screen.getByTestId(LayoutGridField.TEST_IDS.field)).toBeInTheDocument();
+  });
+  test('renders the component of a cell whose name is an object, rather than crashing', () => {
+    const props = getProps({ layoutGridSchema: { name: { field: 'foo' }, render: TestRenderer } });
+    render(<LayoutGridField {...props} />);
+
+    expect(screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent)).toBeInTheDocument();
+  });
   test('renders nothing when there is no uiSchema', () => {
     const props = getProps();
     render(<LayoutGridField {...props} />);
