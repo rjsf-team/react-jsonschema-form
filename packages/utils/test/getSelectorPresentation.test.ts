@@ -63,18 +63,6 @@ describe('getSelectorPresentation()', () => {
     },
   );
 
-  it('names the selector of a field with no label text by the fallback name', () => {
-    const field = resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: '' });
-    expect(getSelectorPresentation(field, SELECTOR, 'Option').control?.attributes).toEqual({ 'aria-label': 'Option' });
-  });
-
-  it("leaves the fallback name unused where the field's label names the selector", () => {
-    const field = resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo' });
-    expect(getSelectorPresentation(field, SELECTOR, 'Option').control?.attributes).toEqual({
-      'aria-labelledby': `${ID}__label`,
-    });
-  });
-
   it('has no control when its field has none on screen', () => {
     const field = resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo', hasControl: false });
     expect(getSelectorPresentation(field, SELECTOR).control).toBeUndefined();

@@ -250,7 +250,10 @@ export default function useSchemaFieldPresentation<
     if (rendersUnsupportedTemplate) {
       return { ...declared, label: 'self' as const, description: 'self' as const };
     }
-    return optionLabelledBy ? { ...declared, labelledBy: optionLabelledBy } : declared;
+    // A declared `aria-labelledby` is kept, since it never leaves a `for` naming an element a `for` can't label
+    return optionLabelledBy && declared.labelledBy !== 'aria-labelledby'
+      ? { ...declared, labelledBy: optionLabelledBy }
+      : declared;
   }, [
     registry,
     schema,
