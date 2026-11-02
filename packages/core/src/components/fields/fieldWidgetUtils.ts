@@ -32,17 +32,6 @@ import {
 
 import { getFirstOption, getSelectorField, resolveSelectorWidget } from './layoutMultiSchemaFieldSelector.ts';
 
-/** The map of component type to FieldName */
-export const COMPONENT_TYPES: Record<string, string> = {
-  array: 'ArrayField',
-  boolean: 'BooleanField',
-  integer: 'NumberField',
-  number: 'NumberField',
-  object: 'ObjectField',
-  string: 'StringField',
-  null: 'NullField',
-};
-
 /** How `ArrayField` renders an array: as one widget (`multiSelect`, `customWidget`, `files`), as a list of items
  * (`fixed`, `normal`), or as the unsupported-field template when the schema declares no `items`
  */

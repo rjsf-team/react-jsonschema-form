@@ -15,19 +15,13 @@ import type {
 import {
   ANY_OF_KEY,
   getFieldTypeForUiSchema,
-  getOptionUiSchema,
   getPresentationDeclaration,
-  getRenderedOptionSchema,
-  getSchemaType,
-  getUiOptions,
-  getXxxOfKey,
-  isConstantSelect,
   ITEMS_KEY,
   resolveFieldPresentation,
   schemaRequiresTrueValue,
 } from '@rjsf/utils';
 
-import getFieldWidget, { COMPONENT_TYPES, displaysLabel, withoutDescribers } from './fieldWidgetUtils.ts';
+import getFieldWidget, { displaysLabel, withoutDescribers } from './fieldWidgetUtils.ts';
 
 /** The fields of core's that render no control for a template label to name: a container, whose label is its own
  * heading, and `NullField`, which renders nothing. `ArrayField` is one only when it renders no widget
@@ -76,64 +70,61 @@ export interface SchemaFieldPresentationInputs<
   required: boolean;
   /** The plan of the field above rendering the same id */
   inherited?: FieldPresentation;
-  /** The `anyOf`/`oneOf` options `SchemaField` retrieved for the field's data, undefined where it renders none */
-  options: readonly S[] | undefined;
-  /** The index of the option shown, -1 for none */
-  selectedOption: number;
+  /** The field the `anyOf`/`oneOf` option shown renders with, null where the field renders its options and shows none.
+   * Undefined where it renders none, or the option is a `$ref` cycle, which names no field
+   */
+  shownOptionField?: ShownOptionField<T, S, F> | null;
 }
 
-/** How the label of a field rendering its `anyOf`/`oneOf` options reaches the control the selected option renders
- * under the field's id: by its `for`, unless the option renders no control there, as an object, a `null` or an array of
- * items does, or one a `for` can't name, as the group of an alt-date's parts is, so the label names it through
- * `aria-labelledby` instead (#5578). An option rendering options of its own is named that way too, since the option it
- * shows may be an object, whose `<fieldset>` a `for` can't name, and a control it shows is named by the label all the
- * same. An option naming a `ui:field` or no type with a field of its own keeps the `for`, unresolved here: an untyped
- * option may render nothing under the field's id, which leaves the `for` naming no control (#5709)
+/** The field the `anyOf`/`oneOf` option shown renders with, as `SchemaField` resolves the option's own `SchemaField` */
+export interface ShownOptionField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> {
+  /** The field component the option renders */
+  field: Field<T, S, F>;
+  /** The registry key that named it, if one did */
+  fieldKey: string | undefined;
+  /** The schema it renders */
+  schema: S;
+  /** The uiSchema it renders */
+  uiSchema: UiSchema<T, S, F>;
+  /** The single widget it renders, if any */
+  widget: Widget<T, S, F> | string | undefined;
+  /** Whether it renders hidden */
+  hidden: boolean;
+  /** Whether it renders an option selector of its own, for options of its own */
+  rendersOptionSelector: boolean;
+}
+
+/** How the label of a field rendering its `anyOf`/`oneOf` options reaches the control the option shown renders under
+ * the field's id: by its `for`, unless the option renders no control there, as an object, a `null`, an array of items
+ * or a hidden field does, or one a `for` can't name, as the group of an alt-date's parts is, so the label names it
+ * through `aria-labelledby` instead (#5578). An option rendering options of its own is named that way too, since the
+ * option it shows may be an object, whose `<fieldset>` a `for` can't name, and a control it shows is named by the label
+ * all the same
  *
  * @param registry - The registry, whose `fields` and `presentation` are read
- * @param schema - The schema of the field rendering the options
- * @param uiSchema - Its uiSchema, whose `anyOf`/`oneOf` entry gives the option's
- * @param xxxOfKey - The keyword its options are under
- * @param option - The option shown, retrieved for the field's data, if one is
- * @param index - Its index among the options
- * @returns - How the label reaches the selected option's control
+ * @param option - The field the option shown renders with, null where none is shown
+ * @returns - How the label reaches the option's control
  */
-function selectedOptionLabelledBy<
+function shownOptionLabelledBy<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
   registry: Registry<T, S, F>,
-  schema: S,
-  uiSchema: UiSchema<T, S, F>,
-  xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY,
-  option: S | undefined,
-  index: number,
+  option: ShownOptionField<T, S, F> | null,
 ): ResolvedPresentationDeclaration['labelledBy'] {
-  if (!option) {
+  if (!option || option.hidden || option.rendersOptionSelector) {
     return 'aria-labelledby';
   }
-  const rendered = getRenderedOptionSchema<S>(schema, option);
-  const optionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, index);
-  // A `oneOf`/`anyOf` of constants is a select, rendered as one control, rather than options of its own
-  if (getXxxOfKey<S>(rendered) && !isConstantSelect<S>(rendered, true)) {
+  const { field, fieldKey, schema, uiSchema, widget } = option;
+  if (!rendersControl<T, S, F>(field, widget, registry, schema, uiSchema)) {
     return 'aria-labelledby';
   }
-  const type = getSchemaType<S>(rendered);
-  if (
-    getUiOptions<T, S, F>(optionUiSchema).field ||
-    typeof type !== 'string' ||
-    !Object.hasOwn(COMPONENT_TYPES, type)
-  ) {
-    return 'for';
-  }
-  const fieldKey = COMPONENT_TYPES[type];
-  const field = registry.fields[fieldKey];
-  const widget = getFieldWidget<T, S, F>(field, rendered, optionUiSchema, registry);
-  if (!rendersControl<T, S, F>(field, widget, registry, rendered, optionUiSchema ?? {})) {
-    return 'aria-labelledby';
-  }
-  return getPresentationDeclaration<T, S, F>(registry, { schema: rendered, field, fieldKey, widget }).labelledBy;
+  return getPresentationDeclaration<T, S, F>(registry, { schema, field, fieldKey, widget }).labelledBy;
 }
 
 /** Whether the field renders a control for a template label to name
@@ -203,8 +194,7 @@ export default function useSchemaFieldPresentation<
     hidden,
     required,
     inherited,
-    options,
-    selectedOption,
+    shownOptionField,
   } = inputs;
   const { fields, globalFormOptions } = registry;
   let plannedField = field;
@@ -234,16 +224,11 @@ export default function useSchemaFieldPresentation<
   // id, which draws them as its heading: the field rendering withheld options, and the fallback UI's field while its
   // value is one that draws its own heading or label
   const handsLabelDown = xxxOfKey === undefined ? fallbackDrawsNoControl && usesFallbackUi : hidden;
-  // Keyed on the option shown rather than the list, which is retrieved afresh with every change of the data while each
-  // option keeps its identity, and a string, so the declaration keeps its own
-  const rendersOptions = options !== undefined;
-  const option = options?.[selectedOption];
+  // A string, so a new plan of the option shown that labels it the same way, as the option shown changing for another
+  // of the same kind, leaves the declaration as it was
   const optionLabelledBy = useMemo(
-    () =>
-      xxxOfKey !== undefined && rendersOptions
-        ? selectedOptionLabelledBy<T, S, F>(registry, schema, uiSchema, xxxOfKey, option, selectedOption)
-        : undefined,
-    [registry, schema, uiSchema, xxxOfKey, rendersOptions, option, selectedOption],
+    () => (shownOptionField === undefined ? undefined : shownOptionLabelledBy<T, S, F>(registry, shownOptionField)),
+    [shownOptionField, registry],
   );
   const declaration = useMemo(() => {
     if (!plannedField) {
