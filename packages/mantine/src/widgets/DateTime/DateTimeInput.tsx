@@ -9,6 +9,7 @@ import {
   dateElementLabel,
   getDateTimeLocalValue,
   labelValue,
+  partId,
   TranslatableString,
   widgetDrawsLabel,
 } from '@rjsf/utils';
@@ -62,8 +63,7 @@ const withTimeOfDay = (date: DateStringValue | Date, time: string) => {
 
 function hasSeconds(format: string) {
   const unescaped = format.replace(/\[[^\]]*\]/g, '');
-  // Future-proofing in case the dayjs localized format extension is included (`LTS`)
-  return /s|LTS/.test(unescaped);
+  return unescaped.includes('s');
 }
 
 /** The `TimePicker` beside the date input, which sits inside the field's `InputWrapper`, so it can describe its hours
@@ -116,7 +116,8 @@ export default function DateTimeInput<
 
   const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
   const themeProps = cleanupOptions(options, props, ['timePickerProps']);
-  const { timePickerProps, size, radius, variant, clearable } = options;
+  const { size, radius, variant, clearable } = themeProps;
+  const { timePickerProps } = options;
   const timePickerOptions = timePickerProps as TimePickerProps | undefined;
   const [pendingTime, setPendingTime] = useState('');
   const [prevTimeValue, setPrevTimeValue] = useState('');
@@ -134,9 +135,9 @@ export default function DateTimeInput<
     () => (parsedValue ? dayjs(parsedValue).format(TIME_FORMAT) : pendingTime),
     [parsedValue, pendingTime],
   );
-  if (prevTimeValue !== timeValue) {
-    setPrevTimeValue(timeValue);
-    setPendingTime(timeValue);
+  if (prevTimeValue !== value) {
+    setPrevTimeValue(value);
+    setPendingTime(value);
   }
 
   const commit = useCallback(
@@ -200,11 +201,12 @@ export default function DateTimeInput<
       <Group gap='xs' wrap='nowrap' align='flex-start'>
         <Box flex={1}>{children}</Box>
         <TimePickerField
-          key={timeResetKey}
-          {...timePickerOptions}
           size={size}
           radius={radius}
           variant={variant}
+          clearable={clearable}
+          {...timePickerOptions}
+          key={timeResetKey}
           value={timeValue}
           onChange={handleTimeChange}
           onFocus={handleFocus}
@@ -223,23 +225,11 @@ export default function DateTimeInput<
           minutesInputLabel={dateElementLabel(TranslatableString.MinuteLabel, translateString)}
           secondsInputLabel={dateElementLabel(TranslatableString.SecondLabel, translateString)}
           hoursInputProps={{
-            id: `${id}-time`,
+            id: partId(id, 'time'),
             'aria-invalid': !!error || undefined,
             ...timePickerOptions?.hoursInputProps,
           }}
           popoverProps={{ withinPortal: false, ...timePickerOptions?.popoverProps }}
-          clearable={clearable}
-          clearButtonProps={
-            clearable
-              ? {
-                  ...timePickerOptions?.clearButtonProps,
-                  onClick: (event) => {
-                    handleTimeChange('');
-                    timePickerOptions?.clearButtonProps?.onClick?.(event);
-                  },
-                }
-              : undefined
-          }
         />
       </Group>
     ),
