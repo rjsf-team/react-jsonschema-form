@@ -1126,7 +1126,7 @@ An empty `aria-label` names nothing, so it falls back like a missing one.
 #### Parameters
 
 - props: Pick&lt;WidgetProps&lt;T, S, F>, 'label' | 'hideLabel' | 'placeholder' | 'presentation' | 'registry'> - The widget's `label`, `hideLabel`, `placeholder`, `presentation` and `registry`
-- [ariaLabel]: string | undefined - The `aria-label` the caller or the plan gives the control, as [widgetAriaProps()](#widgetariaprops) merges them
+- [ariaLabel]: string | undefined - The `aria-label` the caller or the plan gives the control
 - [drawsOwnLabel=false]: boolean - Whether the widget draws a label that names the control, as [widgetDrawsLabelText()](#widgetdrawslabeltext) says for one that draws its field's label
 
 #### Returns
@@ -1136,11 +1136,12 @@ An empty `aria-label` names nothing, so it falls back like a missing one.
 #### Example
 
 ```tsx
-// In a select whose trigger draws its value, beside a label the widget may draw itself
-const ariaProps = widgetAriaProps(props);
-const drawsLabel = widgetDrawsLabelText(props);
-<SelectTrigger {...ariaProps} aria-label={getControlAriaLabel(props, ariaProps['aria-label'], drawsLabel)} />;
+// In a combobox whose trigger draws its value, beside a label the widget may draw itself
+const ariaLabel = props['aria-label'] || getControlAttributes(props)['aria-label'];
+<ComboboxTrigger aria-label={getControlAriaLabel(props, ariaLabel, widgetDrawsLabelText(props))} />;
 ```
+
+A `SelectWidget` takes this name from [widgetAriaProps()](#widgetariaprops) instead.
 
 ### getControlAttributes()
 
@@ -3601,6 +3602,7 @@ If no `additionalErrorSchema` is passed, or one that holds nothing, then `valida
 
 Return the `aria-label`, `aria-labelledby`, `aria-describedby` and `aria-invalid` a `SelectWidget` gives the element a screen reader focuses, all of which belong on that element.
 A select its field's plan reaches takes the attributes [getControlAttributes()](#getcontrolattributes) gives its control, with the ids its caller passed, then the selected option's description id, added to the plan's describers, each id once, and the caller's `aria-label` over the plan's unless it is empty.
+A select shows its value rather than a name, so where neither gives one, it takes the name [getControlAriaLabel()](#getcontrolarialabel) gives it: none where a label names it, else the field's label, its `placeholder` or the translated `TranslatableString.SelectPlaceholder`.
 A select rendered inside another widget, such as each date part of an `AltDateWidget`, has an id of its own that no help or error element is rendered for, so `DateElement` gives it a plan of its own, through which it is described by its field's parts.
 Without a plan, the caller's ids, even an empty `aria-describedby`, replace the `ariaDescribedByIds(props.id)` a select rendered without one falls back to, whose ids no element may have.
 The selected option's description id, [selectedOptionDescriptionId()](#selectedoptiondescriptionid) under its field's plan and `descriptionId(props.id)` without one, is added only while the select shows that description, the one element it renders itself: a date part, a `multiple` select, one whose label is hidden and one whose selected option has no description render none, and its id may be another field's description id.
@@ -3608,7 +3610,8 @@ Every theme's `SelectWidget` gives the result to its control, and a replacement 
 
 #### Parameters
 
-- props: WidgetAriaPropsInput&lt;T, S, F> - The widget's props, of which `id`, `presentation`, `aria-label`, `aria-describedby` and those `SelectedOptionDescription` reads (`multiple`, `hideLabel`, `options`, `registry`, `uiSchema` and `value`) are used
+- props: WidgetAriaPropsInput&lt;T, S, F> - The widget's props, of which `id`, `presentation`, `aria-label`, `aria-describedby`, `label`, `placeholder` and those `SelectedOptionDescription` reads (`multiple`, `hideLabel`, `options`, `registry`, `uiSchema` and `value`) are used
+- [namedByWidget=false]: boolean - Whether the widget names the control itself, by a label it draws, as [widgetDrawsLabelText()](#widgetdrawslabeltext) says for one that draws its field's label, or by an `aria-label` of its own, so it takes no fallback name
 
 #### Returns
 

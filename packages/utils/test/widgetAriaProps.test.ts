@@ -1,5 +1,10 @@
-import type { Registry, WidgetAriaPropsInput } from '../src/index.ts';
-import { ariaDescribedByIds, resolveFieldPresentation, widgetAriaProps } from '../src/index.ts';
+import type { Registry, ResolvedPresentationDeclaration, WidgetAriaPropsInput } from '../src/index.ts';
+import {
+  ariaDescribedByIds,
+  englishStringTranslator,
+  resolveFieldPresentation,
+  widgetAriaProps,
+} from '../src/index.ts';
 
 const describedOptions = {
   enumOptions: [
@@ -8,10 +13,19 @@ const describedOptions = {
   ],
 };
 
+const TEMPLATE: ResolvedPresentationDeclaration = {
+  label: 'template',
+  description: 'template',
+  errors: 'template',
+  help: 'template',
+  labelledBy: 'for',
+};
+
 const colorProps: WidgetAriaPropsInput = {
   id: 'root_color',
+  label: 'Color',
   options: describedOptions,
-  registry: {} as Registry,
+  registry: { translateString: englishStringTranslator } as Registry,
   value: 'r',
   'aria-describedby': 'ext',
 };
@@ -28,13 +42,7 @@ describe('widgetAriaProps()', () => {
   });
   const hiddenLabelPlan = resolveFieldPresentation({
     id: 'root_color',
-    declaration: {
-      label: 'template',
-      description: 'template',
-      errors: 'template',
-      help: 'template',
-      labelledBy: 'for',
-    },
+    declaration: TEMPLATE,
     label: 'Color',
     showLabel: false,
   });
@@ -43,6 +51,28 @@ describe('widgetAriaProps()', () => {
     expect(widgetAriaProps(props)['aria-label']).toBe('Color');
     expect(widgetAriaProps({ ...props, 'aria-label': 'Paint' })['aria-label']).toBe('Paint');
     expect(widgetAriaProps({ ...props, 'aria-label': '' })['aria-label']).toBe('Color');
+  });
+  describe('names a select no label names, as getControlAriaLabel() does', () => {
+    const untitled = { ...colorProps, label: '' };
+    it.each([
+      ["its caller's ids", untitled],
+      ['no ids of its caller', { ...untitled, 'aria-describedby': undefined }],
+    ])('by its placeholder, else the translated prompt, rendered without a plan and with %s', (_, props) => {
+      expect(widgetAriaProps(props)['aria-label']).toBe('Select ...');
+      expect(widgetAriaProps({ ...props, placeholder: 'Pick one' })['aria-label']).toBe('Pick one');
+    });
+    it('by the label text of a plan whose template draws no label', () => {
+      const presentation = resolveFieldPresentation({
+        id: 'root_color',
+        declaration: { ...TEMPLATE, label: 'self' },
+        label: 'Color',
+      });
+      expect(widgetAriaProps({ ...colorProps, presentation })['aria-label']).toBe('Color');
+    });
+    it('by nothing where the widget names it itself, unless its caller names it', () => {
+      expect(widgetAriaProps(untitled, true)['aria-label']).toBeUndefined();
+      expect(widgetAriaProps({ ...untitled, 'aria-label': 'Paint' }, true)['aria-label']).toBe('Paint');
+    });
   });
   it("leaves out the selected option's description when its plan hides the label, though hideLabel is false", () => {
     expect(
@@ -71,13 +101,7 @@ describe('widgetAriaProps()', () => {
   describe('with the plan of its field', () => {
     const presentation = resolveFieldPresentation({
       id: 'root_color',
-      declaration: {
-        label: 'template',
-        description: 'template',
-        errors: 'template',
-        help: 'template',
-        labelledBy: 'for',
-      },
+      declaration: TEMPLATE,
       label: 'Color',
       help: 'Pick one',
       errors: ['is required'],

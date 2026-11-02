@@ -5033,6 +5033,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -5071,6 +5072,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -5210,6 +5212,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -5249,6 +5252,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -5412,6 +5416,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -5450,6 +5455,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -5613,6 +5619,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -5652,6 +5659,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -5803,6 +5811,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -5841,6 +5850,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -5992,6 +6002,7 @@ exports[`select widget with options sharing a String() in the realValue format (
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -6031,6 +6042,7 @@ exports[`select widget with options sharing a String() in the realValue format (
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -15669,6 +15681,7 @@ exports[`single fields > select field 1`] = `
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -15708,6 +15721,7 @@ exports[`single fields > select field 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -15855,6 +15869,7 @@ exports[`single fields > select field multiple choice 1`] = `
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
@@ -15896,6 +15911,7 @@ exports[`single fields > select field multiple choice 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-MultiSelect-options"
           id="mantine-i"
           role="listbox"
@@ -16067,6 +16083,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
@@ -16108,6 +16125,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-MultiSelect-options"
           id="mantine-i"
           role="listbox"
@@ -16604,6 +16622,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
@@ -16645,6 +16664,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-MultiSelect-options"
           id="mantine-i"
           role="listbox"
@@ -16848,6 +16868,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
@@ -16889,6 +16910,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-MultiSelect-options"
           id="mantine-i"
           role="listbox"
@@ -17036,6 +17058,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -17075,6 +17098,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -17524,6 +17548,7 @@ exports[`single fields > select field single choice formData 1`] = `
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -17563,6 +17588,7 @@ exports[`single fields > select field single choice formData 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -17714,6 +17740,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -17753,6 +17780,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -17936,6 +17964,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -17975,6 +18004,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -18524,6 +18554,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
             aria-describedby="root__selectedOptionDescription"
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -18563,6 +18594,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -18714,6 +18746,7 @@ exports[`single fields > select widget with selected oneOf option description an
           <input
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -18753,6 +18786,7 @@ exports[`single fields > select widget with selected oneOf option description an
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"
@@ -18928,6 +18962,7 @@ exports[`single fields > select widget with selected oneOf option description be
             aria-describedby="root__description root__selectedOptionDescription"
             aria-expanded="false"
             aria-haspopup="listbox"
+            aria-label="Select ..."
             autocomplete="off"
             class="m_8fb7ebe7 mantine-Input-input mantine-Select-input"
             data-variant="default"
@@ -18967,6 +19002,7 @@ exports[`single fields > select widget with selected oneOf option description be
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Select ..."
           class="m_b2821a6e mantine-Select-options"
           id="mantine-i"
           role="listbox"

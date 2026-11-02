@@ -8,7 +8,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
  * `getControlFallbackName()` gives it. An empty `aria-label` names nothing, so it falls back like a missing one
  *
  * @param props - The widget's `label`, `hideLabel`, `placeholder`, `presentation` and `registry`
- * @param [ariaLabel] - The `aria-label` the caller or the plan gives the control, as `widgetAriaProps()` merges them
+ * @param [ariaLabel] - The `aria-label` the caller or the plan gives the control
  * @param [drawsOwnLabel=false] - Whether the widget draws a label that names the control, as `widgetDrawsLabelText()`
  *        says for one that draws its field's label
  * @returns - The `aria-label`, or undefined where a label names the control

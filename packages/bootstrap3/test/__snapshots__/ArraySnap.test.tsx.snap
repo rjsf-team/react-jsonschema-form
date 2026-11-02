@@ -248,6 +248,7 @@ exports[`array fields > checkboxes 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         multiple=""
@@ -974,6 +975,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
       class="form-group rjsf-field rjsf-field-array"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         multiple=""

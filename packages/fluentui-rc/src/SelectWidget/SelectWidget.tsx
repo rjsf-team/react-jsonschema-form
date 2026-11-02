@@ -6,7 +6,6 @@ import {
   enumOptionsDomValues,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
-  getControlAriaLabel,
   getLabelId,
   getOptionValueFormat,
   groupEnumOptions,
@@ -72,7 +71,7 @@ function SelectWidget<
   // dropdown, whose contents are its value, is named by the field's label, its placeholder or the translated prompt
   const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const labelId = getLabelId<T, S, F>(props);
-  const ariaProps = widgetAriaProps(props);
+  const ariaProps = widgetAriaProps(props, drawsLabel);
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -125,7 +124,6 @@ function SelectWidget<
         // `anyOf`'s option selector shares with the selector above it, so the dropdown points at its own label's id too
         aria-labelledby={drawsLabel ? labelId : undefined}
         {...ariaProps}
-        aria-label={getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], drawsLabel)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>
