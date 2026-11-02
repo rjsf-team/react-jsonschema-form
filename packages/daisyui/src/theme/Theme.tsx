@@ -18,6 +18,8 @@ function createPresentation(): ThemePresentation {
     widgets: {
       toggle: { label: 'self', description: 'self', uncheckedIsFalse: true },
     },
+    // `SelectWidget` draws the selected option's description before the field's description
+    selectedOptionDescription: 'beforeDescription',
   };
 }
 

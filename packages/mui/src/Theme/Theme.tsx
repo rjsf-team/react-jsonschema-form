@@ -28,6 +28,8 @@ function createPresentation(): ThemePresentation {
       AltDateTimeWidget: { label: 'template' },
     },
     fields: { AnyOfField: { label: 'self' }, OneOfField: { label: 'self' }, FallbackField: { label: 'self' } },
+    // `SelectWidget` draws the selected option's description before the field's description
+    selectedOptionDescription: 'beforeDescription',
   };
 }
 

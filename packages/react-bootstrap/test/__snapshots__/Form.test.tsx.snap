@@ -10923,7 +10923,7 @@ exports[`single fields > select widget with selected oneOf option description be
     >
       <div>
         <select
-          aria-describedby="root__description root__selectedOptionDescription"
+          aria-describedby="root__selectedOptionDescription root__description"
           aria-label="Select ..."
           class="form-select"
           id="root"
