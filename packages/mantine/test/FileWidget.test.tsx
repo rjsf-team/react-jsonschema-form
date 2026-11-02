@@ -46,7 +46,7 @@ describe('FileWidget', () => {
   test('offers to clear a stored item that could not be read', async () => {
     const schema: RJSFSchema = { type: 'array', items: { type: 'string', format: 'data-url' } };
     const onChange = vi.fn();
-    render(<Form schema={schema} uiSchema={uiSchema} formData={[null]} validator={validator} onChange={onChange} />);
+    render(<Form schema={schema} uiSchema={uiSchema} initialFormData={[null]} validator={validator} onChange={onChange} />);
 
     await user.click(screen.getByLabelText('Clear'));
 
