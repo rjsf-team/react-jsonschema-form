@@ -115,6 +115,9 @@ function valueAt(container: unknown, key: string | undefined): unknown {
 /** A value the diff removes from the data */
 const DROP = Symbol('drop');
 
+/** A value the diff leaves without a value, for the defaults to fill */
+const UNSET = Symbol('unset');
+
 /** The schemas a field renders, outermost first: the field's own, and the selected option's where it has options, which
  * renders at the same path, and so on for an option's own options. None for a collapsed `$ref` cycle that is not
  * expanded, which renders no field beneath its Expand button. Follows `SchemaField`, `MultiSchemaField` and
@@ -192,7 +195,7 @@ function offeredValues<S extends StrictRJSFSchema>(layers: readonly S[]): unknow
   }
   const last = layers[layers.length - 1];
   const options = last && getXxxOfOptions<S>(last)?.options;
-  if (!options || !isConstantOptionList<S>(options, true)) {
+  if (!isConstantOptionList<S>(options)) {
     return undefined;
   }
   return options.map((option) => toConstant<S>(option));
@@ -206,6 +209,26 @@ function isSameType(oldType: unknown, newType: unknown): boolean {
   return oldType === newType;
 }
 
+/** Whether `oldField` and `newField` hold the same values and declare the same default, as `judge()` compares them
+ *
+ * @param oldField - The field's schema before the change
+ * @param newField - The field's schema after the change
+ * @param oldInherited - The default the schema above `oldField` declares for it
+ * @param newInherited - The default the schema above `newField` declares for it
+ * @returns - Whether a value of the field keeps its standing
+ */
+export function hasSameConstraints<S extends StrictRJSFSchema>(
+  oldField: S,
+  newField: S,
+  oldInherited: unknown,
+  newInherited: unknown,
+): boolean {
+  return deepEquals(
+    constraintsOf([oldField], oldField.default ?? oldInherited),
+    constraintsOf([newField], newField.default ?? newInherited),
+  );
+}
+
 /** What a field's value is judged by: the keywords whose change can make the value one the field no longer holds */
 function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declaredDefault: unknown) {
   return {
@@ -217,11 +240,14 @@ function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declare
   };
 }
 
-/** Re-judges a value whose field's constraints changed. A value equal to the default the old schema declared for it
- * is that schema's, so it becomes the new schema's default; a value of another type, or one the new `const` or `enum`
- * rejects, is replaced as `sanitizeDataForNewSchema()` replaces it, or dropped.
+/** Re-judges a value whose field's constraints changed. A cleared property is dropped, for the defaults to fill. A value
+ * equal to the default the old schema declared for it is that schema's, so it becomes the new schema's default; a value
+ * of another type, or one the new `const` or `enum` rejects, is replaced as `sanitizeDataForNewSchema()` replaces it,
+ * or dropped.
  *
- * @returns - The value to hold, `DROP` to remove it, or `undefined` to keep it and judge what it holds
+ * @param acceptsNull - Whether the field's new schema holds `null`, asked only of a `null` item
+ * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
+ *   judge what it holds
  */
 function judge<S extends StrictRJSFSchema>(
   oldLayers: readonly S[],
@@ -230,11 +256,21 @@ function judge<S extends StrictRJSFSchema>(
   oldDefault: unknown,
   newDefault: unknown,
   isItem: boolean,
+  acceptsNull: () => boolean,
 ): unknown {
   const before = constraintsOf(oldLayers, oldDefault);
   const now = constraintsOf(newLayers, newDefault);
   if (deepEquals(before, now)) {
     return undefined;
+  }
+  // A clear is the user's for the field as it was, so once the field changes it gives way to the new field's defaults,
+  // as a field that never held a value takes them
+  if (value === undefined && !isItem) {
+    return DROP;
+  }
+  // A cleared item is `null`, whose row stays for the new default to fill. A `null` the item holds is a value, not a clear
+  if (value === null && isItem && newDefault !== undefined && !acceptsNull()) {
+    return UNSET;
   }
   if (oldDefault !== undefined && newDefault !== undefined && deepEquals(oldDefault, value)) {
     return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
@@ -307,7 +343,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { oldRaw, newRaw, oldValue, newValue, oldInherited, newInherited, isItem, hasOld, oldRetrieved, newRetrieved } =
     pair;
   const edited = isEdited(ctx, path);
-  if (oldRaw === undefined || !hasOld || (newValue === undefined && !isItem)) {
+  // A property holding `undefined` is a clear, which is judged as the field around it changes
+  const isClear = newValue === undefined && !isItem;
+  if (oldRaw === undefined || (isClear ? edited : !hasOld)) {
     return newValue;
   }
   // Nothing a field's subtree is built from differs, so neither does the subtree
@@ -328,9 +366,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const newDefault = newOwnDefault ?? newInherited;
   // The edited value and the values holding it are the user's
   if (!edited) {
-    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem);
+    const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
+    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull);
     if (judged !== undefined) {
-      return judged;
+      return judged === UNSET ? undefined : judged;
     }
   }
   if (newLayers.some((layer) => isWholeValueSelect<S>(layer))) {

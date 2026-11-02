@@ -11,8 +11,8 @@ import type {
 import {
   ADDITIONAL_PROPERTIES_KEY,
   CONST_KEY,
-  DEFAULT_KEY,
   deepEquals,
+  DEFAULT_KEY,
   getByPath,
   getPropertySchema,
   getRenderedOptionSchema,
@@ -20,10 +20,13 @@ import {
   getXxxOfKey,
   isCollapsedByOptionalDataControls,
   isPlainObject,
+  isSchemaObject,
   mergeSchemas,
   resolveUiSchema,
 } from '@rjsf/utils';
 
+import keepClears from '../keepClears.ts';
+import { hasSameConstraints } from '../sanitizeFieldTree.ts';
 import { asFieldValue } from '../uiState.ts';
 import { declaresProperty, isAdditionalPropertySchema, withGlobalUiOptions } from './fieldWidgetUtils.ts';
 
@@ -95,48 +98,93 @@ function optionDeclaresValueFor<
   if (declaresOwnValue<S>(schemaUtils.retrieveSchema(getPropertySchema<S>(option, key)))) {
     return true;
   }
-  const optionDefault = option[DEFAULT_KEY];
+  return givesKey(option[DEFAULT_KEY], key);
+}
+
+/** Whether an option's own `default` is an object giving `key` a value */
+function givesKey(optionDefault: unknown, key: string): optionDefault is GenericObjectType {
   // `Object.hasOwn()`, so a property named `constructor` or `toString` is not answered for by the member every object
   // inherits under that name
   return isPlainObject(optionDefault) && Object.hasOwn(optionDefault, key);
 }
 
-/** Returns `data` without each key the switch discarded: one the old option declares and neither the new option nor
- * the schema holding the options declares, which `sanitizeDataForNewSchema()` leaves holding `undefined`. Left in
- * place, such a key is an extra key of the object holding the options, which renders it as an additional property
- * holding nothing and counts it against its `maxProperties` and its `propertyNames`.
+/** The default `option`'s own `default` object gives `key` */
+function optionDefaultFor<S extends StrictRJSFSchema>(option: S | undefined, key: string): unknown {
+  const optionDefault: unknown = option?.[DEFAULT_KEY];
+  return givesKey(optionDefault, key) ? optionDefault[key] : undefined;
+}
+
+/** Whether two options' schemas for `key` describe the same field, so a clear of it carries over a switch */
+function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  key: string,
+  oldOption: S | undefined,
+  newOption: S | undefined,
+): boolean {
+  const oldProperty = getByPath(oldOption?.properties, key);
+  const newProperty = getByPath(newOption?.properties, key);
+  return (
+    !isSchemaObject<S>(oldProperty) ||
+    !isSchemaObject<S>(newProperty) ||
+    hasSameConstraints<S>(
+      schemaUtils.retrieveSchema(oldProperty),
+      schemaUtils.retrieveSchema(newProperty),
+      optionDefaultFor<S>(oldOption, key),
+      optionDefaultFor<S>(newOption, key),
+    )
+  );
+}
+
+/** Builds the function that returns data without each key the switch discarded: one the old option declares and neither
+ * the new option nor the schema holding the options declares, which `sanitizeDataForNewSchema()` leaves holding
+ * `undefined`. Left in place, such a key is an extra key of the object holding the options, which renders it as an
+ * additional property holding nothing and counts it against its `maxProperties` and its `propertyNames`. A key both
+ * options declare under different constraints goes too: the `undefined` it holds is a clear of the old option's field,
+ * which gives way to the new one's defaults.
  *
- * @param data - The data `sanitizeDataForNewSchema()` returned
+ * A switch asks this before and after the defaults are filled in, so each key's answer is kept: comparing two options'
+ * fields retrieves both schemas, and a retrieval can call the validator.
+ *
+ * @param schemaUtils - The schema utilities, to read a property's schema
  * @param [oldOption] - The option switched away from, as it is rendered
  * @param [newOption] - The option switched to, as it is rendered
  * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`
- * @returns - `data`, or a copy of it without the discarded keys
+ * @returns - A function returning its data, or a copy of it without the discarded keys
  */
-function withoutDiscardedKeys<D extends GenericObjectType, S extends StrictRJSFSchema = RJSFSchema>(
-  data: D,
+function discardedKeysRemover<T, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
   oldOption?: S,
   newOption?: S,
   parentSchema?: S,
-): D {
+) {
   const oldProperties: object = oldOption?.properties ?? {};
   const newProperties: object = newOption?.properties ?? {};
   // The schema holding the options arrives with the extra keys of its data stubbed among its `properties`, a key the
   // old option declares among them, and a stub declares nothing
   const parentProperties = parentSchema?.properties ?? {};
-  const discardedKeys = Object.keys(data).filter(
-    (key) =>
-      data[key] === undefined &&
-      Object.hasOwn(oldProperties, key) &&
-      !Object.hasOwn(newProperties, key) &&
-      !declaresProperty<S>(parentProperties, key),
-  );
-  if (discardedKeys.length === 0) {
-    return data;
-  }
-  // Copy rather than delete from what `sanitizeDataForNewSchema()` returned, as below
-  const kept = { ...data };
-  discardedKeys.forEach((key) => delete kept[key]);
-  return kept;
+  const discards = new Map<string, boolean>();
+  const isDiscarded = (key: string) => {
+    let discarded = discards.get(key);
+    if (discarded === undefined) {
+      discarded =
+        Object.hasOwn(oldProperties, key) &&
+        (Object.hasOwn(newProperties, key)
+          ? !holdsSameField(schemaUtils, key, oldOption, newOption)
+          : !declaresProperty<S>(parentProperties, key));
+      discards.set(key, discarded);
+    }
+    return discarded;
+  };
+  return <D extends GenericObjectType>(data: D): D => {
+    const discardedKeys = Object.keys(data).filter((key) => data[key] === undefined && isDiscarded(key));
+    if (discardedKeys.length === 0) {
+      return data;
+    }
+    // Copy rather than delete from what `sanitizeDataForNewSchema()` returned, as below
+    const kept = { ...data };
+    discardedKeys.forEach((key) => delete kept[key]);
+    return kept;
+  };
 }
 
 type WalkUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
@@ -400,9 +448,10 @@ export default function formDataForNewOption<
   const oldOptionUiSchema = withGlobalUiOptions<T, S, F>(uiSchemas.oldOptionUiSchema, globalUiOptions);
   const renderedNewOption = renderedOption<S>(parentSchema, newOption);
   const renderedOldOption = renderedOption<S>(parentSchema, oldOption);
+  const removeDiscardedKeys = discardedKeysRemover(schemaUtils, renderedOldOption, renderedNewOption, parentSchema);
   let newFormData: T | undefined = schemaUtils.sanitizeDataForNewSchema(renderedNewOption, renderedOldOption, formData);
   if (isPlainObject(newFormData)) {
-    newFormData = withoutDiscardedKeys(newFormData, renderedOldOption, renderedNewOption, parentSchema);
+    newFormData = removeDiscardedKeys(newFormData);
   }
   // A `null` option renders no field, so the switch leaves the data as the sanitize did, rather than the `null` the
   // option's defaults fill in for a field that renders one
@@ -573,17 +622,23 @@ export default function formDataForNewOption<
     // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
     // so that only the root objects themselves are created without adding undefined children properties. With
     // nothing carried over it is the same call the option's own defaults came from, so reuse those
+    const carriedOver = newFormData;
     newFormData =
-      newFormData === undefined
+      carriedOver === undefined
         ? defaultsForNewOption()
         : (schemaUtils.getDefaultFormState(
             newOptionForDefaults,
-            newFormData,
+            carriedOver,
             'excludeObjectChildren',
             undefined,
             newOptionUiSchema,
             uiSchemaDefinitions,
           ) as T);
+    // The defaults add a key back for each property the option declares, which would read as the clear carried over,
+    // and `useDefaultIfFormDataUndefined` fills a clear that was carried over, which `Form` can no longer tell was one
+    if (isPlainObject(newFormData)) {
+      newFormData = keepClears(removeDiscardedKeys(newFormData), carriedOver, carriedOver);
+    }
   }
   return newFormData;
 }

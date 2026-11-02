@@ -5,16 +5,14 @@ import {
   setByPath,
   getOptionUiSchema,
   fieldPathToName,
-  ONE_OF_KEY,
   getUiOptions,
-  getXxxOfKey,
   toFieldPath,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
-import { getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
+import { getWidgetErrorProps, getWidgetLabelProps, optionsKeywordOf } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import {
   computeEnumOptions,
@@ -56,7 +54,7 @@ function omitFieldDirectives<T, S extends StrictRJSFSchema, F extends FormContex
  *
  * It renders the selector widget alone: `SchemaField` renders it in place of the options, within the `FieldTemplate`
  * it renders for every field, and resolves its label, `ui:disabled`, `ui:readonly`, `ui:required`, `ui:hideError` and
- * deprecation handling, as for any other field, disabling it too when there are no options to select
+ * deprecation handling, as for any other field. Its selector is disabled too when there are no options to select
  */
 export default function LayoutMultiSchemaField<
   T = unknown,
@@ -65,7 +63,7 @@ export default function LayoutMultiSchemaField<
 >(props: FieldProps<T, S, F>) {
   const {
     name,
-    disabled = false,
+    disabled: fieldDisabled = false,
     formData,
     fieldPath,
     id,
@@ -88,11 +86,12 @@ export default function LayoutMultiSchemaField<
   const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
   const uiSchema = useMemo(() => omitFieldDirectives<T, S, F>(namingUiSchema), [namingUiSchema]);
-  const keyword = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
+  const keyword = optionsKeywordOf<S>(schema);
   const enumOptions = useMemo(
     () => computeEnumOptions(schema, schemaUtils, uiSchema, formData),
     [schema, schemaUtils, uiSchema, formData],
   );
+  const disabled = fieldDisabled || enumOptions.length === 0;
   const allUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const selectorField = getSelectorField<T, S, F>(schema, allUiOptions);
   if (!selectorField) {

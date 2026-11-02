@@ -17,6 +17,7 @@ import {
   getFieldTypeForWidget,
   getTemplates,
   getUiOptions,
+  getXxxOfKey,
   GUESSED_TYPE_FLAG,
   guessType,
   hasWidget,
@@ -188,7 +189,7 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
   if (isLabelled) {
     valueSchema.title = title;
   }
-  const hasOptions = Array.isArray(valueSchema[ANY_OF_KEY]) || Array.isArray(valueSchema[ONE_OF_KEY]);
+  const hasOptions = getXxxOfKey(valueSchema) !== undefined;
   // A `null` is the whole of the value it describes, so there is nothing for an option to say about it. Keeping the
   // options would leave an option selector standing over a field that renders nothing, changing nothing below it
   if (type === 'null') {

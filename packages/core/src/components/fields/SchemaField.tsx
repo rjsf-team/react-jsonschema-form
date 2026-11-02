@@ -108,7 +108,7 @@ interface SelectSchemaInfo<S extends StrictRJSFSchema> {
   xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined;
   /** The non-empty constant options of that keyword, when they all are constants */
   constantOptions: S[] | undefined;
-  /** Whether the schema is an `enum` or a `oneOf`/`anyOf` of constants, empty or not, see `isConstantSelect()` */
+  /** Whether the schema is an `enum`, empty or not, or a `oneOf`/`anyOf` of constants, see `isConstantSelect()` */
   isSelectSchema: boolean;
   /** Whether that select offers at least one option */
   hasConstantOptions: boolean;
@@ -125,7 +125,7 @@ interface SelectSchemaInfo<S extends StrictRJSFSchema> {
 function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedSchema: S): SelectSchemaInfo<S> {
   const xxxOfKey = getXxxOfKey<S>(retrievedSchema);
   const options = xxxOfKey && retrievedSchema[xxxOfKey];
-  const constantOptions = isConstantOptionList<S>(options, true) ? options : undefined;
+  const constantOptions = isConstantOptionList<S>(options) ? options : undefined;
   let schema = retrievedSchema;
   if (constantOptions && getSchemaType<S>(retrievedSchema) === undefined) {
     // `toConstant()` throws for an option that isn't a constant, which is why only a list of them is mapped
@@ -138,9 +138,8 @@ function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedS
     xxxOfKey,
     constantOptions,
     // The schema is already retrieved, so it's checked directly rather than through `isSelect()`, which would resolve
-    // it again. As for `isSelect()`, an empty `enum` or `oneOf`/`anyOf` still counts as a select, so it renders as a
-    // select with nothing to choose rather than as an option selector with no options. A list already found to be all
-    // constants isn't scanned again, which a long one makes worth skipping
+    // it again. As for `isSelect()`, an empty `enum` still counts as a select, with nothing to choose. A list already
+    // found to be all constants isn't scanned again, which a long one makes worth skipping
     isSelectSchema: constantOptions !== undefined || isConstantSelect<S>(schema, true),
     hasConstantOptions: constantOptions !== undefined || isConstantSelect<S>(schema),
   };
@@ -1233,7 +1232,6 @@ function SchemaFieldRender<
   if (!uiField || !fieldToRender) {
     return withUiState(<CyclicSchemaField {...props} />);
   }
-  const { optionsGiveWayToField } = fieldToRender;
   // A pure union's object has nothing of its own beside its options, so like a withheld field it renders nothing, rather
   // than leave each theme's `ObjectFieldTemplate` to tell that an object it is handed is one and drop its empty frame
   const FieldComponent = plannedAsOptions ? RenderNothing : fieldToRender.FieldComponent;
@@ -1244,10 +1242,7 @@ function SchemaFieldRender<
     templateEntry.label,
   );
 
-  // A field the options give way to renders the choice between them, so with no options it has nothing to choose, which
-  // no `ui:disabled` can change
-  const hasNoOptionToChoose = optionsGiveWayToField && xxxOfKey !== undefined && (schema[xxxOfKey]?.length ?? 0) === 0;
-  const disabled = plannedDisabled || deprecatedHandling === 'disable' || hasNoOptionToChoose;
+  const disabled = plannedDisabled || deprecatedHandling === 'disable';
   if (
     uiRequired === false &&
     required &&

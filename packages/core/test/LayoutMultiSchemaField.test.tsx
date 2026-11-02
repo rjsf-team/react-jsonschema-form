@@ -1007,9 +1007,19 @@ describe('LayoutMultiSchemaField', () => {
       expect(typedOn[0].schema).toBe(typed[0].schema);
       expect(typedOn[1].schema).toBe(typed[1].schema);
     });
-    test('throws error when no enumOptions are generated', () => {
+    // An empty oneOf offers no option, as a schema without one does (#5365)
+    test.each([
+      ['no oneOf', {}],
+      ['an empty oneOf', { oneOf: [] }],
+    ])('returns no options for a schema with %s', (_, schema) => {
       const { schemaUtils } = getTestRegistry({});
-      expect(() => computeEnumOptions({}, schemaUtils)).toThrow('No enumOptions were computed from the schema {}');
+      expect(computeEnumOptions(schema, schemaUtils)).toEqual([]);
+    });
+    test('throws when options that are not constants have no selector to list them by', () => {
+      const { schemaUtils } = getTestRegistry({});
+      expect(() => computeEnumOptions({ oneOf: [{ type: 'string' }] }, schemaUtils)).toThrow(
+        'No enumOptions were computed from the schema',
+      );
     });
   });
   describe('getSelectedOptionIndex', () => {

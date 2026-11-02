@@ -2863,8 +2863,8 @@ describe('oneOf', () => {
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(0);
     });
-    // It renders the choice between the options, which with none has nothing to choose
-    it('should be disabled, whatever ui:disabled says, when there are no options', () => {
+    // An empty oneOf offers no choice to render, so the field is the schema without it, enabled as any field is (#5365)
+    it('is not disabled when there are no options', () => {
       const recordDisabled = vi.fn<(disabled: boolean | undefined) => void>();
       function CustomField({ disabled }: FieldProps) {
         recordDisabled(disabled);
@@ -2872,10 +2872,10 @@ describe('oneOf', () => {
       }
       createFormComponent({
         schema: { oneOf: [] },
-        uiSchema: { 'ui:field': CustomField, 'ui:fieldReplacesAnyOrOneOf': true, 'ui:disabled': false },
+        uiSchema: { 'ui:field': CustomField, 'ui:fieldReplacesAnyOrOneOf': true },
       });
 
-      expect(recordDisabled).toHaveBeenLastCalledWith(true);
+      expect(recordDisabled).toHaveBeenLastCalledWith(false);
     });
   });
 
@@ -2929,6 +2929,33 @@ describe('oneOf', () => {
           'root_items_0__oneof_select',
         );
       }
+    });
+
+    it("keeps a clear both options declare the same way through a switch, under 'useDefaultIfFormDataUndefined'", async () => {
+      const declared = { x: { type: 'string', default: 'D' } } as const;
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            type: 'object',
+            oneOf: [
+              { title: 'A', properties: declared },
+              { title: 'B', properties: declared },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: { p: { x: 'typed' } },
+        defaultFormStateBehavior: { mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined' },
+      });
+
+      await user.clear(node.querySelector('input#root_p_x') as HTMLInputElement);
+      await user.selectOptions(node.querySelector('select#root_p__oneof_select') as HTMLSelectElement, 'B');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ p: { x: undefined } });
+      expect(node.querySelector('input#root_p_x')).toHaveValue('');
     });
 
     it('should handle undefined boolean fields correctly when switching oneOf options', async () => {
