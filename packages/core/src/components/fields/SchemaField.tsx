@@ -69,6 +69,7 @@ import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import {
+  COMPONENT_TYPES,
   getDeprecatedTemplateProps,
   getFieldErrorProps,
   getTemplateParts,
@@ -86,17 +87,6 @@ import ShownOptionContext from './ShownOptionContext.ts';
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
 import useAdditionalDepths from './useAdditionalDepths.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
-
-/** The map of component type to FieldName */
-const COMPONENT_TYPES: Record<string, string> = {
-  array: 'ArrayField',
-  boolean: 'BooleanField',
-  integer: 'NumberField',
-  number: 'NumberField',
-  object: 'ObjectField',
-  string: 'StringField',
-  null: 'NullField',
-};
 
 /** What `SchemaField` needs to know about a retrieved schema that may be a select */
 interface SelectSchemaInfo<S extends StrictRJSFSchema> {
@@ -996,6 +986,8 @@ export function useSchemaFieldPlan<
     hidden: hidden || isOptedOut,
     required: effectiveRequired,
     inherited: inheritedPresentation?.plan,
+    options: xxxOfOptions,
+    selectedOption,
   });
   // The lock the form, its schema or its uiSchema puts on the field, planned here so an array item's buttons follow it.
   // `SchemaFieldRender` adds the states that only leave its control unusable, which still let an item be removed

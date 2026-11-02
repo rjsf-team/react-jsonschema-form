@@ -3,6 +3,7 @@ import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSc
 import {
   deepEquals,
   ERRORS_KEY,
+  getControlFallbackName,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
   getRenderedOptionUiSchema,
@@ -311,8 +312,14 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   });
 
   const selectorPresentation = useMemo(
-    () => presentation && getSelectorPresentation(presentation, fieldId),
-    [presentation, fieldId],
+    () =>
+      presentation &&
+      getSelectorPresentation(
+        presentation,
+        fieldId,
+        getControlFallbackName<T, S, F>({ label: '', placeholder, registry }),
+      ),
+    [presentation, fieldId, placeholder, registry],
   );
   const selectorLabelProps = getWidgetLabelProps<T, S, F>(selectorPresentation, title ?? name, () =>
     displaysLabel(registry, schema, uiSchema),
