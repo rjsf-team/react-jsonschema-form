@@ -63,6 +63,12 @@ describe('AdditionalPropertyKeySelect', () => {
     expect(container.querySelector('#root_a__key')).not.toHaveAttribute('aria-describedby');
   });
 
+  it('disables the select where there is no rename to offer', () => {
+    const { container } = render(<AdditionalPropertyKeySelect {...baseProps} onKeyRename={undefined} />);
+
+    expect(container.querySelector('select')).toBeDisabled();
+  });
+
   it('marks the select invalid and describes it by the errors its row shows', () => {
     const { container } = render(
       <AdditionalPropertyKeySelect

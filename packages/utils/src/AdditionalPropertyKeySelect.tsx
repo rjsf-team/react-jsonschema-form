@@ -103,6 +103,8 @@ export default function AdditionalPropertyKeySelect<
   return (
     <SelectWidget
       {...selectProps}
+      // A field `ObjectField` doesn't render has no rename to offer, so the select can't take a pick it would drop
+      disabled={disabled || !onKeyRename}
       id={id}
       name={id}
       presentation={presentation}

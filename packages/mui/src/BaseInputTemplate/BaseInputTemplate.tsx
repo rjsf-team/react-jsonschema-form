@@ -62,15 +62,11 @@ export type MuiBaseInputTemplateProps<
   F extends FormContextType = FormContextType,
 > = BaseInputTemplateProps<T, S, F> &
   Pick<BaseInputTemplateMuiProps, 'slotProps'> &
-  Partial<Pick<TextFieldProps, 'size' | 'variant' | 'helperText'>> & {
+  Partial<Pick<TextFieldProps, 'size' | 'variant' | 'helperText' | 'multiline' | 'rows'>> & {
     /** Props for MUI's `InputLabel`, under the name MUI's `TextField` once took them by */
     InputLabelProps?: Partial<MuiInputLabelProps>;
     /** Props for MUI's `Input`, under the name MUI's `TextField` once took them by */
     InputProps?: Partial<MuiInputProps>;
-    /** Renders a `<textarea>`, as mui's `TextareaWidget` has the template do */
-    multiline?: boolean;
-    /** The number of rows of a `multiline` input */
-    rows?: string | number;
   };
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
@@ -114,6 +110,9 @@ export default function BaseInputTemplate<
     InputProps,
     slotProps,
     presentation,
+    // Attributes of the `<input>`, which `TextField` would otherwise put on its root
+    pattern: ownPattern,
+    accept: ownAccept,
     ...textFieldProps
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
@@ -147,13 +146,13 @@ export default function BaseInputTemplate<
       ...resolveSlotProps(muiSlotProps?.htmlInput, ownerState),
     };
     return {
-      title: 'pattern' in callerHtmlInput ? undefined : numericTitle,
+      title: 'pattern' in callerHtmlInput || ownPattern !== undefined ? undefined : numericTitle,
       step,
       min,
       max,
-      accept,
+      accept: ownAccept ?? accept,
       inputMode,
-      pattern,
+      pattern: ownPattern ?? pattern,
       autoCapitalize,
       ...controlAttributes,
       ...callerHtmlInput,
