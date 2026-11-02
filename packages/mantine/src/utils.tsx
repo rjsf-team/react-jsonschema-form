@@ -377,6 +377,10 @@ export function GroupOptions({
   return children(describedOptionProps);
 }
 
+function wrapped(children: ReactNode, wrap?: (children: ReactNode) => ReactNode): ReactNode {
+  return wrap ? wrap(children) : children;
+}
+
 interface AriaContainerOptions {
   id: string;
   ownDescriptionProps?: unknown;
@@ -391,11 +395,13 @@ interface AriaContainerOptions {
   wrapperObject?: GenericObjectType;
   before?: ReactNode;
   after?: ReactNode;
+  wrap?: (children: ReactNode) => ReactNode;
   successOnOptions?: boolean;
 }
 
 /** Builds the `inputContainer` that overrides the aria ids Mantine reads from the `InputWrapper` context, wrapping
- * `ownContainer`, the container Mantine would otherwise render, between anything in `before` and `after`. The error
+ * `ownContainer`, the container Mantine would otherwise render, between anything in `before` and `after`. `wrap`
+ * surrounds the input itself, inside `ownContainer` and the context override, for an element drawn beside it. The error
  * element Mantine renders is given the field's `errorId(id)`, the id the input is described by, the success message the
  * known `successId`, since Mantine's components derive it differently, and the description is rendered as a `div`.
  * Where `idsLabel` is set, the label is given an id too, from `ownLabelProps`. These are set top-level and in
@@ -416,6 +422,7 @@ function useAriaContainerProps({
   wrapperObject,
   before,
   after,
+  wrap,
   successOnOptions = false,
 }: AriaContainerOptions) {
   const container = useCallback(
@@ -427,11 +434,13 @@ function useAriaContainerProps({
         successOnOptions={successOnOptions}
       >
         {before}
-        {typeof ownContainer === 'function' ? (ownContainer as InputContainer)(children) : children}
+        {typeof ownContainer === 'function'
+          ? (ownContainer as InputContainer)(wrapped(children, wrap))
+          : wrapped(children, wrap)}
         {after}
       </InputWrapperAriaProvider>
     ),
-    [describedBy, labelId, successId, successOnOptions, before, after, ownContainer],
+    [describedBy, labelId, successId, successOnOptions, before, after, wrap, ownContainer],
   );
   return useMemo(() => {
     const descriptionProps = withDescriptionDiv(ownDescriptionProps, id);
@@ -681,7 +690,8 @@ export function useFieldWrapperProps<
  * @param options - The widget's options, whose own `inputContainer`, if any, is still applied inside the override
  * @param settings - `describedBy`, the ids to describe the input by, `alsoDescribedBy`, further ids to describe it by,
  *   `wrapperOverrides`, set over the `wrapperProps` the input would otherwise take, rather than replacing them, and
- *   `slotlessErrors`, which gets what to render after the input from the `inputWrapperOrder` it resolves to
+ *   `slotlessErrors`, which gets what to render after the input from the `inputWrapperOrder` it resolves to, and
+ *   `wrap`, which surrounds the input with an element drawn beside it, inside the container and the context override
  * @returns - An object to spread on the props of the Mantine input, after the theme props
  */
 export function useAriaDescribedByProps(
@@ -693,11 +703,13 @@ export function useAriaDescribedByProps(
     alsoDescribedBy,
     wrapperOverrides,
     slotlessErrors,
+    wrap,
   }: {
     describedBy?: string;
     alsoDescribedBy?: string;
     wrapperOverrides?: GenericObjectType;
     slotlessErrors?: (inputWrapperOrder: unknown) => ReactNode;
+    wrap?: (children: ReactNode) => ReactNode;
   },
 ) {
   const props = useProps<GenericObjectType>(themeComponentNames[component], {}, pickOptions(options, inputPickedKeys));
@@ -728,6 +740,7 @@ export function useAriaDescribedByProps(
     ownContainer: resolved.inputContainer,
     wrapperObject,
     after: slotlessErrors?.(resolved.inputWrapperOrder),
+    wrap,
   });
 }
 
@@ -742,6 +755,7 @@ export function useAriaDescribedByProps(
  * @param widgetProps - The props of the widget
  * @param [attributes] - The `aria-describedby`, `aria-labelledby` and `aria-label` to give the input, such as those
  *   `getControlAttributes()` gives with the ids of the elements the widget renders to describe it
+ * @param [wrap] - Surrounds the input with an element drawn beside it, inside the container and the context override
  * @returns - An object to spread on the props of the Mantine input, after the theme props
  */
 export function useInputAriaProps<
@@ -756,12 +770,14 @@ export function useInputAriaProps<
     S,
     F
   >(widgetProps),
+  wrap?: (children: ReactNode) => ReactNode,
 ) {
   const { id, options } = widgetProps;
   const { 'aria-describedby': describedBy, 'aria-labelledby': labelledBy, 'aria-label': ariaLabel } = attributes;
   const ariaProps = useAriaDescribedByProps(component, id, options, {
     describedBy,
     slotlessErrors: (inputWrapperOrder) => getSlotlessErrors<T, S, F>(widgetProps, inputWrapperOrder),
+    wrap,
   });
   // Each left out rather than `undefined` where none is given, so one in the options still applies
   return {
