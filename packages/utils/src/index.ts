@@ -182,6 +182,8 @@ import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } 
 import type { ObjectPath } from './pathUtils.ts';
 import pickGlobalUiOptions from './pickGlobalUiOptions.ts';
 import rangeSpec from './rangeSpec.ts';
+import ratingStarCount from './ratingStarCount.ts';
+import ratingStoresString from './ratingStoresString.ts';
 import rendersOwnFieldBesideOption, { hasOwnContentBesideOptions } from './rendersOwnFieldBesideOption.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
@@ -462,7 +464,8 @@ export {
   toDateString,
   toErrorList,
   toErrorSchema,
-  numericWidgetStoresString,
+  ratingStarCount,
+  ratingStoresString,
   toInputValue,
   offersClearButton,
   toNumericValue,

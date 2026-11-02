@@ -122,18 +122,21 @@ describe('useAltDateWidgetProps()', () => {
     vi.useRealTimers();
     vi.mocked(PROPS.onChange).mockClear();
   });
-  test('falls back to the default years for a `yearsRange` with one entry', () => {
-    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: { yearsRange: [1990] } }));
+  test('reads the years of a `yearsRange` held as numeric strings', () => {
+    const jsonOptions: Record<string, unknown> = { yearsRange: ['1990', '1992'] };
+    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: jsonOptions }));
 
     const years = result.current.elements.find(({ type }) => type === 'year');
-    expect(years?.range).toEqual(
-      getDateElementProps(parseDateString(), false).find(({ type }) => type === 'year')?.range,
-    );
+    expect(years?.range).toEqual([1990, 1992]);
   });
   test.each([
-    ['numeric strings', ['1990', '2030']],
+    ['one entry', [1990]],
     ['null', [null, 2030]],
     ['NaN', [1990, Number.NaN]],
+    ['a number', 2000],
+    ['a boolean', true],
+    ['an object', {}],
+    ['an array-like object', { 0: 1990, 1: 2030 }],
   ])('falls back to the default years for a `yearsRange` holding %s', (_, yearsRange) => {
     const jsonOptions: Record<string, unknown> = { yearsRange };
     const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: jsonOptions }));

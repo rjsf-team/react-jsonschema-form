@@ -30,11 +30,6 @@ function readyForChange(state: DateObject) {
   return Object.values(state).every((value) => value !== -1);
 }
 
-/** Whether a `yearsRange` entry is a year `dateRangeOptions()` can count from */
-function isYear(year: unknown): year is number {
-  return typeof year === 'number' && Number.isFinite(year);
-}
-
 /** The Props for the `DateElement` component */
 export type DateElementProps<
   T = unknown,
@@ -227,14 +222,15 @@ export default function useAltDateWidgetProps<
   );
 
   const { yearsRange, format } = options;
-  const [firstYear, lastYear]: unknown[] = yearsRange ?? [];
+  // A JSON uiSchema can hold anything here, so a range that isn't a list gives the default years, and a year held as a
+  // numeric string counts as its number, as a `stars` option does
+  const [firstYear, lastYear]: unknown[] = Array.isArray(yearsRange) ? yearsRange.map(toNumericValue) : [];
   const elements = useMemo(
     () =>
       getDateElementProps(
         state,
         time,
-        // A JSON uiSchema can hold anything here, and `dateRangeOptions()` loops over the range, adding to its start
-        isYear(firstYear) && isYear(lastYear) ? [firstYear, lastYear] : undefined,
+        typeof firstYear === 'number' && typeof lastYear === 'number' ? [firstYear, lastYear] : undefined,
         isDateElementFormat(format) ? format : undefined,
       ),
     [state, time, firstYear, lastYear, format],

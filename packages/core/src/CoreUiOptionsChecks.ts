@@ -52,20 +52,23 @@ export type CoreUiOptionsChecks =
           | 'AltDateTimeWidget'
           | 'SelectWidget'
           | 'RadioWidget'
+          | 'RatingWidget'
           | 'FileWidget'
           | 'HiddenWidget'
           | WidgetAliasFor<'string'>;
         field?: 'StringField';
         placeholder?: string;
         rows?: number;
+        stars?: number | string;
+        shape?: 'star' | 'heart';
         inputType?: string;
         autocomplete?: HTMLInputElement['autocomplete'];
         autocapitalize?: HTMLInputElement['autocapitalize'];
         emptyValue?: string;
         accept?: string;
         filePreview?: boolean;
-        accept?: string | string[];
-        yearsRange?: number[];
+        accept?: string | readonly string[];
+        yearsRange?: readonly number[];
         inline?: boolean;
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
@@ -90,6 +93,7 @@ export type CoreUiOptionsChecks =
         field?: 'NumberField';
         placeholder?: string;
         stars?: number | string;
+        shape?: 'star' | 'heart';
         inputType?: string;
         autocomplete?: HTMLInputElement['autocomplete'];
         autocapitalize?: HTMLInputElement['autocapitalize'];
@@ -148,7 +152,7 @@ export type CoreUiOptionsChecks =
         copyable?: boolean;
         itemLabel?: string;
         inline?: boolean;
-        accept?: string | string[];
+        accept?: string | readonly string[];
         filePreview?: boolean;
         placeholder?: string;
         emptyValue?: unknown[];

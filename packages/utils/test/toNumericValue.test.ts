@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../src/index.ts';
-import { numericWidgetStoresString, toNumericValue } from '../src/index.ts';
+import { ratingStarCount, ratingStoresString, toNumericValue } from '../src/index.ts';
 
 describe('toNumericValue()', () => {
   it.each([
@@ -50,5 +50,24 @@ describe('numericWidgetStoresString()', () => {
     { schema: {}, value: 3, expected: false },
   ])('$schema holding $value', ({ schema, value, expected }) => {
     expect(numericWidgetStoresString(schema, value)).toBe(expected);
+  });
+});
+
+describe('ratingStarCount()', () => {
+  it.each<{ schema: RJSFSchema; stars: unknown; expected: number }>([
+    { schema: {}, stars: 3, expected: 3 },
+    { schema: {}, stars: '3', expected: 3 },
+    { schema: {}, stars: 2.5, expected: 2 },
+    { schema: {}, stars: 9, expected: 5 },
+    { schema: {}, stars: 0, expected: 1 },
+    { schema: {}, stars: undefined, expected: 5 },
+    { schema: {}, stars: true, expected: 5 },
+    { schema: { maximum: 3 }, stars: 5, expected: 3 },
+    { schema: { maximum: 9 }, stars: 2, expected: 5 },
+    { schema: { maximum: 0.5 }, stars: 2, expected: 1 },
+    { schema: { maximum: -2 }, stars: 2, expected: 1 },
+    { schema: { maximum: 3.7 }, stars: 2, expected: 3 },
+  ])('$schema with stars $stars', ({ schema, stars, expected }) => {
+    expect(ratingStarCount(schema, stars)).toBe(expected);
   });
 });

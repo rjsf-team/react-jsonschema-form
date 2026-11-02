@@ -2059,7 +2059,7 @@ type UIOptionsDeclaredType<
     /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
     submitButtonOptions?: UISchemaSubmitButtonOptions;
     /** The file types a `FileWidget` accepts: a comma-separated list, or an array of them */
-    accept?: string | string[];
+    accept?: string | readonly string[];
     /** The number of stars a `RatingWidget` shows, from 1 to 5, when the schema has no `maximum`; a numeric string reads
      * as its number
      */
@@ -2067,7 +2067,7 @@ type UIOptionsDeclaredType<
     /** The first and last year an `AltDateWidget` offers, as `[first, last]`, both counted from the current year when
      * neither is positive
      */
-    yearsRange?: number[];
+    yearsRange?: readonly number[];
     /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */
