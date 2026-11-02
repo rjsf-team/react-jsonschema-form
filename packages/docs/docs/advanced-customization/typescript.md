@@ -118,7 +118,7 @@ render(<Form<any, MySchema> schema={schema} validator={validator} />, document.g
 Declare a keyword RJSF doesn't read the same way, so that it type-checks at every depth of a schema:
 
 ```ts
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 
 declare module 'json-schema' {
   interface JSONSchema7 {

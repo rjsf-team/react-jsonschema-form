@@ -2,8 +2,8 @@ import type { JSONSchema7 } from 'json-schema';
 
 /**
  * This file is used to augment the `json-schema` module with the keywords RJSF or its validators read beyond draft 7:
- * `deprecated` and the other keywords of later drafts it supports, OpenAPI's `discriminator`, and Ajv's
- * `formatMinimum`/`formatMaximum`/`formatExclusiveMinimum`/`formatExclusiveMaximum`.
+ * `deprecated` and the other keywords of later drafts it supports, OpenAPI's `discriminator` and `components`, Ajv's
+ * `formatMinimum`/`formatMaximum`/`formatExclusiveMinimum`/`formatExclusiveMaximum` and ajv-errors' `errorMessage`.
  *
  * It is a dedicated file because `json-schema` is a type-only package. Standard augmentation
  * using `import 'json-schema'` in a file with other imports can cause module resolution
@@ -29,6 +29,8 @@ declare module 'json-schema' {
     $recursiveRef?: string;
     /** The vocabularies a meta-schema uses, by URI, each `true` when it is required (draft 2019-09) */
     $vocabulary?: Record<string, boolean>;
+    /** OpenAPI's reusable definitions, which RJSF resolves a `$ref` into */
+    components?: Record<string, unknown>;
     /** The schema of the decoded content of a string, with its `contentMediaType` (draft 2019-09) */
     contentSchema?: JSONSchema7Definition;
     /** The properties the presence of a property requires, by that property's name (draft 2019-09) */
@@ -37,6 +39,9 @@ declare module 'json-schema' {
     dependentSchemas?: Record<string, JSONSchema7Definition>;
     /** The property whose value selects the `oneOf`/`anyOf` option (OpenAPI) */
     discriminator?: { propertyName: string; mapping?: Record<string, string> };
+    /** The messages `ajv-errors` reports for this schema's keywords, wired into `@rjsf/validator-ajv8` through its
+     * `extenderFn` */
+    errorMessage?: string | Record<string, unknown>;
     /** The date or time the value must be before, for a `format` that has an order, or Ajv's `$data` reference to one
      * when Ajv runs with `$data` (Ajv's `ajv-formats`)
      */

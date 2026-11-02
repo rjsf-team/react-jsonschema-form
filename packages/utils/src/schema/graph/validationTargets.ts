@@ -19,7 +19,7 @@ import isObject, { isSchemaObject } from '../../isObject.ts';
 import { keywordShape } from '../../schemaUri.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import KeyedMemo from './keyedMemo.ts';
-import { childPointer, isRootPointer } from './parseSchemaGraph.ts';
+import { childPointer, isRootPointer, stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
 
@@ -801,8 +801,8 @@ export function validationTargets<S extends StrictRJSFSchema = RJSFSchema>(graph
   const discriminators = new Set<string>();
   for (let id = 0; id < graph.size; id += 1) {
     const node = graph.node(id);
-    const name: unknown = node.kind === 'schema' ? node.raw.discriminator?.propertyName : undefined;
-    if (typeof name === 'string') {
+    const name = node.kind === 'schema' ? stringKeyword(node.raw.discriminator, 'propertyName') : undefined;
+    if (name !== undefined) {
       discriminators.add(name);
     }
   }
