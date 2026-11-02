@@ -116,4 +116,12 @@ describe('mergeThemePresentation()', () => {
     expect(merged.default).toStrictEqual({ errors: 'self' });
     expect(merged.widgets.TextWidget).toStrictEqual({ label: 'self', errors: 'self' });
   });
+
+  it("takes the selected option description's placement from the top layer that declares one", () => {
+    const theme = { selectedOptionDescription: 'beforeDescription' } as const;
+    expect(mergeThemePresentation(core, theme, {}).selectedOptionDescription).toBe('beforeDescription');
+    expect(mergeThemePresentation(theme, { selectedOptionDescription: 'afterHelp' }).selectedOptionDescription).toBe(
+      'afterHelp',
+    );
+  });
 });

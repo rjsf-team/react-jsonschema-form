@@ -8,6 +8,8 @@ function createTheme() {
   return {
     templates: createTemplates(),
     widgets: createWidgets(),
+    // `SelectWidget` draws the selected option's description before the field's description
+    presentation: { selectedOptionDescription: 'beforeDescription' } as const,
     // Core's `AltDateWidget`, which this theme falls back to, lays its parts out with these
     classMap: {
       altDateList: 'list-inline',

@@ -59,6 +59,49 @@ export function selectedOptionDescriptionTests(Form: ComponentType<FormProps>, w
       },
     );
 
+    // Sighted and screen reader users meet the descriptions and the help in the same order
+    const ownSelect: RJSFSchema = { type: 'string', oneOf: describedOptions };
+    // The option's select is described by the description and help its option selector's field draws
+    const anyOfSelect: RJSFSchema = { anyOf: [{ type: 'string', oneOf: describedOptions }, { type: 'number' }] };
+    test.each([
+      ['its own description', ownSelect, { description: 'Pick a plan' }, {}],
+      ['its own description and help', ownSelect, { description: 'Pick a plan' }, { 'ui:help': 'Some help' }],
+      ['its own help', ownSelect, {}, { 'ui:help': 'Some help' }],
+      ["an anyOf field's description", anyOfSelect, { description: 'Pick a plan' }, {}],
+      [
+        "an anyOf field's description and help",
+        anyOfSelect,
+        { description: 'Pick a plan' },
+        { 'ui:help': 'Some help' },
+      ],
+      ["an anyOf field's help", anyOfSelect, {}, { 'ui:help': 'Some help' }],
+    ] as [string, RJSFSchema, RJSFSchema, UiSchema][])(
+      "lists %s and the selected option's description in the order they are drawn",
+      (_, color, described, uiSchema) => {
+        const { container } = render(
+          <Form
+            schema={{ type: 'object', properties: { color: { title: 'Color', ...described, ...color } } }}
+            uiSchema={{ color: uiSchema }}
+            initialFormData={{ color: 'r' }}
+            widgets={widgets}
+            validator={validator}
+          />,
+        );
+        // In document order. Only where the option's description falls among the others is compared, since a theme
+        // may draw the field's description and help in another order than the plan announces them
+        const drawn = screen.getAllByText(/^(Warm|Pick a plan|Some help)$/).map(({ textContent }) => textContent);
+        const announced = container.querySelector('#root_color')!.getAttribute('aria-describedby')!.split(' ');
+        const announcedTexts = announced.map((id) => document.getElementById(id)?.textContent ?? '');
+        const withoutOption = (texts: string[]) => texts.filter((text) => text !== 'Warm');
+        const before = (texts: string[]) => withoutOption(texts.slice(0, texts.indexOf('Warm')));
+
+        expect(announcedTexts).toContain('Warm');
+        expect(before(announcedTexts)).toEqual(
+          before(drawn).filter((text) => withoutOption(announcedTexts).includes(text)),
+        );
+      },
+    );
+
     /** Renders the form's `SelectWidget` from a custom field, so without a plan, described by an element of its own */
     function renderWithoutPlan({
       hideLabel,

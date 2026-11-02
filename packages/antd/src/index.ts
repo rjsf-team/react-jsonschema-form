@@ -17,6 +17,8 @@ function createPresentation(): ThemePresentation {
       RangeWidget: { labelledBy: 'aria-labelledby' },
     },
     fieldDefault: { description: 'template' },
+    // `SelectWidget` draws the selected option's description before the field's description
+    selectedOptionDescription: 'beforeDescription',
   };
 }
 

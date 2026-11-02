@@ -27,6 +27,8 @@ function createPresentation(): ThemePresentation {
       OneOfField: { label: 'self', labelPlacement: 'above' },
       FallbackField: { label: 'self', labelPlacement: 'above' },
     },
+    // `FieldTemplate` draws the help above the widget, so the selected option's description follows it
+    selectedOptionDescription: 'afterHelp',
   };
 }
 
