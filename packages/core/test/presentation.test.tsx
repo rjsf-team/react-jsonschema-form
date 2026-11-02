@@ -1088,6 +1088,84 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
   });
 });
 
+describe("an anyOf/oneOf field's label, by the field SchemaField renders the option shown with (#5709)", () => {
+  /** Every `for` on the page names an element a `for` can label */
+  function expectEveryForToNameAControl(node: Element) {
+    for (const label of node.querySelectorAll('label[for]')) {
+      const target = document.getElementById(label.getAttribute('for')!);
+      expect(target?.matches('input, select, textarea, button, meter, output, progress')).toBe(true);
+    }
+  }
+
+  it('draws no for where a type list option renders an alt-date', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { when: { title: 'When', anyOf: [{ type: ['string', 'null'] }, { type: 'number' }] } },
+      },
+      uiSchema: { when: { anyOf: [{ 'ui:widget': 'alt-date' }, {}] } },
+    });
+
+    expect(node.querySelector(`#${fieldLabelId('root_when')}`)?.closest('label')).not.toHaveAttribute('for');
+    expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+  });
+
+  it('names the select an option of array constants renders by the for', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { pet: { title: 'Pet', anyOf: [{ type: 'array', enum: [[1], [2]] }, { type: 'string' }] } },
+      },
+      initialFormData: { pet: [1] },
+    });
+
+    const select = node.querySelector('select#root_pet')!;
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).toHaveAttribute('for', 'root_pet');
+    expect(select).not.toHaveAttribute('aria-labelledby');
+    expect(select).toHaveAccessibleName('Pet');
+  });
+
+  it('draws no for where an untyped option renders no control', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { pet: { title: 'Pet', anyOf: [{}, { type: 'number' }] } } },
+      initialFormData: { pet: 'x' },
+    });
+
+    expect(node.querySelector('#root_pet')).toBeNull();
+    expectEveryForToNameAControl(node);
+  });
+
+  it("names whatever the fallback UI renders for a multi-type option, through the for or the label's id", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { pet: { title: 'Pet', anyOf: [{ type: ['string', 'number'] }, { type: 'boolean' }] } },
+      },
+      initialFormData: { pet: 'x' },
+      useFallbackUiForUnsupportedType: true,
+    });
+
+    expectEveryForToNameAControl(node);
+  });
+
+  it('draws no for where an option a $id names renders a field declared as named through aria-labelledby', () => {
+    function GroupField({ id, presentation }: FieldProps) {
+      return <div role='group' id={id} aria-labelledby={presentation?.control?.attributes['aria-labelledby']} />;
+    }
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { pet: { title: 'Pet', anyOf: [{ $id: 'GroupField', type: 'string' }, { type: 'number' }] } },
+      },
+      fields: { GroupField },
+      presentation: { fields: { GroupField: { labelledBy: 'aria-labelledby' } } },
+    });
+
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
+    expect(screen.getByRole('group', { name: 'Pet' })).toHaveAttribute('id', 'root_pet');
+  });
+});
+
 describe('a fallback field with no control for a label to name', () => {
   const val: RJSFSchema = { type: ['object', 'boolean'], title: 'Val', description: 'A value' };
 
