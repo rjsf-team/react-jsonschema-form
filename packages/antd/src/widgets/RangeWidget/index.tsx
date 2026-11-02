@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes, rangeSpec } from '@rjsf/utils';
 import { Slider } from 'antd';
@@ -59,10 +60,49 @@ export default function RangeWidget<
   const drawnValue =
     typeof value === 'number' && Number.isFinite(value) ? nativeRangeValue(value, min, max, step) : (min ?? 0);
 
-  const { 'aria-labelledby': ariaLabelledBy, 'aria-label': ariaLabel } = getControlAttributes<T, S, F>({
-    id,
-    presentation,
-  });
+  const {
+    'aria-labelledby': ariaLabelledBy,
+    'aria-label': ariaLabel,
+    'aria-describedby': ariaDescribedBy,
+    'aria-invalid': ariaInvalid,
+  } = getControlAttributes<T, S, F>({ id, presentation });
+
+  // antd's `Slider` drops `aria-describedby` and `aria-invalid` and takes no handle props for them, so they're written
+  // onto its handle; the hidden input after the slider's root finds the handle in this widget alone. The handle's
+  // tooltip rewrites `aria-describedby` to its own id as it opens and removes it as it closes, without this widget
+  // rendering, so the field's ids are written back in front of whatever ids the tooltip leaves.
+  // shortcut: pass `aria-describedby` as `ariaDescribedByForHandle` once antd ships `@rc-component/slider` 1.2 (#5560)
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
+  const writtenIdsRef = useRef<string[]>([]);
+  useLayoutEffect(() => {
+    const handle = hiddenInputRef.current?.previousElementSibling?.querySelector('[role="slider"]');
+    if (!handle) {
+      return undefined;
+    }
+    if (ariaInvalid) {
+      handle.setAttribute('aria-invalid', 'true');
+    } else {
+      handle.removeAttribute('aria-invalid');
+    }
+    const fieldIds = ariaDescribedBy?.split(' ') ?? [];
+    const describe = () => {
+      const current = handle.getAttribute('aria-describedby') ?? '';
+      const otherIds = current
+        .split(' ')
+        .filter((describedById) => describedById && !writtenIdsRef.current.includes(describedById));
+      writtenIdsRef.current = fieldIds;
+      const describedBy = [...fieldIds, ...otherIds].join(' ');
+      if (!describedBy) {
+        handle.removeAttribute('aria-describedby');
+      } else if (current !== describedBy) {
+        handle.setAttribute('aria-describedby', describedBy);
+      }
+    };
+    describe();
+    const observer = new MutationObserver(describe);
+    observer.observe(handle, { attributeFilter: ['aria-describedby'] });
+    return () => observer.disconnect();
+  }, [ariaDescribedBy, ariaInvalid]);
 
   const handleChange = (nextValue: number) => onChange(nextValue);
 
@@ -91,17 +131,16 @@ export default function RangeWidget<
         step={step}
         value={drawnValue}
         {...extraProps}
-        // The slider's handle is what takes focus, and it takes no `aria-describedby` or `aria-invalid`, nor a
-        // `handleRender` to add them, so it is only named, by the label a `for` can't reach or by the text of one
-        // `ui:label: false` hides. It isn't marked required: a slider always holds a value, and ARIA allows no
-        // `aria-required` on one
+        // The slider's handle is what takes focus, so it is named here, by the label a `for` can't reach or by the
+        // text of one `ui:label: false` hides. It isn't marked required: a slider always holds a value, and ARIA allows
+        // no `aria-required` on one
         ariaLabelledByForHandle={ariaLabelledBy}
         ariaLabelForHandle={ariaLabel}
       />
       {/* antd's `Slider` renders no native control, so the value a native submit or `FormData` reads is carried by a
       hidden input. It posts the value the slider is drawn at, as a native range input posts the value its thumb is drawn
       at, and it posts nothing when the slider is drawn disabled */}
-      <input type='hidden' name={htmlName || id} value={drawnValue} disabled={control.disabled} />
+      <input ref={hiddenInputRef} type='hidden' name={htmlName || id} value={drawnValue} disabled={control.disabled} />
     </>
   );
 }
