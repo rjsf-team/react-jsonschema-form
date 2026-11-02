@@ -5873,7 +5873,9 @@ describe('ArrayField', () => {
             return (
               <div className='rjsf-array-item'>
                 {props.children}
-                <button type='submit' onClick={props.buttonsProps[handler]}>Press</button>
+                <button type='submit' onClick={props.buttonsProps[handler]}>
+                  Press
+                </button>
               </div>
             );
           }
