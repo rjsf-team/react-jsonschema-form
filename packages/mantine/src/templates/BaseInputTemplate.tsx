@@ -7,6 +7,7 @@ import {
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
+  callerInputProps,
   getInputProps,
   labelValue,
   numericWidgetStoresString,
@@ -51,7 +52,7 @@ export default function BaseInputTemplate<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const inputProps = getInputProps<T, S, F>(schema, type, options, false);
+  const inputProps = { ...getInputProps<T, S, F>(schema, type, options, false), ...callerInputProps<T, S, F>(props) };
   const themeProps = cleanupOptions(options, props);
   const descriptionProps = getDescriptionProps(props);
 

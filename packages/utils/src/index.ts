@@ -7,6 +7,7 @@ import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import asNumber from './asNumber.ts';
+import callerInputProps from './callerInputProps.ts';
 import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
@@ -262,6 +263,7 @@ export type {
 };
 
 export {
+  callerInputProps,
   additionalKeyId,
   AdditionalPropertyKeySelect,
   allowAdditionalItems,

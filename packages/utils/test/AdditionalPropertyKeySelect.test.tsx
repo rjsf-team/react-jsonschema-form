@@ -134,21 +134,38 @@ describe('AdditionalPropertyKeySelect', () => {
     expect(baseProps.onKeyRename).toHaveBeenCalledWith('b');
   });
 
-  it('keeps the selection without throwing when it has no rename callback', async () => {
+  it('disables the select when it has no rename callback', () => {
     const { container } = render(<AdditionalPropertyKeySelect {...baseProps} onKeyRename={undefined} />);
-    const select = elementOf(container, '#root_a__key');
+
+    expect(elementOf(container, '#root_a__key')).toBeDisabled();
+  });
+
+  it("drops a pick from a theme's select that ignores `disabled` when it has no rename callback", async () => {
+    function SelectIgnoringDisabled({ onChange }: WidgetProps) {
+      return (
+        <button type='button' onClick={() => onChange('b')}>
+          Pick b
+        </button>
+      );
+    }
+    const { getByRole } = render(
+      <AdditionalPropertyKeySelect
+        {...baseProps}
+        registry={{ widgets: { SelectWidget: SelectIgnoringDisabled } } as unknown as Registry}
+        onKeyRename={undefined}
+      />,
+    );
     // React reports an error thrown in a handler as a window `error` event rather than rejecting user-event's promise
     const onWindowError = vi.fn((event: Event) => event.preventDefault());
     window.addEventListener('error', onWindowError);
 
     try {
-      await user.selectOptions(select, 'b');
+      await user.click(getByRole('button', { name: 'Pick b' }));
     } finally {
       window.removeEventListener('error', onWindowError);
     }
 
     expect(onWindowError).not.toHaveBeenCalled();
-    expect(select).toHaveValue('a');
   });
 
   it.each([

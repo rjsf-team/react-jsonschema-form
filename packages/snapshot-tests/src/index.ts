@@ -4,6 +4,7 @@ export { arrayTests } from './arrayTests.tsx';
 
 export { checkboxLabelTests } from './checkboxLabelTests.tsx';
 
+export { callerInputPropsTests } from './callerInputPropsTests.tsx';
 export { clearButtonTests } from './clearButtonTests.tsx';
 
 export { deprecatedLabelTests } from './deprecatedLabelTests.tsx';

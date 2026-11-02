@@ -1,4 +1,4 @@
-import { clearButtonTests } from '@rjsf/snapshot-tests';
+import { callerInputPropsTests, clearButtonTests } from '@rjsf/snapshot-tests';
 
 import WrappedForm from './WrappedForm.tsx';
 
@@ -8,3 +8,4 @@ vi.mock('@mantine/hooks', async (importOriginal) => ({
 }));
 
 clearButtonTests(WrappedForm);
+callerInputPropsTests(WrappedForm);

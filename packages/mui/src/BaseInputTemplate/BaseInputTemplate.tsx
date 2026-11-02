@@ -146,13 +146,13 @@ export default function BaseInputTemplate<
       ...resolveSlotProps(muiSlotProps?.htmlInput, ownerState),
     };
     return {
-      title: 'pattern' in callerHtmlInput || ownPattern !== undefined ? undefined : numericTitle,
+      title: 'pattern' in callerHtmlInput || 'pattern' in props ? undefined : numericTitle,
       step,
       min,
       max,
       accept: ownAccept ?? accept,
       inputMode,
-      pattern: ownPattern ?? pattern,
+      pattern: 'pattern' in props ? ownPattern : pattern,
       autoCapitalize,
       ...controlAttributes,
       ...callerHtmlInput,

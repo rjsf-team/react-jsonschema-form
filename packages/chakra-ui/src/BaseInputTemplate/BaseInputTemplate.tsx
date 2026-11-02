@@ -7,6 +7,7 @@ import {
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
+  callerInputProps,
   getInputProps,
   getNumericInputTitle,
   hasWidgetErrors,
@@ -45,7 +46,9 @@ export default function BaseInputTemplate<
     presentation,
   } = props;
   const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
-  const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
+  const callerProps = callerInputProps<T, S, F>(props);
+  const inputProps = { ...derivedInputProps, ...callerProps };
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
@@ -86,7 +89,7 @@ export default function BaseInputTemplate<
         onFocus={handleFocus}
         autoFocus={autofocus}
         placeholder={placeholder}
-        title={getNumericInputTitle(inputProps, registry.translateString)}
+        title={'pattern' in callerProps ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
         list={hasExamples ? examplesId(id) : undefined}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
