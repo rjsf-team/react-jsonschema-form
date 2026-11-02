@@ -32,8 +32,13 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
     render(
       <Form
         schema={{ type: 'object', properties: { agree: { type: 'boolean', title: 'Agree' } } }}
-        // @ts-expect-error: TS2353, a global `required`, which rjsf ignores, is what this case checks
-        uiSchema={{ 'ui:globalOptions': { required: true }, agree: { 'ui:widget': 'select' } }}
+        uiSchema={{
+          'ui:globalOptions': {
+            // @ts-expect-error: TS2353, a global `required`, which rjsf ignores, is what this case checks
+            required: true,
+          },
+          agree: { 'ui:widget': 'select' },
+        }}
         validator={validator}
       />,
     );

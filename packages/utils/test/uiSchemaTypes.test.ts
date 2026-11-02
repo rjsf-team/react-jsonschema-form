@@ -228,6 +228,7 @@ describe('UiSchema type', () => {
   });
 
   it('reads a field typed `any` back as `unknown`', () => {
+    // oxlint-disable-next-line typescript/no-explicit-any -- a field typed `any` is what this test is about
     expectTypeOf<UiSchema<{ meta: any }>['meta']>().toBeUnknown();
   });
 

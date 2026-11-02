@@ -221,8 +221,7 @@ describe('mergeDefaultsWithFormData()', () => {
   });
 
   it('should not merge a scalar default into object formData as index keys', () => {
-    // oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- `<unknown>` keeps `T` from being inferred from the scalar, array or null default alone
-    expect(mergeDefaultsWithFormData<unknown>('x', { b: 2 })).toEqual({ b: 2 });
+    expect(mergeDefaultsWithFormData<string | object>('x', { b: 2 })).toEqual({ b: 2 });
   });
 
   it('should not merge an array default into object formData as index keys', () => {
