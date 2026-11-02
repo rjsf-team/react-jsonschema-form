@@ -3024,6 +3024,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
+          aria-label="Choose an option"
           class="fui-RadioGroup ___1tjgnp0_1mgmpxf f22iagw f6jr5hl f1vx9l62"
           id="root"
           role="radiogroup"
@@ -9954,6 +9955,7 @@ exports[`single fields > radio field 1`] = `
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
+          aria-label="Choose an option"
           class="fui-RadioGroup ___1tjgnp0_1mgmpxf f22iagw f6jr5hl f1vx9l62"
           id="root"
           role="radiogroup"
@@ -10949,6 +10951,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
+          aria-label="Choose an option"
           class="fui-RadioGroup ___1tjgnp0_1mgmpxf f22iagw f6jr5hl f1vx9l62"
           id="root"
           role="radiogroup"
@@ -11025,6 +11028,7 @@ exports[`single fields > select field single choice form disabled using radio wi
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
+          aria-label="Choose an option"
           class="fui-RadioGroup ___1tjgnp0_1mgmpxf f22iagw f6jr5hl f1vx9l62"
           id="root"
           role="radiogroup"
@@ -11368,6 +11372,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
         class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
       >
         <div
+          aria-label="Choose an option"
           class="fui-RadioGroup ___1tjgnp0_1mgmpxf f22iagw f6jr5hl f1vx9l62"
           id="root"
           role="radiogroup"

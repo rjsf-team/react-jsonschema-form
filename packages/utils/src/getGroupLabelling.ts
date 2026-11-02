@@ -11,9 +11,11 @@ import widgetDrawsLabelText from './widgetDrawsLabelText.ts';
  * slot, since it is the id of the label the template draws. The label is drawn with no `for`, which can't name the
  * group's wrapper, so the group points `aria-labelledby` at it instead, where its field's plan names the group by no
  * other label. A widget draws the label where `widgetDrawsLabelText()` says it does; a group whose label
- * `ui:label: false` hides is named by the `aria-label` its plan gives it
+ * `ui:label: false` hides is named by the `aria-label` its plan gives it, and a `radiogroup` no label names by the one
+ * `getGroupAttributes()` gives it, given the `registry`
  *
- * @param props - The widget's `id`, `label`, `hideLabel` and `presentation`
+ * @param props - The widget's `id`, `label`, `hideLabel` and `presentation`, and for a group of radios its
+ *   `placeholder` and `registry`
  * @param role - The role of the group's wrapper
  * @returns - `drawsLabel` and `labelId` for the label, and the `group` and `option` attributes
  */
@@ -21,7 +23,11 @@ export default function getGroupLabelling<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: Pick<WidgetProps<T, S, F>, 'id' | 'label' | 'hideLabel' | 'presentation'>, role: GroupRole) {
+>(
+  props: Pick<WidgetProps<T, S, F>, 'id' | 'label' | 'hideLabel' | 'presentation'> &
+    Partial<Pick<WidgetProps<T, S, F>, 'placeholder' | 'registry'>>,
+  role: GroupRole,
+) {
   const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const labelId = getLabelId<T, S, F>(props);
   const { group, option } = getGroupAttributes<T, S, F>(props, role, drawsLabel ? labelId : undefined);

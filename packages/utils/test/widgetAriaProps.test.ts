@@ -61,17 +61,14 @@ describe('widgetAriaProps()', () => {
       expect(widgetAriaProps(props)['aria-label']).toBe('Select ...');
       expect(widgetAriaProps({ ...props, placeholder: 'Pick one' })['aria-label']).toBe('Pick one');
     });
-    it('by the label text of a plan whose template draws no label', () => {
+    it('by nothing where its plan has the widget draw its label, unless its caller names it', () => {
       const presentation = resolveFieldPresentation({
         id: 'root_color',
         declaration: { ...TEMPLATE, label: 'self' },
         label: 'Color',
       });
-      expect(widgetAriaProps({ ...colorProps, presentation })['aria-label']).toBe('Color');
-    });
-    it('by nothing where the widget names it itself, unless its caller names it', () => {
-      expect(widgetAriaProps(untitled, true)['aria-label']).toBeUndefined();
-      expect(widgetAriaProps({ ...untitled, 'aria-label': 'Paint' }, true)['aria-label']).toBe('Paint');
+      expect(widgetAriaProps({ ...colorProps, presentation })['aria-label']).toBeUndefined();
+      expect(widgetAriaProps({ ...colorProps, presentation, 'aria-label': 'Paint' })['aria-label']).toBe('Paint');
     });
   });
   it("leaves out the selected option's description when its plan hides the label, though hideLabel is false", () => {

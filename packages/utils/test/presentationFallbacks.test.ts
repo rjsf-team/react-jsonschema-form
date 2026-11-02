@@ -240,7 +240,7 @@ describe('getControlAriaLabel()', () => {
     expect(getControlAriaLabel({ label: 'Color', hideLabel: true, registry }, '')).toBe('Color');
   });
   it('gives none where the widget draws a label that names the control', () => {
-    expect(getControlAriaLabel({ label: 'Color', hideLabel: true, registry }, undefined, true)).toBeUndefined();
+    expect(getControlAriaLabel({ label: 'Color', registry })).toBeUndefined();
   });
   it('gives none where a label the template draws names the control', () => {
     expect(getControlAriaLabel({ label: 'Foo', presentation: plan(), registry })).toBeUndefined();

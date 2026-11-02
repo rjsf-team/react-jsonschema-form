@@ -65,7 +65,7 @@ function SelectWidget<
   // dropdown, whose contents are its value, is named by the field's label, its placeholder or the translated prompt
   const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const labelId = getLabelId<T, S, F>(props);
-  const ariaProps = widgetAriaProps(props, drawsLabel);
+  const ariaProps = widgetAriaProps(props);
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);

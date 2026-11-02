@@ -745,7 +745,7 @@ describe('chakra-ui CheckboxesWidget', () => {
 describe('chakra-ui RadioWidget', () => {
   test.each([
     ['whose label is hidden by its text', { title: 'Color' }, { 'ui:label': false }, 'Color'],
-    ['with no label unnamed', {}, {}, ''],
+    ['with no label by the translated prompt', {}, {}, 'Choose an option'],
   ])('names a group %s, rather than by the description or by an id no element has', (_, title, uiSchema, name) => {
     render(
       <WrappedForm

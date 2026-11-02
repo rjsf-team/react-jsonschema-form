@@ -4819,6 +4819,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                 class="ant-form-item-control-input-content"
               >
                 <div
+                  aria-label="Choose an option"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"
@@ -15382,6 +15383,7 @@ exports[`single fields > radio field 1`] = `
                 class="ant-form-item-control-input-content"
               >
                 <div
+                  aria-label="Choose an option"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"
@@ -16803,6 +16805,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                 class="ant-form-item-control-input-content"
               >
                 <div
+                  aria-label="Choose an option"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"
@@ -16891,6 +16894,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                 class="ant-form-item-control-input-content"
               >
                 <div
+                  aria-label="Choose an option"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"
@@ -17259,6 +17263,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                 class="ant-form-item-control-input-content"
               >
                 <div
+                  aria-label="Choose an option"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"

@@ -27,7 +27,6 @@ import {
   useSelectFocusHandlers,
   widgetAriaProps,
   widgetDrawsLabel,
-  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { describeByHelperText, getMuiProps, helperTextSlot, inputLabelId, withSlotProps } from '../util.ts';
@@ -110,11 +109,7 @@ export default function SelectWidget<
   // `htmlInput` given through `rjsfSlotProps` is the form author's own choice for that element, so it is applied last
   const textFieldOverrides = { ...otherMuiProps, ...textFieldRemainingProps } as TextFieldProps;
   const textFieldId = textFieldOverrides.id ?? id;
-  const ariaProps = describeByHelperText(
-    widgetAriaProps(props, widgetDrawsLabelText<T, S, F>(props)),
-    textFieldId,
-    textFieldOverrides.helperText,
-  );
+  const ariaProps = describeByHelperText(widgetAriaProps(props), textFieldId, textFieldOverrides.helperText);
   const ownLabel = labelValue(label || undefined, hideLabel, undefined);
   const textFieldLabel = 'label' in textFieldOverrides ? textFieldOverrides.label : ownLabel;
   const labelId = muiSlotProps?.inputLabel?.id ?? inputLabelId(textFieldId);

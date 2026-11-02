@@ -2819,6 +2819,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
     >
       <div>
         <div
+          aria-label="Choose an option"
           class="mb-0"
           id="root"
           role="radiogroup"
@@ -9619,6 +9620,7 @@ exports[`single fields > radio field 1`] = `
     >
       <div>
         <div
+          aria-label="Choose an option"
           class="mb-0"
           id="root"
           role="radiogroup"
@@ -10391,6 +10393,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
     >
       <div>
         <div
+          aria-label="Choose an option"
           class="mb-0"
           id="root"
           role="radiogroup"
@@ -10457,6 +10460,7 @@ exports[`single fields > select field single choice form disabled using radio wi
     >
       <div>
         <div
+          aria-label="Choose an option"
           class="mb-0"
           id="root"
           role="radiogroup"
@@ -10691,6 +10695,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
     >
       <div>
         <div
+          aria-label="Choose an option"
           class="mb-0"
           id="root"
           role="radiogroup"

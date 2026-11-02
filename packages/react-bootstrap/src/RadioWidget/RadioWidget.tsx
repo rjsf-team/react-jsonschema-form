@@ -18,20 +18,7 @@ export default function RadioWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    htmlName,
-    options,
-    value,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    onChange,
-    onBlur,
-    onFocus,
-    presentation,
-  } = props;
+  const { id, htmlName, options, value, required, disabled, readonly, autofocus, onChange, onBlur, onFocus } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -45,10 +32,7 @@ export default function RadioWidget<
 
   const inline = Boolean(options?.inline);
   const invalid = hasWidgetErrors<T, S, F>(props);
-  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
-    { id, presentation },
-    'radiogroup',
-  );
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(props, 'radiogroup');
 
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (

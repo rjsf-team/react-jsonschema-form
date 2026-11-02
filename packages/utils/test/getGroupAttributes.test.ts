@@ -1,5 +1,10 @@
-import type { FieldPresentation, ResolvedPresentationDeclaration } from '../src/index.ts';
-import { ariaDescribedByIds, getGroupAttributes, resolveFieldPresentation } from '../src/index.ts';
+import type { FieldPresentation, Registry, ResolvedPresentationDeclaration } from '../src/index.ts';
+import {
+  ariaDescribedByIds,
+  englishStringTranslator,
+  getGroupAttributes,
+  resolveFieldPresentation,
+} from '../src/index.ts';
 
 const ID = 'root_foo';
 const GROUP: ResolvedPresentationDeclaration = {
@@ -86,6 +91,40 @@ describe('getGroupAttributes()', () => {
     expect(getGroupAttributes({ id: ID }, 'radiogroup')).toEqual({
       group: { role: 'radiogroup' },
       option: { 'aria-describedby': ariaDescribedByIds(ID) },
+    });
+  });
+
+  describe('names a radiogroup no label names, where its caller hands it the registry', () => {
+    const registry = { translateString: englishStringTranslator } as Registry;
+    const untitled = plan({ label: '' });
+
+    it('by its placeholder, else the translated prompt', () => {
+      expect(getGroupAttributes({ id: ID, presentation: untitled, registry }, 'radiogroup').group).toEqual({
+        role: 'radiogroup',
+        'aria-label': 'Choose an option',
+      });
+      const placeholderProps = { id: ID, presentation: untitled, placeholder: 'Pick one', registry };
+      expect(getGroupAttributes(placeholderProps, 'radiogroup').group['aria-label']).toBe('Pick one');
+    });
+
+    it('by its label, rendered without a plan or a label the widget draws', () => {
+      expect(getGroupAttributes({ id: ID, label: 'Foo', registry }, 'radiogroup').group['aria-label']).toBe('Foo');
+    });
+
+    it('by nothing where a label names it', () => {
+      expect(getGroupAttributes({ id: ID, presentation: plan(), registry }, 'radiogroup').group).toEqual({
+        role: 'radiogroup',
+        'aria-labelledby': `${ID}__label`,
+      });
+    });
+
+    it('by nothing for a group of another role, or one handed no registry, such as a rating', () => {
+      expect(getGroupAttributes({ id: ID, presentation: untitled, registry }, 'group').group).toEqual({
+        role: 'group',
+      });
+      expect(getGroupAttributes({ id: ID, presentation: untitled }, 'radiogroup').group).toEqual({
+        role: 'radiogroup',
+      });
     });
   });
 });

@@ -39,7 +39,6 @@ export default function RadioWidget<
     onBlur,
     onFocus,
     className,
-    presentation,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -58,10 +57,7 @@ export default function RadioWidget<
   const inline = Boolean(options?.inline);
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '');
   const radioClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) });
-  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
-    { id, presentation },
-    'radiogroup',
-  );
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(props, 'radiogroup');
 
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (

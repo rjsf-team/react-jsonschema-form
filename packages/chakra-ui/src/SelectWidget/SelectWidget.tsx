@@ -46,7 +46,7 @@ export default function SelectWidget<
   } = props;
   const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const labelId = getLabelId<T, S, F>(props);
-  const ariaProps = widgetAriaProps(props, drawsLabel);
+  const ariaProps = widgetAriaProps(props);
   const labelledBy = labelledByOrNone(ariaProps['aria-labelledby'], drawsLabel);
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);

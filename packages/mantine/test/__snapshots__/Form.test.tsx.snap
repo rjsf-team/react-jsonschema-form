@@ -4479,7 +4479,14 @@ exports[`radio widget with options sharing a String() in the realValue format (#
         class="m_46b77525 mantine-InputWrapper-root mantine-RadioGroup-root"
         id="root"
       >
+        <span
+          hidden=""
+          id="root__title"
+        >
+          Choose an option
+        </span>
         <div
+          aria-labelledby="root__title"
           role="radiogroup"
         >
           <div
@@ -14895,7 +14902,14 @@ exports[`single fields > radio field 1`] = `
         class="m_46b77525 mantine-InputWrapper-root mantine-RadioGroup-root"
         id="root"
       >
+        <span
+          hidden=""
+          id="root__title"
+        >
+          Choose an option
+        </span>
         <div
+          aria-labelledby="root__title"
           role="radiogroup"
         >
           <div
@@ -17225,7 +17239,14 @@ exports[`single fields > select field single choice enumDisabled using radio wid
         class="m_46b77525 mantine-InputWrapper-root mantine-RadioGroup-root"
         id="root"
       >
+        <span
+          hidden=""
+          id="root__title"
+        >
+          Choose an option
+        </span>
         <div
+          aria-labelledby="root__title"
           role="radiogroup"
         >
           <div
@@ -17379,7 +17400,14 @@ exports[`single fields > select field single choice form disabled using radio wi
         class="m_46b77525 mantine-InputWrapper-root mantine-RadioGroup-root"
         id="root"
       >
+        <span
+          hidden=""
+          id="root__title"
+        >
+          Choose an option
+        </span>
         <div
+          aria-labelledby="root__title"
           role="radiogroup"
         >
           <div
@@ -18179,7 +18207,14 @@ exports[`single fields > select field single choice uiSchema disabled using radi
         class="m_46b77525 mantine-InputWrapper-root mantine-RadioGroup-root"
         id="root"
       >
+        <span
+          hidden=""
+          id="root__title"
+        >
+          Choose an option
+        </span>
         <div
+          aria-labelledby="root__title"
           role="radiogroup"
         >
           <div

@@ -150,17 +150,17 @@ describe('aria-labelledby', () => {
     expect(screen.queryByRole('combobox', { name: /An option/ })).not.toBeInTheDocument();
   });
 
-  test.each([
-    ['checkboxes', 'group', checkboxesSchema, { 'ui:widget': 'checkboxes' }],
-    ['radio', 'radiogroup', enumSchema, { 'ui:widget': 'radio' }],
-  ] as [string, string, RJSFSchema, UiSchema][])(
-    '%s widget leaves its group unlabelled when the field has no label',
-    (_, role, schema, uiSchema) => {
-      renderField(schema, uiSchema);
+  test('checkboxes widget leaves its group unlabelled when the field has no label', () => {
+    renderField(checkboxesSchema, { 'ui:widget': 'checkboxes' });
 
-      expect(screen.getByRole(role)).not.toHaveAttribute('aria-labelledby');
-    },
-  );
+    expect(screen.getByRole('group')).not.toHaveAttribute('aria-labelledby');
+  });
+
+  test('radio widget names its group by the translated prompt when the field has no label', () => {
+    renderField(enumSchema, { 'ui:widget': 'radio' });
+
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Choose an option');
+  });
 
   test.each([
     ['checkboxes', 'ui:options', 'group', checkboxesSchema, 'checkboxes'],

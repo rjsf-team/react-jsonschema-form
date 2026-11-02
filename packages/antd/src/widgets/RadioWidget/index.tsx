@@ -38,6 +38,8 @@ export default function RadioWidget<
   required,
   value,
   presentation,
+  label,
+  placeholder,
 }: WidgetProps<T, S, F>) {
   const control = useControlState<T, S, F>({ disabled, readonly, required, registry });
 
@@ -56,7 +58,7 @@ export default function RadioWidget<
 
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, emptyValue);
   const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
-    { id, presentation },
+    { id, presentation, label, placeholder, registry },
     'radiogroup',
   );
 
