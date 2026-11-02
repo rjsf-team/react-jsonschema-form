@@ -1409,7 +1409,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // A schema change sanitizes the data for the new schema's tree, as an edit does for the tree it leads to, and leaves
   // the data of a disabled or read-only form as it is, as an edit there does
   const isSanitized = !props.disabled && !props.readonly;
-  const options = { isSanitized, clears: isSanitized ? current?.formData : undefined };
+  const options = { isSanitized, clears: isSanitized && fillsOverClears(props) ? current?.formData : undefined };
   const { formData, context, areSchemaUtilsReused } = deriveFormData(current, inputFormData, options, props);
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   const baseline = current ? rederiveBaseline(current, formData, options, props, context.schemaUtils) : formData;
@@ -1511,6 +1511,16 @@ function heldPathOf<T>(change: FieldChange<T>): FieldPathList | undefined {
   return change.isFieldEdit ? (change.editedPath ?? fieldPathToList(change.fieldPath)) : undefined;
 }
 
+/** Whether the form's defaults can replace an own `undefined`: only this mode's fill does, so under the others there is
+ * no clear to keep and nothing has to be walked
+ *
+ * @param props - The current props
+ * @returns - True if the fill replaces a clear
+ */
+function fillsOverClears<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>): boolean {
+  return props.defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
+}
+
 /** The data whose clears `change` keeps, laid out as `written`, the data it wrote; see `keepClears()`. A field's own
  * edit keeps the committed data's clears and its own: a container it writes, as an option switch writes one, keeps
  * only the clears the committed data held there, under the keys the edit moved them to, since the `undefined` a switch
@@ -1566,9 +1576,8 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
   const { newValue, fieldPath } = change;
   // The single place where a `FieldPath` is parsed back into segments for writing into the formData
   const path = fieldPathToList(fieldPath);
-  const { omitExtraData, liveOmit, disabled, readonly, defaultFormStateBehavior } = props;
+  const { omitExtraData, liveOmit, disabled, readonly } = props;
   const { formData: oldFormData } = current;
-  const fillsOverClears = defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
   // The derivation below hands back the context for the data it settled on, resolved schema included, so committing
   // whatever it returns is what keeps state's resolved schema and the utilities that resolved it in step.
   let context: RenderContext<T, S, F> = current;
@@ -1607,8 +1616,8 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
         isSanitized: editedPath !== undefined && !disabled && !readonly,
         edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
         heldPath: heldPathOf(change),
-        // Only this mode's fill replaces an own `undefined`, so under the others there is nothing to keep on a keystroke
-        clears: fillsOverClears && !disabled && !readonly ? clearsOf(change, oldFormData, formData, path) : undefined,
+        clears:
+          fillsOverClears(props) && !disabled && !readonly ? clearsOf(change, oldFormData, formData, path) : undefined,
       },
       props,
     );
