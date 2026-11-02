@@ -12,10 +12,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -48,7 +48,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -169,7 +169,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -380,7 +380,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -393,7 +393,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="flex flex-wrap gap-4"
+                    class="flex flex-wrap gap-4 w-full"
                   >
                     <div
                       class="flex-grow"
@@ -513,7 +513,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </div>
                     </div>
                     <div
-                      class="flex flex-wrap gap-4"
+                      class="flex flex-wrap gap-4 w-full"
                     >
                       <div
                         class="flex-grow"
@@ -1473,7 +1473,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -1573,10 +1573,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -1609,7 +1609,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -1730,7 +1730,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -1941,7 +1941,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -1954,7 +1954,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="flex flex-wrap gap-4"
+                    class="flex flex-wrap gap-4 w-full"
                   >
                     <div
                       class="flex-grow"
@@ -2074,7 +2074,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </div>
                     </div>
                     <div
-                      class="flex flex-wrap gap-4"
+                      class="flex flex-wrap gap-4 w-full"
                     >
                       <div
                         class="flex-grow"
@@ -3034,7 +3034,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -3134,10 +3134,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -3170,7 +3170,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -3291,7 +3291,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -3502,7 +3502,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -3515,7 +3515,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="flex flex-wrap gap-4"
+                    class="flex flex-wrap gap-4 w-full"
                   >
                     <div
                       class="flex-grow"
@@ -3635,7 +3635,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </div>
                     </div>
                     <div
-                      class="flex flex-wrap gap-4"
+                      class="flex flex-wrap gap-4 w-full"
                     >
                       <div
                         class="flex-grow"
@@ -4595,7 +4595,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -4695,10 +4695,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -4731,7 +4731,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -4852,7 +4852,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -5063,7 +5063,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -5076,7 +5076,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="flex flex-wrap gap-4"
+                    class="flex flex-wrap gap-4 w-full"
                   >
                     <div
                       class="flex-grow"
@@ -5196,7 +5196,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </div>
                     </div>
                     <div
-                      class="flex flex-wrap gap-4"
+                      class="flex flex-wrap gap-4 w-full"
                     >
                       <div
                         class="flex-grow"
@@ -6156,7 +6156,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -6256,7 +6256,7 @@ exports[`Three even column grid > renders person and address in three columns, n
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
             class="flex-grow"
@@ -7669,7 +7669,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
             class="flex-grow"

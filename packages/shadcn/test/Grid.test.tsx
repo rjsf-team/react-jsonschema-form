@@ -217,7 +217,7 @@ describe('GridTemplate span', () => {
     expect(column).toHaveClass('md:col-span-6');
     expect(column.style.gridColumn).toBe('');
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` in "root" is ignored, since the column has a `col-span-*` class of its own',
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a `col-span-*` class of its own',
     );
   });
   test('lays a row without grid-cols out on 12 tracks, a column without a span across all of them', () => {
@@ -229,10 +229,27 @@ describe('GridTemplate span', () => {
     expect(row).not.toHaveClass('grid-cols-12');
     expect(row).not.toHaveClass('[:where(&)>*]:col-span-full');
   });
+  test.each([{ gridTemplateColumns: 'repeat(3, 1fr)' }, { gridTemplateAreas: '"a b"' }])(
+    'leaves a row with a %o style of its own to it',
+    (style) => {
+      const { row } = renderGridColumn(Form, {}, { style });
+      expect(row).toHaveStyle(style);
+      expect(row).not.toHaveClass('grid-cols-12');
+      expect(row).not.toHaveClass('[:where(&)>*]:col-span-full');
+    },
+  );
+  test.each([{ gridTemplate: 'auto / 1fr 1fr' }, { grid: 'auto / 1fr 1fr' }])(
+    'leaves a row with a %o shorthand style of its own to it',
+    (style) => {
+      const { row } = renderGridColumn(Form, {}, { style });
+      expect(row).not.toHaveClass('grid-cols-12');
+      expect(row).not.toHaveClass('[:where(&)>*]:col-span-full');
+    },
+  );
   test('warns that a half step is not a whole number', () => {
     renderGridColumn(Form, { span: 4.5 });
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` of 4.5 in "root" is not a whole number, which this theme\'s grid needs',
+      'A layout grid column\'s `span` of 4.5 in "root_name" is not a whole number, which this theme\'s grid needs',
     );
   });
 });

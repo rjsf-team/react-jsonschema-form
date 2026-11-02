@@ -237,7 +237,7 @@ describe('GridTemplate span', () => {
     const { column } = renderGridColumn(Form, { span: 4, style: { gridColumn: '1 / span 6' } });
     expect(column).toHaveStyle({ gridColumn: '1 / span 6' });
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` in "root" is ignored, since the column has a `gridColumn` style of its own',
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a `gridColumn` style of its own',
     );
   });
   test('lays a row without columns out on 12 tracks, a column without a span across all of them', () => {
@@ -252,18 +252,30 @@ describe('GridTemplate span', () => {
   });
   test('leaves a row with a gridTemplateColumns style of its own to it', () => {
     const { row, column } = renderGridColumn(Form, {}, { style: { gridTemplateColumns: 'repeat(3, 1fr)' } });
-    expect(row).toHaveStyle({ gridTemplateColumns: 'repeat(3, 1fr)' });
+    expect(row).toHaveStyle({ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' });
     expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
   });
+  test.each([{ gridTemplate: 'auto / 1fr 1fr' }, { grid: 'auto / 1fr 1fr' }])(
+    'leaves a row with a %o shorthand style of its own to it',
+    (style) => {
+      const { row } = renderGridColumn(Form, {}, { style });
+      expect(row).toHaveStyle({ display: 'grid' });
+      expect(row).not.toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+    },
+  );
   test('warns that a half step is not a whole number', () => {
     renderGridColumn(Form, { span: 4.5 });
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` of 4.5 in "root" is not a whole number, which this theme\'s grid needs',
+      'A layout grid column\'s `span` of 4.5 in "root_name" is not a whole number, which this theme\'s grid needs',
     );
   });
   test('leaves a row with a gridTemplateAreas style of its own to it', () => {
     const { row } = renderGridColumn(Form, {}, { style: { gridTemplateAreas: '"a b"' } });
-    expect(row).toHaveStyle({ gridTemplateAreas: '"a b"' });
+    expect(row).toHaveStyle({ display: 'grid', gridTemplateAreas: '"a b"' });
     expect(row).not.toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+  });
+  test("keeps a row's own display beside a template style", () => {
+    const { row } = renderGridColumn(Form, {}, { style: { display: 'inline-grid', gridTemplateColumns: '1fr 1fr' } });
+    expect(row).toHaveStyle({ display: 'inline-grid' });
   });
 });

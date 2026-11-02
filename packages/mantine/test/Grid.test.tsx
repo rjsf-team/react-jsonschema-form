@@ -228,4 +228,31 @@ describe('GridTemplate span', () => {
     const styles = Array.from(document.querySelectorAll('style'), (style) => style.textContent).join('');
     expect(styles).toContain('calc(37.5%');
   });
+  test('grows a row without a fluid container to fill its line, so a row nested in a row takes a line of its own', () => {
+    expect(renderGridColumn(WrappedForm, {}, { fluid: false }).row).toHaveStyle({ flex: '1 1 100%' });
+  });
+  test("leaves a row's own w to size it", () => {
+    const { row } = renderGridColumn(WrappedForm, {}, { fluid: false, w: '50%' });
+    expect(row).toHaveStyle({ width: '50%' });
+    expect(row).not.toHaveStyle({ flex: '1 1 100%' });
+  });
+  // A responsive style prop is written to a class, which the fill's inline `flex` would beat
+  test("leaves a row's own responsive flex to size it", () => {
+    const { row } = renderGridColumn(WrappedForm, {}, { fluid: false, flex: { base: '0 0 50%', sm: '0 0 40%' } });
+    expect(row).not.toHaveStyle({ flexGrow: 1 });
+    expect(row).not.toHaveStyle({ flexBasis: '100%' });
+  });
+  test.each([
+    [{ width: '50%' }, { width: '50%' }],
+    [[{ padding: '4px' }, { width: '50%' }], { width: '50%' }],
+    [[{ padding: '4px' }, [{ width: '50%' }]], { width: '50%' }],
+    [{ flexBasis: '50%' }, { flexBasis: '50%' }],
+    [{ flexGrow: 0 }, { flexGrow: 0 }],
+    [() => ({ width: '50%' }), { width: '50%' }],
+  ])("leaves a row's own flex or width style, %o, to size it", (style, ownStyle) => {
+    const { row } = renderGridColumn(WrappedForm, {}, { fluid: false, style });
+    expect(row).toHaveStyle(ownStyle);
+    expect(row).not.toHaveStyle({ flexGrow: 1 });
+    expect(row).not.toHaveStyle({ flexBasis: '100%' });
+  });
 });

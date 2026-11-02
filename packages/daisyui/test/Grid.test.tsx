@@ -147,7 +147,7 @@ describe('GridTemplate span', () => {
   test("prefers a column's own flex style", () => {
     expect(renderGridColumn(Form, { span: 4, style: { flex: '1 1 auto' } }).column).toHaveStyle({ flex: '1 1 auto' });
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` in "root" is ignored, since the column has a width of its own',
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a width of its own',
     );
   });
   test("leaves a column's span off beside a flexBasis style of its own", () => {
@@ -159,12 +159,15 @@ describe('GridTemplate span', () => {
     expect(column).toHaveClass('md:basis-1/2');
     expect(column).not.toHaveAttribute('style');
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` in "root" is ignored, since the column has a width of its own',
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a width of its own',
     );
   });
   test("keeps a column's span beside a max-w class, which caps its width without setting it", () => {
     const { column } = renderGridColumn(Form, { span: 4, className: 'max-w-sm' });
     expect(column).toHaveStyle({ flex: '0 0 calc((100% + 1rem) * 4 / 12 - 1rem)' });
     expect(warnings.consoleSpy).not.toHaveBeenCalled();
+  });
+  test('fills the width of a row without a class of its own, so a row nested in a row takes a line of its own', () => {
+    expect(renderGridColumn(Form, {}).row).toHaveClass('w-full');
   });
 });

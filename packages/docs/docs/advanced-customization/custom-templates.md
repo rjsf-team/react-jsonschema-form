@@ -912,7 +912,7 @@ The following props are passed to the `GridTemplate`:
 - `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
 - `span`: Optional number of twelfths of a row a column spans, which every theme's `GridTemplate` converts to its own grid
-- `fieldId`: The id of the field whose layout grid holds the row or column, for naming it in a warning; keep it off the element you render
+- `fieldId`: For a column, the id of the first field it holds; for a row, or a column holding no field of its own, the id of the field whose layout grid holds it. It's for naming the row or column in a warning; keep it off the element you render
 
 ## MarkdownTemplate
 

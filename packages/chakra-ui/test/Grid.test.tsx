@@ -222,7 +222,7 @@ describe('GridTemplate span', () => {
   test("prefers a column's own colSpan", () => {
     expect(renderGridColumn(WrappedForm, { span: 4, colSpan: 6 }).column).toHaveStyle({ gridColumn: 'span 6/span 6' });
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` in "root" is ignored, since the column has a `colSpan` of its own',
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a `colSpan` of its own',
     );
   });
   test('lays a row without templateColumns out on 12 tracks, a column without a span across all of them', () => {
@@ -240,10 +240,28 @@ describe('GridTemplate span', () => {
     expect(row).toHaveStyle({ gridTemplateColumns: 'repeat(3, 1fr)' });
     expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
   });
+  test.each([
+    { gridTemplate: 'auto / 1fr 1fr' },
+    { grid: 'auto / 1fr 1fr' },
+    { style: { gridTemplate: 'auto / 1fr 1fr' } },
+    { style: { grid: 'auto / 1fr 1fr' } },
+  ])('leaves a row with a %o grid shorthand of its own to it', (rowProps) => {
+    const { row, column } = renderGridColumn(WrappedForm, {}, rowProps);
+    expect(row).not.toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+    expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
+  });
+  test.each([
+    { css: { gridTemplateColumns: '1fr 1fr' } },
+    { css: [{ padding: '4px' }, { gridTemplate: 'auto / 1fr 1fr' }] },
+  ])('leaves a row with a template in its css, %o, to it', (rowProps) => {
+    const { row, column } = renderGridColumn(WrappedForm, {}, rowProps);
+    expect(row).not.toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+    expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
+  });
   test('warns that a half step is not a whole number', () => {
     renderGridColumn(WrappedForm, { span: 4.5 });
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` of 4.5 in "root" is not a whole number, which this theme\'s grid needs',
+      'A layout grid column\'s `span` of 4.5 in "root_name" is not a whole number, which this theme\'s grid needs',
     );
   });
   test('leaves a row with templateAreas of its own to it', () => {
@@ -251,4 +269,13 @@ describe('GridTemplate span', () => {
     expect(row).not.toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
     expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
   });
+  test.each([{ gridTemplateColumns: 'repeat(3, 1fr)' }, { gridTemplateAreas: '"a b"' }])(
+    'leaves a row with a %o style of its own to it',
+    (style) => {
+      const { row, column } = renderGridColumn(WrappedForm, {}, { style });
+      expect(row).toHaveStyle(style);
+      expect(row).not.toHaveStyle({ gridTemplateColumns: 'repeat(12, minmax(0, 1fr))' });
+      expect(column).not.toHaveStyle({ gridColumn: '1/-1' });
+    },
+  );
 });

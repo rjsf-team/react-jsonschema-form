@@ -447,17 +447,18 @@ Every theme's `GridTemplate` reads a column's `span` as twelfths of a row and co
 | `@rjsf/shadcn`          | the column's `grid-column` style                                      | No                                               |
 
 Use whole numbers in the themes without half steps: their grids span whole tracks or name a class per width, and a half
-step there logs a warning. daisyui's column widths assume its row's default `gap-4`, so a row given another gap gets
+step there logs a warning. antd rounds a `span` finer than a half step, such as `4.3`, to the nearest one and logs a
+warning saying so. daisyui's column widths assume its row's default `gap-4`, so a row given another gap gets
 slightly wrong widths, and a full row of spans may wrap.
 
-A theme's own width prop wins over `span`: `size` in mui, `xs` in react-bootstrap, `colSpan` in chakra-ui, a `gridColumn`
+A theme's own width prop wins over `span`: a `flex` prop or a `flex`, `flexBasis` or `width` style in antd, `size` in mui, `xs` in react-bootstrap, `colSpan` in chakra-ui, a `gridColumn`
 style in fluentui-rc, a `flex`, `flexBasis` or `width` style or a `basis-*` or `w-*` class in daisyui, a `col-xs-*` class in bootstrap3 and a `col-span-*` class in shadcn,
 responsive ones such as `md:col-span-6` included. The column then ignores its `span`, and RJSF logs a warning saying so,
 once. antd's breakpoint props, such as `md`, take over from `span` at their breakpoints, as they do over antd's own
 `span`, and so do bootstrap3's `col-sm-*`, `col-md-*` and `col-lg-*` classes.
 
 In chakra-ui, fluentui-rc and shadcn, a `ui:row` without a column template of its own (`templateColumns`, `templateAreas`, `columns`,
-a `gridTemplateColumns` or `gridTemplateAreas` style or a `grid-cols-*` class) lays out on 12 tracks, where each child is full width unless it
+a `gridTemplateColumns`, `gridTemplateAreas`, `gridTemplate` or `grid` style, the same keys in chakra-ui's `css`, or a `grid-cols-*` class) lays out on 12 tracks, where each child is full width unless it
 spans fewer. A row with a template of its own keeps it, and a `span` then counts that template's tracks, as it counts the
 tracks of a mantine or mui row given `columns` of its own.
 

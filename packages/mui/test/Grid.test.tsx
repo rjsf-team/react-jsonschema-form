@@ -251,7 +251,29 @@ describe('GridTemplate span', () => {
     expect(column).toHaveClass('MuiGrid-grid-xs-6');
     expect(column).not.toHaveClass('MuiGrid-grid-xs-4');
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` in "root" is ignored, since the column has a `size` of its own',
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a `size` of its own',
     );
+  });
+  test('grows a row without a size to fill its line, so a row nested in a row takes a line of its own', () => {
+    const { row, column } = renderGridColumn(Form, {}, { sx: { padding: '4px' } });
+    expect(row).toHaveStyle({ flex: '1 1 100%', padding: '4px' });
+    expect(column).not.toHaveStyle({ flex: '1 1 100%' });
+  });
+  test("leaves a row's own size to size it", () => {
+    expect(renderGridColumn(Form, {}, { size: 6 }).row).not.toHaveStyle({ flex: '1 1 100%' });
+  });
+  test.each([
+    [{ sx: { width: '50%' } }, { width: '50%' }],
+    [{ sx: [{ padding: '4px' }, { width: '50%' }] }, { width: '50%' }],
+    [{ style: { width: '50%' } }, { width: '50%' }],
+    [{ sx: { flexBasis: '50%' } }, { flexBasis: '50%' }],
+    [{ style: { flexGrow: 0 } }, { flexGrow: 0 }],
+    [{ sx: () => ({ width: '50%' }) }, { width: '50%' }],
+    [{ sx: [{ padding: '4px' }, () => ({ width: '50%' })] }, { width: '50%' }],
+  ])("leaves a row's own %o flex or width to size it", (rowProps, ownStyle) => {
+    const { row } = renderGridColumn(Form, {}, rowProps);
+    expect(row).toHaveStyle(ownStyle);
+    expect(row).not.toHaveStyle({ flexGrow: 1 });
+    expect(row).not.toHaveStyle({ flexBasis: '100%' });
   });
 });

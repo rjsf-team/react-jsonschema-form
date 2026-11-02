@@ -3,15 +3,13 @@ import { LOOKUP_MAP_NAME } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
-// Each theme's row props that a column's `span` leaves to it: its gaps, the `row` class Bootstrap 3's columns need, and
-// the width a mui or daisyui row needs to fill a line of the row around it, since it is that row's flex item too
+// Each theme's row props that a column's `span` leaves to it: its gaps and the `row` class Bootstrap 3's columns need
 const ROW_PROPS: Record<string, object | undefined> = {
   antd: { gutter: [6, 0] },
   bootstrap3: { className: 'row' },
   'chakra-ui': { gap: 2 },
-  'daisy-ui': { style: { width: '100%' } },
   'fluentui-rc': { style: { columnGap: '5px', rowGap: '5px' } },
-  mui: { spacing: 2, size: 12 },
+  mui: { spacing: 2 },
   shadcn: { className: 'gap-4' },
 };
 

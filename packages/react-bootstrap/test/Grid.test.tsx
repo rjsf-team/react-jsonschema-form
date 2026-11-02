@@ -227,13 +227,13 @@ describe('GridTemplate span', () => {
     expect(column).toHaveClass('col-6');
     expect(column).not.toHaveClass('col-4');
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` in "root" is ignored, since the column has an `xs` of its own',
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has an `xs` of its own',
     );
   });
   test('warns that a half step is not a whole number', () => {
     renderGridColumn(Form, { span: 4.5 });
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` of 4.5 in "root" is not a whole number, which this theme\'s grid needs',
+      'A layout grid column\'s `span` of 4.5 in "root_name" is not a whole number, which this theme\'s grid needs',
     );
   });
 });

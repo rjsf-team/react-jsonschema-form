@@ -2038,3 +2038,91 @@ describe('a span on a ui:row', () => {
     expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
   });
 });
+
+describe("a column's fieldId", () => {
+  const consoleWarnSuppression = setupConsoleWarnSuppression();
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      a: { type: 'string' },
+      b: { type: 'string' },
+      person: { type: 'object', properties: { first: { type: 'string' } } },
+      list: { type: 'array', items: { type: 'string' } },
+    },
+  };
+  const recordFieldIds = (row: GenericObjectType) => {
+    const fieldIds: { column?: boolean; fieldId?: string }[] = [];
+    function RecordingGridTemplate({ children, column, fieldId }: GridTemplateProps) {
+      fieldIds.push({ column, fieldId });
+      return <div>{children}</div>;
+    }
+    createFormComponent({
+      schema,
+      uiSchema: { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': row } },
+      templates: { GridTemplate: RecordingGridTemplate },
+    });
+    return fieldIds;
+  };
+
+  test("is the id of a ui:col's first field, named by a string or an object", () => {
+    expect(
+      recordFieldIds({
+        children: [{ 'ui:col': { children: ['a', 'b'] } }, { 'ui:col': { children: [{ name: 'b' }] } }],
+      }),
+    ).toEqual([
+      { column: undefined, fieldId: 'root' },
+      { column: true, fieldId: 'root_a' },
+      { column: true, fieldId: 'root_b' },
+    ]);
+  });
+  test("is the id of each ui:columns column's own field, down a dotted path", () => {
+    expect(recordFieldIds({ children: [{ 'ui:columns': { children: ['a', 'person.first'] } }] })).toEqual([
+      { column: undefined, fieldId: 'root' },
+      { column: true, fieldId: 'root_a' },
+      { column: true, fieldId: 'root_person_first' },
+    ]);
+  });
+  test('is the id an array item field renders with, for a column naming it by index', () => {
+    expect(recordFieldIds({ children: [{ 'ui:col': { children: ['list.1'] } }] })).toEqual([
+      { column: undefined, fieldId: 'root' },
+      { column: true, fieldId: 'root_list_1' },
+    ]);
+  });
+  test("is the grid's own id for a ui:col naming no field of its own", () => {
+    expect(
+      recordFieldIds({ children: [{ 'ui:col': { children: [{ 'ui:row': { children: ['a'] } }] } }] }).slice(0, 3),
+    ).toEqual([
+      { column: undefined, fieldId: 'root' },
+      { column: true, fieldId: 'root' },
+      { column: undefined, fieldId: 'root' },
+    ]);
+  });
+  test('skips a render cell whose name the schema does not hold', () => {
+    const Nav = () => <nav />;
+    expect(
+      recordFieldIds({
+        children: [
+          { 'ui:col': { children: [{ name: 'nav', render: Nav }, 'b'] } },
+          { 'ui:col': { children: [{ name: 'nav', render: Nav }] } },
+        ],
+      }),
+    ).toEqual([
+      { column: undefined, fieldId: 'root' },
+      { column: true, fieldId: 'root_b' },
+      { column: true, fieldId: 'root' },
+    ]);
+  });
+  test('lets each column of one grid log its own span warning', () => {
+    createFormComponent({
+      schema,
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': { children: [{ 'ui:columns': { span: 4.5, children: ['a', 'b'] } }] } },
+      },
+    });
+    const halfStep = (id: string) =>
+      `A layout grid column's \`span\` of 4.5 in "${id}" is not a whole number, which this theme's grid needs`;
+    expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(halfStep('root_a'));
+    expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(halfStep('root_b'));
+  });
+});

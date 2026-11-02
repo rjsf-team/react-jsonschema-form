@@ -223,7 +223,7 @@ describe('GridTemplate span', () => {
     expect(column).toHaveClass('col-xs-6');
     expect(column).not.toHaveClass('col-xs-4');
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` in "root" is ignored, since the column has a `col-xs-*` class of its own',
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a `col-xs-*` class of its own',
     );
   });
   test("keeps a column's span beside a col-xs-offset class of its own", () => {
@@ -242,7 +242,7 @@ describe('GridTemplate span', () => {
     // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
     renderGridColumn(Form, { span: 4.5 });
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` of 4.5 in "root" is not a whole number, which this theme\'s grid needs',
+      'A layout grid column\'s `span` of 4.5 in "root_name" is not a whole number, which this theme\'s grid needs',
     );
   });
 });

@@ -1,5 +1,5 @@
 import type { GridTemplateProps } from '@rjsf/utils';
-import { logOnce } from '@rjsf/utils';
+import { logGridSpanWarning } from '@rjsf/utils';
 import { Col, Row } from 'react-bootstrap';
 
 /** Renders a `GridTemplate` for react-bootstrap, which is expecting the column sizing information coming in via the
@@ -10,15 +10,11 @@ import { Col, Row } from 'react-bootstrap';
  */
 export default function GridTemplate(props: GridTemplateProps) {
   const { children, column, fieldId, span, ...rest } = props;
-  const spanned = column && span !== undefined;
-  if (spanned && rest.xs !== undefined) {
-    logOnce(`A layout grid column's \`span\` in "${fieldId}" is ignored, since the column has an \`xs\` of its own`);
-  } else if (spanned && !Number.isInteger(span)) {
-    logOnce(
-      `A layout grid column's \`span\` of ${span} in "${fieldId}" is not a whole number, which this theme's grid needs`,
-    );
-  }
   if (column) {
+    logGridSpanWarning(fieldId, span, {
+      ownWidth: rest.xs === undefined ? undefined : 'an `xs`',
+      wholeSpansOnly: true,
+    });
     return (
       <Col xs={span} {...rest}>
         {children}

@@ -586,6 +586,33 @@ function LayoutGridCondition<
   return null;
 }
 
+/** Gets the id of the first field among a column's `children`, which tells one column's `span` warnings apart from
+ * another's in the same grid. A column whose children name no field, only nested grids or `render`s, gets the id of
+ * the field whose layout grid holds it.
+ *
+ * @param children - The column's `children` from its `layoutGridSchema`
+ * @param props - The props of the column, whose `registry`, `schema`, `formData` and `fieldPath` locate the field
+ * @returns - The id the column's first field renders with, or the grid's own id when it names no field
+ */
+function columnFieldId<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(children: LayoutGridSchemaType[], props: LayoutGridFieldProps<T, S, F>) {
+  const { registry, schema, formData, fieldPath, id } = props;
+  for (const child of children) {
+    const name: unknown = typeof child === 'string' ? child : (child as GenericObjectType).name;
+    if (typeof name === 'string' && name !== '') {
+      // A name the schema doesn't hold, such as a `render` cell's, renders no field
+      const details = getSchemaDetailsForField<T, S, F>(registry, name, schema, formData, fieldPath);
+      if (details.schema) {
+        return fieldPathToId(details.fieldPath, registry.globalFormOptions);
+      }
+    }
+  }
+  return id;
+}
+
 /** Renders a `GridTemplate` as an item. The `layoutGridSchema` for the `GridType.COLUMN` is separated into the
  * `children` and other `gridProps`. The `gridProps` will be spread onto the outer `GridTemplate`. Inside the
  * `GridTemplate` all the `children` are rendered.
@@ -598,13 +625,18 @@ function LayoutGridCol<
   F extends FormContextType = FormContextType,
 >(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
-  const { registry, uiSchema, id } = layoutGridFieldProps;
+  const { registry, uiSchema } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMN, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (
-    <GridTemplate column fieldId={id} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col} {...gridProps}>
+    <GridTemplate
+      column
+      fieldId={columnFieldId<T, S, F>(children, layoutGridFieldProps)}
+      data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
+      {...gridProps}
+    >
       <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
     </GridTemplate>
   );
@@ -623,7 +655,7 @@ function LayoutGridColumns<
 >(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
 
-  const { registry, uiSchema, id } = layoutGridFieldProps;
+  const { registry, uiSchema } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMNS, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
@@ -631,7 +663,7 @@ function LayoutGridColumns<
   return children.map((child) => (
     <GridTemplate
       column
-      fieldId={id}
+      fieldId={columnFieldId<T, S, F>([child], layoutGridFieldProps)}
       key={`column-${hashObject(child)}`}
       data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
       {...gridProps}

@@ -242,18 +242,48 @@ describe('GridTemplate span', () => {
   test('takes a half step as an odd 24th', () => {
     expect(renderGridColumn(Form, { span: 4.5 }).column).toHaveClass('ant-col-9');
   });
-  test('rounds a span to the nearest 24th', () => {
+  test('rounds a span to the nearest 24th, warning that it did', () => {
     expect(renderGridColumn(Form, { span: 4.3 }).column).toHaveClass('ant-col-9');
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` of 4.3 in "root_name" is finer than a half step, which antd\'s 24 columns need, ' +
+        'so it is rounded to 4.5',
+    );
   });
   test('warns about a span over 12, which only a pre-v7 24ths span can be', () => {
     renderGridColumn(Form, { span: 16 });
     expect(warnings.consoleSpy).toHaveBeenCalledWith(
-      'A layout grid column\'s `span` of 16 in "root" is more than 12: `span` counts twelfths of a row, ' +
+      'A layout grid column\'s `span` of 16 in "root_name" is more than 12: `span` counts twelfths of a row, ' +
         "where antd's counted 24ths before v7, so halve it",
     );
   });
-  test('does not warn about a span of 12 or under', () => {
-    renderGridColumn(Form, { span: 12 });
+  test.each([
+    { flex: '200px' },
+    { style: { flex: '0 0 200px' } },
+    { style: { flexBasis: '200px' } },
+    { style: { width: '200px' } },
+  ])("prefers a column's own %o width to its span", (colProps) => {
+    const { column } = renderGridColumn(Form, { span: 6, ...colProps });
+    expect(column).not.toHaveClass('ant-col-12');
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a `flex` or a width of its own',
+    );
+  });
+  test.each([4.5, 12])('does not warn about a span of %s', (span) => {
+    renderGridColumn(Form, { span });
     expect(warnings.consoleSpy).not.toHaveBeenCalled();
   });
+  test('grows a row to fill its line, so a row nested in a row takes a line of its own', () => {
+    const { row, column } = renderGridColumn(Form, {}, { style: { padding: '4px' } });
+    expect(row).toHaveStyle({ flex: '1 1 100%', padding: '4px' });
+    expect(column).not.toHaveStyle({ flex: '1 1 100%' });
+  });
+  test.each([{ flex: '0 0 50%' }, { width: '50%' }, { flexBasis: '50%' }, { flexGrow: 0 }])(
+    "leaves a row's own %o style to size it, which the fill would override or mix with",
+    (style) => {
+      const { row } = renderGridColumn(Form, {}, { style });
+      expect(row).toHaveStyle(style);
+      expect(row).not.toHaveStyle({ flexGrow: 1 });
+      expect(row).not.toHaveStyle({ flexBasis: '100%' });
+    },
+  );
 });

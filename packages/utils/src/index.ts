@@ -153,6 +153,7 @@ import joinClassNames from './joinClassNames.ts';
 import labelValue from './labelValue.ts';
 import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
 import localToUTC from './localToUTC.ts';
+import logGridSpanWarning from './logGridSpanWarning.ts';
 import logOnce, { resetLogOnce } from './logOnce.ts';
 import type { LogOnceLevel } from './logOnce.ts';
 import logUnsupportedDefaultForEnum from './logUnsupportedDefaultForEnum.ts';
@@ -395,6 +396,7 @@ export {
   labelValue,
   localTimeToOffsetTime,
   localToUTC,
+  logGridSpanWarning,
   logOnce,
   logUnsupportedDefaultForEnum,
   lookupFromFormContext,

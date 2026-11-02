@@ -545,8 +545,8 @@ export interface GridTemplateProps extends GenericObjectType {
    * for Rows vs Columns. NOTE: This is falsy by default when not specified
    */
   column?: boolean;
-  /** The id of the field whose layout grid holds this row or column, which a theme names in the warnings it logs and
-   * keeps off the element it renders
+  /** For a column, the id of the first field it holds; for a row, or a column holding no field of its own, the id of the
+   * field whose layout grid holds it. A theme names it in the warnings it logs and keeps it off the element it renders
    */
   fieldId?: string;
   /** How many twelfths of a row a column spans, which every theme's `GridTemplate` converts to its own grid. A theme's

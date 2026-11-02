@@ -25,9 +25,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
               >
                 <div
                   class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                  style="flex: 1 1 100%;"
                 >
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    style="flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -75,7 +77,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -262,7 +264,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -538,7 +540,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -564,6 +566,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <div
                                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                    style="flex: 1 1 100%;"
                                   >
                                     <div
                                       class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -746,7 +749,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     </div>
                                     <div
                                       class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                      style="margin-inline: -3px; row-gap: 0px;"
+                                      style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                                     >
                                       <div
                                         class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -920,6 +923,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        style="flex: 1 1 100%;"
                       >
                         <div
                           class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -1153,7 +1157,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </div>
                         <div
                           class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                          style="margin-inline: -3px; row-gap: 0px;"
+                          style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                         >
                           <div
                             class="ant-col ant-col-xs-16 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -1360,9 +1364,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
               >
                 <div
                   class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                  style="flex: 1 1 100%;"
                 >
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    style="flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -1410,7 +1416,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -1597,7 +1603,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -1873,7 +1879,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -1899,6 +1905,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <div
                                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                    style="flex: 1 1 100%;"
                                   >
                                     <div
                                       class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -2081,7 +2088,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     </div>
                                     <div
                                       class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                      style="margin-inline: -3px; row-gap: 0px;"
+                                      style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                                     >
                                       <div
                                         class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -2255,6 +2262,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        style="flex: 1 1 100%;"
                       >
                         <div
                           class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -2547,7 +2555,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </div>
                         <div
                           class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                          style="margin-inline: -3px; row-gap: 0px;"
+                          style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                         >
                           <div
                             class="ant-col ant-col-xs-16 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -2754,9 +2762,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
               >
                 <div
                   class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                  style="flex: 1 1 100%;"
                 >
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    style="flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -2804,7 +2814,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -2991,7 +3001,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -3267,7 +3277,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -3293,6 +3303,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <div
                                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                    style="flex: 1 1 100%;"
                                   >
                                     <div
                                       class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -3475,7 +3486,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     </div>
                                     <div
                                       class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                      style="margin-inline: -3px; row-gap: 0px;"
+                                      style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                                     >
                                       <div
                                         class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -3649,6 +3660,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        style="flex: 1 1 100%;"
                       >
                         <div
                           class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -3872,9 +3884,11 @@ exports[`Complex grid > renders person and address and employment in a complex g
               >
                 <div
                   class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                  style="flex: 1 1 100%;"
                 >
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    style="flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -3922,7 +3936,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -4109,7 +4123,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-8 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -4385,7 +4399,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   </div>
                   <div
                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                    style="margin-inline: -3px; row-gap: 0px;"
+                    style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                   >
                     <div
                       class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -4411,6 +4425,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <div
                                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                    style="flex: 1 1 100%;"
                                   >
                                     <div
                                       class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -4593,7 +4608,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     </div>
                                     <div
                                       class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                      style="margin-inline: -3px; row-gap: 0px;"
+                                      style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                                     >
                                       <div
                                         class="ant-col ant-col-xs-12 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -4767,6 +4782,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                        style="flex: 1 1 100%;"
                       >
                         <div
                           class="ant-col ant-col-xs-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -5000,7 +5016,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </div>
                         <div
                           class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
-                          style="margin-inline: -3px; row-gap: 0px;"
+                          style="margin-inline: -3px; row-gap: 0px; flex: 1 1 100%;"
                         >
                           <div
                             class="ant-col ant-col-xs-16 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -5207,6 +5223,7 @@ exports[`Three even column grid > renders person and address in three columns, n
               >
                 <div
                   class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                  style="flex: 1 1 100%;"
                 >
                   <div
                     class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
@@ -6020,6 +6037,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
               >
                 <div
                   class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                  style="flex: 1 1 100%;"
                 >
                   <div
                     class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"

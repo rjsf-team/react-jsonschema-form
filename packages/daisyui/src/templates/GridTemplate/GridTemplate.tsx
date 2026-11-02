@@ -1,5 +1,5 @@
 import type { GridTemplateProps } from '@rjsf/utils';
-import { logOnce } from '@rjsf/utils';
+import { logGridSpanWarning } from '@rjsf/utils';
 
 /** Renders a `GridTemplate` for DaisyUI, which follows the same pattern as other RJSF themes.
  * This uses DaisyUI's grid system with flexbox for responsive layouts.
@@ -17,9 +17,7 @@ export default function GridTemplate(props: GridTemplateProps) {
       style?.flexBasis !== undefined ||
       style?.width !== undefined ||
       /(?:^|[\s:])(?:basis|w)-/.test(className ?? '');
-    if (span !== undefined && ownsWidth) {
-      logOnce(`A layout grid column's \`span\` in "${fieldId}" is ignored, since the column has a width of its own`);
-    }
+    logGridSpanWarning(fieldId, span, { ownWidth: ownsWidth ? 'a width' : undefined });
     // The row's `gap-4` is 1rem, so a full row of spans fills it exactly
     const spanStyle =
       span === undefined || ownsWidth ? style : { flex: `0 0 calc((100% + 1rem) * ${span} / 12 - 1rem)`, ...style };
@@ -31,9 +29,9 @@ export default function GridTemplate(props: GridTemplateProps) {
     );
   }
 
-  // For rows, use DaisyUI's flex container with wrap
+  // For rows, use DaisyUI's flex container with wrap; `w-full` keeps a row nested in a row from shrinking to its content
   return (
-    <div className={className ?? 'flex flex-wrap gap-4'} style={style} {...rest}>
+    <div className={className ?? 'flex flex-wrap gap-4 w-full'} style={style} {...rest}>
       {children}
     </div>
   );
