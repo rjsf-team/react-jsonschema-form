@@ -236,17 +236,17 @@ Return a consistent `id` for the `btn` button element
 
 - string: The consistent id for the button from the given `id` and `btn` type
 
-### callerInputProps()
+### callerInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` or `inputMode` the caller names counts even when it is undefined, which is how a caller turns the derived one off. [`getBaseInputProps()`](#getbaseinputprops) merges them for you.
 
 #### Parameters
 
-- props: BaseInputTemplateProps<T, S, F> - The props of the `BaseInputTemplate`
+- props: BaseInputTemplateProps&lt;T, S, F> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick<BaseInputTemplateProps<T, S, F>, 'accept' | 'pattern'>: The `pattern` and `accept` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps&lt;T, S, F>, 'accept' | 'pattern'>: The `pattern` and `accept` to spread after the derived input props
 
 ### callWithDeferredThrow()
 
@@ -2987,6 +2987,32 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 
 - RangeSpecType: A range specification from the schema
 
+### ratingStarCount&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the number of stars a rating widget draws: the schema's `maximum` if it has one other than 0, otherwise the `stars` option, or the default 5 for a `stars` that isn't a number, limited to 1-5 and rounded down to whole stars.
+
+#### Parameters
+
+- schema: S - The schema of the field
+- stars: unknown - The `stars` option
+
+#### Returns
+
+- number: The number of stars to draw
+
+### ratingStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Reports whether a rating widget writes its value as a string. The schema's type decides, and a type that allows a number too writes one. The value only speaks for a schema with no type.
+
+#### Parameters
+
+- schema: S - The schema of the field
+- value: unknown - The widget's value
+
+#### Returns
+
+- boolean: True if a star writes a string
+
 ### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's `ObjectField` does ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
@@ -3483,36 +3509,18 @@ Appends `segment` to `parentPath`, returning the `FieldPath` of the child field.
 
 - FieldPath: The `FieldPath` of the field
 
-### ratingStarCount()
-
-Returns the number of stars a rating widget draws: the schema's `maximum` if it has one, otherwise the `stars` option, or the default 5 for a `stars` that isn't a number, limited to 1-5 and rounded down to whole stars.
-
-#### Parameters
-
-- schema: S - The schema of the field
-- stars: unknown - The `stars` option
-
-#### Returns
-
-- number: The number of stars to draw
-
-### ratingStoresString()
-
-Reports whether a rating widget writes its value as a string. The schema's type decides, and a type that allows a number too writes one. The value only speaks for a schema with no type.
-
-#### Parameters
-
-- schema: S - The schema of the field
-- value: unknown - The widget's value
-
-#### Returns
-
-- boolean: True if a star writes a string
-
 ### toInputValue()
 
 Turns a widget's `value`, which can hold anything, into what an input's `value` prop accepts.
 A string or a number is kept, so a numeric input stays numeric, a boolean or a bigint is stringified and an array joined with commas the way React renders them, so a hidden multi-select still submits its items, and anything else, `undefined` and `null` included, becomes an empty string.
+
+#### Parameters
+
+- value: unknown - The widget's value
+
+#### Returns
+
+- string | number: The value for an input's `value` prop
 
 ### toNumericValue()
 
@@ -3525,14 +3533,6 @@ Reads a widget's `value` as a number, for a widget that draws one such as a slid
 #### Returns
 
 - number | undefined: The number `value` holds, or `undefined` if it holds none
-
-#### Parameters
-
-- value: unknown - The widget's value
-
-#### Returns
-
-- string | number: The value for an input's `value` prop
 
 ### toPath()
 
