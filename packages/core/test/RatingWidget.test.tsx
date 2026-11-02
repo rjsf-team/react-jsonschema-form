@@ -1,3 +1,4 @@
+import type { RJSFSchema } from '@rjsf/utils';
 import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -20,6 +21,41 @@ describe('RatingWidget', () => {
 
     expect(getFormData()).toBe('4');
   });
+
+  it.each([
+    { caseName: 'an integer field holding a numeric string', schema: { type: 'integer' }, formData: '3', expected: 4 },
+    {
+      caseName: 'a string or null field holding null',
+      schema: { type: ['string', 'null'] },
+      formData: null,
+      expected: '4',
+    },
+    {
+      caseName: 'a field with no type holding a numeric string',
+      schema: { enum: ['0', '1', '2', '3', '4'] },
+      formData: '3',
+      expected: '4',
+    },
+    {
+      caseName: 'a field with no type holding a number',
+      schema: { enum: [0, 1, 2, 3, 4] },
+      formData: 3,
+      expected: 4,
+    },
+  ] satisfies { caseName: string; schema: RJSFSchema; formData: unknown; expected: unknown }[])(
+    'writes what the schema holds for $caseName',
+    async ({ schema, formData, expected }) => {
+      const { getFormData } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:widget': 'RatingWidget' },
+        initialFormData: formData,
+      });
+
+      await user.click(screen.getAllByRole('radio')[4]);
+
+      expect(getFormData()).toBe(expected);
+    },
+  );
 
   it('fills and checks the stars of a rating stored as a numeric string, as it does a number', () => {
     createFormComponent({

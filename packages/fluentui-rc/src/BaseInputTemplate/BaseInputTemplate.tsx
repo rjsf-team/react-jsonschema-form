@@ -99,13 +99,13 @@ export default function BaseInputTemplate<
           // Due to Fluent UI this does not work correctly
           list: hasExamples ? examplesId(id) : undefined,
         }}
-        value={String(toInputValue(value || value === 0 ? value : ''))}
+        value={String(toInputValue(value))}
         onChange={onChangeOverride ?? handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(toInputValue(value)) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

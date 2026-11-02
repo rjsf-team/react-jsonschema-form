@@ -124,7 +124,7 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(toInputValue(value)) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

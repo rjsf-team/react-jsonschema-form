@@ -78,7 +78,7 @@ export default function BaseInputTemplate<
     readOnly: readonly,
     list: hasExamples ? examplesId(id) : undefined,
     ...inputProps,
-    value: toInputValue(value || value === 0 ? value : ''),
+    value: toInputValue(value),
     onChange: onChangeOverride ?? handleChange,
     onBlur: handleBlur,
     onFocus: handleFocus,
@@ -96,7 +96,7 @@ export default function BaseInputTemplate<
       ) : (
         <Form.Control isInvalid={isInvalid} {...controlProps} />
       )}
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(toInputValue(value)) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}

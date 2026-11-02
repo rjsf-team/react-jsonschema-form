@@ -66,7 +66,7 @@ export default function ColorWidget<
     <ColorInput
       id={id}
       name={htmlName || id}
-      value={String(toInputValue(value || ''))}
+      value={String(toInputValue(value))}
       placeholder={placeholder || undefined}
       format={options.colorFormat}
       required={required}

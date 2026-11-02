@@ -95,10 +95,9 @@ export default function SelectWidget<
   const isMultiple = multiple ?? false;
 
   const emptyValue = isMultiple ? [] : '';
-  const isEmpty =
-    typeof value === 'undefined' ||
-    (isMultiple && Array.isArray(value) && value.length < 1) ||
-    (!isMultiple && value === emptyValue);
+  const isEmpty = isMultiple
+    ? !Array.isArray(value) || value.length < 1
+    : typeof value === 'undefined' || value === emptyValue;
 
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<{ value: string }>) =>
     onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));

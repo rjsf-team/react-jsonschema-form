@@ -68,7 +68,7 @@ export default function PasswordWidget<
     <PasswordInput
       id={id}
       name={htmlName || id}
-      value={toInputValue(value || '')}
+      value={toInputValue(value)}
       placeholder={placeholder || undefined}
       required={required}
       disabled={disabled || readonly}

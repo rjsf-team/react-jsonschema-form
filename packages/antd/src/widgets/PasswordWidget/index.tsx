@@ -53,7 +53,7 @@ export default function PasswordWidget<
       placeholder={placeholder}
       readOnly={readonly}
       required={required}
-      value={toInputValue(value || '')}
+      value={toInputValue(value)}
       {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );

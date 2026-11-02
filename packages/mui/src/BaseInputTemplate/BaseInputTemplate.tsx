@@ -153,7 +153,7 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
   const inputProps = { ...InputProps, ...slotProps?.input, ...muiSlotProps?.input };
-  if (options.allowClearTextInputs && value && !readonly && !disabled) {
+  if (options.allowClearTextInputs && toInputValue(value) && !readonly && !disabled) {
     const clearAdornment = (
       <InputAdornment position='end'>
         <ClearButton registry={registry} onClick={handleClear} />
@@ -192,7 +192,7 @@ export default function BaseInputTemplate<
           ),
         }}
         {...rest}
-        value={toInputValue(value || value === 0 ? value : '')}
+        value={toInputValue(value)}
         error={hasWidgetErrors<T, S, F>(props)}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}

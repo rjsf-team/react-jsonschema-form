@@ -90,13 +90,13 @@ export default function BaseInputTemplate<
         list={hasExamples ? examplesId(id) : undefined}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
-        value={toInputValue(value || value === 0 ? value : '')}
+        value={toInputValue(value)}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(value) && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(toInputValue(value)) && (
         <ClearButton onClick={handleClear} registry={registry} />
       )}
       {children}

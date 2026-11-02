@@ -88,10 +88,12 @@ export default function RangeWidget<
   // A `min` from `ui:options.props` replaces the schema's on the slider, so an empty range's thumb is drawn there
   const min: number = typeof uiProps.min === 'number' ? uiProps.min : (spec.min ?? 0);
   const { max, step } = spec;
-  const isEmpty = value === undefined || value === null;
+  // `Number()` alone reads `''`, `false` and `[]` as 0, which is no value the range holds
+  const numericValue =
+    typeof value === 'number' || (typeof value === 'string' && value.trim() !== '') ? Number(value) : NaN;
+  const isEmpty = Number.isNaN(numericValue);
   // A numeric string counts as its number, and anything else that isn't a number is drawn at the minimum
-  const numericValue = Number(value);
-  const drawnValue = isEmpty || Number.isNaN(numericValue) ? min : numericValue;
+  const drawnValue = isEmpty ? min : numericValue;
   // Radix reports only a value that changes, and an empty range draws its thumb at its minimum, so a press or a key
   // that leaves the thumb there commits the minimum itself, as moving a native range's thumb to its minimum would.
   // Only one that began on the slider does, so a release dragged in from elsewhere commits nothing

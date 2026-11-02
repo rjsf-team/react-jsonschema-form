@@ -11,6 +11,12 @@ describe('RangeWidget', () => {
     expect(screen.getByText('5')).toBeInTheDocument();
   });
 
+  test.each(['', ' ', false, true, []])('draws %j, which holds no number, at the minimum', (value) => {
+    render(<RangeWidget {...makeWidgetMockProps({ schema: { type: 'number', minimum: 10, maximum: 20 }, value })} />);
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '10');
+  });
+
   test('draws an object value at the minimum, showing nothing beside the slider', () => {
     const { container } = render(
       <RangeWidget {...makeWidgetMockProps({ schema: { type: 'number', minimum: 2 }, value: { a: 1 } })} />,

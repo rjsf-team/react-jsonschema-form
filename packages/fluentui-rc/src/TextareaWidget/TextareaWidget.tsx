@@ -65,7 +65,7 @@ export default function TextareaWidget<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        value={String(toInputValue(value || value === 0 ? value : ''))}
+        value={String(toInputValue(value))}
         onChange={onChangeOverride || handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}

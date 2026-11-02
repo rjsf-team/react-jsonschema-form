@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
@@ -26,6 +26,22 @@ export function clearButtonTests(Form: ComponentType<FormProps>, clearButtonName
       );
       expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
       expect(container).not.toHaveTextContent(/0/);
+    });
+
+    test('offers no clear button for an object value, which the input shows as nothing', () => {
+      // The form replaces an object a text field holds before a widget sees it, so this hands one to the template
+      function ObjectValueInput(props: WidgetProps) {
+        const { BaseInputTemplate } = props.registry.templates;
+        return <BaseInputTemplate {...props} value={{ a: 1 }} />;
+      }
+      render(
+        <Form
+          schema={{ type: 'string', title: 'Amount' }}
+          uiSchema={{ 'ui:widget': ObjectValueInput, 'ui:allowClearTextInputs': true }}
+          validator={validator}
+        />,
+      );
+      expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
     });
   });
 }

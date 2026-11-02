@@ -75,7 +75,7 @@ export default function BaseInputTemplate<
   const schemaType = getSchemaType(schema);
   let inputValue;
   if (schemaType === 'number' || schemaType === 'integer') {
-    inputValue = toInputValue(value || value === 0 ? value : '');
+    inputValue = toInputValue(value);
   } else {
     inputValue = toInputValue(value);
   }

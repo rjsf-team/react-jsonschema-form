@@ -58,8 +58,9 @@ export default function RatingWidget<
   );
 
   const min = schema.minimum ?? 0;
-  // A string field can store the rating, as a numeric string
-  const storesString = schema.type === 'string' || typeof value === 'string';
+  // The schema's type decides what a star writes, so a click makes invalid data valid; the value only speaks for a schema
+  // with no type
+  const storesString = schema.type === undefined ? typeof value === 'string' : [schema.type].flat().includes('string');
   const numericValue = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
   const rating = typeof numericValue === 'number' && Number.isFinite(numericValue) ? numericValue : undefined;
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
@@ -180,7 +181,7 @@ export default function RatingWidget<
       <input
         type='hidden'
         name={htmlName || id}
-        value={toInputValue(value || '')}
+        value={toInputValue(value)}
         required={required}
         disabled={disabled || readonly}
         aria-hidden='true'

@@ -49,7 +49,7 @@ function TextareaWidget<
       id={id}
       name={htmlName || id}
       className={classMap.textarea}
-      value={toInputValue(value || '')}
+      value={toInputValue(value)}
       placeholder={placeholder}
       required={required}
       disabled={disabled}

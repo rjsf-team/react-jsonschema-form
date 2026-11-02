@@ -1,4 +1,4 @@
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -160,6 +160,22 @@ describe('SelectWidget focus and blur', () => {
 describe('SelectWidget named and described by its caller', () => {
   const schema: RJSFSchema = { type: 'string', title: 'When', format: 'date' };
   const uiSchema: UiSchema = { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } };
+
+  it('leaves the label unshrunk for a multiple select holding null', () => {
+    function NullMultipleSelect(props: WidgetProps) {
+      const { SelectWidget } = props.registry.widgets;
+      return <SelectWidget {...props} multiple value={null} />;
+    }
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', title: 'Colors', enum: ['a', 'b'] }}
+        uiSchema={{ 'ui:widget': NullMultipleSelect }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('.MuiInputLabel-root')).toHaveAttribute('data-shrink', 'false');
+  });
 
   it('names the combobox alone, leaving the aria-label off the field root around it', () => {
     const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);

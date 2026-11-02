@@ -20,7 +20,13 @@ describe('toInputValue', () => {
     expect(toInputValue(['a', 'b'])).toBe('a,b');
     expect(toInputValue([1, null, 'c'])).toBe('1,,c');
   });
+  it('joins an array of objects as the empty strings each object turns into', () => {
+    expect(toInputValue([{ a: 1 }, 'b'])).toBe(',b');
+  });
   it('turns an object into an empty string', () => {
     expect(toInputValue({ a: 1 })).toBe('');
+  });
+  it('turns NaN into an empty string', () => {
+    expect(toInputValue(Number.NaN)).toBe('');
   });
 });
