@@ -1,5 +1,5 @@
 import type { ComponentType, JSXElementConstructor, ReactNode } from 'react';
-import { useCallback, useMemo } from 'react';
+import { use, useCallback, useMemo } from 'react';
 import type {
   FieldProps,
   FieldPath,
@@ -40,8 +40,9 @@ import {
   ITEMS_KEY,
 } from '@rjsf/utils';
 
-import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
+import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import { isAdditionalPropertySchema, storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';
 
@@ -691,10 +692,11 @@ function LayoutGridRow<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const { span, ...rowGridProps } = gridProps;
+  const additionalDepths = use(AdditionalPropertyDepthsContext);
   if (span !== undefined) {
     logOnce(
-      `span on a ui:row in ${fieldLabelForLog(id, fieldPath)} is ignored, since span sizes a ui:col or ui:columns ` +
-        'rather than a row.',
+      `span on a ui:row in ${entryLabelForLog(fieldPath, registry.globalFormOptions, additionalDepths)} is ignored, ` +
+        'since span sizes a ui:col or ui:columns rather than a row.',
     );
   }
 

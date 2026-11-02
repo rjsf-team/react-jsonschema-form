@@ -2486,7 +2486,7 @@ Nothing is logged for a column without a `span`.
 
 - fieldId: string | undefined - The column's `fieldId`, which the warning names
 - span: number | undefined - The column's `span`
-- [options]: { ownWidth?: string; wholeSpansOnly?: boolean } - What the theme's grid makes of the `span`:
+- [options]: `{ ownWidth?: string; wholeSpansOnly?: boolean }` - What the theme's grid makes of the `span`:
   - [ownWidth]: string - What the column has of its own that wins over `span`, such as ``"a `size`"``, when it has one
   - [wholeSpansOnly=false]: boolean - Whether the theme's grid needs a whole number of twelfths
 

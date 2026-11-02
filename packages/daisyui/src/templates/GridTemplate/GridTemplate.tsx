@@ -18,9 +18,16 @@ export default function GridTemplate(props: GridTemplateProps) {
       style?.width !== undefined ||
       /(?:^|[\s:])(?:basis|w)-/.test(className ?? '');
     logGridSpanWarning(fieldId, span, { ownWidth: ownsWidth ? 'a width' : undefined });
+    // `minWidth` stops content wider than the span, such as an input or a long unbroken description, from widening the
+    // column and wrapping the rest of the row, and `overflowWrap` stops that text painting over the next column instead;
+    // `minWidth` is left off beside a `min-w-*` class, which an inline value would override
+    // shortcut: a custom class setting min-width isn't seen and loses to the inline 0; widen the check if that comes up
+    const minWidth = /(?:^|[\s:])min-w-/.test(className ?? '') ? undefined : 0;
     // The row's `gap-4` is 1rem, so a full row of spans fills it exactly
     const spanStyle =
-      span === undefined || ownsWidth ? style : { flex: `0 0 calc((100% + 1rem) * ${span} / 12 - 1rem)`, ...style };
+      span === undefined || ownsWidth
+        ? style
+        : { flex: `0 0 calc((100% + 1rem) * ${span} / 12 - 1rem)`, minWidth, overflowWrap: 'break-word', ...style };
     // For columns, use DaisyUI's flex classes
     return (
       <div className={className ?? 'flex-grow'} style={spanStyle} {...rest}>

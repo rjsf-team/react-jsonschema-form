@@ -142,6 +142,8 @@ describe('GridTemplate span', () => {
   test("sets a column's span as its flex basis, half steps included", () => {
     expect(renderGridColumn(Form, { span: 4.5 }).column).toHaveStyle({
       flex: '0 0 calc((100% + 1rem) * 4.5 / 12 - 1rem)',
+      minWidth: '0px',
+      overflowWrap: 'break-word',
     });
   });
   test("prefers a column's own flex style", () => {
@@ -166,6 +168,11 @@ describe('GridTemplate span', () => {
     const { column } = renderGridColumn(Form, { span: 4, className: 'max-w-sm' });
     expect(column).toHaveStyle({ flex: '0 0 calc((100% + 1rem) * 4 / 12 - 1rem)' });
     expect(warnings.consoleSpy).not.toHaveBeenCalled();
+  });
+  test("leaves a column's own minimum width to its min-w class", () => {
+    const { column } = renderGridColumn(Form, { span: 4, className: 'md:min-w-48' });
+    expect(column).toHaveStyle({ flex: '0 0 calc((100% + 1rem) * 4 / 12 - 1rem)' });
+    expect(column.style.minWidth).toBe('');
   });
   test('fills the width of a row without a class of its own, so a row nested in a row takes a line of its own', () => {
     expect(renderGridColumn(Form, {}).row).toHaveClass('w-full');

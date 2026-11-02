@@ -2017,6 +2017,32 @@ describe('a span on a ui:row', () => {
       'span on a ui:row in "root" is ignored, since span sizes a ui:col or ui:columns rather than a row.',
     );
   });
+  test('warns once for an array whose every item renders the same uiSchema entry', () => {
+    createFormComponent({
+      schema: { type: 'array', items: schema },
+      uiSchema: { items: gridUiSchema({ span: 6 }) },
+      initialFormData: [{}, {}],
+    });
+    const rowWarnings = consoleWarnSuppression.consoleSpy.mock.calls.filter(([message]) =>
+      String(message).startsWith('span on a ui:row'),
+    );
+    expect(rowWarnings).toEqual([
+      ['span on a ui:row in "root_[]" ([]) is ignored, since span sizes a ui:col or ui:columns rather than a row.'],
+    ]);
+  });
+  test('warns once for an object whose every extra key renders the same uiSchema entry', () => {
+    createFormComponent({
+      schema: { type: 'object', additionalProperties: schema },
+      uiSchema: { additionalProperties: gridUiSchema({ span: 6 }) },
+      initialFormData: { a: {}, b: {} },
+    });
+    const rowWarnings = consoleWarnSuppression.consoleSpy.mock.calls.filter(([message]) =>
+      String(message).startsWith('span on a ui:row'),
+    );
+    expect(rowWarnings).toEqual([
+      ['span on a ui:row in "root_{}" ({}) is ignored, since span sizes a ui:col or ui:columns rather than a row.'],
+    ]);
+  });
   test("keeps it from a custom GridTemplate's row", () => {
     const rowProps: GenericObjectType[] = [];
     function RecordingGridTemplate({ children, column, ...props }: GridTemplateProps) {

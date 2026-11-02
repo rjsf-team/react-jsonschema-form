@@ -244,6 +244,24 @@ describe('FieldTemplate', () => {
     });
   });
 
+  it("wraps the field's label rather than letting it run past a narrow column", () => {
+    const { container } = render(<Form schema={{ type: 'string', title: 'A long label' }} validator={validator} />);
+    expect(fieldLabel(container, 'root')).toHaveClass('whitespace-normal', '[overflow-wrap:anywhere]');
+  });
+  it.each(['checkbox', 'toggle'])("wraps a %s's own label too", (widget) => {
+    render(
+      <Form
+        schema={{ type: 'boolean', title: 'A long label' }}
+        uiSchema={{ 'ui:widget': widget }}
+        validator={validator}
+      />,
+    );
+    expect(screen.getByText('A long label').closest('label')).toHaveClass(
+      'whitespace-normal',
+      '[overflow-wrap:anywhere]',
+    );
+  });
+
   // The label a widget renders for itself is the only one the field has, so the marker for a required field has to
   // travel with it
   describe('the required marker', () => {

@@ -449,7 +449,8 @@ Every theme's `GridTemplate` reads a column's `span` as twelfths of a row and co
 Use whole numbers in the themes without half steps: their grids span whole tracks or name a class per width, and a half
 step there logs a warning. antd rounds a `span` finer than a half step, such as `4.3`, to the nearest one and logs a
 warning saying so. daisyui's column widths assume its row's default `gap-4`, so a row given another gap gets
-slightly wrong widths, and a full row of spans may wrap.
+slightly wrong widths, and a full row of spans may wrap. A mantine row with `fluid: false` also grows its columns to fill
+each line, so spans that add up to less than 12 stretch; give that row `grow: false` to keep them as written.
 
 A theme's own width prop wins over `span`: a `flex` prop or a `flex`, `flexBasis` or `width` style in antd, `size` in mui, `xs` in react-bootstrap, `colSpan` in chakra-ui, a `gridColumn`
 style in fluentui-rc, a `flex`, `flexBasis` or `width` style or a `basis-*` or `w-*` class in daisyui, a `col-xs-*` class in bootstrap3 and a `col-span-*` class in shadcn,
@@ -461,6 +462,9 @@ In chakra-ui, fluentui-rc and shadcn, a `ui:row` without a column template of it
 a `gridTemplateColumns`, `gridTemplateAreas`, `gridTemplate` or `grid` style, the same keys in chakra-ui's `css`, or a `grid-cols-*` class) lays out on 12 tracks, where each child is full width unless it
 spans fewer. A row with a template of its own keeps it, and a `span` then counts that template's tracks, as it counts the
 tracks of a mantine or mui row given `columns` of its own.
+
+In shadcn a column's `span` is an inline `grid-column` style, which overrides a `col-start-*` or `col-end-*` class beside
+it; place such a column with a `gridColumnStart` style instead.
 
 In bootstrap3, give each `ui:row` that holds columns Bootstrap's `row` class (`className: 'row'`), which clears the
 floated `col-xs-*` columns and lines their padding up with the content around the row.
