@@ -2260,7 +2260,7 @@ export type UiSchema<
       | UiSchema<ArrayElement<T>, S, F>[]
       | Bivariant<[itemData: ArrayElement<T>, index: number, formContext?: F], UiSchema<ArrayElement<T>, S, F>>;
     /** The uiSchema applied to properties added through the schema's `additionalProperties`, typed by the data those
-     * properties hold: the index signature's value type when `T` declares one, otherwise unconstrained
+     * properties hold: the index signature's value type when `T` declares one, otherwise `unknown`
      */
     additionalProperties?: UiSchema<AdditionalPropertyData<T>, S, F>;
     /** The uiSchema applied to the items a fixed-items array accepts beyond its tuple, per `additionalItems` */
