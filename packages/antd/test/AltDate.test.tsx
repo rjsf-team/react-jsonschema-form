@@ -9,10 +9,10 @@ altDateTests(Form);
 describe("antd's AltDateWidget", () => {
   it.each([
     ['a number', 10, '-2.5px', '5px'],
-    ['the horizontal one of a [horizontal, vertical] pair', [8, 8], '-2px', '4px'],
+    ['each side of a [horizontal, vertical] pair', [8, 32], '-2px', '16px'],
     ["the default for a numeric string, which antd's `Row` cannot space", '16', '-6px', '12px'],
-    ['the default for a CSS length', '1rem', '-6px', '12px'],
-    ['the default for a responsive gutter', { xs: 8, md: 16 }, '-6px', '12px'],
+    ['a CSS length', '1rem', 'calc(-0.25rem)', 'calc(0.5rem)'],
+    ['each breakpoint of a responsive gutter, which `Row` reads at the widest here', { xs: 8, md: 16 }, '-4px', '8px'],
   ])("spaces the date parts by half the formContext's rowGutter: %s", (_, rowGutter, margin, gap) => {
     render(
       <Form
@@ -36,7 +36,7 @@ describe("antd's AltDateWidget", () => {
       />,
     );
 
-    expect(screen.getByRole('group').style.rowGap).toBe('0px');
+    expect(screen.getByRole('group').style).toMatchObject({ marginInline: '', rowGap: '8px' });
   });
   it.each([
     ['alt-date', 'year'],

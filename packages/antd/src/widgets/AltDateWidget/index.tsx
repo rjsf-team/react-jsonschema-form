@@ -1,8 +1,42 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, dateElementId, getGroupAttributes, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import {
+  DateElement,
+  dateElementId,
+  getGroupAttributes,
+  isPlainObject,
+  TranslatableString,
+  useAltDateWidgetProps,
+} from '@rjsf/utils';
 import { Row, Col, Button } from 'antd';
+import type { RowProps } from 'antd';
 
 import type { AntdFormContext } from '../../formContext.ts';
+
+type Gutter = Exclude<RowProps['gutter'], readonly unknown[]>;
+
+/** Half of one side of a `rowGutter`, which spaces the date parts, in any form antd's `Row` takes: a number, a CSS length
+ * or a value per breakpoint. A numeric string, which `Row` turns into invalid CSS, gives half the default
+ *
+ * @param gutter - One side of the `rowGutter`
+ * @returns - The gutter for the date parts' `Row`
+ */
+function halfGutter(gutter: Gutter): Gutter {
+  if (typeof gutter === 'number' && Number.isFinite(gutter)) {
+    return Math.floor(gutter / 2);
+  }
+  if (typeof gutter === 'string' && gutter.trim() !== '' && Number.isNaN(Number(gutter))) {
+    return `calc(${gutter} / 2)`;
+  }
+  if (isPlainObject(gutter)) {
+    return Object.fromEntries(
+      Object.entries(gutter).map(([breakpoint, value]) => [
+        breakpoint,
+        typeof value === 'number' ? Math.floor(value / 2) : value,
+      ]),
+    );
+  }
+  return 12;
+}
 
 export default function AltDateWidget<
   T = unknown,
@@ -23,35 +57,37 @@ export default function AltDateWidget<
   } = props;
   const { formContext, translateString } = registry;
   const { rowGutter: contextGutter }: AntdFormContext = formContext;
-  // The date parts are spaced by half the gutter, which takes a number: a `[horizontal, vertical]` pair gives its
-  // horizontal one, which antd's `Row` reads as 0 when it is missing, and anything else the default, as antd's own `Row`
-  // can't space a string either
-  const gutter = Array.isArray(contextGutter) ? (contextGutter[0] ?? 0) : contextGutter;
-  const rowGutter = typeof gutter === 'number' && Number.isFinite(gutter) ? gutter : 24;
+  const [horizontal, vertical] = Array.isArray(contextGutter)
+    ? // antd's `Row` reads a missing side of a pair as 0
+      [halfGutter(contextGutter[0] ?? 0), halfGutter(contextGutter[1] ?? 0)]
+    : [halfGutter(contextGutter ?? 24), halfGutter(contextGutter ?? 24)];
   const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
   // The date parts are a group carrying the field's id, as core's are, named by the template's label, which a `for`
   // can't reach since no part carries that id
   const { group } = getGroupAttributes<T, S, F>({ id, presentation }, 'group');
 
   return (
-    <Row id={id} gutter={[Math.floor(rowGutter / 2), Math.floor(rowGutter / 2)]} {...group}>
-      {elements.map((elemProps, i) => (
-        <Col flex='88px' key={elemProps.type}>
-          <DateElement
-            rootId={id}
-            label={label}
-            select={handleChange}
-            {...elemProps}
-            disabled={disabled}
-            readonly={readonly}
-            registry={registry}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            autofocus={autofocus && i === 0}
-            presentation={presentation}
-          />
-        </Col>
-      ))}
+    <Row id={id} gutter={[horizontal, vertical]} {...group}>
+      {elements.map((elemProps, i) => {
+        const elemId = dateElementId(id, elemProps.type);
+        return (
+          <Col flex='88px' key={elemId}>
+            <DateElement
+              rootId={id}
+              label={label}
+              select={handleChange}
+              {...elemProps}
+              disabled={disabled}
+              readonly={readonly}
+              registry={registry}
+              onBlur={onBlur}
+              onFocus={onFocus}
+              autofocus={autofocus && i === 0}
+              presentation={presentation}
+            />
+          </Col>
+        );
+      })}
       {!options.hideNowButton && (
         <Col flex='88px'>
           <Button
