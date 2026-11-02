@@ -348,52 +348,6 @@ describe('the plan SchemaField builds', () => {
       expect(node.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
     });
 
-    it('is named by a fallback when its field has no title (#5586)', () => {
-      const { node } = createFormComponent({
-        schema: {
-          oneOf: [
-            { type: 'string', title: 'Text' },
-            { type: 'number', title: 'Num' },
-          ],
-        },
-        initialFormData: 'a',
-      });
-
-      expect(node.querySelector('#root__oneof_select')).toHaveAccessibleName('Select ...');
-    });
-
-    it('is named by its placeholder when its field has no title', () => {
-      const { node } = createFormComponent({
-        schema: {
-          oneOf: [
-            { type: 'string', title: 'Text' },
-            { type: 'number', title: 'Num' },
-          ],
-        },
-        uiSchema: { 'ui:placeholder': 'Pick a kind' },
-        initialFormData: 'a',
-      });
-
-      expect(node.querySelector('#root__oneof_select')).toHaveAccessibleName('Pick a kind');
-    });
-
-    it('is a radiogroup named by a fallback when its field has no title', () => {
-      const { node } = createFormComponent({
-        schema: {
-          oneOf: [
-            { type: 'string', title: 'Text' },
-            { type: 'number', title: 'Num' },
-          ],
-        },
-        uiSchema: { 'ui:widget': 'radio' },
-        initialFormData: 'a',
-      });
-
-      const group = node.querySelector('#root__oneof_select');
-      expect(group).toHaveAttribute('role', 'radiogroup');
-      expect(group).toHaveAccessibleName('Select ...');
-    });
-
     it("is named by the label the field's template draws, and described by the parts that render", () => {
       const { node } = createFormComponent({
         schema,
@@ -961,6 +915,20 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
     );
 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBeUndefined();
+  });
+
+  it('keeps a declared aria-labelledby while an option of another type renders a control under the field id', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { title: 'Name', type: 'string' }] } },
+      },
+      initialFormData: { pet: 'Rex' },
+      presentation: { fields: { OneOfField: { labelledBy: 'aria-labelledby' } } },
+    });
+
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
+    expect(node.querySelector('input#root_pet')).toHaveAttribute('aria-labelledby', fieldLabelId('root_pet'));
   });
 
   it.each<[string, RJSFSchema]>([

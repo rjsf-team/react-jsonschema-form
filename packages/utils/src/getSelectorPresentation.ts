@@ -12,23 +12,18 @@ function asSelectorPart<P extends PartPresentation>(part: P): P {
 /** Derives the plan of the selector a field renders to pick its `anyOf`/`oneOf` option from the field's plan. The
  * selector draws the parts the field's plan has the field draw itself, as a theme whose template draws no label
  * declares, and is named and described by the parts drawn above it: named through `aria-labelledby`, since the `for` of
- * a template's label names the field's own control rather than the selector, by the `aria-label` the field's control
- * takes where `ui:label: false` hides its label, or by `fallbackName` where the field has no label text, and described
- * by the parts that render, marked invalid while the field shows errors. It is neither required nor marked so, since it
- * picks an option index rather than form data and holds one unless its widget offers an empty choice, which clears the
- * field's data with it. The plan is that of the field rendering the options, so a component rendered beside them, such
- * as a custom field or an object with properties, hands it none of the parts it draws itself
+ * a template's label names the field's own control rather than the selector, or by the `aria-label` the field's control
+ * takes where `ui:label: false` hides its label, and described by the parts that render, marked invalid while the
+ * field shows errors. It is neither required nor marked so, since it picks an option index rather than form data and
+ * holds one unless its widget offers an empty choice, which clears the field's data with it. The plan is that of the
+ * field rendering the options, so a component rendered beside them, such as a custom field or an object with
+ * properties, hands it none of the parts it draws itself
  *
  * @param field - The plan of the field the selector picks the option of
  * @param selectorId - The id of the selector, which is its own
- * @param [fallbackName] - The `aria-label` of the selector of a field with no label text, which nothing else names
  * @returns - The selector's plan, with no control when the field has none on screen
  */
-export default function getSelectorPresentation(
-  field: FieldPresentation,
-  selectorId: string,
-  fallbackName?: string,
-): FieldPresentation {
+export default function getSelectorPresentation(field: FieldPresentation, selectorId: string): FieldPresentation {
   let control: FieldPresentation['control'];
   if (field.control) {
     // From the field's parts alone: its control's own describers, such as its examples list, describe that control
@@ -38,8 +33,6 @@ export default function getSelectorPresentation(
       attributes['aria-labelledby'] = field.label.id;
     } else if (ariaLabel) {
       attributes['aria-label'] = ariaLabel;
-    } else if (!field.label.text && fallbackName) {
-      attributes['aria-label'] = fallbackName;
     }
     control = { id: selectorId, attributes };
   }
