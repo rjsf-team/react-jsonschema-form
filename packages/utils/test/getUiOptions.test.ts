@@ -59,7 +59,9 @@ const results: Record<string, UIOptionsType> = {
   },
 };
 
-/** One case of `uiSchema`. Two cases hold shapes the type forbids on purpose, so the fixture can't carry `UiSchema` itself */
+/** One case of `uiSchema`. The fixture stays unannotated so that `keyof typeof` catches a misspelled case, and so that
+ * each case reads back as what it holds rather than as `unknown`
+ */
 function uiSchemaCase(name: keyof typeof uiSchema) {
   return uiSchema[name] as UiSchema;
 }

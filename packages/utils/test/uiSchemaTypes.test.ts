@@ -201,6 +201,10 @@ describe('UiSchema type', () => {
     expect(ui.loose?.nested).toEqual({ 'ui:title': 'Nested' });
   });
 
+  it('reads a field typed `any` back as `unknown`', () => {
+    expectTypeOf<UiSchema<{ meta: any }>['meta']>().toBeUnknown();
+  });
+
   it('keeps the ui: namespace open for theme and application directives', () => {
     const ui: Known = { 'ui:order': ['name', '*'], 'ui:myTheme:thing': 42 };
 
