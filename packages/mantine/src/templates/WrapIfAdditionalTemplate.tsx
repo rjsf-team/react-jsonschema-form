@@ -25,7 +25,12 @@ import { useAriaDescribedByProps } from '../utils.tsx';
  * the template wraps
  */
 function KeyTextInput({ id, describedBy, ...props }: TextInputProps & { id: string; describedBy?: string }) {
-  const ariaProps = useAriaDescribedByProps('TextInput', id, {}, { describedBy });
+  const ariaProps = useAriaDescribedByProps(
+    'TextInput',
+    id,
+    {},
+    { describedBy, label: typeof props.label === 'string' ? props.label : undefined },
+  );
   return <TextInput id={id} {...props} {...ariaProps} />;
 }
 

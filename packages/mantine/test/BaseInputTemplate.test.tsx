@@ -36,6 +36,20 @@ function renderTemplate(props: Partial<BaseInputTemplateProps> = {}) {
 }
 
 describe('mantine BaseInputTemplate', () => {
+  // Without a plan, `hideLabel` says a label drawn elsewhere, such as by a custom field, names the input
+  test.each([
+    [false, 'Name'],
+    [true, null],
+  ])(
+    'rendered without a plan, hideLabel %s, gives the aria-label %s where inputWrapperOrder leaves out the label',
+    (hideLabel, ariaLabel) => {
+      // oxlint-disable-next-line typescript/no-deprecated -- a widget rendered without a plan reads the deprecated prop
+      const { container } = renderTemplate({ hideLabel, options: { inputWrapperOrder: ['input', 'error'] } });
+
+      expect(container.querySelector('input')!.getAttribute('aria-label')).toBe(ariaLabel);
+    },
+  );
+
   test('calls `onChange` with the new value when there is no override', async () => {
     const onChange = vi.fn();
 

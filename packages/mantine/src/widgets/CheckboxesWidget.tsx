@@ -12,7 +12,7 @@ import {
   useOptionFocusHandlers,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, GroupOptions, useGroupAriaProps } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, GroupOptions, groupExcludedKeys, useGroupAriaProps } from '../utils.tsx';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -29,7 +29,7 @@ export default function CheckboxesWidget<
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
-  const themeProps = cleanupOptions(options, props);
+  const themeProps = cleanupOptions(options, props, groupExcludedKeys);
   const fieldDisabled = disabled || readonly;
 
   const handleChange = useCallback(

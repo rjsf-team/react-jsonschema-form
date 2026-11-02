@@ -62,6 +62,21 @@ describe('aria-labelledby', () => {
       ? widgets.filter(([name]) => name !== 'select' && name !== 'multi-select')
       : widgets;
 
+  describe.each(labelCases.filter(([, labelSchema]) => labelSchema.title))(
+    'with %s',
+    (_, labelSchema, labelUiSchema) => {
+      // The groups and the alt-date parts, whose `id` isn't on the control a user focuses, have tests of their own below
+      test.each(widgets.filter(([name]) => !['checkboxes', 'radio', 'alt-date', 'alt-datetime'].includes(name)))(
+        '%s widget is named by the field title',
+        (__, schema, uiSchema) => {
+          const { container } = renderField({ ...schema, ...labelSchema }, { ...uiSchema, ...labelUiSchema });
+
+          expect(container.querySelector('[id="root"]')).toHaveAccessibleName('A title');
+        },
+      );
+    },
+  );
+
   describe.each(labelCases)('with %s', (labelCase, labelSchema, labelUiSchema) => {
     test.each(labelCaseWidgets(labelCase))('%s widget only references elements that exist', (_, schema, uiSchema) => {
       const { container } = renderField({ ...schema, ...labelSchema }, { ...uiSchema, ...labelUiSchema });
@@ -657,6 +672,127 @@ describe('aria-labelledby', () => {
       expect(wrapper.style.cursor).toBe('pointer');
     }
   });
+
+  test.each([
+    ['Input theme', { wrapperProps: { 'data-x': 'theme' } }, [false, true, true, true]],
+    ['ui:options.wrapperProps', { 'data-x': 'own' }, [true, false, false, false]],
+  ] as [string, GenericObjectType, boolean[]][])(
+    "alt-date widget applies wrapperProps from the %s once, to the field's or each part's wrapper",
+    (source, props, expected) => {
+      const { container } = render(titledForm('alt-date', { type: 'string' }, source, props));
+
+      const fieldWrapper = container.querySelector(`.mantine-InputWrapper-root:has(> [id="${titleId('root')}"])`)!;
+      const wrappers = Array.from(container.querySelectorAll('.mantine-InputWrapper-root'));
+      expect(wrappers[0]).toBe(fieldWrapper);
+      expect(wrappers.map((wrapper) => wrapper.hasAttribute('data-x'))).toEqual(expected);
+    },
+  );
+
+  test("alt-date widget styles its field's title by the classNames in the Input theme's wrapperProps, less their root", () => {
+    const { container } = render(
+      titledForm('alt-date', { type: 'string' }, 'Input theme', {
+        wrapperProps: { classNames: { label: 'theme-label', root: 'theme-root' } },
+      }),
+    );
+
+    const fieldWrapper = container.querySelector('.mantine-InputWrapper-root')!;
+    expect(document.getElementById(titleId('root'))).toHaveClass('theme-label');
+    expect(fieldWrapper).not.toHaveClass('theme-root');
+  });
+
+  test("alt-date widget orders its field's wrapper by an inputWrapperOrder in the Input theme's wrapperProps", () => {
+    const { container } = render(
+      titledForm('alt-date', { type: 'string', description: 'A description' }, 'Input theme', {
+        wrapperProps: { inputWrapperOrder: ['input', 'label'] },
+      }),
+    );
+
+    const fieldWrapper = container.querySelector('.mantine-InputWrapper-root')!;
+    expect(fieldWrapper.lastElementChild).toHaveAttribute('id', titleId('root'));
+    expect(screen.queryByText('A description')).not.toBeInTheDocument();
+  });
+
+  test('additional property key input is named by its label when the theme inputWrapperOrder leaves it out', () => {
+    render(
+      themedForm(
+        { TextInput: { defaultProps: { inputWrapperOrder: orderWithoutLabel } } },
+        { type: 'object', title: 'A title', additionalProperties: { type: 'string' } },
+        {},
+        { formData: { foo: 'bar' } },
+      ),
+    );
+
+    expect(document.getElementById('root_foo__key')).toHaveAccessibleName('foo Key');
+  });
+
+  test.each([
+    ['text', { type: 'string' }],
+    ['select', enumSchema],
+  ] as [string, RJSFSchema][])(
+    '%s widget keeps the aria-label of its ui:options when its inputWrapperOrder leaves the label out',
+    (_, schema) => {
+      renderField(
+        { ...schema, title: 'A title' },
+        { 'ui:options': { 'aria-label': 'Paint', inputWrapperOrder: orderWithoutLabel } },
+      );
+
+      expect(document.getElementById('root')).toHaveAccessibleName('Paint');
+    },
+  );
+
+  const sizedInputs: [string, string, RJSFSchema, string][] = [
+    ['range', 'Slider', { type: 'integer' }, '.mantine-Slider-root'],
+    ['alt-date', 'Select', { type: 'string' }, '.mantine-Select-root'],
+  ];
+  /** The distinct `data-size` values of the elements `selector` finds, so that none found fails a comparison */
+  const sizesOf = (container: HTMLElement, selector: string) =>
+    new Set(Array.from(container.querySelectorAll(selector), (element) => element.getAttribute('data-size')));
+
+  test.each(
+    sizedInputs.flatMap(([widget, , schema, selector]) =>
+      titleOptionSources.map((source) => [widget, source, schema, selector] as [string, string, RJSFSchema, string]),
+    ),
+  )('%s widget sizes its inputs as its wrapper, by a size from the %s', (widget, source, schema, selector) => {
+    const { container } = render(titledForm(widget, schema, source, { size: 'xl' }));
+
+    expect(sizesOf(container, '.mantine-InputWrapper-root')).toEqual(new Set(['xl']));
+    expect(sizesOf(container, selector)).toEqual(new Set(['xl']));
+  });
+
+  // As Mantine resolves an input's size: the field's own, then its component's theme, then the Input theme
+  test.each(sizedInputs)(
+    "%s widget sizes its inputs by the %s theme over the Input theme, and by the field's own size over both",
+    (widget, component, schema, selector) => {
+      const components = { Input: { defaultProps: { size: 'xs' } }, [component]: { defaultProps: { size: 'xl' } } };
+      const { container, unmount } = render(
+        themedForm(components, { ...schema, title: 'A title' }, { 'ui:widget': widget }),
+      );
+
+      expect(sizesOf(container, selector)).toEqual(new Set(['xl']));
+      unmount();
+
+      const own = render(
+        themedForm(components, { ...schema, title: 'A title' }, { 'ui:widget': widget, 'ui:options': { size: 'md' } }),
+      );
+      expect(sizesOf(own.container, selector)).toEqual(new Set(['md']));
+    },
+  );
+
+  // As a Mantine input takes its top-level `size`, leaving `wrapperProps.size` to its wrapper
+  test.each(sizedInputs)(
+    "%s widget sizes its inputs by ui:options.size over its wrapperProps' size, which sizes its wrapper",
+    (widget, _, schema, selector) => {
+      const { container } = render(
+        titledForm(widget, schema, 'ui:options', { size: 'md', wrapperProps: { size: 'xl' } }),
+      );
+
+      expect(container.querySelector(`.mantine-InputWrapper-root:has(> [id="${titleId('root')}"])`)).toHaveAttribute(
+        'data-size',
+        'xl',
+      );
+      expect(sizesOf(container, selector)).toEqual(new Set(['md']));
+    },
+  );
 
   test.each(titledWidgets)(
     '%s widget applies root props from its ui:options.wrapperProps to the field wrapper',

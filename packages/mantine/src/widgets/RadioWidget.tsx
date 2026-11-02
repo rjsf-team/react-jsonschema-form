@@ -12,7 +12,7 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, GroupOptions, useGroupAriaProps } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, GroupOptions, groupExcludedKeys, useGroupAriaProps } from '../utils.tsx';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -29,7 +29,7 @@ export default function RadioWidget<
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
-  const themeProps = cleanupOptions(options, props);
+  const themeProps = cleanupOptions(options, props, groupExcludedKeys);
   const fieldDisabled = disabled || readonly;
 
   const handleChange = useCallback(
