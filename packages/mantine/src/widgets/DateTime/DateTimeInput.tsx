@@ -53,6 +53,7 @@ const offsetValueFormatter = (value?: DateStringValue | Date | null) => {
 };
 
 const TIME_FORMAT = 'HH:mm:ss';
+const MIDNIGHT = '00:00:00';
 const DATE_ONLY_FORMAT = 'YYYY-MM-DD';
 const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -140,7 +141,7 @@ export default function DateTimeInput<
   );
   if (prevTimeValue !== value) {
     setPrevTimeValue(value);
-    setPendingTime(value);
+    setPendingTime('');
   }
 
   const commit = useCallback(
@@ -153,7 +154,7 @@ export default function DateTimeInput<
   const handleChange = useCallback(
     (nextValue: DateStringValue | Date | null) => {
       const isDateOnly = typeof nextValue === 'string' && DATE_ONLY_PATTERN.test(nextValue);
-      commit(withTime && nextValue && isDateOnly ? withTimeOfDay(nextValue, timeValue || '00:00:00') : nextValue);
+      commit(withTime && nextValue && isDateOnly ? withTimeOfDay(nextValue, timeValue || MIDNIGHT) : nextValue);
       setPendingTime('');
     },
     [commit, withTime, timeValue],
@@ -173,6 +174,16 @@ export default function DateTimeInput<
     },
     [commit, parsedValue],
   );
+
+  // `TimePicker` reports its clear button as the same `''` as a half-edited segment, so the button is the only place a
+  // clear can be told apart; the remount re-syncs the picker, which stops following `value` after reporting `''`
+  const handleTimeClear = useCallback(() => {
+    if (parsedValue) {
+      commit(withTimeOfDay(parsedValue, MIDNIGHT));
+    }
+    setPendingTime('');
+    setTimeResetKey((key) => key + 1);
+  }, [commit, parsedValue]);
 
   const handleBlur = useCallback(() => {
     if (onBlur) {
@@ -196,9 +207,7 @@ export default function DateTimeInput<
 
   const error = getWidgetError<T, S, F>(props);
   const { translateString } = registry;
-  const withSeconds =
-    (typeof displayFormat === 'string' && hasSeconds(displayFormat)) ||
-    (typeof valueFormat === 'string' && hasSeconds(valueFormat));
+  const withSeconds = typeof displayFormat === 'string' && hasSeconds(displayFormat);
   const withTimePicker = useCallback(
     (children: ReactNode) => (
       <Group gap='xs' wrap='nowrap' align='flex-start'>
@@ -233,6 +242,13 @@ export default function DateTimeInput<
             ...timePickerOptions?.hoursInputProps,
           }}
           popoverProps={{ withinPortal: false, ...timePickerOptions?.popoverProps }}
+          clearButtonProps={{
+            ...timePickerOptions?.clearButtonProps,
+            onClick: (event) => {
+              timePickerOptions?.clearButtonProps?.onClick?.(event);
+              handleTimeClear();
+            },
+          }}
         />
       </Group>
     ),
@@ -242,6 +258,7 @@ export default function DateTimeInput<
       handleTimeChange,
       handleFocus,
       handleTimeBlur,
+      handleTimeClear,
       timeResetKey,
       disabled,
       readonly,

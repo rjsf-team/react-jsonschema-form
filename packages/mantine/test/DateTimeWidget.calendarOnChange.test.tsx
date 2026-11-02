@@ -116,4 +116,41 @@ describe('DateTimeWidget calendar-click onChange', () => {
 
     expect(onChange).toHaveBeenCalledWith('2024-01-15T10:30:15');
   });
+
+  test('commits midnight, not a time held earlier, when the value is reset from outside before a date is picked', async () => {
+    const onChange = vi.fn();
+    const props = { onChange, schema: { type: 'string', format: 'iso-date-time' } } as const;
+    const { rerender } = render(
+      <MantineProvider>
+        <DateTimeWidget {...makeProps(props)} />
+      </MantineProvider>,
+    );
+
+    await user.click(screen.getByText('pick time'));
+    rerender(
+      <MantineProvider>
+        <DateTimeWidget {...makeProps({ ...props, value: undefined })} />
+      </MantineProvider>,
+    );
+    await user.click(screen.getByText('pick date'));
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith('2024-01-15T00:00:00');
+  });
+
+  test('does not apply a held time to a second date pick once the first has used it', async () => {
+    const onChange = vi.fn();
+    render(
+      <MantineProvider>
+        <DateTimeWidget {...makeProps({ onChange, schema: { type: 'string', format: 'iso-date-time' } })} />
+      </MantineProvider>,
+    );
+
+    await user.click(screen.getByText('pick time'));
+    await user.click(screen.getByText('pick date'));
+    await user.click(screen.getByText('pick date'));
+
+    expect(onChange).toHaveBeenNthCalledWith(1, '2024-01-15T10:30:15');
+    expect(onChange).toHaveBeenNthCalledWith(2, '2024-01-15T00:00:00');
+  });
 });

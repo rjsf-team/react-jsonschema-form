@@ -178,6 +178,52 @@ describe('DateTimeWidget', () => {
       expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('15');
     });
 
+    test('drops a held time when the value is reset from outside the widget', async () => {
+      const props = { schema: { type: 'string', format: 'iso-date-time' } } as const;
+      const { rerender } = renderWidget(props);
+
+      await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+      await user.keyboard('083015');
+      expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('08');
+
+      rerender(
+        <MantineProvider>
+          <DateTimeWidget {...makeProps({ ...props, value: undefined })} />
+        </MantineProvider>,
+      );
+
+      expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+      expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('');
+      expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('');
+    });
+
+    test('does not show an unparseable stored value in the time picker', () => {
+      renderWidget({ value: 'not a date', schema: { type: 'string', format: 'iso-date-time' } });
+
+      expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+      expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('');
+    });
+
+    test.each([
+      ['displayFormat', { displayFormat: 'YYYY-MM-DD HH:mm' }],
+      ['a displayFormat with a literal containing an s', { displayFormat: '[as of] YYYY-MM-DD HH:mm' }],
+      ['valueFormat when there is no displayFormat', { valueFormat: 'YYYY-MM-DDTHH:mm' }],
+    ])('hides the seconds segment from %s without seconds', (_, options) => {
+      renderWidget({ options, schema: { type: 'string', format: 'iso-date-time' } });
+
+      expect(screen.getByRole('spinbutton', { name: 'minute' })).toBeInTheDocument();
+      expect(screen.queryByRole('spinbutton', { name: 'second' })).not.toBeInTheDocument();
+    });
+
+    test('shows the seconds segment when displayFormat has seconds but valueFormat does not', () => {
+      renderWidget({
+        options: { displayFormat: 'YYYY-MM-DD HH:mm:ss', valueFormat: 'YYYY-MM-DDTHH:mm' },
+        schema: { type: 'string', format: 'iso-date-time' },
+      });
+
+      expect(screen.getByRole('spinbutton', { name: 'second' })).toBeInTheDocument();
+    });
+
     test('describes the hours input by the field ids and marks it invalid when there are errors', () => {
       renderWidget({
         options: { description: 'Test description' },
@@ -217,23 +263,65 @@ describe('DateTimeWidget', () => {
       expect(onChange).not.toHaveBeenCalled();
     });
 
-    test('clearable time does not commit value when cleared', async () => {
-      const onChange = vi.fn();
-      const onClearBtnClick = vi.fn();
-      renderWidget({
-        onChange,
-        value: '2024-01-01T10:30:00',
-        options: {
-          clearable: true,
-          timePickerProps: { clearButtonProps: { 'aria-label': 'clear-btn', onClick: onClearBtnClick } },
-        },
+    describe('clearing the time', () => {
+      const schemaProps = { schema: { type: 'string', format: 'iso-date-time' } } as const;
+      const clearButtonProps = { 'aria-label': 'clear-btn' };
+
+      test('commits the stored date at midnight, and still calls a clear button onClick from timePickerProps', async () => {
+        const onChange = vi.fn();
+        const onClearBtnClick = vi.fn();
+        renderWidget({
+          onChange,
+          value: '2024-01-01T10:30:00',
+          options: {
+            clearable: true,
+            timePickerProps: { clearButtonProps: { ...clearButtonProps, onClick: onClearBtnClick } },
+          },
+          ...schemaProps,
+        });
+
+        await user.click(screen.getByRole('button', { name: 'clear-btn' }));
+
+        expect(onClearBtnClick).toHaveBeenCalled();
+        expect(onChange).toHaveBeenLastCalledWith('2024-01-01T00:00:00');
       });
 
-      const clearButton = screen.getByRole('button', { name: 'clear-btn' });
-      await user.click(clearButton);
+      test('shows the committed midnight instead of blank segments', async () => {
+        const props = {
+          value: '2024-01-01T10:30:00',
+          options: { clearable: true, timePickerProps: { clearButtonProps } },
+          ...schemaProps,
+        };
+        const { rerender } = renderWidget(props);
 
-      expect(onClearBtnClick).toHaveBeenCalled();
-      expect(onChange).not.toHaveBeenCalled();
+        await user.click(screen.getByRole('button', { name: 'clear-btn' }));
+        rerender(
+          <MantineProvider>
+            <DateTimeWidget {...makeProps({ ...props, value: '2024-01-01T00:00:00' })} />
+          </MantineProvider>,
+        );
+
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('00');
+        expect(screen.getByRole('spinbutton', { name: 'minute' })).toHaveValue('00');
+        expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('00');
+      });
+
+      test('drops a held time without committing when there is no date', async () => {
+        const onChange = vi.fn();
+        renderWidget({
+          onChange,
+          options: { clearable: true, timePickerProps: { clearButtonProps } },
+          ...schemaProps,
+        });
+
+        await user.click(screen.getByRole('spinbutton', { name: 'hour' }));
+        await user.keyboard('083015');
+        await user.click(screen.getByRole('button', { name: 'clear-btn' }));
+
+        expect(onChange).not.toHaveBeenCalled();
+        expect(screen.getByRole('spinbutton', { name: 'hour' })).toHaveValue('');
+        expect(screen.getByRole('spinbutton', { name: 'second' })).toHaveValue('');
+      });
     });
 
     describe('editing a segment away', () => {
