@@ -1409,7 +1409,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // A schema change sanitizes the data for the new schema's tree, as an edit does for the tree it leads to, and leaves
   // the data of a disabled or read-only form as it is, as an edit there does
   const isSanitized = !props.disabled && !props.readonly;
-  const options = { isSanitized, clears: isSanitized && fillsOverClears(props) ? current?.formData : undefined };
+  const options = { isSanitized, clears: fillsOverClears(props) && isSanitized ? current?.formData : undefined };
   const { formData, context, areSchemaUtilsReused } = deriveFormData(current, inputFormData, options, props);
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   const baseline = current ? rederiveBaseline(current, formData, options, props, context.schemaUtils) : formData;
