@@ -70,8 +70,8 @@ export interface SchemaFieldPresentationInputs<
   required: boolean;
   /** The plan of the field above rendering the same id */
   inherited?: FieldPresentation;
-  /** The field the `anyOf`/`oneOf` option shown renders with, null where the field renders its options and shows none.
-   * Undefined where it renders none, or the option is a `$ref` cycle, which names no field
+  /** The field the `anyOf`/`oneOf` option shown renders with, null where the field renders its options and none renders
+   * under its id. Undefined where it renders none, or the option is a `$ref` cycle, which names no field
    */
   shownOptionField?: ShownOptionField<T, S, F> | null;
 }
@@ -106,7 +106,7 @@ export interface ShownOptionField<
  * all the same
  *
  * @param registry - The registry, whose `fields` and `presentation` are read
- * @param option - The field the option shown renders with, null where none is shown
+ * @param option - The field the option shown renders with, null where none renders under the field's id
  * @returns - How the label reaches the option's control
  */
 function shownOptionLabelledBy<
