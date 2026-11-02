@@ -117,7 +117,10 @@ export interface FormProps<
   // Form registry
   /** The dictionary of registered fields in the form */
   fields?: RegistryFieldsType<Uninferred<T>, S, F>;
-  /** The dictionary of registered templates in the form; Partial allows a subset to be provided beyond the defaults */
+  /** The dictionary of registered templates in the form; any subset of them may be provided beyond the defaults. Spelled
+   * as a mapped type because `Omit` on `TemplatesType` collapses to its string index signature, which would leave every
+   * declared template unchecked
+   */
   templates?: {
     [K in keyof TemplatesType<Uninferred<T>, S, F> as K extends 'ButtonTemplates' ? never : K]?: TemplatesType<
       Uninferred<T>,
