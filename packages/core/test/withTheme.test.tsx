@@ -189,7 +189,9 @@ describe('withTheme', () => {
 
   describe('With templates', () => {
     it('checks a declared template against its own props, beside the open custom entries', () => {
-      const unrelatedTemplate = ({ unrelated }: { unrelated: string }) => <div>{unrelated}</div>;
+      const unrelatedTemplate = ({ unrelated }: { unrelated: string }) => (
+        <div className='unrelated-template'>{unrelated}</div>
+      );
       const formTemplates: FormProps['templates'] = {
         // @ts-expect-error `FieldTemplate` takes `FieldTemplateProps`, which hold no `unrelated`
         FieldTemplate: unrelatedTemplate,
@@ -202,8 +204,16 @@ describe('withTheme', () => {
           MyCustomTemplate: () => <div />,
         },
       };
-      expect(formTemplates).toBeDefined();
-      expect(withTheme(theme)).toBeInstanceOf(Function);
+
+      const fromForm = createComponent(WrapperClassComponent({}), {
+        schema: { type: 'string' },
+        validator,
+        templates: formTemplates,
+      });
+      const fromTheme = createComponent(withTheme(theme), { schema: { type: 'string' }, validator });
+
+      expect(fromForm.node.querySelectorAll('.unrelated-template')).toHaveLength(1);
+      expect(fromTheme.node.querySelectorAll('.unrelated-template')).toHaveLength(1);
     });
 
     it('should use the withTheme template', () => {

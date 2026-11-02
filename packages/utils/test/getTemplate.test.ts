@@ -1,4 +1,3 @@
-import type { ComponentType } from 'react';
 import { Component, createElement, forwardRef, lazy, memo } from 'react';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
@@ -8,6 +7,7 @@ import {
   englishStringTranslator,
   getTemplate,
   getTemplates,
+  isComponentType,
   mergeThemePresentation,
   pickGlobalUiOptions,
   resetLogOnce,
@@ -374,7 +374,9 @@ describe('a custom entry in TemplatesType', () => {
       // @ts-expect-error a custom entry's props type is `never`
       createElement(readBack, { label: 'Label' });
     }
-    const Typed = templates.FunctionTemplate as ComponentType<CustomProps>;
-    expect(createElement(Typed, { label: 'Label' }).props).toEqual({ label: 'Label' });
+    if (!isComponentType<CustomProps>(readBack)) {
+      throw new Error('a function template is a component');
+    }
+    expect(createElement(readBack, { label: 'Label' }).props).toEqual({ label: 'Label' });
   });
 });

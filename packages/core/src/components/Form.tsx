@@ -10,7 +10,9 @@ import {
   useSyncExternalStore,
 } from 'react';
 import type {
+  CustomTemplateEntries,
   CustomValidator,
+  DeclaredTemplatesType,
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
@@ -117,19 +119,10 @@ export interface FormProps<
   // Form registry
   /** The dictionary of registered fields in the form */
   fields?: RegistryFieldsType<Uninferred<T>, S, F>;
-  /** The dictionary of registered templates in the form; any subset of them may be provided beyond the defaults. Spelled
-   * as a mapped type because `Omit` on `TemplatesType` collapses to its string index signature, which would leave every
-   * declared template unchecked
-   */
-  templates?: {
-    [K in keyof TemplatesType<Uninferred<T>, S, F> as K extends 'ButtonTemplates' ? never : K]?: TemplatesType<
-      Uninferred<T>,
-      S,
-      F
-    >[K];
-  } & {
-    ButtonTemplates?: Partial<TemplatesType<Uninferred<T>, S, F>['ButtonTemplates']>;
-  };
+  /** The dictionary of registered templates in the form; any subset of them may be provided beyond the defaults */
+  templates?: Partial<Omit<DeclaredTemplatesType<Uninferred<T>, S, F>, 'ButtonTemplates'>> & {
+    ButtonTemplates?: Partial<DeclaredTemplatesType<Uninferred<T>, S, F>['ButtonTemplates']>;
+  } & CustomTemplateEntries;
   /** The dictionary of registered widgets in the form */
   widgets?: RegistryWidgetsType<Uninferred<T>, S, F>;
   /** Which parts of a field the registered fields and widgets draw themselves, layered over the theme's declarations,

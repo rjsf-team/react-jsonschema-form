@@ -1,6 +1,6 @@
 import describeUnresolvedComponent from './describeUnresolvedComponent.ts';
 import logOnce from './logOnce.ts';
-import type { TemplatesType } from './types.ts';
+import type { DeclaredTemplatesType } from './types.ts';
 
 /** The names of the templates `TemplatesType` declares that a field's options may override (every one but
  * `ButtonTemplates`, which `getTemplate()` reads from the registry alone), as an object checked against
@@ -32,7 +32,7 @@ export const OVERRIDABLE_TEMPLATE_NAME_MAP = {
   UnsupportedFieldTemplate: true,
   WrapIfAdditionalTemplate: true,
 } satisfies Record<
-  Exclude<keyof { [K in keyof TemplatesType as string extends K ? never : K]: unknown }, 'ButtonTemplates'>,
+  Exclude<keyof DeclaredTemplatesType, 'ButtonTemplates'>,
   true
 >;
 
