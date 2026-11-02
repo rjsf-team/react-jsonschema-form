@@ -5866,6 +5866,69 @@ describe('ArrayField', () => {
         expect(getFormData()).toEqual(expected);
       });
 
+      it('follows the item own lock for copy and remove, but not for add', async () => {
+        const { getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string', default: 'new' } },
+          uiSchema: { 'ui:copyable': true, items: { 'ui:disabled': true } },
+          initialFormData: ['a', 'b'],
+          templates: { ArrayFieldItemTemplate: DirectCallItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Copy 0' }));
+        await user.click(screen.getByRole('button', { name: 'Remove 0' }));
+        expect(getFormData()).toEqual(['a', 'b']);
+
+        await user.click(screen.getByRole('button', { name: 'Add after 0' }));
+        expect(getFormData()).toEqual(['a', 'new', 'b']);
+      });
+
+      it.each([
+        { button: 'Add after 0', expected: [['a', 1]], caseName: 'not after a fixed item before the last' },
+        { button: 'Add after 1', expected: [['a', 1, true]], caseName: 'after the last fixed item' },
+      ])('$caseName of a tuple', async ({ button, expected }) => {
+        const { getFormData } = createFormComponent({
+          schema: {
+            type: 'array',
+            items: [{ type: 'string' }, { type: 'number' }],
+            additionalItems: { type: 'boolean', default: true },
+          },
+          initialFormData: ['a', 1],
+          templates: { ArrayFieldItemTemplate: DirectCallItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(expected[0]);
+      });
+
+      it.each([
+        { caseName: 'a disabled array', uiSchema: { 'ui:disabled': true }, schema: {} },
+        { caseName: 'a read-only array', uiSchema: { 'ui:readonly': true }, schema: {} },
+        { caseName: 'an array at maxItems', uiSchema: {}, schema: { maxItems: 1 } },
+      ])('keeps onAddClick from appending to $caseName', async ({ uiSchema, schema }) => {
+        function DirectAddTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
+          return (
+            <div>
+              {items}
+              <button type='submit' onClick={onAddClick}>
+                Append
+              </button>
+            </div>
+          );
+        }
+        const { getFormData, onSubmit } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' }, ...schema },
+          uiSchema,
+          initialFormData: ['a'],
+          templates: { ArrayFieldTemplate: DirectAddTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Append' }));
+
+        expect(getFormData()).toEqual(['a']);
+        expect(onSubmit).not.toHaveBeenCalled();
+      });
+
       it.each(['onAddItem', 'onCopyItem', 'onRemoveItem', 'onMoveUpItem', 'onMoveDownItem'] as const)(
         'keeps a refused %s from submitting the form',
         async (handler) => {

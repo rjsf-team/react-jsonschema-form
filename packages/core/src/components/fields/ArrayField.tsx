@@ -169,6 +169,26 @@ function canAddItem<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   return addable;
 }
 
+/** The `onAddClick` a template gets, which does what the array's add button can. A refused press still prevents the
+ * default, so a template's button that isn't `type='button'` doesn't submit the form
+ *
+ * @param handleAppendItem - Appends an item
+ * @param addable - Whether the add button can act
+ * @returns - The handler to publish
+ */
+function useAddClick(handleAppendItem: (event: ArrayButtonEvent) => void, addable: boolean) {
+  return useCallback(
+    (event: ArrayButtonEvent) => {
+      if (addable) {
+        handleAppendItem(event);
+      } else {
+        event?.preventDefault();
+      }
+    },
+    [addable, handleAppendItem],
+  );
+}
+
 /** `canAddItem()` for a tuple, which can only add an item that its `additionalItems` describes */
 function canAddTupleItem<
   T = unknown,
@@ -623,6 +643,8 @@ function ArrayFieldItemInner<
   title: string | undefined;
   itemName?: string;
   canAdd: boolean;
+  /** Whether an item can go after this one, which only the last fixed item of a tuple and its additional items allow */
+  canAddAfter: boolean;
   canRemove?: boolean;
   canMoveUp: boolean;
   canMoveDown: boolean;
@@ -652,6 +674,7 @@ function ArrayFieldItemInner<
     uiOptions,
     parentUiSchema,
     canAdd,
+    canAddAfter,
     canRemove = true,
     canMoveUp,
     canMoveDown,
@@ -775,7 +798,7 @@ function ArrayFieldItemInner<
   // What decides each button, so a template calling these from its own control can't do what the button can't. A
   // refused press still prevents the default, so a template's button that isn't `type='button'` doesn't submit the form
   const locked = lockedDisabled || lockedReadonly;
-  const addsItem = canAdd && !disabled && !readonly;
+  const addsItem = canAddAfter && !disabled && !readonly;
   const copiesItem = has.copy && !locked;
   const removesItem = has.remove && !locked;
   const movesUp = has.moveUp && !locked;
@@ -940,6 +963,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     () => canAddItem<T, S, F>(registry, schema, formData, uiSchema) && (!renderOptionalField || hasFormData),
     [registry, schema, formData, uiSchema, renderOptionalField, hasFormData],
   );
+  const onAddClick = useAddClick(handleAppendItem, canAdd && !disabled && !readonly);
   const actualFormData = hasFormData ? keyedFormData : [];
   const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
   const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
@@ -969,6 +993,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
         itemName: itemNames?.[index],
         canAdd,
+        canAddAfter: canAdd,
         canMoveUp: index > 0,
         canMoveDown: index < formData.length - 1,
         rawItemSchema: schemaItems,
@@ -992,7 +1017,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     disabled,
     id,
     uiSchema,
-    onAddClick: handleAppendItem,
+    onAddClick,
     readonly,
     hideError,
     required,
@@ -1062,6 +1087,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   // These are the props passed into the render function
   const canAdd = canAddTupleItem<T, S, F>(registry, schema, items, uiSchema) && (!renderOptionalField || hasFormData);
+  const onAddClick = useAddClick(handleAppendItem, canAdd && !disabled && !readonly);
   const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiSchema, uiOptions, schemaItems.length);
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
@@ -1106,6 +1132,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
         itemName: itemNames?.[index],
         canAdd,
+        canAddAfter: canAdd && index >= schemaItems.length - 1,
         canRemove: additional,
         canMoveUp: index >= schemaItems.length + 1,
         canMoveDown: additional && index < items.length - 1,
@@ -1126,7 +1153,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       };
       return <ArrayFieldItem key={key} {...itemProps} />;
     }),
-    onAddClick: handleAppendItem,
+    onAddClick,
     readonly,
     hideError,
     required,
