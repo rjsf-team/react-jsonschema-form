@@ -242,11 +242,11 @@ Returns the `pattern` and `accept` a widget passes `BaseInputTemplate`, to sprea
 
 #### Parameters
 
-- props: BaseInputTemplateProps<T, S, F> - The props of the `BaseInputTemplate`
+- props: BaseInputTemplateProps&lt;T, S, F> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick<BaseInputTemplateProps<T, S, F>, 'accept' | 'pattern'>: The `pattern` and `accept` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps&lt;T, S, F>, 'accept' | 'pattern'>: The `pattern` and `accept` to spread after the derived input props
 
 ### callWithDeferredThrow()
 
