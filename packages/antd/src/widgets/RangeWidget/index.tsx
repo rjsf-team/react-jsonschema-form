@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, rangeSpec } from '@rjsf/utils';
+import { getControlAttributes, rangeSpec, toNumericValue } from '@rjsf/utils';
 import { Slider } from 'antd';
 
 import useControlState from '../../controlState.ts';
@@ -57,8 +57,8 @@ export default function RangeWidget<
 
   const { min, max, step } = rangeSpec(schema);
   // An empty value is drawn at `min`, where antd's `Slider` draws an empty one, rather than at a native input's midpoint
-  const drawnValue =
-    typeof value === 'number' && Number.isFinite(value) ? nativeRangeValue(value, min, max, step) : (min ?? 0);
+  const numericValue = toNumericValue(value);
+  const drawnValue = numericValue === undefined ? (min ?? 0) : nativeRangeValue(numericValue, min, max, step);
 
   const {
     'aria-labelledby': ariaLabelledBy,

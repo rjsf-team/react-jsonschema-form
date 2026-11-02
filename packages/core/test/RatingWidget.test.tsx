@@ -22,6 +22,18 @@ describe('RatingWidget', () => {
     expect(getFormData()).toBe('4');
   });
 
+  it('writes a number to a field whose type allows a string too', async () => {
+    const { getFormData } = createFormComponent({
+      schema: { type: ['integer', 'string'] },
+      uiSchema: { 'ui:widget': 'RatingWidget' },
+      initialFormData: 3,
+    });
+
+    await user.click(screen.getAllByRole('radio')[4]);
+
+    expect(getFormData()).toBe(4);
+  });
+
   it.each([
     { caseName: 'an integer field holding a numeric string', schema: { type: 'integer' }, formData: '3', expected: 4 },
     {

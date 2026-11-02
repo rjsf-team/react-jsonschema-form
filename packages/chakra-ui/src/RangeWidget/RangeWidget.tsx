@@ -8,6 +8,7 @@ import {
   hasWidgetErrors,
   labelValue,
   rangeSpec,
+  toNumericValue,
   widgetDrawsLabelText,
 } from '@rjsf/utils';
 
@@ -49,6 +50,14 @@ export default function RangeWidget<
   }, []);
   const handleChange = ({ value: newValue }: SliderValueChangeDetails) =>
     onChange(newValue === undefined ? options.emptyValue : newValue[0]);
+  const numericValue = toNumericValue(value);
+  // Zag reports only a value that changes, so a press or a key that leaves an empty range's thumb at its minimum commits
+  // the minimum itself, as moving a native range's thumb there would
+  const handleChangeEnd = ({ value: newValue }: SliderValueChangeDetails) => {
+    if (numericValue === undefined) {
+      onChange(newValue[0]);
+    }
+  };
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
@@ -79,11 +88,12 @@ export default function RangeWidget<
         // The thumb, which a user focuses, carries the field's id, and is named by the label through
         // `aria-labelledby`, since a `for` can't name it
         ids={{ thumb: () => id, label: labelId }}
-        name={htmlName || id}
+        // An empty range draws its thumb at its minimum, which isn't a value it holds, so it submits nothing
+        name={numericValue === undefined ? undefined : htmlName || id}
         disabled={disabled || readonly}
-        // Zag places a thumb with no value at `min`, which is where it stays until the user moves it
-        value={[typeof value === 'number' ? value : (spec.min ?? 0)]}
+        value={[numericValue ?? spec.min ?? 0]}
         onValueChange={handleChange}
+        onValueChangeEnd={handleChangeEnd}
         onBlur={handleBlur}
         onFocus={handleFocus}
         thumbProps={{

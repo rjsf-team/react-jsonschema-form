@@ -176,6 +176,7 @@ import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } 
 import type { ObjectPath } from './pathUtils.ts';
 import pickGlobalUiOptions from './pickGlobalUiOptions.ts';
 import rangeSpec from './rangeSpec.ts';
+import ratingStoresString from './ratingStoresString.ts';
 import rendersOwnFieldBesideOption, { hasOwnContentBesideOptions } from './rendersOwnFieldBesideOption.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
@@ -204,6 +205,7 @@ import toDateString from './toDateString.ts';
 import toErrorList from './toErrorList.ts';
 import toErrorSchema from './toErrorSchema.ts';
 import toInputValue from './toInputValue.ts';
+import toNumericValue from './toNumericValue.ts';
 import uiBooleanOption from './uiBooleanOption.ts';
 import unwrapErrorHandler from './unwrapErrorHandler.ts';
 import type { DateElementProps, UseAltDateWidgetResult } from './useAltDateWidgetProps.tsx';
@@ -451,7 +453,9 @@ export {
   toDateString,
   toErrorList,
   toErrorSchema,
+  ratingStoresString,
   toInputValue,
+  toNumericValue,
   ROOT_FIELD_PATH,
   toFieldPath,
   fieldPathFromList,

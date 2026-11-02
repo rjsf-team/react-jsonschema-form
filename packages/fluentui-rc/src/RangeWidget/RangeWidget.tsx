@@ -2,7 +2,7 @@ import type { FocusEvent } from 'react';
 import type { SliderProps } from '@fluentui/react-components';
 import { Label, makeStyles, Slider } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, labelValue, rangeSpec, widgetDrawsLabelText } from '@rjsf/utils';
+import { getControlAttributes, labelValue, rangeSpec, toNumericValue, widgetDrawsLabelText } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   // Fluent's `Slider` keeps a 120px minimum width, which would push it out of a narrower layout grid column
@@ -38,7 +38,7 @@ export default function RangeWidget<
   // A label holding only a required field's `*` would name the slider "star", so one is drawn only with text
   const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const sliderProps = {
-    value: typeof value === 'number' ? value : undefined,
+    value: toNumericValue(value),
     label,
     id,
     name: htmlName || id,

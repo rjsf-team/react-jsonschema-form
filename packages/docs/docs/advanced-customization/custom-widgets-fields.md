@@ -139,7 +139,7 @@ const CustomTextWidget = function (props: WidgetProps) {
     props.onChange(value, raiseError, id);
   };
 
-  return <input id={id} onChange={raiseErrorOnChange} value={toInputValue(value || '')} />;
+  return <input id={id} onChange={raiseErrorOnChange} value={toInputValue(value)} />;
 };
 
 const widgets: RegistryWidgetsType = {

@@ -343,6 +343,71 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     expect(container.querySelector('[data-scope="radio-group"][data-part="root"]')).toHaveAttribute('data-invalid');
   });
 
+  test('an empty range submits nothing, until it holds a value', async () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 1, maximum: 9 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+      />,
+    );
+    const form = elementOf(container, 'form', HTMLFormElement);
+
+    expect([...new FormData(form).keys()]).toEqual([]);
+
+    screen.getByRole('slider').focus();
+    await user.keyboard('{End}');
+    // Zag focuses the thumb in the next frame, which throws once the test has unmounted the slider
+    await new Promise(requestAnimationFrame);
+
+    expect(new FormData(form).get('root')).toBe('9');
+  });
+
+  test('a range holding a value submits it', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 1, maximum: 9 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+        initialFormData={5}
+      />,
+    );
+
+    expect(new FormData(elementOf(container, 'form', HTMLFormElement)).get('root')).toBe('5');
+  });
+
+  test('draws a numeric string at its number', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 1, maximum: 9 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+        initialFormData='7'
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '7');
+  });
+
+  test('commits the minimum from an empty range whose thumb a key leaves there', async () => {
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 1, maximum: 9 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    screen.getByRole('slider').focus();
+    await user.keyboard('{Home}');
+    // Zag focuses the thumb in the next frame, which throws once the test has unmounted the slider
+    await new Promise(requestAnimationFrame);
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
+  });
+
   test('focuses the slider thumb under ui:autofocus, as core focuses its range input', () => {
     render(
       <WrappedForm
@@ -1141,6 +1206,7 @@ describe('chakra-ui names and focuses its controls as core does', () => {
         uiSchema={{ volume: uiSchema }}
         nameGenerator={bracketNameGenerator}
         validator={validator}
+        initialFormData={{ volume: 5 }}
       />,
     );
 

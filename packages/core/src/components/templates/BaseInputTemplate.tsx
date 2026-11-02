@@ -7,7 +7,6 @@ import {
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
-  getSchemaType,
   toInputValue,
 } from '@rjsf/utils';
 
@@ -72,13 +71,7 @@ export default function BaseInputTemplate<
     ...('inputMode' in rest ? { inputMode: rest.inputMode } : undefined),
   };
 
-  const schemaType = getSchemaType(schema);
-  let inputValue;
-  if (schemaType === 'number' || schemaType === 'integer') {
-    inputValue = toInputValue(value);
-  } else {
-    inputValue = toInputValue(value);
-  }
+  const inputValue = toInputValue(value);
 
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>

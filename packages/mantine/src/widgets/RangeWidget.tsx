@@ -12,7 +12,7 @@ import type {
 } from '@mantine/core';
 import { Slider, Input, useProps } from '@mantine/core';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, rangeSpec, titleId, widgetDrawsLabel } from '@rjsf/utils';
+import { getControlAttributes, rangeSpec, titleId, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import type { OwnKeys } from '../utils.tsx';
 import { cleanupOptions, getOwnLabel, useFieldWrapperProps, useHiddenTitle, useShownSuccessId } from '../utils.tsx';
@@ -170,7 +170,7 @@ export default function RangeWidget<
           describedBy={describedBy}
           labelledBy={labelledBy ?? (label ? titleId(id) : undefined)}
           name={htmlName || id}
-          value={typeof value === 'number' ? value : undefined}
+          value={toNumericValue(value)}
           max={max}
           min={min}
           step={step}

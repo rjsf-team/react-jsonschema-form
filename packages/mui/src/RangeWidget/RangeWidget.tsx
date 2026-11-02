@@ -10,6 +10,7 @@ import {
   getLabelId,
   labelValue,
   rangeSpec,
+  toNumericValue,
   widgetDrawsLabel,
   widgetDrawsLabelText,
 } from '@rjsf/utils';
@@ -63,10 +64,8 @@ export default function RangeWidget<
       rootRef.current?.querySelector('input')?.focus();
     }
   }, []);
-  const sliderValue =
-    typeof value === 'number' || (isRangeOfValues && value.every((part): part is number => typeof part === 'number'))
-      ? value
-      : undefined;
+  const isNumberRange = isRangeOfValues && value.every((part): part is number => typeof part === 'number');
+  const sliderValue = isNumberRange ? value : toNumericValue(value);
   const sliderProps = { value: sliderValue, name: htmlName || id, ...rangeSpec<S>(schema) };
 
   const handleChange: NonNullable<SliderProps['onChange']> = (_, newValue) => onChange(newValue);
