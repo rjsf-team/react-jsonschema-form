@@ -9,6 +9,27 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
+/** The row of the key, the value and the remove button: `--rjsf-control-row` is the value's control row, past the key's
+ * label. Both labels wrap, as daisyUI's `.label` doesn't, so a long one stays in its column rather than running into the
+ * next
+ */
+const ROW_CLASSES =
+  'grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] ' +
+  'has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]';
+
+/** The value, which spans every row, so a value of any `FieldTemplate` keeps its column. It is laid out on the row's rows
+ * where it is this theme's `FieldTemplate` `<div>` drawing the value's label, and otherwise the last row, `1fr`, takes
+ * whatever height it needs past the key's label and input. A button drawn beside the value's control, such as the Clear
+ * button, keeps its own width rather than stretching to the column. The rows don't collapse margins, so the part above a
+ * description drops its bottom margin, as does a description ending it, and the description's top margin spaces them
+ */
+const VALUE_CLASSES =
+  'rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] ' +
+  'has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid ' +
+  'has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start ' +
+  'has-[>.field-template>label]:[&>.field-template>button]:justify-self-start ' +
+  'has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0';
+
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
  *
@@ -41,6 +62,7 @@ export default function WrapIfAdditionalTemplate<
     onRemoveProperty,
     propertyNamesEnum,
     keyNotAllowed,
+    // Kept out of the props this spreads onto the element
     rawDescription,
     registry,
     ...rest
@@ -55,8 +77,6 @@ export default function WrapIfAdditionalTemplate<
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const keyId = additionalKeyId(id);
-  const marginDesc = rawDescription ? 10 : 0;
-  const margin = hasKeyLabel ? 32 + marginDesc : 10;
 
   if (!additional) {
     return (
@@ -68,10 +88,11 @@ export default function WrapIfAdditionalTemplate<
 
   return (
     <div className={`wrap-if-additional-template ${classNames ?? ''}`.trim()} style={style} {...rest}>
-      <div className='flex items-baseline' style={{ justifyContent: 'space-between' }}>
-        <div>
+      {/* The key's input and the remove button sit on the value's control row, however far its label wraps */}
+      <div className={ROW_CLASSES}>
+        <div className='rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]'>
           {hasKeyLabel && (
-            <label htmlFor={keyId} className='label'>
+            <label htmlFor={keyId} className='rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]'>
               <span className='label-text'>{keyLabel}</span>
             </label>
           )}
@@ -104,8 +125,8 @@ export default function WrapIfAdditionalTemplate<
             />
           )}
         </div>
-        {children}
-        <div className='flex self-start' style={{ marginTop: `${margin}px` }}>
+        <div className={VALUE_CLASSES}>{children}</div>
+        <div className='flex row-[var(--rjsf-control-row)/-1]'>
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'

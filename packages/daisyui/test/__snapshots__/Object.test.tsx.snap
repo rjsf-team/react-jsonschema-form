@@ -299,12 +299,13 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_customField__key"
                     >
                       <span
@@ -321,34 +322,37 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_customField"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_customField"
                       >
                         <span
-                          id="root_customField__label"
+                          class="label-text font-medium"
                         >
-                          customField
+                          <span
+                            id="root_customField__label"
+                          >
+                            customField
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_customField"
-                      name="root[customField]"
-                      placeholder=""
-                      type="text"
-                      value="customValue"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_customField"
+                        name="root[customField]"
+                        placeholder=""
+                        type="text"
+                        value="customValue"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -568,7 +572,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(7,auto)_1fr] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:items-start has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-[2/-1] has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>button]:justify-self-start has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>:is(:last-child,:has(+.rjsf-field-description))]:mb-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>:is(:last-child,:has(+.rjsf-field-description))>.rjsf-field-description:last-child]:mb-0 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -687,7 +691,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(7,auto)_1fr] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:items-start has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-[2/-1] has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>button]:justify-self-start has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>:is(:last-child,:has(+.rjsf-field-description))]:mb-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>:is(:last-child,:has(+.rjsf-field-description))>.rjsf-field-description:last-child]:mb-0 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -1315,7 +1319,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                         class="rjsf-array-item-list"
                       >
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(7,auto)_1fr] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:items-start has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-[2/-1] has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>button]:justify-self-start has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>:is(:last-child,:has(+.rjsf-field-description))]:mb-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>:is(:last-child,:has(+.rjsf-field-description))>.rjsf-field-description:last-child]:mb-0 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -1434,7 +1438,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                           </div>
                         </div>
                         <div
-                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px data-display-label:[&>.rjsf-array-item-toolbox]:mt-5"
+                          class="rjsf-array-item fieldset flex items-start gap-2 bg-base-100 border border-base-300 p-4 first:rounded-t-lg last:rounded-b-lg not-last:-mb-px has-[>.rjsf-field>.field-template>label]:grid has-[>.rjsf-field>.field-template>label]:has-[>.rjsf-array-item-toolbox]:grid-cols-[minmax(0,1fr)_auto] has-[>.rjsf-field>.field-template>label]:grid-rows-[repeat(7,auto)_1fr] has-[>.rjsf-field>.field-template>label]:gap-y-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-cols-1 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:grid-rows-subgrid has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:row-span-full has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template]:items-start has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:row-[2/-1] has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>button]:justify-self-start has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>:is(:last-child,:has(+.rjsf-field-description))]:mb-0 has-[>.rjsf-field>.field-template>label]:[&>.rjsf-field>.field-template>:is(:last-child,:has(+.rjsf-field-description))>.rjsf-field-description:last-child]:mb-0 data-display-label:not-has-[>.rjsf-field>.field-template>label]:[&>.rjsf-array-item-toolbox]:mt-5"
                           data-display-label="true"
                         >
                           <div
@@ -1763,12 +1767,13 @@ exports[`object fields > additionalProperties 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -1785,34 +1790,37 @@ exports[`object fields > additionalProperties 1`] = `
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_foo"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_foo"
                       >
                         <span
-                          id="root_foo__label"
+                          class="label-text font-medium"
                         >
-                          foo
+                          <span
+                            id="root_foo__label"
+                          >
+                            foo
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -1908,12 +1916,13 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -2005,41 +2014,44 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     </div>
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_foo"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_foo"
                       >
                         <span
-                          id="root_foo__label"
+                          class="label-text font-medium"
                         >
-                          foo
+                          <span
+                            id="root_foo__label"
+                          >
+                            foo
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      aria-describedby="root_foo__description"
-                      class="input input-bordered w-full"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
-                    <div
-                      class="rjsf-field-description text-sm text-base-content/80 my-4"
-                      id="root_foo__description"
-                    >
-                      A description
+                      </label>
+                      <input
+                        aria-describedby="root_foo__description"
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                      <div
+                        class="rjsf-field-description text-sm text-base-content/80 my-4"
+                        id="root_foo__description"
+                      >
+                        A description
+                      </div>
                     </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -2135,12 +2147,13 @@ exports[`object fields > additionalProperties, array type 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-array"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -2157,65 +2170,68 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
                     <div
-                      class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                      class="field-template mb-3"
                     >
-                      <h3
-                        class="text-2xl font-bold"
-                      >
-                        <span
-                          id="root_foo__title"
-                        >
-                          foo
-                        </span>
-                      </h3>
                       <div
-                        class="flex flex-col gap-4"
+                        class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
                       >
+                        <h3
+                          class="text-2xl font-bold"
+                        >
+                          <span
+                            id="root_foo__title"
+                          >
+                            foo
+                          </span>
+                        </h3>
                         <div
-                          class="rjsf-array-item-list"
+                          class="flex flex-col gap-4"
                         >
                           <div
-                            class="text-center italic text-base-content/70"
+                            class="rjsf-array-item-list"
                           >
-                            No items yet. Use the button below to add some.
-                          </div>
-                        </div>
-                        <div
-                          class="flex justify-end"
-                        >
-                          <button
-                            class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
-                            id="root_foo__add"
-                            title="Add"
-                            type="button"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              class="rjsf-button-icon h-5 w-5"
-                              fill="none"
-                              height="1em"
-                              stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              viewBox="0 0 16 16"
-                              width="1em"
+                            <div
+                              class="text-center italic text-base-content/70"
                             >
-                              <path
-                                d="M8 3v10M3 8h10"
-                              />
-                            </svg>
-                          </button>
+                              No items yet. Use the button below to add some.
+                            </div>
+                          </div>
+                          <div
+                            class="flex justify-end"
+                          >
+                            <button
+                              class="rjsf-button rjsf-button-info btn btn-sm rjsf-btn-add rjsf-array-item-add btn-primary"
+                              id="root_foo__add"
+                              title="Add"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                class="rjsf-button-icon h-5 w-5"
+                                fill="none"
+                                height="1em"
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                viewBox="0 0 16 16"
+                                width="1em"
+                              >
+                                <path
+                                  d="M8 3v10M3 8h10"
+                                />
+                              </svg>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -2311,12 +2327,13 @@ exports[`object fields > additionalProperties, description 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -2333,41 +2350,44 @@ exports[`object fields > additionalProperties, description 1`] = `
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_foo"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_foo"
                       >
                         <span
-                          id="root_foo__label"
+                          class="label-text font-medium"
                         >
-                          foo
+                          <span
+                            id="root_foo__label"
+                          >
+                            foo
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      aria-describedby="root_foo__description"
-                      class="input input-bordered w-full"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
-                    <div
-                      class="rjsf-field-description text-sm text-base-content/80 my-4"
-                      id="root_foo__description"
-                    >
-                      item description
+                      </label>
+                      <input
+                        aria-describedby="root_foo__description"
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                      <div
+                        class="rjsf-field-description text-sm text-base-content/80 my-4"
+                        id="root_foo__description"
+                      >
+                        item description
+                      </div>
                     </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -2463,12 +2483,13 @@ exports[`object fields > additionalProperties, label off 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -2485,34 +2506,37 @@ exports[`object fields > additionalProperties, label off 1`] = `
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_foo"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_foo"
                       >
                         <span
-                          id="root_foo__label"
+                          class="label-text font-medium"
                         >
-                          foo
+                          <span
+                            id="root_foo__label"
+                          >
+                            foo
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -2608,12 +2632,13 @@ exports[`object fields > additionalProperties, object type 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-object"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -2630,61 +2655,65 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
                     <div
-                      class="form-control "
+                      class="field-template mb-3"
                     >
                       <div
-                        class="title-field mb-6"
+                        class="form-control "
                       >
-                        <h2
-                          class="text-3xl font-bold text-primary mb-2"
+                        <div
+                          class="title-field mb-6"
                         >
-                          <span
-                            id="root_foo__title"
+                          <h2
+                            class="text-3xl font-bold text-primary mb-2"
                           >
-                            foo
-                          </span>
-                        </h2>
+                            <span
+                              id="root_foo__title"
+                            >
+                              foo
+                            </span>
+                          </h2>
+                          <div
+                            class="divider divider-primary my-0"
+                          />
+                        </div>
                         <div
-                          class="divider divider-primary my-0"
-                        />
-                      </div>
-                      <div
-                        class="grid grid-cols-1 gap-4 mb-4"
-                      >
-                        <div
-                          class=""
+                          class="grid grid-cols-1 gap-4 mb-4"
                         >
                           <div
-                            class="flex-grow rjsf-field rjsf-field-string"
+                            class=""
                           >
                             <div
-                              class="field-template mb-3"
+                              class="flex-grow rjsf-field rjsf-field-string"
                             >
-                              <label
-                                class="label"
-                                for="root_foo_foo"
+                              <div
+                                class="field-template mb-3"
                               >
-                                <span
-                                  class="label-text font-medium"
+                                <label
+                                  class="label"
+                                  for="root_foo_foo"
                                 >
                                   <span
-                                    id="root_foo_foo__label"
+                                    class="label-text font-medium"
                                   >
-                                    foo
+                                    <span
+                                      id="root_foo_foo__label"
+                                    >
+                                      foo
+                                    </span>
                                   </span>
-                                </span>
-                              </label>
-                              <input
-                                class="input input-bordered w-full"
-                                id="root_foo_foo"
-                                name="root_foo_foo"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
+                                </label>
+                                <input
+                                  class="input input-bordered w-full"
+                                  id="root_foo_foo"
+                                  name="root_foo_foo"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -2692,8 +2721,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -2789,12 +2817,13 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -2886,34 +2915,37 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     </div>
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_foo"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_foo"
                       >
                         <span
-                          id="root_foo__label"
+                          class="label-text font-medium"
                         >
-                          foo
+                          <span
+                            id="root_foo__label"
+                          >
+                            foo
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -3009,12 +3041,13 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -3106,34 +3139,37 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     </div>
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_foo"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_foo"
                       >
                         <span
-                          id="root_foo__label"
+                          class="label-text font-medium"
                         >
-                          foo (deprecated)
+                          <span
+                            id="root_foo__label"
+                          >
+                            foo (deprecated)
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -3333,12 +3369,13 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_abc__key"
                     >
                       <span
@@ -3355,34 +3392,37 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_abc"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_abc"
                       >
                         <span
-                          id="root_abc__label"
+                          class="label-text font-medium"
                         >
-                          abc
+                          <span
+                            id="root_abc__label"
+                          >
+                            abc
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_abc"
-                      name="root_abc"
-                      placeholder=""
-                      type="text"
-                      value="hello"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_abc"
+                        name="root_abc"
+                        placeholder=""
+                        type="text"
+                        value="hello"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -3418,12 +3458,13 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                 class="wrap-if-additional-template rjsf-field rjsf-field-null rjsf-field-error"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_a__key"
                     >
                       <span
@@ -3442,46 +3483,49 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <fieldset
-                      aria-labelledby="root_a__title"
-                      class="rjsf-own-title-group"
-                      style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <div
-                        class="title-field mb-6"
+                      <fieldset
+                        aria-labelledby="root_a__title"
+                        class="rjsf-own-title-group"
+                        style="border: 0px; margin: 0px; padding: 0px; min-width: 0px;"
                       >
-                        <h2
-                          class="text-3xl font-bold text-primary mb-2"
-                        >
-                          <span
-                            id="root_a__title"
-                          >
-                            a
-                          </span>
-                        </h2>
                         <div
-                          class="divider divider-primary my-0"
-                        />
-                      </div>
-                    </fieldset>
-                    <div>
-                      <ul
-                        class="rjsf-error-detail list-disc list-inside text-red-600"
-                        id="root_a__error"
-                      >
-                        <li
-                          class="rjsf-error"
+                          class="title-field mb-6"
                         >
-                          The key "a" is not allowed here
-                        </li>
-                      </ul>
+                          <h2
+                            class="text-3xl font-bold text-primary mb-2"
+                          >
+                            <span
+                              id="root_a__title"
+                            >
+                              a
+                            </span>
+                          </h2>
+                          <div
+                            class="divider divider-primary my-0"
+                          />
+                        </div>
+                      </fieldset>
+                      <div>
+                        <ul
+                          class="rjsf-error-detail list-disc list-inside text-red-600"
+                          id="root_a__error"
+                        >
+                          <li
+                            class="rjsf-error"
+                          >
+                            The key "a" is not allowed here
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -3756,12 +3800,13 @@ exports[`object fields > show add button and fields if additionalProperties is t
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_additionalProperty__key"
                     >
                       <span
@@ -3778,34 +3823,37 @@ exports[`object fields > show add button and fields if additionalProperties is t
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_additionalProperty"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_additionalProperty"
                       >
                         <span
-                          id="root_additionalProperty__label"
+                          class="label-text font-medium"
                         >
-                          additionalProperty
+                          <span
+                            id="root_additionalProperty__label"
+                          >
+                            additionalProperty
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_additionalProperty"
-                      name="root_additionalProperty"
-                      placeholder=""
-                      type="text"
-                      value="should appear"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        placeholder=""
+                        type="text"
+                        value="should appear"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -3923,12 +3971,13 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -3945,34 +3994,37 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_foo"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_foo"
                       >
                         <span
-                          id="root_foo__label"
+                          class="label-text font-medium"
                         >
-                          foo
+                          <span
+                            id="root_foo__label"
+                          >
+                            foo
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -4230,12 +4282,13 @@ exports[`object fields > with title and description > show add button and fields
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_additionalProperty__key"
                     >
                       <span
@@ -4252,34 +4305,37 @@ exports[`object fields > with title and description > show add button and fields
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_additionalProperty"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_additionalProperty"
                       >
                         <span
-                          id="root_additionalProperty__label"
+                          class="label-text font-medium"
                         >
-                          additionalProperty
+                          <span
+                            id="root_additionalProperty__label"
+                          >
+                            additionalProperty
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_additionalProperty"
-                      name="root_additionalProperty"
-                      placeholder=""
-                      type="text"
-                      value="should appear"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        placeholder=""
+                        type="text"
+                        value="should appear"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -4397,12 +4453,13 @@ exports[`object fields > with title and description from both > additionalProper
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -4419,34 +4476,37 @@ exports[`object fields > with title and description from both > additionalProper
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_foo"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_foo"
                       >
                         <span
-                          id="root_foo__label"
+                          class="label-text font-medium"
                         >
-                          foo
+                          <span
+                            id="root_foo__label"
+                          >
+                            foo
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -4704,12 +4764,13 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_foo__key"
                     >
                       <span
@@ -4726,34 +4787,37 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_foo"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_foo"
                       >
                         <span
-                          id="root_foo__label"
+                          class="label-text font-medium"
                         >
-                          foo
+                          <span
+                            id="root_foo__label"
+                          >
+                            foo
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -5011,12 +5075,13 @@ exports[`object fields > with title and description from uiSchema > show add but
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <label
-                      class="label"
+                      class="rjsf-field-label label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_additionalProperty__key"
                     >
                       <span
@@ -5033,34 +5098,37 @@ exports[`object fields > with title and description from uiSchema > show add but
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <label
-                      class="label"
-                      for="root_additionalProperty"
+                    <div
+                      class="field-template mb-3"
                     >
-                      <span
-                        class="label-text font-medium"
+                      <label
+                        class="label"
+                        for="root_additionalProperty"
                       >
                         <span
-                          id="root_additionalProperty__label"
+                          class="label-text font-medium"
                         >
-                          additionalProperty
+                          <span
+                            id="root_additionalProperty__label"
+                          >
+                            additionalProperty
+                          </span>
                         </span>
-                      </span>
-                    </label>
-                    <input
-                      class="input input-bordered w-full"
-                      id="root_additionalProperty"
-                      name="root_additionalProperty"
-                      placeholder=""
-                      type="text"
-                      value="should appear"
-                    />
+                      </label>
+                      <input
+                        class="input input-bordered w-full"
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        placeholder=""
+                        type="text"
+                        value="should appear"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 32px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -5156,10 +5224,11 @@ exports[`object fields > with title and description with global label off > addi
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <input
                       aria-label="foo Key"
                       class="input input-bordered"
@@ -5169,21 +5238,24 @@ exports[`object fields > with title and description with global label off > addi
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <input
-                      aria-label="foo"
-                      class="input input-bordered w-full"
-                      id="root_foo"
-                      name="root_foo"
-                      placeholder=""
-                      type="text"
-                      value="foo"
-                    />
+                    <div
+                      class="field-template mb-3"
+                    >
+                      <input
+                        aria-label="foo"
+                        class="input input-bordered w-full"
+                        id="root_foo"
+                        name="root_foo"
+                        placeholder=""
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 10px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
@@ -5357,10 +5429,11 @@ exports[`object fields > with title and description with global label off > show
                 class="wrap-if-additional-template rjsf-field rjsf-field-string"
               >
                 <div
-                  class="flex items-baseline"
-                  style="justify-content: space-between;"
+                  class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[repeat(7,auto)_1fr] items-start gap-x-2 [--rjsf-control-row:1] has-[>.rjsf-additional-property-key>label]:[--rjsf-control-row:2]"
                 >
-                  <div>
+                  <div
+                    class="rjsf-additional-property-key row-span-full grid grid-cols-1 grid-rows-subgrid items-start [&>:not(label)]:row-[var(--rjsf-control-row)/-1]"
+                  >
                     <input
                       aria-label="additionalProperty Key"
                       class="input input-bordered"
@@ -5370,21 +5443,24 @@ exports[`object fields > with title and description with global label off > show
                     />
                   </div>
                   <div
-                    class="field-template mb-3"
+                    class="rjsf-additional-property-value row-span-full [&>.field-template>label]:whitespace-normal [&>.field-template>label]:[overflow-wrap:anywhere] has-[>.field-template>label]:grid has-[>.field-template>label]:grid-cols-1 has-[>.field-template>label]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:grid has-[>.field-template>label]:[&>.field-template]:grid-cols-1 has-[>.field-template>label]:[&>.field-template]:grid-rows-subgrid has-[>.field-template>label]:[&>.field-template]:row-span-full has-[>.field-template>label]:[&>.field-template]:items-start has-[>.field-template>label]:[&>.field-template>button]:justify-self-start has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)]:mb-0 has-[>.field-template>label]:[&>.field-template>:has(+.rjsf-field-description)>.rjsf-field-description:last-child]:mb-0"
                   >
-                    <input
-                      aria-label="additionalProperty"
-                      class="input input-bordered w-full"
-                      id="root_additionalProperty"
-                      name="root_additionalProperty"
-                      placeholder=""
-                      type="text"
-                      value="should appear"
-                    />
+                    <div
+                      class="field-template mb-3"
+                    >
+                      <input
+                        aria-label="additionalProperty"
+                        class="input input-bordered w-full"
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        placeholder=""
+                        type="text"
+                        value="should appear"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="flex self-start"
-                    style="margin-top: 10px;"
+                    class="flex row-[var(--rjsf-control-row)/-1]"
                   >
                     <button
                       class="rjsf-button rjsf-button-danger btn btn-sm rjsf-object-property-remove"
