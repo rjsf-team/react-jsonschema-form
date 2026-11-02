@@ -512,12 +512,22 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { foo: 'bar' };
         // isEmpty(null) and isEmpty(undefined) are both true, so the schema is treated
         // as a pass-through and source is returned unchanged.
-        // @ts-expect-error: TS2345, a missing schema is what this case checks
-        expect(omitExtraData({ validator: testValidator }, null, undefined, formData)).toEqual({ foo: 'bar' });
-        // @ts-expect-error: TS2345, a missing schema is what this case checks
-        expect(omitExtraData({ validator: testValidator }, undefined, undefined, formData)).toEqual({
-          foo: 'bar',
-        });
+        const withNullSchema = omitExtraData(
+          { validator: testValidator },
+          // @ts-expect-error: TS2345, a missing schema is what this case checks
+          null,
+          undefined,
+          formData,
+        );
+        expect(withNullSchema).toEqual({ foo: 'bar' });
+        const withUndefinedSchema = omitExtraData(
+          { validator: testValidator },
+          // @ts-expect-error: TS2345, a missing schema is what this case checks
+          undefined,
+          undefined,
+          formData,
+        );
+        expect(withUndefinedSchema).toEqual({ foo: 'bar' });
       });
 
       it('should return formData as-is when schema type is non-object but formData is an object', () => {
