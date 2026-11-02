@@ -348,6 +348,35 @@ describe('the plan SchemaField builds', () => {
       expect(node.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
     });
 
+    it('is named by a fallback when its field has no title (#5586)', () => {
+      const { node } = createFormComponent({
+        schema: {
+          oneOf: [
+            { type: 'string', title: 'Text' },
+            { type: 'number', title: 'Num' },
+          ],
+        },
+        initialFormData: 'a',
+      });
+
+      expect(node.querySelector('#root__oneof_select')).toHaveAccessibleName('Select ...');
+    });
+
+    it('is named by its placeholder when its field has no title', () => {
+      const { node } = createFormComponent({
+        schema: {
+          oneOf: [
+            { type: 'string', title: 'Text' },
+            { type: 'number', title: 'Num' },
+          ],
+        },
+        uiSchema: { 'ui:placeholder': 'Pick a kind' },
+        initialFormData: 'a',
+      });
+
+      expect(node.querySelector('#root__oneof_select')).toHaveAccessibleName('Pick a kind');
+    });
+
     it("is named by the label the field's template draws, and described by the parts that render", () => {
       const { node } = createFormComponent({
         schema,
@@ -908,11 +937,11 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
     expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
   });
 
-  it('keeps the for where an option of another type renders a control under the field id', () => {
-    const { outerTemplatePlans } = renderPlans({
-      type: 'object',
-      properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { title: 'Name', type: 'string' }] } },
-    });
+  it('keeps the for while an option of another type renders a control under the field id', () => {
+    const { outerTemplatePlans } = renderPlans(
+      { type: 'object', properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { title: 'Name', type: 'string' }] } } },
+      { initialFormData: { pet: 'Rex' } },
+    );
 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBeUndefined();
   });
@@ -930,8 +959,8 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBe(fieldLabelId('root_pet'));
   });
 
-  it('names a multi-select array option by the field label through aria-labelledby', () => {
-    createFormComponent({
+  it('names a multi-select array option by the for of the field label', () => {
+    const { node } = createFormComponent({
       schema: {
         type: 'object',
         properties: {
@@ -947,11 +976,12 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
     });
 
     const select = screen.getByRole('listbox');
-    expect(select).toHaveAttribute('aria-labelledby', fieldLabelId('root_pet'));
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).toHaveAttribute('for', select.id);
+    expect(select).not.toHaveAttribute('aria-labelledby');
     expect(select).toHaveAccessibleName('Pet');
   });
 
-  it('names a file array option by the field label through aria-labelledby', () => {
+  it('names a file array option by the for of the field label', () => {
     const { node } = createFormComponent({
       schema: {
         type: 'object',
@@ -964,17 +994,21 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
       },
     });
 
-    const input = node.querySelector('input[type="file"]');
-    expect(input).toHaveAttribute('aria-labelledby', fieldLabelId('root_pet'));
+    const input = node.querySelector('input[type="file"]')!;
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).toHaveAttribute('for', input.id);
+    expect(input).not.toHaveAttribute('aria-labelledby');
     expect(input).toHaveAccessibleName('Pet');
   });
 
-  it('keeps the for where an option is a $ref it does not resolve', () => {
-    const { outerTemplatePlans } = renderPlans({
-      type: 'object',
-      definitions: { name: { type: 'string' } },
-      properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { $ref: '#/definitions/name' }] } },
-    });
+  it('keeps the for while an option given by a $ref renders a control under the field id', () => {
+    const { outerTemplatePlans } = renderPlans(
+      {
+        type: 'object',
+        definitions: { name: { type: 'string' } },
+        properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { $ref: '#/definitions/name' }] } },
+      },
+      { initialFormData: { pet: 'Rex' } },
+    );
 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBeUndefined();
   });
@@ -1398,6 +1432,34 @@ describe('an alt-date field', () => {
 
     expect(node.querySelector(`#${fieldLabelId('root_start')}`)?.textContent).toBe(label);
     expect(screen.getByRole('combobox', { name: `${label}, year` })).toBeInTheDocument();
+  });
+
+  describe('as the option an anyOf field shows (#5578)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { when: { title: 'When', anyOf: [{ type: 'string' }, { type: 'number' }] } },
+    };
+
+    it.each(['alt-date', 'alt-datetime'])(
+      "names the %s parts' group by the field label, which draws no for",
+      (widget) => {
+        const { node } = createFormComponent({ schema, uiSchema: { when: { anyOf: [{ 'ui:widget': widget }, {}] } } });
+
+        expect(node.querySelector(`#${fieldLabelId('root_when')}`)?.closest('label')).not.toHaveAttribute('for');
+        expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+      },
+    );
+
+    it('keeps the for while the option shown renders an input', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { when: { anyOf: [{ 'ui:widget': 'alt-date' }, {}] } },
+        initialFormData: { when: 5 },
+      });
+
+      expect(node.querySelector(`#${fieldLabelId('root_when')}`)?.closest('label')).toHaveAttribute('for', 'root_when');
+      expect(node.querySelector('input#root_when')).toHaveAccessibleName('When');
+    });
   });
 });
 
