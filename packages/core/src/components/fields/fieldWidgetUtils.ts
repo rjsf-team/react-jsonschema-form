@@ -324,15 +324,6 @@ export function getTemplateParts(presentation: FieldPresentation | undefined) {
   };
 }
 
-/** Whether `schema` is the stub `retrieveSchema()` makes for an additional property, by the flag it marks it with
- *
- * @param schema - The schema to check
- * @returns - True when the schema describes an additional property
- */
-export function isAdditionalPropertySchema(schema: unknown) {
-  return hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
-}
-
 /** Returns whether the object declares `key` in its own `properties`, rather than holding it as an extra key
  * `retrieveSchema()` stubbed in among them for the form data. A stub is told from a declared property by the flag it
  * carries. The name is read as an own property, since a key called `constructor` or `toString` would otherwise be
@@ -346,17 +337,17 @@ export function declaresProperty<S extends StrictRJSFSchema = RJSFSchema>(
   schemaProperties: NonNullable<S['properties']>,
   key: string,
 ) {
-  return Object.hasOwn(schemaProperties, key) && !isAdditionalPropertySchema(schemaProperties[key]);
+  return Object.hasOwn(schemaProperties, key) && !hasSchemaMarker(schemaProperties[key], ADDITIONAL_PROPERTY_FLAG);
 }
 
 /** Returns `schema` without the `ADDITIONAL_PROPERTY_FLAG` that has its template draw the input and remove button of
  * an extra key, for a field whose key is edited elsewhere or not at all
  *
- * @param schema - The field's schema
+ * @param schema - The field's schema, which may be a boolean subschema
  * @returns - The schema without `ADDITIONAL_PROPERTY_FLAG`, or `schema` itself where it has none
  */
 export function withoutAdditionalFlag<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
-  if (!(ADDITIONAL_PROPERTY_FLAG in schema)) {
+  if (typeof schema !== 'object' || schema === null || !(ADDITIONAL_PROPERTY_FLAG in schema)) {
     return schema;
   }
   const unflagged = { ...schema };
@@ -452,7 +443,9 @@ export function getContainerHeading<
   if (presentation.label.by !== 'self') {
     return '';
   }
-  return (isAdditionalPropertySchema(schema) && (uiOptions.title || schema.title)) || presentation.label.text;
+  return (
+    (hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) && (uiOptions.title || schema.title)) || presentation.label.text
+  );
 }
 
 /** Gets the deprecated `displayLabel` and `rawErrors` a field hands its template, for a template that doesn't read

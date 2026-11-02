@@ -29,6 +29,7 @@ import {
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import rendersOwnFieldBesideOption, { rendersOwnFieldBesideOwnOptions } from '../rendersOwnFieldBesideOption.ts';
@@ -768,7 +769,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   // A subschema already handed out was decided where it was handed out, and a stub for an extra key is a field of its
   // own
   const isDecided = (value: object) =>
-    readProvenance(value, root) !== undefined || Boolean(Reflect.get(value, ADDITIONAL_PROPERTY_FLAG));
+    readProvenance(value, root) !== undefined || hasSchemaMarker(value, ADDITIONAL_PROPERTY_FLAG);
   const { properties } = merged;
   if (PROPERTIES_KEY in merged && !isObject(properties)) {
     // `properties` that holds no subschemas declares none

@@ -2165,20 +2165,6 @@ One with neither renders as the field holding its options, which leaves the cont
 
 - boolean: True when the object renders properties of its own or room for more keys beside its options
 
-### hasVisibleErrors()
-
-Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
-It is the boolean form of [getVisibleErrors()](#getvisibleerrors), for the components that only need to decide whether to render an error state rather than render the errors themselves.
-Deprecated, and kept through v7 for a component rendered without a plan: read [hasWidgetErrors()](#haswidgeterrors) instead, which reads the plan and falls back to this only without one, or a template's `hasErrors` prop. A component drawing the messages itself reads [getErrorsToDraw()](#geterrorstodraw).
-
-#### Parameters
-
-- props: VisibleErrorsProps - The props of the widget or template, from which `rawErrors` and `hideError` are read
-
-#### Returns
-
-- boolean: True when there are errors the component should surface, otherwise false
-
 ### hasSchemaMarker()
 
 Whether `schema` carries the `marker` the schema utilities set on the schemas they build, such as the `ADDITIONAL_PROPERTY_FLAG` `retrieveSchema()` sets on a property an `additionalProperties` adds.
@@ -2192,6 +2178,20 @@ A boolean subschema, which can stand wherever a schema can, carries none.
 #### Returns
 
 - boolean: Whether the marker is set on `schema`
+
+### hasVisibleErrors()
+
+Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
+It is the boolean form of [getVisibleErrors()](#getvisibleerrors), for the components that only need to decide whether to render an error state rather than render the errors themselves.
+Deprecated, and kept through v7 for a component rendered without a plan: read [hasWidgetErrors()](#haswidgeterrors) instead, which reads the plan and falls back to this only without one, or a template's `hasErrors` prop. A component drawing the messages itself reads [getErrorsToDraw()](#geterrorstodraw).
+
+#### Parameters
+
+- props: VisibleErrorsProps - The props of the widget or template, from which `rawErrors` and `hideError` are read
+
+#### Returns
+
+- boolean: True when there are errors the component should surface, otherwise false
 
 ### hasWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
