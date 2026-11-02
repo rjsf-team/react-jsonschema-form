@@ -171,7 +171,11 @@ export default function FieldTemplate<
         style={daisy.style}
       >
         {templateDrawsLabel<T, S, F>(props) && !widgetRendersLabel && !!label && (
-          <label htmlFor={templateLabelFor<T, S, F>(props)} className='label'>
+          // daisyUI's `.label` doesn't wrap, and a label wider than a narrow column would paint over the next one
+          <label
+            htmlFor={templateLabelFor<T, S, F>(props)}
+            className='label whitespace-normal [overflow-wrap:anywhere]'
+          >
             <span className='label-text font-medium'>
               {/* The label's id goes on its text alone, as a group or an option selector is named through it, and the
                   `*` isn't part of that name; a control its `for` names takes the whole label */}

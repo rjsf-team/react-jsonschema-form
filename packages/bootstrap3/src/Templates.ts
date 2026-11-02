@@ -4,6 +4,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } fro
 import AddButton from './AddButton.tsx';
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate.tsx';
 import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate.tsx';
+import GridTemplate from './GridTemplate.tsx';
 import { ClearButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './IconButton.tsx';
 import OptionalDataControlsTemplate from './OptionalDataControlsTemplate.tsx';
 import TitleField from './TitleField.tsx';
@@ -26,6 +27,7 @@ export function generateTemplates<
     // `Partial<TemplatesType>` requires, and `ThemeProps['templates']` can't type a partial one's entries for JSX
     ButtonTemplates: { AddButton, ClearButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, SubmitButton },
     CyclicSchemaExpandTemplate,
+    GridTemplate,
     OptionalDataControlsTemplate,
     TitleFieldTemplate: TitleField,
     WrapIfAdditionalTemplate,

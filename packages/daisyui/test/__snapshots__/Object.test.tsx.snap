@@ -58,7 +58,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             class="field-template mb-3"
                           >
                             <label
-                              class="label"
+                              class="label whitespace-normal [overflow-wrap:anywhere]"
                               for="root_person_name"
                             >
                               <span
@@ -123,7 +123,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       class="field-template mb-3"
                                     >
                                       <label
-                                        class="label"
+                                        class="label whitespace-normal [overflow-wrap:anywhere]"
                                         for="root_person_address_street"
                                       >
                                         <span
@@ -157,7 +157,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       class="field-template mb-3"
                                     >
                                       <label
-                                        class="label"
+                                        class="label whitespace-normal [overflow-wrap:anywhere]"
                                         for="root_person_address_city"
                                       >
                                         <span
@@ -191,7 +191,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       class="field-template mb-3"
                                     >
                                       <label
-                                        class="label"
+                                        class="label whitespace-normal [overflow-wrap:anywhere]"
                                         for="root_person_address_country"
                                       >
                                         <span
@@ -268,7 +268,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_name"
                   >
                     <span
@@ -328,7 +328,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_customField"
                       >
                         <span
@@ -451,7 +451,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_name"
                   >
                     <span
@@ -485,7 +485,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_age"
                   >
                     <span
@@ -525,7 +525,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     class="form-control"
                   >
                     <label
-                      class="label cursor-pointer justify-start"
+                      class="label cursor-pointer justify-start whitespace-normal [overflow-wrap:anywhere]"
                     >
                       <input
                         checked=""
@@ -582,7 +582,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_tags_0"
                               >
                                 <span
@@ -701,7 +701,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_tags_1"
                               >
                                 <span
@@ -885,7 +885,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_firstName"
                   >
                     <span
@@ -919,7 +919,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_lastName"
                   >
                     <span
@@ -953,7 +953,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_age"
                   >
                     <span
@@ -1054,7 +1054,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             class="field-template mb-3"
                           >
                             <label
-                              class="label"
+                              class="label whitespace-normal [overflow-wrap:anywhere]"
                               for="root_person_name"
                             >
                               <span
@@ -1119,7 +1119,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       class="field-template mb-3"
                                     >
                                       <label
-                                        class="label"
+                                        class="label whitespace-normal [overflow-wrap:anywhere]"
                                         for="root_person_address_street"
                                       >
                                         <span
@@ -1153,7 +1153,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       class="field-template mb-3"
                                     >
                                       <label
-                                        class="label"
+                                        class="label whitespace-normal [overflow-wrap:anywhere]"
                                         for="root_person_address_city"
                                       >
                                         <span
@@ -1230,7 +1230,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_name"
                   >
                     <span
@@ -1264,7 +1264,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_count"
                   >
                     <span
@@ -1329,7 +1329,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_items_0"
                               >
                                 <span
@@ -1448,7 +1448,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_items_1"
                               >
                                 <span
@@ -1632,7 +1632,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_firstName"
                   >
                     <span
@@ -1666,7 +1666,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_lastName"
                   >
                     <span
@@ -1700,7 +1700,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_age"
                   >
                     <span
@@ -1796,7 +1796,7 @@ exports[`object fields > additionalProperties 1`] = `
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_foo"
                       >
                         <span
@@ -2020,7 +2020,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_foo"
                       >
                         <span
@@ -2356,7 +2356,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_foo"
                       >
                         <span
@@ -2512,7 +2512,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_foo"
                       >
                         <span
@@ -2692,7 +2692,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                 class="field-template mb-3"
                               >
                                 <label
-                                  class="label"
+                                  class="label whitespace-normal [overflow-wrap:anywhere]"
                                   for="root_foo_foo"
                                 >
                                   <span
@@ -2921,7 +2921,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_foo"
                       >
                         <span
@@ -3145,7 +3145,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_foo"
                       >
                         <span
@@ -3268,7 +3268,7 @@ exports[`object fields > object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_a"
                   >
                     <span
@@ -3302,7 +3302,7 @@ exports[`object fields > object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_b"
                   >
                     <span
@@ -3398,7 +3398,7 @@ exports[`object fields > patternProperties, a key additionalProperties false for
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_abc"
                       >
                         <span
@@ -3609,7 +3609,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
         class="field-template mb-3"
       >
         <label
-          class="label"
+          class="label whitespace-normal [overflow-wrap:anywhere]"
         >
           <span
             class="label-text font-medium"
@@ -3733,7 +3733,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
                         class="field-template mb-3"
                       >
                         <label
-                          class="label"
+                          class="label whitespace-normal [overflow-wrap:anywhere]"
                           for="root_bark"
                         >
                           <span
@@ -3829,7 +3829,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_additionalProperty"
                       >
                         <span
@@ -4000,7 +4000,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_foo"
                       >
                         <span
@@ -4145,7 +4145,7 @@ exports[`object fields > with title and description > object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_a"
                   >
                     <span
@@ -4186,7 +4186,7 @@ exports[`object fields > with title and description > object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_b"
                   >
                     <span
@@ -4311,7 +4311,7 @@ exports[`object fields > with title and description > show add button and fields
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_additionalProperty"
                       >
                         <span
@@ -4482,7 +4482,7 @@ exports[`object fields > with title and description from both > additionalProper
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_foo"
                       >
                         <span
@@ -4627,7 +4627,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_a"
                   >
                     <span
@@ -4668,7 +4668,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_b"
                   >
                     <span
@@ -4793,7 +4793,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_foo"
                       >
                         <span
@@ -4938,7 +4938,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_a"
                   >
                     <span
@@ -4979,7 +4979,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_b"
                   >
                     <span
@@ -5104,7 +5104,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                       class="field-template mb-3"
                     >
                       <label
-                        class="label"
+                        class="label whitespace-normal [overflow-wrap:anywhere]"
                         for="root_additionalProperty"
                       >
                         <span

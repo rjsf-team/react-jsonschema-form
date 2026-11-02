@@ -13,11 +13,13 @@ can be hidden/shown based upon the value(s) of a field. It even supports the inc
 are not associated with a field. Finally, there is built-in support for doing a named look up of data within a special
 location in the `FormContext`.
 
-Since each theme that RJSF supports has its own unique grid system, the `uiSchema` that one creates for the
-`LayoutGridField` for one theme will most likely not work for any other theme unless two themes have the exact same
-grid specification props. It also requires that one understand how to use the grid system of the theme and how it
-interplays with the `LayoutGridField`'s "syntax". In other words, it will likely take some experimentation to get the
-grid looking exactly the way you want it to.
+Each theme that RJSF supports has its own grid system. A column's `span`, in twelfths of a row, lays out the same way
+in every theme, since each theme's `GridTemplate` converts it to its own grid (see [`span` in each theme](#span-in-each-theme)).
+Anything beyond that, such as breakpoints, gaps or a row's own template, uses the theme's own grid props, and a `uiSchema`
+that does will most likely not work for any other theme unless two themes have the exact same grid specification props.
+It also requires that one understand how to use the grid system of the theme and how it interplays with the
+`LayoutGridField`'s "syntax". In other words, it will likely take some experimentation to get the grid looking exactly
+the way you want it to.
 
 Let's break down how to use the `LayoutGridField` one step at a time.
 
@@ -120,8 +122,10 @@ This results in the following UI using the `core` theme's grid:
 ```
 
 As mentioned before, another theme's grid system may render the above example differently. Most likely as three fields
-lined up next to each other. Assume all examples from here on out will be shown using the `core` theme. You may have to
-adjust the `uiSchema` for your theme to achieve the same results.
+lined up next to each other, since fields placed in a row without a `ui:col` are laid out by the theme's own grid.
+Assume all examples from here on out will be shown using the `core` theme. The ones that size every column with `span`
+lay out the same way in every theme; for the others you may have to adjust the `uiSchema` for your theme to achieve the
+same results.
 
 ### `ui:layoutGrid`
 
@@ -272,10 +276,12 @@ Person Info
   +--------------------------+  +--------------------------+  +--------------------------+
 ```
 
-The above example uses the `core` UI theme's `span` property to make the `Person Info` span all 12 columns of a row and
-each of the person name fields span 4 columns within a row. The `core` theme's `GridTemplate` renders every `ui:row` as a
-12-column grid and every `ui:col` as a column spanning `span` of its tracks, or all of them when it has none, laid out by
-the optional `@rjsf/core/rjsf.css` stylesheet. Without that stylesheet the `span` property has no visible effect.
+The above example uses the `span` property to make the `Person Info` span all 12 columns of a row and each of the person
+name fields span 4 columns within a row. `span` counts twelfths of a row in every theme. The `core` theme's
+`GridTemplate` renders every `ui:row` as a 12-column grid and every `ui:col` as a column spanning `span` of its tracks, or
+all of them when it has none, laid out by the optional `@rjsf/core/rjsf.css` stylesheet. Without that stylesheet the
+`span` property has no visible effect in the `core` theme. Every other theme's `GridTemplate` converts `span` to its own
+grid, as [`span` in each theme](#span-in-each-theme) lists.
 
 Now sometimes, depending on the grid system, you don't need to explicitly define both second-level rows, instead
 depending on the column grid behavior. Luckily the `core` theme's grid system is one of those, so the following UI
@@ -421,6 +427,47 @@ also override your theme's `GridTemplate` with your own to fine tune how the pro
 and `ui:columns` are handled. Each `ui:row` and `ui:col` will render a `GridTemplate` passing `column: false` for `ui:row`
 and `column: true` for `ui:col`. The `ui:columns` syntax will render a `GridTemplate` around each of the `children`. Any
 additional properties besides `children` will be directly passed to the `GridTemplate`.
+
+### `span` in each theme
+
+Every theme's `GridTemplate` reads a column's `span` as twelfths of a row and converts it to its own grid. A `span` on a
+`ui:row` is ignored, and RJSF logs a warning saying so, once.
+
+| Theme                   | A column's `span` becomes                                             | Half steps, such as `4.5`                        |
+| ----------------------- | --------------------------------------------------------------------- | ------------------------------------------------ |
+| `core`                  | the `--rjsf-span` custom property, which `rjsf.css` reads             | No                                               |
+| `@rjsf/antd`            | `Col`'s `span`, doubled into antd's 24ths and rounded to a whole 24th | Yes, natively: `4.5` is `9` of antd's 24 columns |
+| `@rjsf/bootstrap3`      | a `col-xs-*` class                                                    | No                                               |
+| `@rjsf/chakra-ui`       | `GridItem`'s `colSpan`                                                | No                                               |
+| `@rjsf/daisyui`         | the column's flex basis                                               | Yes, through RJSF's own column width             |
+| `@rjsf/fluentui-rc`     | the column's `gridColumn` style                                       | No                                               |
+| `@rjsf/mantine`         | `Grid.Col`'s `span`                                                   | Yes, natively                                    |
+| `@rjsf/mui`             | `Grid`'s `size`                                                       | Yes, natively                                    |
+| `@rjsf/react-bootstrap` | `Col`'s `xs`                                                          | No                                               |
+| `@rjsf/shadcn`          | the column's `grid-column` style                                      | No                                               |
+
+Use whole numbers in the themes without half steps: their grids span whole tracks or name a class per width, and a half
+step there logs a warning. antd rounds a `span` finer than a half step, such as `4.3`, to the nearest one and logs a
+warning saying so. daisyui's column widths assume its row's default `gap-4`, so a row given another gap gets
+slightly wrong widths, and a full row of spans may wrap. A mantine row with `fluid: false` also grows its columns to fill
+each line, so spans that add up to less than 12 stretch; give that row `grow: false` to keep them as written.
+
+A theme's own width prop wins over `span`: a `flex` prop or a `flex`, `flexBasis` or `width` style in antd, `size` in mui, `xs` in react-bootstrap, `colSpan` in chakra-ui, a `gridColumn`
+style in fluentui-rc, a `flex`, `flexBasis` or `width` style or a `basis-*` or `w-*` class in daisyui, a `col-xs-*` class in bootstrap3 and a `col-span-*` class in shadcn,
+responsive ones such as `md:col-span-6` included. The column then ignores its `span`, and RJSF logs a warning saying so,
+once. antd's breakpoint props, such as `md`, take over from `span` at their breakpoints, as they do over antd's own
+`span`, and so do bootstrap3's `col-sm-*`, `col-md-*` and `col-lg-*` classes.
+
+In chakra-ui, fluentui-rc and shadcn, a `ui:row` without a column template of its own (`templateColumns`, `templateAreas`, `columns`,
+a `gridTemplateColumns`, `gridTemplateAreas`, `gridTemplate` or `grid` style, the same keys in chakra-ui's `css`, or a `grid-cols-*` class) lays out on 12 tracks, where each child is full width unless it
+spans fewer. A row with a template of its own keeps it, and a `span` then counts that template's tracks, as it counts the
+tracks of a mantine or mui row given `columns` of its own.
+
+In shadcn a column's `span` is an inline `grid-column` style, which overrides a `col-start-*` or `col-end-*` class beside
+it; place such a column with a `gridColumnStart` style instead.
+
+In bootstrap3, give each `ui:row` that holds columns Bootstrap's `row` class (`className: 'row'`), which clears the
+floated `col-xs-*` columns and lines their padding up with the content around the row.
 
 ## Defining the LayoutGridField to render fields conditionally
 
@@ -710,7 +757,7 @@ and
   +--------------------------+  +--------------------------+  +--------------------------+
 ```
 
-As mentioned before, another theme's grid system may render the above example differently.
+Since every column in the above example has a `span`, it lays out the same way in every theme.
 
 ### `ui:condition`
 

@@ -1,13 +1,14 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { gridTests, renderGridColumn } from '@rjsf/snapshot-tests';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import Form from '../src/index.ts';
 
 // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
 gridTests(Form, {
-  ColumnWidthAll: { className: 'col-xs-12' },
-  ColumnWidth4: { className: 'col-xs-4' },
-  ColumnWidth6: { className: 'col-xs-6' },
-  ColumnWidth8: { className: 'col-xs-8' },
+  ColumnWidthAll: { span: 12 },
+  ColumnWidth4: { span: 4 },
+  ColumnWidth6: { span: 6 },
+  ColumnWidth8: { span: 8 },
   Row2Columns: { className: 'row' },
   Row3Columns: { className: 'row' },
   ComplexUiSchema: {
@@ -205,4 +206,43 @@ gridTests(Form, {
       },
     },
   },
+});
+
+describe('GridTemplate span', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  test("sets a column's span as its col-xs class", () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
+    const { row, column } = renderGridColumn(Form, { span: 4 }, { className: 'row' });
+    expect(column).toHaveClass('rjsf-grid-column', 'col-xs-4');
+    expect(row).toHaveClass('row');
+  });
+  test("prefers a column's own col-xs class", () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
+    const { column } = renderGridColumn(Form, { span: 4, className: 'col-xs-6' });
+    expect(column).toHaveClass('col-xs-6');
+    expect(column).not.toHaveClass('col-xs-4');
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` in "root_name" is ignored, since the column has a `col-xs-*` class of its own',
+    );
+  });
+  test("keeps a column's span beside a col-xs-offset class of its own", () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
+    const { column } = renderGridColumn(Form, { span: 4, className: 'col-xs-offset-2' });
+    expect(column).toHaveClass('col-xs-4', 'col-xs-offset-2');
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
+  });
+  test("keeps a column's span below a breakpoint class of its own", () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
+    const { column } = renderGridColumn(Form, { span: 4, className: 'col-md-6' });
+    expect(column).toHaveClass('col-xs-4', 'col-md-6');
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
+  });
+  test('warns that a half step is not a whole number', () => {
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
+    renderGridColumn(Form, { span: 4.5 });
+    expect(warnings.consoleSpy).toHaveBeenCalledWith(
+      'A layout grid column\'s `span` of 4.5 in "root_name" is not a whole number, which this theme\'s grid needs',
+    );
+  });
 });

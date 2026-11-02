@@ -9,7 +9,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <div
-        class="grid gap-2"
+        class="grid gap-2 grid-cols-12 [:where(&)>*]:col-span-full"
       >
         <div
           class="grid grid-cols-1 gap-4 col-span-12"
@@ -982,7 +982,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <div
-        class="grid gap-2"
+        class="grid gap-2 grid-cols-12 [:where(&)>*]:col-span-full"
       >
         <div
           class="grid grid-cols-1 gap-4 col-span-12"
@@ -1986,7 +1986,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <div
-        class="grid gap-2"
+        class="grid gap-2 grid-cols-12 [:where(&)>*]:col-span-full"
       >
         <div
           class="grid grid-cols-1 gap-4 col-span-12"
@@ -2812,7 +2812,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <div
-        class="grid gap-2"
+        class="grid gap-2 grid-cols-12 [:where(&)>*]:col-span-full"
       >
         <div
           class="grid grid-cols-1 gap-4 col-span-12"
@@ -3788,7 +3788,8 @@ exports[`Three even column grid > renders person and address in three columns, n
         class="grid grid-cols-12 gap-4 col-span-12"
       >
         <div
-          class="grid gap-2 col-span-12"
+          class="grid gap-2"
+          style="grid-column: span 12 / span 12;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -3815,7 +3816,8 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-4"
+          class="grid gap-2"
+          style="grid-column: span 4 / span 4;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -3852,7 +3854,8 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-4"
+          class="grid gap-2"
+          style="grid-column: span 4 / span 4;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -3883,7 +3886,8 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-4"
+          class="grid gap-2"
+          style="grid-column: span 4 / span 4;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -3920,7 +3924,8 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-4"
+          class="grid gap-2"
+          style="grid-column: span 4 / span 4;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -3957,7 +3962,8 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-8"
+          class="grid gap-2"
+          style="grid-column: span 8 / span 8;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-array"
@@ -4142,7 +4148,8 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-6"
+          class="grid gap-2"
+          style="grid-column: span 6 / span 6;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4179,7 +4186,8 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-6"
+          class="grid gap-2"
+          style="grid-column: span 6 / span 6;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4210,7 +4218,8 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-4"
+          class="grid gap-2"
+          style="grid-column: span 4 / span 4;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4247,7 +4256,8 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-4"
+          class="grid gap-2"
+          style="grid-column: span 4 / span 4;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4325,7 +4335,8 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-4"
+          class="grid gap-2"
+          style="grid-column: span 4 / span 4;"
         />
       </div>
     </div>
@@ -4354,7 +4365,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
         class="grid grid-cols-12 gap-4 col-span-12"
       >
         <div
-          class="grid gap-2 col-span-12"
+          class="grid gap-2"
+          style="grid-column: span 12 / span 12;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-object"
@@ -4381,7 +4393,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-6"
+          class="grid gap-2"
+          style="grid-column: span 6 / span 6;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4418,7 +4431,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-6"
+          class="grid gap-2"
+          style="grid-column: span 6 / span 6;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4449,7 +4463,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-6"
+          class="grid gap-2"
+          style="grid-column: span 6 / span 6;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4486,7 +4501,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-6"
+          class="grid gap-2"
+          style="grid-column: span 6 / span 6;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4523,7 +4539,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-12"
+          class="grid gap-2"
+          style="grid-column: span 12 / span 12;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-array"
@@ -4708,7 +4725,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-6"
+          class="grid gap-2"
+          style="grid-column: span 6 / span 6;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4745,7 +4763,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-6"
+          class="grid gap-2"
+          style="grid-column: span 6 / span 6;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4776,7 +4795,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-6"
+          class="grid gap-2"
+          style="grid-column: span 6 / span 6;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4813,7 +4833,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-6"
+          class="grid gap-2"
+          style="grid-column: span 6 / span 6;"
         >
           <div
             class="flex flex-col gap-2 rjsf-field rjsf-field-string"
@@ -4891,7 +4912,8 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
         </div>
         <div
-          class="grid gap-2 col-span-12"
+          class="grid gap-2"
+          style="grid-column: span 12 / span 12;"
         />
       </div>
     </div>

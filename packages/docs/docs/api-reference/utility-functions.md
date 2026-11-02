@@ -2476,6 +2476,20 @@ Converts a local Date string into a UTC date string
 
 - string | null | undefined: A UTC date string if `dateString` is truthy and names a valid date; `undefined` for an empty value, and `null` for a value `Date` can't read, as `toJSON()` gives for an invalid date. Years 1-9999 are the supported range, as in `getDateTimeLocalValue()`; a five or six digit year is read all the same, up to the last instant `Date` holds, 275760-09-13T00:00Z, so the string it gives keeps that year and fails `date-time` validation instead of `null` wiping the value
 
+### logGridSpanWarning()
+
+Logs, through [`logOnce()`](#logonce), why a layout grid column's `span` won't lay out as given, for a theme's `GridTemplate`.
+When the column has a width of its own, which the template lets win over `span`, it warns that the `span` is ignored; otherwise, when the theme's grid needs a whole number of twelfths and `span` isn't one, it warns about that.
+Nothing is logged for a column without a `span`.
+
+#### Parameters
+
+- fieldId: string | undefined - The column's `fieldId`, which the warning names
+- span: number | undefined - The column's `span`
+- [options]: `{ ownWidth?: string; wholeSpansOnly?: boolean }` - What the theme's grid makes of the `span`:
+  - [ownWidth]: string - What the column has of its own that wins over `span`, such as ``"a `size`"``, when it has one
+  - [wholeSpansOnly=false]: boolean - Whether the theme's grid needs a whole number of twelfths
+
 ### logOnce()
 
 Logs `message` (followed by `error`, when there is one) through `console.warn()` or `console.error()`, but only the first time that combination of `level`, `message` and `error` is seen, so a warning raised while rendering isn't repeated on every re-render.

@@ -534,7 +534,7 @@ exports[`array fields > empty errors array 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_name"
                   >
                     <span
@@ -701,7 +701,7 @@ exports[`array fields > has errors 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_name"
                   >
                     <span
@@ -782,7 +782,7 @@ exports[`array fields > no errors 1`] = `
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_name"
                   >
                     <span
@@ -867,7 +867,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_0_name"
                               >
                                 <span
@@ -901,7 +901,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_0_value"
                               >
                                 <span
@@ -1036,7 +1036,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_1_name"
                               >
                                 <span
@@ -1070,7 +1070,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_1_value"
                               >
                                 <span
@@ -2484,7 +2484,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_0_name"
                               >
                                 <span
@@ -2518,7 +2518,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_0_value"
                               >
                                 <span
@@ -2653,7 +2653,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_1_name"
                               >
                                 <span
@@ -2687,7 +2687,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_1_value"
                               >
                                 <span
@@ -3148,7 +3148,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_0_name"
                               >
                                 <span
@@ -3303,7 +3303,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                               class="field-template mb-3"
                             >
                               <label
-                                class="label"
+                                class="label whitespace-normal [overflow-wrap:anywhere]"
                                 for="root_1_name"
                               >
                                 <span
@@ -3608,7 +3608,7 @@ exports[`with title and description > array icons 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_0"
                     >
                       <span
@@ -3758,7 +3758,7 @@ exports[`with title and description > array icons 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_1"
                     >
                       <span
@@ -3952,7 +3952,7 @@ exports[`with title and description > checkboxes 1`] = `
         class="field-template mb-3"
       >
         <label
-          class="label"
+          class="label whitespace-normal [overflow-wrap:anywhere]"
           for="root"
         >
           <span
@@ -4137,7 +4137,7 @@ exports[`with title and description > fixed array 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_0"
                     >
                       <span
@@ -4186,7 +4186,7 @@ exports[`with title and description > fixed array 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_1"
                     >
                       <span
@@ -4374,7 +4374,7 @@ exports[`with title and description from both > array icons 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_0"
                     >
                       <span
@@ -4524,7 +4524,7 @@ exports[`with title and description from both > array icons 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_1"
                     >
                       <span
@@ -4718,7 +4718,7 @@ exports[`with title and description from both > checkboxes 1`] = `
         class="field-template mb-3"
       >
         <label
-          class="label"
+          class="label whitespace-normal [overflow-wrap:anywhere]"
           for="root"
         >
           <span
@@ -4903,7 +4903,7 @@ exports[`with title and description from both > fixed array 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_0"
                     >
                       <span
@@ -4952,7 +4952,7 @@ exports[`with title and description from both > fixed array 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_1"
                     >
                       <span
@@ -5140,7 +5140,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_0"
                     >
                       <span
@@ -5290,7 +5290,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_1"
                     >
                       <span
@@ -5484,7 +5484,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         class="field-template mb-3"
       >
         <label
-          class="label"
+          class="label whitespace-normal [overflow-wrap:anywhere]"
           for="root"
         >
           <span
@@ -5669,7 +5669,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_0"
                     >
                       <span
@@ -5718,7 +5718,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     class="field-template mb-3"
                   >
                     <label
-                      class="label"
+                      class="label whitespace-normal [overflow-wrap:anywhere]"
                       for="root_1"
                     >
                       <span

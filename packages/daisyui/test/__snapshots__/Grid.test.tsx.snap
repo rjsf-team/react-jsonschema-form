@@ -12,10 +12,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -48,7 +48,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -61,7 +61,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_first"
                   >
                     <span
@@ -102,7 +102,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_middle"
                   >
                     <span
@@ -137,7 +137,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_last"
                   >
                     <span
@@ -169,7 +169,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -182,7 +182,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_birth_date"
                   >
                     <span
@@ -250,7 +250,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                   >
                     <span
                       class="label-text font-medium"
@@ -380,7 +380,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -393,7 +393,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="flex flex-wrap gap-4"
+                    class="flex flex-wrap gap-4 w-full"
                   >
                     <div
                       class="flex-grow"
@@ -406,7 +406,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_line_1"
                           >
                             <span
@@ -447,7 +447,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_line_2"
                           >
                             <span
@@ -482,7 +482,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_city"
                           >
                             <span
@@ -513,7 +513,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </div>
                     </div>
                     <div
-                      class="flex flex-wrap gap-4"
+                      class="flex flex-wrap gap-4 w-full"
                     >
                       <div
                         class="flex-grow"
@@ -526,7 +526,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="field-template mb-3"
                           >
                             <label
-                              class="label"
+                              class="label whitespace-normal [overflow-wrap:anywhere]"
                               for="root_person_address_state"
                             >
                               <span
@@ -1436,7 +1436,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="field-template mb-3"
                           >
                             <label
-                              class="label"
+                              class="label whitespace-normal [overflow-wrap:anywhere]"
                               for="root_person_address_postal_code"
                             >
                               <span
@@ -1473,7 +1473,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -1573,10 +1573,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -1609,7 +1609,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -1622,7 +1622,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_first"
                   >
                     <span
@@ -1663,7 +1663,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_middle"
                   >
                     <span
@@ -1698,7 +1698,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_last"
                   >
                     <span
@@ -1730,7 +1730,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -1743,7 +1743,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_birth_date"
                   >
                     <span
@@ -1811,7 +1811,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                   >
                     <span
                       class="label-text font-medium"
@@ -1941,7 +1941,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -1954,7 +1954,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="flex flex-wrap gap-4"
+                    class="flex flex-wrap gap-4 w-full"
                   >
                     <div
                       class="flex-grow"
@@ -1967,7 +1967,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_line_1"
                           >
                             <span
@@ -2008,7 +2008,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_line_2"
                           >
                             <span
@@ -2043,7 +2043,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_city"
                           >
                             <span
@@ -2074,7 +2074,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </div>
                     </div>
                     <div
-                      class="flex flex-wrap gap-4"
+                      class="flex flex-wrap gap-4 w-full"
                     >
                       <div
                         class="flex-grow"
@@ -2087,7 +2087,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="field-template mb-3"
                           >
                             <label
-                              class="label"
+                              class="label whitespace-normal [overflow-wrap:anywhere]"
                               for="root_person_address_state"
                             >
                               <span
@@ -2997,7 +2997,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="field-template mb-3"
                           >
                             <label
-                              class="label"
+                              class="label whitespace-normal [overflow-wrap:anywhere]"
                               for="root_person_address_postal_code"
                             >
                               <span
@@ -3034,7 +3034,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -3134,10 +3134,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -3170,7 +3170,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -3183,7 +3183,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_first"
                   >
                     <span
@@ -3224,7 +3224,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_middle"
                   >
                     <span
@@ -3259,7 +3259,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_last"
                   >
                     <span
@@ -3291,7 +3291,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -3304,7 +3304,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_birth_date"
                   >
                     <span
@@ -3372,7 +3372,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                   >
                     <span
                       class="label-text font-medium"
@@ -3502,7 +3502,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -3515,7 +3515,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="flex flex-wrap gap-4"
+                    class="flex flex-wrap gap-4 w-full"
                   >
                     <div
                       class="flex-grow"
@@ -3528,7 +3528,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_line_1"
                           >
                             <span
@@ -3569,7 +3569,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_line_2"
                           >
                             <span
@@ -3604,7 +3604,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_city"
                           >
                             <span
@@ -3635,7 +3635,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </div>
                     </div>
                     <div
-                      class="flex flex-wrap gap-4"
+                      class="flex flex-wrap gap-4 w-full"
                     >
                       <div
                         class="flex-grow"
@@ -3648,7 +3648,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="field-template mb-3"
                           >
                             <label
-                              class="label"
+                              class="label whitespace-normal [overflow-wrap:anywhere]"
                               for="root_person_address_state"
                             >
                               <span
@@ -4558,7 +4558,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="field-template mb-3"
                           >
                             <label
-                              class="label"
+                              class="label whitespace-normal [overflow-wrap:anywhere]"
                               for="root_person_address_postal_code"
                             >
                               <span
@@ -4595,7 +4595,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -4695,10 +4695,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -4731,7 +4731,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -4744,7 +4744,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_first"
                   >
                     <span
@@ -4785,7 +4785,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_middle"
                   >
                     <span
@@ -4820,7 +4820,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_name_last"
                   >
                     <span
@@ -4852,7 +4852,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -4865,7 +4865,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                     for="root_person_birth_date"
                   >
                     <span
@@ -4933,7 +4933,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <label
-                    class="label"
+                    class="label whitespace-normal [overflow-wrap:anywhere]"
                   >
                     <span
                       class="label-text font-medium"
@@ -5063,7 +5063,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -5076,7 +5076,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   class="field-template mb-3"
                 >
                   <div
-                    class="flex flex-wrap gap-4"
+                    class="flex flex-wrap gap-4 w-full"
                   >
                     <div
                       class="flex-grow"
@@ -5089,7 +5089,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_line_1"
                           >
                             <span
@@ -5130,7 +5130,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_line_2"
                           >
                             <span
@@ -5165,7 +5165,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="field-template mb-3"
                         >
                           <label
-                            class="label"
+                            class="label whitespace-normal [overflow-wrap:anywhere]"
                             for="root_person_address_city"
                           >
                             <span
@@ -5196,7 +5196,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       </div>
                     </div>
                     <div
-                      class="flex flex-wrap gap-4"
+                      class="flex flex-wrap gap-4 w-full"
                     >
                       <div
                         class="flex-grow"
@@ -5209,7 +5209,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="field-template mb-3"
                           >
                             <label
-                              class="label"
+                              class="label whitespace-normal [overflow-wrap:anywhere]"
                               for="root_person_address_state"
                             >
                               <span
@@ -6119,7 +6119,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             class="field-template mb-3"
                           >
                             <label
-                              class="label"
+                              class="label whitespace-normal [overflow-wrap:anywhere]"
                               for="root_person_address_postal_code"
                             >
                               <span
@@ -6156,7 +6156,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
           <div
-            class="flex flex-wrap gap-4"
+            class="flex flex-wrap gap-4 w-full"
           >
             <div
               class="flex-grow"
@@ -6256,11 +6256,11 @@ exports[`Three even column grid > renders person and address in three columns, n
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
             class="flex-grow"
-            xs="24"
+            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-object"
@@ -6289,7 +6289,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6298,7 +6298,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_name_first"
                 >
                   <span
@@ -6330,7 +6330,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6339,7 +6339,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_name_middle"
                 >
                   <span
@@ -6365,7 +6365,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6374,7 +6374,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_name_last"
                 >
                   <span
@@ -6406,7 +6406,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6415,7 +6415,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_birth_date"
                 >
                   <span
@@ -6474,7 +6474,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="16"
+            style="flex: 0 0 calc(-1rem + 0.6666666666666666*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-array"
@@ -6483,7 +6483,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                 >
                   <span
                     class="label-text font-medium"
@@ -6613,7 +6613,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6622,7 +6622,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_address_line_1"
                 >
                   <span
@@ -6654,7 +6654,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6663,7 +6663,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_address_line_2"
                 >
                   <span
@@ -6689,7 +6689,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6698,7 +6698,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_address_city"
                 >
                   <span
@@ -6730,7 +6730,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -6739,7 +6739,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_address_state"
                 >
                   <span
@@ -7640,7 +7640,7 @@ exports[`Three even column grid > renders person and address in three columns, n
           </div>
           <div
             class="flex-grow"
-            xs="8"
+            style="flex: 0 0 calc(-1rem + 0.3333333333333333*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           />
         </div>
       </div>
@@ -7669,11 +7669,11 @@ exports[`Two even column grid > renders person and address in two columns, no em
         class="field-template mb-3"
       >
         <div
-          class="flex flex-wrap gap-4"
+          class="flex flex-wrap gap-4 w-full"
         >
           <div
             class="flex-grow"
-            xs="24"
+            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-object"
@@ -7702,7 +7702,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7711,7 +7711,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_name_first"
                 >
                   <span
@@ -7743,7 +7743,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7752,7 +7752,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_name_middle"
                 >
                   <span
@@ -7778,7 +7778,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7787,7 +7787,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_name_first"
                 >
                   <span
@@ -7819,7 +7819,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -7828,7 +7828,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_birth_date"
                 >
                   <span
@@ -7887,7 +7887,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="24"
+            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-array"
@@ -7896,7 +7896,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                 >
                   <span
                     class="label-text font-medium"
@@ -8026,7 +8026,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -8035,7 +8035,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_address_line_1"
                 >
                   <span
@@ -8067,7 +8067,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -8076,7 +8076,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_address_line_2"
                 >
                   <span
@@ -8102,7 +8102,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -8111,7 +8111,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_address_city"
                 >
                   <span
@@ -8143,7 +8143,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="12"
+            style="flex: 0 0 calc(-1rem + 0.5*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           >
             <div
               class="flex-grow rjsf-field rjsf-field-string"
@@ -8152,7 +8152,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 class="field-template mb-3"
               >
                 <label
-                  class="label"
+                  class="label whitespace-normal [overflow-wrap:anywhere]"
                   for="root_person_address_state"
                 >
                   <span
@@ -9053,7 +9053,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
           </div>
           <div
             class="flex-grow"
-            xs="24"
+            style="flex: 0 0 calc(-1rem + 1*(100% + 1rem)); min-width: 0px; overflow-wrap: break-word;"
           />
         </div>
       </div>

@@ -138,7 +138,11 @@ export default function BooleanInput<
       {hideLabel || !label ? (
         input
       ) : (
-        <label className={labelClassName} data-invalid={hasErrors || undefined}>
+        // daisyUI's `.label` doesn't wrap, and a label wider than a narrow column would paint over the next one
+        <label
+          className={`${labelClassName} whitespace-normal [overflow-wrap:anywhere]`}
+          data-invalid={hasErrors || undefined}
+        >
           {input}
           <span className='label-text'>
             {label}

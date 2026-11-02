@@ -37,6 +37,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  -webkit-flex: 1 1 100%;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
 }
 
 .emotion-1>* {
@@ -2486,6 +2489,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  -webkit-flex: 1 1 100%;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
 }
 
 .emotion-1>* {
@@ -4984,6 +4990,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  -webkit-flex: 1 1 100%;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
 }
 
 .emotion-1>* {
@@ -7405,6 +7414,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  -webkit-flex: 1 1 100%;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
 }
 
 .emotion-1>* {
@@ -9854,6 +9866,9 @@ exports[`Three even column grid > renders person and address in three columns, n
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  -webkit-flex: 1 1 100%;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
 }
 
 .emotion-1>* {
@@ -11562,6 +11577,9 @@ exports[`Two even column grid > renders person and address in two columns, no em
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
+  -webkit-flex: 1 1 100%;
+  -ms-flex: 1 1 100%;
+  flex: 1 1 100%;
 }
 
 .emotion-1>* {

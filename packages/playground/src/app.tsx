@@ -27,6 +27,8 @@ import shadcnPastelDreams from './themes/shadcn/pastel-dreams.css?url';
 import shadcnSoftPop from './themes/shadcn/soft-pop.css?url';
 import shadcnTwitter from './themes/shadcn/twitter.css?url';
 import shadcnVercel from './themes/shadcn/vercel.css?url';
+import mantineStylesheet from '@mantine/core/styles.css?url';
+import mantineDatesStylesheet from '@mantine/dates/styles.css?url';
 import rjsfThemeStylesheet from '@rjsf/core/rjsf-theme.css?url';
 import rjsfStylesheet from '@rjsf/core/rjsf.css?url';
 
@@ -178,7 +180,7 @@ const themes: PlaygroundProps['themes'] = {
     theme: FluentUIRCTheme,
   },
   mantine: {
-    stylesheet: '//mantine-rjsf.pages.dev/styles.css',
+    stylesheet: [mantineStylesheet, mantineDatesStylesheet],
     theme: MantineTheme,
   },
   mui: {

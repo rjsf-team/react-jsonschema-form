@@ -1,6 +1,6 @@
 import type { OptionOnSelectData } from '@fluentui/react-combobox';
 import type { DropdownProps } from '@fluentui/react-components';
-import { Dropdown, Field, Option, OptionGroup } from '@fluentui/react-components';
+import { Dropdown, Field, makeStyles, mergeClasses, Option, OptionGroup } from '@fluentui/react-components';
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionsDomValues,
@@ -21,6 +21,11 @@ import {
 } from '@rjsf/utils';
 
 import { fieldLabelSlot } from '../utils.ts';
+
+const useStyles = makeStyles({
+  // Fluent's `Dropdown` keeps a 250px minimum width, which would push it out of a narrower layout grid column
+  dropdown: { minWidth: 0 },
+});
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
   if (multiple) {
@@ -60,6 +65,7 @@ function SelectWidget<
     uiSchema,
     presentation,
   } = props;
+  const classes = useStyles();
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given, and one holding
   // only a required field's `*` would name it "star", so a label is drawn only with text. Where none names it, the
@@ -107,7 +113,7 @@ function SelectWidget<
         id={id}
         name={htmlName || id}
         multiselect={multiple}
-        className={className ? `form-control ${className}` : 'form-control'}
+        className={mergeClasses('form-control', classes.dropdown, className)}
         value={dropdownValue}
         disabled={disabled || readonly}
         autoFocus={autofocus}

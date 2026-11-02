@@ -20,7 +20,7 @@ export { selectedOptionDescriptionTests } from './selectedOptionDescriptionTests
 
 export { submitPendingTests } from './submitPendingTests.tsx';
 
-export { type GridRenderCustomOptions, gridTests } from './gridTests.tsx';
+export { type GridRenderCustomOptions, gridTests, renderGridColumn } from './gridTests.tsx';
 
 export { wrapIfAdditionalErrorStateTests } from './wrapIfAdditionalErrorStateTests.tsx';
 
