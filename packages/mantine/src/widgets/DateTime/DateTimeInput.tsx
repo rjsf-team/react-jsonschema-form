@@ -116,7 +116,10 @@ export default function DateTimeInput<
 
   const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
   const themeProps = cleanupOptions(options, props, ['timePickerProps']);
-  const { size, radius, variant, clearable } = themeProps;
+  const { size, radius, variant, clearable } = themeProps as Pick<
+    TimePickerProps,
+    'size' | 'radius' | 'variant' | 'clearable'
+  >;
   const { timePickerProps } = options;
   const timePickerOptions = timePickerProps as TimePickerProps | undefined;
   const [pendingTime, setPendingTime] = useState('');
