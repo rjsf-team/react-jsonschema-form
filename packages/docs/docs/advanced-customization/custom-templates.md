@@ -896,7 +896,7 @@ const schema: RJSFSchema = {
   description: 'input description',
 };
 
-function GridTemplate(props: FieldHelpProps) {
+function GridTemplate(props: GridTemplateProps) {
   const { children, column, className, ...rest } = props;
   return (
     <Grid2 item={column} {...rest} className={`${className} my-custom-grid-styling`}>
