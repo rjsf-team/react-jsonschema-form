@@ -42,6 +42,5 @@ export default function mergeObjects(
     },
     { ...obj1 },
   ); // Prevent mutation of source object.
-  // The single deliberate cast here: the merged object is trusted to be the `R` the caller declared
   return result;
 }
