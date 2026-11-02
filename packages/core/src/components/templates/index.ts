@@ -24,6 +24,7 @@ import UnsupportedFieldTemplate from './UnsupportedField.tsx';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate.tsx';
 
 export * from './ButtonTemplates/index.ts';
+export { default as FieldLabel, type LabelProps as FieldLabelProps } from './FieldTemplate/Label.tsx';
 export {
   ArrayFieldDescriptionTemplate,
   ArrayFieldItemButtonsTemplate,
