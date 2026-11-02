@@ -16,6 +16,12 @@ describe('GridTemplate', () => {
     });
   });
 
+  it.each(['1e1', '0xa'])('writes a track count given as %s as a plain number', (columns) => {
+    const { container } = render(<GridTemplate columns={columns}>content</GridTemplate>);
+
+    expect(container.firstChild).toHaveStyle({ gridTemplateColumns: 'repeat(10, 1fr)' });
+  });
+
   it('passes a CSS template through', () => {
     const { container } = render(<GridTemplate columns='100px auto'>content</GridTemplate>);
 

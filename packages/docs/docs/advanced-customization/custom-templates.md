@@ -886,7 +886,7 @@ If you want to customize how grids are rendered you can.
 
 ```tsx
 import { Grid2 } from '@mui/material';
-import { GridTemplateProps } from '@rjsf/utils';
+import type { GridTemplateProps, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import classNames from 'classnames';
 
@@ -899,7 +899,7 @@ const schema: RJSFSchema = {
 function GridTemplate(props: GridTemplateProps) {
   const { children, column, className, ...rest } = props;
   return (
-    <Grid2 item={column} {...rest} className={`${className} my-custom-grid-styling`}>
+    <Grid2 container={!column} {...rest} className={classNames(className, 'my-custom-grid-styling')}>
       {children}
     </Grid2>
   );
