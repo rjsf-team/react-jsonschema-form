@@ -31,10 +31,7 @@ export const OVERRIDABLE_TEMPLATE_NAME_MAP = {
   TitleFieldTemplate: true,
   UnsupportedFieldTemplate: true,
   WrapIfAdditionalTemplate: true,
-} satisfies Record<
-  Exclude<keyof DeclaredTemplatesType, 'ButtonTemplates'>,
-  true
->;
+} satisfies Record<Exclude<keyof DeclaredTemplatesType, 'ButtonTemplates'>, true>;
 
 const TEMPLATE_NAME_SET: ReadonlySet<string> = new Set(Object.keys(OVERRIDABLE_TEMPLATE_NAME_MAP));
 
