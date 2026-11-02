@@ -1,6 +1,4 @@
-import { DISCRIMINATOR_PATH } from './constants.ts';
 import logOnce from './logOnce.ts';
-import { getByPath } from './pathUtils.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Returns the `discriminator.propertyName` when defined in the `schema` if it is a string. A warning is generated when
@@ -11,7 +9,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  */
 export default function getDiscriminatorFieldFromSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
   let discriminator: string | undefined;
-  const maybeString = getByPath(schema, DISCRIMINATOR_PATH);
+  const maybeString: unknown = schema.discriminator?.propertyName;
   if (typeof maybeString === 'string') {
     discriminator = maybeString;
   } else if (maybeString !== undefined) {

@@ -1005,7 +1005,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       graph: this.graph,
       data: this.data,
       depData: this.depData,
-      discriminator: stringKeyword(Reflect.get(provider.node.raw, 'discriminator'), 'propertyName'),
+      discriminator: stringKeyword(provider.node.raw.discriminator, 'propertyName'),
     });
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
     this.choices.push({ ...request, selected });

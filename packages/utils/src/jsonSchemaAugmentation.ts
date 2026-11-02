@@ -1,8 +1,9 @@
 import type { JSONSchema7 } from 'json-schema';
 
 /**
- * This file is used to augment the `json-schema` module with the keywords RJSF reads beyond draft 7: `deprecated` and
- * the other keywords of later drafts it supports, OpenAPI's `discriminator`, and Ajv's `formatMinimum`/`formatMaximum`.
+ * This file is used to augment the `json-schema` module with the keywords RJSF or its validators read beyond draft 7:
+ * `deprecated` and the other keywords of later drafts it supports, OpenAPI's `discriminator`, and Ajv's
+ * `formatMinimum`/`formatMaximum`/`formatExclusiveMinimum`/`formatExclusiveMaximum`.
  *
  * It is a dedicated file because `json-schema` is a type-only package. Standard augmentation
  * using `import 'json-schema'` in a file with other imports can cause module resolution

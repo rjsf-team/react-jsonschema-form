@@ -1,5 +1,10 @@
 import type { RangeSpecType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
+/** Whether a keyword holds a number an input can show, which an Ajv `$data` reference to another value doesn't */
+function isBound(keyword: unknown): keyword is number {
+  return typeof keyword === 'number' && Number.isFinite(keyword);
+}
+
 /** Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML
  * input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.
  *
@@ -8,14 +13,13 @@ import type { RangeSpecType, RJSFSchema, StrictRJSFSchema } from './types.ts';
  */
 export default function rangeSpec<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
   const spec: RangeSpecType = {};
-  // The `typeof` checks are for Ajv's `$data`, whose reference names another value that an input can't show as its bound
-  if (typeof schema.multipleOf === 'number' && schema.multipleOf !== 0) {
+  if (isBound(schema.multipleOf) && schema.multipleOf !== 0) {
     spec.step = schema.multipleOf;
   }
-  if (typeof schema.minimum === 'number') {
+  if (isBound(schema.minimum)) {
     spec.min = schema.minimum;
   }
-  if (typeof schema.maximum === 'number') {
+  if (isBound(schema.maximum)) {
     spec.max = schema.maximum;
   }
   return spec;

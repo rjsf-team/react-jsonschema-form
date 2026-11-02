@@ -1,13 +1,7 @@
 import type { FocusEvent, KeyboardEvent } from 'react';
 import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import {
-  getGroupAttributes,
-  numericWidgetStoresString,
-  ratingStarValues,
-  toInputValue,
-  toNumericValue,
-} from '@rjsf/utils';
+import { getGroupAttributes, toInputValue } from '@rjsf/utils';
 
 /** How far each key moves from the focused star, choosing the star it lands on */
 const STAR_KEY_STEPS: Partial<Record<string, number>> = {
@@ -58,9 +52,22 @@ export default function RatingWidget<
     'radiogroup',
   );
 
-  const storesString = numericWidgetStoresString<S>(schema, value);
-  const rating = toNumericValue(value);
-  const starValues = ratingStarValues<S>(schema, stars);
+  // A JSON uiSchema can hold `stars` as a numeric string, which reads as its number, or as anything else, which shows
+  // the default 5, where `Number()` alone reads `null`, `''`, `true` and `[4]` as numbers
+  const starCount =
+    typeof stars === 'number' || (typeof stars === 'string' && stars.trim() !== '') ? Number(stars) : NaN;
+  // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
+  // The `typeof` checks are for Ajv's `$data`, whose reference names another value that holds no bound to read here
+  const maximum = typeof schema.maximum === 'number' ? schema.maximum : undefined;
+  const numStars = maximum
+    ? Math.min(maximum, 5)
+    : Math.min(Math.max(Number.isFinite(starCount) ? starCount : 5, 1), 5);
+  const min = typeof schema.minimum === 'number' ? schema.minimum : 0;
+  // The schema's type decides what a star writes, so a click makes invalid data valid; the value only speaks for a schema
+  // with no type
+  const storesString = schema.type === undefined ? typeof value === 'string' : [schema.type].flat().includes('string');
+  const numericValue = typeof value === 'string' && value.trim() !== '' ? Number(value) : value;
+  const rating = typeof numericValue === 'number' && Number.isFinite(numericValue) ? numericValue : undefined;
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
   const tabStopIndex = Math.max(
     starValues.findIndex((starValue) => starValue === rating),

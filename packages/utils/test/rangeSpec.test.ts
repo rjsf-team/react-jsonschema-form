@@ -16,6 +16,10 @@ describe('rangeSpec()', () => {
     // @ts-expect-error `minimum`, `maximum` and `multipleOf` are numbers, but Ajv with `$data` takes a reference too
     expect(rangeSpec({ minimum: reference, maximum: reference, multipleOf: reference })).toEqual({});
   });
+  it('sets no step or bound from NaN', () => {
+    expect(rangeSpec({ multipleOf: Number.NaN, minimum: Number.NaN, maximum: Number.NaN })).toEqual({});
+  });
+
   it('returns an partial range spec when the schema contains zero range info', () => {
     expect(rangeSpec({ multipleOf: 0, minimum: 0, maximum: 0 })).toEqual({
       min: 0,

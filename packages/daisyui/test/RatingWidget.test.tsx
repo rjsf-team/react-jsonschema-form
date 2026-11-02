@@ -37,6 +37,14 @@ describe('RatingWidget', () => {
     expect(getAllByRole('radio')).toHaveLength(count);
   });
 
+  test('falls back to the `stars` option for Ajv `$data` bounds', () => {
+    const dataBounds = { type: 'integer', maximum: { $data: '1/limit' }, minimum: { $data: '1/floor' } };
+    const schema = dataBounds as unknown as RJSFSchema;
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ schema, options: { stars: 3 } })} />);
+
+    expect(getAllByRole('radio')).toHaveLength(3);
+  });
+
   test('autofocuses the first star for a value beyond the stars left by rounding down', () => {
     const { getAllByRole } = render(
       <RatingWidget {...makeWidgetMockProps({ autofocus: true, value: 2, options: { stars: 2.5 } })} />,
