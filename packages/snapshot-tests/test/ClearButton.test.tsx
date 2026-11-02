@@ -1,5 +1,6 @@
 import Form from '@rjsf/core';
 
-import { clearButtonTests } from '../src/index.ts';
+import { callerInputPropsTests, clearButtonTests } from '../src/index.ts';
 
 clearButtonTests(Form);
+callerInputPropsTests(Form);

@@ -5,6 +5,7 @@ import {
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
+  callerInputProps,
   getInputProps,
   getNumericInputTitle,
   offersClearButton,
@@ -64,11 +65,11 @@ export default function BaseInputTemplate<
   // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so a widget passing either keeps
   // it. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the title with
   // it rather than describing a rule no longer in force
-  const callerPattern = 'pattern' in rest ? { pattern: rest.pattern } : undefined;
+  const callerProps = callerInputProps<T, S, F>(props);
   const inputProps = {
     ...rest,
     ...derivedInputProps,
-    ...callerPattern,
+    ...callerProps,
     ...('inputMode' in rest ? { inputMode: rest.inputMode } : undefined),
   };
 
@@ -111,7 +112,7 @@ export default function BaseInputTemplate<
         disabled={disabled}
         autoFocus={autofocus}
         value={inputValue}
-        title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
+        title={'pattern' in callerProps ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
         list={hasExamples ? examplesId(id) : undefined}
         onChange={onChangeOverride ?? handleChange}

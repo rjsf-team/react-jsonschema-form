@@ -236,7 +236,7 @@ Return a consistent `id` for the `btn` button element
 
 - string: The consistent id for the button from the given `id` and `btn` type
 
-### callerInputProps()
+### callerInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the `pattern` and `accept` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` the caller names counts even when it is undefined, which is how a caller turns the derived one off.
 

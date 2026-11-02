@@ -1190,7 +1190,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add the `RawValidationResult` type, what `ValidatorType.rawValidation()` returns ([#5678](https://github.com/rjsf-team/react-jsonschema-form/pull/5678))
 - Add `toNumericValue()`, which reads a widget's `value` as a number, and `ratingStoresString()`, which reports whether a rating widget writes a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Add `callerInputProps()`, the `pattern` and `accept` a widget passes `BaseInputTemplate` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Change `AdditionalPropertyKeySelect` to take an optional `onKeyRename` and render disabled without one, since a pick would have nowhere to go ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Change `AdditionalPropertyKeySelect` to take an optional `onKeyRename` and render disabled without one ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/validator-ajv8
 

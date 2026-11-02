@@ -73,6 +73,7 @@ export default function BaseInputTemplate<
     ...callerProps,
     ...derivedInputProps,
     ...callerPattern,
+    ...(callerProps.accept === undefined ? undefined : { accept: callerProps.accept }),
     ...('inputMode' in callerProps ? { inputMode: callerProps.inputMode } : undefined),
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
