@@ -25,9 +25,6 @@ import {
 
 import type { CFWorkerValidationError, SuppressDuplicateFilteringType } from './types.ts';
 
-/** The raw validation results produced by the underlying engine, before conversion into RJSF's error formats. */
-export type RawValidationErrorsType = RawValidationResult<CFWorkerValidationError>;
-
 /** Converts a cfworker instance location into RJSF's dot-separated property path.
  *
  * @param instanceLocation - The instance location emitted by `@cfworker/json-schema`
@@ -195,7 +192,7 @@ export default function processRawValidationErrors<
   F extends FormContextType = FormContextType,
 >(
   context: SchemaContext<S, F>,
-  rawErrors: RawValidationErrorsType,
+  rawErrors: RawValidationResult<CFWorkerValidationError>,
   formData: T | undefined,
   schema: S,
   customValidate?: CustomValidator<T, S, F>,

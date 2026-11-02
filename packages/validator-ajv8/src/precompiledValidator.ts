@@ -8,11 +8,12 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
 import { createRootSchemaGuard, ID_KEY, REF_KEY, schemaKey } from '@rjsf/utils';
+import type { ErrorObject } from 'ajv';
 
 import { copyForValidation } from './dataForValidation.ts';
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type {
   CompiledValidateFunction,
@@ -147,7 +148,7 @@ export default class AJV8PrecompiledValidator<
    * @param [formData] - The form data to validate, if any
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
-  rawValidation(schema: S, formData?: unknown): RawValidationErrorsType {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<ErrorObject> {
     this.ensureSameRootSchema(schema, formData);
     this.mainValidator(formData);
 

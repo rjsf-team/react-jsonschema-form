@@ -7,12 +7,12 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
 import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
 import createAtaInstance from './createAtaInstance.ts';
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import { isDraft04, schemaList } from './schemaList.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
@@ -174,7 +174,7 @@ export default class ATAValidator<
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate
    */
-  rawValidation(schema: S, formData?: unknown): RawValidationErrorsType {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<ValidationError> {
     let compilationError: Error | undefined;
     let errors: ValidationError[] | undefined;
 

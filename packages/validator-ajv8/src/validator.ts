@@ -7,14 +7,14 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
 import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
-import type { ValidateFunction, Ajv } from 'ajv';
+import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import ajvRootSchemaId from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
 import { changesData, copyForValidation } from './dataForValidation.ts';
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
 
@@ -141,7 +141,7 @@ export default class AJV8Validator<
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate
    */
-  rawValidation(schema: S, formData?: unknown): RawValidationErrorsType {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<ErrorObject> {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
     try {

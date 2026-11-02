@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import type { ValidatorType, RJSFSchema } from '@rjsf/utils';
+import type { RawValidationResult, ValidatorType, RJSFSchema } from '@rjsf/utils';
 
 interface RawValidatorTestProps {
   validator: ValidatorType;
@@ -10,7 +10,7 @@ interface RawValidatorTestProps {
 }
 
 export default function RawValidatorTest({ validator, schema, formData }: RawValidatorTestProps) {
-  const [rawValidation, setRawValidation] = useState<ReturnType<ValidatorType['rawValidation']>>();
+  const [rawValidation, setRawValidation] = useState<RawValidationResult>();
   const handleClearClick = () => setRawValidation(undefined);
   const handleRawClick = () => setRawValidation(validator.rawValidation(schema, formData));
 

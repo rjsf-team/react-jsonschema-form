@@ -8,13 +8,13 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
 import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
-import type { CustomValidatorOptionsType } from './types.ts';
+import type { CFWorkerValidationError, CustomValidatorOptionsType } from './types.ts';
 
 /** Cached schema-bound validator and the schemas used to construct it. */
 interface CachedValidator {
@@ -154,7 +154,7 @@ export default class CFWorkerValidator<
    * @param [formData] - The form data to validate
    * @returns - The raw cfworker errors and any engine exception
    */
-  rawValidation(schema: S, formData?: unknown): RawValidationErrorsType {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<CFWorkerValidationError> {
     let validationError: Error | undefined;
     let errors: OutputUnit[] | undefined;
     try {

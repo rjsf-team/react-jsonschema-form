@@ -8,10 +8,11 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
 import { createRootSchemaGuard, ID_KEY, REF_KEY, schemaKey } from '@rjsf/utils';
+import type { ValidationError } from 'ata-validator';
 
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type {
   CompiledValidateFunction,
@@ -147,7 +148,7 @@ export default class ATAPrecompiledValidator<
    * @param [formData] - The form data to validate, if any
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
-  rawValidation(schema: S, formData?: unknown): RawValidationErrorsType {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<ValidationError> {
     this.ensureSameRootSchema(schema, formData);
     this.mainValidator(formData);
 
