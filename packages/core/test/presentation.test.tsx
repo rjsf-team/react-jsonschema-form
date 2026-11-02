@@ -377,6 +377,23 @@ describe('the plan SchemaField builds', () => {
       expect(node.querySelector('#root__oneof_select')).toHaveAccessibleName('Pick a kind');
     });
 
+    it('is a radiogroup named by a fallback when its field has no title', () => {
+      const { node } = createFormComponent({
+        schema: {
+          oneOf: [
+            { type: 'string', title: 'Text' },
+            { type: 'number', title: 'Num' },
+          ],
+        },
+        uiSchema: { 'ui:widget': 'radio' },
+        initialFormData: 'a',
+      });
+
+      const group = node.querySelector('#root__oneof_select');
+      expect(group).toHaveAttribute('role', 'radiogroup');
+      expect(group).toHaveAccessibleName('Select ...');
+    });
+
     it("is named by the label the field's template draws, and described by the parts that render", () => {
       const { node } = createFormComponent({
         schema,
@@ -1252,6 +1269,26 @@ describe('a ui:field wrapping SchemaField under its own id', () => {
     expect(screen.getAllByText('About pet')).toHaveLength(1);
     // Once as the object's heading and once as the selector's first option
     expect(screen.getAllByText('Pet')).toHaveLength(2);
+  });
+
+  it('draws no for on the label of a union it wraps while the option shown is an object', () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          x: {
+            title: 'X',
+            oneOf: [
+              { type: 'object', title: 'A', properties: { a: { type: 'string' } } },
+              { type: 'object', title: 'B', properties: { b: { type: 'string' } } },
+            ],
+          },
+        },
+      },
+      uiSchema: { x: { 'ui:field': Wrapper } },
+    });
+
+    expect(screen.getByText('X').closest('label')).not.toHaveAttribute('for');
   });
 });
 

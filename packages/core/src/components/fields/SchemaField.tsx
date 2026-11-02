@@ -987,8 +987,9 @@ export function useSchemaFieldPlan<
     hidden: hidden || isOptedOut,
     required: effectiveRequired,
     inherited: inheritedPresentation?.plan,
-    options: xxxOfOptions,
-    selectedOption,
+    // Below a named field the options render above, so the option shown is read from there
+    options: fieldShownOption?.options as readonly S[] | undefined,
+    selectedOption: optionBeside,
   });
   // The lock the form, its schema or its uiSchema puts on the field, planned here so an array item's buttons follow it.
   // `SchemaFieldRender` adds the states that only leave its control unusable, which still let an item be removed
