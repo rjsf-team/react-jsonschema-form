@@ -15,6 +15,7 @@ import {
   useSelectFocusHandlers,
   widgetAriaProps,
   widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
@@ -89,11 +90,15 @@ export default function SelectWidget<
     );
   }, [enumDisabled, enumOptions, optgroups, domValues]);
 
-  // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop
+  // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop. An
+  // `aria-label` in the options, spread onto the select as Mantine's own prop, names it in place of the fallback name,
+  // though the plan's still outranks it
+  const optionsAriaLabel = options['aria-label'];
+  const namedByOptions = typeof optionsAriaLabel === 'string' && optionsAriaLabel !== '';
   const ariaDescribedByProps = useInputAriaProps<T, S, F>(
     multiple ? 'MultiSelect' : 'Select',
     props,
-    widgetAriaProps<T, S, F>(props),
+    widgetAriaProps<T, S, F>(props, widgetDrawsLabelText<T, S, F>(props) || namedByOptions),
   );
 
   const sharedProps = {

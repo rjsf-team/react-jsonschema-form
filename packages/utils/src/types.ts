@@ -1712,7 +1712,8 @@ export interface WidgetProps<
   htmlName?: string;
   /** An accessible name chosen by the widget's caller, such as the `DateElement` an `AltDateWidget` renders for each
    * of its parts. Only a `SelectWidget` is required to honor it: it gives it to the element a screen reader focuses,
-   * through `widgetAriaProps()`, since nothing else names a select its caller renders without a label
+   * through `widgetAriaProps()`, since a select its caller renders without a label otherwise takes only the generic name
+   * `widgetAriaProps()` falls back to
    */
   'aria-label'?: string;
   /** The ids describing the widget, chosen by its caller. Only a `SelectWidget` is required to honor them: it describes

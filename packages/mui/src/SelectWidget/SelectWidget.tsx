@@ -17,7 +17,6 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
-  getControlAriaLabel,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
@@ -111,10 +110,11 @@ export default function SelectWidget<
   // `htmlInput` given through `rjsfSlotProps` is the form author's own choice for that element, so it is applied last
   const textFieldOverrides = { ...otherMuiProps, ...textFieldRemainingProps } as TextFieldProps;
   const textFieldId = textFieldOverrides.id ?? id;
-  const ariaProps = describeByHelperText(widgetAriaProps(props), textFieldId, textFieldOverrides.helperText);
-  // The combobox shows its value, not a name, so where no label names it, it is named by the field's label, its
-  // placeholder or the translated prompt
-  const ariaLabel = getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], widgetDrawsLabelText<T, S, F>(props));
+  const ariaProps = describeByHelperText(
+    widgetAriaProps(props, widgetDrawsLabelText<T, S, F>(props)),
+    textFieldId,
+    textFieldOverrides.helperText,
+  );
   const ownLabel = labelValue(label || undefined, hideLabel, undefined);
   const textFieldLabel = 'label' in textFieldOverrides ? textFieldOverrides.label : ownLabel;
   const labelId = muiSlotProps?.inputLabel?.id ?? inputLabelId(textFieldId);
@@ -163,7 +163,7 @@ export default function SelectWidget<
             ...muiSlotProps?.select,
             multiple,
           },
-          htmlInput: withSlotProps({ ...ariaProps, 'aria-label': ariaLabel }, muiSlotProps?.htmlInput),
+          htmlInput: withSlotProps(ariaProps, muiSlotProps?.htmlInput),
           formHelperText: helperTextSlot(textFieldId, muiSlotProps?.formHelperText),
         }}
       >

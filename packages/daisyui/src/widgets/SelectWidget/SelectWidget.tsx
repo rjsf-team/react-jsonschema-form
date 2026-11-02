@@ -15,7 +15,6 @@ import {
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
-  getControlAriaLabel,
   getControlFallbackName,
   groupEnumOptions,
   isEnumOptionsGroup,
@@ -254,7 +253,7 @@ export default function SelectWidget<
   // A combobox takes no name from its contents, which are its value, so with no label or `aria-label` naming it, it is
   // named by the field's label, as the label drawn for it would, or, for a field with no title, such as an array item
   // or an untitled option selector, by its placeholder, else the translated prompt, as `DatePickerTrigger` is, by the rule
-  // `getControlAriaLabel()` gives every theme's select. The plan points it at a label through `aria-labelledby` only where
+  // `widgetAriaProps()` gives every theme's select. The plan points it at a label through `aria-labelledby` only where
   // `isNamedByTemplateLabel()` already reports one
   const fallbackName = getControlFallbackName<T, S, F>({ label, placeholder, registry });
 
@@ -356,7 +355,6 @@ export default function SelectWidget<
           aria-expanded={expanded && !dismissed}
           aria-controls={listboxId}
           {...ariaProps}
-          aria-label={getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'])}
           aria-disabled={disabled || readonly || undefined}
           // A button takes no `required`, so the combobox says it as a native select's attribute would
           aria-required={required || undefined}

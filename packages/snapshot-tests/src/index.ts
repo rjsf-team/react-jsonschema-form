@@ -16,6 +16,8 @@ export { objectTests } from './objectTests.tsx';
 
 export { optionErrorStateTests } from './optionErrorStateTests.tsx';
 
+export { selectNameTests } from './selectNameTests.tsx';
+
 export { selectedOptionDescriptionTests } from './selectedOptionDescriptionTests.tsx';
 
 export { submitPendingTests } from './submitPendingTests.tsx';
