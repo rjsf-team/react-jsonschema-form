@@ -772,31 +772,50 @@ function ArrayFieldItemInner<
     return Object.keys(buttonProps).length > 0 ? buttonProps : undefined;
   }, [copyTitle, moveDownTitle, moveUpTitle, removeTitle]);
 
+  // What decides each button, so a template calling these from its own control can't do what the button can't. A
+  // refused press still prevents the default, so a template's button that isn't `type='button'` doesn't submit the form
+  const locked = lockedDisabled || lockedReadonly;
+  const addsItem = canAdd && !disabled && !readonly;
+  const copiesItem = has.copy && !locked;
+  const removesItem = has.remove && !locked;
+  const movesUp = has.moveUp && !locked;
+  const movesDown = has.moveDown && !locked;
   const onAddItem = useCallback(
     (event: ArrayButtonEvent) => {
-      handleAddItem(event, index + 1);
+      if (addsItem) {
+        handleAddItem(event, index + 1);
+      } else {
+        event?.preventDefault();
+      }
     },
-    [handleAddItem, index],
+    [addsItem, handleAddItem, index],
   );
   const onCopyItem = useCallback(
     (event: ArrayButtonEvent) => {
-      handleCopyItem(event, index);
+      if (copiesItem) {
+        handleCopyItem(event, index);
+      } else {
+        event?.preventDefault();
+      }
     },
-    [handleCopyItem, index],
+    [copiesItem, handleCopyItem, index],
   );
   const onRemoveItem = useCallback(
     (event: ArrayButtonEvent) => {
-      handleRemoveItem(event, index);
+      if (removesItem) {
+        handleRemoveItem(event, index);
+      } else {
+        event?.preventDefault();
+      }
     },
-    [handleRemoveItem, index],
+    [removesItem, handleRemoveItem, index],
   );
-  // What decides each move button, so a template calling these from its own control can't do what the button can't
-  const movesUp = has.moveUp && !lockedDisabled && !lockedReadonly;
-  const movesDown = has.moveDown && !lockedDisabled && !lockedReadonly;
   const onMoveUpItem = useCallback(
     (event: ArrayButtonEvent) => {
       if (movesUp) {
         handleReorderItems(event, index, index - 1);
+      } else {
+        event?.preventDefault();
       }
     },
     [movesUp, handleReorderItems, index],
@@ -805,6 +824,8 @@ function ArrayFieldItemInner<
     (event: ArrayButtonEvent) => {
       if (movesDown) {
         handleReorderItems(event, index, index + 1);
+      } else {
+        event?.preventDefault();
       }
     },
     [movesDown, handleReorderItems, index],

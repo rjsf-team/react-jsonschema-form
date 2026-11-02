@@ -5813,6 +5813,84 @@ describe('ArrayField', () => {
       });
     });
 
+    describe('should act on an item from a direct call only where its button could', () => {
+      function DirectCallItemTemplate(props: ArrayFieldItemTemplateProps) {
+        const { onAddItem, onCopyItem, onRemoveItem } = props.buttonsProps;
+        return (
+          <div className='rjsf-array-item'>
+            {props.children}
+            <button type='button' onClick={() => onAddItem()}>{`Add after ${props.index}`}</button>
+            <button type='button' onClick={() => onCopyItem()}>{`Copy ${props.index}`}</button>
+            <button type='button' onClick={() => onRemoveItem()}>{`Remove ${props.index}`}</button>
+          </div>
+        );
+      }
+
+      it.each([
+        { button: 'Add after 0', caseName: 'adding under a disabled array', uiOptions: { 'ui:disabled': true } },
+        { button: 'Add after 0', caseName: 'adding under a read-only array', uiOptions: { 'ui:readonly': true } },
+        { button: 'Add after 0', caseName: 'adding under ui:addable: false', uiOptions: { 'ui:addable': false } },
+        { button: 'Copy 0', caseName: 'copying under a disabled array', uiOptions: { 'ui:disabled': true } },
+        { button: 'Copy 0', caseName: 'copying where the button hides', uiOptions: {} },
+        { button: 'Remove 0', caseName: 'removing under a read-only array', uiOptions: { 'ui:readonly': true } },
+        { button: 'Remove 0', caseName: 'removing under ui:removable: false', uiOptions: { 'ui:removable': false } },
+      ])('not $caseName', async ({ button, uiOptions }) => {
+        const { onChange, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          uiSchema: uiOptions,
+          initialFormData: ['a', 'b'],
+          templates: { ArrayFieldItemTemplate: DirectCallItemTemplate },
+        });
+        onChange.mockClear();
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(['a', 'b']);
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      it.each([
+        { button: 'Add after 0', expected: ['a', undefined, 'b'] },
+        { button: 'Copy 0', expected: ['a', 'a', 'b'] },
+        { button: 'Remove 0', expected: ['b'] },
+      ])('$button where the button can', async ({ button, expected }) => {
+        const { getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          uiSchema: { 'ui:copyable': true },
+          initialFormData: ['a', 'b'],
+          templates: { ArrayFieldItemTemplate: DirectCallItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(expected);
+      });
+
+      it.each(['onAddItem', 'onCopyItem', 'onRemoveItem', 'onMoveUpItem', 'onMoveDownItem'] as const)(
+        'keeps a refused %s from submitting the form',
+        async (handler) => {
+          function SubmittingButtonItemTemplate(props: ArrayFieldItemTemplateProps) {
+            return (
+              <div className='rjsf-array-item'>
+                {props.children}
+                <button type='submit' onClick={props.buttonsProps[handler]}>Press</button>
+              </div>
+            );
+          }
+          const { onSubmit } = createFormComponent({
+            schema: { type: 'array', items: { type: 'string' } },
+            uiSchema: { 'ui:disabled': true },
+            initialFormData: ['a', 'b'],
+            templates: { ArrayFieldItemTemplate: SubmittingButtonItemTemplate },
+          });
+
+          await user.click(screen.getAllByRole('button', { name: 'Press' })[1]);
+
+          expect(onSubmit).not.toHaveBeenCalled();
+        },
+      );
+    });
+
     it('should report one change when a move down after a remove has no row left to move to', async () => {
       function RemoveThenMoveDownItemTemplate(props: ArrayFieldItemTemplateProps) {
         const { onRemoveItem, onMoveDownItem } = props.buttonsProps;
