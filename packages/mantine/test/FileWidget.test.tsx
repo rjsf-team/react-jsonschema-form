@@ -52,10 +52,11 @@ describe('FileWidget', () => {
   });
 
   test('joins an `accept` option given as an array', () => {
+    const jsonOptions: Record<string, unknown> = { accept: ['.png', '.jpg'] };
     const { container } = render(
       <Form
         schema={{ type: 'string', format: 'data-url' }}
-        uiSchema={{ 'ui:options': { accept: ['.png', '.jpg'] } }}
+        uiSchema={{ 'ui:options': jsonOptions }}
         validator={validator}
       />,
     );

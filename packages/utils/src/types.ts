@@ -1476,15 +1476,15 @@ export type ArrayFieldItemButtonsTemplateProps<
   index: number;
   /** A number stating the total number `items` in the array */
   totalItems: number;
-  /** Callback function that adds a new item below this item. React clears the event's `currentTarget` once dispatch ends, so it is `null` in a handler that reads it after an `await` */
+  /** Callback function that adds a new item below this item, or does nothing where its button can't act. React clears the event's `currentTarget` once dispatch ends, so it is `null` in a handler that reads it after an `await` */
   onAddItem: (event?: SyntheticEvent<HTMLElement>) => void;
-  /** Callback function that copies this item below itself. Its event follows the same rule as `onAddItem`'s */
+  /** Callback function that copies this item below itself, or does nothing where its button can't act. Its event follows the same rule as `onAddItem`'s */
   onCopyItem: (event?: SyntheticEvent<HTMLElement>) => void;
-  /** Callback function that moves the item up one spot in the list. Its event follows the same rule as `onAddItem`'s */
+  /** Callback function that moves the item up one spot in the list, or does nothing where its button can't act. Its event follows the same rule as `onAddItem`'s */
   onMoveUpItem: (event?: SyntheticEvent<HTMLElement>) => void;
-  /** Callback function that moves the item down one spot in the list. Its event follows the same rule as `onAddItem`'s */
+  /** Callback function that moves the item down one spot in the list, or does nothing where its button can't act. Its event follows the same rule as `onAddItem`'s */
   onMoveDownItem: (event?: SyntheticEvent<HTMLElement>) => void;
-  /** Callback function that removes the item from the list. Its event follows the same rule as `onAddItem`'s */
+  /** Callback function that removes the item from the list, or does nothing where its button can't act. Its event follows the same rule as `onAddItem`'s */
   onRemoveItem: (event?: SyntheticEvent<HTMLElement>) => void;
   /** Whether the array item's buttons are read-only, by the array's lock or the item's own; its inputs can stay editable, under an item's `ui:readonly: false` */
   readonly?: boolean;
@@ -1604,7 +1604,7 @@ export type ArrayFieldTemplateProps<
   canAdd?: boolean;
   /** An array of React elements representing the items in the array */
   items: ReactElement[];
-  /** A function that adds a new item to the end of the array. Its event follows the same rule as `onAddItem`'s */
+  /** A function that adds a new item to the end of the array, or does nothing where the array's add button can't act. Its event follows the same rule as `onAddItem`'s */
   onAddClick: (event?: SyntheticEvent<HTMLElement>) => void;
 };
 
@@ -2273,16 +2273,23 @@ type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullab
  */
 type IsOpenEntry<K, V> = IsAny<V> extends true ? true : [string, unknown] extends [K, V] ? true : false;
 
-/** A nested field entry. For unknown data the entry is unconstrained and reads back as `unknown`: the loose `UiSchema`
- * can't stand in, since the string index signature it would sit under also covers the `ui:` keys, whose values aren't
- * uiSchemas
+/** A nested field entry. For a key of an untyped `UiSchema`, a field typed `any`, or a string index holding `unknown`,
+ * the entry is unconstrained and reads back as `unknown`: the loose `UiSchema` can't stand in, since the string index
+ * signature it would sit under also covers the `ui:` keys, whose values aren't uiSchemas. So an untyped `UiSchema`
+ * doesn't fit a `UiSchema<T>` where `T`, or the element of an array `T`, has a narrower string index signature, such
+ * as `Record<string, string>`, since its `unknown` entries don't fit the `UiSchema` that signature holds for each key
  */
 type UiSchemaChild<K, V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsOpenEntry<K, V> extends true ? unknown : UiSchema<V, S, F>;
 
-/** A nested field entry of a `StrictUiSchema`, unconstrained for unknown data the same way as `UiSchemaChild` */
-type StrictUiSchemaChild<Checks extends UiOptionsCheck, K, V, S extends StrictRJSFSchema, F extends FormContextType> =
-  IsOpenEntry<K, V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
+/** A nested field entry of a `StrictUiSchema`, unconstrained for the same keys as `UiSchemaChild` */
+type StrictUiSchemaChild<
+  Checks extends AnyUiOptionsCheck,
+  K,
+  V,
+  S extends StrictRJSFSchema,
+  F extends FormContextType,
+> = IsOpenEntry<K, V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
 
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`. It accepts any `ui:widget`/`ui:field` name and any `ui:`-prefixed option; `StrictUiSchema` is
