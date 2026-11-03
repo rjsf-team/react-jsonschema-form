@@ -400,7 +400,7 @@ describe('FieldTemplate', () => {
   });
 
   describe('the alt-date widget', () => {
-    const altDate = { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } };
+    const altDate: UiSchema = { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } };
     const dateSchema = { type: 'string' as const, format: 'date' };
 
     test('names the whole group with the field label', () => {

@@ -40,14 +40,6 @@ describe('pickGlobalUiOptions()', () => {
       'globalUiOptionsKeys names MarkdownTemplate, an option RJSF reads per field, so it is not read from ui:globalOptions.',
     );
   });
-  it("drops an extension key naming an option RJSF's widgets read that ui:options doesn't declare", () => {
-    const withFormat: GenericObjectType = { format: 'MDY' };
-
-    expect(pickGlobalUiOptions(withFormat, ['format'])).toEqual({});
-    expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
-      'globalUiOptionsKeys names format, an option RJSF reads per field, so it is not read from ui:globalOptions.',
-    );
-  });
   it('drops an extension key naming the enumOptions a field computes for its widget', () => {
     const withEnumOptions: GenericObjectType = { enumOptions: [{ label: 'X', value: 0 }] };
 

@@ -61,6 +61,40 @@ describe('CoreUiOptionsChecks', () => {
     expect(bad).toBeDefined();
   });
 
+  it("offers the options @rjsf/core's widgets read on the type of field they read them from", () => {
+    type Checked = StrictUiSchema<
+      CoreUiOptionsChecks,
+      { born: string; upload: string[]; score: number; extras: { name: string } }
+    >;
+    // Outside the literal, since an `as const` array written where a mutable tuple is expected isn't made read-only
+    const years = [2000, 2030] as const;
+
+    const ui: Checked = {
+      born: {
+        'ui:widget': 'alt-date',
+        'ui:options': { format: 'MDY', yearsRange: [2000, 2030], hideNowButton: true, hideClearButton: true },
+        'ui:accept': '.pdf',
+        'ui:yearsRange': years,
+      },
+      upload: { 'ui:accept': '.pdf' },
+      score: { 'ui:widget': 'RatingWidget', 'ui:stars': 3, 'ui:shape': 'heart' },
+      extras: { 'ui:expandable': false },
+    };
+    const bad: Checked = {
+      born: {
+        // @ts-expect-error `stars` is read by `RatingWidget`, a number widget
+        'ui:stars': 3,
+      },
+      score: {
+        // @ts-expect-error `yearsRange` is read by the alt-date widgets, for a string field
+        'ui:yearsRange': [2000, 2030],
+      },
+    };
+
+    expect(ui.score?.['ui:stars']).toBe(3);
+    expect(bad).toBeDefined();
+  });
+
   it('keeps type-agnostic options (template overrides, global options) available under Checks', () => {
     type Checked = StrictUiSchema<CoreUiOptionsChecks, { bio: string }>;
 

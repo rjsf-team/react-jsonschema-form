@@ -1,4 +1,4 @@
-import type { EnumValue, UiOptionsCheck, WidgetAliasFor } from '@rjsf/utils';
+import type { DateElementFormat, EnumValue, UiOptionsCheck, WidgetAliasFor } from '@rjsf/utils';
 
 import type { LayoutGridSchemaType } from './components/fields/LayoutGridField.tsx';
 
@@ -62,7 +62,12 @@ export type CoreUiOptionsChecks =
         autocomplete?: HTMLInputElement['autocomplete'];
         autocapitalize?: HTMLInputElement['autocapitalize'];
         emptyValue?: string;
+        accept?: string;
         filePreview?: boolean;
+        format?: DateElementFormat;
+        hideClearButton?: boolean;
+        hideNowButton?: boolean;
+        yearsRange?: readonly [number, number];
         inline?: boolean;
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
@@ -81,6 +86,7 @@ export type CoreUiOptionsChecks =
           | 'UpDownWidget'
           | 'SelectWidget'
           | 'RadioWidget'
+          | 'RatingWidget'
           | 'HiddenWidget'
           | WidgetAliasFor<'number'>;
         field?: 'NumberField';
@@ -89,6 +95,8 @@ export type CoreUiOptionsChecks =
         autocomplete?: HTMLInputElement['autocomplete'];
         autocapitalize?: HTMLInputElement['autocapitalize'];
         emptyValue?: number;
+        shape?: 'star' | 'heart';
+        stars?: number;
         inline?: boolean;
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
@@ -141,6 +149,7 @@ export type CoreUiOptionsChecks =
         copyable?: boolean;
         itemLabel?: string;
         inline?: boolean;
+        accept?: string;
         filePreview?: boolean;
         placeholder?: string;
         emptyValue?: unknown[];
@@ -160,6 +169,7 @@ export type CoreUiOptionsChecks =
         // through `getWidget`, so the select and radio widgets are offered for it.
         widget?: 'SelectWidget' | 'RadioWidget' | WidgetAliasFor<'object'>;
         field?: 'ObjectField';
+        expandable?: boolean;
         optionsSchemaSelector?: string;
         order?: string[];
       }

@@ -45,7 +45,7 @@ export default function RatingWidget<
   const { stars = 5, shape = 'star', color = 'orange', size = 'md', colorGradient = false } = options;
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
-  const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
+  const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars, 1), 5);
   const min = schema.minimum ?? 0;
 
   // Generate shape class

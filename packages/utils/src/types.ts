@@ -13,6 +13,7 @@ import type {
 import type { JSONSchema7 } from 'json-schema';
 
 import type { TranslatableString } from './enums.ts';
+import type { DateElementFormat } from './getDateElementProps.ts';
 import './jsonSchemaAugmentation.ts';
 
 /** The representation of any generic object type, usually used as an intersection on other types to make them more
@@ -721,24 +722,15 @@ type OverridableTemplateName = Exclude<
 /** Every option name RJSF reads for a field, which an extension of `GlobalUISchemaOptions` may not reuse: the
  * registry hands an extension's keys to every field along with RJSF's own, so one of these names would act as the
  * option RJSF reads per field. `ui:fieldReplacesAnyOrOneOf` is among them, since `getUiOptions()` returns it as an
- * option too, and so is `enumOptions`, which a field computes and hands its widget beside the options, every template
- * `getTemplates()` reads from a field's options, the ones `ui:options` doesn't declare included, and every option
- * `@rjsf/core`'s widgets read that `ui:options` doesn't declare. A theme whose widgets read more lists them in the
- * `Reserved` its `<Theme>GlobalUISchemaOptions` checks a user's extension against.
+ * option too, and so is `enumOptions`, which a field computes and hands its widget beside the options, and every
+ * template `getTemplates()` reads from a field's options, the ones `ui:options` doesn't declare included. A theme whose
+ * widgets read more lists them in the `Reserved` its `<Theme>GlobalUISchemaOptions` checks a user's extension against.
  */
 export type ReservedUiOptionName =
   | keyof UIOptionsDeclaredType
   | 'fieldReplacesAnyOrOneOf'
   | 'enumOptions'
-  | OverridableTemplateName
-  | 'accept'
-  | 'expandable'
-  | 'format'
-  | 'hideClearButton'
-  | 'hideNowButton'
-  | 'shape'
-  | 'stars'
-  | 'yearsRange';
+  | OverridableTemplateName;
 
 /** Checks the keys an extension of `GlobalUISchemaOptions` adds: each one also in `Reserved` is mapped to `never`, so
  * an extension declaring one doesn't satisfy it, and so is an extension with a string index signature, which would
@@ -1970,6 +1962,24 @@ type UIOptionsDeclaredType<
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */
     widget?: Widget<T, S, F> | string;
+    /** The file types a `FileWidget` offers, as the `accept` attribute of its `<input type="file">` */
+    accept?: string;
+    /** Flag, if set to `false`, will stop an object field with additional properties from offering to add any more */
+    expandable?: boolean;
+    /** The order of an alt-date widget's date parts: `YMD` by default */
+    format?: DateElementFormat;
+    /** Flag, if set to `true`, will remove an alt-date widget's `Clear` button */
+    hideClearButton?: boolean;
+    /** Flag, if set to `true`, will remove an alt-date widget's `Now` button */
+    hideNowButton?: boolean;
+    /** The shape a `RatingWidget` draws its stars in: `star` by default */
+    shape?: 'star' | 'heart';
+    /** The number of stars a `RatingWidget` draws, from 1 to 5: 5 by default. A schema's `maximum` takes its place */
+    stars?: number;
+    /** The first and last years an alt-date widget's year select offers. Both above 0, or both at most 0 to count back
+     * from the current year: a negative beside a positive throws
+     */
+    yearsRange?: readonly [number, number];
   };
 
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to

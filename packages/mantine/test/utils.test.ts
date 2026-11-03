@@ -15,7 +15,25 @@ describe('cleanupOptions()', () => {
     expect(cleanupOptions({ itemLabel: 'name', radius: 'md' }, noGlobals)).toEqual({ radius: 'md' });
   });
 
-  it.each(['initialValue', 'placeholder', 'required', 'rows', 'enumOptions'])('removes the %s option', (name) => {
+  it.each([
+    'initialValue',
+    'placeholder',
+    'required',
+    'rows',
+    'enumOptions',
+    'accept',
+    'colorFormat',
+    'expandable',
+    'format',
+    'gridCols',
+    'gridSpacing',
+    'gridVerticalSpacing',
+    'hideClearButton',
+    'hideNowButton',
+    'shape',
+    'stars',
+    'yearsRange',
+  ])('removes the %s option', (name) => {
     expect(cleanupOptions({ [name]: 'value', radius: 'md' }, noGlobals)).toEqual({ radius: 'md' });
   });
 
@@ -28,22 +46,6 @@ describe('cleanupOptions()', () => {
 
   it('removes fieldReplacesAnyOrOneOf, which the ui: key of the same name gives a field', () => {
     expect(cleanupOptions({ fieldReplacesAnyOrOneOf: true, radius: 'md' }, noGlobals)).toEqual({ radius: 'md' });
-  });
-
-  it.each([
-    'accept',
-    'expandable',
-    'format',
-    'gridCols',
-    'gridSpacing',
-    'gridVerticalSpacing',
-    'hideClearButton',
-    'hideNowButton',
-    'shape',
-    'stars',
-    'yearsRange',
-  ])('removes %s, an option rjsf reads that no type declares', (name) => {
-    expect(cleanupOptions({ [name]: 'value', radius: 'md' }, noGlobals)).toEqual({ radius: 'md' });
   });
 
   it.each([
@@ -86,6 +88,8 @@ describe('MantineGlobalUISchemaOptions', () => {
     expectTypeOf<MantineGlobalUISchemaOptions<{ thumbLabel?: string }>>().not.toBeNever();
     // @ts-expect-error `DateWidget` reads `valueFormat`
     expectTypeOf<MantineGlobalUISchemaOptions<{ valueFormat?: string }>>().not.toBeNever();
+    // @ts-expect-error `ColorWidget` reads `colorFormat`
+    expectTypeOf<MantineGlobalUISchemaOptions<{ colorFormat?: string }>>().not.toBeNever();
     // @ts-expect-error `useFieldWrapperProps()` reads the `InputWrapper`'s `size`
     expectTypeOf<MantineGlobalUISchemaOptions<{ size?: string }>>().not.toBeNever();
   });

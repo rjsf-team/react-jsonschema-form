@@ -69,7 +69,7 @@ export default function FileWidget<
       name={htmlName || id}
       value={value || null}
       placeholder={placeholder || undefined}
-      accept={options.accept ? String(options.accept) : undefined}
+      accept={options.accept || undefined}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}

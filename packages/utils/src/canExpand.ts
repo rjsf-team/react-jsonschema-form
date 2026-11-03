@@ -25,7 +25,7 @@ export default function canExpand<
   if (!allowsAdditionalProperties<S, F>(context, schema)) {
     return false;
   }
-  const { expandable = true } = getUiOptions<T, S, F>(uiSchema);
+  const { expandable } = getUiOptions<T, S, F>(uiSchema);
   if (expandable === false) {
     return false;
   }
