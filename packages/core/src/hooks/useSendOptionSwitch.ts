@@ -1,13 +1,12 @@
 import { use, useCallback } from 'react';
 import type { FieldPath, FormContextType, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
-  hasSchemaMarker,
   ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
   deepEqualsUndefinedAsMissing,
   getRenderedOptionSchema,
   getXxxOfKey,
-  isConstant,
+  hasSchemaMarker,
   isPlainObject,
   isWholeValueSelect,
   toConstant,

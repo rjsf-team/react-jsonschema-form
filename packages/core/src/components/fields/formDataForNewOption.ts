@@ -9,9 +9,8 @@ import type {
   UiSchemaDefinitions,
 } from '@rjsf/utils';
 import {
-  hasSchemaMarker,
-  ADDITIONAL_PROPERTY_FLAG,
   ADDITIONAL_PROPERTIES_KEY,
+  ADDITIONAL_PROPERTY_FLAG,
   CONST_KEY,
   deepEquals,
   DEFAULT_KEY,
@@ -20,6 +19,7 @@ import {
   getRenderedOptionSchema,
   getStaticItemsUiSchema,
   getXxxOfKey,
+  hasSchemaMarker,
   isCollapsedByOptionalDataControls,
   isPlainObject,
   isSchemaObject,

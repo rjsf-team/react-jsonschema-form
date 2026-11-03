@@ -13,11 +13,11 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
-  hasSchemaMarker,
   ADDITIONAL_PROPERTY_FLAG,
   enumOptionsIsDisabled,
   getByPath,
   hasByPath,
+  hasSchemaMarker,
   setByPath,
   setOwn,
   ADDITIONAL_PROPERTIES_KEY,

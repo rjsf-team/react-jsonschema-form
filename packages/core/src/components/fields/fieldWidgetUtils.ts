@@ -18,16 +18,19 @@ import type {
 } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  ANY_OF_KEY,
   fieldPathEndsWithIndex,
   getDescribedControlAttributes,
   getSchemaType,
   getSelectFieldType,
   getUiOptions,
+  getXxxOfKey,
   hasSchemaMarker,
   isCustomWidget,
   isFixedItems,
   isObject,
   ITEMS_KEY,
+  ONE_OF_KEY,
   resolveDefaultWidget,
   toConstant,
   UI_GLOBAL_OPTIONS_KEY,
@@ -122,6 +125,16 @@ export function resolveStringFieldWidget<
   );
   const { widget = defaultWidget } = uiOptions;
   return { widget, enumOptions };
+}
+
+/** The keyword a field offering `schema`'s options reads its ids and uiSchema from. A field named on an empty list keeps
+ * that list's, as there is no option to read them from
+ *
+ * @param schema - The schema the field renders
+ * @returns - The keyword of the options, or of the list holding none
+ */
+export function optionsKeywordOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
+  return getXxxOfKey<S>(schema) ?? (Array.isArray(schema[ANY_OF_KEY]) ? ANY_OF_KEY : ONE_OF_KEY);
 }
 
 /** Gets the widget `BooleanField` renders with: its `ui:widget`, or a checkbox for none or a `null` one
@@ -347,7 +360,7 @@ export function declaresProperty<S extends StrictRJSFSchema = RJSFSchema>(
  * @returns - The schema without `ADDITIONAL_PROPERTY_FLAG`, or `schema` itself where it has none
  */
 export function withoutAdditionalFlag<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
-  if (typeof schema !== 'object' || schema === null || !(ADDITIONAL_PROPERTY_FLAG in schema)) {
+  if (!hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG)) {
     return schema;
   }
   const unflagged = { ...schema };

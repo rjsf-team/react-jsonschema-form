@@ -56,10 +56,11 @@ export type StrictRJSFSchema = JSONSchema7;
  */
 export type RJSFSchema = StrictRJSFSchema;
 
-/** A schema with the boolean and string symbol markers `retrieveSchema()` adds, such as `ADDITIONAL_PROPERTY_FLAG` and
- * `RJSF_REF_KEY`
+/** A schema with the symbol markers `retrieveSchema()` adds, such as `ADDITIONAL_PROPERTY_FLAG` and `RJSF_REF_KEY`.
+ * They hold booleans, strings and objects by marker, so a value read from one is `unknown`; `hasSchemaMarker()` reads
+ * a flag
  */
-export type RJSFMarkedSchema = StrictRJSFSchema & Record<symbol, boolean | string>;
+export type RJSFMarkedSchema = StrictRJSFSchema & Record<symbol, unknown>;
 
 /** The type of a form's `formContext`, the constraint and default of every `F`: any object, an `interface` included,
  * which a component reading it narrows or names the keys of
