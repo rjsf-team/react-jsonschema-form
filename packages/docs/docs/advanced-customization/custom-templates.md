@@ -286,7 +286,7 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 
 - `className`: The className string.
 - `disabled`: Whether the array item's buttons are disabled, by the array's lock or the item's own. Its inputs can stay enabled, under an item's `ui:disabled: false`.
-- `canAdd`: A boolean value stating whether new elements can be added to the array.
+- `canAdd`: A boolean value stating whether a new item can be added below this one, which is when `onAddItem` acts.
 - `hasCopy`: A boolean value stating whether the array item can be copied.
 - `hasMoveDown`: A boolean value stating whether the array item can be moved down.
 - `hasMoveUp`: A boolean value stating whether the array item can be moved up.
@@ -791,6 +791,8 @@ To take control over the inner organization of each field (each form row), you c
 
 A field template is basically a React stateless component being passed field-related props, allowing you to structure your form row as you like.
 
+To keep an array item's buttons and an additional property's key input level with the field's control, see [Lining up a custom `FieldTemplate`](../usage/themes.md#lining-up-a-custom-fieldtemplate).
+
 ```tsx
 import { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -897,7 +899,7 @@ const schema: RJSFSchema = {
 };
 
 function GridTemplate(props: GridTemplateProps) {
-  const { children, column, className, ...rest } = props;
+  const { children, column, className, fieldId, ...rest } = props;
   return (
     <Grid container={!column} {...rest} className={classNames(className, 'my-custom-grid-styling')}>
       {children}
@@ -912,9 +914,10 @@ The following props are passed to the `GridTemplate`:
 
 - `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
-- `span`: Optional number of the 12 tracks a column spans in the `core` theme's grid; a column without one is full width
+- `span`: Optional number of twelfths of a row a column spans, which every theme's `GridTemplate` converts to its own grid
 - `className`: Optional class names to add to the grid element
 - `style`: Optional style to apply to the grid element
+- `fieldId`: For a column, the id of the first field it holds; for a row, or a column holding no field of its own, the id of the field whose layout grid holds it. It's for naming the row or column in a warning; keep it off the element you render
 
 ## MarkdownTemplate
 
@@ -1273,6 +1276,7 @@ The following props are passed to each `UnsupportedFieldTemplate`:
 
 The `WrapIfAdditionalTemplate` is used by the `FieldTemplate` to conditionally render additional controls if `additionalProperties` or `patternProperties` are present in the schema.
 You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or behavior of user-controlled `additionalProperties` and `patternProperties`.
+Core's lays the key, the value and the remove button out on shared grid rows, so the key's input sits level with the value's; see [Lining up a custom `FieldTemplate`](../usage/themes.md#lining-up-a-custom-fieldtemplate).
 
 ```tsx
 import { ADDITIONAL_PROPERTY_FLAG, additionalKeyId, RJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
@@ -1534,3 +1538,20 @@ const registry = { templates: { CustomArrayFieldTemplate } };
 // Use the custom template in the uiSchema
 const uiSchema: UiSchema = { 'ui:ArrayFieldTemplate': 'CustomArrayFieldTemplate' };
 ```
+
+### Typing a set of templates
+
+`TemplatesType` is two exported types put together: `DeclaredTemplatesType` holds the templates RJSF declares, each checked against its own props, and `CustomTemplateEntries` is the string index signature for your own templates and groups of them. `Omit` or `Pick` on `TemplatesType` collapses to that signature and checks nothing, so build your own type from the two parts:
+
+```tsx
+import { CustomTemplateEntries, DeclaredTemplatesType } from '@rjsf/utils';
+import MyFieldTemplate from './MyFieldTemplate';
+import MyTemplate from './MyTemplate';
+
+const templates: Partial<DeclaredTemplatesType> & CustomTemplateEntries = {
+  FieldTemplate: MyFieldTemplate,
+  MyTemplate,
+};
+```
+
+`Partial` reaches only the top level, so a `ButtonTemplates` entry in this type has to hold every button. The `templates` prop of `Form` itself takes any of the buttons on their own.
