@@ -218,13 +218,15 @@ describe('UiSchema type', () => {
     expect(ui.nested).toEqual({ deeper: { 'ui:widget': 'text' } });
   });
 
-  it('fits an untyped uiSchema into a typed one only where the data has no string index signature', () => {
+  it('fits an untyped uiSchema into a typed one only where neither the data nor its array element has a string index signature', () => {
     const ui: UiSchema = { notes: { 'ui:widget': 'textarea' } };
     const named: UiSchema<{ notes: string }> = ui;
     // @ts-expect-error TS2322, the untyped entries are `unknown`, not the `UiSchema<string>` each indexed key holds
     const indexed: UiSchema<Record<string, string>> = ui;
+    // @ts-expect-error TS2322, `items` holds the untyped `unknown` entries where each element's indexed keys need a `UiSchema<string>`
+    const indexedElements: UiSchema<Record<string, string>[]> = ui;
 
-    expect([named, indexed]).toHaveLength(2);
+    expect([named, indexed, indexedElements]).toHaveLength(3);
   });
 
   it('rejects a field name the data does not have', () => {

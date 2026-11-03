@@ -2211,9 +2211,9 @@ type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullab
 
 /** A nested field entry. For a key of an untyped `UiSchema`, or a field typed `any`, the entry is unconstrained and
  * reads back as `unknown`: the loose `UiSchema` can't stand in, since the string index signature it would sit under
- * also covers the `ui:` keys, whose values aren't uiSchemas. The cost is that an untyped `UiSchema` no longer fits a
- * `UiSchema<T>` whose `T` has a string index signature, since its `unknown` entries don't fit the `UiSchema` that
- * signature holds for each key; `any` used to fit there too
+ * also covers the `ui:` keys, whose values aren't uiSchemas. The cost is that an untyped `UiSchema` doesn't fit a
+ * `UiSchema<T>` where `T`, or the element of an array `T`, has a string index signature, since its `unknown` entries
+ * don't fit the `UiSchema` that signature holds for each key
  */
 type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? unknown : UiSchema<V, S, F>;
