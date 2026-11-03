@@ -39,16 +39,13 @@ import {
   getTemplates,
   getUiOptions,
   getUnionTypes,
-  getXxxOfKey,
   GUESSED_TYPE_FLAG,
-  guessType,
   hasOwnContentBesideOptions,
   isComponentType,
   isConstant,
-  isConstantOptionList,
-  isConstantSelect,
   isFormDataAvailable,
   isLabelledByTemplate,
+  isSchemaObject,
   logOnce,
   omitConsumedStyling,
   rendersOwnFieldBesideOption,
@@ -70,9 +67,11 @@ import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
+import type { SelectSchemaInfo } from './fieldWidgetUtils.ts';
 import getFieldWidget, {
   getDeprecatedTemplateProps,
   getFieldErrorProps,
+  getSelectSchemaInfo,
   getTemplateParts,
   withoutAdditionalFlag,
   withoutDescribers,
@@ -101,53 +100,6 @@ const COMPONENT_TYPES: Record<string, string> = {
   string: 'StringField',
   null: 'NullField',
 };
-
-/** What `SchemaField` needs to know about a retrieved schema that may be a select */
-interface SelectSchemaInfo<S extends StrictRJSFSchema> {
-  /** The retrieved schema, with a `type` inferred from its constants when it is a typeless `oneOf`/`anyOf` select */
-  schema: S;
-  /** Whether the `type` was inferred rather than declared */
-  hasInferredType: boolean;
-  /** The keyword the schema's options are read from, if it has any */
-  xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined;
-  /** The non-empty constant options of that keyword, when they all are constants */
-  constantOptions: S[] | undefined;
-  /** Whether the schema is an `enum`, empty or not, or a `oneOf`/`anyOf` of constants, see `isConstantSelect()` */
-  isSelectSchema: boolean;
-  /** Whether that select offers at least one option */
-  hasConstantOptions: boolean;
-}
-
-/** Works out whether a retrieved schema is a select, reading its options from the same keyword `isSelect()` and
- * `optionsList()` read. A `oneOf`/`anyOf` whose options are all constants renders as a select through the field for the
- * schema's `type`, but JSON Schema doesn't require that `type`, and without it neither a field nor a widget can be
- * resolved, so it is inferred from the constant values.
- *
- * @param retrievedSchema - The retrieved schema for the field
- * @returns - The `SelectSchemaInfo` for the schema
- */
-function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedSchema: S): SelectSchemaInfo<S> {
-  const xxxOfKey = getXxxOfKey<S>(retrievedSchema);
-  const options = xxxOfKey && retrievedSchema[xxxOfKey];
-  const constantOptions = isConstantOptionList<S>(options) ? options : undefined;
-  let schema = retrievedSchema;
-  if (constantOptions && getSchemaType<S>(retrievedSchema) === undefined) {
-    // `toConstant()` throws for an option that isn't a constant, which is why only a list of them is mapped
-    const types = [...new Set(constantOptions.map((option) => guessType(toConstant<S>(option))))];
-    schema = { ...retrievedSchema, type: getSelectFieldType(types) };
-  }
-  return {
-    schema,
-    hasInferredType: schema !== retrievedSchema,
-    xxxOfKey,
-    constantOptions,
-    // The schema is already retrieved, so it's checked directly rather than through `isSelect()`, which would resolve
-    // it again. As for `isSelect()`, an empty `enum` still counts as a select, with nothing to choose. A list already
-    // found to be all constants isn't scanned again, which a long one makes worth skipping
-    isSelectSchema: constantOptions !== undefined || isConstantSelect<S>(schema, true),
-    hasConstantOptions: constantOptions !== undefined || isConstantSelect<S>(schema),
-  };
-}
 
 /** Returns the widget to default the `uiSchema` of a `oneOf`/`anyOf` select to when the field for its `type` wouldn't
  * render a select on its own. That is only ever BooleanField, which defaults to a checkbox, and a checkbox ignores
@@ -409,6 +361,34 @@ export function createIsSchemaFieldHidden<
 
 const RenderNothing = () => null;
 
+/** Whether the `anyOf`/`oneOf` of a schema listing several types leaves the choice of type to its options, so the
+ * fallback UI renders no type selector around them. An option naming none takes the schema's whole list instead, which
+ * gets it a selector of its own within the option, where choosing a type does change the field. An option that only
+ * implies its type, by declaring `properties` say, names none, since it renders for whichever type it is handed. On an
+ * object-first schema the `ObjectField` beside the options keeps its `properties` on screen for another type unless a
+ * selector around them takes them off, so every option has to name its type there. A field naming the fallback field
+ * keeps that selector regardless, since yielding to the options would leave no `ObjectField` beside them at all.
+ *
+ * @param schema - The retrieved schema of the field
+ * @param schemaUtils - The form's `SchemaUtilsType`, which resolves an option given by a `$ref`
+ * @param isNamedFallback - Whether a `ui:field` or a `$id` names the fallback field for the schema
+ * @returns - True when the options leave no type selector to render around them
+ */
+function optionsTakeOverTypeSelector<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  schemaUtils: Registry<T, S, F>['schemaUtils'],
+  isNamedFallback: boolean,
+): boolean {
+  const options = getUnionTypes<S>(schema) && retrievedOptionsOf<T, S, F>(schemaUtils, schema, undefined);
+  if (!options) {
+    return false;
+  }
+  const namesType = (option: S) => option.type !== undefined;
+  return rendersOwnFieldBesideOption<S>(schema)
+    ? !isNamedFallback && options.every(namesType)
+    : options.some(namesType);
+}
+
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the
  * `schema`. The `uiOptions` are used to alter what potential `Field` implementation is actually returned. If no
  * appropriate `Field` implementation can be found then a wrapper around `UnsupportedFieldTemplate` is used.
@@ -481,7 +461,8 @@ function getFieldComponent<
   // renders a selector for choosing which of them to enter, so it takes over whenever that opt-in UI is enabled.
   // An `anyOf`/`oneOf` is kept, and the fallback UI wraps it: the value schema it builds pins the type but carries the
   // options along, so the option selector renders within the type selector rather than instead of it, and every member
-  // of the union stays reachable from inside an option.
+  // of the union stays reachable from inside an option. Options naming types of their own are left out of that, see
+  // `optionsTakeOverTypeSelector()`, and render through the field for the schema's type as with the opt-in off.
   // A select is left alone, since its options are constants that pin the value; an `enum` or `const` is left alone for
   // the same reason, as switching type would cast a value the user picked into one the schema rejects and leave a
   // select still offering values of the old type.
@@ -493,13 +474,16 @@ function getFieldComponent<
   // to handle, so the widget renders within it for the chosen one
   const hasGuessedType = GUESSED_TYPE_FLAG in schema;
   const isNamedWidget = !widget || typeof widget === 'string';
+  const mayDivert = globalFormOptions.useFallbackUiForUnsupportedType && !isSelectSchema;
+  const optionsTakeOverSelector =
+    mayDivert &&
+    optionsTakeOverTypeSelector<T, S, F>(schema, registry.schemaUtils, namedField === fields.FallbackField);
   const isDivertedToFallbackUi =
-    globalFormOptions.useFallbackUiForUnsupportedType &&
+    mayDivert &&
     (isNamedWidget || hasGuessedType) &&
-    !isSelectSchema &&
     !schema.enum &&
     !isConstant<S>(schema) &&
-    (getUnionTypes<S>(schema) !== undefined || hasGuessedType);
+    ((getUnionTypes<S>(schema) !== undefined && !optionsTakeOverSelector) || hasGuessedType);
   if (isDivertedToFallbackUi) {
     componentName = 'FallbackField';
   }
@@ -542,12 +526,13 @@ function getFieldComponent<
    */
   const ownTypes = rendersFallbackUi && rendersOptionSelector ? getSchemaOwnTypes<S>(schema) : undefined;
   /** Whether the option selector is the only choice of type there is, because the schema names no type of its own for a
-   * type selector to offer one of. An option naming its own type overrides whatever a type selector pinned, so such a
-   * selector would leave the screen as it was while `castToNewType()` rewrote the value on every switch. What the
-   * schema names is read from the schema rather than from how the fallback UI was reached, so that a named field gets
-   * the same answer as the schema's own type having no field of its own
+   * type selector to offer one of, or its options take that selector over. An option naming its own type overrides
+   * whatever a type selector pinned, so such a selector would leave the screen as it was while `castToNewType()`
+   * rewrote the value on every switch. What the schema names is read from the schema rather than from how the fallback
+   * UI was reached, so that a named field gets the same answer as the schema's own type having no field of its own
    */
-  const optionsSupplyTheTypes = rendersFallbackUi && rendersOptionSelector && ownTypes === undefined;
+  const optionsSupplyTheTypes =
+    rendersFallbackUi && rendersOptionSelector && (ownTypes === undefined || optionsTakeOverSelector);
   /** Whether the value field the fallback UI would render the options within holds nothing for them to describe. A
    * `null` is the whole of the value it describes, so `getValueSchema()` drops the options once that is the type in
    * effect; with `null` the only type the schema allows there is no selector to choose another, so the options are
@@ -568,8 +553,6 @@ function getFieldComponent<
   // A named field is excluded too: a field written for this schema renders beside the options. This field is not,
   // whether it was named or reached by the schema's own type having no field, since what it would add is the type
   // selector the options replace.
-  // A schema that lists its types keeps that selector even though a typed option overrides it there too, which is the
-  // asymmetry #5390 is about
   const yieldsToOptions =
     rendersOptionSelector && !rendersOptionsItself && (namedField === undefined || isFallbackField);
   /** A named field written for the schema, which never yields to the options */
@@ -653,15 +636,21 @@ function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormC
       xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY,
       option: S,
       index: number,
-    ) => ({
-      schema: getRenderedOptionSchema<S>(schema, option),
-      uiSchema: getOptionFieldUiSchema<T, S, F>(
-        schema,
-        option,
-        uiSchema,
-        getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, index),
-      ),
-    }),
+      registry: Registry<T, S, F>,
+    ) => {
+      const renderedOption = getRenderedOptionSchema<S>(schema, option);
+      return {
+        schema: renderedOption,
+        uiSchema: getOptionFieldUiSchema<T, S, F>(
+          schema,
+          option,
+          uiSchema,
+          getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, index),
+          renderedOption,
+          registry,
+        ),
+      };
+    },
   );
   // Keyed on the resolver's parts rather than its result, a new object with every change of the data
   const planField = memoizeLast(
@@ -702,7 +691,7 @@ function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormC
     if (!option) {
       return null;
     }
-    const input = optionInput(schema, uiSchema, xxxOfKey, option, index);
+    const input = optionInput(schema, uiSchema, xxxOfKey, option, index, registry);
     const isRefCycle = Boolean((input.schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
     const resolved = resolve(input.schema, input.uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove);
     const { selectSchemaInfo, uiField, uiSchema: optionUiSchema, ownUiOptions, hidden } = resolved;
@@ -947,8 +936,13 @@ export function useSchemaFieldPlan<
   const { schema, xxxOfKey } = selectSchemaInfo;
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
-  // The field's own options pick the field, since `getDisplayLabel()` and the defaults read only its own `ui:widget`
-  const fieldToRender = planFieldComponent<T, S, F>({ selectSchemaInfo, uiField, ownUiOptions }, registry);
+  // The field's own options pick the field, since `getDisplayLabel()` and the defaults read only its own `ui:widget`.
+  // Memoized, since a union's plan retrieves its options, which a keystroke would otherwise repeat with no data, leaving
+  // the `xxxOfOptions` retrieved below to diff against that rather than the previous data's and lose their identity
+  const fieldToRender = useMemo(
+    () => planFieldComponent<T, S, F>({ selectSchemaInfo, uiField, ownUiOptions }, registry),
+    [selectSchemaInfo, uiField, ownUiOptions, registry],
+  );
   // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
   // type in effect — and only the inner one would follow the type the user chose. Below a named field, the
@@ -1077,9 +1071,17 @@ export function useSchemaFieldPlan<
   // An object with nothing of its own to render beside its options, a pure union, is planned like a withheld field as
   // the field that renders its options, whose template labels it. `fieldSchema` carries the option shown, so an object
   // whose every option is closed stays a pure union however its own keywords read
+  // So is a `type` list's object while the option shown holds another type, whether the list is on the schema or pinned
+  // by the fallback UI's selector above: there is no object for its field to render, and an edit in it would replace the
+  // option's value with one
+  const optionShown = fieldShownOption?.options[optionBeside];
+  const optionHoldsNoObject =
+    (getUnionTypes<S>(schema) !== undefined || selectorsAbove.type > 0) &&
+    isSchemaObject<S>(optionShown) &&
+    getSchemaOwnTypes<S>(optionShown)?.includes('object') === false;
   const isPureUnion =
     fieldToRender?.yieldsToOptions === true &&
-    !hasOwnContentBesideOptions<T, S, F>(schemaUtils, fieldSchema, fieldUiSchema, formData);
+    (optionHoldsNoObject || !hasOwnContentBesideOptions<T, S, F>(schemaUtils, fieldSchema, fieldUiSchema, formData));
   const plannedAsOptions = fieldToRender?.isWithheld === true || isPureUnion;
   // Kept only by a field rendering its options, so the many that render none don't hold a planner they never call
   const planShownOption = useMemo(
@@ -1153,6 +1155,7 @@ export function useSchemaFieldPlan<
     required: effectiveRequired,
     inherited: inheritedPresentation?.plan,
     shownOptionField: optionsRenderedAbove ? null : shownOptionField,
+    formData,
   });
   // The lock the form, its schema or its uiSchema puts on the field, planned here so an array item's buttons follow it.
   // `SchemaFieldRender` adds the states that only leave its control unusable, which still let an item be removed
@@ -1175,7 +1178,9 @@ export function useSchemaFieldPlan<
     effectiveRequired,
     hideError,
     hidden,
-    title,
+    // A label drawn above shows that field's title rather than this one, so a field below titled as this one says
+    // something no label says yet, and keeps its heading
+    title: presentation?.label.by === 'above' && inheritedPresentation ? inheritedPresentation.title : title,
     label,
     schemaDescription,
     fieldComponentId,

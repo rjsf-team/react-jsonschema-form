@@ -21,7 +21,6 @@ import {
   GUESSED_TYPE_FLAG,
   guessType,
   hasWidget,
-  isLabelledByTemplate,
   JSON_SCHEMA_TYPES,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
@@ -30,13 +29,13 @@ import {
   toFieldPath,
   TranslatableString,
   UI_OPTIONS_KEY,
-  UI_WIDGET_KEY,
   uiBooleanOption,
   UNEVALUATED_PROPERTIES_KEY,
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
+import { withoutUiWidget } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 
@@ -239,16 +238,11 @@ function getValueUiSchema<
   F extends FormContextType = FormContextType,
 >(uiSchema: UiSchema<T, S, F> | undefined, keepsWidget: boolean): UiSchema<T, S, F> {
   const noUiSchema: UiSchema<T, S, F> = {};
-  const valueUiSchema = { ...(uiSchema ?? noUiSchema) };
+  const ownUiSchema = uiSchema ?? noUiSchema;
+  const valueUiSchema = keepsWidget ? { ...ownUiSchema } : withoutUiWidget<T, S, F>(ownUiSchema);
   delete valueUiSchema[HELP_UI_KEY];
-  if (!keepsWidget) {
-    delete valueUiSchema[UI_WIDGET_KEY];
-  }
   const uiOptions = { ...valueUiSchema[UI_OPTIONS_KEY] } as UIOptionsType<T, S, F>;
   delete uiOptions[HELP_UI_OPTION];
-  if (!keepsWidget) {
-    delete uiOptions.widget;
-  }
   valueUiSchema[UI_OPTIONS_KEY] = uiOptions;
   return valueUiSchema;
 }
@@ -419,8 +413,9 @@ function FallbackUiField<
   // Exactly one of the two fields renders the title: the outer one where a template's label names the value, which its
   // plan gives a control only where the value is one, and the value field otherwise, as where the theme declares the
   // field drawing its own label. Only a custom field renders this one without a plan, however the form reached it, and
-  // that field is taken to draw no label of its own, so the value field draws it
-  const isLabelled = presentation?.control !== undefined && isLabelledByTemplate(presentation);
+  // that field is taken to draw no label of its own, so the value field draws it. So does the value field below a label
+  // drawn above this one, as for an option's type selector: that label is the field above's, not this schema's title
+  const isLabelled = presentation?.control !== undefined && presentation.label.by === 'template';
   const valueSchema = useMemo(
     () => getValueSchema<S>(schema, type, translateString(TranslatableString.Value), isLabelled),
     [schema, type, translateString, isLabelled],
