@@ -805,6 +805,7 @@ export function useFieldWrapperProps<
       successProps: { ...ownSuccessProps, id: successId },
     },
     inputWrapperOrder: resolved.inputWrapperOrder,
+    size: (ownSize ?? inputThemeSize ?? wrapperProps.size) as InputWrapperProps['size'],
     invalid: !!error,
     successId,
     slotlessErrors: getSlotlessErrors<T, S, F>(widgetProps, resolved.inputWrapperOrder),

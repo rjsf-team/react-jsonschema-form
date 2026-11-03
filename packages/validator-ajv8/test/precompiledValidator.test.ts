@@ -1,5 +1,7 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ErrorSchemaBuilder, hashForSchema, isObject, mergeSchemas, noop, retrieveSchema } from '@rjsf/utils';
+import type { ErrorObject } from 'ajv';
+import ajvI18n from 'ajv-i18n';
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
