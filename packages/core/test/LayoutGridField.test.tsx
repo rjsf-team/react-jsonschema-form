@@ -2163,6 +2163,12 @@ describe("a column's fieldId", () => {
       { column: true, fieldId: 'root_5' },
     ]);
   });
+  test('is the id of the field a number cell names, past a null cell', () => {
+    expect(recordFieldIds({ children: [{ 'ui:col': { children: [null, 5] } }] })).toEqual([
+      { column: undefined, fieldId: 'root' },
+      { column: true, fieldId: 'root_5' },
+    ]);
+  });
   test("is the grid's own id for a ui:col naming no field of its own", () => {
     expect(
       recordFieldIds({ children: [{ 'ui:col': { children: [{ 'ui:row': { children: ['a'] } }] } }] }).slice(0, 3),
@@ -2199,5 +2205,60 @@ describe("a column's fieldId", () => {
       `A layout grid column's \`span\` of 4.5 in "${id}" is not a whole number, which this theme's grid needs`;
     expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(halfStep('root_a'));
     expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(halfStep('root_b'));
+  });
+});
+
+describe('a layout read from JSON', () => {
+  const consoleWarnSuppression = setupConsoleWarnSuppression();
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { a: { type: 'string' }, 5: { type: 'string' }, flag: { type: 'number' } },
+  };
+  const renderedIds = (layoutGrid: unknown, formData?: GenericObjectType) => {
+    const { node } = createFormComponent({
+      schema,
+      uiSchema: { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': layoutGrid },
+      initialFormData: formData,
+    });
+    return Array.from(node.querySelectorAll('input'), (input) => input.id);
+  };
+
+  test('skips a null cell', () => {
+    expect(renderedIds({ 'ui:row': { children: ['a', null] } })).toEqual(['root_a']);
+  });
+  test('skips a null cell in a ui:col', () => {
+    expect(renderedIds({ 'ui:row': { children: [{ 'ui:col': { children: [null, 'a'] } }] } })).toEqual(['root_a']);
+  });
+  test('renders the field a number cell names, as it does for a name that is a number', () => {
+    expect(renderedIds({ 'ui:row': { children: [5] } })).toEqual(['root_5']);
+  });
+  test('renders the field a number cell names in a ui:col', () => {
+    expect(renderedIds({ 'ui:row': { children: [{ 'ui:col': { children: [5] } }] } })).toEqual(['root_5']);
+  });
+  test('reads a ui:condition field that is a number as the property it names', () => {
+    const layoutGrid = {
+      'ui:row': {
+        children: [{ 'ui:condition': { field: 5, operator: 'all', value: 'yes', children: ['a'] } }],
+      },
+    };
+    expect(renderedIds(layoutGrid, { 5: 'yes' })).toEqual(['root_a']);
+    expect(renderedIds(layoutGrid, { 5: 'no' })).toEqual([]);
+  });
+  test('reads a ui:condition field that is neither a string nor a number as a condition not met', () => {
+    const layoutGrid = {
+      'ui:row': {
+        children: [{ 'ui:condition': { field: { name: 'flag' }, operator: 'none', value: 'yes', children: ['a'] } }],
+      },
+    };
+    expect(renderedIds(layoutGrid, { flag: 1 })).toEqual([]);
+  });
+  test.each([
+    ['missing', undefined],
+    ['not an object', 'ui:row'],
+  ])('warns, and renders nothing, for a ui:layoutGrid that is %s', (_, layoutGrid) => {
+    expect(renderedIds(layoutGrid)).toEqual([]);
+    expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
+      'ui:layoutGrid in "root" is not an object, so the LayoutGridField renders nothing.',
+    );
   });
 });

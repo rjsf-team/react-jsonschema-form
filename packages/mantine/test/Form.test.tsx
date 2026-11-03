@@ -260,6 +260,23 @@ describe('mantine FieldTemplate', () => {
   });
 
   test.each([
+    ['range', 'a string', 'label'],
+    ['range', 'a number', 5],
+    ['alt-date', 'a string', 'label'],
+    ['alt-date', 'a number', 5],
+  ])("leaves out the %s widget's inputWrapperOrder that is %s rather than an array", (widget, _, inputWrapperOrder) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: widget === 'range' ? 'number' : 'string', title: 'X' } } }}
+        uiSchema={{ x: { 'ui:widget': widget, 'ui:options': { inputWrapperOrder } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByText('X')).toBeInTheDocument();
+  });
+
+  test.each([
     ['alt-date', 'AltDateWidget'],
     ['alt-datetime', 'AltDateTimeWidget'],
   ])("draws the template's label of an %s with no for, since no element carries the field's id", (widget, key) => {

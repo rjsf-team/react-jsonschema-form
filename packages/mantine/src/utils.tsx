@@ -794,6 +794,7 @@ export function useFieldWrapperProps<
     wrapperProps: {
       ...wrapperProps,
       inputContainer: containerOnInputs ? renderChildren : ownInputContainer,
+      inputWrapperOrder: Array.isArray(wrapperProps.inputWrapperOrder) ? wrapperProps.inputWrapperOrder : undefined,
       label: labelValue(label || undefined, hideLabel, false),
       labelProps: { ...asObject(resolved.labelProps), id: titleId(id), htmlFor: undefined },
       required,

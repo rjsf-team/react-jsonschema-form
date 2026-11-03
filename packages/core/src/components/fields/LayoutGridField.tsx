@@ -472,6 +472,17 @@ function lookUpRender<
   return typeof render === 'string' ? lookupFromFormContext<T, S, F>(registry, render) : render;
 }
 
+/** Gets the name of the field a layout cell renders: the cell itself, or the `name` of a cell object. A JSON layout can
+ * name a field by a number, which names the same property as its string; any other value names no field.
+ *
+ * @param cell - A cell of a layout grid's `children`
+ * @returns - The name of the field the cell renders, or `''` when it names none
+ */
+function cellFieldName(cell: unknown): string {
+  const name = isObject(cell) ? cell.name : cell;
+  return typeof name === 'string' || typeof name === 'number' ? String(name) : '';
+}
+
 /** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
  * see if can be resolved to a UIComponent. If `name` does not exist and there is an optional `render` UIComponent, we
  * set the `rendered` component with only specified props for that component in the object.
@@ -485,16 +496,12 @@ export function computeUIComponentPropsFromGridSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(registry: Registry<T, S, F>, gridSchema?: string | GenericObjectType): UIComponentPropsType {
-  let name: string;
+  const name = cellFieldName(gridSchema);
   let UIComponent: RenderComponent | null = null;
   let uiProps: GenericObjectType = {};
   let rendered: ReactNode | undefined;
-  if (typeof gridSchema === 'string' || gridSchema === undefined) {
-    name = gridSchema ?? '';
-  } else {
-    const { name: innerName = '', render, ...innerProps } = gridSchema;
-    // A JSON layout can name a field by a number, which names the same property as its string
-    name = typeof innerName === 'string' || typeof innerName === 'number' ? String(innerName) : '';
+  if (isObject(gridSchema)) {
+    const { name: _name, render, ...innerProps } = gridSchema;
     uiProps = innerProps;
     // Transform any `$lookup=` in the uiProps props with the appropriate value
     Object.entries(uiProps).forEach(([key, prop]) => {
@@ -582,7 +589,12 @@ function LayoutGridCondition<
   const { formData, registry } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.CONDITION, registry);
   const { operator, field = '', value } = gridProps;
-  const fieldData = getByPath(formData, toPath(field), null);
+  // A JSON layout can hold any value here, though `GridProps` types it as a string
+  const fieldName: unknown = field;
+  if (typeof fieldName !== 'string' && typeof fieldName !== 'number') {
+    return null;
+  }
+  const fieldData = getByPath(formData, toPath(String(fieldName)), null);
   if (conditionMatches(operator, fieldData, value)) {
     return <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />;
   }
@@ -604,10 +616,10 @@ function columnFieldId<
 >(children: LayoutGridSchemaType[], props: LayoutGridFieldProps<T, S, F>) {
   const { registry, schema, formData, fieldPath, id } = props;
   for (const child of children) {
-    const name: unknown = typeof child === 'string' ? child : (child as GenericObjectType).name;
-    if ((typeof name === 'string' && name !== '') || typeof name === 'number') {
+    const name = cellFieldName(child);
+    if (name) {
       // A name the schema doesn't hold, such as a `render` cell's, renders no field
-      const details = getSchemaDetailsForField<T, S, F>(registry, String(name), schema, formData, fieldPath);
+      const details = getSchemaDetailsForField<T, S, F>(registry, name, schema, formData, fieldPath);
       if (details.schema) {
         return fieldPathToId(details.fieldPath, registry.globalFormOptions);
       }
@@ -1169,11 +1181,20 @@ export default function LayoutGridField<
    * match one of the `GridType`s. If so, call the appropriate render function for the type. Otherwise, just call the
    * generic `renderField()` function with the `layoutGridSchema`.
    */
-  const { uiSchema } = props;
+  const { uiSchema, id, fieldPath } = props;
   let { layoutGridSchema } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  if (!layoutGridSchema && LAYOUT_GRID_UI_OPTION in uiOptions && isObject(uiOptions[LAYOUT_GRID_UI_OPTION])) {
-    layoutGridSchema = uiOptions[LAYOUT_GRID_UI_OPTION];
+  // Only a grid handed no layout reads its uiSchema's: a cell is handed its own, and a `null` or `''` one reading the
+  // grid's layout again would render it inside itself without end
+  if (layoutGridSchema === undefined) {
+    const uiLayoutGrid = getUiOptions<T, S, F>(uiSchema)[LAYOUT_GRID_UI_OPTION];
+    if (isObject(uiLayoutGrid)) {
+      layoutGridSchema = uiLayoutGrid;
+    } else {
+      logOnce(
+        `${LAYOUT_GRID_OPTION} in ${fieldLabelForLog(id, fieldPath)} is not an object, so the LayoutGridField renders ` +
+          'nothing.',
+      );
+    }
   }
 
   if (isObject(layoutGridSchema)) {

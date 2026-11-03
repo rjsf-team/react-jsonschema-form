@@ -75,4 +75,20 @@ describe('FieldTemplate', () => {
 
     expect(container.querySelector('.slot.root')).toBeInTheDocument();
   });
+
+  it("merges the root option's sx with the slot's, the root's winning a clash", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'string' }}
+        uiSchema={{
+          'ui:options': {
+            mui: { sx: { mt: 1 }, rjsfSlotProps: { fieldFormControl: { sx: { mt: 4, mb: 2 }, className: 'slot' } } },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('.slot')).toHaveStyle({ marginTop: '8px', marginBottom: '16px' });
+  });
 });
