@@ -1,5 +1,12 @@
 import { Component } from 'react';
-import type { FieldProps, GenericObjectType, Registry, RJSFSchema, ThemePresentation } from '@rjsf/utils';
+import type {
+  DeclaredTemplatesType,
+  FieldProps,
+  GenericObjectType,
+  Registry,
+  RJSFSchema,
+  ThemePresentation,
+} from '@rjsf/utils';
 import { WIDGET_FIELD_PRESENTATION } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
@@ -188,6 +195,10 @@ describe('withTheme', () => {
   });
 
   describe('With templates', () => {
+    it('takes a whole set of declared templates', () => {
+      expectTypeOf<DeclaredTemplatesType>().toExtend<NonNullable<FormProps['templates']>>();
+    });
+
     it('checks a declared template against its own props, beside the open custom entries', () => {
       const unrelatedTemplate = ({ unrelated }: { unrelated: string }) => (
         <div className='unrelated-template'>{unrelated}</div>

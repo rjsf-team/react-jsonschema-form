@@ -1,7 +1,7 @@
 import { Component, createElement, forwardRef, lazy, memo } from 'react';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
-import type { MergedClassMap, Registry, UIOptionsType } from '../src/index.ts';
+import type { DeclaredTemplatesType, MergedClassMap, Registry, TemplatesType, UIOptionsType } from '../src/index.ts';
 import {
   createSchemaUtils,
   englishStringTranslator,
@@ -362,6 +362,10 @@ describe('a custom entry in TemplatesType', () => {
     LazyTemplate: lazy(async () => ({ default: FunctionTemplate })),
     CustomGroup: { ClassTemplate, FunctionTemplate },
   };
+
+  it('fits a whole set of declared templates', () => {
+    expectTypeOf<DeclaredTemplatesType>().toExtend<TemplatesType>();
+  });
 
   it('accepts any kind of component, alone or in a group', () => {
     expect(templates.ClassTemplate).toBe(ClassTemplate);

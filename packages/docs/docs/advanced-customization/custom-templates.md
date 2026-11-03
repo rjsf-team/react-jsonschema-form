@@ -1535,3 +1535,20 @@ const registry = { templates: { CustomArrayFieldTemplate } };
 // Use the custom template in the uiSchema
 const uiSchema: UiSchema = { 'ui:ArrayFieldTemplate': 'CustomArrayFieldTemplate' };
 ```
+
+### Typing a set of templates
+
+`TemplatesType` is two exported types put together: `DeclaredTemplatesType` holds the templates RJSF declares, each checked against its own props, and `CustomTemplateEntries` is the string index signature for your own templates and groups of them. `Omit` or `Pick` on `TemplatesType` collapses to that signature and checks nothing, so build your own type from the two parts:
+
+```tsx
+import { CustomTemplateEntries, DeclaredTemplatesType } from '@rjsf/utils';
+import MyFieldTemplate from './MyFieldTemplate';
+import MyTemplate from './MyTemplate';
+
+const templates: Partial<DeclaredTemplatesType> & CustomTemplateEntries = {
+  FieldTemplate: MyFieldTemplate,
+  MyTemplate,
+};
+```
+
+`Partial` reaches only the top level, so a `ButtonTemplates` entry in this type has to hold every button. The `templates` prop of `Form` itself takes any of the buttons on their own.

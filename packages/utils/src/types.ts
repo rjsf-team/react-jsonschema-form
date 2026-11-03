@@ -590,13 +590,15 @@ export type MarkdownTemplateProps<
 };
 
 /** The templates RJSF declares. Separate from `TemplatesType` because `Omit` and `Pick` on a type with a string index
- * signature collapse to that signature, so `Omit<TemplatesType, 'ButtonTemplates'>` would leave every template unchecked
+ * signature collapse to that signature, so `Omit<TemplatesType, 'ButtonTemplates'>` would leave every template unchecked.
+ * Object types rather than an `interface`, which gets no implicit index signature and so wouldn't fit
+ * `CustomTemplateEntries`. `ButtonTemplates` is a second one because a lone object type must be an `interface` to lint
  */
-export interface DeclaredTemplatesType<
+export type DeclaredTemplatesType<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> {
+> = {
   /** The template to use while rendering normal or fixed array fields */
   ArrayFieldTemplate: SlotComponent<ArrayFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering the description for an array field */
@@ -642,6 +644,7 @@ export interface DeclaredTemplatesType<
   UnsupportedFieldTemplate: SlotComponent<UnsupportedFieldProps<T, S, F>>;
   /** The template to use for rendering a field that allows a user to add additional properties */
   WrapIfAdditionalTemplate: SlotComponent<WrapIfAdditionalTemplateProps<T, S, F>>;
+} & {
   /** The set of templates associated with buttons in the form */
   ButtonTemplates: {
     /** The template to use for the main `Submit` button  */
@@ -659,7 +662,7 @@ export interface DeclaredTemplatesType<
     /** The template to use for the Clear button used for input fields */
     ClearButton: SlotComponent<IconButtonProps<T, S, F>>;
   };
-}
+};
 
 /** A custom entry of `TemplatesType`, a template or a named group of them, whose props only its lookup knows */
 export type CustomTemplateEntries = Record<
