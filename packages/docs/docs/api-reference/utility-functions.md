@@ -3448,7 +3448,7 @@ A string or a number is kept, so a numeric input stays numeric, a boolean, a big
 
 ### toNumericValue()
 
-Reads a widget's `value` as a number, for a widget that draws one such as a slider or a rating. A finite number is kept and a numeric string counts as its number. Anything else is no number.
+Reads a widget's `value` as a number, for a widget that draws one such as a slider or a rating. A finite number is kept and a plain decimal string, such as `'7'`, `' -2.5 '` or `'.5'`, counts as its number. Anything else is no number, including a hex, binary, octal, exponent or `Infinity` string such as `'0x3'` or `'1e1'`.
 
 #### Parameters
 

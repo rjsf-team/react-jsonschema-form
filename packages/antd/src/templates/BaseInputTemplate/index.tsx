@@ -76,6 +76,7 @@ export default function BaseInputTemplate<
   // `InputNumber` keeps the digits a conversion to a number would round
   const numberValue = typeof value === 'number' || typeof value === 'string' ? value : undefined;
 
+  const inputValue = toInputValue(value);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []);
@@ -116,7 +117,7 @@ export default function BaseInputTemplate<
       style={INPUT_STYLE}
       list={hasExamples ? examplesId(id) : undefined}
       {...inputProps}
-      value={value === undefined ? undefined : toInputValue(value)}
+      value={value === undefined ? undefined : inputValue}
       {...controlAttributes}
     />
   );
@@ -124,7 +125,7 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(toInputValue(value)) && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(inputValue) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

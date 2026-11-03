@@ -62,6 +62,7 @@ export default function BaseInputTemplate<
 
   const chakraProps = getChakra(options);
 
+  const inputValue = toInputValue(value);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   return (
@@ -78,7 +79,7 @@ export default function BaseInputTemplate<
       <Input
         id={id}
         name={htmlName || id}
-        value={toInputValue(value)}
+        value={inputValue}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
@@ -89,7 +90,7 @@ export default function BaseInputTemplate<
         list={hasExamples ? examplesId(id) : undefined}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(toInputValue(value)) && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(inputValue) && (
         <ClearButton registry={registry} onClick={onClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

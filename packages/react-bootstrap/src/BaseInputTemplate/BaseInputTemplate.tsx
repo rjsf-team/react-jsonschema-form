@@ -64,6 +64,7 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const inputValue = toInputValue(value);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const isInvalid = hasWidgetErrors<T, S, F>(props);
@@ -78,7 +79,7 @@ export default function BaseInputTemplate<
     readOnly: readonly,
     list: hasExamples ? examplesId(id) : undefined,
     ...inputProps,
-    value: toInputValue(value),
+    value: inputValue,
     onChange: onChangeOverride ?? handleChange,
     onBlur: handleBlur,
     onFocus: handleFocus,
@@ -96,7 +97,7 @@ export default function BaseInputTemplate<
       ) : (
         <Form.Control isInvalid={isInvalid} {...controlProps} />
       )}
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(toInputValue(value)) && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(inputValue) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}

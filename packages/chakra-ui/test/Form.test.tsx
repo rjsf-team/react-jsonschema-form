@@ -408,6 +408,31 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
   });
 
+  test('keeps the key that moved an empty range when its onChange is deferred', async () => {
+    const { RangeWidget } = generateWidgets();
+    function DeferringRangeWidget(props: WidgetProps) {
+      return <RangeWidget {...props} onChange={(value) => setTimeout(() => props.onChange(value))} />;
+    }
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 1, maximum: 9 }}
+        uiSchema={{ 'ui:widget': DeferringRangeWidget }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    screen.getByRole('slider').focus();
+    await user.keyboard('{End}');
+    await new Promise(requestAnimationFrame);
+    await new Promise((resolve) => {
+      setTimeout(resolve);
+    });
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 9 }), 'root');
+  });
+
   test('focuses the slider thumb under ui:autofocus, as core focuses its range input', () => {
     render(
       <WrappedForm

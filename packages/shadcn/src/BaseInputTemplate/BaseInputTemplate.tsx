@@ -73,6 +73,7 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const inputValue = toInputValue(value);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   return (
@@ -90,13 +91,13 @@ export default function BaseInputTemplate<
         list={hasExamples ? examplesId(id) : undefined}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
-        value={toInputValue(value)}
+        value={inputValue}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(toInputValue(value)) && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(inputValue) && (
         <ClearButton onClick={handleClear} registry={registry} />
       )}
       {children}

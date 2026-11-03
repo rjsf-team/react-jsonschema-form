@@ -1198,8 +1198,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `toInputValue()`, which turns a widget's `value` into what an input's `value` prop takes ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useFileWidgetProps()`'s `handleRemove` removing the wrong file when an earlier item of a multiple value isn't a readable data URL, such as the `null` stored for a file that couldn't be read: it now takes the index of the file in `filesInfo`, as every theme passes it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useAltDateWidgetProps()` reading a date part cleared to `null`, as a select with an `emptyValue` of `null` reports it, as a picked `0`, which built a date with a day, month or year of `0` ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Add `toNumericValue()`, which reads a widget's `value` as a number, and `ratingStoresString()`, which reports whether a rating widget writes a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Add `toNumericValue()`, which reads a widget's `value`, a number or a plain decimal string, as a number, and `ratingStoresString()`, which reports whether a rating widget writes a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useFileWidgetProps()` appending the next selection after a lone value of a multiple field that isn't a data URL, which the field doesn't show: the selection now replaces it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change `useAltDateWidgetProps()` to read only a string value, so a number or `Date` value, which the widget can't write back, renders every alt-date widget's selects blank, where it showed that date ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/validator-ajv8
 

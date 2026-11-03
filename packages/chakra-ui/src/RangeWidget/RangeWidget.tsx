@@ -48,15 +48,21 @@ export default function RangeWidget<
       thumbRef.current?.focus();
     }
   }, []);
-  const handleChange = ({ value: newValue }: SliderValueChangeDetails) =>
+  // Set by a change Zag reports during an interaction, so its end doesn't overwrite that change with the minimum while
+  // the value it rendered with is still empty, as it is when the change is committed later
+  const changedRef = useRef(false);
+  const handleChange = ({ value: newValue }: SliderValueChangeDetails) => {
+    changedRef.current = true;
     onChange(newValue === undefined ? options.emptyValue : newValue[0]);
+  };
   const numericValue = toNumericValue(value);
   // Zag reports only a value that changes, so a press or a key that leaves an empty range's thumb at its minimum commits
   // the minimum itself, as moving a native range's thumb there would
   const handleChangeEnd = ({ value: newValue }: SliderValueChangeDetails) => {
-    if (numericValue === undefined) {
+    if (!changedRef.current && numericValue === undefined) {
       onChange(newValue[0]);
     }
+    changedRef.current = false;
   };
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);

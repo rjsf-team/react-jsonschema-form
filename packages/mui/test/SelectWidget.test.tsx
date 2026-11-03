@@ -177,6 +177,23 @@ describe('SelectWidget named and described by its caller', () => {
     expect(container.querySelector('.MuiInputLabel-root')).toHaveAttribute('data-shrink', 'false');
   });
 
+  it('shows a lone value of a multiple select as selected, with its label shrunk above it', () => {
+    function LoneValueMultipleSelect(props: WidgetProps) {
+      const { SelectWidget } = props.registry.widgets;
+      return <SelectWidget {...props} multiple value='a' />;
+    }
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', title: 'Colors', enum: ['a', 'b'] }}
+        uiSchema={{ 'ui:widget': LoneValueMultipleSelect }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveTextContent('a');
+    expect(container.querySelector('.MuiInputLabel-root')).toHaveAttribute('data-shrink', 'true');
+  });
+
   it('names the combobox alone, leaving the aria-label off the field root around it', () => {
     const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
 

@@ -95,8 +95,10 @@ export default function SelectWidget<
   const isMultiple = multiple ?? false;
 
   const emptyValue = isMultiple ? [] : '';
-  const isEmpty = isMultiple
-    ? !Array.isArray(value) || value.length < 1
+  const selectedValue = enumOptionSelectedValue(value, enumOptions, isMultiple, optionValueFormat, emptyValue);
+  // A multiple select shows a lone value as a one-item selection, so its label shrinks for whatever it shows
+  const isEmpty = Array.isArray(selectedValue)
+    ? selectedValue.length < 1
     : typeof value === 'undefined' || value === emptyValue;
 
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<{ value: string }>) =>
@@ -131,7 +133,7 @@ export default function SelectWidget<
         id={id}
         name={htmlName || id}
         label={ownLabel}
-        value={enumOptionSelectedValue(value, enumOptions, isMultiple, optionValueFormat, emptyValue)}
+        value={selectedValue}
         required={required}
         disabled={disabled || readonly}
         autoFocus={autofocus}

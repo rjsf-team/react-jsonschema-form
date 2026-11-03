@@ -85,6 +85,7 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const inputValue = toInputValue(value);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const componentProps = {
@@ -123,7 +124,7 @@ export default function BaseInputTemplate<
       type='text'
       {...ariaDescribedByProps}
       {...descriptionProps}
-      value={toInputValue(value)}
+      value={inputValue}
       min={typeof min === 'number' ? min : undefined}
       max={typeof max === 'number' ? max : undefined}
     />
@@ -135,14 +136,14 @@ export default function BaseInputTemplate<
       {...themeProps}
       {...ariaDescribedByProps}
       {...descriptionProps}
-      value={toInputValue(value)}
+      value={inputValue}
     />
   );
 
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(toInputValue(value)) && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(inputValue) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}

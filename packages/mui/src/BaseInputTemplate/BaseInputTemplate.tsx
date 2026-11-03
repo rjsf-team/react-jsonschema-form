@@ -103,6 +103,7 @@ export default function BaseInputTemplate<
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
+  const inputValue = toInputValue(value);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const textFieldOverrides = { ...otherMuiProps, ...textFieldProps } as TextFieldProps;
@@ -153,7 +154,7 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
   const inputProps = { ...InputProps, ...slotProps?.input, ...muiSlotProps?.input };
-  if (options.allowClearTextInputs && toInputValue(value) && !readonly && !disabled) {
+  if (options.allowClearTextInputs && inputValue && !readonly && !disabled) {
     const clearAdornment = (
       <InputAdornment position='end'>
         <ClearButton registry={registry} onClick={handleClear} />
@@ -192,7 +193,7 @@ export default function BaseInputTemplate<
           ),
         }}
         {...rest}
-        value={toInputValue(value)}
+        value={inputValue}
         error={hasWidgetErrors<T, S, F>(props)}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}

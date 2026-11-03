@@ -75,6 +75,7 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
+  const inputValue = toInputValue(value);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   return (
@@ -99,13 +100,13 @@ export default function BaseInputTemplate<
           // Due to Fluent UI this does not work correctly
           list: hasExamples ? examplesId(id) : undefined,
         }}
-        value={String(toInputValue(value))}
+        value={String(inputValue)}
         onChange={onChangeOverride ?? handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(toInputValue(value)) && (
+      {options.allowClearTextInputs && !readonly && !disabled && Boolean(inputValue) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
