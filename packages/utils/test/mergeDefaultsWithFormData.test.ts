@@ -412,11 +412,8 @@ describe('mergeDefaultsWithFormData()', () => {
       ['null', null],
       ['number', 5],
     ])('should keep object formData over a %s default', (_, defaults) => {
-      expect(mergeDefaultsWithFormData<object | string | number | null>(defaults, { b: 2 }, true, false, true)).toEqual(
-        {
-          b: 2,
-        },
-      );
+      const merged = mergeDefaultsWithFormData<object | string | number | null>(defaults, { b: 2 }, true, false, true);
+      expect(merged).toEqual({ b: 2 });
     });
 
     it.each([
