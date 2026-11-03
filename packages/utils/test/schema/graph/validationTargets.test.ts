@@ -1,4 +1,3 @@
-import type { WithOpenApiComponents } from '../../../../../testing/openApiSchema.ts';
 import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
 import parseSchemaGraph from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from '../../../src/schema/graph/parseSchemaGraph.ts';
@@ -344,7 +343,7 @@ describe('validationTargets() of a root sharing objects', () => {
     expect(listed(sharing)).not.toContainEqual({ $ref: '#/properties/x/properties/next/oneOf/0' });
   });
   it('lists the subschemas below the place a $ref names under a keyword no walk follows', () => {
-    const root: WithOpenApiComponents<RJSFSchema> = {
+    const root: RJSFSchema = {
       $ref: '#/components/schemas/Pet',
       components: { schemas: { Pet: { oneOf: [{ type: 'string' }] } } },
     };

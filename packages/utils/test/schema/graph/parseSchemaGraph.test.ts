@@ -1,4 +1,3 @@
-import type { WithOpenApiComponents } from '../../../../../testing/openApiSchema.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   GUESSED_TYPE_FLAG,
@@ -463,7 +462,7 @@ describe('parseSchemaGraph()', () => {
       expect(objectNode(adopted.graph, adopted.node).ref).toBe(graph.byPointer('/$defs/one'));
     });
     it('keeps an $id under a keyword that holds no subschemas from naming a resource or moving the base (#5529)', () => {
-      const root: WithOpenApiComponents<RJSFSchema> = {
+      const root: RJSFSchema = {
         $schema: JSON_SCHEMA_DRAFT_2020_12,
         $id: 'https://example.com/root.json',
         $defs: { real: { $id: 'n.json', type: 'boolean' }, s: { type: 'string' } },

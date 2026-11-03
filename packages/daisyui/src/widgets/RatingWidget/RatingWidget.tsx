@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { widgetDrawsLabel } from '@rjsf/utils';
+import { rangeSpec, ratingStarCount, ratingStoresString, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { classNameOption, getGroupAndOptionProps } from '../../utils.ts';
 
@@ -46,17 +46,10 @@ export default function RatingWidget<
   const size = classNameOption(options.size);
   const color = classNameOption(options.color) ?? 'orange';
 
-  // A JSON uiSchema can hold `stars` as a numeric string, which reads as its number, or as anything else, which shows
-  // the default 5, where `Number()` alone reads `null`, `''`, `true` and `[4]` as numbers
-  const starCount =
-    typeof stars === 'number' || (typeof stars === 'string' && stars.trim() !== '') ? Number(stars) : NaN;
-  // Use schema.maximum if provided, otherwise use stars option (limited to 1-5), rounded down to the stars that render
-  // The `typeof` checks are for Ajv's `$data`, whose reference names another value that holds no bound to read here
-  const maximum = typeof schema.maximum === 'number' ? schema.maximum : undefined;
-  const numStars = Math.floor(
-    maximum ? Math.min(maximum, 5) : Math.min(Math.max(Number.isFinite(starCount) ? starCount : 5, 1), 5),
-  );
-  const min = typeof schema.minimum === 'number' ? schema.minimum : 0;
+  const numStars = ratingStarCount<S>(schema, stars);
+  const { min = 0 } = rangeSpec<S>(schema);
+  const storesString = ratingStoresString<S>(schema, value);
+  const rating = toNumericValue(value);
 
   // Generate shape class
   const maskClass = shape === 'heart' ? 'mask-heart' : 'mask-star-2';
@@ -67,9 +60,10 @@ export default function RatingWidget<
   /** Handles change events from radio inputs */
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => {
-      onChange(parseInt(newValue, 10));
+      const starValue = parseInt(newValue, 10);
+      onChange(storesString ? String(starValue) : starValue);
     },
-    [onChange],
+    [onChange, storesString],
   );
 
   /** Handles focus events for accessibility */
@@ -120,7 +114,7 @@ export default function RatingWidget<
 
   // The checked star, where Tab into the group lands, as `RadioWidget` gives it its checked radio, else the first
   const autofocusValue =
-    typeof value === 'number' && Number.isInteger(value - min) && value >= min && value < min + numStars ? value : min;
+    rating !== undefined && Number.isInteger(rating - min) && rating >= min && rating < min + numStars ? rating : min;
 
   return (
     <div className='form-control w-full'>
@@ -133,7 +127,7 @@ export default function RatingWidget<
               type='radio'
               name={htmlName || id}
               value={starValue}
-              checked={value === starValue}
+              checked={rating === starValue}
               onChange={handleChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
