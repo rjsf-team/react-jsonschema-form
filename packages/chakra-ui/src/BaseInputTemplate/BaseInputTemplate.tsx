@@ -47,7 +47,7 @@ export default function BaseInputTemplate<
   } = props;
   const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  const callerProps = callerInputProps<T, S, F>(props);
+  const callerProps = callerInputProps(props);
   const inputProps = { ...derivedInputProps, ...callerProps };
   const { ClearButton } = registry.templates.ButtonTemplates;
 

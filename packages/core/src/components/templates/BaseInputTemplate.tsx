@@ -65,7 +65,7 @@ export default function BaseInputTemplate<
   // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so a widget passing either keeps
   // it. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the title with
   // it rather than describing a rule no longer in force
-  const callerProps = callerInputProps<T, S, F>(props);
+  const callerProps = callerInputProps(props);
   const inputProps = {
     ...rest,
     ...derivedInputProps,

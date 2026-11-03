@@ -64,7 +64,7 @@ export default function BaseInputTemplate<
   const { ClearButton } = registry.templates.ButtonTemplates;
   const classes = useStyles();
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  const callerProps = callerInputProps<T, S, F>(props);
+  const callerProps = callerInputProps(props);
   const inputProps = { ...derivedInputProps, ...callerProps };
   // Now we need to pull out the step, min, max into an inner `inputProps` for fluentui-rc
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>

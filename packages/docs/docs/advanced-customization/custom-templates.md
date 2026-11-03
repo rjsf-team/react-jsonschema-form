@@ -376,7 +376,15 @@ For instance, say you have a `CustomTextInput` component that you want to integr
 
 ```tsx
 import { ChangeEvent, FocusEvent } from 'react';
-import { BaseInputTemplateProps, getControlAttributes, getInputProps, hasWidgetErrors, RJSFSchema, toInputValue } from '@rjsf/utils';
+import {
+  BaseInputTemplateProps,
+  callerInputProps,
+  getControlAttributes,
+  getInputProps,
+  hasWidgetErrors,
+  RJSFSchema,
+  toInputValue,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import CustomTextInput from '../CustomTextInput';
@@ -418,7 +426,7 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
   const onTextBlur = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onBlur(id, val);
   const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
 
-  const inputProps = { ...rest, ...getInputProps(schema, type, options) };
+  const inputProps = { ...rest, ...getInputProps(schema, type, options), ...callerInputProps(props) };
   // The field's plan leaves out the errors `ui:hideError` hides, and `hasWidgetErrors()` reads the `aria-invalid` it
   // gives the control, falling back to `rawErrors` with `hideError` for a widget rendered without a plan. The messages
   // are drawn here only where the plan has the widget draw them, under the id the control's `aria-describedby` names,
@@ -491,6 +499,9 @@ The following props are passed to the `BaseInputTemplate`:
 - `autofocus`: A boolean value stating if the widget should autofocus;
 - `label`: The computed label for this widget, as a string
 - `multiple`: A boolean value stating if the widget can accept multiple values;
+- `type`: The `type` of the input, which the widgets rendering a `BaseInputTemplate` set, such as `'number'` or `'date'`;
+- `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns it to spread after the input props `getInputProps()` derives, even when it is undefined, which turns the derived one off;
+- `accept`: The file types a widget passes for the input, which replace `ui:options.accept`, and which `callerInputProps()` returns too;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
 - `onChangeOverride`: A `BaseInputTemplate` implements a default `onChange` handler that it passes to the HTML input component to handle the `ChangeEvent`. Sometimes a widget may need to handle the `ChangeEvent` using custom logic. If that is the case, that widget should provide its own handler via this prop;
 - `onBlur`: The input blur event handler; call it with the widget id and value;

@@ -58,7 +58,7 @@ export default function BaseInputTemplate<
   // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so `extraProps` keeps either one
   // it carries. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the
   // title with it rather than describing a rule no longer in force
-  const callerProps = { ...callerInputProps<T, S, F>(props), ...extraProps };
+  const callerProps = { ...callerInputProps(props), ...extraProps };
   const callerPattern = 'pattern' in callerProps ? { pattern: callerProps.pattern } : undefined;
   const inputProps = {
     ...callerProps,
