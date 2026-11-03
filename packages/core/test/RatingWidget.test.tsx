@@ -280,18 +280,20 @@ describe('RatingWidget numeric strings', () => {
   });
 
   it('reads a numeric-string `stars` option as its number', () => {
+    const jsonOptions: Record<string, unknown> = { stars: '3' };
     createFormComponent({
       schema: { type: 'number' },
-      uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': { stars: '3' } },
+      uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': jsonOptions },
     });
 
     expect(screen.getAllByRole('radio')).toHaveLength(3);
   });
 
   it('shows the default 5 stars for a `stars` option that is not a number, as a JSON uiSchema can hold', () => {
+    const jsonOptions: Record<string, unknown> = { stars: 'five' };
     createFormComponent({
       schema: { type: 'number' },
-      uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': { stars: 'five' } },
+      uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': jsonOptions },
     });
 
     expect(screen.getAllByRole('radio')).toHaveLength(5);

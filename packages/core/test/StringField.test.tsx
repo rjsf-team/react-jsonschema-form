@@ -2855,13 +2855,14 @@ describe('StringField', () => {
     });
 
     it('should join an accept list given as an array', () => {
+      const jsonOptions: Record<string, unknown> = { accept: ['.png', '.jpg'] };
       const { node } = createFormComponent({
         schema: {
           type: 'string',
           format: 'data-url',
         },
         uiSchema: {
-          'ui:options': { accept: ['.png', '.jpg'] },
+          'ui:options': jsonOptions,
         },
       });
 

@@ -203,7 +203,8 @@ describe('useAltDateWidgetProps()', () => {
     ['orders the elements by a date `format`', 'DMY', ['day', 'month', 'year']],
     ['keeps the default order for a `format` of another widget, such as a color', 'hex', ['year', 'month', 'day']],
   ])('%s, with the default years range', (_, format, order) => {
-    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: { format } }));
+    const jsonOptions: Record<string, unknown> = { format };
+    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: jsonOptions }));
     expect(result.current.elements.map(({ type }) => type)).toEqual(order);
     expect(result.current.elements.find(({ type }) => type === 'year')?.range).toEqual(
       getDateElementProps(parseDateString(undefined), false).find(({ type }) => type === 'year')?.range,

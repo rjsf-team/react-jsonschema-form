@@ -36,7 +36,7 @@ describe('getInputProps', () => {
     });
   });
   it('joins an accept list given as an array', () => {
-    const options: UIOptionsType = { accept: ['.png', '.jpg'] };
+    const options: Record<string, unknown> = { accept: ['.png', '.jpg'] };
     expect(getInputProps({}, 'file', options)).toEqual({ type: 'file', accept: '.png,.jpg' });
   });
   it.each([

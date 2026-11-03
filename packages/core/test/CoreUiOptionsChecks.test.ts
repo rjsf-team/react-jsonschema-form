@@ -19,21 +19,20 @@ describe('CoreUiOptionsChecks', () => {
   it('accepts the options `UIOptionsType` declares for a file and an alt-date string field', () => {
     type Checked = StrictUiSchema<CoreUiOptionsChecks, { upload: string; born: string }>;
     const ui: Checked = {
-      upload: { 'ui:widget': 'FileWidget', 'ui:options': { accept: ['.png', '.jpg'] } },
+      upload: { 'ui:widget': 'FileWidget', 'ui:options': { accept: '.png,.jpg' } },
       born: { 'ui:widget': 'AltDateWidget', 'ui:options': { yearsRange: [1900, 2000] } },
     };
 
     expect(ui.upload?.['ui:widget']).toBe('FileWidget');
   });
 
-  it('accepts the alt-date options and a `yearsRange` of numeric strings', () => {
-    type Checked = StrictUiSchema<CoreUiOptionsChecks, { born: string; died: string }>;
+  it('accepts the alt-date options', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { born: string }>;
     const ui: Checked = {
       born: {
         'ui:widget': 'alt-datetime',
         'ui:options': { yearsRange: [1980, 2030], format: 'MDY', hideNowButton: true, hideClearButton: true },
       },
-      died: { 'ui:widget': 'AltDateWidget', 'ui:options': { yearsRange: ['1990', '2030'] } },
     };
     const badFormat: Checked = {
       // @ts-expect-error `format` orders the date elements, so only `DMY`, `MDY` or `YMD`
@@ -53,9 +52,9 @@ describe('CoreUiOptionsChecks', () => {
 
   it('accepts `accept` for a multiple file field', () => {
     type Checked = StrictUiSchema<CoreUiOptionsChecks, { files: string[] }>;
-    const ui: Checked = { files: { 'ui:widget': 'FileWidget', 'ui:options': { accept: ['.pdf'] } } };
+    const ui: Checked = { files: { 'ui:widget': 'FileWidget', 'ui:options': { accept: '.pdf' } } };
 
-    expect(ui.files?.['ui:options']?.accept).toEqual(['.pdf']);
+    expect(ui.files?.['ui:options']?.accept).toBe('.pdf');
   });
 
   it("narrows ui:widget/ui:field/ui:options to @rjsf/core's real widget and field names", () => {

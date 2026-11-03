@@ -28,7 +28,7 @@ type NonBuiltInObject = object & {
  * `StrictUiSchema`'s `Checks` type parameter to narrow `ui:widget`/`ui:field`/`ui:options` to `@rjsf/core`'s own
  * vocabulary; union it with a `Checks` union of your own to extend it, since it isn't included automatically.
  *
- * This is intentionally a starting set covering the options `@rjsf/core`'s own widgets and fields read - it does not
+ * This is intentionally a starting set covering the options that already exist on `UIOptionsBaseType` - it does not
  * attempt to model every widget/option combination (for example, per-widget options like `RangeWidget`'s min/max
  * come from the JSON Schema itself, not from `ui:options`, so they are not repeated here). Widget names include both
  * the registered PascalCase component name and the lowercase alias(es) `getWidget` resolves for that schema type
@@ -52,15 +52,12 @@ export type CoreUiOptionsChecks =
           | 'AltDateTimeWidget'
           | 'SelectWidget'
           | 'RadioWidget'
-          | 'RatingWidget'
           | 'FileWidget'
           | 'HiddenWidget'
           | WidgetAliasFor<'string'>;
         field?: 'StringField';
         placeholder?: string;
         rows?: number;
-        shape?: 'star' | 'heart';
-        stars?: number;
         inputType?: string;
         autocomplete?: HTMLInputElement['autocomplete'];
         autocapitalize?: HTMLInputElement['autocapitalize'];
