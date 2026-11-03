@@ -1,4 +1,4 @@
-import type { ArrayFieldTemplateProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, FieldTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 
 import { createFormComponent } from './testUtils.tsx';
 
@@ -8,8 +8,7 @@ const formContext = { foo: 'bar' };
 
 const fooId = `#${formContext.foo}`;
 
-// Typed by the `registry` alone, which widgets, fields and templates all receive
-function CustomComponent(props: { registry: { formContext: { foo?: string } } }) {
+function CustomComponent(props: Pick<WidgetProps<unknown, RJSFSchema, { foo?: string }>, 'registry'>) {
   const { registry } = props;
   const { formContext } = registry;
   return <div id={formContext.foo} />;

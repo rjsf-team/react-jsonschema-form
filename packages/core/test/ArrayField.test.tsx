@@ -4794,8 +4794,8 @@ describe('ArrayField', () => {
         },
       };
 
-      const uiSchema: UiSchema = {
-        items: (itemData: { visible?: boolean }) => {
+      const uiSchema: UiSchema<{ name?: string; visible?: boolean }[]> = {
+        items: (itemData) => {
           // Return empty uiSchema for items where visible is false
           if (!itemData.visible) {
             return {};
