@@ -144,8 +144,12 @@ describe('normalizeYearsRange()', () => {
   it('rounds a fractional year down', () => {
     expect(normalizeYearsRange([1990.5, 1992.5])).toEqual([1990, 1992]);
   });
-  it('keeps a span of a thousand years', () => {
-    expect(normalizeYearsRange([1000, 2000])).toEqual([1000, 2000]);
+  it('keeps a span of ten thousand years', () => {
+    expect(normalizeYearsRange([800, 2030])).toEqual([800, 2030]);
+    expect(normalizeYearsRange([-10000, 0])).toEqual([-10000, 0]);
+  });
+  it('keeps entries after the first two', () => {
+    expect(normalizeYearsRange([1990, 2030, 'junk'])).toEqual([1990, 2030]);
   });
   it.each([
     ['undefined', undefined],
@@ -153,8 +157,10 @@ describe('normalizeYearsRange()', () => {
     ['one entry', [1990]],
     ['a year that is not a number', [1990, 'soon']],
     ['a relative and an absolute year', [-10, 2030]],
-    ['a span of more than a thousand years', [999, 2000]],
+    ['a span of more than ten thousand years', [0, 10001]],
     ['a span of a billion years', [1, 1e9]],
+    ['years too large to count one by one', [1e16, 1e16]],
+    ['years too large to count one by one as numeric strings', ['10000000000000000', '10000000000000000']],
   ])('gives undefined for %s', (_, yearsRange) => {
     expect(normalizeYearsRange(yearsRange)).toBeUndefined();
   });

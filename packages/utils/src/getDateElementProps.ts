@@ -2,9 +2,9 @@ import toNumericValue from './toNumericValue.ts';
 import type { DateObject } from './types.ts';
 
 /** The widest `yearsRange` read. A year select offers one option per year, built during render, so a span such as
- * `[1, 1e9]` would hang the page; no date picker needs to offer more than a thousand years
+ * `[1, 1e9]` would hang the page; ten thousand years keeps that render fast
  */
-const MAX_YEARS_SPAN = 1000;
+const MAX_YEARS_SPAN = 10000;
 
 /** Available options for re-ordering date input element */
 export type DateElementFormat = 'DMY' | 'MDY' | 'YMD';
@@ -20,9 +20,10 @@ export function isDateElementFormat(value: unknown): value is DateElementFormat 
 }
 
 /** The `[first, last]` years for a `yearsRange` option, which a JSON uiSchema can hold as anything. A year held as a
- * numeric string counts as its number, and a fractional year is rounded down. A range that isn't a list of two years,
- * that mixes a relative and an absolute year, which `dateRangeOptions()` throws for, or that spans more than a
- * thousand years gives `undefined`, for the default years
+ * numeric string counts as its number, and a fractional year is rounded down. Only its first two entries are read. A
+ * range whose first two entries aren't years, that mixes a relative and an absolute year, which `dateRangeOptions()`
+ * throws for, that spans more than ten thousand years, or whose years are too large to count one by one, beyond
+ * `Number.MAX_SAFE_INTEGER`, gives `undefined`, for the default years
  *
  * @param yearsRange - The `yearsRange` option
  * @returns - The range to pass `getDateElementProps()`, or `undefined` for the default years
@@ -34,7 +35,12 @@ export function normalizeYearsRange(yearsRange: unknown): [number, number] | und
   }
   const firstYear = Math.floor(first);
   const lastYear = Math.floor(last);
-  if (Math.sign(firstYear) * Math.sign(lastYear) < 0 || Math.abs(lastYear - firstYear) > MAX_YEARS_SPAN) {
+  if (
+    !Number.isSafeInteger(firstYear) ||
+    !Number.isSafeInteger(lastYear) ||
+    Math.sign(firstYear) * Math.sign(lastYear) < 0 ||
+    Math.abs(lastYear - firstYear) > MAX_YEARS_SPAN
+  ) {
     return undefined;
   }
   return [firstYear, lastYear];

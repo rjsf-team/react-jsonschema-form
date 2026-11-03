@@ -125,7 +125,7 @@ Without its field's plan, `hideLabel` turns it off as well, and it renders under
 
 ### acceptAttribute()
 
-Returns the value of a file input's `accept` attribute for an `accept` option: a string, or an array of them joined with commas. Whatever isn't a string is left out.
+Returns the value of a file input's `accept` attribute for an `accept` option: a string, or an array of them joined with commas. Whatever isn't a string, or is a blank one, is left out.
 
 #### Parameters
 
@@ -2714,7 +2714,7 @@ A validator package that has to tell which resource of the root a `$ref` names u
 
 ### normalizeYearsRange()
 
-Returns the `[first, last]` years to pass `getDateElementProps()` for a `yearsRange` option, which a JSON uiSchema can hold as anything. A year held as a numeric string counts as its number, and a fractional year is rounded down. A range that isn't a list of two years, that mixes a relative and an absolute year, which `dateRangeOptions()` throws for, or that spans more than a thousand years gives `undefined`, for the default years
+Returns the `[first, last]` years to pass `getDateElementProps()` for a `yearsRange` option, which a JSON uiSchema can hold as anything. A year held as a numeric string counts as its number, and a fractional year is rounded down. Only its first two entries are read. A range whose first two entries aren't years, that mixes a relative and an absolute year, which `dateRangeOptions()` throws for, that spans more than ten thousand years, or whose years are too large to count one by one, beyond `Number.MAX_SAFE_INTEGER`, gives `undefined`, for the default years
 
 #### Parameters
 
@@ -3027,7 +3027,7 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 
 ### ratingStarCount&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the number of stars a rating widget draws: the schema's `maximum` if it has one other than 0, otherwise the `stars` option, or the default 5 for a `stars` that isn't a number, limited to 1-5 and rounded down to whole stars.
+Returns the number of stars a rating widget draws: the schema's `maximum` if it is a number other than 0, otherwise the `stars` option, or the default 5 for a `stars` that isn't a number, limited to 1-5 and rounded down to whole stars. A numeric string counts as its number.
 
 #### Parameters
 

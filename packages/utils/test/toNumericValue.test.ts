@@ -71,4 +71,12 @@ describe('ratingStarCount()', () => {
   ])('$schema with stars $stars', ({ schema, stars, expected }) => {
     expect(ratingStarCount(schema, stars)).toBe(expected);
   });
+  it.each([
+    ['a string that is not a number', '{"maximum": "abc"}'],
+    ['a `$data` reference', '{"maximum": {"$data": "1/max"}}'],
+    ['null', '{"maximum": null}'],
+  ])('falls back to the `stars` option for a JSON schema `maximum` of %s', (_, json) => {
+    const schema: RJSFSchema = JSON.parse(json);
+    expect(ratingStarCount(schema, 3)).toBe(3);
+  });
 });
