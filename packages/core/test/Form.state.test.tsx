@@ -15,6 +15,7 @@ import {
   expectToHaveBeenCalledWithFormData,
   handleOf,
   renderNode,
+  setupConsoleWarnSuppression,
   submitForm,
 } from './testUtils.tsx';
 
@@ -235,12 +236,16 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     });
 
     describe('when the onChange prop sets formData to a falsey value', () => {
-      function TestForm(props: { falseyValue: unknown }) {
+      setupConsoleWarnSuppression();
+
+      function TestForm(props: { falseyValue: unknown; onChange: () => void }) {
+        const { falseyValue, onChange } = props;
         const [formData, setFormData] = useState<unknown>({});
 
-        const onChange = useCallback(() => {
-          setFormData(props.falseyValue);
-        }, [props]);
+        const handleChange = useCallback(() => {
+          onChange();
+          setFormData(falseyValue);
+        }, [falseyValue, onChange]);
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -250,21 +255,24 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
           },
         };
         // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
-        return <Form onChange={onChange} schema={schema} formData={formData} validator={validator} />;
+        return <Form onChange={handleChange} schema={schema} formData={formData} validator={validator} />;
       }
 
       const falseyValues = [0, false, null, undefined, NaN];
 
       falseyValues.forEach((falseyValue) => {
-        it("Should not crash due to 'Maximum call stack size exceeded...'", () => {
-          // It is expected that this will throw an error due to non-matching propTypes,
-          // so the error message needs to be inspected
-          try {
-            renderNode(TestForm, { falseyValue });
-          } catch (e) {
-            const { message } = e as Error;
-            expect(message).not.toEqual('Maximum call stack size exceeded');
+        it(`keeps the edit and reports it once when the parent passes back ${String(falseyValue)}`, async () => {
+          const onChange = vi.fn();
+          const { node } = renderNode(TestForm, { falseyValue, onChange });
+          const input = node?.querySelector('#root_value');
+          if (!(input instanceof HTMLInputElement)) {
+            throw new Error('expected the value input');
           }
+
+          await user.type(input, 'a');
+
+          expect(input).toHaveValue('a');
+          expect(onChange).toHaveBeenCalledTimes(1);
         });
       });
     });
