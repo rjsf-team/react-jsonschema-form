@@ -1365,27 +1365,37 @@ describe('a ui:field wrapping SchemaField under its own id', () => {
   });
 
   describe('a union it wraps', () => {
-    function renderWrappedUnion(option: RJSFSchema, formData: unknown, optionUiSchema: UiSchema = {}) {
+    function renderWrappedUnion(
+      option: RJSFSchema,
+      formData: unknown,
+      optionUiSchema: UiSchema = {},
+      field: RJSFSchema = {},
+      fieldUiSchema: UiSchema = {},
+    ) {
       return createFormComponent({
-        schema: { type: 'object', properties: { x: { title: 'X', oneOf: [option, { type: 'number' }] } } },
-        uiSchema: { x: { 'ui:field': Wrapper, oneOf: [optionUiSchema, {}] } },
+        schema: { type: 'object', properties: { x: { title: 'X', ...field, oneOf: [option, { type: 'number' }] } } },
+        uiSchema: { x: { 'ui:field': Wrapper, ...fieldUiSchema, oneOf: [optionUiSchema, {}] } },
         initialFormData: { x: formData },
       }).node;
     }
     const belowWrapperLabel = '#root_x__XxxOf__label';
-
-    it.each<[string, RJSFSchema, unknown]>([
+    const untitledOptions: [string, RJSFSchema, unknown][] = [
       ['a string', { type: 'string' }, 'a'],
       ['a boolean', { type: 'boolean' }, true],
       ['an object', { type: 'object', properties: { a: { type: 'string' } } }, { a: 'a' }],
       ['an array of items', { type: 'array', items: { type: 'string' } }, ['a']],
-    ])('draws its label once where the option shown is %s with no title', (_name, option, formData) => {
-      const node = renderWrappedUnion(option, formData);
+    ];
 
-      expect(screen.getAllByText('X')).toHaveLength(1);
-      expect(node.querySelector(belowWrapperLabel)).toBeNull();
-      expect(node.querySelector('[for="root_x__XxxOf"]')).toBeNull();
-    });
+    it.each(untitledOptions)(
+      'draws its label once where the option shown is %s with no title',
+      (_name, option, formData) => {
+        const node = renderWrappedUnion(option, formData);
+
+        expect(screen.getAllByText('X')).toHaveLength(1);
+        expect(node.querySelector(belowWrapperLabel)).toBeNull();
+        expect(node.querySelector('[for="root_x__XxxOf"]')).toBeNull();
+      },
+    );
 
     it.each<[string, RJSFSchema]>([
       ['titled the same', { type: 'string', title: 'X' }],
@@ -1420,6 +1430,47 @@ describe('a ui:field wrapping SchemaField under its own id', () => {
 
       expect(screen.getAllByText('X')).toHaveLength(1);
       expect(node.querySelector(belowWrapperLabel)?.closest('label')).not.toHaveAttribute('for');
+    });
+
+    it.each(untitledOptions)(
+      "keeps the field's description, once, where the option shown is %s and draws the label",
+      (_name, option, formData) => {
+        renderWrappedUnion(option, formData, {}, { description: 'About x' });
+
+        expect(screen.getAllByText('About x')).toHaveLength(1);
+        expect(screen.getAllByText('X')).toHaveLength(1);
+      },
+    );
+
+    it('keeps a ui:description where the option shown draws the label', () => {
+      renderWrappedUnion({ type: 'string' }, 'a', {}, {}, { 'ui:description': 'About x' });
+
+      expect(screen.getAllByText('About x')).toHaveLength(1);
+    });
+
+    it("keeps the field's description beside one of the option's own where the option draws the label", () => {
+      renderWrappedUnion({ type: 'string', description: 'Own' }, 'a', {}, { description: 'About x' });
+
+      expect(screen.getAllByText('About x')).toHaveLength(1);
+      expect(screen.getAllByText('Own')).toHaveLength(1);
+    });
+
+    it("draws the field's description once where the option shown draws the label and repeats it", () => {
+      renderWrappedUnion({ type: 'string', description: 'About x' }, 'a', {}, { description: 'About x' });
+
+      expect(screen.getAllByText('About x')).toHaveLength(1);
+    });
+
+    it('hides the description under the ui:label: false of its field', () => {
+      renderWrappedUnion({ type: 'string' }, 'a', {}, { description: 'About x' }, { 'ui:label': false });
+
+      expect(screen.queryByText('About x')).toBeNull();
+    });
+
+    it('draws its ui:help once', () => {
+      renderWrappedUnion({ type: 'string' }, 'a', {}, {}, { 'ui:help': 'Help me' });
+
+      expect(screen.getAllByText('Help me')).toHaveLength(1);
     });
   });
 });

@@ -1119,6 +1119,10 @@ export function useSchemaFieldPlan<
   // and the option draws it where it would only say the same
   const labelDrawnByOption =
     optionsRenderedAbove && optionDrawsFieldLabel<T, S, F>(shownOptionField, title, registry.translateString);
+  const optionDescription =
+    labelDrawnByOption && shownOptionField
+      ? getUiOptions<T, S, F>(shownOptionField.uiSchema).description || shownOptionField.schema.description
+      : undefined;
   const renderedComponent = fieldToRender?.FieldComponent;
   // The `SchemaField` that named the field takes its own errors out of the `errorSchema` it hands on, and passes them
   // to the field framed inside its template through the context, whatever the named field does with its `rawErrors`
@@ -1133,10 +1137,12 @@ export function useSchemaFieldPlan<
     field: renderedComponent,
     fieldKey: fieldToRender?.fieldKey,
     xxxOfKey: plannedAsOptions ? xxxOfKey : undefined,
-    label,
-    showLabel: showLabel && !labelDrawnByOption,
-    description: fieldDescription,
-    help: ownUiOptions.help,
+    // Its text rather than `showLabel`, which also hides the description, that the option doesn't draw for it
+    label: labelDrawnByOption ? '' : label,
+    showLabel,
+    description: optionDescription === fieldDescription ? '' : fieldDescription,
+    // The field that named this one draws the help beside the options it renders
+    help: optionsRenderedAbove ? undefined : ownUiOptions.help,
     errors: ownErrors,
     hideError,
     hidden: hidden || isOptedOut,
