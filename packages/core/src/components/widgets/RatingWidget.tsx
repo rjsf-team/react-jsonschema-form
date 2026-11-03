@@ -42,7 +42,7 @@ export default function RatingWidget<
   );
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
-  const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
+  const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars, 1), 5);
   const min = schema.minimum ?? 0;
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
   const autofocusIndex = Math.max(Array.from({ length: numStars }, (_, index) => min + index).indexOf(value), 0);

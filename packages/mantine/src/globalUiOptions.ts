@@ -21,8 +21,8 @@ export interface MantineGlobalUiOptionsKeys {
 /** The option names a user's extension may not reuse: RJSF's, the theme's own, and the ones its widgets read that
  * RJSF doesn't reserve, since every field hands its widget the extension keys a form declares.
  * `useFieldWrapperProps()` and the aria hooks read `wrapperProps` and the `InputWrapper` options, such as `size` and
- * `labelProps`, `RangeWidget` reads `thumbProps` and `thumbLabel`, and `DateWidget` and `DateTimeWidget` read
- * `valueFormat` and `displayFormat`
+ * `labelProps`, `RangeWidget` reads `thumbProps` and `thumbLabel`, `DateWidget` and `DateTimeWidget` read
+ * `valueFormat` and `displayFormat`, and `ColorWidget` reads `colorFormat`
  */
 type MantineReservedUiOptionName =
   | ReservedUiOptionName
@@ -32,7 +32,8 @@ type MantineReservedUiOptionName =
   | 'thumbProps'
   | 'thumbLabel'
   | 'valueFormat'
-  | 'displayFormat';
+  | 'displayFormat'
+  | 'colorFormat';
 
 /** The `ui:globalOptions` this theme reads, plus a user's own `UserExtensions` */
 export type MantineGlobalUISchemaOptions<

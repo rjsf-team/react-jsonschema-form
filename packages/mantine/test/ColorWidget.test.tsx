@@ -71,31 +71,32 @@ describe('ColorWidget', () => {
     expect(queryByText('Test description')).not.toBeInTheDocument();
   });
 
-  describe('a format from options, which cleanupOptions() strips', () => {
-    function renderWithFormat(value: string, format: string) {
+  describe('a colorFormat from options', () => {
+    function renderWithOptions(value: string, options: WidgetProps['options']) {
       const onChange = vi.fn();
       const { rerender } = renderWidget({ value, onChange });
       // `ColorInput` converts its color only when the format changes, not to the one it mounts with
       rerender(
         <MantineProvider>
-          <ColorWidget {...makeProps({ value, onChange, options: { format } })} />
+          <ColorWidget {...makeProps({ value, onChange, options })} />
         </MantineProvider>,
       );
       return onChange;
     }
 
     test('is passed on to ColorInput, which converts the color to it', () => {
-      expect(renderWithFormat('#ff0000', 'rgba')).toHaveBeenCalledWith('rgba(255, 0, 0, 1)');
+      expect(renderWithOptions('#ff0000', { colorFormat: 'rgba' })).toHaveBeenCalledWith('rgba(255, 0, 0, 1)');
     });
 
-    test.each(['DMY', 'MDY', 'YMD'])("is ignored when it's the alt-date widgets' order %s", (format) => {
-      expect(renderWithFormat('rgba(255, 0, 0, 1)', format)).not.toHaveBeenCalled();
+    test('is not spread onto ColorInput as a prop of its own', () => {
+      const { container } = renderWidget({ value: '#ff0000', options: { colorFormat: 'rgba' } });
+
+      expect(container.querySelector('[colorformat]')).toBeNull();
     });
 
-    test("is passed on when ColorInput doesn't know it, such as a format a later Mantine release adds", () => {
-      // A format left out converts nothing, so the conversion to hex, Mantine's fallback for a format it doesn't know,
-      // shows this one reached `ColorInput`
-      expect(renderWithFormat('rgba(255, 0, 0, 1)', 'not-a-color-format')).toHaveBeenCalledWith('#ff0000');
+    test("leaves the alt-date widgets' format off ColorInput", () => {
+      // A format ColorInput doesn't know converts to hex, so this rgba color stays as it is only if none reached it
+      expect(renderWithOptions('rgba(255, 0, 0, 1)', { format: 'MDY' })).not.toHaveBeenCalled();
     });
   });
 });

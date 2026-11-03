@@ -1,4 +1,5 @@
 import type {
+  DateElementFormat,
   GlobalUISchemaOptions,
   StrictUiSchema,
   ThemeGlobalUISchemaOptions,
@@ -53,6 +54,72 @@ describe('UiSchema type', () => {
 
     expect(open.additionalProperties?.city).toBeDefined();
     expect([indexed, wrong]).toHaveLength(2);
+  });
+
+  it("types the options RJSF's widgets read, in both their ui:options and ui:<name> spellings", () => {
+    const ui: UiSchema = {
+      'ui:accept': '.pdf',
+      'ui:expandable': false,
+      'ui:format': 'MDY',
+      'ui:hideClearButton': true,
+      'ui:hideNowButton': true,
+      'ui:shape': 'heart',
+      'ui:stars': 3,
+      'ui:yearsRange': [2000, 2030],
+      'ui:options': {
+        accept: '.pdf',
+        expandable: false,
+        format: 'MDY',
+        hideClearButton: true,
+        hideNowButton: true,
+        shape: 'heart',
+        stars: 3,
+        yearsRange: [2000, 2030],
+      },
+    };
+    const wrongNames: UiSchema = {
+      // @ts-expect-error: TS2322, `accept` is the `accept` attribute's string
+      'ui:accept': ['.pdf'],
+      // @ts-expect-error: TS2322, `expandable` is a flag
+      'ui:expandable': 'no',
+      // @ts-expect-error: TS2322, `format` is an order of date parts
+      'ui:format': 'rgba',
+      // @ts-expect-error: TS2322, `hideClearButton` is a flag
+      'ui:hideClearButton': 'yes',
+      // @ts-expect-error: TS2322, `hideNowButton` is a flag
+      'ui:hideNowButton': 'yes',
+      // @ts-expect-error: TS2322, `shape` is `star` or `heart`
+      'ui:shape': 'circle',
+      // @ts-expect-error: TS2322, `stars` is a number
+      'ui:stars': '3',
+      // @ts-expect-error: TS2322, `yearsRange` is a first and a last year
+      'ui:yearsRange': [2000],
+    };
+    const wrongOptions: UiSchema = {
+      'ui:options': {
+        // @ts-expect-error: TS2322, `accept` is the `accept` attribute's string
+        accept: ['.pdf'],
+        // @ts-expect-error: TS2322, `expandable` is a flag
+        expandable: 'no',
+        // @ts-expect-error: TS2322, `format` is an order of date parts
+        format: 'rgba',
+        // @ts-expect-error: TS2322, `hideClearButton` is a flag
+        hideClearButton: 'yes',
+        // @ts-expect-error: TS2322, `hideNowButton` is a flag
+        hideNowButton: 'yes',
+        // @ts-expect-error: TS2322, `shape` is `star` or `heart`
+        shape: 'circle',
+        // @ts-expect-error: TS2322, `stars` is a number
+        stars: '3',
+        // @ts-expect-error: TS2322, `yearsRange` is a first and a last year
+        yearsRange: [2000],
+      },
+    };
+
+    expectTypeOf(ui['ui:options']?.stars).toEqualTypeOf<number | undefined>();
+    expectTypeOf(ui['ui:options']?.format).toEqualTypeOf<DateElementFormat | undefined>();
+    expect(ui['ui:stars']).toBe(3);
+    expect([wrongNames, wrongOptions]).toHaveLength(2);
   });
 
   it('accepts a key from any branch of a union-typed field', () => {
@@ -356,8 +423,6 @@ describe('GlobalUISchemaOptions (extensions)', () => {
     expectTypeOf<GlobalUISchemaOptions<{ label?: string }>>().not.toBeNever();
     // @ts-expect-error `widget` is an option RJSF reads per field, which every field would read as its own
     expectTypeOf<GlobalUISchemaOptions<{ widget?: string }>>().not.toBeNever();
-    // @ts-expect-error `format` is an option RJSF's widgets read per field, though `ui:options` doesn't declare it
-    expectTypeOf<GlobalUISchemaOptions<{ format?: string }>>().not.toBeNever();
     // @ts-expect-error `enumOptions` is the list a field computes for its widget, which a global one would replace
     expectTypeOf<GlobalUISchemaOptions<{ enumOptions?: string[] }>>().not.toBeNever();
     // @ts-expect-error an index signature would cover every one of RJSF's keys

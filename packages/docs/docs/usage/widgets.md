@@ -70,6 +70,8 @@ uiSchema:
 - `color`: an `input[type=color]` element is used;
 - by default, a regular `input[type=text]` element is used.
 
+`@rjsf/mantine` draws `color` with Mantine's `ColorInput`, and `ui:options.colorFormat` sets its format, such as `rgba`.
+
 ### String formats
 
 The built-in string field also supports the JSON Schema `format` property, and will render an appropriate widget by default for the following string formats:
