@@ -393,6 +393,11 @@ describe('package surface', () => {
     expect(typeof pkg.ATAValidator).toBe('function');
     expect(pkg.default).toBeInstanceOf(pkg.ATAValidator);
   });
+  it('exports ATAPrecompiledValidator as a value', () => {
+    const schema: RJSFSchema = { $id: 'surface', type: 'string' };
+    expect(typeof pkg.ATAPrecompiledValidator).toBe('function');
+    expect(pkg.createPrecompiledValidator({ surface: () => true }, schema)).toBeInstanceOf(pkg.ATAPrecompiledValidator);
+  });
 });
 
 describe('customFormats option (extra spec shapes)', () => {

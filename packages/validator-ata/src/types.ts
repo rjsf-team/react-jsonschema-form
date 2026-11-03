@@ -1,6 +1,8 @@
 import type { Bivariant, CustomMergeAllOf, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import type { ValidationError, Validator, ValidatorOptions } from 'ata-validator';
 
+export type { ValidationError } from 'ata-validator';
+
 /** Custom format checker. Receives a string and returns true when the value
  * is considered valid for this format. Mirrors the function shape used by
  * `ata-validator`'s `formats` option.

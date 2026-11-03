@@ -37,6 +37,7 @@ import pointerValidationTests, {
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
+import * as pkg from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
 
@@ -3692,4 +3693,16 @@ describe('AJV8Validator', () => {
   nestedResourceTests(validatorFor);
   mergedResourceViewTests(validatorFor);
   handedResourceTests(validatorFor);
+});
+
+describe('package surface', () => {
+  it('exports the validator classes as values', () => {
+    const schema: RJSFSchema = { $id: 'surface', type: 'string' };
+    expect(typeof pkg.AJV8Validator).toBe('function');
+    expect(typeof pkg.AJV8PrecompiledValidator).toBe('function');
+    expect(pkg.default).toBeInstanceOf(pkg.AJV8Validator);
+    expect(pkg.createPrecompiledValidator({ surface: () => true }, schema)).toBeInstanceOf(
+      pkg.AJV8PrecompiledValidator,
+    );
+  });
 });

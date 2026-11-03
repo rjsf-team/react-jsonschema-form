@@ -14,6 +14,7 @@ import { createRootSchemaGuard, ID_KEY, REF_KEY, schemaKey } from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
 
 import { copyForValidation } from './dataForValidation.ts';
+import localizeErrors from './localizeErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type {
   CompiledValidateFunction,
@@ -153,7 +154,7 @@ export default class AJV8PrecompiledValidator<
     this.mainValidator(formData);
 
     if (typeof this.localizer === 'function') {
-      this.localizer(this.mainValidator.errors);
+      localizeErrors(this.localizer, this.mainValidator.errors);
     }
     const errors = this.mainValidator.errors ?? undefined;
 
