@@ -1982,7 +1982,7 @@ type UIOptionsDeclaredType<
     hideNowButton?: boolean;
     /** The shape a `RatingWidget` draws its stars in: `star` by default */
     shape?: 'star' | 'heart';
-    /** The number of stars a `RatingWidget` draws, from 1 to 5: 5 by default. A schema's `maximum` takes its place */
+    /** The most stars a `RatingWidget` draws, from 1 to 5: 5 by default. It stops sooner at a schema's `maximum` */
     stars?: number;
     /** The first and last years an alt-date widget's year select offers. Both above 0, or both at most 0 to count back
      * from the current year: a negative beside a positive throws

@@ -5,6 +5,11 @@ import { widgetDrawsLabel } from '@rjsf/utils';
 
 import { getGroupAndOptionProps } from '../../utils.ts';
 
+/** Drops binary floating point's noise: `2.3 - 1.3` falls just short of 1, which would lose the last star, and
+ * `0.57 + 1` misses 1.57, so a stored 1.57 would check no star
+ */
+const withoutFloatNoise = (number: number) => Number(number.toFixed(9));
+
 /** The `RatingWidget` component renders a star or heart rating input with DaisyUI styling
  *
  * Features:
@@ -44,9 +49,11 @@ export default function RatingWidget<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { stars = 5, shape = 'star', color = 'orange', size = 'md', colorGradient = false } = options;
 
-  // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
-  const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars, 1), 5);
   const min = schema.minimum ?? 0;
+  const numStars = Math.floor(
+    Math.max(Math.min(withoutFloatNoise((schema.maximum ?? Infinity) - min + 1), stars, 5), 1),
+  );
+  const starValues = Array.from({ length: numStars }, (_, index) => withoutFloatNoise(min + index));
 
   // Generate shape class
   const maskClass = shape === 'heart' ? 'mask-heart' : 'mask-star-2';
@@ -57,7 +64,7 @@ export default function RatingWidget<
   /** Handles change events from radio inputs */
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => {
-      onChange(parseInt(newValue, 10));
+      onChange(Number(newValue));
     },
     [onChange],
   );
@@ -109,34 +116,30 @@ export default function RatingWidget<
   });
 
   // The checked star, where Tab into the group lands, as `RadioWidget` gives it its checked radio, else the first
-  const autofocusValue =
-    typeof value === 'number' && Number.isInteger(value - min) && value >= min && value < min + numStars ? value : min;
+  const autofocusValue = starValues.includes(value) ? value : min;
 
   return (
     <div className='form-control w-full'>
       <div className={`rating gap-1 ${sizeClass}`} {...groupProps}>
-        {[...Array(numStars)].map((_, index) => {
-          const starValue = min + index;
-          return (
-            <input
-              // oxlint-disable-next-line react/no-array-index-key
-              key={index}
-              type='radio'
-              name={htmlName || id}
-              value={starValue}
-              checked={value === starValue}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              className={`mask ${maskClass} ${getColorClass(index)}`}
-              disabled={disabled || readonly}
-              required={required}
-              autoFocus={autofocus && starValue === autofocusValue}
-              aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
-              {...optionAttributes}
-            />
-          );
-        })}
+        {starValues.map((starValue, index) => (
+          <input
+            // oxlint-disable-next-line react/no-array-index-key
+            key={index}
+            type='radio'
+            name={htmlName || id}
+            value={starValue}
+            checked={value === starValue}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            className={`mask ${maskClass} ${getColorClass(index)}`}
+            disabled={disabled || readonly}
+            required={required}
+            autoFocus={autofocus && starValue === autofocusValue}
+            aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
+            {...optionAttributes}
+          />
+        ))}
       </div>
     </div>
   );
