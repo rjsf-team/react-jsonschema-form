@@ -2992,6 +2992,12 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       const { node } = createFormComponent(props);
       expect(node.querySelector('button[type=submit]')).toHaveTextContent('Confirm');
     });
+
+    it('renders the submit button when a JSON uiSchema sets `props` to null', () => {
+      const uiSchema: UiSchema = JSON.parse('{"ui:submitButtonOptions": {"props": null, "submitText": "Send"}}');
+      const { node } = createFormComponent({ schema: {}, uiSchema });
+      expect(node.querySelector('button[type=submit]')).toHaveTextContent('Send');
+    });
   });
 
   describe('Custom submit buttons', () => {

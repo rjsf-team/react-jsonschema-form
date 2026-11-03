@@ -8,7 +8,7 @@ export default function SubmitButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >({ uiSchema, registry }: SubmitButtonProps<T, S, F>) {
-  const { submitText, norender, props: submitButtonProps = {} } = getSubmitButtonOptions<T, S, F>(uiSchema);
+  const { submitText, norender, props: submitButtonProps } = getSubmitButtonOptions<T, S, F>(uiSchema);
   const { classMap } = registry;
   if (norender) {
     return null;

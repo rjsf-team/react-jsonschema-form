@@ -1,3 +1,4 @@
+import type { GridItemProps, GridProps } from '@chakra-ui/react';
 import { Grid, GridItem } from '@chakra-ui/react';
 import type { GridTemplateProps } from '@rjsf/utils';
 import { logGridSpanWarning } from '@rjsf/utils';
@@ -20,7 +21,9 @@ const TEMPLATE_KEYS = [
  *
  * @param props - The GridTemplateProps, including the extra props containing the chakra-ui grid positioning details
  */
-export default function GridTemplate(props: GridTemplateProps) {
+export default function GridTemplate(
+  props: GridTemplateProps & Pick<GridItemProps, 'colSpan'> & Pick<GridProps, 'css'>,
+) {
   const { children, column, fieldId, span, ...rest } = props;
   if (column) {
     logGridSpanWarning(fieldId, span, {

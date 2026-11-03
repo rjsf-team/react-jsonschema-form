@@ -1760,7 +1760,7 @@ The array (tuple) form resolves to the entry at `index`, or to `undefined` when 
 
 ### getSubmitButtonOptions&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto the `DEFAULT_OPTIONS`
+Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto the `DEFAULT_OPTIONS`, taking the default `props` for missing ones, or ones a JSON uiSchema sets to `null`
 
 #### Parameters
 
@@ -1768,7 +1768,7 @@ Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto t
 
 #### Returns
 
-- UISchemaSubmitButtonOptions: The merging of the `DEFAULT_OPTIONS` with any custom ones
+- UISchemaSubmitButtonOptions: The merging of the `DEFAULT_OPTIONS` with any custom ones, always with `props`
 
 ### getTemplate&lt;Name extends keyof TemplatesType&lt;T, S, F>, T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

@@ -1,6 +1,9 @@
+import { MantineProvider } from '@mantine/core';
 import { gridTests, renderGridColumn } from '@rjsf/snapshot-tests';
+import { render } from '@testing-library/react';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
+import GridTemplate from '../src/templates/GridTemplate.tsx';
 import WrappedForm from './WrappedForm.tsx';
 
 gridTests(WrappedForm, {
@@ -254,5 +257,15 @@ describe('GridTemplate span', () => {
     expect(row).toHaveStyle(ownStyle);
     expect(row).not.toHaveStyle({ flexGrow: 1 });
     expect(row).not.toHaveStyle({ flexBasis: '100%' });
+  });
+  test("takes mantine's own style arrays and functions", () => {
+    const { container } = render(
+      <MantineProvider>
+        <GridTemplate fluid={false} style={[{ padding: '4px' }, () => ({ width: '50%' })]}>
+          content
+        </GridTemplate>
+      </MantineProvider>,
+    );
+    expect(container.querySelector('.mantine-Grid-root')).toHaveStyle({ padding: '4px', width: '50%' });
   });
 });

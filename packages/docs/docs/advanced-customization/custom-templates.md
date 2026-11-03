@@ -883,7 +883,7 @@ The following props are passed to a custom field template component:
 
 The `GridTemplate` is the template that renders a theme dependent Grid for either a row or column.
 While it declares only a few properties, it takes any other prop too, in order to support passing any of the properties associated with a Grid implementation for any theme.
-A prop it doesn't declare reads back as `unknown`, so a template that reads one declares it on its own props, as in `GridTemplateProps & { gap?: number }`.
+A prop it doesn't declare can't be read from it, so a template that reads one declares it on its own props, as in `GridTemplateProps & { gap?: number }`.
 If you want to customize how grids are rendered you can.
 
 ```tsx
@@ -899,9 +899,14 @@ const schema: RJSFSchema = {
 };
 
 function GridTemplate(props: GridTemplateProps) {
-  const { children, column, className, fieldId, ...rest } = props;
+  const { children, column, className, fieldId, span, ...rest } = props;
   return (
-    <Grid container={!column} {...rest} className={classNames(className, 'my-custom-grid-styling')}>
+    <Grid
+      container={!column}
+      size={column ? span : undefined}
+      {...rest}
+      className={classNames(className, 'my-custom-grid-styling')}
+    >
       {children}
     </Grid>
   );

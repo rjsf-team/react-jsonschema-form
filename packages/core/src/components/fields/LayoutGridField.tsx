@@ -965,7 +965,7 @@ function LayoutGridFieldComponent<
  *  ]
  * ```
  *
- * Complex `ui:row` definition, with additional `GridTemplate` (this example uses @mui/material/Grid2 native props):
+ * Complex `ui:row` definition, with additional `GridTemplate` (this example uses @mui/material/Grid native props):
  * ```
  *  "ui:row": {
  *    "spacing": 2,
@@ -1024,7 +1024,7 @@ function LayoutGridFieldComponent<
  *  ```
  *
  * Most complicated `ui:col` definition, additional `GridTemplate` props and form 1, 2 and 3 children  (this example
- * uses @mui/material/Grid2 native props):
+ * uses @mui/material/Grid native props):
  * ```
  * "ui:col": {
  *    "size": { "md": 4 },

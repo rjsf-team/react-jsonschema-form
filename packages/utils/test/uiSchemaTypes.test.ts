@@ -445,6 +445,17 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
     expect(ui.active?.['ui:widget']).toBe('ToggleWidget');
     expect(wrong.active?.['ui:widget']).toBe('SliderWidget');
   });
+
+  it('leaves `ui:options` open for a check without a `then` type', () => {
+    type Checked = StrictUiSchema<UiOptionsCheck<boolean>, { active: boolean }>;
+
+    const ui: Checked = { active: { 'ui:options': { myOption: 1 } } };
+    // @ts-expect-error a check without a `then` type declares no widget
+    const wrong: Checked = { active: { 'ui:widget': 'ToggleWidget' } };
+
+    expect(ui.active?.['ui:options']?.myOption).toBe(1);
+    expect(wrong.active?.['ui:widget']).toBe('ToggleWidget');
+  });
 });
 
 describe('ui:submitButtonOptions', () => {

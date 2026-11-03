@@ -1,6 +1,19 @@
+import type { ComponentProps } from 'react';
+import type * as FluentMigration from '@fluentui/react-migration-v0-v9';
 import { render } from '@testing-library/react';
 
 import GridTemplate from '../src/GridTemplate/GridTemplate.tsx';
+
+// jsdom drops a template it can't parse, as a browser does, so the template the grid is given is read from its props
+vi.mock('@fluentui/react-migration-v0-v9', async (importOriginal) => {
+  const actual = await importOriginal<typeof FluentMigration>();
+  return {
+    ...actual,
+    GridShim: (props: ComponentProps<typeof actual.GridShim>) => (
+      <actual.GridShim data-columns={props.style?.gridTemplateColumns} {...props} />
+    ),
+  };
+});
 
 describe('GridTemplate', () => {
   it('turns a number of tracks into equal tracks', () => {
@@ -20,6 +33,12 @@ describe('GridTemplate', () => {
     const { container } = render(<GridTemplate columns={columns}>content</GridTemplate>);
 
     expect(container.firstChild).toHaveStyle({ gridTemplateColumns: 'repeat(10, 1fr)' });
+  });
+
+  it.each([1.5, '2.5', 'Infinity'])('passes %s through, which is no track count', (columns) => {
+    const { container } = render(<GridTemplate columns={columns}>content</GridTemplate>);
+
+    expect(container.firstChild).toHaveAttribute('data-columns', String(columns));
   });
 
   it('passes a CSS template through', () => {

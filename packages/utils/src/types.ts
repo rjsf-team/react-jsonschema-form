@@ -546,8 +546,10 @@ export type FieldHelpProps<
   presentation?: FieldPresentation;
 };
 
-/** The properties that are passed to a `GridTemplate` */
-export interface GridTemplateProps extends Record<string, unknown> {
+/** The properties that are passed to a `GridTemplate`. `object` takes a value typed by an interface, which has no index
+ * signature, and `Record` lets an object literal carry the theme's own grid props
+ */
+export type GridTemplateProps = (object | Record<string, unknown>) & {
   /** The contents of the grid template */
   children?: ReactNode;
   /** Optional flag indicating whether the grid element represents a column, necessary for themes which have components
@@ -567,7 +569,7 @@ export interface GridTemplateProps extends Record<string, unknown> {
   className?: string;
   /** The style to apply to the grid element */
   style?: CSSProperties;
-}
+};
 
 /** The set of `Fields` stored in the `Registry` */
 export type RegistryFieldsType<
@@ -2063,10 +2065,13 @@ export type ArrayElement<A> = A extends readonly (infer E)[] ? E : A;
  * exports it for its users to pass as `Checks` (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`), and a consumer of a
  * theme adds their own domain-specific options the same way, unioned into what they pass.
  */
-export interface UiOptionsCheck<When = unknown, Then = object> {
+export interface UiOptionsCheck<When = unknown, Then = Record<string, unknown>> {
   when: When;
   then: Then;
 }
+
+/** @internal Any `UiOptionsCheck`, including one whose `Then` is an interface, which has no index signature */
+type AnyUiOptionsCheck = UiOptionsCheck<unknown, object>;
 
 /** @internal Merges a union of object types into a single object type, unioning each key's value type across every
  * union member that declares it, rather than intersecting them. A plain intersection collapses a key declared with a
@@ -2226,8 +2231,8 @@ type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullab
 type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? unknown : UiSchema<V, S, F>;
 
-/** A nested field entry of a `StrictUiSchema`, unconstrained for the same keys as `UiSchemaChild` */
-type StrictUiSchemaChild<Checks extends UiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
+/** A nested field entry of a `StrictUiSchema`, unconstrained for unknown data the same way as `UiSchemaChild` */
+type StrictUiSchemaChild<Checks extends AnyUiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
 
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
@@ -2301,7 +2306,7 @@ export type UiSchema<
  * `UiSchema` keeps TypeScript from measuring `UiSchema`'s variance cheaply, for every `UiSchema` in every package.
  */
 export type StrictUiSchema<
-  Checks extends UiOptionsCheck,
+  Checks extends AnyUiOptionsCheck,
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,

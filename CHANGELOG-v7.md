@@ -446,6 +446,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked, focuses it and is written back as a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix the submit button crashing when a JSON uiSchema sets `ui:submitButtonOptions.props` to `null` ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
 
 ## @rjsf/daisyui
 
@@ -618,6 +619,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix a layout grid `ui:row` given its template through its `style` rendering as a block, which ignored the template: `GridTemplate` makes it a grid, unless its `style` sets a `display` of its own ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix a layout grid `ui:row` whose `columns` is a track count written as `'1e1'` or `'0xa'` getting an invalid column template: it now gets `repeat(10, 1fr)` ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
 
 ## @rjsf/mantine
 
@@ -1200,7 +1202,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `useAltDateWidgetProps()` reading a date part cleared to `null`, as a select with an `emptyValue` of `null` reports it, as a picked `0`, which built a date with a day, month or year of `0` ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Add `toNumericValue()`, which reads a widget's `value` as a number, and `ratingStoresString()`, which reports whether a rating widget writes a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useFileWidgetProps()` appending the next selection after a lone value of a multiple field that isn't a data URL, which the field doesn't show: the selection now replaces it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- **BREAKING CHANGE:** Change the undeclared props of `GridTemplateProps` from `any` to `unknown`, declaring `className` and `style`, and `ui:submitButtonOptions.props` from an object whose undeclared keys were `any` to any object, of which only the declared `disabled`, `className`, `onClick` and `onClickCapture` read back. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
+- **BREAKING CHANGE:** Change `GridTemplateProps` and `ui:submitButtonOptions.props`, whose undeclared props were `any`, to take any object, of which only the declared props read back: `GridTemplateProps` now also declares `className` and `style`, and `props` declares `disabled`, `className`, `onClick` and `onClickCapture`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
+- Change `getSubmitButtonOptions()` to always return `props`, the default ones when the uiSchema's are missing or a JSON uiSchema sets them to `null` ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
 
 ## @rjsf/validator-ajv8
 

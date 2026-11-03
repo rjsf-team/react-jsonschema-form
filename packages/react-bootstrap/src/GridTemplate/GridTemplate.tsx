@@ -11,8 +11,9 @@ import { Col, Row } from 'react-bootstrap';
 export default function GridTemplate(props: GridTemplateProps) {
   const { children, column, fieldId, span, ...rest } = props;
   if (column) {
+    // `xs` is left undeclared since a row spreads the same props on `Row`, whose `xs` takes another type
     logGridSpanWarning(fieldId, span, {
-      ownWidth: rest.xs === undefined ? undefined : 'an `xs`',
+      ownWidth: 'xs' in rest && rest.xs !== undefined ? 'an `xs`' : undefined,
       wholeSpansOnly: true,
     });
     return (
