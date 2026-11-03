@@ -290,3 +290,27 @@ describe('mantine SelectWidget rendered by a caller that names and describes it'
     expect(screen.getByRole('combobox')).toHaveAccessibleDescription('Pick one. The first one');
   });
 });
+
+test('mantine SelectWidget no label names keeps the aria-label its ui:options give it (#5711)', () => {
+  render(
+    <WrappedForm
+      schema={{ type: 'string', enum: ['a', 'b'] }}
+      uiSchema={{ 'ui:options': { 'aria-label': 'Fruit' } }}
+      validator={validator}
+    />,
+  );
+
+  expect(document.getElementById('root')).toHaveAccessibleName('Fruit');
+});
+
+test('mantine SelectWidget names its select by its ui:options aria-label over the label ui:label: false hides', () => {
+  render(
+    <WrappedForm
+      schema={{ type: 'string', title: 'Color', enum: ['a', 'b'] }}
+      uiSchema={{ 'ui:label': false, 'ui:options': { 'aria-label': 'Fruit' } }}
+      validator={validator}
+    />,
+  );
+
+  expect(document.getElementById('root')).toHaveAccessibleName('Fruit');
+});

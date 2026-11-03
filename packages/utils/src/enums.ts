@@ -72,8 +72,10 @@ export const TranslatableString = {
   SecondLabel: 'second',
   /** Aria date label, used by DateWidget */
   AriaDateLabel: 'Select a date',
-  /** Placeholder for a select input, and its accessible name when the field has no title, used by the shadcn and daisyui SelectWidgets */
+  /** Placeholder for the shadcn SelectWidget's input, and the accessible name getControlFallbackName() gives a select when the field has no title */
   SelectPlaceholder: 'Select ...',
+  /** Accessible name of a radio group no label names, such as an untitled field's, given by getGroupAttributes() */
+  RadioGroupName: 'Choose an option',
   /** Done button label, used by the daisyUI date pickers */
   DoneLabel: 'Done',
   /** Time input label, used by the daisyUI DateTimeWidget */

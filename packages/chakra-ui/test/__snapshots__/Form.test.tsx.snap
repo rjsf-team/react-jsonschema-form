@@ -9805,6 +9805,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             role="group"
           >
             <div
+              aria-label="Choose an option"
               aria-labelledby=""
               aria-orientation="vertical"
               class="chakra-radio-group__root"
@@ -32395,6 +32396,7 @@ exports[`single fields > radio field 1`] = `
             role="group"
           >
             <div
+              aria-label="Choose an option"
               aria-labelledby=""
               aria-orientation="vertical"
               class="chakra-radio-group__root"
@@ -39279,6 +39281,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             role="group"
           >
             <div
+              aria-label="Choose an option"
               aria-labelledby=""
               aria-orientation="vertical"
               class="chakra-radio-group__root"
@@ -39692,6 +39695,7 @@ exports[`single fields > select field single choice form disabled using radio wi
           >
             <div
               aria-disabled="true"
+              aria-label="Choose an option"
               aria-labelledby=""
               aria-orientation="vertical"
               class="chakra-radio-group__root"
@@ -42333,6 +42337,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
           >
             <div
               aria-disabled="true"
+              aria-label="Choose an option"
               aria-labelledby=""
               aria-orientation="vertical"
               class="chakra-radio-group__root"

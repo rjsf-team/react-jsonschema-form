@@ -812,11 +812,21 @@ export function useGroupAriaProps<
       inputOptionKeys.map((name) => [name, props[name] !== undefined ? props[name] : wrapperObject?.[name]]),
     ),
   );
-  const shownLabel = labelValue(label, hideLabel, false);
-  const hiddenLabel = useHiddenTitle(id, label, hideLabel, resolved.inputWrapperOrder);
   // The label the widget draws, shown or hidden, where the plan names the group by no other
   const role = component === 'RadioGroup' ? 'radiogroup' : 'group';
   const { group, option } = getGroupAttributes<T, S, F>(widgetProps, role, label ? titleId(id) : undefined);
+  const shownLabel = labelValue(label, hideLabel, false);
+  // Mantine's group element takes its name only from the `InputWrapper` context's `labelId`, so any name no shown label
+  // gives it is a hidden title. An `aria-label` in the options comes first, as in a `SelectWidget`, though a label on
+  // screen, Mantine's or the plan's, still names the group, where it would not name a select
+  const optionsAriaLabel = typeof options['aria-label'] === 'string' ? options['aria-label'] : undefined;
+  const labelledByPlan = !label && group['aria-labelledby'];
+  const hiddenLabel = useHiddenTitle(
+    id,
+    labelledByPlan ? undefined : optionsAriaLabel || (label ?? group['aria-label']),
+    hideLabel || !label,
+    resolved.inputWrapperOrder,
+  );
   const labelledBy = group['aria-labelledby'] ?? (hiddenLabel ? titleId(id) : undefined);
   const ownSuccessProps = asObject(resolved.successProps);
   const containerProps = useAriaContainerProps({
@@ -849,6 +859,8 @@ export function useGroupAriaProps<
   );
   return {
     groupProps: {
+      // Over the one in the theme props, which Mantine would put on its wrapper, naming nothing
+      'aria-label': undefined,
       label: shownLabel,
       labelProps: { ...asObject(resolved.labelProps), id: titleId(id) },
       error: getWidgetError<T, S, F>(widgetProps),

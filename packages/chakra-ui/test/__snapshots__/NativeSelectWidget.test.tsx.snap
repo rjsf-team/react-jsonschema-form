@@ -292,6 +292,7 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
               class="chakra-native-select__root emotion-3"
             >
               <select
+                aria-label="Pick something"
                 class="chakra-native-select__field emotion-4"
                 data-part="select"
                 data-scope="field"
@@ -645,6 +646,7 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
               class="chakra-native-select__root emotion-3"
             >
               <select
+                aria-label="Pick something"
                 class="chakra-native-select__field emotion-4"
                 data-part="select"
                 data-scope="field"

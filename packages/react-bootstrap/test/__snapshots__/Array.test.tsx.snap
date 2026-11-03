@@ -410,6 +410,7 @@ exports[`array fields > checkboxes 1`] = `
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           multiple=""
@@ -1442,6 +1443,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           multiple=""

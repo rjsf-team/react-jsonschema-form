@@ -6,7 +6,6 @@ import {
   enumOptionsDomValues,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
-  getControlAriaLabel,
   getLabelId,
   getOptionValueFormat,
   groupEnumOptions,
@@ -125,7 +124,6 @@ function SelectWidget<
         // `anyOf`'s option selector shares with the selector above it, so the dropdown points at its own label's id too
         aria-labelledby={drawsLabel ? labelId : undefined}
         {...ariaProps}
-        aria-label={getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], drawsLabel)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>

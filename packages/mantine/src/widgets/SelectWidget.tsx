@@ -89,11 +89,13 @@ export default function SelectWidget<
     );
   }, [enumDisabled, enumOptions, optgroups, domValues]);
 
-  // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop
+  // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop. An
+  // `aria-label` in the options, spread onto the select as Mantine's own prop, names it as its caller's would
+  const optionsAriaLabel = typeof options['aria-label'] === 'string' ? options['aria-label'] : undefined;
   const ariaDescribedByProps = useInputAriaProps<T, S, F>(
     multiple ? 'MultiSelect' : 'Select',
     props,
-    widgetAriaProps<T, S, F>(props),
+    widgetAriaProps<T, S, F>({ ...props, 'aria-label': props['aria-label'] || optionsAriaLabel }),
   );
 
   const sharedProps = {

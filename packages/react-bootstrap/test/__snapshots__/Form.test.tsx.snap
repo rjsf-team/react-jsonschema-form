@@ -2819,6 +2819,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
     >
       <div>
         <div
+          aria-label="Choose an option"
           class="mb-0"
           id="root"
           role="radiogroup"
@@ -2993,6 +2994,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -3030,6 +3032,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -3077,6 +3080,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -3124,6 +3128,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -3166,6 +3171,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -3208,6 +3214,7 @@ exports[`select widget with options sharing a String() in the realValue format (
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -9613,6 +9620,7 @@ exports[`single fields > radio field 1`] = `
     >
       <div>
         <div
+          aria-label="Choose an option"
           class="mb-0"
           id="root"
           role="radiogroup"
@@ -9997,6 +10005,7 @@ exports[`single fields > select field 1`] = `
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -10039,6 +10048,7 @@ exports[`single fields > select field multiple choice 1`] = `
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           multiple=""
@@ -10089,6 +10099,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           multiple=""
@@ -10241,6 +10252,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           multiple=""
@@ -10291,6 +10303,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           multiple=""
@@ -10336,6 +10349,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -10379,6 +10393,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
     >
       <div>
         <div
+          aria-label="Choose an option"
           class="mb-0"
           id="root"
           role="radiogroup"
@@ -10445,6 +10460,7 @@ exports[`single fields > select field single choice form disabled using radio wi
     >
       <div>
         <div
+          aria-label="Choose an option"
           class="mb-0"
           id="root"
           role="radiogroup"
@@ -10513,6 +10529,7 @@ exports[`single fields > select field single choice formData 1`] = `
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -10555,6 +10572,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -10615,6 +10633,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -10676,6 +10695,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
     >
       <div>
         <div
+          aria-label="Choose an option"
           class="mb-0"
           id="root"
           role="radiogroup"
@@ -10809,6 +10829,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
       <div>
         <select
           aria-describedby="root__selectedOptionDescription"
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -10859,6 +10880,7 @@ exports[`single fields > select widget with selected oneOf option description an
     >
       <div>
         <select
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"
@@ -10902,6 +10924,7 @@ exports[`single fields > select widget with selected oneOf option description be
       <div>
         <select
           aria-describedby="root__description root__selectedOptionDescription"
+          aria-label="Select ..."
           class="form-select"
           id="root"
           name="root"

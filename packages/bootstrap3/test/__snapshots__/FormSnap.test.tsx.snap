@@ -1877,6 +1877,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
       class="form-group rjsf-field rjsf-field-string"
     >
       <div
+        aria-label="Choose an option"
         class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
@@ -2026,6 +2027,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -2061,6 +2063,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
       class="form-group rjsf-field rjsf-field-string"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -2106,6 +2109,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -2151,6 +2155,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
       class="form-group rjsf-field rjsf-field-string"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -2191,6 +2196,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -2231,6 +2237,7 @@ exports[`select widget with options sharing a String() in the realValue format (
       class="form-group rjsf-field rjsf-field-string"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -6030,6 +6037,7 @@ exports[`single fields > radio field 1`] = `
       class="form-group rjsf-field rjsf-field-boolean"
     >
       <div
+        aria-label="Choose an option"
         class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
@@ -6354,6 +6362,7 @@ exports[`single fields > select field 1`] = `
       class="form-group rjsf-field rjsf-field-string"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -6394,6 +6403,7 @@ exports[`single fields > select field multiple choice 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         multiple=""
@@ -6442,6 +6452,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         multiple=""
@@ -6588,6 +6599,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         multiple=""
@@ -6636,6 +6648,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         multiple=""
@@ -6679,6 +6692,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
       class="form-group rjsf-field rjsf-field-string"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -6720,6 +6734,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
       class="form-group rjsf-field rjsf-field-string"
     >
       <div
+        aria-label="Choose an option"
         class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
@@ -6783,6 +6798,7 @@ exports[`single fields > select field single choice form disabled using radio wi
       class="form-group rjsf-field rjsf-field-string"
     >
       <div
+        aria-label="Choose an option"
         class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
@@ -6849,6 +6865,7 @@ exports[`single fields > select field single choice formData 1`] = `
       class="form-group rjsf-field rjsf-field-string"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -6889,6 +6906,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
       class="form-group rjsf-field rjsf-field-string"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -6947,6 +6965,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
       class="form-group rjsf-field rjsf-field-string"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -7006,6 +7025,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
       class="form-group rjsf-field rjsf-field-string"
     >
       <div
+        aria-label="Choose an option"
         class="rjsf-field-radio-group"
         id="root"
         role="radiogroup"
@@ -7135,6 +7155,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
       </div>
       <select
         aria-describedby="root__selectedOptionDescription"
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -7175,6 +7196,7 @@ exports[`single fields > select widget with selected oneOf option description an
       class="form-group rjsf-field rjsf-field-string"
     >
       <select
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"
@@ -7228,6 +7250,7 @@ exports[`single fields > select widget with selected oneOf option description be
       </div>
       <select
         aria-describedby="root__description root__selectedOptionDescription"
+        aria-label="Select ..."
         class="form-control"
         id="root"
         name="root"

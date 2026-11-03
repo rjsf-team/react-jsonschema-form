@@ -36,6 +36,8 @@ function RadioWidget<
   htmlName,
   registry,
   presentation,
+  label,
+  placeholder,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const { classMap } = registry;
@@ -55,7 +57,7 @@ function RadioWidget<
   );
 
   const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
-    { id, presentation },
+    { id, presentation, label, placeholder, registry },
     'radiogroup',
   );
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);

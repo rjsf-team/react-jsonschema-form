@@ -12,7 +12,6 @@ import {
   enumOptionsDomValues,
   enumOptionsValueForIndex,
   flattenGroupedOptions,
-  getControlAriaLabel,
   getControlFallbackName,
   getOptionValueFormat,
   groupEnumOptions,
@@ -140,7 +139,7 @@ export default function SelectWidget<
           disabled={disabled || readonly}
           required={required}
           placeholder={placeholderText}
-          ariaLabel={getControlAriaLabel<T, S, F>(props, ariaLabel)}
+          ariaLabel={ariaLabel}
           ariaLabelledby={ariaLabelledby}
           ariaInvalid={ariaInvalid}
           className={cnClassName}

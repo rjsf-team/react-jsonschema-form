@@ -348,6 +348,52 @@ describe('the plan SchemaField builds', () => {
       expect(node.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
     });
 
+    it('is named by a fallback when its field has no title (#5586)', () => {
+      const { node } = createFormComponent({
+        schema: {
+          oneOf: [
+            { type: 'string', title: 'Text' },
+            { type: 'number', title: 'Num' },
+          ],
+        },
+        initialFormData: 'a',
+      });
+
+      expect(node.querySelector('#root__oneof_select')).toHaveAccessibleName('Select ...');
+    });
+
+    it('is named by its placeholder when its field has no title', () => {
+      const { node } = createFormComponent({
+        schema: {
+          oneOf: [
+            { type: 'string', title: 'Text' },
+            { type: 'number', title: 'Num' },
+          ],
+        },
+        uiSchema: { 'ui:placeholder': 'Pick a kind' },
+        initialFormData: 'a',
+      });
+
+      expect(node.querySelector('#root__oneof_select')).toHaveAccessibleName('Pick a kind');
+    });
+
+    it('is a radiogroup named by a fallback when its field has no title', () => {
+      const { node } = createFormComponent({
+        schema: {
+          oneOf: [
+            { type: 'string', title: 'Text' },
+            { type: 'number', title: 'Num' },
+          ],
+        },
+        uiSchema: { 'ui:widget': 'radio', oneOf: [{}, {}] },
+        initialFormData: 'a',
+      });
+
+      const group = node.querySelector('#root__oneof_select');
+      expect(group).toHaveAttribute('role', 'radiogroup');
+      expect(group).toHaveAccessibleName('Choose an option');
+    });
+
     it("is named by the label the field's template draws, and described by the parts that render", () => {
       const { node } = createFormComponent({
         schema,
@@ -1322,6 +1368,16 @@ describe('a ui:field wrapping SchemaField under its own id', () => {
     expect(screen.getByRole('textbox', { name: 'X' })).toBe(input);
     describers.forEach((id) => expect(node.querySelector(`#${id}`)).not.toBeNull());
     expect(describers).toEqual(expect.arrayContaining([errorId('root_x'), helpId('root_x'), 'root_x__description']));
+  });
+
+  it("names the selector of a union it wraps by the field's label text, as no label names it", () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { x: { title: 'X', anyOf: [{ type: 'string' }, { type: 'number' }] } } },
+      uiSchema: { x: { 'ui:field': Wrapper } },
+      initialFormData: { x: 'a' },
+    });
+
+    expect(node.querySelector('#root_x__anyof_select')).toHaveAccessibleName('X');
   });
 
   it('keeps the heading of an ObjectField a ui:field names from repeating under an option titled as the field', () => {

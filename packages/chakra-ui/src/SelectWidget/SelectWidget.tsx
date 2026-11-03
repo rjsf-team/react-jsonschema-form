@@ -7,7 +7,6 @@ import {
   enumOptionValueDecoder,
   enumOptionsDomValues,
   flattenGroupedOptions,
-  getControlAriaLabel,
   getLabelId,
   getOptionValueFormat,
   groupEnumOptions,
@@ -49,9 +48,6 @@ export default function SelectWidget<
   const labelId = getLabelId<T, S, F>(props);
   const ariaProps = widgetAriaProps(props);
   const labelledBy = labelledByOrNone(ariaProps['aria-labelledby'], drawsLabel);
-  // A trigger shows its value, not a name, so where no label names it, it is named by the field's label, its placeholder
-  // or the translated prompt
-  const ariaLabel = getControlAriaLabel<T, S, F>(props, ariaProps['aria-label'], drawsLabel);
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = useMemo(
@@ -148,17 +144,11 @@ export default function SelectWidget<
         value={formValue}
         positioning={{ placement: 'bottom' }}
       >
-        <SelectTrigger
-          ref={triggerRef}
-          autoFocus={autofocus}
-          {...ariaProps}
-          aria-label={ariaLabel}
-          aria-labelledby={labelledBy}
-        >
+        <SelectTrigger ref={triggerRef} autoFocus={autofocus} {...ariaProps} aria-labelledby={labelledBy}>
           <SelectValueText placeholder={placeholder} />
         </SelectTrigger>
         <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
-          <ChakraSelect.Content aria-labelledby={labelledBy} aria-label={ariaLabel}>
+          <ChakraSelect.Content aria-labelledby={labelledBy} aria-label={ariaProps['aria-label']}>
             {groupedOptions.map((option) =>
               isEnumOptionsGroup<S>(option) ? (
                 <ChakraSelect.ItemGroup key={`optgroup-${option.label}`}>
