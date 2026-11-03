@@ -3711,7 +3711,7 @@ describe('AJV8Validator localizing the errors of a custom keyword', () => {
 
   it('hands back the params that are not strings untouched', () => {
     const { validator } = validatorReporting([{ property: 5 }, { property: ['a', 'b'] }], noop);
-    const schema: RJSFSchema = { $id: 'customNonString', custom: true };
+    const schema: RJSFSchema & { custom?: boolean } = { $id: 'customNonString', custom: true };
     expect(validator.rawValidation(schema, {}).errors?.map(({ params }) => params)).toEqual([
       { property: 5 },
       { property: ['a', 'b'] },
@@ -3722,7 +3722,7 @@ describe('AJV8Validator localizing the errors of a custom keyword', () => {
     const { reported, validator } = validatorReporting([{ missingProperty: 'foo' }], () => {
       throw new Error('localizer failed');
     });
-    const schema: RJSFSchema = { $id: 'customThrowing', custom: true };
+    const schema: RJSFSchema & { custom?: boolean } = { $id: 'customThrowing', custom: true };
     expect(() => validator.rawValidation(schema, {})).toThrow('localizer failed');
     expect(validator.ajv.getSchema('customThrowing')?.errors).toBeNull();
     expect(reported.map(({ params }) => params)).toEqual([{ missingProperty: 'foo' }]);

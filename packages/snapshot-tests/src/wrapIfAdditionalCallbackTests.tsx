@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
-import type { RJSFMarkedSchema } from '@rjsf/utils';
+import type { RJSFMarkedSchema, RJSFSchema } from '@rjsf/utils';
 import { ADDITIONAL_PROPERTY_FLAG, additionalKeyId, buttonId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
