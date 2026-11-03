@@ -654,9 +654,9 @@ function renderChildren(children: ReactNode): ReactNode {
  * render it; it goes beside the wrapper rather than in it, since a custom `inputContainer`, like Mantine's `Tooltip`,
  * may only accept the single element Mantine's own inputs pass it. The wrapper options are
  * resolved as Mantine's inputs resolve them, from the widget's options and `Input`'s and `InputWrapper`'s theme
- * `defaultProps`; the widget's own component's theme `defaultProps` aren't read, since Mantine would spread them on its
- * root element. The wrapper gets no `id`, which Mantine would put on its root element and point the title's `for` at,
- * though the widget's inputs have their own ids; the title gets no `for`.
+ * `defaultProps`; the widget's own component's theme `defaultProps` aren't applied to the wrapper, since Mantine would
+ * spread them on its root element. The wrapper gets no `id`, which Mantine would put on its root element and point the
+ * title's `for` at, though the widget's inputs have their own ids; the title gets no `for`.
  *
  * @param widgetProps - The props of the widget, from which the label, description, errors and options are derived
  * @param inputComponent - The Mantine component of the widget's inputs, whose theme `defaultProps` size them over the
@@ -747,7 +747,8 @@ export function useFieldWrapperProps<
  *   `wrapperOverrides`, set over the `wrapperProps` the input would otherwise take, rather than replacing them,
  *   `slotlessErrors`, which gets what to render after the input from the `inputWrapperOrder` it resolves to, and
  *   `label`, the input's own label, which names it through `aria-label` where that `inputWrapperOrder` leaves the label
- *   out, since Mantine then renders no label to name it, unless the options give an `aria-label` of their own
+ *   out, since Mantine then renders no label to name it, unless the options or the theme give an `aria-label` of
+ *   their own
  * @returns - An object to spread on the props of the Mantine input, after the theme props
  */
 export function useAriaDescribedByProps(
@@ -797,7 +798,10 @@ export function useAriaDescribedByProps(
     wrapperObject,
     after: slotlessErrors?.(resolved.inputWrapperOrder),
   });
-  return label && !options['aria-label'] && !rendersWrapperPart(resolved.inputWrapperOrder, 'label')
+  return label &&
+    !options['aria-label'] &&
+    !props['aria-label'] &&
+    !rendersWrapperPart(resolved.inputWrapperOrder, 'label')
     ? { ...containerProps, 'aria-label': label }
     : containerProps;
 }
@@ -807,7 +811,8 @@ export function useAriaDescribedByProps(
  * through `useAriaDescribedByProps()`. The input is described and named by the `aria-describedby`, `aria-labelledby`
  * and `aria-label` it is given, those `getControlAttributes()` gives by default, the second for a label drawn
  * elsewhere with no `for` and the third for a label `ui:label: false` hides, else by its own label through
- * `aria-label` where its `inputWrapperOrder` leaves the label out, and the errors the widget draws are
+ * `aria-label` where its `inputWrapperOrder` leaves the label out and neither its options nor the theme give an
+ * `aria-label`, and the errors the widget draws are
  * rendered by the registry's `FieldErrorTemplate` where its `inputWrapperOrder` leaves out Mantine's error slot.
  *
  * @param component - The Mantine input the props are spread on

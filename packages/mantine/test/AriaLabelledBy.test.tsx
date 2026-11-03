@@ -740,6 +740,24 @@ describe('aria-labelledby', () => {
     },
   );
 
+  test.each([
+    ['text', 'TextInput', { type: 'string' }],
+    ['select', 'Select', enumSchema],
+  ] as [string, string, RJSFSchema][])(
+    '%s widget keeps the aria-label of its theme when its inputWrapperOrder leaves the label out',
+    (_, component, schema) => {
+      render(
+        themedForm(
+          { [component]: { defaultProps: { 'aria-label': 'Paint', inputWrapperOrder: orderWithoutLabel } } },
+          { ...schema, title: 'A title' },
+          {},
+        ),
+      );
+
+      expect(document.getElementById('root')).toHaveAccessibleName('Paint');
+    },
+  );
+
   const sizedInputs: [string, string, RJSFSchema, string][] = [
     ['range', 'Slider', { type: 'integer' }, '.mantine-Slider-root'],
     ['alt-date', 'Select', { type: 'string' }, '.mantine-Select-root'],
