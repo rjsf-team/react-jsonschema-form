@@ -455,7 +455,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` replacing an `accept` a widget passes it as a prop with `ui:options.accept` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars, and for a `stars` option or schema `maximum` that isn't a whole number, which now rounds down, and to draw one star for a nonzero `maximum` below 1 ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `FileWidget` to set no `accept` for an `accept` option that isn't a string or an array of them, where it stringified anything truthy ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
-- Fix `RatingWidget` for an Ajv `$data` reference: a `maximum` rendered no stars, and a `minimum` wrote values such as `'[object Object]0'`, and for a numeric-string `minimum`, which wrote values such as `'10'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Fix `RatingWidget` for an Ajv `$data` reference: a `maximum` rendered no stars, and a `minimum` wrote values such as `'[object Object]0'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Fix `RatingWidget` for a numeric-string `minimum`, which wrote values such as `'10'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Fix `TimeWidget` hiding a value's zero seconds for a numeric-string `multipleOf` below 60, such as `'30'`, which a numeric one keeps ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/daisyui
 
@@ -580,7 +582,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` replacing an `accept` a widget passes it as a prop with `ui:options.accept` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars, and for a `stars` option or schema `maximum` that isn't a whole number, which now rounds down, and to draw one star for a nonzero `maximum` below 1, and use the default size and color for a `size` or `color` option that isn't a string ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `ToggleWidget` to add no size class for a `size` option that isn't a string, where a number gave `toggle-5` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
-- Fix `RatingWidget` for an Ajv `$data` reference: a `maximum` rendered no stars, and a `minimum` wrote values such as `'[object Object]0'`, and for a numeric-string `minimum`, which wrote values such as `'10'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Fix `RatingWidget` for an Ajv `$data` reference: a `maximum` rendered no stars, and a `minimum` wrote values such as `'[object Object]0'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Fix `RatingWidget` for a numeric-string `minimum`, which wrote values such as `'10'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Fix `RatingWidget` writing a star numbered from a fractional `minimum` as a whole number, so the first star of `minimum: 1.5` wrote `1` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/fluentui-rc
 
@@ -1236,7 +1240,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change `FormContextType` from `Record<string, any>` to `object`, so a component reading an untyped `formContext` names the keys it reads. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5686](https://github.com/rjsf-team/react-jsonschema-form/pull/5686))
 - **BREAKING CHANGE:** Change `RJSFSchema` from `JSONSchema7 & Record<string, any>` to `JSONSchema7`, which `@rjsf/utils` now augments, globally, with the later-draft, OpenAPI and Ajv keywords RJSF or its validators read, so a schema with keywords of its own declares them by augmenting `JSONSchema7` too. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 - Fix `getInputProps()` and `rangeSpec()` setting `min`, `max` or `step` to `[object Object]` when `formatMinimum`, `formatMaximum`, `minimum`, `maximum` or `multipleOf` is an Ajv `$data` reference ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
-- Change `getInputProps()` and `rangeSpec()` to read a numeric-string bound such as `minimum: '5'` as its number, which they passed on as a string ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Change `getInputProps()` and `rangeSpec()` to read a numeric-string bound such as `minimum: '5'` as its number, which they passed on as a string, and to leave out a string bound that is no number, which `getInputProps()` still passes on as the `min` or `max` of a date or time input ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 - Fix `RJSFSchema` checking nothing where a package manager doesn't hoist `@types/json-schema`, which is now a dependency of `@rjsf/utils` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/validator-ajv8

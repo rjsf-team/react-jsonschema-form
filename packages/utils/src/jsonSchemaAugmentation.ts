@@ -30,7 +30,7 @@ declare module 'json-schema' {
     /** The vocabularies a meta-schema uses, by URI, each `true` when it is required (draft 2019-09) */
     $vocabulary?: Record<string, boolean>;
     /** OpenAPI's reusable definitions, which RJSF resolves a `$ref` into */
-    components?: Record<string, unknown>;
+    components?: object;
     /** The schema of the decoded content of a string, with its `contentMediaType` (draft 2019-09) */
     contentSchema?: JSONSchema7Definition;
     /** The properties the presence of a property requires, by that property's name (draft 2019-09) */
@@ -38,10 +38,10 @@ declare module 'json-schema' {
     /** The subschema the presence of a property applies, by that property's name (draft 2019-09) */
     dependentSchemas?: Record<string, JSONSchema7Definition>;
     /** The property whose value selects the `oneOf`/`anyOf` option (OpenAPI) */
-    discriminator?: { propertyName: string; mapping?: Record<string, string> };
+    discriminator?: JSONSchema7Discriminator;
     /** The messages `ajv-errors` reports for this schema's keywords, wired into `@rjsf/validator-ajv8` through its
      * `extenderFn` */
-    errorMessage?: string | Record<string, unknown>;
+    errorMessage?: string | object;
     /** The date or time the value must be before, for a `format` that has an order, or Ajv's `$data` reference to one
      * when Ajv runs with `$data` (Ajv's `ajv-formats`)
      */
@@ -68,6 +68,16 @@ declare module 'json-schema' {
     unevaluatedItems?: JSONSchema7Definition;
     /** The schema of the properties no other keyword evaluates (draft 2019-09) */
     unevaluatedProperties?: JSONSchema7Definition;
+  }
+
+  /** OpenAPI's `discriminator`, which a schema with fields of its own, such as `defaultMapping`, declares by augmenting
+   * this interface
+   */
+  export interface JSONSchema7Discriminator {
+    /** The property whose value names the option */
+    propertyName: string;
+    /** The option's `$ref` by that property's value, where it isn't the option's name */
+    mapping?: Record<string, string>;
   }
 }
 

@@ -1544,6 +1544,16 @@ describe('StringField', () => {
       expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:00');
     });
 
+    it('should preserve seconds in the dom for a numeric-string `multipleOf` below a minute', () => {
+      const { node } = createFormComponent({
+        // @ts-expect-error `multipleOf` is a number, but a schema that skips Ajv's meta-schema can hold a string
+        schema: { type: 'string', format: 'time', multipleOf: '30' },
+        initialFormData: '12:30:00',
+      });
+
+      expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('12:30:00');
+    });
+
     it('should preserve non-zero seconds in the dom', () => {
       const { node } = createFormComponent({
         schema: {

@@ -4,6 +4,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  DISCRIMINATOR_PATH,
   ELSE_KEY,
   ID_KEY,
   IF_KEY,
@@ -16,10 +17,11 @@ import {
 } from '../../constants.ts';
 import hashForSchema from '../../hashForSchema.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
+import { getByPath } from '../../pathUtils.ts';
 import { keywordShape } from '../../schemaUri.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import KeyedMemo from './keyedMemo.ts';
-import { childPointer, isRootPointer, stringKeyword } from './parseSchemaGraph.ts';
+import { childPointer, isRootPointer } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
 
@@ -801,8 +803,8 @@ export function validationTargets<S extends StrictRJSFSchema = RJSFSchema>(graph
   const discriminators = new Set<string>();
   for (let id = 0; id < graph.size; id += 1) {
     const node = graph.node(id);
-    const name = node.kind === 'schema' ? stringKeyword(node.raw.discriminator, 'propertyName') : undefined;
-    if (name !== undefined) {
+    const name = node.kind === 'schema' ? getByPath(node.raw, DISCRIMINATOR_PATH) : undefined;
+    if (typeof name === 'string') {
       discriminators.add(name);
     }
   }

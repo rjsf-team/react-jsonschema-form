@@ -51,6 +51,17 @@ describe('RatingWidget', () => {
     expect(onChange).toHaveBeenCalledWith(1);
   });
 
+  test('writes the fractional value of a star numbered from a fractional `minimum`', async () => {
+    const onChange = vi.fn();
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ schema: { type: 'number', minimum: 1.5 }, onChange })} />,
+    );
+
+    await user.click(getAllByRole('radio')[0]);
+
+    expect(onChange).toHaveBeenCalledWith(1.5);
+  });
+
   test('falls back to the `stars` option for Ajv `$data` bounds', () => {
     const dataBounds = { type: 'integer', maximum: { $data: '1/limit' }, minimum: { $data: '1/floor' } };
     const schema = dataBounds as unknown as RJSFSchema;

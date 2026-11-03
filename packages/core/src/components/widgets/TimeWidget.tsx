@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getTemplates, useTimeWidgetProps } from '@rjsf/utils';
+import { getTemplates, rangeSpec, useTimeWidgetProps } from '@rjsf/utils';
 
 /** The `TimeWidget` component uses the `BaseInputTemplate` changing the type to `time` and transforms
  * the value to undefined when it is falsy during the `onChange` handling. On change, the local UTC offset is
@@ -20,8 +20,8 @@ export default function TimeWidget<
   const { onChange, options, registry, schema } = props;
   const { BaseInputTemplate } = getTemplates<T, S, F>(registry, options);
   const { localValue, computeTimeValue } = useTimeWidgetProps(props);
-  const hasSecondPrecision =
-    typeof schema.multipleOf === 'number' && Number.isFinite(schema.multipleOf) && schema.multipleOf < 60;
+  const { step } = rangeSpec<S>(schema);
+  const hasSecondPrecision = step !== undefined && step < 60;
   const handleChange = useCallback(
     (newValue: unknown) => {
       if (typeof newValue !== 'string' || !newValue) {

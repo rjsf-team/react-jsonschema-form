@@ -60,7 +60,7 @@ export default function RatingWidget<
   /** Handles change events from radio inputs */
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => {
-      const starValue = parseInt(newValue, 10);
+      const starValue = Number(newValue);
       onChange(storesString ? String(starValue) : starValue);
     },
     [onChange, storesString],

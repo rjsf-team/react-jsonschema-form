@@ -135,6 +135,19 @@ A package manager that doesn't hoist `@types/json-schema`, as pnpm doesn't by de
 The file also has to be a module, with an `import` or an `export`, as the example is.
 In a file with neither, such as a `.d.ts` of its own, `declare module` replaces `json-schema` instead of adding to it, and TypeScript reports TS2353 on `type` and every other keyword until you add `export {};`.
 
+An augmentation adds keywords but can't change the type of one `JSONSchema7` already declares (TS2717).
+So Ajv's `$data` reference, which `formatMinimum` and its siblings take, doesn't type-check in `minimum`, `maximum`, `multipleOf` or another keyword typed as a number, even though a validator built with `customizeValidator({ ajvOptionsOverrides: { $data: true } })` validates it and the built-in widgets pass over it.
+Convert such a schema through `unknown`, since a direct `as RJSFSchema` fails with TS2352:
+
+```ts
+import type { RJSFSchema } from '@rjsf/utils';
+
+const schema = {
+  type: 'object',
+  properties: { low: { type: 'number' }, high: { type: 'number', minimum: { $data: '1/low' } } },
+} as unknown as RJSFSchema;
+```
+
 ### F
 
 The generic `F` is used to represent the type of the `formContext` property passed into `Form`.
