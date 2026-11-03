@@ -65,12 +65,14 @@ export function rendersTypeSelector<S extends StrictRJSFSchema = RJSFSchema>(sch
  * offers nothing but `null` starts there all the same, since it is the only value that schema allows.
  * @param schema - The schema being rendered by the fallback UI.
  * @param types - The types the selection offers.
- * @param [widget] - The `ui:widget` for the field, if any
+ * @param widget - The `ui:widget` for the field, if any
+ * @param registeredWidgets - The form's registered widgets
  */
 function getDefaultType<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   types: JSONSchema7TypeName[],
-  widget?: unknown,
+  widget: unknown,
+  registeredWidgets: Readonly<Record<string, unknown>>,
 ): JSONSchema7TypeName {
   // The rule every other reader of a type list resolves it by, so the selection starts on the field `SchemaField`
   // renders, and on the type `getDefaultFormState()` fills the value in as: a `textarea` on a
@@ -78,7 +80,11 @@ function getDefaultType<S extends StrictRJSFSchema = RJSFSchema>(
   // schema that lists its types has its widget read, since `getDefaultFormState()` fills nothing in for the widget's
   // type of one that names no type, which offers every type. The list itself is still resolved, so one whose types
   // come from an `enum` of `[null, 'a']` starts on `string` rather than on `null`
-  const type = getFieldTypeForWidget({ type: types }, Array.isArray(schema.type) ? widget : undefined);
+  const type = getFieldTypeForWidget(
+    { type: types },
+    Array.isArray(schema.type) ? widget : undefined,
+    registeredWidgets,
+  );
   return types.find((aType) => aType === type) ?? types[0];
 }
 
@@ -346,8 +352,8 @@ function FallbackUiField<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(
-    () => getDefaultType<S>(schema, types, uiOptions.widget),
-    [schema, types, uiOptions.widget],
+    () => getDefaultType<S>(schema, types, uiOptions.widget, widgets),
+    [schema, types, uiOptions.widget, widgets],
   );
   // What `getUiOptions(uiSchema, globalUiOptions)` returns for the label, without reading the `uiSchema` a second time
   const { label } = { ...globalUiOptions, ...uiOptions };

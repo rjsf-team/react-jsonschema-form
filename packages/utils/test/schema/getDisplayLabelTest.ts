@@ -89,11 +89,21 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
       );
     });
     it.each<[string, RJSFSchema['type'], boolean]>([
-      ['textarea', ['null', 'object', 'string'], false],
+      ['textarea', ['null', 'object', 'string'], true],
+      ['textarea', ['array', 'string'], true],
       ['CheckboxWidget', ['number', 'boolean'], false],
       ['MyWidget', ['null', 'object', 'string'], false],
     ])('a %s on a %j follows the field of the type that renders it', (widget, type, expected) => {
       expect(getDisplayLabel({ validator: testValidator }, { type }, { 'ui:widget': widget })).toEqual(expected);
+    });
+    it('a widget the form registers under an alias leaves a type list on the type it resolves to', () => {
+      expect(
+        getDisplayLabel(
+          { validator: testValidator, widgets: { textarea: () => null } },
+          { type: ['null', 'object', 'string'] },
+          { 'ui:widget': 'textarea' },
+        ),
+      ).toEqual(false);
     });
     it('a type list ignores a widget in globalOptions, which picks no field', () => {
       // As a caller could pass a root uiSchema's `ui:globalOptions` that `pickGlobalUiOptions()` never saw

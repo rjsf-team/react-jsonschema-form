@@ -219,6 +219,26 @@ describe('ObjectFieldTemplate colSpan map', () => {
     expect(classes[0]).toContain('ant-col-24');
   });
 
+  it('keys a type list holding an object by its type rather than the widget SchemaField drops for it', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            val: { type: ['object', 'string'], properties: { a: { type: 'string' } } },
+            other: { type: 'string' },
+          },
+        }}
+        uiSchema={{ val: { 'ui:widget': 'textarea' } }}
+        validator={validator}
+        initialFormData={{ val: { a: 'q' } }}
+        formContext={{ colSpan: { textarea: 8, object: 4 } }}
+      />,
+    );
+
+    expect(container.querySelector('fieldset > .ant-row > .ant-col')).toHaveClass('ant-col-4');
+  });
+
   describe('a property whose type depends on its form data', () => {
     const textOrNumber: RJSFSchema = { if: { const: 'text' }, then: { type: 'string' }, else: { type: 'number' } };
     const getSpan = (formSchema: RJSFSchema, formData: unknown) => {

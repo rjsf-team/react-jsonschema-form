@@ -29,6 +29,7 @@ import {
   getDiscriminatorFieldFromSchema,
   getFieldClassNames,
   getFieldLabel,
+  getFieldTypeForUiSchema,
   getFieldTypeForWidget,
   getOptionUiSchema,
   getRenderedOptionSchema,
@@ -81,9 +82,10 @@ import getFieldWidget, {
   getTemplateParts,
   withoutAdditionalFlag,
   withoutDescribers,
+  withoutUiWidget,
 } from './fieldWidgetUtils.ts';
 import getOptionFieldUiSchema from './getOptionFieldUiSchema.ts';
-import { lookUpUiField, resolveNamedField, withoutNamedField } from './namedField.ts';
+import { isWrittenField, lookUpUiField, resolveNamedField, withoutNamedField } from './namedField.ts';
 import type { NamedFieldResolution } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 import type { NamedFieldPath } from './NamedFieldContext.ts';
@@ -415,6 +417,7 @@ function createFieldWidgetResolver<
   const inferWidget = memoizeLast(inferSelectWidget<T, S, F>);
   // Kept apart from the schema above so that the resolved `uiSchema` keeps its identity as the form data changes
   const writeBackWidget = memoizeLast(withInferredWidget<T, S, F>);
+  const dropWidget = memoizeLast(withoutUiWidget<T, S, F>);
   const readOwnUiOptions = memoizeLast((uiSchema: UiSchema<T, S, F>) => getUiOptions<T, S, F>(uiSchema));
   // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time
   const overGlobalUiOptions = memoizeLast(
@@ -448,7 +451,15 @@ function createFieldWidgetResolver<
       globalFormOptions,
     );
     const resolvedUiSchema = uiField?.uiSchema ?? ownUiSchema;
-    const uiSchema = writeBackWidget(resolvedUiSchema, inferWidget(selectSchemaInfo, resolvedUiSchema), fields);
+    const widgetUiSchema = writeBackWidget(resolvedUiSchema, inferWidget(selectSchemaInfo, resolvedUiSchema), fields);
+    // The value is a container kept in its own field, for which another type's widget means nothing, and `ArrayField`
+    // would render it in place of the items. A field written for the schema reads its `uiSchema` as given
+    const widgetIsAnotherTypes =
+      !isWrittenField<T, S, F>(uiField?.namedField, fields) &&
+      Array.isArray(selectSchemaInfo.schema.type) &&
+      getFieldTypeForUiSchema<T, S, F>(selectSchemaInfo.schema, widgetUiSchema, registry.widgets, formData) !==
+        getFieldTypeForUiSchema<T, S, F>(selectSchemaInfo.schema, widgetUiSchema, registry.widgets);
+    const uiSchema = widgetIsAnotherTypes ? dropWidget(widgetUiSchema) : widgetUiSchema;
     const ownUiOptions = readOwnUiOptions(uiSchema);
     const uiOptions = overGlobalUiOptions(globalUiOptions, ownUiOptions);
     const deprecatedHandling = getDeprecatedHandling<T, S, F>(selectSchemaInfo.schema, uiOptions);
@@ -584,6 +595,7 @@ function getFieldComponent<
   hasConstantOptions: boolean,
 ): {
   FieldComponent: Field<T, S, F>;
+  fieldType: string | undefined;
   rendersNamedField: boolean;
   rendersOptionsItself: boolean;
   rendersOptionSelector: boolean;
@@ -603,7 +615,8 @@ function getFieldComponent<
   // that type has the widget it renders with: a `textarea` on a `['null', 'number', 'string']` is rendered by
   // `StringField`, which keeps the `'007'` typed into it as it is rather than casting it to `7` the way `NumberField`
   // would. `getFieldTypeForWidget()` answers both, so `getDisplayLabel()` and the defaults agree with the field
-  const type = getFieldTypeForWidget<S>(schema, widget) ?? '';
+  const widgetFieldType = getFieldTypeForWidget<S>(schema, widget, registry.widgets);
+  const type = widgetFieldType ?? '';
 
   // Looked up as an own property, for the reason `lookUpUiField()` looks the `ui:field` up that way: a `type` such
   // as `constructor` or `toString` would otherwise resolve to something off `Object.prototype` rather than to no field
@@ -733,6 +746,8 @@ function getFieldComponent<
     FieldComponent !== fields.ArrayField;
   return {
     FieldComponent: isWithheld ? RenderNothing : FieldComponent,
+    // A named field renders in place of the one the widget would pick
+    fieldType: rendersNamedField ? getSchemaType<S>(schema) : widgetFieldType,
     rendersNamedField,
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
@@ -939,6 +954,37 @@ export function schemaFieldDrawsControlsBesideOptions<T, S extends StrictRJSFSch
   return drawsControlsBesideOwnOptions<T, S, F>(plan, registry.fields, () =>
     hasOwnContentBesideOptions<T, S, F>(registry.schemaUtils, schema, resolved.uiSchema, formData),
   );
+}
+
+/** Whether the fallback UI renders the field for `schema`, whose selector picks the type its value is entered as
+ *
+ * @param registry - The registry from which fields are obtained
+ * @param fieldPath - The path of the field
+ * @param schema - The field's schema
+ * @param uiSchema - The field's uiSchema
+ * @param formData - The field's form data
+ * @returns - True when the fallback UI renders the field
+ */
+export function schemaFieldRendersFallbackUi<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  registry: Registry<T, S, F>,
+  fieldPath: FieldPath,
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  formData: T | undefined,
+): boolean {
+  if (!registry.globalFormOptions.useFallbackUiForUnsupportedType) {
+    return false;
+  }
+  const resolved = createFieldWidgetResolver<T, S, F>().resolve(
+    schema,
+    uiSchema,
+    formData,
+    fieldPath,
+    registry,
+    false,
+    false,
+  );
+  return planFieldComponent<T, S, F>(resolved, registry)?.FieldComponent === registry.fields.FallbackField;
 }
 
 /** Gets a part of a field's plan with the field's own drawing of it taken away, so nothing draws a part the field was
@@ -1438,8 +1484,7 @@ function SchemaFieldRender<
     drawsControlsBesideOwnOptions<T, S, F>(fieldToRender, fields, () => !plannedAsOptions) &&
     shouldRenderOptionalField<T, S, F>(registry, fieldSchema, effectiveRequired, fieldUiSchema, fieldPath);
   // Read off the schema rather than the value, so an array or object holding nothing yet is still one
-  const fieldType = getSchemaType<S>(fieldSchema);
-  const holdsContainer = fieldType === 'array' || fieldType === 'object';
+  const holdsContainer = fieldToRender?.fieldType === 'array' || fieldToRender?.fieldType === 'object';
   const handleBlur = useSendBlur(fieldPath, props.onBlur, holdsContainer ? 'leaves' : 'field');
   const handleSelectorBlur = useSendBlur(fieldPath, props.onBlur, 'nothing');
   const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
@@ -1718,7 +1763,7 @@ function SchemaFieldRender<
     hideError,
     hasErrors,
     presentation,
-    classNames: getFieldClassNames<S>(schema, hasErrors, uiOptions.classNames),
+    classNames: getFieldClassNames<S>(schema, hasErrors, uiOptions.classNames, fieldToRender.fieldType),
     style: uiOptions.style,
     formData,
     // The named field above frames this one as a wrapper renders `SchemaField` for its own data, and its template has

@@ -222,6 +222,177 @@ describe('SchemaField', () => {
     });
   });
 
+  describe("a type list's widget", () => {
+    const objectList: RJSFSchema = {
+      type: ['null', 'object', 'string'],
+      properties: { a: { type: 'string', default: 'x' }, b: { type: 'string', default: 'y' } },
+    };
+    const arrayList: RJSFSchema = { type: ['array', 'string'], items: { type: 'string' } };
+    const listForm = (val: RJSFSchema, formData?: { val: unknown }, more: Partial<NoValFormProps> = {}) =>
+      createFormComponent({
+        schema: { type: 'object', properties: { val } },
+        uiSchema: { val: { 'ui:widget': 'textarea' } },
+        initialFormData: formData,
+        ...more,
+      });
+
+    it.each<[string, RJSFSchema]>([
+      ['object', objectList],
+      ['array', arrayList],
+      ['array, after a null,', { ...arrayList, type: ['null', 'array', 'string'] }],
+    ])('should let a string be entered in a textarea on a list resolving to %s', async (_, val) => {
+      const { node, onChange } = listForm(val);
+
+      await user.type(screen.getByRole('textbox'), 'hi');
+
+      expect(screen.getByRole('textbox').tagName).toBe('TEXTAREA');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 'hi' } }), 'root_val');
+      expect(node.querySelector('#root_val')?.closest('.rjsf-field')).toHaveClass('rjsf-field-string');
+    });
+
+    it('should keep an object the list holds in its own field, with its defaults filled in', () => {
+      const { node } = listForm(objectList, { val: { a: 'q' } });
+
+      expect(node.querySelector('textarea')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val_a')).toHaveValue('q');
+      expect(node.querySelector('#root_val_b')).toHaveValue('y');
+      expect(node.querySelector('#root_val')?.closest('.rjsf-field')).toHaveClass('rjsf-field-object');
+    });
+
+    it('should keep an array the list holds in its own field, without handing the field the widget', () => {
+      const { node } = listForm(arrayList, { val: ['a'] });
+
+      expect(node.querySelector('textarea')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val_0')).toHaveValue('a');
+      expect(node.querySelector('#root_val')?.closest('.rjsf-field')).toHaveClass('rjsf-field-array');
+    });
+
+    it('should name the type the list resolves to in the class of a named field, which the widget picks nothing for', () => {
+      const NamedField = () => <div id='named' />;
+      const { node } = listForm({ type: ['null', 'number', 'string'] }, undefined, {
+        uiSchema: { val: { 'ui:field': NamedField, 'ui:widget': 'textarea' } },
+      });
+
+      expect(node.querySelector('#named')?.closest('.rjsf-field')).toHaveClass('rjsf-field-number');
+    });
+
+    it('should hand a named field its widget whatever value the list holds', () => {
+      const NamedField = ({ uiSchema }: FieldProps) => <div id='named'>{String(uiSchema?.['ui:widget'])}</div>;
+      const { node } = listForm(
+        objectList,
+        { val: { a: 'q' } },
+        {
+          uiSchema: { val: { 'ui:field': NamedField, 'ui:widget': 'textarea' } },
+        },
+      );
+
+      expect(node.querySelector('#named')).toHaveTextContent('textarea');
+    });
+
+    it('should name the field rendering a select over the list in its class', () => {
+      const { node } = listForm({ type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] }, undefined, {
+        uiSchema: {},
+      });
+
+      expect(node.querySelector('#root_val')?.closest('.rjsf-field')).toHaveClass('rjsf-field-string');
+    });
+
+    describe('registered under a built-in alias', () => {
+      function NumericTextarea({ id, value, onChange }: WidgetProps) {
+        return <textarea id={id} value={String(value ?? '')} onChange={(event) => onChange(event.target.value)} />;
+      }
+      const widgets = { textarea: NumericTextarea };
+
+      it('should leave the list on the type it resolves to', async () => {
+        const { node, onChange } = listForm({ type: ['null', 'number', 'string'] }, undefined, { widgets });
+
+        await user.type(screen.getByRole('textbox'), '7');
+
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 7 } }), 'root_val');
+        expect(node.querySelector('#root_val')?.closest('.rjsf-field')).toHaveClass('rjsf-field-number');
+      });
+
+      it('should fill in the defaults of the object field it leaves on screen', () => {
+        const { node } = listForm(objectList, undefined, { widgets });
+
+        expect(node.querySelector('#root_val_a')).toHaveValue('x');
+        expect(node.querySelector('textarea')).not.toBeInTheDocument();
+      });
+    });
+
+    describe('with ui:required properties', () => {
+      const required: RJSFSchema = { type: ['string', 'object'], properties: { a: { type: 'string' } } };
+      const uiSchema: UiSchema = { val: { a: { 'ui:required': true } } };
+      const submitted = async (
+        val: RJSFSchema,
+        formData: { val: unknown },
+        useFallbackUiForUnsupportedType: boolean,
+      ) => {
+        const { node, onSubmit, onError } = listForm(val, formData, {
+          uiSchema,
+          noHtml5Validate: true,
+          useFallbackUiForUnsupportedType,
+        });
+        await submitForm(node, user);
+        return { hasInput: node.querySelector('#root_val_a') !== null, onSubmit, onError };
+      };
+
+      it.each<[string, RJSFSchema, { val: unknown }, boolean]>([
+        ['an object under the fallback UI, whatever the order of the list', required, { val: {} }, true],
+        [
+          'an object under the fallback UI, listed first',
+          { ...required, type: ['object', 'string'] },
+          { val: {} },
+          true,
+        ],
+        [
+          'a string in the object field, with the fallback UI off',
+          { ...required, type: ['object', 'string'] },
+          { val: 'hello' },
+          false,
+        ],
+        [
+          'a null in the object field, with the fallback UI off',
+          { ...required, type: ['null', 'object'] },
+          { val: null },
+          false,
+        ],
+      ])('should block the submit of %s, whose input is on screen', async (_, val, formData, fallback) => {
+        const { hasInput, onSubmit, onError } = await submitted(val, formData, fallback);
+
+        expect(hasInput).toBe(true);
+        expect(onError).toHaveBeenCalled();
+        expect(onSubmit).not.toHaveBeenCalled();
+      });
+
+      it.each<[string, RJSFSchema, { val: unknown }, boolean]>([
+        [
+          'a null picked under the fallback UI',
+          { ...required, type: ['null', 'object', 'string'] },
+          { val: null },
+          true,
+        ],
+        ['a string under the fallback UI', { ...required, type: ['object', 'string'] }, { val: 'hello' }, true],
+        ['an object in the string field, with the fallback UI off', required, { val: {} }, false],
+      ])('should submit %s, with no input on screen for it', async (_, val, formData, fallback) => {
+        const { hasInput, onSubmit, onError } = await submitted(val, formData, fallback);
+
+        expect(hasInput).toBe(false);
+        expect(onError).not.toHaveBeenCalled();
+        expect(onSubmit).toHaveBeenCalled();
+      });
+    });
+
+    it('should let the fallback UI start a textarea on the string with no value, and an object on its own type', () => {
+      const { node: empty } = listForm(objectList, undefined, { useFallbackUiForUnsupportedType: true });
+      expect(empty.querySelector('textarea')).toBeInTheDocument();
+
+      const { node: holding } = listForm(objectList, { val: { a: 'q' } }, { useFallbackUiForUnsupportedType: true });
+      expect(holding.querySelector('textarea')).not.toBeInTheDocument();
+      expect(holding.querySelector('#root_val_a')).toHaveValue('q');
+    });
+  });
+
   describe('type list starting with null', () => {
     it('should render the field for the first type that is not null', async () => {
       const { node, onChange } = createFormComponent({

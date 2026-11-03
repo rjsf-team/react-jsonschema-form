@@ -213,6 +213,10 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
    * default, offers none and prunes them.
    */
   readonly additionalPropertiesWhenAbsent?: 'forbid' | 'allow';
+  /** The widgets the form registers, as a widget registered under a built-in alias such as `textarea` keeps a `type`
+   * list on the type it resolves to. Only the names are read.
+   */
+  readonly widgets?: Readonly<Record<string, unknown>>;
 }
 
 /** The props for the `getDefaultFormState()` schema function */
@@ -324,6 +328,10 @@ export interface FormFieldState<S extends StrictRJSFSchema = RJSFSchema> {
    * more keys, see `hasOwnContentBesideOptions()`
    */
   drawsControlsBesideOptions?(fieldPath: FieldPath, schema: S, uiSchema: GenericObjectType, formData: unknown): boolean;
+  /** Whether the fallback UI renders the field at `fieldPath`, whose `type` is a list, so the field on screen is the one
+   * for the type of its value. Without it, none does
+   */
+  rendersFallbackUi?(fieldPath: FieldPath, schema: S, uiSchema: GenericObjectType, formData: unknown): boolean;
 }
 
 declare const FIELD_PATH_BRAND: unique symbol;

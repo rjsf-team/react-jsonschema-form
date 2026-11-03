@@ -7,6 +7,8 @@ import getUiOptions from './getUiOptions.ts';
 import { getKnownTypes } from './getUnionTypes.ts';
 import isComponentType from './isComponentType.ts';
 import isConstantSelect from './isConstantSelect.ts';
+import isContainerValue from './isContainerValue.ts';
+import { isSchemaObject } from './isObject.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
 import type {
   FormContextType,
@@ -137,24 +139,21 @@ function findWidgetType<S extends StrictRJSFSchema = RJSFSchema>(
     return undefined;
   }
   // The other types are all scalars, whose aliases don't depend on the schema
-  const otherType = WIDGET_FIELD_TYPES.includes(fieldType)
-    ? getKnownTypes<S>(schema).find(
-        (aType) => aType !== fieldType && WIDGET_FIELD_TYPES.includes(aType) && hasWidget(widgetMap[aType]),
-      )
-    : undefined;
+  const otherType = getKnownTypes<S>(schema).find(
+    (aType) => aType !== fieldType && WIDGET_FIELD_TYPES.includes(aType) && hasWidget(widgetMap[aType]),
+  );
   return otherType && { type: otherType, widgets: widgetMap[otherType] };
 }
 
 /** Gets the type whose field renders `widget` for `schema`, matching the widget's alias or the registered name an alias
- * maps to. That is the type the schema resolves to when it has the widget, otherwise, when that type is a string,
- * number, integer or boolean, the first other one of those its `type` list names that does: a `textarea` or
- * `TextareaWidget` on a `['null', 'number', 'string']` is the `string` one. No `null`, `object` or `array` type is
- * looked to, since `SchemaField` only switches to a scalar type's field, so the field of the type the list resolves to
- * would be left rendering the widget: a radio of the `null` type would replace the list an `ArrayField` multi-select
- * edits with one value. A list resolving to `object` or `array` takes only its own widgets, since form data of that
- * type, which the list is written to hold, would otherwise be handed to a scalar widget. A select over a `type` list
- * takes only the widgets of the field `getSelectFieldType()` renders it through, so a `checkbox` on an `enum` of
- * `['a', true]` has no type.
+ * maps to. That is the type the schema resolves to when it has the widget, otherwise the first string, number, integer
+ * or boolean its `type` list names that does: a `textarea` or `TextareaWidget` on a `['null', 'number', 'string']` or a
+ * `['array', 'string']` is the `string` one. No `null`, `object` or `array` type is looked to, since `SchemaField` only
+ * switches to a scalar type's field, so the field of the type the list resolves to would be left rendering the widget:
+ * a radio of the `null` type would replace the list an `ArrayField` multi-select edits with one value. For the same
+ * reason a multi-select takes only its own widgets, as another type's field has none of its options to show. A select over a
+ * `type` list takes only the widgets of the field `getSelectFieldType()` renders it through, so a `checkbox` on an
+ * `enum` of `['a', true]` has no type.
  *
  * @param schema - The schema for the field
  * @param widget - The alias or registered name of the widget
@@ -219,7 +218,8 @@ function canPickFieldType(types: readonly string[], type: string | undefined): b
 /** Gets the type of the field that renders a select over a `type` list that can pick its field, which is the one
  * `getSelectFieldType()` gives the list whatever the select's widget: a list naming several non-null types renders
  * through `StringField` in whatever order it names them, so a `checkbox` on an `enum` of `['a', true]` would write a
- * `false` that no option holds
+ * `false` that no option holds. A multi-select's options pin its `ArrayField` the same way, as another type's field has
+ * none of them to show
  *
  * @param schema - The schema for the field
  * @param type - The type `getSchemaType()` resolves the schema to
@@ -230,9 +230,20 @@ function getTypeListSelectType<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   type: string | undefined,
 ): string | undefined {
-  return Array.isArray(schema.type) && canPickFieldType(schema.type, type) && isConstantSelect<S>(schema, true)
-    ? getSelectFieldType(schema.type)
-    : undefined;
+  if (!Array.isArray(schema.type) || !canPickFieldType(schema.type, type)) {
+    return undefined;
+  }
+  if (isConstantSelect<S>(schema, true)) {
+    return getSelectFieldType(schema.type);
+  }
+  // shortcut: a `$ref` in `items` can't be resolved without a validator, so such a multi-select still looks to the other
+  // types; pass in the root schema if one is reported
+  const isMultiSelect =
+    type === 'array' &&
+    schema.uniqueItems === true &&
+    isSchemaObject<S>(schema.items) &&
+    isConstantSelect<S>(schema.items, true);
+  return isMultiSelect ? type : undefined;
 }
 
 /** Gets the type whose field `SchemaField` renders a `schema` by, calling `readWidget` for its `ui:widget` only when a
@@ -240,11 +251,15 @@ function getTypeListSelectType<S extends StrictRJSFSchema = RJSFSchema>(
  *
  * @param schema - The schema for the field
  * @param readWidget - Returns the `ui:widget` for the field, if any
+ * @param registeredWidgets - The form's registered widgets, if known
+ * @param formData - The field's value, if known
  * @returns - The type of the field that renders the widget
  */
 function resolveFieldType<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   readWidget: () => unknown,
+  registeredWidgets: Readonly<Record<string, unknown>> = {},
+  formData?: unknown,
 ): string | undefined {
   const type = getSchemaType<S>(schema);
   const selectType = getTypeListSelectType<S>(schema, type);
@@ -254,8 +269,18 @@ function resolveFieldType<S extends StrictRJSFSchema = RJSFSchema>(
   if (!Array.isArray(schema.type) || !canPickFieldType(schema.type, type)) {
     return type;
   }
+  // A scalar widget would show a container the list resolves to as `[object Object]`, and an edit would replace it
+  if ((type === 'object' || type === 'array') && isContainerValue(formData)) {
+    return type;
+  }
   const widget = readWidget();
-  return (typeof widget === 'string' ? findWidgetType<S>(schema, widget, type, undefined)?.type : undefined) ?? type;
+  if (typeof widget !== 'string') {
+    return type;
+  }
+  const found = findWidgetType<S>(schema, widget, type, undefined);
+  // Only an alias can be taken: `TextareaWidget` names the built-in's slot, so replacing that widget keeps its type
+  const isFormsOwn = found && Object.hasOwn(found.widgets, widget) && Object.hasOwn(registeredWidgets, widget);
+  return found && !isFormsOwn ? found.type : type;
 }
 
 /** Gets the type whose field `SchemaField` renders a `schema` with `widget` by, which for a `type` list naming several
@@ -265,17 +290,22 @@ function resolveFieldType<S extends StrictRJSFSchema = RJSFSchema>(
  * type's field, as it constrains only the list's string member: an `email` on a `['number', 'string']` stays a number.
  * A select over such a list is the type `getSelectFieldType()` gives its `type` list, as `SchemaField` renders it
  * through that field whatever the widget, so an `enum` of `[null, true, 'a']` on a `['null', 'boolean', 'string']`
- * keeps its label.
+ * keeps its label. A widget the form registers under a built-in alias is the form's own, so it picks no other type, and
+ * a list resolving to `object` or `array` keeps that type's field while its value is an object or array.
  *
  * @param schema - The schema for the field
  * @param widget - The `ui:widget` for the field, if any
+ * @param [registeredWidgets] - The form's registered widgets
+ * @param [formData] - The field's value
  * @returns - The type of the field that renders the widget
  */
 export function getFieldTypeForWidget<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   widget: unknown,
+  registeredWidgets?: Readonly<Record<string, unknown>>,
+  formData?: unknown,
 ): string | undefined {
-  return resolveFieldType<S>(schema, () => widget);
+  return resolveFieldType<S>(schema, () => widget, registeredWidgets, formData);
 }
 
 /** Gets the type of the field `SchemaField` renders a `schema` by, as `getFieldTypeForWidget()` does for the field's
@@ -283,14 +313,26 @@ export function getFieldTypeForWidget<S extends StrictRJSFSchema = RJSFSchema>(
  *
  * @param schema - The schema for the field
  * @param [uiSchema] - The uiSchema for the field
+ * @param [registeredWidgets] - The form's registered widgets
+ * @param [formData] - The field's value
  * @returns - The type of the field that renders the field's own widget
  */
 export function getFieldTypeForUiSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(schema: S, uiSchema?: UiSchema<T, S, F>): string | undefined {
-  return resolveFieldType<S>(schema, () => uiSchema && getUiOptions<T, S, F>(uiSchema).widget);
+>(
+  schema: S,
+  uiSchema?: UiSchema<T, S, F>,
+  registeredWidgets?: Readonly<Record<string, unknown>>,
+  formData?: unknown,
+): string | undefined {
+  return resolveFieldType<S>(
+    schema,
+    () => uiSchema && getUiOptions<T, S, F>(uiSchema).widget,
+    registeredWidgets,
+    formData,
+  );
 }
 
 /** The registry key a `boolean` resolves to when nothing names a widget for it, which is the widget that renders the

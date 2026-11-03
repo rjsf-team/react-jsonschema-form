@@ -4,7 +4,7 @@ import { createContext, forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
 import { getWidgetKey } from '../src/getWidget.tsx';
-import type { GenericObjectType, Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
+import type { GenericObjectType, Registry, RJSFSchema, UiSchema, WidgetProps, Widget } from '../src/index.ts';
 import {
   getFieldTypeForUiSchema,
   getFieldTypeForWidget,
@@ -133,9 +133,34 @@ describe('getWidget()', () => {
   it.each<[string, RJSFSchema]>([
     ['array', { type: ['array', 'string'], items: { type: 'string' } }],
     ['object', { type: ['null', 'object', 'string'] }],
-  ])('should fail for the widget of another listed type on a type list that resolves to %s', (type, union) => {
+  ])('should find the widget of another listed type on a type list that resolves to %s', (_, union) => {
+    expect(getWidget(union, 'textarea', { TextareaWidget: TestWidget })).toBe(TestWidget);
+  });
+
+  it.each<[string, RJSFSchema['items']]>([
+    ['enum', { enum: ['a', 'b'] }],
+    ['constant oneOf', { oneOf: [{ const: 'a' }, { const: 'b' }] }],
+  ])('should fail for a scalar widget on a multi-select over an %s, which keeps only its own widgets', (_, items) => {
+    const union: RJSFSchema = { type: ['array', 'string'], items, uniqueItems: true };
+    expect(() => getWidget(union, 'radio', { RadioWidget: TestWidget })).toThrow(
+      `No widget 'radio' for type 'array' in schema: ${JSON.stringify(union)}`,
+    );
+    expect(getFieldTypeForWidget(union, 'radio')).toBe('array');
+  });
+
+  it.each<[string, RJSFSchema]>([
+    ['unique items that are not options', { type: ['array', 'string'], items: { type: 'string' }, uniqueItems: true }],
+    ['options that need not be unique', { type: ['array', 'string'], items: { enum: ['a', 'b'] } }],
+    ['boolean items', { type: ['array', 'string'], items: true, uniqueItems: true }],
+    ['tuple items', { type: ['array', 'string'], items: [{ enum: ['a'] }], uniqueItems: true }],
+  ])('should find a scalar widget on a list resolving to array with %s', (_, union) => {
+    expect(getWidget(union, 'textarea', { TextareaWidget: TestWidget })).toBe(TestWidget);
+  });
+
+  it('should fail for a widget of no listed scalar type on a type list that resolves to object', () => {
+    const union: RJSFSchema = { type: ['object', 'array'] };
     expect(() => getWidget(union, 'textarea', { TextareaWidget: TestWidget })).toThrow(
-      `No widget 'textarea' for type '${type}' in schema: ${JSON.stringify(union)}`,
+      `No widget 'textarea' for type 'object' in schema: ${JSON.stringify(union)}`,
     );
   });
 
@@ -299,10 +324,18 @@ describe('getWidgetType()', () => {
     expect(getWidgetType({ type }, widget)).toBe(expected);
   });
 
+  it.each<[string, RJSFSchema, string]>([
+    ['textarea', { type: ['null', 'object', 'string'] }, 'string'],
+    ['textarea', { type: ['null', 'array', 'string'], items: { type: 'string' } }, 'string'],
+    ['updown', { type: ['object', 'number'] }, 'number'],
+    ['radio', { type: ['object', 'string'] }, 'object'],
+    ['checkboxes', { type: ['array', 'string'], items: { type: 'string' } }, 'array'],
+  ])('should give the %s on %j the type whose field renders it', (widget, schema, expected) => {
+    expect(getWidgetType(schema, widget)).toBe(expected);
+  });
+
   it.each<[string, RJSFSchema]>([
     ['textarea', { type: ['null', 'object', 'array'] }],
-    ['textarea', { type: ['null', 'object', 'string'] }],
-    ['textarea', { type: ['null', 'array', 'string'], items: { type: 'string' } }],
     ['checkboxes', { type: ['null', 'string', 'array'], items: { type: 'string' } }],
     ['radio', { type: ['array', 'null'], items: { enum: ['a', 'b'] }, uniqueItems: true }],
     ['textarea', { type: ['null', 'number', 'boolean'] }],
@@ -400,6 +433,46 @@ describe('getFieldTypeForWidget()', () => {
   ])('should return the type of the field rendering %j with the widget %s', (schema, widget, expected) => {
     expect(getFieldTypeForWidget(schema, widget)).toBe(expected);
   });
+
+  describe('with a registered widget', () => {
+    const schema: RJSFSchema = { type: ['null', 'number', 'string'] };
+    it('should read an alias the form registers as its own widget, which picks no other type', () => {
+      expect(getFieldTypeForWidget(schema, 'textarea', { textarea: TestWidget })).toBe('number');
+    });
+    it('should still pick the type of a built-in the form replaces under its registered name', () => {
+      expect(getFieldTypeForWidget(schema, 'TextareaWidget', { TextareaWidget: TestWidget })).toBe('string');
+    });
+    it('should still read an alias the form registers nothing under as the built-in', () => {
+      expect(getFieldTypeForWidget(schema, 'textarea', { TextareaWidget: TestWidget })).toBe('string');
+    });
+    it('should still render a select through its field', () => {
+      expect(
+        getFieldTypeForWidget({ type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] }, 'radio', {
+          radio: TestWidget,
+        }),
+      ).toBe('string');
+    });
+  });
+
+  describe('with a value', () => {
+    const objectList: RJSFSchema = { type: ['null', 'object', 'string'] };
+    const arrayList: RJSFSchema = { type: ['array', 'string'], items: { type: 'string' } };
+    it.each<[RJSFSchema, unknown, string]>([
+      [objectList, { a: 'x' }, 'object'],
+      [objectList, 'hello', 'string'],
+      [objectList, null, 'string'],
+      [objectList, undefined, 'string'],
+      [arrayList, ['a'], 'array'],
+      [arrayList, 'hello', 'string'],
+    ])('should give a textarea on %j holding %j the type %s', (schema, value, expected) => {
+      expect(getFieldTypeForWidget(schema, 'textarea', undefined, value)).toBe(expected);
+    });
+    it('should leave a list resolving to a scalar to the widget whatever it holds', () => {
+      expect(getFieldTypeForWidget({ type: ['number', 'string', 'object'] }, 'textarea', undefined, { a: 'x' })).toBe(
+        'string',
+      );
+    });
+  });
 });
 
 describe('getFieldTypeForUiSchema()', () => {
@@ -407,6 +480,11 @@ describe('getFieldTypeForUiSchema()', () => {
   it("should return the type of the field rendering the field's own ui:widget", () => {
     expect(getFieldTypeForUiSchema(schema, { 'ui:widget': 'textarea' })).toBe('string');
     expect(getFieldTypeForUiSchema(schema, { 'ui:options': { widget: 'textarea' } })).toBe('string');
+  });
+  it('should read the registered widgets and the value', () => {
+    const uiSchema: UiSchema = { 'ui:widget': 'textarea' };
+    expect(getFieldTypeForUiSchema(schema, uiSchema, { textarea: TestWidget })).toBe('number');
+    expect(getFieldTypeForUiSchema({ type: ['object', 'string'] }, uiSchema, undefined, {})).toBe('object');
   });
   it('should resolve the schema type without a uiSchema, or ignoring ui:globalOptions', () => {
     // Untyped, as a JSON uiSchema is, since `widget` is an option RJSF reads only per field

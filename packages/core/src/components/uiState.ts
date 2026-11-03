@@ -208,6 +208,7 @@ export function asFieldValue(value: unknown): unknown {
  *        they do when the form renders the edit
  * @param [drawsControlsBesideOptions] - Where the form's fields draw the controls, passed in by the caller so this
  *        module needn't import `SchemaField`, which imports it
+ * @param [rendersFallbackUi] - Which fields the fallback UI renders, passed in for the same reason
  * @returns - The field state
  */
 export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -215,10 +216,12 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
   schemaUtils: SchemaUtilsType<T, S, F>,
   editedPath?: FieldPathList,
   drawsControlsBesideOptions?: FormFieldState<S>['drawsControlsBesideOptions'],
+  rendersFallbackUi?: FormFieldState<S>['rendersFallbackUi'],
 ): FormFieldState<S> {
   const rootSchema = schemaUtils.getRootSchema();
   return {
     ...(drawsControlsBesideOptions && { drawsControlsBesideOptions }),
+    ...(rendersFallbackUi && { rendersFallbackUi }),
     selectedOption: (fieldPath, options, formData, discriminator) =>
       shownOption<T, S, F>(
         schemaUtils,

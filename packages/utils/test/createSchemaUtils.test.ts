@@ -191,6 +191,27 @@ describe('createSchemaUtils()', () => {
       });
     });
 
+    describe('constructed with widgets', () => {
+      const widgets = { textarea: () => null };
+      const withWidgets = createSchemaUtils({ validator: testValidator, widgets }, rootSchema);
+      it('returns false for the same names, whichever objects and components hold them', () => {
+        expect(
+          withWidgets.doesSchemaUtilsDiffer(
+            { validator: testValidator, widgets: { textarea: () => null } },
+            rootSchema,
+          ),
+        ).toBe(false);
+      });
+      it.each([
+        ['other names', { text: () => null }],
+        ['no widgets', undefined],
+      ])('returns true for %s', (_, otherWidgets) => {
+        expect(withWidgets.doesSchemaUtilsDiffer({ validator: testValidator, widgets: otherWidgets }, rootSchema)).toBe(
+          true,
+        );
+      });
+    });
+
     describe('constructed with defaultFormStateBehavior', () => {
       it('returns false when passing same validator, rootSchema, and defaultFormStateBehavior', () => {
         expect(

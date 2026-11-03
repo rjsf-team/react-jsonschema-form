@@ -81,8 +81,11 @@ export default function ObjectFieldTemplate<
     const propertyUiSchema: UiSchema<T, S, F> = resolveUiSchema<T, S, F>(rawSchema, rawUiSchema, registry);
     const propertyUiOptions = getUiOptions<T, S, F>(propertyUiSchema);
     // The select `SchemaField` infers for a boolean with labelled options is not modelled here (see #5516)
-    const { widget, field: uiField } = propertyUiOptions;
-    const type = getFieldTypeForWidget<S>(propertySchema, widget);
+    const { widget: ownWidget, field: uiField } = propertyUiOptions;
+    const type = getFieldTypeForWidget<S>(propertySchema, ownWidget, registry.widgets, propertyFormData);
+    // A value keeping the field of its own type drops another type's widget in `SchemaField`
+    const widget =
+      getFieldTypeForWidget<S>(propertySchema, ownWidget, registry.widgets) === type ? ownWidget : undefined;
     // The `ui:field` names the rendered field, as `SchemaField` resolves it, only when it names a registered one; the map
     // is keyed by name, so a field given as a component has no entry
     const field =
