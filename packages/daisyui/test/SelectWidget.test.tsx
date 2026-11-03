@@ -10,6 +10,17 @@ import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 const user = userEvent.setup();
 
+/** Records whether each key's `keydown` had its default prevented by the time it reached the document */
+function recordPrevented() {
+  const prevented: Record<string, boolean> = {};
+  const record = (event: KeyboardEvent) => {
+    prevented[event.key] = event.defaultPrevented;
+  };
+  document.addEventListener('keydown', record);
+  onTestFinished(() => document.removeEventListener('keydown', record));
+  return prevented;
+}
+
 describe('SelectWidget', () => {
   const enumOptions = [
     { label: 'Foo', value: 'foo' },
@@ -318,7 +329,10 @@ describe('SelectWidget', () => {
     expect(screen.getByRole('option', { name: 'Foo' })).toHaveFocus();
   });
 
-  test('focuses the option an arrow reopens it onto only once its dropdown is no longer closed by Escape', async () => {
+  test.each([
+    ['an arrow', '{ArrowDown}'],
+    ['a typed letter', 'f'],
+  ])('focuses the option %s reopens it onto only once its dropdown is no longer closed by Escape', async (_, key) => {
     render(<SelectWidget {...makeWidgetMockProps({ options: { enumOptions }, autofocus: false, value: undefined })} />);
     const combobox = screen.getByRole('combobox');
     const dropdown = combobox.closest('.dropdown')!;
@@ -328,7 +342,8 @@ describe('SelectWidget', () => {
     foo.addEventListener('focus', () => closedWhenFocused.push(dropdown.classList.contains('dropdown-close')));
 
     await user.click(combobox);
-    await user.keyboard('{Escape}{ArrowDown}');
+    await user.keyboard(`{Escape}${key}`);
+    expect(combobox).toHaveAttribute('aria-expanded', 'true');
     expect(foo).toHaveFocus();
     expect(closedWhenFocused).toEqual([false]);
   });
@@ -433,6 +448,270 @@ describe('SelectWidget', () => {
     expect(screen.getByRole('button', { name: 'Next' })).toHaveFocus();
   });
 
+  describe('type-ahead', () => {
+    const cities = [
+      { label: 'Boston', value: 'bos' },
+      { label: 'New Orleans', value: 'nol' },
+      { label: 'Newark', value: 'ewr' },
+      { label: 'New York', value: 'nyc' },
+      { label: 'Nashville', value: 'bna' },
+    ];
+    const renderCities = (props: Partial<WidgetProps> = {}) =>
+      render(
+        <SelectWidget
+          {...makeWidgetMockProps({
+            options: { enumOptions: cities },
+            autofocus: false,
+            value: undefined,
+            ...props,
+          })}
+        />,
+      );
+
+    beforeEach(() => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    test('moves to the first option whose label starts with what is typed, whatever its case', async () => {
+      renderCities();
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('ne');
+      expect(screen.getByRole('option', { name: 'New Orleans' })).toHaveFocus();
+
+      await user.keyboard('WA');
+      expect(screen.getByRole('option', { name: 'Newark' })).toHaveFocus();
+    });
+
+    test('starts over once the interval has passed', async () => {
+      renderCities();
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('n');
+      vi.setSystemTime(Date.now() + 499);
+      await user.keyboard('a');
+      expect(screen.getByRole('option', { name: 'Nashville' })).toHaveFocus();
+
+      vi.setSystemTime(Date.now() + 500);
+      await user.keyboard('b');
+      expect(screen.getByRole('option', { name: 'Boston' })).toHaveFocus();
+    });
+
+    test('steps through the labels starting with one letter typed over and over, wrapping around', async () => {
+      renderCities();
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('n');
+      expect(screen.getByRole('option', { name: 'New Orleans' })).toHaveFocus();
+      await user.keyboard('nnn');
+      expect(screen.getByRole('option', { name: 'Nashville' })).toHaveFocus();
+      await user.keyboard('n');
+      expect(screen.getByRole('option', { name: 'New Orleans' })).toHaveFocus();
+    });
+
+    test('prefers a label starting with a repeated letter to stepping through the labels', async () => {
+      const days = Array.from({ length: 12 }, (_, index) => ({ label: String(index + 1), value: index + 1 }));
+      renderCities({ options: { enumOptions: days } });
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('11');
+      expect(screen.getByRole('option', { name: '11' })).toHaveFocus();
+
+      await user.keyboard('1');
+      expect(screen.getByRole('option', { name: '12' })).toHaveFocus();
+    });
+
+    test('takes a character typed with AltGr, which some browsers report as Ctrl+Alt', async () => {
+      renderCities({ options: { enumOptions: [...cities, { label: 'Łódź', value: 'lcj' }] } });
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('{Control>}{Alt>}{AltGraph>}ł{/AltGraph}{/Alt}{/Control}');
+
+      expect(screen.getByRole('option', { name: 'Łódź' })).toHaveFocus();
+    });
+
+    test('starts a new search once an option is chosen', async () => {
+      renderCities({ multiple: true, value: [] });
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('b{Enter}n');
+
+      expect(screen.getByRole('option', { name: 'New Orleans' })).toHaveFocus();
+    });
+
+    test('goes on from the selected option from the trigger', async () => {
+      renderCities({ value: 'nol' });
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('n');
+
+      expect(screen.getByRole('option', { name: 'Newark' })).toHaveFocus();
+    });
+
+    test('skips an option ui:enumDisabled disables', async () => {
+      renderCities({ options: { enumOptions: cities, enumDisabled: ['nol'] } });
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('n');
+
+      expect(screen.getByRole('option', { name: 'Newark' })).toHaveFocus();
+    });
+
+    test('looks past the whitespace a label starts with, which a browser does not draw', async () => {
+      renderCities({ options: { enumOptions: [...cities, { label: '  Chicago', value: 'chi' }] } });
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('c');
+
+      expect(screen.getByRole('option', { name: 'Chicago' })).toHaveFocus();
+    });
+
+    test('reads a run of whitespace in a label as the one space a browser draws', async () => {
+      renderCities({
+        options: {
+          enumOptions: [
+            { label: 'San Antonio', value: 'sat' },
+            { label: 'San  Diego', value: 'san' },
+          ],
+        },
+      });
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('san d');
+
+      expect(screen.getByRole('option', { name: 'San Diego' })).toHaveFocus();
+    });
+
+    test.each([
+      ['End', 'n{End}b'],
+      ['Escape', 'n{Escape}b'],
+    ])('starts a new search after %s', async (_, keys) => {
+      renderCities();
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard(keys);
+
+      expect(screen.getByRole('option', { name: 'Boston' })).toHaveFocus();
+    });
+
+    test('chooses with Space after an arrow, though the label typed before it goes on with a space', async () => {
+      const onChange = vi.fn();
+      renderCities({ onChange });
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('new{ArrowDown} ');
+
+      expect(onChange).toHaveBeenLastCalledWith('ewr');
+    });
+
+    test.each([
+      ['no label starts with what is typed', 'z'],
+      ['a key is pressed with Ctrl, Meta or Alt', '{Control>}n{/Control}{Meta>}n{/Meta}{Alt>}n{/Alt}'],
+    ])('stays where it is where %s', async (_, keys) => {
+      renderCities();
+      const combobox = screen.getByRole('combobox');
+
+      await user.click(combobox);
+      await user.keyboard(keys);
+
+      expect(combobox).toHaveFocus();
+    });
+
+    test.each([
+      ['one key at a time', 'new y'],
+      ['with the key before it still held', 'ne{w>}[Space>]{/w}[/Space]y'],
+      ['and still held as the next key goes down', 'new[Space>]y[/Space]'],
+      ['and held until it repeats', 'new[Space>2/]y'],
+    ])('takes Space that goes on with a label as part of it, typed %s', async (_, keys) => {
+      const onChange = vi.fn();
+      renderCities({ onChange });
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard(keys);
+
+      expect(screen.getByRole('option', { name: 'New York' })).toHaveFocus();
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    test.each([
+      ['a typed letter', '[Space>]n[/Space]', 'New Orleans'],
+      ['an arrow', '[Space>]{ArrowDown}[/Space]', 'Boston'],
+    ])(
+      'chooses nothing with Space pressed on the trigger and released on the option %s moves to',
+      async (_, keys, name) => {
+        const onChange = vi.fn();
+        renderCities({ onChange });
+
+        await user.click(screen.getByRole('combobox'));
+        await user.keyboard(keys);
+
+        expect(screen.getByRole('option', { name })).toHaveFocus();
+        expect(onChange).not.toHaveBeenCalled();
+      },
+    );
+
+    test('chooses with Space that goes on with no label', async () => {
+      const onChange = vi.fn();
+      renderCities({ onChange });
+
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('b ');
+
+      expect(onChange).toHaveBeenLastCalledWith('bos');
+    });
+
+    test.each([
+      ['with nothing being typed', ' '],
+      ['that goes on with no label', 'z '],
+    ])('presses the trigger with Space %s, which opens the list Escape closed', async (_, keys) => {
+      renderCities();
+      const combobox = screen.getByRole('combobox');
+
+      await user.click(combobox);
+      await user.keyboard(`{Escape}${keys}`);
+
+      expect(combobox).toHaveFocus();
+      expect(combobox).toHaveAttribute('aria-expanded', 'true');
+    });
+  });
+
+  test.each([
+    ['an empty list', [], undefined],
+    ['a list ui:enumDisabled disables throughout', enumOptions, enumOptions.map(({ value }) => value)],
+  ])('keeps the arrows, Home and End from scrolling the page with %s', async (_, options, enumDisabled) => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          options: { enumOptions: options, enumDisabled },
+          autofocus: false,
+          value: undefined,
+        })}
+      />,
+    );
+    const prevented = recordPrevented();
+
+    await user.click(screen.getByRole('combobox'));
+    await user.keyboard('{ArrowDown}{ArrowUp}{Home}{End}');
+
+    expect(prevented).toEqual({ ArrowDown: true, ArrowUp: true, Home: true, End: true });
+  });
+
+  test('leaves a browser shortcut on a move key to the browser where no option can be reached', async () => {
+    render(
+      <SelectWidget {...makeWidgetMockProps({ options: { enumOptions: [] }, autofocus: false, value: undefined })} />,
+    );
+    const prevented = recordPrevented();
+
+    await user.click(screen.getByRole('combobox'));
+    await user.keyboard('{Meta>}{ArrowUp}{/Meta}{Alt>}{Home}{/Alt}{Control>}{End}{/Control}');
+
+    expect(prevented).toMatchObject({ ArrowUp: false, Home: false, End: false });
+  });
+
   test('closes on Shift+Tab from an option, returning focus to the combobox, and leaves on a second press', async () => {
     render(
       <>
@@ -445,7 +724,9 @@ describe('SelectWidget', () => {
     await user.click(combobox);
     await user.keyboard('{ArrowDown}{ArrowDown}');
     expect(screen.getByRole('option', { name: 'Bar' })).toHaveFocus();
+    const prevented = recordPrevented();
     await user.tab({ shift: true });
+    expect(prevented.Tab).toBe(true);
     expect(combobox).toHaveFocus();
     expect(combobox).toHaveAttribute('aria-expanded', 'false');
 
