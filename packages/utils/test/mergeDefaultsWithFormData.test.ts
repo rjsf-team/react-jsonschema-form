@@ -412,8 +412,11 @@ describe('mergeDefaultsWithFormData()', () => {
       ['null', null],
       ['number', 5],
     ])('should keep object formData over a %s default', (_, defaults) => {
-      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- `<unknown>` keeps `T` from being inferred from the scalar, array or null default alone
-      expect(mergeDefaultsWithFormData<unknown>(defaults, { b: 2 }, true, false, true)).toEqual({ b: 2 });
+      expect(mergeDefaultsWithFormData<object | string | number | null>(defaults, { b: 2 }, true, false, true)).toEqual(
+        {
+          b: 2,
+        },
+      );
     });
 
     it.each([
