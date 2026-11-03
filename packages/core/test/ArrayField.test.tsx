@@ -5792,6 +5792,35 @@ describe('ArrayField', () => {
         expect(getFormData()).toEqual(expected);
       });
 
+      it('below the last item once an add in the same handler gives it one', async () => {
+        function AddThenMoveDownItemTemplate(props: ArrayFieldItemTemplateProps) {
+          const { onAddItem, onMoveDownItem } = props.buttonsProps;
+          return (
+            <div className='rjsf-array-item'>
+              {props.children}
+              <button
+                type='button'
+                onClick={() => {
+                  onAddItem();
+                  onMoveDownItem();
+                }}
+              >
+                {`Add after ${props.index}, then move it down`}
+              </button>
+            </div>
+          );
+        }
+        const { getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string', default: 'new' } },
+          initialFormData: ['a', 'b'],
+          templates: { ArrayFieldItemTemplate: AddThenMoveDownItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add after 1, then move it down' }));
+
+        expect(getFormData()).toEqual(['a', 'new', 'b']);
+      });
+
       it.each([
         { caseName: 'ui:orderable: false', uiOptions: { 'ui:orderable': false } },
         { caseName: 'a read-only array', uiOptions: { 'ui:readonly': true } },
@@ -5883,8 +5912,8 @@ describe('ArrayField', () => {
       });
 
       it.each([
-        { button: 'Add after 0', expected: [['a', 1]], caseName: 'not after a fixed item before the last' },
-        { button: 'Add after 1', expected: [['a', 1, true]], caseName: 'after the last fixed item' },
+        { button: 'Add after 0', expected: ['a', 1], caseName: 'not after a fixed item before the last' },
+        { button: 'Add after 1', expected: ['a', 1, true], caseName: 'after the last fixed item' },
       ])('$caseName of a tuple', async ({ button, expected }) => {
         const { getFormData } = createFormComponent({
           schema: {
@@ -5898,7 +5927,7 @@ describe('ArrayField', () => {
 
         await user.click(screen.getByRole('button', { name: button }));
 
-        expect(getFormData()).toEqual(expected[0]);
+        expect(getFormData()).toEqual(expected);
       });
 
       it.each([
@@ -5927,6 +5956,47 @@ describe('ArrayField', () => {
 
         expect(getFormData()).toEqual(['a']);
         expect(onSubmit).not.toHaveBeenCalled();
+      });
+
+      describe('with onAddClick', () => {
+        function AppendTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
+          return (
+            <div>
+              {items}
+              <button type='button' onClick={onAddClick}>
+                Append
+              </button>
+            </div>
+          );
+        }
+
+        it("fills a tuple's missing fixed item from that item's own schema", async () => {
+          const { getFormData } = createFormComponent({
+            schema: {
+              type: 'array',
+              items: [{ type: 'string' }, { type: 'number', default: 5 }],
+              additionalItems: { type: 'boolean', default: true },
+            },
+            initialFormData: ['a'],
+            templates: { ArrayFieldTemplate: AppendTemplate },
+          });
+
+          await user.click(screen.getByRole('button', { name: 'Append' }));
+
+          expect(getFormData()).toEqual(['a', 5]);
+        });
+
+        it('appends to an array whose items list holds a non-object, which renders as a plain array', async () => {
+          const { getFormData } = createFormComponent({
+            schema: { type: 'array', items: [true, true], maxItems: 2 },
+            initialFormData: ['a'],
+            templates: { ArrayFieldTemplate: AppendTemplate },
+          });
+
+          await user.click(screen.getByRole('button', { name: 'Append' }));
+
+          expect(getFormData()).toHaveLength(2);
+        });
       });
 
       describe('against the items at the call, so calls chained in one handler', () => {
@@ -6079,6 +6149,20 @@ describe('ArrayField', () => {
 
           await user.click(screen.getByRole('button', { name: 'Insert below 3' }));
           expect(getFormData()).toEqual(['a', 1, true, false, true]);
+        });
+
+        it.each([
+          { caseName: 'a disabled array', uiSchema: { 'ui:disabled': true } },
+          { caseName: 'a read-only array', uiSchema: { 'ui:readonly': true } },
+        ])('offers nothing on $caseName', ({ uiSchema }) => {
+          createFormComponent({
+            schema: { type: 'array', items: { type: 'string' } },
+            uiSchema,
+            initialFormData: ['a'],
+            templates: { ArrayFieldItemTemplate: CanAddItemTemplate },
+          });
+
+          expect(screen.queryByRole('button', { name: 'Insert below 0' })).not.toBeInTheDocument();
         });
 
         it('offers nothing at maxItems', () => {
