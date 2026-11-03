@@ -63,6 +63,11 @@ export function selectedOptionDescriptionTests(Form: ComponentType<FormProps>, w
     const ownSelect: RJSFSchema = { type: 'string', oneOf: describedOptions };
     // The option's select is described by the description and help its option selector's field draws
     const anyOfSelect: RJSFSchema = { anyOf: [{ type: 'string', oneOf: describedOptions }, { type: 'number' }] };
+    const anyOfOwnDescription: RJSFSchema = {
+      anyOf: [{ type: 'string', oneOf: describedOptions, description: 'Own description' }, { type: 'number' }],
+    };
+    // Options with a uiSchema of their own, so the field's help stays the field's
+    const fieldHelp: UiSchema = { 'ui:help': 'Some help', anyOf: [{}, {}] };
     test.each([
       ['its own description', ownSelect, { description: 'Pick a plan' }, {}],
       ['its own description and help', ownSelect, { description: 'Pick a plan' }, { 'ui:help': 'Some help' }],
@@ -75,6 +80,21 @@ export function selectedOptionDescriptionTests(Form: ComponentType<FormProps>, w
         { 'ui:help': 'Some help' },
       ],
       ["an anyOf field's help", anyOfSelect, {}, { 'ui:help': 'Some help' }],
+      ["an anyOf option's description", anyOfOwnDescription, {}, {}],
+      ["an anyOf field's description and its option's", anyOfOwnDescription, { description: 'Pick a plan' }, {}],
+      ["an anyOf field's help and its option's description", anyOfOwnDescription, {}, fieldHelp],
+      [
+        "an anyOf field's description and help and its option's description",
+        anyOfOwnDescription,
+        { description: 'Pick a plan' },
+        fieldHelp,
+      ],
+      [
+        "an anyOf field's help and its option's",
+        anyOfSelect,
+        {},
+        { 'ui:help': 'Some help', anyOf: [{ 'ui:help': 'Own help' }, {}] },
+      ],
     ] as [string, RJSFSchema, RJSFSchema, UiSchema][])(
       "lists %s and the selected option's description in the order they are drawn",
       (_, color, described, uiSchema) => {
@@ -89,7 +109,9 @@ export function selectedOptionDescriptionTests(Form: ComponentType<FormProps>, w
         );
         // In document order. Only where the option's description falls among the others is compared, since a theme
         // may draw the field's description and help in another order than the plan announces them
-        const drawn = screen.getAllByText(/^(Warm|Pick a plan|Some help)$/).map(({ textContent }) => textContent);
+        const drawn = screen
+          .getAllByText(/^(Warm|Pick a plan|Some help|Own description|Own help)$/)
+          .map(({ textContent }) => textContent);
         const announced = container.querySelector('#root_color')!.getAttribute('aria-describedby')!.split(' ');
         const announcedTexts = announced.map((id) => document.getElementById(id)?.textContent ?? '');
         const withoutOption = (texts: string[]) => texts.filter((text) => text !== 'Warm');

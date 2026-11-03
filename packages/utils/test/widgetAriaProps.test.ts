@@ -1,4 +1,5 @@
 import type {
+  FieldPresentation,
   MergedThemePresentation,
   Registry,
   ResolvedPresentationDeclaration,
@@ -8,6 +9,7 @@ import type {
 import {
   ariaDescribedByIds,
   englishStringTranslator,
+  getSelectorPresentation,
   resolveFieldPresentation,
   widgetAriaProps,
 } from '../src/index.ts';
@@ -227,6 +229,77 @@ describe('widgetAriaProps()', () => {
             'aria-describedby'
           ],
         ).toBe(`${presentation.description.id} root_color__selectedOptionDescription`);
+      });
+      describe('with a description and help of its own under a field above with its own', () => {
+        const fieldPlan = (declaration = TEMPLATE) =>
+          resolveFieldPresentation({
+            id: 'root_color',
+            declaration,
+            label: 'Color',
+            description: 'Field',
+            help: 'Field help',
+          });
+        const optionPlan = (inherited: FieldPresentation) =>
+          resolveFieldPresentation({
+            id: 'root_color',
+            declaration: TEMPLATE,
+            label: 'Color',
+            description: 'Own',
+            help: 'Own help',
+            inherited,
+          });
+        const selected = 'root_color__selectedOptionDescription';
+        it.each([
+          ['afterDescription', ['fieldDescription', 'ownDescription', selected, 'fieldHelp', 'ownHelp']],
+          ['beforeDescription', [selected, 'fieldDescription', 'fieldHelp', 'ownDescription', 'ownHelp']],
+          ['afterHelp', ['fieldDescription', 'fieldHelp', 'ownDescription', 'ownHelp', selected]],
+        ] as const)('lists it under %s around every level', (placement, expected) => {
+          const field = fieldPlan();
+          const presentation = optionPlan(field);
+          const ids: Record<string, string> = {
+            fieldDescription: field.description.id,
+            fieldHelp: field.help.id,
+            ownDescription: presentation.description.id,
+            ownHelp: presentation.help.id,
+          };
+          expect(
+            widgetAriaProps({ ...colorProps, presentation, registry: declaring(placement) })['aria-describedby'],
+          ).toBe([...expected.map((part) => ids[part] ?? part), 'ext'].join(' '));
+        });
+        it('lists it after the parts a field above draws itself, and before those the option draws', () => {
+          const field = fieldPlan({ ...TEMPLATE, description: 'self', help: 'self' });
+          const presentation = optionPlan(field);
+          expect(
+            widgetAriaProps({
+              ...colorProps,
+              'aria-describedby': undefined,
+              presentation,
+              registry: declaring('beforeDescription'),
+            })['aria-describedby'],
+          ).toBe(
+            [field.description.id, field.help.id, selected, presentation.description.id, presentation.help.id].join(
+              ' ',
+            ),
+          );
+        });
+        // The selector's plan repeats the parts its field draws itself as its own, and it is the select that draws them
+        it.each([
+          ['afterDescription', ['description', 'option', 'help']],
+          ['beforeDescription', ['option', 'description', 'help']],
+          ['afterHelp', ['description', 'help', 'option']],
+        ] as const)('lists it once among the parts a selector draws itself under %s', (placement, expected) => {
+          const field = fieldPlan({ ...TEMPLATE, description: 'self', help: 'self' });
+          const presentation = getSelectorPresentation(field, 'root_color');
+          const ids = { description: field.description.id, option: selected, help: field.help.id };
+          expect(
+            widgetAriaProps({
+              ...colorProps,
+              'aria-describedby': undefined,
+              presentation,
+              registry: declaring(placement),
+            })['aria-describedby'],
+          ).toBe(expected.map((part) => ids[part]).join(' '));
+        });
       });
     });
   });
