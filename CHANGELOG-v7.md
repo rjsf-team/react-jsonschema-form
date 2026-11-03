@@ -62,9 +62,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change `GridTemplate` to read a column's `span` as twelfths of a row, doubled into antd's 24 columns, so `span: 12` is now a whole row rather than half; a half step such as `4.5` spans an odd 24th, one finer than a half step is rounded to the nearest one with a warning, and a `span` over 12 logs a warning to halve it; a column with a `flex` prop or a `flex`, `flexBasis` or `width` style of its own keeps it in place of its `span`, logging a warning that its `span` is ignored. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#rjsfantds-gridtemplate-reads-a-columns-span-as-twelfths-breaking-change) ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix a layout grid `ui:row` nested in another `ui:row` shrinking to its content rather than taking a line of its own: `GridTemplate` gives a row without a `flex`, `flexBasis`, `flexGrow` or `width` style of its own a `flex` of `1 1 100%`, ahead of the rest of its `style` ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change `InputNumber` to show a numeric string, which a `number` field holds only as invalid data ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change a text input holding `false`, which it shows, to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RangeWidget` drawing a numeric string, and posting it, at its minimum ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `RangeWidget` and `InputNumber` writing a number into a string field, which then failed validation and, for `InputNumber`, lost the digits past a number's precision: they now write a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/bootstrap3
 
@@ -140,8 +140,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `ObjectFieldTemplate` leaving an empty grid cell for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - **BREAKING CHANGE:** Change `GridTemplate` to read a column's `span` as its `colSpan` unless it has a `colSpan` of its own, logging a warning that its `span` is ignored, and to lay a `ui:row` without `templateColumns`, `templateAreas`, `gridTemplate` or `grid`, as a prop or in its `style` or `css`, out on 12 tracks, each child full width unless it spans fewer, and warn about a column `span` that isn't a whole number. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-layout-grid-row-without-a-column-template-lays-out-on-12-tracks-in-chakra-ui-fluentui-rc-and-shadcn-breaking-change) ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change a text input holding `false` to show that value and offer the clear button for it, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change an empty `RangeWidget` to leave its name out of a native form submit, and to commit its minimum when a press or a key leaves the thumb there ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `RangeWidget` writing a number into a string field, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/core
 
@@ -445,7 +446,10 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change the `templates` prop of `Form`, and a theme's `templates` passed to `withTheme()`, to check a declared template against its own props, where it accepted any component. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#the-templates-prop-of-form-and-withtheme-checks-declared-templates-breaking-change) ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked, focuses it and is written back as a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change a number field's text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty, and a text input holding `false` to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- **BREAKING CHANGE:** Change the `templates` prop of `Form`, and a theme's `templates` passed to `withTheme()`, to check a declared template against its own props, where it accepted any component, and a custom template written inline in it to have a type on its `props`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#the-templates-prop-of-form-and-withtheme-checks-declared-templates-breaking-change) ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
+- Fix `onAddClick` filling a tuple's missing fixed item with an `additionalItems` value instead of a value of that item's own schema ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
+- Fix the add button throwing on an array whose `items` is a list holding a boolean, which renders its items with an empty schema ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 
 ## @rjsf/daisyui
 
@@ -617,7 +621,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `SelectWidget` and `RangeWidget` overflowing a column narrower than Fluent's minimum widths of 250px and 120px, such as a layout grid's: they now shrink to their column as the text inputs do ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix a layout grid `ui:row` given its template through its `style` rendering as a block, which ignored the template: `GridTemplate` makes it a grid, unless its `style` sets a `display` of its own ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change a text input or textarea holding `false` to show that value, where they were empty, and the text input to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `RangeWidget` writing a number into a string field, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/mantine
 
@@ -689,8 +694,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Fix `ObjectFieldTemplate` giving a grid cell to a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget: it now leaves the property out, as it does one with its own `ui:widget: 'hidden'`. See [`@rjsf/antd` and `@rjsf/mantine` leave out a property hidden by `deprecatedHandling` or `ui:definitions`](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#rjsfantd-and-rjsfmantine-leave-out-a-property-hidden-by-deprecatedhandling-or-uidefinitions-breaking-change) ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Fix a layout grid `ui:row` with `fluid: false` nested in another `ui:row` shrinking to its content rather than taking a line of its own: `GridTemplate` grows its `Grid` to fill its line, with a `flex` of `1 1 100%`, unless the row has a `w` or `flex` prop, a `flex`, `flexBasis`, `flexGrow` or `width` style of its own, or a `style` function, which can't be read for one ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change a textarea holding `0` or `false` to show that value, where it was empty, and a text input holding `false`, which it shows, to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `FileWidget` to show the clear button for a stored file, including one that can't be read ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `RangeWidget` writing a number into a string field, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/mui
 
@@ -743,7 +749,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `ObjectFieldTemplate` leaving an empty grid cell for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Change `GridTemplate` to read a column's `span` as its `size`, unless it has a `size` of its own, logging a warning that its `span` is ignored ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix a layout grid `ui:row` nested in another `ui:row` shrinking to its content rather than taking a line of its own: `GridTemplate` grows a row without a `size`, a `flex`, `flexBasis`, `flexGrow` or `width` in its `style` or `sx`, or an `sx` function, which can't be read for one, to fill its line, with a `flex` of `1 1 100%` ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
-- Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change a text input or textarea holding `false` to show that value and offer the clear button for it, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `RangeWidget` writing a number into a string field, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/react-bootstrap
 
@@ -789,7 +796,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `ObjectFieldTemplate` leaving a gap for a property hidden by `deprecatedHandling: 'hide'` or a `ui:definitions` hidden widget ([#5617](https://github.com/rjsf-team/react-jsonschema-form/pull/5617), fixes [#5507](https://github.com/rjsf-team/react-jsonschema-form/issues/5507))
 - Change `GridTemplate` to read a column's `span` as its `xs`, unless it has an `xs` of its own, logging a warning that its `span` is ignored, and warn about a column `span` that isn't a whole number ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change a text input holding `false` to show that value and offer the clear button for it, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/shadcn
 
@@ -869,7 +876,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix an array item's buttons and an additional property's key input and remove button sitting off the field's input when its label or description is taller than one line, and an additional property's key or value label with a long unbroken word, such as a `snake_case` key, pushing the key's input over the value's ([#5673](https://github.com/rjsf-team/react-jsonschema-form/pull/5673), [#5667](https://github.com/rjsf-team/react-jsonschema-form/issues/5667))
 - **BREAKING CHANGE:** Change `GridTemplate` to read a column's `span` as its `grid-column` unless it has a `col-span-*` class of its own, logging a warning that its `span` is ignored, and to lay a `ui:row` without a `grid-cols-*` class or a `gridTemplateColumns`, `gridTemplateAreas`, `gridTemplate` or `grid` style out on 12 tracks, each child full width unless it spans fewer, and warn about a column `span` that isn't a whole number. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-layout-grid-row-without-a-column-template-lays-out-on-12-tracks-in-chakra-ui-fluentui-rc-and-shadcn-breaking-change) ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change a text input holding `false` to show that value and offer the clear button for it, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `RangeWidget` writing a number into a string field, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix the multiple `SelectWidget` throwing on a value that isn't an array: it now reads a lone value as one selected item, as core does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/snapshot-tests
 
@@ -889,7 +898,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add an `objectTests` case for a key matching none of the `patternProperties` beside `additionalProperties: false`, whose row says the key is not allowed ([#5640](https://github.com/rjsf-team/react-jsonschema-form/pull/5640), [#4630](https://github.com/rjsf-team/react-jsonschema-form/issues/4630))
 - Add `submitPendingTests()`, checking that the theme's `SubmitButton` is `aria-disabled` but enabled while a promise `onSubmit` returned is pending, idle once it settles, and that a click on it while pending is canceled ([#5649](https://github.com/rjsf-team/react-jsonschema-form/pull/5649))
 - Add `renderGridColumn()`, which renders a one-column layout grid with the given `ui:col` and `ui:row` props, for a theme's tests of how its `GridTemplate` reads them ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
-- Add `clearButtonTests()`, which checks that a theme's `allowClearTextInputs` clear button shows for a value and renders nothing beside the input for `0` ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Add `clearButtonTests()`, which checks that a theme's `allowClearTextInputs` clear button shows for a value, `false` in a text input among them, renders nothing beside the input for `0`, and isn't offered for `false` in a number input, which shows nothing ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/utils
 
@@ -1198,9 +1207,11 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `toInputValue()`, which turns a widget's `value` into what an input's `value` prop takes ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useFileWidgetProps()`'s `handleRemove` removing the wrong file when an earlier item of a multiple value isn't a readable data URL, such as the `null` stored for a file that couldn't be read: it now takes the index of the file in `filesInfo`, as every theme passes it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useAltDateWidgetProps()` reading a date part cleared to `null`, as a select with an `emptyValue` of `null` reports it, as a picked `0`, which built a date with a day, month or year of `0` ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Add `toNumericValue()`, which reads a widget's `value`, a number or a plain decimal string, as a number, and `ratingStoresString()`, which reports whether a rating widget writes a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Add `toNumericValue()`, which reads a widget's `value`, a number or a plain decimal string, as a number, and `numericWidgetStoresString()`, which reports whether a widget that draws a number, such as a rating or a slider, writes a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useFileWidgetProps()` appending the next selection after a lone value of a multiple field that isn't a data URL, which the field doesn't show: the selection now replaces it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `useAltDateWidgetProps()` to read only a string value, so a number or `Date` value, which the widget can't write back, renders every alt-date widget's selects blank, where it showed that date ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- **BREAKING CHANGE:** Change a nested entry read from an untyped `UiSchema`, or a field typed `any` in a typed one, from `any` to `unknown`, so an untyped `UiSchema` no longer fits a `UiSchema<T>` whose `T` has a string index signature, nor does the rest of a generic `UiSchema<T>` left by a destructure. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5680](https://github.com/rjsf-team/react-jsonschema-form/pull/5680))
+- Add `inputShowsValue()`, which reports whether a native input of a given `type` shows a value, as a number input blanks anything but a valid floating-point number ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/validator-ajv8
 

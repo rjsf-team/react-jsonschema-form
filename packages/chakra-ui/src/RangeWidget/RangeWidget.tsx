@@ -7,6 +7,7 @@ import {
   getLabelId,
   hasWidgetErrors,
   labelValue,
+  numericWidgetStoresString,
   rangeSpec,
   toNumericValue,
   widgetDrawsLabelText,
@@ -51,16 +52,22 @@ export default function RangeWidget<
   // Set by a change Zag reports during an interaction, so its end doesn't overwrite that change with the minimum while
   // the value it rendered with is still empty, as it is when the change is committed later
   const changedRef = useRef(false);
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const write = (nextValue: number) => onChange(storesString ? String(nextValue) : nextValue);
   const handleChange = ({ value: newValue }: SliderValueChangeDetails) => {
     changedRef.current = true;
-    onChange(newValue === undefined ? options.emptyValue : newValue[0]);
+    if (newValue === undefined) {
+      onChange(options.emptyValue);
+    } else {
+      write(newValue[0]);
+    }
   };
   const numericValue = toNumericValue(value);
   // Zag reports only a value that changes, so a press or a key that leaves an empty range's thumb at its minimum commits
   // the minimum itself, as moving a native range's thumb there would
   const handleChangeEnd = ({ value: newValue }: SliderValueChangeDetails) => {
     if (!changedRef.current && numericValue === undefined) {
-      onChange(newValue[0]);
+      write(newValue[0]);
     }
     changedRef.current = false;
   };

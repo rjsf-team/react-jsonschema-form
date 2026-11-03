@@ -9,6 +9,7 @@ import {
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
+  inputShowsValue,
   hasWidgetErrors,
   labelValue,
   toInputValue,
@@ -90,9 +91,11 @@ export default function BaseInputTemplate<
         list={hasExamples ? examplesId(id) : undefined}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(inputValue) && (
-        <ClearButton registry={registry} onClick={onClear} />
-      )}
+      {options.allowClearTextInputs &&
+        !readonly &&
+        !disabled &&
+        Boolean(inputValue) &&
+        inputShowsValue(value, inputProps.type) && <ClearButton registry={registry} onClick={onClear} />}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </Field>
   );

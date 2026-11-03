@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ratingStoresString, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
+import { numericWidgetStoresString, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { getGroupAndOptionProps } from '../../utils.ts';
 
@@ -50,7 +50,7 @@ export default function RatingWidget<
   const { stars = 5, shape = 'star', color = 'orange', size = 'md', colorGradient = false } = options;
 
   const min = schema.minimum ?? 0;
-  const storesString = ratingStoresString<S>(schema, value);
+  const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
 
   // Generate shape class

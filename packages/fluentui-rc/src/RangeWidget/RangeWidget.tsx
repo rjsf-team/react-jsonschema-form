@@ -2,7 +2,14 @@ import type { FocusEvent } from 'react';
 import type { SliderProps } from '@fluentui/react-components';
 import { Label, makeStyles, Slider } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, labelValue, rangeSpec, toNumericValue, widgetDrawsLabelText } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  labelValue,
+  numericWidgetStoresString,
+  rangeSpec,
+  toNumericValue,
+  widgetDrawsLabelText,
+} from '@rjsf/utils';
 
 const useStyles = makeStyles({
   // Fluent's `Slider` keeps a 120px minimum width, which would push it out of a narrower layout grid column
@@ -47,7 +54,9 @@ export default function RangeWidget<
     ...rangeSpec<S>(schema),
   };
 
-  const handleChange: NonNullable<SliderProps['onChange']> = (_, data) => onChange(data.value);
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const handleChange: NonNullable<SliderProps['onChange']> = (_, data) =>
+    onChange(storesString ? String(data.value) : data.value);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 

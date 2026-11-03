@@ -102,3 +102,24 @@ describe('antd RangeWidget value', () => {
     expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '7');
   });
 });
+
+describe('antd RangeWidget on a string field', () => {
+  it('writes a string, which keeps the field valid', async () => {
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'string', minimum: 0, maximum: 10 }}
+        uiSchema={{ 'ui:widget': 'RangeWidget' }}
+        validator={validator}
+        initialFormData='7'
+        liveValidate='onChange'
+        onChange={onChange}
+      />,
+    );
+    await user.tab();
+    // rc-slider reads a key only from the legacy `keyCode`, which user-event never sets
+    fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight', keyCode: 39 });
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: '8', errors: [] }), 'root');
+  });
+});

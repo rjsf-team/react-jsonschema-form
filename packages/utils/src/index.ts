@@ -136,6 +136,7 @@ import {
   selectedOptionDescriptionId,
   titleId,
 } from './idGenerators.ts';
+import inputShowsValue from './inputShowsValue.ts';
 import isComponentType from './isComponentType.ts';
 import isConstant from './isConstant.ts';
 import isConstantOptionList from './isConstantOptionList.ts';
@@ -165,6 +166,7 @@ import mergeSchemas from './mergeSchemas.ts';
 import mergeThemePresentation from './mergeThemePresentation.ts';
 import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators.ts';
 import noop from './noop.ts';
+import numericWidgetStoresString from './numericWidgetStoresString.ts';
 import offsetTimeToLocalTime from './offsetTimeToLocalTime.ts';
 import omitConsumedStyling from './omitConsumedStyling.ts';
 import optionsList from './optionsList.ts';
@@ -176,7 +178,6 @@ import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } 
 import type { ObjectPath } from './pathUtils.ts';
 import pickGlobalUiOptions from './pickGlobalUiOptions.ts';
 import rangeSpec from './rangeSpec.ts';
-import ratingStoresString from './ratingStoresString.ts';
 import rendersOwnFieldBesideOption, { hasOwnContentBesideOptions } from './rendersOwnFieldBesideOption.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
@@ -453,8 +454,9 @@ export {
   toDateString,
   toErrorList,
   toErrorSchema,
-  ratingStoresString,
+  numericWidgetStoresString,
   toInputValue,
+  inputShowsValue,
   toNumericValue,
   ROOT_FIELD_PATH,
   toFieldPath,

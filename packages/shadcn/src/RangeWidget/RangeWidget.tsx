@@ -1,7 +1,14 @@
 import type { KeyboardEvent } from 'react';
 import { useEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, hasWidgetErrors, rangeSpec, toInputValue, toNumericValue } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  hasWidgetErrors,
+  numericWidgetStoresString,
+  rangeSpec,
+  toInputValue,
+  toNumericValue,
+} from '@rjsf/utils';
 
 import type { SliderProps } from '../components/ui/slider.tsx';
 import { Slider } from '../components/ui/slider.tsx';
@@ -89,6 +96,8 @@ export default function RangeWidget<
   const min: number = typeof uiProps.min === 'number' ? uiProps.min : (spec.min ?? 0);
   const { max, step } = spec;
   const numericValue = toNumericValue(value);
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const write = (nextValue: number) => onChange(storesString ? String(nextValue) : nextValue);
   const isEmpty = numericValue === undefined;
   // Anything that isn't a number is drawn at the minimum
   const drawnValue = numericValue ?? min;
@@ -123,7 +132,7 @@ export default function RangeWidget<
       onChange(undefined);
       return;
     }
-    onChange(newValue[0]);
+    write(newValue[0]);
   };
   const startInteraction = () => {
     pendingRef.current = true;
@@ -135,7 +144,7 @@ export default function RangeWidget<
   };
   const commitMinimum = () => {
     if (pendingRef.current && isEmpty && !sliderDisabled) {
-      onChange(min);
+      write(min);
     }
     pendingRef.current = false;
   };

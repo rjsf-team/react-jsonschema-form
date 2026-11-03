@@ -2182,6 +2182,20 @@ Return a consistent `id` for the field help element.
 
 - string: The consistent id for the field help element from the given `id`
 
+### inputShowsValue()
+
+Reports whether a native input of `type` shows the `value` that [toInputValue()](#toinputvalue) gives it, the gate a clear button follows.
+A number input shows only a [valid floating-point number](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-floating-point-number) and blanks anything else, `false` included; any other input shows whatever isn't an empty string.
+
+#### Parameters
+
+- value: unknown - The widget's value
+- [type]: string - Optional `type` of the input
+
+#### Returns
+
+- boolean: True if the input shows a value
+
 ### isCollapsedByOptionalDataControls&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#iscollapsedbyoptionaldatacontrols}
 
 Determines whether the Optional Data Controls render the property of an object collapsed, showing only its Add button: it holds no data, it is not required, read from its own `ui:required` before the object's `required`, and [`isOptionalDataControlsType()`](#isoptionaldatacontrolstype) is true for it.
@@ -2639,6 +2653,19 @@ A validator package that has to tell which resource of the root a `$ref` names u
 
 - string: The URI in the form two spellings of the same URI share
 
+### numericWidgetStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The schema's type decides, and a type that allows a number too writes one. The value only speaks for a schema with no type.
+
+#### Parameters
+
+- schema: S - The schema of the field
+- value: unknown - The widget's value
+
+#### Returns
+
+- boolean: True if the widget writes a string
+
 ### optionalControlsId()
 
 Return a consistent `id` for the optional data controls `element`
@@ -2923,19 +2950,6 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 #### Returns
 
 - RangeSpecType: A range specification from the schema
-
-### ratingStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Reports whether a rating widget writes its value as a string. The schema's type decides, and a type that allows a number too writes one. The value only speaks for a schema with no type.
-
-#### Parameters
-
-- schema: S - The schema of the field
-- value: unknown - The widget's value
-
-#### Returns
-
-- boolean: True if a star writes a string
 
 ### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

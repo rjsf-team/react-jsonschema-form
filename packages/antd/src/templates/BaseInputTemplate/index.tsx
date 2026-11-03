@@ -2,7 +2,15 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { examplesId, getControlAttributes, getExampleSuggestions, getInputProps, toInputValue } from '@rjsf/utils';
+import {
+  examplesId,
+  getControlAttributes,
+  getExampleSuggestions,
+  getInputProps,
+  inputShowsValue,
+  numericWidgetStoresString,
+  toInputValue,
+} from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
 
 import useControlState from '../../controlState.ts';
@@ -73,10 +81,16 @@ export default function BaseInputTemplate<
   const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
 
   // A string is handed over as it is, as a string field that `ui:inputType: 'number'` renders here stores one, and
-  // `InputNumber` keeps the digits a conversion to a number would round
+  // `InputNumber` keeps the digits a conversion to a number would round. Its `stringMode` writes such a field a string
+  // with those digits too
   const numberValue = typeof value === 'number' || typeof value === 'string' ? value : undefined;
+  const stringMode = numericWidgetStoresString<S>(schema, value);
 
   const inputValue = toInputValue(value);
+  // `InputNumber` shows whatever string or number it's given, where a native number input blanks all but a number
+  const showsValue = isNumeric
+    ? Boolean(toInputValue(numberValue))
+    : Boolean(inputValue) && inputShowsValue(value, inputProps.type);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []);
@@ -99,6 +113,7 @@ export default function BaseInputTemplate<
       min={typeof min === 'number' ? min : undefined}
       max={typeof max === 'number' ? max : undefined}
       type={undefined}
+      stringMode={stringMode}
       value={numberValue}
       {...controlAttributes}
     />
@@ -125,7 +140,7 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(inputValue) && (
+      {options.allowClearTextInputs && !readonly && !disabled && showsValue && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

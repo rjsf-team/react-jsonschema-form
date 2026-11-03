@@ -1,7 +1,11 @@
+import type { RJSFSchema } from '@rjsf/utils';
 import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import RangeWidget from '../src/RangeWidget/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
+
+const user = userEvent.setup();
 
 describe('RangeWidget', () => {
   test.each([5, '5'])('draws and shows the value %j', (value) => {
@@ -24,5 +28,19 @@ describe('RangeWidget', () => {
 
     expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '2');
     expect(container).toHaveTextContent('');
+  });
+
+  test.each<[RJSFSchema, unknown]>([
+    [{ type: 'string' }, '8'],
+    [{ type: 'number' }, 8],
+  ])('writes a %j field the type it stores', async (schema, expected) => {
+    const onChange = vi.fn();
+    render(
+      <RangeWidget {...makeWidgetMockProps({ schema, value: '7', readonly: false, autofocus: false, onChange })} />,
+    );
+    await user.tab();
+    await user.keyboard('{ArrowRight}');
+
+    expect(onChange).toHaveBeenLastCalledWith(expected);
   });
 });

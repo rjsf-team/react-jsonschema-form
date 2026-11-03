@@ -32,6 +32,21 @@ describe('BaseInputTemplate', () => {
 
     expect(screen.getByRole('spinbutton')).toHaveValue('12345678901234567890');
   });
+  test('writes every digit of an edited numeric string past the precision of a number', async () => {
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'string' }}
+        uiSchema={{ 'ui:inputType': 'number' }}
+        validator={validator}
+        initialFormData='1234567890123456789'
+        onChange={onChange}
+      />,
+    );
+    await user.type(screen.getByRole('spinbutton'), '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: '12345678901234567891' }), 'root');
+  });
   test('calls `onChangeOverride` with the change event for a numeric field', async () => {
     const schema: RJSFSchema = { type: 'number' };
     const onChange = vi.fn();

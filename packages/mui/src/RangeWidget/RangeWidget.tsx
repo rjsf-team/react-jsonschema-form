@@ -9,6 +9,7 @@ import {
   getControlAttributes,
   getLabelId,
   labelValue,
+  numericWidgetStoresString,
   rangeSpec,
   toNumericValue,
   widgetDrawsLabel,
@@ -68,7 +69,9 @@ export default function RangeWidget<
   const sliderValue = rangeParts?.every((part) => part !== undefined) ? rangeParts : toNumericValue(value);
   const sliderProps = { value: sliderValue, name: htmlName || id, ...rangeSpec<S>(schema) };
 
-  const handleChange: NonNullable<SliderProps['onChange']> = (_, newValue) => onChange(newValue);
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const handleChange: NonNullable<SliderProps['onChange']> = (_, newValue) =>
+    onChange(storesString && typeof newValue === 'number' ? String(newValue) : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 

@@ -1,7 +1,7 @@
 import type { FocusEvent, KeyboardEvent } from 'react';
 import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getGroupAttributes, ratingStoresString, toInputValue, toNumericValue } from '@rjsf/utils';
+import { getGroupAttributes, numericWidgetStoresString, toInputValue, toNumericValue } from '@rjsf/utils';
 
 /** How far each key moves from the focused star, choosing the star it lands on */
 const STAR_KEY_STEPS: Partial<Record<string, number>> = {
@@ -58,7 +58,7 @@ export default function RatingWidget<
   );
 
   const min = schema.minimum ?? 0;
-  const storesString = ratingStoresString<S>(schema, value);
+  const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
   const autofocusIndex = Math.max(

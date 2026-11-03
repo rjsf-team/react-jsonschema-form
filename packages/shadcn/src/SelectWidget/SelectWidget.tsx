@@ -162,7 +162,7 @@ export default function SelectWidget<
           className={cnClassName}
           items={enumOrder.map(toOptionValueItem)}
           sections={groups && toSections(groups, toOptionValueItem)}
-          selected={Array.isArray(value) ? value : []}
+          selected={value === undefined ? [] : [value].flat()}
           onValueChange={(indexes) => {
             // `FancyMultiSelect` reports the selected options by index whatever the `optionValueFormat`, so they're
             // resolved as indexes rather than decoded as DOM values

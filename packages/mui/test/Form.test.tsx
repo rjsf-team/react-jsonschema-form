@@ -427,6 +427,24 @@ describe("mui widgets are named by their label and carry the field's id on the e
     expect(screen.getAllByText('*')).toHaveLength(1);
   });
 
+  test("writes a string field's slider value as a string, which keeps it valid", async () => {
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'string', minimum: 0, maximum: 10 }}
+        uiSchema={{ 'ui:widget': 'RangeWidget' }}
+        validator={validator}
+        initialFormData='7'
+        liveValidate='onChange'
+        onChange={onChange}
+      />,
+    );
+    await user.tab();
+    await user.keyboard('{ArrowRight}');
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: '8', errors: [] }), 'root');
+  });
+
   test('requires the slider of a required range field, as core does', () => {
     render(
       <Form

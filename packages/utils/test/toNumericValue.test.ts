@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../src/index.ts';
-import { ratingStoresString, toNumericValue } from '../src/index.ts';
+import { numericWidgetStoresString, toNumericValue } from '../src/index.ts';
 
 describe('toNumericValue()', () => {
   it.each([
@@ -39,7 +39,7 @@ describe('toNumericValue()', () => {
   });
 });
 
-describe('ratingStoresString()', () => {
+describe('numericWidgetStoresString()', () => {
   it.each<{ schema: RJSFSchema; value: unknown; expected: boolean }>([
     { schema: { type: 'string' }, value: 3, expected: true },
     { schema: { type: ['string', 'null'] }, value: null, expected: true },
@@ -49,6 +49,6 @@ describe('ratingStoresString()', () => {
     { schema: {}, value: '3', expected: true },
     { schema: {}, value: 3, expected: false },
   ])('$schema holding $value', ({ schema, value, expected }) => {
-    expect(ratingStoresString(schema, value)).toBe(expected);
+    expect(numericWidgetStoresString(schema, value)).toBe(expected);
   });
 });

@@ -12,7 +12,14 @@ import type {
 } from '@mantine/core';
 import { Slider, Input, useProps } from '@mantine/core';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, rangeSpec, titleId, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  numericWidgetStoresString,
+  rangeSpec,
+  titleId,
+  toNumericValue,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 
 import type { OwnKeys } from '../utils.tsx';
 import { cleanupOptions, getOwnLabel, useFieldWrapperProps, useHiddenTitle, useShownSuccessId } from '../utils.tsx';
@@ -140,13 +147,14 @@ export default function RangeWidget<
     { thumbProps: options.thumbProps, thumbLabel: options.thumbLabel },
   );
 
+  const storesString = numericWidgetStoresString<S>(schema, value);
   const handleChange = useCallback(
     (nextValue: number) => {
       if (!disabled && !readonly && onChange) {
-        onChange(nextValue);
+        onChange(storesString ? String(nextValue) : nextValue);
       }
     },
-    [onChange, disabled, readonly],
+    [onChange, disabled, readonly, storesString],
   );
 
   const handleBlur = useCallback(() => {

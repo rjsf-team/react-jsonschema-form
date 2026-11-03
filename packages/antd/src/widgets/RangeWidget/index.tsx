@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, rangeSpec, toNumericValue } from '@rjsf/utils';
+import { getControlAttributes, numericWidgetStoresString, rangeSpec, toNumericValue } from '@rjsf/utils';
 import { Slider } from 'antd';
 
 import useControlState from '../../controlState.ts';
@@ -104,7 +104,8 @@ export default function RangeWidget<
     return () => observer.disconnect();
   }, [ariaDescribedBy, ariaInvalid]);
 
-  const handleChange = (nextValue: number) => onChange(nextValue);
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const handleChange = (nextValue: number) => onChange(storesString ? String(nextValue) : nextValue);
 
   const handleBlur = () => onBlur(id, value);
 

@@ -8,6 +8,7 @@ import {
   getControlAttributes,
   getExampleSuggestions,
   getInputProps,
+  inputShowsValue,
   labelValue,
   toInputValue,
   widgetDrawsLabel,
@@ -143,9 +144,11 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && Boolean(inputValue) && (
-        <ClearButton registry={registry} onClick={handleClear} />
-      )}
+      {options.allowClearTextInputs &&
+        !readonly &&
+        !disabled &&
+        Boolean(inputValue) &&
+        inputShowsValue(value, inputProps.type) && <ClearButton registry={registry} onClick={handleClear} />}
       {children}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>

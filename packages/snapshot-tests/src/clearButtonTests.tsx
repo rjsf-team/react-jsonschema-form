@@ -43,5 +43,35 @@ export function clearButtonTests(Form: ComponentType<FormProps>, clearButtonName
       );
       expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
     });
+
+    test('offers no clear button for false in a number input, which the input shows as nothing', () => {
+      function FalseValueInput(props: WidgetProps) {
+        const { BaseInputTemplate } = props.registry.templates;
+        return <BaseInputTemplate {...props} type='number' value={false} />;
+      }
+      render(
+        <Form
+          schema={schema}
+          uiSchema={{ 'ui:widget': FalseValueInput, 'ui:allowClearTextInputs': true }}
+          validator={validator}
+        />,
+      );
+      expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
+    });
+
+    test('offers the clear button for false in a text input, which shows it', () => {
+      function FalseValueInput(props: WidgetProps) {
+        const { BaseInputTemplate } = props.registry.templates;
+        return <BaseInputTemplate {...props} value={false} />;
+      }
+      render(
+        <Form
+          schema={{ type: 'string', title: 'Amount' }}
+          uiSchema={{ 'ui:widget': FalseValueInput, 'ui:allowClearTextInputs': true }}
+          validator={validator}
+        />,
+      );
+      expect(screen.getByRole('button', { name: clearButtonName })).toBeInTheDocument();
+    });
   });
 }
