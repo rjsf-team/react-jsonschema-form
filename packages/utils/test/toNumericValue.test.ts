@@ -65,6 +65,7 @@ describe('ratingStarCount()', () => {
     { schema: { maximum: 3 }, stars: 5, expected: 3 },
     { schema: { maximum: 9 }, stars: 2, expected: 5 },
     { schema: { maximum: 0.5 }, stars: 2, expected: 1 },
+    { schema: { maximum: 0 }, stars: 3, expected: 3 },
     { schema: { maximum: -2 }, stars: 2, expected: 1 },
     { schema: { maximum: 3.7 }, stars: 2, expected: 3 },
   ])('$schema with stars $stars', ({ schema, stars, expected }) => {
