@@ -1,6 +1,12 @@
 import { createRef } from 'react';
 import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType, WidgetProps } from '@rjsf/utils';
-import { englishStringTranslator, JSON_SCHEMA_TYPES, templateDrawsLabel, TranslatableString } from '@rjsf/utils';
+import {
+  englishStringTranslator,
+  JSON_SCHEMA_TYPES,
+  templateDrawsLabel,
+  toInputValue,
+  TranslatableString,
+} from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -994,7 +1000,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
           if (id === 'root_val_b') {
             rendersOfB();
           }
-          return <input id={id} value={String(value ?? '')} onChange={(event) => onChange(event.target.value)} />;
+          return <input id={id} value={toInputValue(value)} onChange={(event) => onChange(event.target.value)} />;
         };
         const { node } = createFormComponent({
           schema: unionOf([{ type: 'object', additionalProperties: { type: 'string' } }, { type: 'string' }]),

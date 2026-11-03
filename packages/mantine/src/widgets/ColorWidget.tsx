@@ -1,7 +1,7 @@
 import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { ColorInput } from '@mantine/core';
-import type { DateElementFormat, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue, toInputValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
