@@ -1,6 +1,6 @@
 import type { GridProps, MantineSpacing, MantineStyleProp, StyleProp } from '@mantine/core';
 import { Container, Grid } from '@mantine/core';
-import type { GridTemplateProps } from '@rjsf/utils';
+import type { GridTemplateProps, OpenProps } from '@rjsf/utils';
 
 const ROW_SIZE_STYLES = ['flex', 'flexBasis', 'flexGrow', 'width'] as const;
 
@@ -23,7 +23,7 @@ function leavesSizeOpen(style: MantineStyleProp): boolean {
  */
 export default function GridTemplate(
   // `style` widened to the arrays and functions mantine's own `style` takes, which an intersection can't do
-  props: (object | Record<string, unknown>) &
+  props: OpenProps &
     Omit<GridTemplateProps, 'style'> &
     Pick<GridProps, 'style' | 'w' | 'flex'> & {
       /** Whether a row is wrapped in a fluid `Container`, which it is by default */

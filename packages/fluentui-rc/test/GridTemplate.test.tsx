@@ -35,7 +35,7 @@ describe('GridTemplate', () => {
     expect(container.firstChild).toHaveStyle({ gridTemplateColumns: 'repeat(10, 1fr)' });
   });
 
-  it.each([1.5, '2.5', 'Infinity'])('passes %s through, which is no track count', (columns) => {
+  it.each([1.5, '2.5', 'Infinity', 1e21, '1e21'])('passes %s through, which is no track count', (columns) => {
     const { container } = render(<GridTemplate columns={columns}>content</GridTemplate>);
 
     expect(container.firstChild).toHaveAttribute('data-columns', String(columns));

@@ -546,10 +546,13 @@ export type FieldHelpProps<
   presentation?: FieldPresentation;
 };
 
-/** The properties that are passed to a `GridTemplate`. `object` takes a value typed by an interface, which has no index
- * signature, and `Record` lets an object literal carry the theme's own grid props
+/** The open part of a props type, intersected with its declared props: `object` takes a value typed by an interface,
+ * which has no index signature, and `Record` lets an object literal carry props that aren't declared
  */
-export type GridTemplateProps = (object | Record<string, unknown>) & {
+export type OpenProps = object | Record<string, unknown>;
+
+/** The properties that are passed to a `GridTemplate`, along with the theme's own grid props */
+export type GridTemplateProps = OpenProps & {
   /** The contents of the grid template */
   children?: ReactNode;
   /** Optional flag indicating whether the grid element represents a column, necessary for themes which have components
@@ -1838,10 +1841,8 @@ export interface UISchemaSubmitButtonOptions {
   submitText?: string;
   /** Flag, if `true`, removes the submit button completely from the form */
   norender?: boolean;
-  /** Any other props to be passed to the submit button itself. `object` takes a value typed by an interface, which has
-   * no index signature, and `Record` lets an object literal carry props that aren't declared here
-   */
-  props?: (object | Record<string, unknown>) & {
+  /** Any other props to be passed to the submit button itself */
+  props?: OpenProps & {
     /** A boolean value stating if the submit button is disabled */
     disabled?: boolean;
     /** The class name for the submit button */
@@ -1852,6 +1853,9 @@ export interface UISchemaSubmitButtonOptions {
     onClickCapture?: Bivariant<[event: MouseEvent<HTMLElement>]>;
   };
 }
+
+/** The submit button options `getSubmitButtonOptions()` returns, whose `props` are always present */
+export type SubmitButtonOptions = UISchemaSubmitButtonOptions & Required<Pick<UISchemaSubmitButtonOptions, 'props'>>;
 
 /** Represents a primitive JSON Schema enum value */
 export type EnumValue = string | number | boolean;
@@ -2070,8 +2074,10 @@ export interface UiOptionsCheck<When = unknown, Then = Record<string, unknown>> 
   then: Then;
 }
 
-/** @internal Any `UiOptionsCheck`, including one whose `Then` is an interface, which has no index signature */
-type AnyUiOptionsCheck = UiOptionsCheck<unknown, object>;
+/** Any `UiOptionsCheck`, including one whose `Then` is an interface, which has no index signature: the constraint of
+ * `StrictUiSchema`'s `Checks`, for a generic type that passes its own `Checks` on to it
+ */
+export type AnyUiOptionsCheck = UiOptionsCheck<unknown, object>;
 
 /** @internal Merges a union of object types into a single object type, unioning each key's value type across every
  * union member that declares it, rather than intersecting them. A plain intersection collapses a key declared with a

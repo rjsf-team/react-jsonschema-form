@@ -1213,6 +1213,19 @@ const uiSchema: MyUiSchema<{ active: boolean }> = {
 };
 ```
 
+A generic type that passes its own `Checks` on to `StrictUiSchema` constrains them with `AnyUiOptionsCheck`, which `StrictUiSchema` uses itself. `UiOptionsCheck` alone is narrower: its default `Then` is a `Record<string, unknown>`, which a `Then` written as an interface doesn't fit, since an interface has no index signature:
+
+```ts
+import type { AnyUiOptionsCheck, StrictUiSchema, UiOptionsCheck } from '@rjsf/utils';
+
+interface ToggleThen {
+  widget?: 'ToggleWidget';
+}
+type Wrap<C extends AnyUiOptionsCheck> = StrictUiSchema<C, { active: boolean }>;
+
+const uiSchema: Wrap<UiOptionsCheck<boolean, ToggleThen>> = { active: { 'ui:widget': 'ToggleWidget' } };
+```
+
 ### Known gaps
 
 - With no form-data type (`T` defaulting to `unknown`), a `StrictUiSchema` does **not** fall back to unrestricted strings for `ui:widget`/`ui:field` - they're still limited to the names declared in `Checks`, every one of them, since data of an unknown type could match any `when`. Its other keys are not narrowed at all, so a nested field, or a misspelled `ui:` key such as `ui:wigdet`, is not caught. Every `ui:definitions` entry falls into this gap, since a definition applies to whichever field references it and its data type can't be known from the `$ref` key: its `ui:widget`/`ui:field` names and its declared options (in `ui:options` or as `ui:` keys) are still checked against `Checks`, but an undeclared `ui:` key or a nested field key is not. Pass an actual widget/field component instance instead of a string, or extend `Checks`, for anything not already covered.

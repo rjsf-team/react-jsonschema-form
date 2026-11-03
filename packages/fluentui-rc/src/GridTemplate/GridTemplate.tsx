@@ -11,7 +11,7 @@ const useStyles = makeStyles({
   fullWidthChildren: { '> *': { gridColumn: '1 / -1' } },
 });
 
-/** The CSS template fluentui's `grid.rows()`/`grid.columns()` build: `repeat(n, 1fr)` for a whole, positive number of tracks,
+/** The CSS template fluentui's `grid.rows()`/`grid.columns()` build: `repeat(n, 1fr)` for a positive safe integer of tracks,
  * else the template as given. Built here because those functions are typed as Griffel styles, whose fallback arrays an
  * inline style can't hold
  *
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
  */
 function gridTemplate(template: string | number): string {
   const tracks = Number(template);
-  return Number.isInteger(tracks) && tracks > 0 ? `repeat(${tracks}, 1fr)` : String(template);
+  return Number.isSafeInteger(tracks) && tracks > 0 ? `repeat(${tracks}, 1fr)` : String(template);
 }
 
 /** Renders a `GridTemplate` for fluentui-rc, which is expecting the column sizing information coming in via the
