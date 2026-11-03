@@ -404,6 +404,29 @@ function withoutAbsentValues(data: unknown): unknown {
   return normalize(data, true);
 }
 
+/** Returns `errorSchema` without the messages any of `others` holds at the same path. A field that passes back the
+ * errors it was handed, as `ArrayField` does when it re-indexes its items, hands back `extraErrors` and custom errors
+ * merged in, which must not be stored as if the validator had produced them
+ *
+ * @param errorSchema - The error schema to strip
+ * @param others - The error schemas whose messages are removed, each read at the same path as `errorSchema`
+ */
+function withoutMessagesOf(errorSchema: unknown, others: unknown[]): unknown {
+  if (!isObject(errorSchema)) {
+    return errorSchema;
+  }
+  return Object.fromEntries(
+    Object.entries(errorSchema).map(([key, value]) => {
+      const othersAtKey = others.map((other) => (isObject(other) ? other[key] : undefined));
+      if (key === ERRORS_KEY && Array.isArray(value)) {
+        const known = new Set(othersAtKey.flatMap((messages) => (Array.isArray(messages) ? messages : [])));
+        return [key, value.filter((message) => !known.has(message))];
+      }
+      return [key, withoutMessagesOf(value, othersAtKey)];
+    }),
+  );
+}
+
 /** A change made to a field, which an updater queued by the `onChange` handler applies
  */
 interface FieldChange<T> {
@@ -413,8 +436,6 @@ interface FieldChange<T> {
   newValue?: T;
   /** The new errors to be set into the errorSchema, if any */
   newErrorSchema?: ErrorSchema<T>;
-  /** The optional id of the field for which the change is being made */
-  id?: string;
 }
 
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
@@ -1109,7 +1130,7 @@ export default class Form<
           return outcome.result;
         }
         try {
-          const state = this.processChange({ newValue, path, newErrorSchema, id }, isLast, prevState, props);
+          const state = this.processChange({ newValue, path, newErrorSchema }, isLast, prevState, props);
           const result = state as FormState<T, S, F>;
           outcome = { prevState, props, isLast, result };
         } catch (error) {
@@ -1338,12 +1359,15 @@ export default class Form<
       if (oldValidationError && Object.keys(oldValidationError).length > 0) {
         // Apply the user-supplied newErrorSchema onto a clone of the AJV-only base, so that
         // mergeErrors below sees the user's error at this path without mutating shared state.
+        const extraAtPath = isRootPath ? extraErrors : getByPath(extraErrors, path);
+        const customAtPath = isRootPath ? customErrors?.ErrorSchema : getByPath(customErrors?.ErrorSchema, path);
+        const replacement = withoutMessagesOf(newErrorSchema, [extraAtPath, customAtPath]) as ErrorSchema<T>;
         if (!isRootPath) {
           mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
           // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-          setByPath(mergeBaseErrorSchema, path, newErrorSchema, true);
+          setByPath(mergeBaseErrorSchema, path, replacement, true);
         } else {
-          mergeBaseErrorSchema = newErrorSchema;
+          mergeBaseErrorSchema = replacement;
         }
       } else {
         // A copy, since the builder in `prevState` is the state's own, which a change that throws must leave as it was
@@ -1382,13 +1406,14 @@ export default class Form<
       );
       state = { ...state, ...liveValidation };
     } else if (!noValidate && (newErrorSchema || customErrors !== prevState.customErrors)) {
-      // The errors this change raised or cleared, merged onto the AJV-only errors, which hold neither
+      // The errors this change raised or cleared, merged onto the AJV-only errors, which hold neither. A replacement of
+      // an AJV error is kept in them, so a later rebuild, such as another field's clear, does not bring the AJV error back
       const mergedErrors = Form.mergeErrors<T>(
         { errorSchema: mergeBaseErrorSchema, errors: prevState.schemaValidationErrors || [] },
         extraErrors,
         customErrors,
       );
-      state = { ...state, ...mergedErrors };
+      state = { ...state, ...mergedErrors, schemaValidationErrorSchema: mergeBaseErrorSchema };
     }
 
     return state;

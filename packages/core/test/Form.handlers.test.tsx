@@ -1475,7 +1475,10 @@ describe('Form change handler under a parent', () => {
     const shown = Array.from(container.querySelectorAll('#root_foo__error li'), (item) => item.textContent);
     expect(onChange.mock.lastCall![0].errors.map(({ message }: { message: string }) => message)).toEqual(shown);
   });
-  it('should keep the custom error another field raised when a field whose custom error was cleared changes again', async () => {
+  it.each([
+    ['clears its custom error', false],
+    ['whose custom error was cleared changes again', true],
+  ])('should keep the custom error another field raised when a field %s', async (_, isClearedFirst) => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: { foo: { type: 'string', minLength: 3 }, baz: { type: 'string' } },
@@ -1508,7 +1511,9 @@ describe('Form change handler under a parent', () => {
 
     await submitForm(container, user);
     await user.click(container.querySelector('#raise')!);
-    await user.click(container.querySelector('#edit')!);
+    if (isClearedFirst) {
+      await user.click(container.querySelector('#edit')!);
+    }
     await user.click(container.querySelector('#replace')!);
     await user.click(container.querySelector('#edit')!);
 
@@ -1793,5 +1798,23 @@ describe('Form change handler under a parent', () => {
     rerender(<Form {...props} noValidate extraErrors={extraErrors} />);
     expect(container).toHaveTextContent('extra on foo');
     expect(container).not.toHaveTextContent('custom on foo');
+  });
+  it('should drop extraErrors an array passed back on removing an item once the parent removes them', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { list: { type: 'array', items: { type: 'string', minLength: 3 } } },
+    };
+    const validator = customizeValidator<GenericObjectType>();
+    const extraErrors = { list: { 0: { __errors: ['server'] } } } as unknown as ErrorSchema;
+    const props = { schema, validator, formData: { list: ['a', 'b'] } };
+    const { container, rerender } = render(<Form {...props} extraErrors={extraErrors} />);
+
+    await submitForm(container, user);
+    await user.click(container.querySelectorAll('.rjsf-array-item-remove')[1]);
+    rerender(<Form {...props} extraErrors={undefined} />);
+    expect(container).not.toHaveTextContent('server');
+
+    rerender(<Form {...props} extraErrors={{ ...extraErrors }} />);
+    expect(container.querySelectorAll('#root_list_0__error li')).toHaveLength(2);
   });
 });
