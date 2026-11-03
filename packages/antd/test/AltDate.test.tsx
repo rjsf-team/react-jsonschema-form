@@ -13,6 +13,13 @@ describe("antd's AltDateWidget", () => {
     ["the default for a numeric string, which antd's `Row` cannot space", '16', '-6px', '12px'],
     ['a CSS length', '1rem', 'calc(-0.25rem)', 'calc(0.5rem)'],
     ['each breakpoint of a responsive gutter, which `Row` reads at the widest here', { xs: 8, md: 16 }, '-4px', '8px'],
+    ['a CSS length at a breakpoint', { md: '1rem' }, 'calc(-0.25rem)', 'calc(0.5rem)'],
+    ['the default for an invalid number at a breakpoint', { md: Number.NaN }, '-6px', '12px'],
+    ['a breakpoint left undefined, which `Row` passes over', { sm: 8, md: undefined }, '-2px', '4px'],
+    ['each side of a pair with a CSS length and a responsive side', ['1rem', { md: 16 }], 'calc(-0.25rem)', '8px'],
+    ['the default when there is none', undefined, '-6px', '12px'],
+    ['no gutter for an empty string, as every other `Row` reads it', '', '', '0px'],
+    ['no gutter for null, as every other `Row` reads it', null, '', '0px'],
   ])("spaces the date parts by half the formContext's rowGutter: %s", (_, rowGutter, margin, gap) => {
     render(
       <Form
