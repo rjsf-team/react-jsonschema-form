@@ -19,6 +19,7 @@ import {
 import { Col, Row, Form, Input } from 'antd';
 
 import useControlState from '../../controlState.ts';
+import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -62,7 +63,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,
-    rowGutter = 24,
+    rowGutter = DEFAULT_ROW_GUTTER,
     toolbarAlign = 'top',
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,

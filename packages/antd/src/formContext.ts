@@ -1,6 +1,9 @@
 import type { CSSProperties } from 'react';
 import type { ColProps, FormProps, RowProps } from 'antd';
 
+/** The `rowGutter` a row takes when the formContext sets none */
+export const DEFAULT_ROW_GUTTER = 24;
+
 /** The `formContext` options the antd theme reads. A form's `formContext` can hold anything, so the templates read it
  * through this type, which names the options they look for
  */
@@ -19,7 +22,7 @@ export interface AntdFormContext {
   labelCol?: ColProps;
   /** Whether a read-only field is drawn disabled, which it is unless this is `false` */
   readonlyAsDisabled?: boolean;
-  /** The gutter between the columns of a row */
+  /** The gutter between the columns of a row, `DEFAULT_ROW_GUTTER` when undefined */
   rowGutter?: RowProps['gutter'];
   /** The vertical alignment of an array item's toolbar, or of an additional property's row */
   toolbarAlign?: RowProps['align'];

@@ -4,6 +4,7 @@ import { getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } f
 import { Col, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
 
+import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
@@ -38,7 +39,7 @@ export default function ArrayFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { labelAlign = 'right', rowGutter = 24 }: AntdFormContext = formContext;
+  const { labelAlign = 'right', rowGutter = DEFAULT_ROW_GUTTER }: AntdFormContext = formContext;
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('form');

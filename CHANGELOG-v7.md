@@ -65,8 +65,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `InputNumber` to show a numeric string, which a `number` field holds only as invalid data ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RangeWidget` drawing a numeric string, and posting it, at its minimum ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Fix `BaseInputTemplate` dropping a `pattern` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix `AltDateWidget` spacing its date parts by a `NaN` gutter when `formContext.rowGutter` is a pair, a responsive object or a CSS length: they now take half of each side of a pair, and half of a single gutter both ways, as they did of a number, though `Row` applies a single gutter horizontally only. A numeric string such as `'16'`, which `Row` turns into invalid CSS, now gives half the default 24, where it gave half its number ([#5686](https://github.com/rjsf-team/react-jsonschema-form/pull/5686))
+- Fix `AltDateWidget` spacing its date parts by a `NaN` gutter when `formContext.rowGutter` is a pair, a responsive object or a CSS length: they now take half of each side of a pair, and half of a single gutter both ways, as they did of a number, though `Row` applies a single gutter horizontally only. A numeric string such as `'16'`, which `Row` turns into invalid CSS, now gives no spacing, as `Row` draws none for it, where it gave half its number ([#5686](https://github.com/rjsf-team/react-jsonschema-form/pull/5686))
 - Add the `AntdFormContext` type, the `formContext` options the antd theme reads ([#5686](https://github.com/rjsf-team/react-jsonschema-form/pull/5686))
 
 ## @rjsf/bootstrap3

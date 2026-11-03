@@ -10,14 +10,13 @@ import {
 import { Row, Col, Button } from 'antd';
 import type { RowProps } from 'antd';
 
+import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
 
 type Gutter = Exclude<RowProps['gutter'], readonly unknown[]>;
 
-const DEFAULT_ROW_GUTTER = 24;
-
-/** Half of a single gutter value: a number, or a CSS length. An empty value or `null`, which `Row` reads as no gutter,
- * gives none, and a value `Row` can't space, such as a numeric string or `NaN`, gives half the default
+/** Half of a single gutter value: a number, or a CSS length. A value `Row` draws no spacing for, such as `0`, `false`,
+ * `''`, `NaN` or a numeric string, which it turns into invalid CSS, gives none
  *
  * @param side - The gutter value, the default when undefined
  * @returns - Half of it
@@ -26,13 +25,10 @@ function halfSide(side: unknown = DEFAULT_ROW_GUTTER): number | string {
   if (typeof side === 'number' && Number.isFinite(side)) {
     return Math.floor(side / 2);
   }
-  if (side === null || (typeof side === 'string' && side.trim() === '')) {
-    return 0;
-  }
   if (typeof side === 'string' && Number.isNaN(Number(side))) {
     return `calc(${side} / 2)`;
   }
-  return Math.floor(DEFAULT_ROW_GUTTER / 2);
+  return 0;
 }
 
 /** Half of one side of a `rowGutter`, which spaces the date parts, in any form antd's `Row` takes: a value, or a value
