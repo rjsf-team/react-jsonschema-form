@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react';
-import { useCallback, useMemo } from 'react';
+import { use, useCallback, useMemo } from 'react';
 import type {
   FieldProps,
   FieldPath,
@@ -11,7 +11,9 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   getByPath,
+  hasSchemaMarker,
   toPath,
   deepEquals,
   getDiscriminatorFieldFromSchema,
@@ -39,9 +41,10 @@ import {
   ITEMS_KEY,
 } from '@rjsf/utils';
 
-import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
-import { isAdditionalPropertySchema, storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
+import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
+import { storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
@@ -586,6 +589,33 @@ function LayoutGridCondition<
   return null;
 }
 
+/** Gets the id of the first field among a column's `children`, which tells one column's `span` warnings apart from
+ * another's in the same grid. A column whose children name no field, only nested grids or `render`s, gets the id of
+ * the field whose layout grid holds it.
+ *
+ * @param children - The column's `children` from its `layoutGridSchema`
+ * @param props - The props of the column, whose `registry`, `schema`, `formData` and `fieldPath` locate the field
+ * @returns - The id the column's first field renders with, or the grid's own id when it names no field
+ */
+function columnFieldId<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(children: LayoutGridSchemaType[], props: LayoutGridFieldProps<T, S, F>) {
+  const { registry, schema, formData, fieldPath, id } = props;
+  for (const child of children) {
+    const name: unknown = typeof child === 'string' ? child : (child as GenericObjectType).name;
+    if (typeof name === 'string' && name !== '') {
+      // A name the schema doesn't hold, such as a `render` cell's, renders no field
+      const details = getSchemaDetailsForField<T, S, F>(registry, name, schema, formData, fieldPath);
+      if (details.schema) {
+        return fieldPathToId(details.fieldPath, registry.globalFormOptions);
+      }
+    }
+  }
+  return id;
+}
+
 /** Renders a `GridTemplate` as an item. The `layoutGridSchema` for the `GridType.COLUMN` is separated into the
  * `children` and other `gridProps`. The `gridProps` will be spread onto the outer `GridTemplate`. Inside the
  * `GridTemplate` all the `children` are rendered.
@@ -604,7 +634,12 @@ function LayoutGridCol<
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (
-    <GridTemplate column data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col} {...gridProps}>
+    <GridTemplate
+      column
+      fieldId={columnFieldId<T, S, F>(children, layoutGridFieldProps)}
+      data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
+      {...gridProps}
+    >
       <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
     </GridTemplate>
   );
@@ -631,6 +666,7 @@ function LayoutGridColumns<
   return children.map((child) => (
     <GridTemplate
       column
+      fieldId={columnFieldId<T, S, F>([child], layoutGridFieldProps)}
       key={`column-${hashObject(child)}`}
       data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
       {...gridProps}
@@ -653,13 +689,21 @@ function LayoutGridRow<
 >(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
 
-  const { registry, uiSchema } = layoutGridFieldProps;
+  const { registry, uiSchema, id, fieldPath } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.ROW, registry);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const { span, ...rowGridProps } = gridProps;
+  const additionalDepths = use(AdditionalPropertyDepthsContext);
+  if (span !== undefined) {
+    logOnce(
+      `span on a ui:row in ${entryLabelForLog(fieldPath, registry.globalFormOptions, additionalDepths)} is ignored, ` +
+        'since span sizes a ui:col or ui:columns rather than a row.',
+    );
+  }
 
   return (
-    <GridTemplate {...gridProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.row}>
+    <GridTemplate fieldId={id} {...rowGridProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.row}>
       <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
     </GridTemplate>
   );
@@ -734,7 +778,7 @@ function LayoutGridFieldComponent<
     () => getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, parentFieldPath),
     [registry, name, initialSchema, formData, parentFieldPath],
   );
-  const isAdditionalProperty = isAdditionalPropertySchema(flaggedSchema);
+  const isAdditionalProperty = hasSchemaMarker(flaggedSchema, ADDITIONAL_PROPERTY_FLAG);
   // A cell the layout names by an `additionalProperties` key keeps that key, since renaming or removing it would take
   // the cell out of the layout, so its template draws no key input or remove button
   const schema = useMemo(() => flaggedSchema && withoutAdditionalFlag<S>(flaggedSchema), [flaggedSchema]);
