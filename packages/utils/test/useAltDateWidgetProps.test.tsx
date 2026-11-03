@@ -129,6 +129,11 @@ describe('useAltDateWidgetProps()', () => {
     const years = result.current.elements.find(({ type }) => type === 'year');
     expect(years?.range).toEqual([1990, 1992]);
   });
+  test('rounds the years of a fractional `yearsRange` down', () => {
+    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: { yearsRange: [1990.5, 1992.5] } }));
+
+    expect(result.current.elements.find(({ type }) => type === 'year')?.range).toEqual([1990, 1992]);
+  });
   test('keeps a `yearsRange` running from 0, which reads as absolute years', () => {
     const jsonOptions: Record<string, unknown> = { yearsRange: [0, 2] };
     const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: jsonOptions }));
@@ -146,6 +151,9 @@ describe('useAltDateWidgetProps()', () => {
     ['a relative and an absolute year', [-10, 2030]],
     ['an absolute and a relative year', [2030, -10]],
     ['a relative and an absolute year as numeric strings', ['-10', '2030']],
+    ['a span of a billion years', [1, 1e9]],
+    ['a span of a billion years as numeric strings', ['1', '1e9']],
+    ['a relative span of a billion years', [-1e9, 0]],
   ])('falls back to the default years for a `yearsRange` holding %s', (_, yearsRange) => {
     const jsonOptions: Record<string, unknown> = { yearsRange };
     const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: jsonOptions }));

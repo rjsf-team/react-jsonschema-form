@@ -51,7 +51,7 @@ export default function RatingWidget<
   htmlName,
   presentation,
 }: WidgetProps<T, S, F>) {
-  const { stars = 5, shape = 'star' } = options;
+  const { stars, shape = 'star' } = options;
   const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
     { id, presentation },
     'radiogroup',

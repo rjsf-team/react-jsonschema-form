@@ -6,12 +6,11 @@ import { useCallback, useMemo, useState } from 'react';
 import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
 import type { DateElementProp } from './getDateElementProps.ts';
-import getDateElementProps, { elementValue, isDateElementFormat } from './getDateElementProps.ts';
+import getDateElementProps, { elementValue, isDateElementFormat, normalizeYearsRange } from './getDateElementProps.ts';
 import getNestedControlPresentation from './getNestedControlPresentation.ts';
 import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
-import toNumericValue from './toNumericValue.ts';
 import type {
   DateObject,
   FieldPresentation,
@@ -222,21 +221,15 @@ export default function useAltDateWidgetProps<
   );
 
   const { yearsRange, format } = options;
-  // A JSON uiSchema can hold anything here, so a range that isn't a list, or that `dateRangeOptions()` would throw for
-  // mixing a relative and an absolute year, gives the default years, and a year held as a numeric string counts as its
-  // number, as a `stars` option does
-  const [firstYear, lastYear]: unknown[] = Array.isArray(yearsRange) ? yearsRange.map(toNumericValue) : [];
   const elements = useMemo(
     () =>
       getDateElementProps(
         state,
         time,
-        typeof firstYear === 'number' && typeof lastYear === 'number' && Math.sign(firstYear) * Math.sign(lastYear) >= 0
-          ? [firstYear, lastYear]
-          : undefined,
+        normalizeYearsRange(yearsRange),
         isDateElementFormat(format) ? format : undefined,
       ),
-    [state, time, firstYear, lastYear, format],
+    [state, time, yearsRange, format],
   );
   return { elements, handleChange, handleClear, handleSetNow, buttonsDisabled };
 }

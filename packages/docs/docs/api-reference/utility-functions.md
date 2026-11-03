@@ -2332,6 +2332,18 @@ Checks to see if the `uiSchema` names a `widget` and that the widget is not `hid
 
 - boolean: True if the `uiSchema` describes a custom widget, false otherwise
 
+### isDateElementFormat()
+
+Reports whether a `format` option is a `DateElementFormat`, the order of an `AltDateWidget`'s date elements. Another widget can read `format` as a format of its own, such as a color's
+
+#### Parameters
+
+- value: unknown - The value of the `format` option
+
+#### Returns
+
+- boolean: Whether `value` is `'DMY'`, `'MDY'` or `'YMD'`
+
 ### isEnumOptionsGroup&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 A type guard that determines whether an element of the list returned by `groupEnumOptions()` is a group of options rather than a standalone option.
@@ -2700,18 +2712,17 @@ A validator package that has to tell which resource of the root a `$ref` names u
 
 - string: The URI in the form two spellings of the same URI share
 
-### numericWidgetStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### normalizeYearsRange()
 
-Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The schema's type decides, and a type that allows a number too writes one. A schema with no type has only the value to go by, so it writes a number until it holds a string, even for an `enum` of strings.
+Returns the `[first, last]` years to pass `getDateElementProps()` for a `yearsRange` option, which a JSON uiSchema can hold as anything. A year held as a numeric string counts as its number, and a fractional year is rounded down. A range that isn't a list of two years, that mixes a relative and an absolute year, which `dateRangeOptions()` throws for, or that spans more than a thousand years gives `undefined`, for the default years
 
 #### Parameters
 
-- schema: S - The schema of the field
-- value: unknown - The widget's value
+- yearsRange: unknown - The `yearsRange` option
 
 #### Returns
 
-- boolean: True if the widget writes a string
+- [number, number] | undefined: The range, or `undefined` for the default years
 
 ### offersClearButton()
 

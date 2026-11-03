@@ -10,6 +10,9 @@ describe('acceptAttribute()', () => {
   it('leaves out the entries of an array that are not strings', () => {
     expect(acceptAttribute(['.png', {}, 5, null, '.jpg'])).toBe('.png,.jpg');
   });
+  it('leaves out the empty and blank entries of an array', () => {
+    expect(acceptAttribute(['', '.png', ' '])).toBe('.png');
+  });
   it.each([
     ['undefined', undefined],
     ['null', null],
@@ -19,6 +22,9 @@ describe('acceptAttribute()', () => {
     ['an object', {}],
     ['an empty array', []],
     ['an array holding no strings', [{}, 5]],
+    ['a blank string', ' '],
+    ['an array of empty strings', ['', '']],
+    ['an array of blank strings', [' ', '\t']],
   ])('returns undefined for %s', (_, accept) => {
     expect(acceptAttribute(accept)).toBeUndefined();
   });

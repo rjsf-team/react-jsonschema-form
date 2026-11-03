@@ -1,4 +1,10 @@
+import toNumericValue from './toNumericValue.ts';
 import type { DateObject } from './types.ts';
+
+/** The widest `yearsRange` read. A year select offers one option per year, built during render, so a span such as
+ * `[1, 1e9]` would hang the page; no date picker needs to offer more than a thousand years
+ */
+const MAX_YEARS_SPAN = 1000;
 
 /** Available options for re-ordering date input element */
 export type DateElementFormat = 'DMY' | 'MDY' | 'YMD';
@@ -11,6 +17,27 @@ export type DateElementFormat = 'DMY' | 'MDY' | 'YMD';
  */
 export function isDateElementFormat(value: unknown): value is DateElementFormat {
   return value === 'DMY' || value === 'MDY' || value === 'YMD';
+}
+
+/** The `[first, last]` years for a `yearsRange` option, which a JSON uiSchema can hold as anything. A year held as a
+ * numeric string counts as its number, and a fractional year is rounded down. A range that isn't a list of two years,
+ * that mixes a relative and an absolute year, which `dateRangeOptions()` throws for, or that spans more than a
+ * thousand years gives `undefined`, for the default years
+ *
+ * @param yearsRange - The `yearsRange` option
+ * @returns - The range to pass `getDateElementProps()`, or `undefined` for the default years
+ */
+export function normalizeYearsRange(yearsRange: unknown): [number, number] | undefined {
+  const [first, last]: unknown[] = Array.isArray(yearsRange) ? yearsRange.map(toNumericValue) : [];
+  if (typeof first !== 'number' || typeof last !== 'number') {
+    return undefined;
+  }
+  const firstYear = Math.floor(first);
+  const lastYear = Math.floor(last);
+  if (Math.sign(firstYear) * Math.sign(lastYear) < 0 || Math.abs(lastYear - firstYear) > MAX_YEARS_SPAN) {
+    return undefined;
+  }
+  return [firstYear, lastYear];
 }
 
 /** Type describing format of DateElement prop */

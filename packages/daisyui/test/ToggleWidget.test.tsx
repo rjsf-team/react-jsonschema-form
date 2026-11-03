@@ -14,6 +14,13 @@ describe('ToggleWidget', () => {
     expect(getByRole('checkbox').className).not.toContain('toggle-');
   });
 
+  test.each(['', ' '])('adds no size class for a `size` option of %j', (size) => {
+    const jsonOptions: Record<string, unknown> = { size };
+    const { getByRole } = render(<ToggleWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getByRole('checkbox').className).not.toContain('toggle-');
+  });
+
   test('renders correctly', () => {
     const { asFragment } = render(<ToggleWidget {...makeWidgetMockProps()} />);
     expect(asFragment()).toMatchSnapshot();

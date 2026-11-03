@@ -1,6 +1,7 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { joinClassNames } from '@rjsf/utils';
 
+import { classNameOption } from '../../utils.ts';
 import BooleanInput from '../BooleanInput.tsx';
 
 /** The `ToggleWidget` component renders a toggle switch input with DaisyUI styling
@@ -19,10 +20,8 @@ export default function ToggleWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { size } = props.options;
-
-  // Only add size class if it's not the default size
-  const sizeClass = typeof size === 'string' && size !== 'md' ? `toggle-${size}` : '';
+  const size = classNameOption(props.options.size);
+  const sizeClass = size === undefined || size === 'md' ? '' : `toggle-${size}`;
 
   return (
     <BooleanInput

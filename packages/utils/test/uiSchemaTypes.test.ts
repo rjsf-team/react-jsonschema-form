@@ -213,6 +213,12 @@ describe('UiSchema type', () => {
     expect(ui['ui:myTheme:thing']).toBe(42);
   });
 
+  it('accepts a `yearsRange` of numbers or numeric strings', () => {
+    const ui: UiSchema = { 'ui:options': { yearsRange: ['1990', 2030] }, 'ui:yearsRange': [-10, '0'] };
+
+    expect(ui['ui:options']?.yearsRange).toEqual(['1990', 2030]);
+  });
+
   it('accepts any key in an untyped uiSchema and reads nested entries back as unknown', () => {
     const ui: UiSchema = { whatever: 1, nested: { deeper: { 'ui:widget': 'text' } }, 'ui:wigdet': 'typo' };
 

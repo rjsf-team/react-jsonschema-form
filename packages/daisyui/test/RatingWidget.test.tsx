@@ -53,6 +53,29 @@ describe('RatingWidget', () => {
     expect(getAllByRole('radio')[0]).toHaveClass('bg-orange-400');
   });
 
+  test.each(['', ' '])('uses the default size and color for a `size` and `color` option of %j', (option) => {
+    const jsonOptions: Record<string, unknown> = { size: option, color: option };
+    const { getAllByRole, getByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getByRole('radiogroup')).toHaveClass('rating gap-1', { exact: true });
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-orange-400');
+  });
+
+  test.each([['false'], [1], [{}]])('draws no gradient for a `colorGradient` option of %j', (colorGradient) => {
+    const jsonOptions: Record<string, unknown> = { colorGradient };
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getAllByRole('radio').map(({ className }) => className.match(/bg-\w+-400/)?.[0])).toEqual(
+      Array(5).fill('bg-orange-400'),
+    );
+  });
+
+  test('draws the gradient for a `colorGradient` option of true', () => {
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: { colorGradient: true } })} />);
+
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-red-400');
+  });
+
   test('renders with default props (value=0)', () => {
     const { asFragment } = render(
       <RatingWidget

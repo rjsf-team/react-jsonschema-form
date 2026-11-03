@@ -1,4 +1,5 @@
 import getDateElementProps from '../src/getDateElementProps.ts';
+import { isDateElementFormat, normalizeYearsRange } from '../src/index.ts';
 
 describe('getDateElementProps', () => {
   const monthRange = [1, 12];
@@ -115,5 +116,46 @@ describe('getDateElementProps', () => {
       { type: 'minute', range: [0, 59], value: date.minute },
       { type: 'second', range: [0, 59], value: date.second },
     ]);
+  });
+});
+
+describe('isDateElementFormat()', () => {
+  it.each(['DMY', 'MDY', 'YMD'])('accepts %s', (format) => {
+    expect(isDateElementFormat(format)).toBe(true);
+  });
+  it.each([
+    ['another string', 'hex'],
+    ['undefined', undefined],
+    ['a number', 1],
+  ])('rejects %s', (_, format) => {
+    expect(isDateElementFormat(format)).toBe(false);
+  });
+});
+
+describe('normalizeYearsRange()', () => {
+  it('keeps two years of the same kind', () => {
+    expect(normalizeYearsRange([1990, 2030])).toEqual([1990, 2030]);
+    expect(normalizeYearsRange([-10, 0])).toEqual([-10, 0]);
+    expect(normalizeYearsRange([0, 2])).toEqual([0, 2]);
+  });
+  it('reads a year held as a numeric string as its number', () => {
+    expect(normalizeYearsRange(['1990', '2030'])).toEqual([1990, 2030]);
+  });
+  it('rounds a fractional year down', () => {
+    expect(normalizeYearsRange([1990.5, 1992.5])).toEqual([1990, 1992]);
+  });
+  it('keeps a span of a thousand years', () => {
+    expect(normalizeYearsRange([1000, 2000])).toEqual([1000, 2000]);
+  });
+  it.each([
+    ['undefined', undefined],
+    ['a number', 2000],
+    ['one entry', [1990]],
+    ['a year that is not a number', [1990, 'soon']],
+    ['a relative and an absolute year', [-10, 2030]],
+    ['a span of more than a thousand years', [999, 2000]],
+    ['a span of a billion years', [1, 1e9]],
+  ])('gives undefined for %s', (_, yearsRange) => {
+    expect(normalizeYearsRange(yearsRange)).toBeUndefined();
   });
 });

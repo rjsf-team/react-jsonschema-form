@@ -28,8 +28,9 @@ type NonBuiltInObject = object & {
  * `StrictUiSchema`'s `Checks` type parameter to narrow `ui:widget`/`ui:field`/`ui:options` to `@rjsf/core`'s own
  * vocabulary; union it with a `Checks` union of your own to extend it, since it isn't included automatically.
  *
- * This is intentionally a starting set covering the options that already exist on `UIOptionsType` - it does not
- * attempt to model every widget/option combination (for example, per-widget options like `RangeWidget`'s min/max
+ * This is intentionally a starting set covering the options `@rjsf/core`'s own widgets and fields read, including
+ * ones `UIOptionsType` leaves undeclared such as `format` and `shape` - it does not attempt to model every
+ * widget/option combination (for example, per-widget options like `RangeWidget`'s min/max
  * come from the JSON Schema itself, not from `ui:options`, so they are not repeated here). Widget names include both
  * the registered PascalCase component name and the lowercase alias(es) `getWidget` resolves for that schema type
  * (`WidgetAliasFor`), since either spelling is a valid `ui:widget` value at runtime.
@@ -68,7 +69,10 @@ export type CoreUiOptionsChecks =
         accept?: string;
         filePreview?: boolean;
         accept?: string | readonly string[];
-        yearsRange?: readonly number[];
+        yearsRange?: readonly (number | string)[];
+        format?: DateElementFormat;
+        hideNowButton?: boolean;
+        hideClearButton?: boolean;
         inline?: boolean;
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;

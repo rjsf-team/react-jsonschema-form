@@ -26,6 +26,24 @@ describe('CoreUiOptionsChecks', () => {
     expect(ui.upload?.['ui:widget']).toBe('FileWidget');
   });
 
+  it('accepts the alt-date options and a `yearsRange` of numeric strings', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { born: string; died: string }>;
+    const ui: Checked = {
+      born: {
+        'ui:widget': 'alt-datetime',
+        'ui:options': { yearsRange: [1980, 2030], format: 'MDY', hideNowButton: true, hideClearButton: true },
+      },
+      died: { 'ui:widget': 'AltDateWidget', 'ui:options': { yearsRange: ['1990', '2030'] } },
+    };
+    const badFormat: Checked = {
+      // @ts-expect-error `format` orders the date elements, so only `DMY`, `MDY` or `YMD`
+      born: { 'ui:widget': 'AltDateWidget', 'ui:options': { format: 'hex' } },
+    };
+
+    expect(ui.born?.['ui:options']?.format).toBe('MDY');
+    expect(badFormat.born?.['ui:options']?.format).toBe('hex');
+  });
+
   it('accepts a RatingWidget and its `stars` for a number field', () => {
     type Checked = StrictUiSchema<CoreUiOptionsChecks, { score: number }>;
     const ui: Checked = { score: { 'ui:widget': 'RatingWidget', 'ui:options': { stars: 3 } } };

@@ -55,7 +55,7 @@ import getControlAttributes from './getControlAttributes.ts';
 import getControlDescribedBy from './getControlDescribedBy.ts';
 import getControlFallbackName from './getControlFallbackName.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
-import getDateElementProps from './getDateElementProps.ts';
+import getDateElementProps, { isDateElementFormat, normalizeYearsRange } from './getDateElementProps.ts';
 import type { DateTimeLocalValueResult } from './getDateTimeLocalValue.ts';
 import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
@@ -328,6 +328,8 @@ export {
   getControlDescribedBy,
   getControlFallbackName,
   getDateElementProps,
+  isDateElementFormat,
+  normalizeYearsRange,
   getDateTimeLocalValue,
   getDecimalSeparator,
   getDeprecatedHandling,

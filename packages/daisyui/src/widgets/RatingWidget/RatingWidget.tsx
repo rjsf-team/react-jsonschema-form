@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ratingStarCount, ratingStoresString, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
 
-import { getGroupAndOptionProps } from '../../utils.ts';
+import { classNameOption, getGroupAndOptionProps } from '../../utils.ts';
 
 /** Drops binary floating point's noise: `2.3 - 1.3` falls just short of 1, which would lose the last star, and
  * `0.57 + 1` misses 1.57, so a stored 1.57 would check no star
@@ -47,7 +47,9 @@ export default function RatingWidget<
     options,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
-  const { stars = 5, shape = 'star', color, size, colorGradient = false } = options;
+  const { stars, shape = 'star', colorGradient } = options;
+  const size = classNameOption(options.size);
+  const color = classNameOption(options.color) ?? 'orange';
 
   const numStars = ratingStarCount<S>(schema, stars);
   const min = schema.minimum ?? 0;
@@ -62,7 +64,7 @@ export default function RatingWidget<
   const maskClass = shape === 'heart' ? 'mask-heart' : 'mask-star-2';
 
   // Generate size class
-  const sizeClass = typeof size === 'string' && size !== 'md' ? `rating-${size}` : '';
+  const sizeClass = size === undefined || size === 'md' ? '' : `rating-${size}`;
 
   /** Handles change events from radio inputs */
   const handleChange = useCallback(
@@ -101,8 +103,8 @@ export default function RatingWidget<
    * @returns The appropriate color class
    */
   const getColorClass = (index: number): string => {
-    if (!colorGradient) {
-      return `bg-${typeof color === 'string' ? color : 'orange'}-400`;
+    if (colorGradient !== true) {
+      return `bg-${color}-400`;
     }
 
     // For gradient effect, use different colors based on position
