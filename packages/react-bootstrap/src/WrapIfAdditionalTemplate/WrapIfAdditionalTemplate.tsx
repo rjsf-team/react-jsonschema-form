@@ -7,6 +7,7 @@ import {
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
   hasSchemaMarker,
+  isAdditionalKeyDisabled,
   TranslatableString,
 } from '@rjsf/utils';
 import { Col, Form, Row } from 'react-bootstrap';

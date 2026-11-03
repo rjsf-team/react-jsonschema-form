@@ -1296,7 +1296,14 @@ You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or
 Core's lays the key, the value and the remove button out on shared grid rows, so the key's input sits level with the value's; see [Lining up a custom `FieldTemplate`](../usage/themes.md#lining-up-a-custom-fieldtemplate).
 
 ```tsx
-import { ADDITIONAL_PROPERTY_FLAG, additionalKeyId, hasSchemaMarker, RJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
+  hasSchemaMarker,
+  isAdditionalKeyDisabled,
+  RJSFSchema,
+  WrapIfAdditionalTemplateProps,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {

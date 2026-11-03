@@ -47,6 +47,7 @@ import {
   isConstantOptionList,
   isFormDataAvailable,
   isLabelledByTemplate,
+  isSchemaObject,
   logOnce,
   omitConsumedStyling,
   ONE_OF_KEY,
@@ -864,7 +865,7 @@ function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormC
       return null;
     }
     const input = optionInput(schema, uiSchema, xxxOfKey, option, index, registry);
-    const isRefCycle = Boolean((input.schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+    const isRefCycle = hasSchemaMarker(input.schema, RJSF_REF_CYCLE_KEY);
     const resolved = resolve(input.schema, input.uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove);
     const { selectSchemaInfo, uiField, uiSchema: optionUiSchema, ownUiOptions, hidden } = resolved;
     // `AnyOfField` renders no `null` option, whatever field it names, and `SchemaField` nothing for an empty schema

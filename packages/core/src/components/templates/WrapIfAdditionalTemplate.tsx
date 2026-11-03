@@ -7,6 +7,7 @@ import {
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
   hasSchemaMarker,
+  isAdditionalKeyDisabled,
   joinClassNames,
   TranslatableString,
 } from '@rjsf/utils';

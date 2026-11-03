@@ -1,5 +1,6 @@
 import Form from '@rjsf/core';
 
-import { wrapIfAdditionalFlagTests } from '../src/index.ts';
+import { wrapIfAdditionalCallbackTests, wrapIfAdditionalFlagTests } from '../src/index.ts';
 
 wrapIfAdditionalFlagTests(Form);
+wrapIfAdditionalCallbackTests(Form);

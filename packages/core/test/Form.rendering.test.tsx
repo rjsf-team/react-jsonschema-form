@@ -1,11 +1,19 @@
 import { createRef } from 'react';
-import type { FieldTemplateProps, RJSFMarkedSchema, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import type {
+  FieldTemplateProps,
+  RJSFMarkedSchema,
+  RJSFSchema,
+  UiSchema,
+  ValidatorType,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   englishStringTranslator,
   GUESSED_TYPE_FLAG,
   JSON_SCHEMA_TYPES,
   templateDrawsLabel,
+  toInputValue,
   TranslatableString,
 } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
