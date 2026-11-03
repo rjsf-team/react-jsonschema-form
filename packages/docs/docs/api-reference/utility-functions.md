@@ -123,6 +123,18 @@ Without its field's plan, `hideLabel` turns it off as well, and it renders under
 
 ## Non-Validator utility functions
 
+### acceptAttribute()
+
+Returns the value of a file input's `accept` attribute for an `accept` option: a string, or an array of them joined with commas. Whatever isn't a string is left out.
+
+#### Parameters
+
+- accept: unknown - The `accept` option
+
+#### Returns
+
+- string | undefined: The attribute's value, or undefined when the option names no file types
+
 ### additionalKeyId()
 
 Return a consistent `id` for the input a `WrapIfAdditionalTemplate` renders to edit an additional property's key

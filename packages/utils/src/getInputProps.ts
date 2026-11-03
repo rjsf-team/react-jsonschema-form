@@ -1,3 +1,4 @@
+import acceptAttribute from './acceptAttribute.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getSchemaType from './getSchemaType.ts';
 import getUnionTypes from './getUnionTypes.ts';
@@ -138,8 +139,9 @@ export default function getInputProps<
     inputProps.autoCapitalize = options.autocapitalize;
   }
 
-  if (options.accept) {
-    inputProps.accept = String(options.accept);
+  const accept = acceptAttribute(options.accept);
+  if (accept) {
+    inputProps.accept = accept;
   }
 
   return inputProps;

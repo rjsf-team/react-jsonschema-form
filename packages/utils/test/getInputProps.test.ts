@@ -39,6 +39,14 @@ describe('getInputProps', () => {
     const options: UIOptionsType = { accept: ['.png', '.jpg'] };
     expect(getInputProps({}, 'file', options)).toEqual({ type: 'file', accept: '.png,.jpg' });
   });
+  it.each([
+    ['true', true],
+    ['an object', {}],
+    ['a number', 5],
+  ])('sets no accept for an option holding %s', (_, accept) => {
+    const jsonOptions: Record<string, unknown> = { accept };
+    expect(getInputProps({}, 'file', jsonOptions)).toEqual({ type: 'file' });
+  });
   it('returns type=defaultType even when schema has type', () => {
     const schema: RJSFSchema = {
       type: 'number',

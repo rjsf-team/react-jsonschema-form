@@ -1,3 +1,4 @@
+import acceptAttribute from './acceptAttribute.ts';
 import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
@@ -270,6 +271,7 @@ export type {
 export {
   additionalKeyId,
   AdditionalPropertyKeySelect,
+  acceptAttribute,
   allowAdditionalItems,
   allowsAdditionalProperties,
   ariaDescribedByIds,

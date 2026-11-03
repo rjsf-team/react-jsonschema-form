@@ -55,6 +55,34 @@ describe('FileWidget', () => {
     expect(container.querySelector('input[type=file]')).toHaveAttribute('accept', '.png,.jpg');
   });
 
+  test.each([
+    ['true', true],
+    ['an object', {}],
+  ])('sets no `accept` for an option holding %s', (_, accept) => {
+    const jsonOptions: Record<string, unknown> = { accept };
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'data-url' }}
+        uiSchema={{ 'ui:options': jsonOptions }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input[type=file]')).not.toHaveAttribute('accept');
+  });
+
+  test('offers to clear a stored item that could not be read', async () => {
+    const schema: RJSFSchema = { type: 'array', items: { type: 'string', format: 'data-url' } };
+    const onChange = vi.fn();
+    render(
+      <Form schema={schema} uiSchema={uiSchema} initialFormData={[null]} validator={validator} onChange={onChange} />,
+    );
+
+    await user.click(screen.getByLabelText('Clear'));
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: [] }), 'root');
+  });
+
   test('renders with description from options', () => {
     const options = { description: 'Test description' };
     const uiOptions = { ...uiSchema, 'ui:options': options };

@@ -222,15 +222,18 @@ export default function useAltDateWidgetProps<
   );
 
   const { yearsRange, format } = options;
-  // A JSON uiSchema can hold anything here, so a range that isn't a list gives the default years, and a year held as a
-  // numeric string counts as its number, as a `stars` option does
+  // A JSON uiSchema can hold anything here, so a range that isn't a list, or that `dateRangeOptions()` would throw for
+  // mixing a relative and an absolute year, gives the default years, and a year held as a numeric string counts as its
+  // number, as a `stars` option does
   const [firstYear, lastYear]: unknown[] = Array.isArray(yearsRange) ? yearsRange.map(toNumericValue) : [];
   const elements = useMemo(
     () =>
       getDateElementProps(
         state,
         time,
-        typeof firstYear === 'number' && typeof lastYear === 'number' ? [firstYear, lastYear] : undefined,
+        typeof firstYear === 'number' && typeof lastYear === 'number' && Math.sign(firstYear) * Math.sign(lastYear) >= 0
+          ? [firstYear, lastYear]
+          : undefined,
         isDateElementFormat(format) ? format : undefined,
       ),
     [state, time, firstYear, lastYear, format],

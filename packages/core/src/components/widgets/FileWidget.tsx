@@ -8,7 +8,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getTemplates, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
+import { acceptAttribute, getTemplates, TranslatableString, useFileWidgetProps } from '@rjsf/utils';
 
 import RichDescription from '../RichDescription.tsx';
 
@@ -114,7 +114,7 @@ function FileWidget<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         required={value ? false : required} // this turns off HTML required validation when a value exists
         onChangeOverride={handleOnChangeEvent}
         value=''
-        accept={options.accept ? String(options.accept) : undefined}
+        accept={acceptAttribute(options.accept)}
       />
       <FilesInfo<T, S, F>
         filesInfo={filesInfo}
