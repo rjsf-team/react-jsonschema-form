@@ -11,6 +11,7 @@ import {
   themeTests,
   wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
+  wrapIfAdditionalFlagTests,
 } from '@rjsf/snapshot-tests';
 import type { ArrayFieldItemTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
@@ -1482,6 +1483,7 @@ optionErrorStateTests(WrappedForm, (container) =>
 );
 
 wrapIfAdditionalErrorStateTests(WrappedForm);
+wrapIfAdditionalFlagTests(WrappedForm);
 
 wrapIfAdditionalCallbackTests(WrappedForm);
 

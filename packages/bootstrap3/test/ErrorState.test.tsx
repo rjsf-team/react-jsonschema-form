@@ -1,8 +1,8 @@
 import {
   hideErrorTests,
   optionErrorStateTests,
-  wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
+  wrapIfAdditionalFlagTests,
 } from '@rjsf/snapshot-tests';
 
 import Form from '../src/index.ts';
@@ -17,6 +17,5 @@ optionErrorStateTests(Form, (container) =>
 
 // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
 wrapIfAdditionalErrorStateTests(Form);
-
 // oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test
-wrapIfAdditionalCallbackTests(Form);
+wrapIfAdditionalFlagTests(Form);

@@ -213,7 +213,22 @@ describe('UiSchema type', () => {
 
     expectTypeOf(record.foo).toBeUnknown();
     expect(record.foo).toEqual({ 'ui:title': 'Foo' });
+    expectTypeOf(open.foo).toBeUnknown();
     expect(open['ui:widget']).toBe('custom');
+  });
+
+  it('leaves a key declared beside an index signature of unknown values as open as the rest', () => {
+    const ui: UiSchema<{ name: string; [key: string]: unknown }> = {
+      name: { 'ui:wigdet': 'typo' },
+      'ui:wigdet': 'typo',
+    };
+
+    expectTypeOf(ui.name).toBeUnknown();
+    expect(ui.name).toEqual({ 'ui:wigdet': 'typo' });
+  });
+
+  it('reads a field typed `any` back as `unknown`', () => {
+    expectTypeOf<UiSchema<{ meta: any }>['meta']>().toBeUnknown();
   });
 
   it('keeps the ui: namespace open for theme and application directives', () => {

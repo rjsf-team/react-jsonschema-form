@@ -119,6 +119,16 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         schemaUtils.sanitizeDataForNewSchema(guessedSchema('number'), guessedSchema('string'), { aKey: 42 }),
       ).toEqual({ aKey: 42 });
     });
+    it.each([undefined, false])('clears the data of a property whose guessed type flag is %s', (flag) => {
+      const flaggedSchema = (type: RJSFSchema['type']): RJSFSchema => {
+        const aKey: RJSFMarkedSchema = { type, [GUESSED_TYPE_FLAG]: flag };
+        return { type: 'object', additionalProperties: true, properties: { aKey } };
+      };
+
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(flaggedSchema('number'), flaggedSchema('string'), { aKey: 'text' }),
+      ).toEqual({});
+    });
     it('clears the data of a property whose guessed type the new schema replaces with one of its own', () => {
       const freeFormSchema: RJSFSchema = {
         type: 'object',

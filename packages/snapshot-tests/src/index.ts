@@ -32,4 +32,6 @@ export { type GridRenderCustomOptions, gridTests, renderGridColumn } from './gri
 export { wrapIfAdditionalCallbackTests } from './wrapIfAdditionalCallbackTests.tsx';
 export { wrapIfAdditionalErrorStateTests } from './wrapIfAdditionalErrorStateTests.tsx';
 
+export { wrapIfAdditionalFlagTests } from './wrapIfAdditionalFlagTests.tsx';
+
 export { type ThemeGenerators, themeTests } from './themeTests.ts';

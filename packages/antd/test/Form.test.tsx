@@ -8,6 +8,7 @@ import {
   themeTests,
   wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
+  wrapIfAdditionalFlagTests,
 } from '@rjsf/snapshot-tests';
 import type { ErrorSchema, FieldProps, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId, toFieldPath } from '@rjsf/utils';
@@ -1263,6 +1264,7 @@ describe("antd's FieldTemplate rendered by hand", () => {
 });
 
 wrapIfAdditionalErrorStateTests(Form);
+wrapIfAdditionalFlagTests(Form);
 
 wrapIfAdditionalCallbackTests(Form);
 

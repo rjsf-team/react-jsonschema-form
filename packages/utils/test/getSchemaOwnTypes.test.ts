@@ -1,6 +1,6 @@
 import type { JSONSchema7TypeName } from 'json-schema';
 
-import type { RJSFSchema } from '../src/index.ts';
+import type { RJSFMarkedSchema, RJSFSchema } from '../src/index.ts';
 import { getSchemaOwnTypes, GUESSED_TYPE_FLAG } from '../src/index.ts';
 
 const cases: { schema: RJSFSchema; expected: JSONSchema7TypeName[] | undefined }[] = [
@@ -52,5 +52,9 @@ describe('getSchemaOwnTypes()', () => {
     // to become anything, which is why the fallback UI offers every type for it
     const schema = { type: 'string', [GUESSED_TYPE_FLAG]: true } as unknown as RJSFSchema;
     expect(getSchemaOwnTypes(schema)).toBeUndefined();
+  });
+  it.each([undefined, false])('should read a schema whose guessed type flag is %s by its type', (flag) => {
+    const schema: RJSFMarkedSchema = { type: 'string', [GUESSED_TYPE_FLAG]: flag };
+    expect(getSchemaOwnTypes(schema)).toEqual(['string']);
   });
 });
