@@ -7,8 +7,8 @@ import { render, screen } from '@testing-library/react';
 const enumSchema: RJSFSchema = { type: 'string', enum: ['a', 'b'] };
 
 /** Pins that a `SelectWidget` no label names, which shows its value rather than a name, is named by its placeholder or
- * the translated prompt, that a `RadioWidget`'s `radiogroup` no label names is named by its own translated prompt, and
- * that one its label names takes no `aria-label` (#5711, #5586)
+ * the translated prompt, that a `RadioWidget`'s `radiogroup` no label names is named by its placeholder or its own
+ * translated prompt, and that one its label names takes no `aria-label` (#5711, #5586)
  *
  * @param Form - The theme's `Form` component
  * @param [widgets] - Widgets the form registers, such as a `SelectWidget` other than the theme's own
@@ -19,6 +19,19 @@ export function controlNameTests(Form: ComponentType<FormProps>, widgets?: Regis
       render(<Form schema={enumSchema} uiSchema={{ 'ui:widget': 'radio' }} widgets={widgets} validator={validator} />);
 
       expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Choose an option');
+    });
+
+    test('names an untitled radiogroup by its placeholder', () => {
+      render(
+        <Form
+          schema={enumSchema}
+          uiSchema={{ 'ui:widget': 'radio', 'ui:placeholder': 'Pick one' }}
+          widgets={widgets}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Pick one');
     });
 
     test('gives a radiogroup its label names no aria-label', () => {

@@ -385,7 +385,7 @@ describe('the plan SchemaField builds', () => {
             { type: 'number', title: 'Num' },
           ],
         },
-        uiSchema: { 'ui:widget': 'radio' },
+        uiSchema: { 'ui:widget': 'radio', oneOf: [{}, {}] },
         initialFormData: 'a',
       });
 
@@ -1368,6 +1368,16 @@ describe('a ui:field wrapping SchemaField under its own id', () => {
     expect(screen.getByRole('textbox', { name: 'X' })).toBe(input);
     describers.forEach((id) => expect(node.querySelector(`#${id}`)).not.toBeNull());
     expect(describers).toEqual(expect.arrayContaining([errorId('root_x'), helpId('root_x'), 'root_x__description']));
+  });
+
+  it("names the selector of a union it wraps by the field's label text, as no label names it", () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { x: { title: 'X', anyOf: [{ type: 'string' }, { type: 'number' }] } } },
+      uiSchema: { x: { 'ui:field': Wrapper } },
+      initialFormData: { x: 'a' },
+    });
+
+    expect(node.querySelector('#root_x__anyof_select')).toHaveAccessibleName('X');
   });
 
   it('keeps the heading of an ObjectField a ui:field names from repeating under an option titled as the field', () => {

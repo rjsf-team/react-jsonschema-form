@@ -105,7 +105,7 @@ describe('AdditionalPropertyKeySelect', () => {
 
   it("plans the select to draw the key's label itself where it doesn't leave it off, so names it by nothing else", () => {
     const Spy = vi.fn(SelectWidget);
-    render(
+    const { container } = render(
       <AdditionalPropertyKeySelect
         {...baseProps}
         required
@@ -113,13 +113,11 @@ describe('AdditionalPropertyKeySelect', () => {
       />,
     );
 
-    const { presentation } = Spy.mock.lastCall![0];
-    expect(presentation).toMatchObject({
+    expect(container.querySelector('#root_a__key')).not.toHaveAttribute('aria-label');
+    expect(Spy.mock.lastCall![0].presentation).toMatchObject({
       label: { by: 'self', text: 'a Key', requiredMarker: true },
       control: { id: 'root_a__key', attributes: { required: true } },
     });
-    // The spy draws no label, so it's the plan, which a theme's select draws its label by, that must give no name
-    expect(presentation?.control?.attributes).not.toHaveProperty('aria-label');
   });
 
   it('renames the key to the selected name', async () => {

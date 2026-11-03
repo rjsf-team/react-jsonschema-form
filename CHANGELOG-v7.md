@@ -560,6 +560,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix a layout grid column's `span` having no effect: `GridTemplate` sizes the column to that many twelfths of its row, unless it has a `flex`, `flexBasis` or `width` style or a `basis-*` or `w-*` class of its own, logging a warning that its `span` is ignored ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix a layout grid `ui:row` nested in another `ui:row` shrinking to its content rather than taking a line of its own: `GridTemplate` adds `w-full` to the default row classes ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix a `FieldTemplate`, `CheckboxWidget` or `ToggleWidget` label wider than a narrow layout grid column painting over the next column: the label now wraps, breaking a long word if it has to ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
+- Fix `RadioWidget` leaving a `radiogroup` no label names, such as an untitled field's, without an accessible name; it is named by its `ui:placeholder`, else `TranslatableString.RadioGroupName` ("Choose an option") ([#5713](https://github.com/rjsf-team/react-jsonschema-form/pull/5713), [#5586](https://github.com/rjsf-team/react-jsonschema-form/issues/5586))
 
 ## @rjsf/fluentui-rc
 
