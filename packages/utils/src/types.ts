@@ -2237,7 +2237,7 @@ type AdditionalPropertyData<T> = string extends keyof NonNullable<T> ? NonNullab
 type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? unknown : UiSchema<V, S, F>;
 
-/** A nested field entry of a `StrictUiSchema`, unconstrained for unknown data the same way as `UiSchemaChild` */
+/** A nested field entry of a `StrictUiSchema`, unconstrained for the same keys as `UiSchemaChild` */
 type StrictUiSchemaChild<Checks extends AnyUiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
 
