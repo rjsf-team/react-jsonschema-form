@@ -121,7 +121,7 @@ export default function WrapIfAdditionalTemplate<
               {...keyAttributes}
               onBlur={onKeyRenameBlur}
               defaultValue={keyName}
-              disabled={disabled || readonly}
+              disabled={disabled || readonly || !onKeyRenameBlur}
             />
           )}
         </div>
@@ -130,7 +130,7 @@ export default function WrapIfAdditionalTemplate<
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'
-            disabled={disabled || readonly}
+            disabled={disabled || readonly || !onRemoveProperty}
             onClick={onRemoveProperty}
             uiSchema={uiSchema}
             registry={registry}

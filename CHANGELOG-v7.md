@@ -65,12 +65,12 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `InputNumber` to show a numeric string, which a `number` field holds only as invalid data ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RangeWidget` drawing a numeric string, and posting it, at its minimum ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Fix `BaseInputTemplate` dropping a `pattern` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/bootstrap3
 
 - Add `@rjsf/bootstrap3`, a theme that keeps the Bootstrap 3 markup `@rjsf/core` rendered through v6, with a layout grid column's `span` as its `col-xs-*` class unless it has one of its own, which it warns about, as it does about a `span` that isn't a whole number, deprecated from the start and removed in v8 ([#5635](https://github.com/rjsf-team/react-jsonschema-form/pull/5635), [#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5616](https://github.com/rjsf-team/react-jsonschema-form/issues/5616), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
-- Fix `BaseInputTemplate` replacing an `accept` a widget passes it as a prop with `ui:options.accept` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/chakra-ui
 
@@ -144,7 +144,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change an empty `RangeWidget` to leave its name out of a native form submit, and to commit its minimum when a press or a key leaves the thumb there ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Fix `BaseInputTemplate` dropping a `pattern` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/core
 
@@ -451,6 +452,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `NumberField` to stop taking a string `value` prop, such as `'3.'`, as the pending text of a custom field that renders it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `BaseInputTemplate` replacing an `accept` a widget passes it as a prop with `ui:options.accept` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/daisyui
 
@@ -573,6 +575,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix a `FieldTemplate`, `CheckboxWidget` or `ToggleWidget` label wider than a narrow layout grid column painting over the next column: the label now wraps, breaking a long word if it has to ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked, focuses it and is written back as a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `BaseInputTemplate` replacing an `accept` a widget passes it as a prop with `ui:options.accept` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/fluentui-rc
 
@@ -624,7 +627,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix a layout grid `ui:row` given its template through its `style` rendering as a block, which ignored the template: `GridTemplate` makes it a grid, unless its `style` sets a `display` of its own ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Fix `BaseInputTemplate` dropping a `pattern` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/mantine
 
@@ -699,7 +703,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `FileWidget` to show the clear button for a stored file, including one that can't be read ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `DateWidget` and `DateTimeWidget` to use their default `valueFormat` and `displayFormat` for an option that isn't a string ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix `BaseInputTemplate` dropping a `pattern` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/mui
 
@@ -754,7 +759,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix a layout grid `ui:row` nested in another `ui:row` shrinking to its content rather than taking a line of its own: `GridTemplate` grows a row without a `size`, a `flex`, `flexBasis`, `flexGrow` or `width` in its `style` or `sx`, or an `sx` function, which can't be read for one, to fill its line, with a `flex` of `1 1 100%` ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Add `MuiBaseInputTemplateProps`, the props mui's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes mui's own props to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix `BaseInputTemplate` putting a `pattern` or `accept` a widget passes it on the `TextField` root, where they did nothing, instead of on the `<input>`; a caller's `pattern` drops the numeric title ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `BaseInputTemplate` putting a `pattern`, `inputMode` or `accept` a widget passes it on the `TextField` root, where they did nothing, instead of on the `<input>`; a caller's `pattern` drops the numeric title ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/react-bootstrap
 
@@ -802,7 +808,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Add `BootstrapBaseInputTemplateProps`, the props the theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes `extraProps` to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix `BaseInputTemplate` dropping a `pattern` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/shadcn
 
@@ -884,7 +891,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Add `ShadcnBaseInputTemplateProps`, the props the theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes `extraProps` to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix `BaseInputTemplate` dropping a `pattern` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/snapshot-tests
 
@@ -1218,7 +1226,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change the undeclared props of `GridTemplateProps` from `any` to `unknown`, declaring `className` and `style`, and `ui:submitButtonOptions.props` from an object whose undeclared keys were `any` to any object, of which only the declared `disabled`, `className`, `onClick` and `onClickCapture` read back. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
 - **BREAKING CHANGE:** Remove the open index signature from `FieldProps`, `WidgetProps` and `BaseInputTemplateProps`, which now declare the props RJSF passes, so a field or widget declares any prop of its own. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - **BREAKING CHANGE:** Make `onKeyRename`, `onKeyRenameBlur` and `onRemoveProperty` optional in `FieldTemplateProps` and `WrapIfAdditionalTemplateProps`, as they are undefined for a field `ObjectField` doesn't render, such as the root or an array item. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Add `callerInputProps()`, the `pattern` and `accept` a widget passes `BaseInputTemplate` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Add `callerInputProps()`, the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `AdditionalPropertyKeySelect` to take an optional `onKeyRename` and render disabled without one ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/validator-ajv8

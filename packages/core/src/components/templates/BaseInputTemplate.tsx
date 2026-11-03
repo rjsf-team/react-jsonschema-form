@@ -62,16 +62,11 @@ export default function BaseInputTemplate<
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so a widget passing either keeps
-  // it. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the title with
+  // `pattern`, `inputMode` and `accept` are the derived props a caller can also mean to set, so the ones a widget passes
+  // win. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the title with
   // it rather than describing a rule no longer in force
   const callerProps = callerInputProps(props);
-  const inputProps = {
-    ...rest,
-    ...derivedInputProps,
-    ...callerProps,
-    ...('inputMode' in rest ? { inputMode: rest.inputMode } : undefined),
-  };
+  const inputProps = { ...rest, ...derivedInputProps, ...callerProps };
 
   const inputValue = toInputValue(value);
 

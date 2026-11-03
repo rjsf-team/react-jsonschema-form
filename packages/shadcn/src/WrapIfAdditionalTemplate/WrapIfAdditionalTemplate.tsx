@@ -121,7 +121,7 @@ export default function WrapIfAdditionalTemplate<
                 {...keyAttributes}
                 required={required}
                 defaultValue={keyName}
-                disabled={disabled || readonly}
+                disabled={disabled || readonly || !onKeyRenameBlur}
                 id={keyId}
                 name={keyId}
                 onBlur={!readonly ? onKeyRenameBlur : undefined}
@@ -138,7 +138,7 @@ export default function WrapIfAdditionalTemplate<
             id={buttonId(id, 'remove')}
             iconType='block'
             className='rjsf-object-property-remove w-full'
-            disabled={disabled || readonly}
+            disabled={disabled || readonly || !onRemoveProperty}
             onClick={onRemoveProperty}
             uiSchema={uiSchema}
             registry={registry}

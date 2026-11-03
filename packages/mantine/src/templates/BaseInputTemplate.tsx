@@ -52,8 +52,10 @@ export default function BaseInputTemplate<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const inputProps = { ...getInputProps<T, S, F>(schema, type, options, false), ...callerInputProps(props) };
-  const themeProps = cleanupOptions(options, props);
+  const callerProps = callerInputProps(props);
+  const inputProps = { ...getInputProps<T, S, F>(schema, type, options, false), ...callerProps };
+  // `ui:options` spreads onto the input as Mantine props, so the props a widget passes go after it to win
+  const themeProps = { ...cleanupOptions(options, props), ...callerProps };
   const descriptionProps = getDescriptionProps(props);
 
   // `NumberInput` reports a number once its text parses as one, and on blur trims leading zeroes by parsing the text,
@@ -120,8 +122,12 @@ export default function BaseInputTemplate<
   const { min, max, ...restInputProps } = inputProps;
 
   // Mantine's `NumberInput` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared
-  // to receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
-  const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
+  // to receive, and sets an `inputMode` of its own over any it is given, so a widget that supplies either gets the plain
+  // input every other theme renders for a numeric field.
+  const isNumeric =
+    !onChangeOverride &&
+    !('inputMode' in callerProps) &&
+    (inputProps.type === 'number' || inputProps.type === 'integer');
 
   const ariaDescribedByProps = useInputAriaProps<T, S, F>(
     isNumeric ? 'NumberInput' : 'TextInput',

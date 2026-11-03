@@ -501,6 +501,7 @@ The following props are passed to the `BaseInputTemplate`:
 - `multiple`: A boolean value stating if the widget can accept multiple values;
 - `type`: The `type` of the input, which the widgets rendering a `BaseInputTemplate` set, such as `'number'` or `'date'`;
 - `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns it to spread after the input props `getInputProps()` derives, even when it is undefined, which turns the derived one off;
+- `inputMode`: An `inputMode` a widget passes for the input, which replaces the one the schema derives, and which `callerInputProps()` returns the way it returns `pattern`;
 - `accept`: The file types a widget passes for the input, which replace `ui:options.accept`, and which `callerInputProps()` returns too;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
 - `onChangeOverride`: A `BaseInputTemplate` implements a default `onChange` handler that it passes to the HTML input component to handle the `ChangeEvent`. Sometimes a widget may need to handle the `ChangeEvent` using custom logic. If that is the case, that widget should provide its own handler via this prop;

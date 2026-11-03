@@ -67,12 +67,10 @@ function withoutFieldText<T, S extends StrictRJSFSchema, F extends FormContextTy
  *
  * @param props - The `FieldProps` for this template. `options` holds the option schemas, each already retrieved for
  *   `formData` by `SchemaField`. A field named through `ui:field`, or rendered by a custom field, is handed none, so it
- *   retrieves them from its `schema` as `SchemaField` does. `FieldProps` declares it, since only a `oneOf`/`anyOf`
- *   field gets it, but nothing checks it here, since `SchemaField` renders this through a `Field` slot that only knows
- *   `FieldProps`
+ *   retrieves them from its `schema` as `SchemaField` does
  */
 function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  props: FieldProps<T, S, F> & { options?: S[] },
+  props: FieldProps<T, S, F>,
 ) {
   const {
     name,

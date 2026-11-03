@@ -139,7 +139,7 @@ export default function WrapIfAdditionalTemplate<
             }}
             error={keyAttributes['aria-invalid']}
             defaultValue={keyName}
-            disabled={disabled || readonly}
+            disabled={disabled || readonly || !onKeyRenameBlur}
             id={keyId}
             name={keyId}
             onBlur={!readonly ? onKeyRenameBlur : undefined}
@@ -156,7 +156,7 @@ export default function WrapIfAdditionalTemplate<
           className='rjsf-object-property-remove'
           iconType='default'
           style={btnStyle}
-          disabled={disabled || readonly}
+          disabled={disabled || readonly || !onRemoveProperty}
           onClick={onRemoveProperty}
           uiSchema={uiSchema}
           registry={registry}

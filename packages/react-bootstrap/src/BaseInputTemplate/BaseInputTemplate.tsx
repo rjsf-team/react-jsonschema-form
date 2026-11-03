@@ -23,7 +23,9 @@ export type BootstrapBaseInputTemplateProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > = BaseInputTemplateProps<T, S, F> & {
-  /** Props to spread on the input along with the ones the schema derives, of which a `pattern` or `inputMode` wins */
+  /** Props to spread on the input along with the ones the schema derives. Its `pattern`, `inputMode` and `accept` win
+   * over the derived ones
+   */
   extraProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
 };
 
@@ -55,18 +57,11 @@ export default function BaseInputTemplate<
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so `extraProps` keeps either one
-  // it carries. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the
-  // title with it rather than describing a rule no longer in force
-  const callerProps = { ...callerInputProps(props), ...extraProps };
-  const callerPattern = 'pattern' in callerProps ? { pattern: callerProps.pattern } : undefined;
-  const inputProps = {
-    ...callerProps,
-    ...derivedInputProps,
-    ...callerPattern,
-    ...(callerProps.accept === undefined ? undefined : { accept: callerProps.accept }),
-    ...('inputMode' in callerProps ? { inputMode: callerProps.inputMode } : undefined),
-  };
+  // `pattern`, `inputMode` and `accept` are the derived props a caller can also mean to set, so the ones the widget
+  // passes, as props or in `extraProps`, win. The title names the rule the derived `pattern` imposes, so a caller
+  // replacing that pattern drops the title with it rather than describing a rule no longer in force
+  const callerProps = { ...callerInputProps(props), ...callerInputProps({ ...extraProps }) };
+  const inputProps = { ...extraProps, ...derivedInputProps, ...callerProps };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
@@ -91,7 +86,7 @@ export default function BaseInputTemplate<
     autoFocus: autofocus,
     required,
     disabled,
-    title: callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString),
+    title: 'pattern' in callerProps ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString),
     readOnly: readonly,
     list: hasExamples ? examplesId(id) : undefined,
     ...inputProps,

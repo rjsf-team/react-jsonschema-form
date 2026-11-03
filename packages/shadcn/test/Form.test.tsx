@@ -6,6 +6,7 @@ import {
   optionErrorStateTests,
   submitPendingTests,
   themeTests,
+  wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -1082,5 +1083,7 @@ fallbackDescriptionTests(Form, true);
 optionErrorStateTests(Form, (container) => container.querySelector('label[for="root"]')?.hasAttribute('data-invalid'));
 
 wrapIfAdditionalErrorStateTests(Form);
+
+wrapIfAdditionalCallbackTests(Form);
 
 submitPendingTests(Form);

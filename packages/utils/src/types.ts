@@ -1835,7 +1835,9 @@ export interface BaseInputTemplateProps<
   onChangeOverride?: (event: ChangeEvent<HTMLInputElement>) => void;
   /** The `type` of the input, which the widgets rendering a `BaseInputTemplate` set, such as `'number'` or `'date'` */
   type?: string;
-  /** A `pattern` for the input, which core's `BaseInputTemplate` puts in place of the one the schema derives */
+  /** A `pattern` for the input, which every theme's `BaseInputTemplate` puts in place of the one the schema derives, as
+   * it does a passed `inputMode` and `accept`
+   */
   pattern?: string;
   /** The file types a file input accepts, which `FileWidget` sets from its `accept` option */
   accept?: string;

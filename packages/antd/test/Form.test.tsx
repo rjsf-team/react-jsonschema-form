@@ -6,6 +6,7 @@ import {
   optionErrorStateTests,
   submitPendingTests,
   themeTests,
+  wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { ErrorSchema, FieldProps, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -1262,5 +1263,7 @@ describe("antd's FieldTemplate rendered by hand", () => {
 });
 
 wrapIfAdditionalErrorStateTests(Form);
+
+wrapIfAdditionalCallbackTests(Form);
 
 submitPendingTests(Form);

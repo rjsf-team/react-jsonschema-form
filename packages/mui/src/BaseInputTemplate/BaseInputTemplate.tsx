@@ -15,6 +15,7 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
+  callerInputProps,
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
@@ -111,8 +112,9 @@ export default function BaseInputTemplate<
     slotProps,
     presentation,
     // Attributes of the `<input>`, which `TextField` would otherwise put on its root
-    pattern: ownPattern,
-    accept: ownAccept,
+    pattern: _pattern,
+    accept: _accept,
+    inputMode: _inputMode,
     ...textFieldProps
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
@@ -135,6 +137,7 @@ export default function BaseInputTemplate<
     textFieldOverrides.helperText,
   );
   const numericTitle = getNumericInputTitle(derivedInputProps, registry.translateString);
+  const callerProps = callerInputProps(props);
   // The derived attributes and the field's plan come first so a caller's `slotProps.htmlInput` overrides any of them.
   // The plan goes on the `<input>` a user focuses rather than on the `TextField`'s root, where its own props go. The
   // title explains the derived `pattern`, so a caller replacing that pattern drops it rather than describing a rule no
@@ -146,14 +149,15 @@ export default function BaseInputTemplate<
       ...resolveSlotProps(muiSlotProps?.htmlInput, ownerState),
     };
     return {
-      title: 'pattern' in callerHtmlInput || 'pattern' in props ? undefined : numericTitle,
+      title: 'pattern' in callerHtmlInput || 'pattern' in callerProps ? undefined : numericTitle,
       step,
       min,
       max,
-      accept: ownAccept ?? accept,
+      accept,
       inputMode,
-      pattern: 'pattern' in props ? ownPattern : pattern,
+      pattern,
       autoCapitalize,
+      ...callerProps,
       ...controlAttributes,
       ...callerHtmlInput,
       ...(hasExamples ? { list: examplesId(id) } : undefined),

@@ -29,6 +29,7 @@ export { submitPendingTests } from './submitPendingTests.tsx';
 
 export { type GridRenderCustomOptions, gridTests, renderGridColumn } from './gridTests.tsx';
 
+export { wrapIfAdditionalCallbackTests } from './wrapIfAdditionalCallbackTests.tsx';
 export { wrapIfAdditionalErrorStateTests } from './wrapIfAdditionalErrorStateTests.tsx';
 
 export { type ThemeGenerators, themeTests } from './themeTests.ts';

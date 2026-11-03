@@ -8,6 +8,7 @@ import {
   optionErrorStateTests,
   submitPendingTests,
   themeTests,
+  wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
@@ -1217,5 +1218,7 @@ optionErrorStateTests(Form, () =>
 );
 
 wrapIfAdditionalErrorStateTests(Form);
+
+wrapIfAdditionalCallbackTests(Form);
 
 submitPendingTests(Form);

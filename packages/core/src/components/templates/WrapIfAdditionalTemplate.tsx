@@ -95,6 +95,7 @@ export default function WrapIfAdditionalTemplate<
               id={keyId}
               aria-label={hasKeyLabel ? undefined : keyLabel}
               {...keyAttributes}
+              disabled={!onKeyRenameBlur}
               onBlur={onKeyRenameBlur}
               defaultValue={keyName}
             />
@@ -104,7 +105,7 @@ export default function WrapIfAdditionalTemplate<
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'
-          disabled={disabled || readonly}
+          disabled={disabled || readonly || !onRemoveProperty}
           onClick={onRemoveProperty}
           uiSchema={uiSchema}
           registry={registry}

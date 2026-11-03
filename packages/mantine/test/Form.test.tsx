@@ -6,6 +6,7 @@ import {
   formTests,
   submitPendingTests,
   themeTests,
+  wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { ArrayFieldItemTemplateProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
@@ -1041,5 +1042,7 @@ checkboxLabelTests(WrappedForm, { generateTemplates, generateWidgets, descriptio
 fallbackDescriptionTests(WrappedForm, true);
 
 wrapIfAdditionalErrorStateTests(WrappedForm);
+
+wrapIfAdditionalCallbackTests(WrappedForm);
 
 submitPendingTests(WrappedForm);

@@ -134,12 +134,6 @@ describe('AdditionalPropertyKeySelect', () => {
     expect(baseProps.onKeyRename).toHaveBeenCalledWith('b');
   });
 
-  it('disables the select when it has no rename callback', () => {
-    const { container } = render(<AdditionalPropertyKeySelect {...baseProps} onKeyRename={undefined} />);
-
-    expect(elementOf(container, '#root_a__key')).toBeDisabled();
-  });
-
   it("drops a pick from a theme's select that ignores `disabled` when it has no rename callback", async () => {
     function SelectIgnoringDisabled({ onChange }: WidgetProps) {
       return (

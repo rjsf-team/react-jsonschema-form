@@ -5,6 +5,7 @@ import {
   optionErrorStateTests,
   submitPendingTests,
   themeTests,
+  wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -619,5 +620,7 @@ optionErrorStateTests(Form, (container) =>
 );
 
 wrapIfAdditionalErrorStateTests(Form);
+
+wrapIfAdditionalCallbackTests(Form);
 
 submitPendingTests(Form);

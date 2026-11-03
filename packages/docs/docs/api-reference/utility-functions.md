@@ -238,15 +238,15 @@ Return a consistent `id` for the `btn` button element
 
 ### callerInputProps()
 
-Returns the `pattern` and `accept` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` the caller names counts even when it is undefined, which is how a caller turns the derived one off.
+Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` or `inputMode` the caller names counts even when it is undefined, which is how a caller turns the derived one off.
 
 #### Parameters
 
-- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'pattern'> - The props of the `BaseInputTemplate`
+- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick&lt;BaseInputTemplateProps, 'accept' | 'pattern'>: The `pattern` and `accept` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'>: The `pattern`, `inputMode` and `accept` to spread after the derived input props
 
 ### callWithDeferredThrow()
 

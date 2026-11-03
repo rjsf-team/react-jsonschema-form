@@ -19,6 +19,18 @@ describe('BaseInputTemplate', () => {
     expect(input).not.toHaveAttribute('title');
   });
 
+  test('keeps a passed accept that extraProps names as undefined', () => {
+    const { container } = render(
+      <BaseInputTemplate
+        {...makeWidgetMockProps({ options: { accept: '.pdf' } })}
+        accept='.png'
+        extraProps={{ accept: undefined }}
+      />,
+    );
+
+    expect(container.querySelector('input')).toHaveAttribute('accept', '.png');
+  });
+
   test('shows nothing for an object value', () => {
     const { container } = render(
       <BaseInputTemplate {...makeWidgetMockProps({ schema: { type: 'string' }, value: { a: 1 } })} />,
