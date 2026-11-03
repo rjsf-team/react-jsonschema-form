@@ -1,3 +1,4 @@
+import type { GridProps } from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
 import type { GridTemplateProps } from '@rjsf/utils';
 import { logGridSpanWarning } from '@rjsf/utils';
@@ -11,7 +12,7 @@ const ROW_SIZE_STYLES = ['flex', 'flexBasis', 'flexGrow', 'width'] as const;
  *
  * @param props - The GridTemplateProps, including the extra props containing the mui grid positioning details
  */
-export default function GridTemplate(props: GridTemplateProps) {
+export default function GridTemplate(props: GridTemplateProps & Pick<GridProps, 'size' | 'sx'>) {
   const { children, column, fieldId, span, sx, ...rest } = props;
   if (column) {
     logGridSpanWarning(fieldId, span, { ownWidth: rest.size === undefined ? undefined : 'a `size`' });
