@@ -161,8 +161,12 @@ function belowMaxItems<S extends StrictRJSFSchema>(schema: S, itemCount: number)
  * shorter
  */
 function hasRoomForRow<S extends StrictRJSFSchema>(schema: S, rows: readonly unknown[]) {
-  const fixedItemCount = Array.isArray(schema.items) && isFixedItems(schema) ? schema.items.length : 0;
-  return belowMaxItems(schema, Math.max(rows.length, fixedItemCount));
+  return belowMaxItems(schema, Math.max(rows.length, getFixedItems(schema)?.length ?? 0));
+}
+
+/** The `items` of a tuple, which `isFixedItems()` can't narrow `schema.items` to */
+function getFixedItems<S extends StrictRJSFSchema>(schema: S) {
+  return Array.isArray(schema.items) && isFixedItems(schema) ? schema.items : undefined;
 }
 
 /** A handler a template gets, which does what its button can. A refused press still prevents the default, so a
@@ -211,10 +215,11 @@ function getNewFormDataRow<
   // Cast this (and the uiSchema below) as T/T[] to work around schema utils being for T/T[] caused by the
   // FieldProps<T[], S, F> call on the class
   let itemUiSchema = getStaticItemsUiSchema<T[], S, F>(uiSchema, index);
-  const fixedItem: unknown = Array.isArray(schema.items) ? schema.items[index] : undefined;
-  if (isFixedItems(schema) && isSchemaObject<S>(fixedItem)) {
+  const fixedItems = getFixedItems(schema);
+  const fixedItem: unknown = fixedItems?.[index];
+  if (isSchemaObject<S>(fixedItem)) {
     itemSchema = fixedItem;
-  } else if (isFixedItems(schema) && allowAdditionalItems(schema)) {
+  } else if (fixedItems && allowAdditionalItems(schema)) {
     // A new row beyond the fixed tuple's own positions is rendered with `uiSchema.additionalItems` elsewhere in this
     // field (see the `itemUiSchema` assignment below), so its default must be computed against the same uiSchema.
     itemSchema = schema.additionalItems as S;
@@ -1392,17 +1397,15 @@ export default function ArrayField<
    */
   const handleReorderItems = useCallback(
     (event: ArrayButtonEvent, index: number, newIndex: number) => {
-      if (event) {
-        event.preventDefault();
-        // React clears `currentTarget` once dispatch ends, so a template calling this after an `await` passes the event
-        // with a `null` one
-        const target: HTMLElement | null = event.currentTarget;
-        target?.blur();
-      }
+      event?.preventDefault();
       const rows = readRows();
       if (index >= rows.length || newIndex >= rows.length) {
         return;
       }
+      // React clears `currentTarget` once dispatch ends, so a template calling this after an `await` passes the event
+      // with a `null` one
+      const target: HTMLElement | null | undefined = event?.currentTarget;
+      target?.blur();
 
       function reOrderArray() {
         const newKeyedFormData = rows.slice();

@@ -5730,10 +5730,10 @@ describe('ArrayField', () => {
         return (
           <div className='rjsf-array-item'>
             {props.children}
-            <button type='button' onClick={() => onMoveUpItem()}>
+            <button type='button' onClick={onMoveUpItem}>
               {`Move ${props.index} up`}
             </button>
-            <button type='button' onClick={() => onMoveDownItem()}>
+            <button type='button' onClick={onMoveDownItem}>
               {`Move ${props.index} down`}
             </button>
           </div>
@@ -5755,6 +5755,7 @@ describe('ArrayField', () => {
 
         expect(getFormData()).toEqual(['a', 'b', 'c']);
         expect(onChange).not.toHaveBeenCalled();
+        expect(screen.getByRole('button', { name: button })).toHaveFocus();
       });
 
       it.each([
@@ -5855,6 +5856,18 @@ describe('ArrayField', () => {
         );
       }
 
+      // A `submit` button, so a test also sees a refused press keep the form from submitting
+      function AppendTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
+        return (
+          <div>
+            {items}
+            <button type='submit' onClick={onAddClick}>
+              Append
+            </button>
+          </div>
+        );
+      }
+
       it.each([
         { button: 'Add after 0', caseName: 'adding under a disabled array', uiOptions: { 'ui:disabled': true } },
         { button: 'Add after 0', caseName: 'adding under a read-only array', uiOptions: { 'ui:readonly': true } },
@@ -5935,21 +5948,11 @@ describe('ArrayField', () => {
         { caseName: 'a read-only array', uiSchema: { 'ui:readonly': true }, schema: {} },
         { caseName: 'an array at maxItems', uiSchema: {}, schema: { maxItems: 1 } },
       ])('keeps onAddClick from appending to $caseName', async ({ uiSchema, schema }) => {
-        function DirectAddTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
-          return (
-            <div>
-              {items}
-              <button type='submit' onClick={onAddClick}>
-                Append
-              </button>
-            </div>
-          );
-        }
         const { getFormData, onSubmit } = createFormComponent({
           schema: { type: 'array', items: { type: 'string' }, ...schema },
           uiSchema,
           initialFormData: ['a'],
-          templates: { ArrayFieldTemplate: DirectAddTemplate },
+          templates: { ArrayFieldTemplate: AppendTemplate },
         });
 
         await user.click(screen.getByRole('button', { name: 'Append' }));
@@ -5959,17 +5962,6 @@ describe('ArrayField', () => {
       });
 
       describe('with onAddClick', () => {
-        function AppendTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
-          return (
-            <div>
-              {items}
-              <button type='button' onClick={onAddClick}>
-                Append
-              </button>
-            </div>
-          );
-        }
-
         it("fills a tuple's missing fixed item from that item's own schema", async () => {
           const { getFormData } = createFormComponent({
             schema: {
@@ -6092,16 +6084,6 @@ describe('ArrayField', () => {
         });
 
         it('keeps onAddClick to maxItems when a tuple renders fewer items than it fixes', async () => {
-          function AppendTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
-            return (
-              <div>
-                {items}
-                <button type='button' onClick={onAddClick}>
-                  Append
-                </button>
-              </div>
-            );
-          }
           const { getFormData } = createFormComponent({
             schema: {
               type: 'array',

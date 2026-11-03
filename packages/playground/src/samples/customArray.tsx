@@ -3,14 +3,14 @@ import type { ArrayFieldItemButtonsTemplateProps, ArrayFieldTemplateProps } from
 import type { Sample } from './Sample.ts';
 
 function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
-  const { className, items, canAdd, onAddClick } = props;
+  const { className, items, canAdd, onAddClick, disabled, readonly } = props;
   return (
     <div className={className}>
       {items}
       {canAdd && (
         <div className='row'>
           <p className='col-xs-3 col-xs-offset-9 array-item-add text-right'>
-            <button onClick={onAddClick} type='button'>
+            <button onClick={onAddClick} type='button' disabled={disabled || readonly}>
               Custom +
             </button>
           </p>
