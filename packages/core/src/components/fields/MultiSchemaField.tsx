@@ -42,33 +42,8 @@ import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContex
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
 import type { TemplateWarnEntry } from './TemplateWarnEntryContext.ts';
 
-/** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
- * description, which the field's plan already carries to the option's, so the option keeps the title and description
- * its own schema gives it rather than taking the field's in their place. Shadowed in `ui:options` as well, as
- * `getUiOptions()` reads either spelling
- *
- * @param uiSchema - The field's uiSchema
- * @returns - The uiSchema the option renders with
- */
-function withoutFieldText<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  uiSchema: UiSchema<T, S, F>,
-): UiSchema<T, S, F> {
-  const options = uiSchema[UI_OPTIONS_KEY];
-  if (
-    !('ui:title' in uiSchema) &&
-    !('ui:description' in uiSchema) &&
-    options?.title === undefined &&
-    options?.description === undefined
-  ) {
-    return uiSchema;
-  }
-  const { 'ui:title': _title, 'ui:description': _description, ...rest } = uiSchema;
-  return {
-    // The rest of a generic `UiSchema<T, S, F>` is a type the checker can't relate back to it
-    ...(rest as UiSchema<T, S, F>),
-    [UI_OPTIONS_KEY]: { ...options, title: undefined, description: undefined },
-  };
-}
+/** The widgets the option index has an implementation of that would show the index as a number to edit */
+const VALUE_ENTRY_WIDGETS = new Set<unknown>(['text', 'updown', 'range', 'TextWidget', 'UpDownWidget', 'RangeWidget']);
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It shows
  * the option `useOptionSelection()` holds for the field, selects another when the user picks one, and cleans up any

@@ -32,7 +32,11 @@ function withoutFieldText<T, S extends StrictRJSFSchema, F extends FormContextTy
     return uiSchema;
   }
   const { 'ui:title': _title, 'ui:description': _description, ...rest } = uiSchema;
-  return { ...rest, [UI_OPTIONS_KEY]: { ...options, title: undefined, description: undefined } };
+  return {
+    // The rest of a generic `UiSchema<T, S, F>` is a type the checker can't relate back to it
+    ...(rest as UiSchema<T, S, F>),
+    [UI_OPTIONS_KEY]: { ...options, title: undefined, description: undefined },
+  };
 }
 
 /** Returns a `uiSchema` an option inherits from its field, without a `ui:widget` no widget implements for the option's
