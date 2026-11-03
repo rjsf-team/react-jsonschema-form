@@ -436,6 +436,12 @@ export default class Form<
    */
   private lastReportedChange = 0;
 
+  /** The `formData` of the latest change that skipped live validation for a later change of its batch, wrapped so that
+   * `undefined` data is distinguishable from no such change. A throwing last change validates in its place only while
+   * the state it is handed still holds that data, rather than after any other update to the state
+   */
+  private unvalidatedChange?: { formData: T | undefined };
+
   /** The `formData` last handed to `onChange`, wrapped so that never having reported a change is distinguishable from
    * having reported `undefined`. A parent that stores what it receives is holding the form's own data even when it
    * reshaped it on the way in, which `isReportedFormData` recognizes while `awaitingReply` says the parent has yet to
@@ -1103,19 +1109,27 @@ export default class Form<
         const isLast = changeNumber === this.changeCount;
         // React reruns an updater with the same arguments, under `StrictMode` say, and commits the first result, so the
         // rerun returns that result rather than building new objects that differ from what is committed and reported
-        if (outcome?.prevState === prevState && outcome.props === props && outcome.isLast === isLast) {
-          return outcome.result;
+        const isRerun = outcome?.prevState === prevState && outcome.props === props && outcome.isLast === isLast;
+        if (!outcome || !isRerun) {
+          try {
+            const state = this.processChange({ newValue, path, newErrorSchema }, isLast, prevState, props);
+            outcome = { prevState, props, isLast, result: state as FormState<T, S, F> };
+          } catch (error) {
+            // Validating `prevState` is only needed while it holds a change that skipped validation for this one
+            const holdsUnvalidatedChange =
+              this.unvalidatedChange !== undefined && this.unvalidatedChange.formData === prevState.formData;
+            const validation =
+              isLast && holdsUnvalidatedChange ? this.validateBeforeThrow(prevState, props) : undefined;
+            const result = (validation ?? null) as FormState<T, S, F> | null;
+            outcome = { prevState, props, isLast, result, error };
+          }
         }
-        try {
-          const state = this.processChange({ newValue, path, newErrorSchema }, isLast, prevState, props);
-          const result = state as FormState<T, S, F>;
-          outcome = { prevState, props, isLast, result };
-        } catch (error) {
-          // Only a burst has earlier changes that skipped validation; a lone change leaves the state as it was
-          const isBurst = prevState !== this.state;
-          const validation = isLast && isBurst ? this.validateBeforeThrow(prevState, props) : undefined;
-          const result = (validation ?? null) as FormState<T, S, F> | null;
-          outcome = { prevState, props, isLast, result, error };
+        // Set on a rerun too, since a restarted render can rerun earlier changes from that result and this one afresh,
+        // and left by a change before the last that throws, since the state it leaves still holds the change before it
+        if (!('error' in outcome)) {
+          this.unvalidatedChange = isLast ? undefined : { formData: outcome.result?.formData };
+        } else if (isLast) {
+          this.unvalidatedChange = undefined;
         }
         return outcome.result;
       },
@@ -1362,26 +1376,22 @@ export default class Form<
       }
     } else if (customErrors && getByPath<unknown[]>(customErrors.ErrorSchema, [...path, ERRORS_KEY])?.length) {
       // If we have custom errors and the path has an error, then we need to clear it, on a copy as above
-      const cleared = new Set(getByPath<string[]>(customErrors.ErrorSchema, [...path, ERRORS_KEY]));
       customErrors = new ErrorSchemaBuilder<T>(customErrors.ErrorSchema);
       customErrors.clearErrors(path);
       if (!noValidate && !(mustValidate && isLast)) {
-        // Only the cleared messages leave the errors shown, rather than rebuilding every field's errors from the
-        // AJV-only ones, which do not hold what other widgets replaced
+        // Only the cleared path is rebuilt, from the AJV and extra errors at it, rather than every field from the
+        // AJV-only errors, which do not hold what other widgets replaced
+        const errorsPath = [...path, ERRORS_KEY];
+        const extraAtPath = getByPath<string[]>(extraErrors, errorsPath) ?? [];
         const errorSchema = structuredClone(prevState.errorSchema || {});
-        const shownAtPath = getByPath<string[]>(errorSchema, [...path, ERRORS_KEY]);
-        if (shownAtPath) {
-          setByPath(
-            errorSchema,
-            [...path, ERRORS_KEY],
-            shownAtPath.filter((message) => !cleared.has(message)),
-            true,
-          );
-        }
+        const ajvAtPath = getByPath<string[]>(schemaValidationErrorSchema, errorsPath) ?? [];
+        setByPath(errorSchema, errorsPath, [...ajvAtPath, ...extraAtPath], true);
         const property = `.${path.join('.')}`;
-        const errors = (prevState.errors || []).filter(
-          (error) => error.property !== property || !cleared.has(error.message ?? ''),
-        );
+        const errors = [
+          ...(prevState.errors || []).filter((error) => error.property !== property),
+          ...(prevState.schemaValidationErrors || []).filter((error) => error.property === property),
+          ...toErrorList<T>({ [ERRORS_KEY]: extraAtPath } as ErrorSchema<T>, path.map(String)),
+        ];
         state = { ...state, errorSchema, errors };
       }
     }
@@ -1474,41 +1484,61 @@ export default class Form<
       onBlur(id, data);
     }
     if ((omitExtraData === true && liveOmit === 'onBlur') || liveValidate === 'onBlur') {
-      const { extraErrors } = this.props;
-      const { formData } = this.state;
-      let newFormData: T | undefined = formData;
-      let state: Partial<FormState<T, S, F>> = { formData: newFormData };
-      if (omitExtraData === true && liveOmit === 'onBlur') {
-        // oxlint-disable-next-line typescript/no-deprecated
-        newFormData = this.omitExtraData(formData);
-        state = { formData: newFormData };
-      }
-      if (liveValidate === 'onBlur') {
-        const { schema, schemaUtils, errorSchema, customErrors, retrievedSchema } = this.state;
-        const liveValidation = this.liveValidate(
-          schema,
-          schemaUtils,
-          errorSchema,
-          newFormData,
-          extraErrors,
-          customErrors,
-          retrievedSchema,
-        );
-        state = { formData: newFormData, ...liveValidation, customErrors };
-      }
-      const hasChanges = Object.keys(state)
-        // Filter out `schemaValidationErrors` and `schemaValidationErrorSchema` since they aren't IChangeEvent props
-        .filter((key) => !key.startsWith('schemaValidation'))
-        .some((key) => {
-          const oldData = this.state[key as keyof FormState<T, S, F>];
-          const newData = state[key as keyof FormState<T, S, F>];
-          return !deepEquals(oldData, newData);
-        });
-      this.setState(state as FormState<T, S, F>, () => {
-        if (hasChanges) {
-          this.reportChange(toIChangeEvent({ ...this.state, ...state }), id);
-        }
-      });
+      let blurred: { state: Partial<FormState<T, S, F>>; hasChanges: boolean } | { error: unknown } | undefined;
+      // An updater, as for a change, so a change queued in the same event is blurred rather than replaced by the data
+      // from before it, and a throw is rethrown from a timeout rather than unmounting the form
+      this.setState(
+        (prevState, props) => {
+          try {
+            const { formData, schema, schemaUtils, errorSchema, customErrors, retrievedSchema } = prevState;
+            let newFormData: T | undefined = formData;
+            let state: Partial<FormState<T, S, F>> = { formData: newFormData };
+            if (omitExtraData === true && liveOmit === 'onBlur') {
+              // oxlint-disable-next-line typescript/no-deprecated
+              newFormData = this.omitExtraData(formData);
+              state = { formData: newFormData };
+            }
+            if (liveValidate === 'onBlur') {
+              const liveValidation = this.liveValidate(
+                schema,
+                schemaUtils,
+                errorSchema,
+                newFormData,
+                props.extraErrors,
+                customErrors,
+                retrievedSchema,
+                false,
+                props,
+              );
+              state = { formData: newFormData, ...liveValidation, customErrors };
+            }
+            const hasChanges = Object.keys(state)
+              // `schemaValidationErrors` and `schemaValidationErrorSchema` aren't IChangeEvent props
+              .filter((key) => !key.startsWith('schemaValidation'))
+              .some((key) => {
+                const oldData = prevState[key as keyof FormState<T, S, F>];
+                const newData = state[key as keyof FormState<T, S, F>];
+                return !deepEquals(oldData, newData);
+              });
+            blurred = { state, hasChanges };
+            return state as FormState<T, S, F>;
+          } catch (error) {
+            blurred = { error };
+            return null;
+          }
+        },
+        () => {
+          const outcome = blurred;
+          blurred = undefined;
+          if (outcome && 'error' in outcome) {
+            setTimeout(() => {
+              throw outcome.error;
+            });
+          } else if (outcome?.hasChanges) {
+            this.reportChange(toIChangeEvent({ ...this.state, ...outcome.state }), id);
+          }
+        },
+      );
     }
   };
 
@@ -1542,7 +1572,8 @@ export default class Form<
     event.persist();
     // oxlint-disable-next-line typescript/no-deprecated
     const { omitExtraData, extraErrors, noValidate, onSubmit } = this.props;
-    let { formData: newFormData } = this.state;
+    const { formData } = this.state;
+    let newFormData = formData;
 
     if (omitExtraData === true) {
       // oxlint-disable-next-line typescript/no-deprecated
@@ -1555,13 +1586,18 @@ export default class Form<
       const errorSchema = extraErrors || {};
       const errors = extraErrors ? toErrorList(extraErrors) : [];
       this.setState(
-        {
-          formData: newFormData,
-          errors,
-          errorSchema,
-          schemaValidationErrors: [],
-          schemaValidationErrorSchema: {},
-        },
+        (prevState) =>
+          // A change queued in the same event is applied before this, so its data and errors are kept rather than
+          // replaced by those from before it, which are what was validated and is submitted
+          prevState.formData === formData
+            ? {
+                formData: newFormData,
+                errors,
+                errorSchema,
+                schemaValidationErrors: [],
+                schemaValidationErrorSchema: {},
+              }
+            : null,
         () => {
           if (onSubmit) {
             onSubmit(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event);

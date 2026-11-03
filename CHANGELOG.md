@@ -31,6 +31,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Change `noValidate` to hide custom errors a widget raised, including ones raised before it was turned on; they show again once it is turned off ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
 - Fix `ErrorList` and the `onChange` event still listing a widget's custom error after an edit cleared it, with live validation off ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
 - Change live validation on change to run once per burst of changes in one event, for the last one; the events of the changes before it report the errors from before the burst ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631))
+- Fix `Form` reverting changes made in the same event as a submit, or as a blur with `liveValidate` or `liveOmit` set to `'onBlur'`. A throw from a blur's live validation is now rethrown from a timeout ([#5631](https://github.com/rjsf-team/react-jsonschema-form/pull/5631), [#5660](https://github.com/rjsf-team/react-jsonschema-form/issues/5660))
 
 ## @rjsf/shadcn
 
