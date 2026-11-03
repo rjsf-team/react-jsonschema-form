@@ -227,6 +227,33 @@ describe('withTheme', () => {
       expect(fromTheme.node.querySelectorAll('.unrelated-template')).toHaveLength(1);
     });
 
+    it('gives a declared template written inline with no type on its props the props it declares', () => {
+      const ThemedForm = withTheme({
+        templates: {
+          FieldTemplate: (props) => {
+            expectTypeOf(props.id).toEqualTypeOf<string>();
+            return <div className='theme-field-template'>{props.id}</div>;
+          },
+        },
+      });
+      const { container } = render(<ThemedForm schema={{ type: 'string' }} validator={validator} />);
+      const { container: fromForm } = render(
+        <ThemedForm
+          schema={{ type: 'string' }}
+          validator={validator}
+          templates={{
+            FieldTemplate: (props) => {
+              expectTypeOf(props.id).toEqualTypeOf<string>();
+              return <div className='form-field-template'>{props.id}</div>;
+            },
+          }}
+        />,
+      );
+
+      expect(container.querySelector('.theme-field-template')).toHaveTextContent('root');
+      expect(fromForm.querySelector('.form-field-template')).toHaveTextContent('root');
+    });
+
     it('should use the withTheme template', () => {
       const themeTemplates = {
         FieldTemplate() {

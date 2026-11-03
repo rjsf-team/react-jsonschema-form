@@ -1536,6 +1536,39 @@ const registry = { templates: { CustomArrayFieldTemplate } };
 const uiSchema: UiSchema = { 'ui:ArrayFieldTemplate': 'CustomArrayFieldTemplate' };
 ```
 
+### Reading a custom template back
+
+RJSF doesn't know the props of a template you register under your own name, so one read back from `registry.templates`, `getTemplate()` or `getTemplates()` under that name has props of type `never` and can't be rendered as it is. Name its props with `isComponentType()`, which also checks that it is a component:
+
+```tsx
+import { getTemplate, isComponentType, Registry } from '@rjsf/utils';
+import { MyTemplateProps } from './MyTemplate';
+
+function renderMyTemplate(registry: Registry, props: MyTemplateProps) {
+  const MyTemplate = getTemplate('MyTemplate', registry);
+  if (!isComponentType<MyTemplateProps>(MyTemplate)) {
+    return null;
+  }
+  return <MyTemplate {...props} />;
+}
+```
+
+For a template in a group of your own, narrow the group first, since `isComponentType()` is false for it, then name the props on the member. A `typeof` check alone isn't enough to find the group, because what `memo()`, `forwardRef()` and `lazy()` return is an object too:
+
+```tsx
+const MyGroup = getTemplate('MyGroup', registry);
+if (typeof MyGroup !== 'object' || isComponentType(MyGroup)) {
+  return null;
+}
+const { MyTemplate } = MyGroup;
+if (!isComponentType<MyTemplateProps>(MyTemplate)) {
+  return null;
+}
+return <MyTemplate {...props} />;
+```
+
+A custom template written inline with no type on its `props` parameter takes `never` from the same entry, so give it one: `templates={{ MyTemplate: (props: MyTemplateProps) => <div>{props.title}</div> }}`.
+
 ### Typing a set of templates
 
 `Partial<TemplatesType>` types a set of templates, as every theme's `generateTemplates()` returns: it checks each template RJSF declares, such as `FieldTemplate`, against its own props, and takes your own templates and groups of them beside those:
@@ -1562,4 +1595,14 @@ const templates: FormProps['templates'] = {
 };
 ```
 
-`TemplatesType` is two exported types put together: `DeclaredTemplatesType` holds the templates RJSF declares, and `CustomTemplateEntries` is the string index signature for your own. `Omit` with literal keys on `TemplatesType`, such as `Omit<TemplatesType, 'ButtonTemplates'>`, collapses to that signature and checks none of the declared templates, so omit from `DeclaredTemplatesType` instead, and add `CustomTemplateEntries` when the type holds your own templates too: `Partial<Omit<DeclaredTemplatesType, 'ButtonTemplates'>> & CustomTemplateEntries`. `Pick` keeps the templates it picks checked.
+`TemplatesType` is two exported types put together: `DeclaredTemplatesType` holds the templates RJSF declares, and `CustomTemplateEntries` is the string index signature for your own. `Omit` with literal keys on `TemplatesType`, such as `Omit<TemplatesType, 'ButtonTemplates'>`, collapses to that signature and checks none of the declared templates, so omit from `DeclaredTemplatesType` instead, and add `CustomTemplateEntries` when the type holds your own templates too. That signature takes a key you omitted unchecked, so declare it again with the type you want. This is the type of `FormProps['templates']`:
+
+```ts
+import { CustomTemplateEntries, DeclaredTemplatesType } from '@rjsf/utils';
+
+type MyTemplates = Partial<Omit<DeclaredTemplatesType, 'ButtonTemplates'>> & {
+  ButtonTemplates?: Partial<DeclaredTemplatesType['ButtonTemplates']>;
+} & CustomTemplateEntries;
+```
+
+`Pick` keeps the templates it picks checked.

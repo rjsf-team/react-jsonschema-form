@@ -1793,6 +1793,10 @@ otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only t
   from an ordinary option, so it is returned unchecked and without a warning: a truthy value (a component or a
   `Record` of them) as-is, a string looked up among the registry's templates, a falsy one falling back
 
+A template under a custom name has props of type `never`, since only its caller knows them: name them with
+`isComponentType<P>()` before rendering it. See
+[Reading a custom template back](../advanced-customization/custom-templates.md#reading-a-custom-template-back).
+
 ### getTemplates&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns every template in the `registry`, with each one that `uiOptions` overrides resolved the way `getTemplate()`
@@ -1809,6 +1813,8 @@ left out. Destructure the templates a component renders from the result, e.g.
 #### Returns
 
 - Readonly&lt;TemplatesType&lt;T, S, F>>: The templates from either the `uiSchema` or `registry`
+
+A template the result holds under a custom name has props of type `never`, as `getTemplate()` returns it.
 
 ### getTestIds()
 

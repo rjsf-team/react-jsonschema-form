@@ -591,10 +591,9 @@ export type MarkdownTemplateProps<
 
 /** The templates RJSF declares. Separate from `TemplatesType` because `Omit` with literal keys on a type with a string
  * index signature collapses to that signature, so `Omit<TemplatesType, 'ButtonTemplates'>` would leave every template
- * unchecked.
- * Object types rather than an `interface`, which gets no implicit index signature and so wouldn't fit
- * `CustomTemplateEntries`. `ButtonTemplates` is a second one because a lone object type must be an `interface` to lint
+ * unchecked
  */
+// oxlint-disable-next-line typescript/consistent-type-definitions -- an interface gets no implicit index signature, so it wouldn't fit `CustomTemplateEntries`
 export type DeclaredTemplatesType<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -645,7 +644,6 @@ export type DeclaredTemplatesType<
   UnsupportedFieldTemplate: SlotComponent<UnsupportedFieldProps<T, S, F>>;
   /** The template to use for rendering a field that allows a user to add additional properties */
   WrapIfAdditionalTemplate: SlotComponent<WrapIfAdditionalTemplateProps<T, S, F>>;
-} & {
   /** The set of templates associated with buttons in the form */
   ButtonTemplates: {
     /** The template to use for the main `Submit` button  */
