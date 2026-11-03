@@ -879,12 +879,15 @@ function isLabelUndrawnForLackOfControl({ label, control, showLabel }: FieldPres
  *
  * @param option - The field the option shown renders with
  * @param title - The title of the field above, without its Deprecated marker
+ * @param titledAsNamer - False where a `ui:field` gave the `SchemaField` it wraps a title over its own, which an option
+ *   with no title doesn't draw, as it takes the label of the field that named it
  * @param translateString - The registry's `translateString`
  * @returns - True when the option draws that label
  */
 function optionDrawsFieldLabel<T, S extends StrictRJSFSchema, F extends FormContextType>(
   option: ShownOptionField<T, S, F> | null | undefined,
   title: string,
+  titledAsNamer: boolean,
   translateString: Registry<T, S, F>['translateString'],
 ) {
   if (!option || option.hidden) {
@@ -896,7 +899,7 @@ function optionDrawsFieldLabel<T, S extends StrictRJSFSchema, F extends FormCont
     return false;
   }
   const optionTitle = getFieldLabel<T, S, F>({ ...option.schema, deprecated: false }, uiOptions, translateString);
-  return !optionTitle || optionTitle === title;
+  return optionTitle ? optionTitle === title : titledAsNamer;
 }
 
 /** Resolves the field a `SchemaField` renders and plans who draws its parts, from the props it is handed and from the
@@ -988,14 +991,10 @@ export function useSchemaFieldPlan<
   // control to name, as while an optional field's option selector isn't on screen, isn't drawn, so it is the field
   // below's heading
   let label = ownLabel;
-  if (inheritedPresentation) {
-    const untitled = !getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, {
-      ...labelSources,
-      name: undefined,
-    });
-    if (inheritedPresentation.title === title || untitled) {
-      label = inheritedPresentation.plan.label.text;
-    }
+  const isUntitled = () =>
+    !getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, { ...labelSources, name: undefined });
+  if (inheritedPresentation && (inheritedPresentation.title === title || isUntitled())) {
+    label = inheritedPresentation.plan.label.text;
   }
   // When the option selector is an optional data control AND it does not have form data, the control is not on screen
   // yet. This is decided here rather than with the `XxxOfField` below because the fallback UI renders that same selector
@@ -1057,8 +1056,9 @@ export function useSchemaFieldPlan<
     getDiscriminatorFieldFromSchema<S>(schema),
   );
   const shownOption = useMemo(
-    () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
-    [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
+    () =>
+      xxxOfOptions ? { fieldPath, options: xxxOfOptions, uiSchema, list, selectedOption, selectOption } : undefined,
+    [xxxOfOptions, uiSchema, list, selectedOption, selectOption, fieldPath],
   );
   // The field below a named one is the field beside the options the `SchemaField` that named it renders. Read there
   // alone: the options are retrieved afresh with every change of the data, so a field reading them re-renders with
@@ -1091,9 +1091,9 @@ export function useSchemaFieldPlan<
       planShownOption && xxxOfKey !== undefined && fieldShownOption
         ? planShownOption(
             schema,
-            uiSchema,
+            // Below a named field the options render above, so the option shown and its uiSchema are read from there
+            fieldShownOption.uiSchema as UiSchema<T, S, F>,
             xxxOfKey,
-            // Below a named field the options render above, so the option shown is read from there
             fieldShownOption.options[optionBeside] as S | undefined,
             optionBeside,
             formData,
@@ -1102,23 +1102,23 @@ export function useSchemaFieldPlan<
             namedAbove,
           )
         : undefined,
-    [
-      planShownOption,
-      xxxOfKey,
-      fieldShownOption,
-      schema,
-      uiSchema,
-      optionBeside,
-      formData,
-      fieldPath,
-      registry,
-      namedAbove,
-    ],
+    [planShownOption, xxxOfKey, fieldShownOption, schema, optionBeside, formData, fieldPath, registry, namedAbove],
   );
+  // What the field that named this one hands it. This field renders under the id beside the options, so it inherits
+  // none of that, though the option takes that field's label and draws its help
+  const namerBelow = optionsRenderedAbove ? use(PresentationContext) : undefined;
   // Below a named field the options render beside that field rather than here, so this label has no control to name,
   // and the option draws it where it would only say the same
   const labelDrawnByOption =
-    optionsRenderedAbove && optionDrawsFieldLabel<T, S, F>(shownOptionField, title, registry.translateString);
+    optionsRenderedAbove &&
+    optionDrawsFieldLabel<T, S, F>(
+      shownOptionField,
+      title,
+      isUntitled() || title === namerBelow?.title,
+      registry.translateString,
+    );
+  // A field with no title has only the property name to say, where the label is already drawn above the field naming it
+  const labelDrawnAbove = namerBelow?.plan.label.by === 'above' && isUntitled();
   const optionDescription =
     labelDrawnByOption && shownOptionField
       ? getUiOptions<T, S, F>(shownOptionField.uiSchema).description || shownOptionField.schema.description
@@ -1138,11 +1138,15 @@ export function useSchemaFieldPlan<
     fieldKey: fieldToRender?.fieldKey,
     xxxOfKey: plannedAsOptions ? xxxOfKey : undefined,
     // Its text rather than `showLabel`, which also hides the description, that the option doesn't draw for it
-    label: labelDrawnByOption ? '' : label,
+    label: labelDrawnByOption || labelDrawnAbove ? '' : label,
     showLabel,
     description: optionDescription === fieldDescription ? '' : fieldDescription,
-    // The field that named this one draws the help beside the options it renders
-    help: optionsRenderedAbove ? undefined : ownUiOptions.help,
+    // The field that named this one draws its help unless it declares it its own, which leaves it to this field and to
+    // an option inheriting its uiSchema alike; a wrapper can set a different one
+    help:
+      namerBelow?.plan.help.by !== 'none' && ownUiOptions.help === namerBelow?.plan.help.text
+        ? undefined
+        : ownUiOptions.help,
     errors: ownErrors,
     hideError,
     hidden: hidden || isOptedOut,

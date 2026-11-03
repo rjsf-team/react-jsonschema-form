@@ -1378,6 +1378,13 @@ describe('a ui:field wrapping SchemaField under its own id', () => {
         initialFormData: { x: formData },
       }).node;
     }
+    function wrapperHanding(hand: (props: FieldProps, ownUiSchema: UiSchema) => Partial<FieldProps>) {
+      return function HandingWrapper(props: FieldProps) {
+        const { SchemaField } = props.registry.fields;
+        const { 'ui:field': _field, ...ownUiSchema } = props.uiSchema ?? {};
+        return <SchemaField {...props} uiSchema={ownUiSchema} {...hand(props, ownUiSchema)} />;
+      };
+    }
     const belowWrapperLabel = '#root_x__XxxOf__label';
     const untitledOptions: [string, RJSFSchema, unknown][] = [
       ['a string', { type: 'string' }, 'a'],
@@ -1471,6 +1478,137 @@ describe('a ui:field wrapping SchemaField under its own id', () => {
       renderWrappedUnion({ type: 'string' }, 'a', {}, {}, { 'ui:help': 'Help me' });
 
       expect(screen.getAllByText('Help me')).toHaveLength(1);
+    });
+
+    it.each<[string, UiSchema, string[]]>([
+      ['with none on its field', {}, ['Inner help']],
+      ['beside the one on its field', { 'ui:help': 'Help me' }, ['Help me', 'Inner help']],
+    ])('draws a ui:help the wrapper sets itself %s', (_name, fieldUiSchema, drawn) => {
+      const helpingWrapper = wrapperHanding((_props, ownUiSchema) => ({
+        uiSchema: { ...ownUiSchema, 'ui:help': 'Inner help' },
+      }));
+      renderWrappedUnion({ type: 'string' }, 'a', {}, {}, { 'ui:field': helpingWrapper, ...fieldUiSchema });
+
+      for (const help of drawn) {
+        expect(screen.getAllByText(help)).toHaveLength(1);
+      }
+    });
+
+    it('keeps its ui:help where the wrapper declares it its own and draws it nowhere', () => {
+      createFormComponent({
+        schema: { type: 'object', properties: { x: { title: 'X', oneOf: [{ type: 'string' }, { type: 'number' }] } } },
+        uiSchema: { x: { 'ui:field': 'Helpless', 'ui:help': 'Help me', oneOf: [{}, {}] } },
+        fields: { Helpless: Wrapper },
+        presentation: { fields: { Helpless: { help: 'self' } } },
+        initialFormData: { x: 'a' },
+      });
+
+      expect(screen.getAllByText('Help me')).toHaveLength(1);
+    });
+
+    it.each<[string, RJSFSchema]>([
+      ['no title', { type: 'string' }],
+      ['a title', { type: 'string', title: 'S' }],
+    ])(
+      "draws the field's label once where an option with no title wraps options of its own, showing one with %s",
+      (_name, shown) => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              x: {
+                title: 'X',
+                oneOf: [{ oneOf: [shown, { type: 'number' }] }, { type: 'boolean' }],
+              },
+            },
+          },
+          uiSchema: { x: { oneOf: [{ 'ui:field': Wrapper }, {}] } },
+          initialFormData: { x: 'a' },
+        });
+
+        expect(screen.queryByText('x')).toBeNull();
+      },
+    );
+
+    describe('a wrapper changing what it hands the field below', () => {
+      it.each<[string, (props: FieldProps, ownUiSchema: UiSchema) => Partial<FieldProps>]>([
+        ['ui:title', (_props, ownUiSchema) => ({ uiSchema: { ...ownUiSchema, 'ui:title': 'Inner' } })],
+        ['schema title', ({ schema }) => ({ schema: { ...schema, title: 'Inner' } })],
+      ])('draws the %s it sets itself beside the label an untitled option draws', (_name, hand) => {
+        const node = renderWrappedUnion({ type: 'string' }, 'a', {}, {}, { 'ui:field': wrapperHanding(hand) });
+
+        expect(node.querySelector(belowWrapperLabel)).toHaveTextContent('Inner');
+        expect(node.querySelector(belowWrapperLabel)?.closest('label')).not.toHaveAttribute('for');
+        expect(node.querySelector('label[for="root_x"]')).toHaveTextContent('X');
+      });
+
+      it('draws the ui:title it sets itself where the field that named it has no title', () => {
+        createFormComponent({
+          schema: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+          uiSchema: {
+            'ui:field': wrapperHanding((_props, ownUiSchema) => ({
+              uiSchema: { ...ownUiSchema, 'ui:title': 'Inner' },
+            })),
+          },
+          initialFormData: 'a',
+        });
+
+        expect(screen.getAllByText('Inner')).toHaveLength(1);
+      });
+
+      it.each<
+        [string, RJSFSchema, UiSchema, (props: FieldProps, ownUiSchema: UiSchema) => Partial<FieldProps>, string]
+      >([
+        ['the schema title', { title: 'X' }, {}, ({ schema: { title: _title, ...schema } }) => ({ schema }), 'X'],
+        ['the ui:title', {}, { 'ui:title': 'T' }, (_props, { 'ui:title': _title, ...uiSchema }) => ({ uiSchema }), 'T'],
+      ])("draws the field's label once where it leaves out %s", (_name, field, fieldUiSchema, hand, drawn) => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { x: { ...field, oneOf: [{ type: 'string' }, { type: 'number' }] } },
+          },
+          uiSchema: { x: { 'ui:field': wrapperHanding(hand), ...fieldUiSchema, oneOf: [{}, {}] } },
+          initialFormData: { x: 'a' },
+        });
+
+        expect(node.querySelector(belowWrapperLabel)).toBeNull();
+        expect(node.querySelector('label[for="root_x"]')).toHaveTextContent(drawn);
+      });
+
+      it('draws the title it sets itself once where the option shown has the same title', () => {
+        const node = renderWrappedUnion(
+          { type: 'string', title: 'Inner' },
+          'a',
+          {},
+          {},
+          {
+            'ui:field': wrapperHanding((_props, ownUiSchema) => ({
+              uiSchema: { ...ownUiSchema, 'ui:title': 'Inner' },
+            })),
+          },
+        );
+
+        expect(node.querySelector(belowWrapperLabel)).toBeNull();
+        expect(node.querySelector('label[for="root_x"]')).toHaveTextContent('Inner');
+      });
+
+      it.each<[string, UiSchema, string | null]>([
+        ['titled by a ui:title', { 'ui:title': 'Opt' }, 'Opt'],
+        ['with its label turned off', { 'ui:label': false }, null],
+      ])('keeps its label where the option shown is %s in a uiSchema it leaves out', (_name, optionUiSchema, drawn) => {
+        const node = renderWrappedUnion(
+          { type: 'string' },
+          'a',
+          optionUiSchema,
+          {},
+          {
+            'ui:field': wrapperHanding((_props, { oneOf: _oneOf, ...ownUiSchema }) => ({ uiSchema: ownUiSchema })),
+          },
+        );
+
+        expect(node.querySelector(belowWrapperLabel)).toHaveTextContent('X');
+        expect(node.querySelector('label[for="root_x"]')?.textContent ?? null).toBe(drawn);
+      });
     });
   });
 });

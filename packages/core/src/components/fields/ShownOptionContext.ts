@@ -1,5 +1,5 @@
 import { createContext, use, useMemo } from 'react';
-import type { FieldPath } from '@rjsf/utils';
+import type { FieldPath, UiSchema } from '@rjsf/utils';
 
 /** The `anyOf`/`oneOf` options `SchemaField` renders for the field at `fieldPath`, and the one it shows, see
  * `useOptionSelection()`
@@ -8,6 +8,8 @@ export interface ShownOption {
   fieldPath: FieldPath;
   /** The options, each retrieved for the field's data */
   options: readonly unknown[];
+  /** The `uiSchema` of the `SchemaField` rendering them, of which a `ui:field` beside them may hand on only part */
+  uiSchema: UiSchema;
   /** The key the selection is stored under */
   list: string | undefined;
   selectedOption: number;
