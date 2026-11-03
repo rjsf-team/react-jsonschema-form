@@ -13,6 +13,7 @@ import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPr
 import type { ValidationError, Validator } from 'ata-validator';
 
 import createAtaInstance from './createAtaInstance.ts';
+import localizeErrors from './localizeErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import { isDraft04, schemaList } from './schemaList.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
@@ -185,11 +186,7 @@ export default class ATAValidator<
       errors = result.valid ? undefined : result.errors;
 
       if (errors && typeof this.localizer === 'function') {
-        // ata freezes `error.params`, so the AJV-validator's pre-quote dance
-        // (used to coax `ajv-i18n` into producing quoted property names)
-        // can't be applied verbatim. The hook is invoked with the raw
-        // ata errors; localizers that mutate `message` in place still work.
-        this.localizer(errors);
+        localizeErrors(this.localizer, errors);
       }
     } catch (err) {
       compilationError = err as Error;

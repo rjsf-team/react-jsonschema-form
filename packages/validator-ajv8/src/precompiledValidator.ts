@@ -153,13 +153,15 @@ export default class AJV8PrecompiledValidator<
     this.ensureSameRootSchema(schema, formData);
     this.mainValidator(formData);
 
-    if (typeof this.localizer === 'function') {
-      localizeErrors(this.localizer, this.mainValidator.errors);
-    }
     const errors = this.mainValidator.errors ?? undefined;
-
-    // Clear errors to prevent persistent errors, see #1104
-    this.mainValidator.errors = null;
+    try {
+      if (typeof this.localizer === 'function') {
+        localizeErrors(this.localizer, this.mainValidator.errors);
+      }
+    } finally {
+      // Clear errors to prevent persistent errors, see #1104
+      this.mainValidator.errors = null;
+    }
 
     return { errors };
   }

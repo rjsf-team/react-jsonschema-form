@@ -965,7 +965,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 NOTES:
 
-- If you provided your own function, modify the list in place.
+- If you provided your own function, set the `message` of each error in the list in place. The function is handed copies of the errors, and only the `message` it sets on each is kept.
 - You must process all the cases which you need by yourself. See the full list of possible cases [here](https://github.com/ajv-validator/ajv-i18n/blob/master/messages/index.js).
-- Each element in the `errors` list passed to the custom function represent a **raw** error object returned by ajv ([see doc](https://github.com/ajv-validator/ajv/blob/master/docs/api.md#error-objects)).
+- Each element in the `errors` list passed to the custom function is a copy of a raw error object returned by ajv ([see doc](https://github.com/ajv-validator/ajv/blob/master/docs/api.md#error-objects)), except that the property names in its `missingProperty`, `property` and `deps` params are quoted, such as `'foo'`, so that RJSF can replace them in your messages with the property's `title` or `ui:title`. Strip the quotes before looking a param up, such as in a map of labels. A property with no title keeps its quoted key in the message.
 - [HTML 5 Validation](#html5-validation) will cause the browser to display a "popup" message, the text of which is entirely under control of the browser. If you are seeing messages which aren't translated "popping up", then add `noHtml5Validate` to your form.

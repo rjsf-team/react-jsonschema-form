@@ -387,6 +387,29 @@ describe('ATAValidator', () => {
   });
 });
 
+describe('ATAValidator with a localizer that names properties', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { foo: { type: 'string', title: 'Foo title' } },
+    required: ['foo'],
+  };
+  const validator = customizeValidator({}, (errors) => {
+    for (const error of errors ?? []) {
+      error.message = `falta ${String(error.params.missingProperty)}`;
+    }
+  });
+
+  it('replaces the property names in the localized messages with their titles', () => {
+    expect(validator.validateFormData({}, schema).errors.map(({ message }) => message)).toEqual(["falta 'Foo title'"]);
+  });
+
+  it('hands back the raw errors with their params unquoted', () => {
+    expect(validator.rawValidation(schema, {}).errors?.map(({ params }) => params)).toEqual([
+      { missingProperty: 'foo' },
+    ]);
+  });
+});
+
 describe('package surface', () => {
   it('re-exports customizeValidator and ATAValidator from index.ts', () => {
     expect(typeof pkg.customizeValidator).toBe('function');

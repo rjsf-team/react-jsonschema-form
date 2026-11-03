@@ -175,13 +175,15 @@ export default class AJV8Validator<
 
     let errors;
     if (compiledValidator) {
-      if (typeof this.localizer === 'function') {
-        localizeErrors(this.localizer, compiledValidator.errors);
-      }
       errors = compiledValidator.errors ?? undefined;
-
-      // Clear errors to prevent persistent errors, see #1104
-      compiledValidator.errors = null;
+      try {
+        if (typeof this.localizer === 'function') {
+          localizeErrors(this.localizer, compiledValidator.errors);
+        }
+      } finally {
+        // Clear errors to prevent persistent errors, see #1104
+        compiledValidator.errors = null;
+      }
     }
 
     return {

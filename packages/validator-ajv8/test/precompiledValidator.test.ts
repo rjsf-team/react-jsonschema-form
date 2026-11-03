@@ -1,11 +1,13 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ErrorSchemaBuilder, hashForSchema, mergeSchemas, noop, retrieveSchema } from '@rjsf/utils';
+import type { ErrorObject } from 'ajv';
 import ajvI18n from 'ajv-i18n';
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import type { Localizer, ValidatorFunctions } from '../src/index.ts';
 import AJV8PrecompiledValidator from '../src/precompiledValidator.ts';
+import type { CompiledValidateFunction } from '../src/types.ts';
 import AJV8Validator from '../src/validator.ts';
 import {
   SUPER_SCHEMA_OPTIONS,
@@ -470,6 +472,44 @@ describe('AJV8PrecompiledValidator with a localizer that names properties', () =
       { missingProperty: 'foo' },
       { property: 'baz', missingProperty: 'bar', depsCount: 1, deps: 'bar' },
     ]);
+  });
+});
+
+describe('AJV8PrecompiledValidator localizing errors it reports itself', () => {
+  const schema: RJSFSchema = { $id: 'reportedErrors', type: 'object' };
+  function validatorReporting(params: ErrorObject['params'][], localizer: Localizer) {
+    const reported: ErrorObject[] = params.map((param) => ({
+      keyword: 'custom',
+      instancePath: '',
+      schemaPath: '#/custom',
+      params: param,
+    }));
+    const validate: CompiledValidateFunction = () => {
+      validate.errors = reported;
+      return false;
+    };
+    return {
+      validate,
+      reported,
+      validator: new AJV8PrecompiledValidator({ reportedErrors: validate }, schema, { localizer }),
+    };
+  }
+
+  it('hands back the params that are not strings untouched', () => {
+    const { validator } = validatorReporting([{ property: 5 }, { property: ['a', 'b'] }], noop);
+    expect(validator.rawValidation(schema, {}).errors?.map(({ params }) => params)).toEqual([
+      { property: 5 },
+      { property: ['a', 'b'] },
+    ]);
+  });
+
+  it('clears the errors and leaves their params unquoted when the localizer throws', () => {
+    const { validate, reported, validator } = validatorReporting([{ missingProperty: 'foo' }], () => {
+      throw new Error('localizer failed');
+    });
+    expect(() => validator.rawValidation(schema, {})).toThrow('localizer failed');
+    expect(validate.errors).toBeNull();
+    expect(reported.map(({ params }) => params)).toEqual([{ missingProperty: 'foo' }]);
   });
 });
 
