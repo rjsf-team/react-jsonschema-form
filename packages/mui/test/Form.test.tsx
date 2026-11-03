@@ -11,7 +11,7 @@ import {
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
-import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
+import { TranslatableString, englishStringTranslator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -534,7 +534,7 @@ describe("mui widgets are named by their label and carry the field's id on the e
     expect(container.querySelector('.MuiSlider-root')).toHaveAttribute('id', 'root_r');
   });
 
-  test('names every thumb of a range of several values by its label, which has no `for` naming the root', () => {
+  test('names each thumb of a range of several values by its label and number, the label having no `for` naming the root', () => {
     const { RangeWidget } = generateWidgets();
     const { container } = render(
       <Form
@@ -547,9 +547,106 @@ describe("mui widgets are named by their label and carry the field's id on the e
 
     const thumbs = screen.getAllByRole('slider');
     expect(thumbs).toHaveLength(2);
-    thumbs.forEach((thumb) => expect(thumb).toHaveAccessibleName('Span'));
+    expect(thumbs[0]).toHaveAccessibleName('Span (1)');
+    expect(thumbs[1]).toHaveAccessibleName('Span (2)');
     expect(container.querySelector('label[for="root_r"]')).not.toBeInTheDocument();
     expectReferencesResolve(container);
+  });
+
+  describe('numbers the thumbs of a range of several values', () => {
+    const { RangeWidget } = generateWidgets();
+    const span: RJSFSchema = {
+      type: 'object',
+      properties: { r: { type: 'array', title: 'Span', items: { type: 'number' } } },
+    };
+
+    test.each<[string, RJSFSchema, UiSchema]>([
+      ['by the text of a label ui:label hides', span, { r: { 'ui:widget': RangeWidget, 'ui:label': false } }],
+      [
+        'by the text of the field above when both hide their label',
+        {
+          type: 'object',
+          properties: { r: { title: 'Span', anyOf: [{ title: 'Pair', type: 'array', items: { type: 'number' } }] } },
+        },
+        { r: { 'ui:label': false, anyOf: [{ 'ui:widget': RangeWidget, 'ui:label': false }] } },
+      ],
+      [
+        'when the author sets getAriaLabel to undefined',
+        span,
+        { r: { 'ui:widget': RangeWidget, 'ui:options': { mui: { getAriaLabel: undefined } } } },
+      ],
+    ])('%s', (_, schema, uiSchema) => {
+      render(<Form schema={schema} uiSchema={uiSchema} initialFormData={{ r: [10, 20] }} validator={validator} />);
+
+      const thumbs = screen.getAllByRole('slider');
+      expect(thumbs[0]).toHaveAccessibleName('Span (1)');
+      expect(thumbs[1]).toHaveAccessibleName('Span (2)');
+    });
+  });
+
+  test('gives the thumbs of a range of several values no bare number when the field has no label text', () => {
+    const { RangeWidget } = generateWidgets();
+    render(
+      <Form
+        schema={{ type: 'array', items: { type: 'number' } }}
+        uiSchema={{ 'ui:widget': RangeWidget }}
+        initialFormData={[10, 20]}
+        validator={validator}
+      />,
+    );
+
+    screen.getAllByRole('slider').forEach((thumb) => expect(thumb).not.toHaveAttribute('aria-label'));
+  });
+
+  test('names the lone thumb of a one-value range by its label, without a number', () => {
+    const { RangeWidget } = generateWidgets();
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { r: { type: 'array', title: 'Span', items: { type: 'number' } } } }}
+        uiSchema={{ r: { 'ui:widget': RangeWidget } }}
+        initialFormData={{ r: [10] }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Span');
+    expectReferencesResolve(container);
+  });
+
+  test.each([
+    ['aria-label', { 'aria-label': 'Volume' }, ['Volume', 'Volume']],
+    ['getAriaLabel', { getAriaLabel: (index: number) => `Bound ${index}` }, ['Bound 0', 'Bound 1']],
+    ['the input slot', { slotProps: { input: { 'aria-label': 'Volume' } } }, ['Volume', 'Volume']],
+  ])('leaves the thumbs of a range of several values to the name the author gives through %s', (_, mui, names) => {
+    const { RangeWidget } = generateWidgets();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { r: { type: 'array', title: 'Span', items: { type: 'number' } } } }}
+        uiSchema={{ r: { 'ui:widget': RangeWidget, 'ui:options': { mui } } }}
+        initialFormData={{ r: [10, 20] }}
+        validator={validator}
+      />,
+    );
+
+    const thumbs = screen.getAllByRole('slider');
+    names.forEach((name, index) => expect(thumbs[index]).toHaveAccessibleName(name));
+  });
+
+  test('names the thumbs of a range of several values by their label alone when translateString leaves the number format empty', () => {
+    const { RangeWidget } = generateWidgets();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { r: { type: 'array', title: 'Span', items: { type: 'number' } } } }}
+        uiSchema={{ r: { 'ui:widget': RangeWidget } }}
+        initialFormData={{ r: [10, 20] }}
+        validator={validator}
+        translateString={(key, params) =>
+          key === TranslatableString.ItemNameWithNumber ? '' : englishStringTranslator(key, params)
+        }
+      />,
+    );
+
+    screen.getAllByRole('slider').forEach((thumb) => expect(thumb).toHaveAccessibleName('Span'));
   });
 
   test('focuses the first thumb of a range of several values under ui:autofocus', () => {

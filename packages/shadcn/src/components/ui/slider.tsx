@@ -10,6 +10,8 @@ import { cn } from '../../lib/utils.ts';
 export type SliderProps = ComponentProps<typeof Root> & {
   /** Additional props for each thumb, the element a user focuses; its `id` and `ref` go on the first thumb only */
   thumbProps?: ComponentProps<typeof Thumb>;
+  /** Gives each of several thumbs a name of its own, by its index, in place of the name in `thumbProps` */
+  getAriaLabel?: (index: number) => string;
 };
 
 /**
@@ -19,10 +21,21 @@ export type SliderProps = ComponentProps<typeof Root> & {
  * @param props.className - Additional CSS classes to apply to the slider
  * @param [props.thumbProps] - Additional props for each thumb, the element a user focuses; its `id` and `ref` go on the
  *   first thumb only
+ * @param [props.getAriaLabel] - Gives each of several thumbs a name of its own, by its index, in place of the name in
+ *   `thumbProps`
  * @param ref - The forwarded ref for the slider element
  * @returns A slider input element with track and thumb
  */
-function Slider({ className, defaultValue, value, min = 0, max = 100, thumbProps, ...props }: SliderProps) {
+function Slider({
+  className,
+  defaultValue,
+  value,
+  min = 0,
+  max = 100,
+  thumbProps,
+  getAriaLabel,
+  ...props
+}: SliderProps) {
   const enumValues = useMemo(() => {
     if (Array.isArray(value)) {
       return value;
@@ -65,6 +78,8 @@ function Slider({ className, defaultValue, value, min = 0, max = 100, thumbProps
           key={index}
           {...everyThumbProps}
           {...(index === 0 && { id: thumbId, ref: thumbRef })}
+          {...(getAriaLabel &&
+            enumValues.length > 1 && { 'aria-label': getAriaLabel(index), 'aria-labelledby': undefined })}
           className={cn(
             'border-primary bg-background ring-ring/50 block size-4 shrink-0 rounded-full border shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50',
             thumbProps?.className,
