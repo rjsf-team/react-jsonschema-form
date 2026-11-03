@@ -2194,6 +2194,20 @@ Return a consistent `id` for the field help element.
 
 - string: The consistent id for the field help element from the given `id`
 
+### inputShowsValue()
+
+Reports whether a native input of `type` shows the `value` that [toInputValue()](#toinputvalue) gives it, the gate a clear button follows.
+A number input shows only a [valid floating-point number](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-floating-point-number) and blanks anything else, `false` included; any other input shows whatever isn't an empty string.
+
+#### Parameters
+
+- value: unknown - The widget's value
+- [type]: string - Optional `type` of the input
+
+#### Returns
+
+- boolean: True if the input shows a value
+
 ### isAdditionalKeyDisabled&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#isadditionalkeydisabled}
 
 Whether a `WrapIfAdditionalTemplate` disables the free-text key input of an `additionalProperties` entry, which it does for a disabled or read-only field, whose key must not be renamed on blur, and for one it is handed no `onKeyRenameBlur`, such as the root, which `ObjectField` doesn't render.
