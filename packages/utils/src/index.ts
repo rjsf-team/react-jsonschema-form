@@ -137,6 +137,7 @@ import {
   selectedOptionDescriptionId,
   titleId,
 } from './idGenerators.ts';
+import isAdditionalKeyDisabled from './isAdditionalKeyDisabled.ts';
 import isComponentType from './isComponentType.ts';
 import isConstant from './isConstant.ts';
 import isConstantOptionList from './isConstantOptionList.ts';
@@ -382,6 +383,7 @@ export {
   hashObject,
   hashString,
   helpId,
+  isAdditionalKeyDisabled,
   isCollapsedByOptionalDataControls,
   isComponentType,
   isConstant,

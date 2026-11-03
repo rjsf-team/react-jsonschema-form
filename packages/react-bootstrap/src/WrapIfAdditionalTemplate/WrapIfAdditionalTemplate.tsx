@@ -6,6 +6,7 @@ import {
   buttonId,
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
+  isAdditionalKeyDisabled,
   TranslatableString,
 } from '@rjsf/utils';
 import { Col, Form, Row } from 'react-bootstrap';
@@ -85,7 +86,7 @@ export default function WrapIfAdditionalTemplate<
               isInvalid={keyAttributes['aria-invalid']}
               required={required}
               defaultValue={keyName}
-              disabled={disabled || readonly || !onKeyRenameBlur}
+              disabled={isAdditionalKeyDisabled<T, S, F>(props)}
               id={keyId}
               name={keyId}
               onBlur={!readonly ? onKeyRenameBlur : undefined}

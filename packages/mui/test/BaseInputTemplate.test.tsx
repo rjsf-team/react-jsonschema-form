@@ -1,7 +1,9 @@
 import { getTestRegistry } from '@rjsf/core/testing';
+import { callerInputPropsTests } from '@rjsf/snapshot-tests';
 import { render, screen } from '@testing-library/react';
 
 import BaseInputTemplate from '../src/BaseInputTemplate/index.ts';
+import Form from '../src/index.ts';
 
 describe('BaseInputTemplate', () => {
   test('puts a pattern and an accept passed as props on the input, not the root', () => {
@@ -55,3 +57,5 @@ describe('BaseInputTemplate', () => {
     expect(screen.getByRole('textbox')).toHaveValue('');
   });
 });
+
+callerInputPropsTests(Form);

@@ -1295,7 +1295,13 @@ You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or
 Core's lays the key, the value and the remove button out on shared grid rows, so the key's input sits level with the value's; see [Lining up a custom `FieldTemplate`](../usage/themes.md#lining-up-a-custom-fieldtemplate).
 
 ```tsx
-import { ADDITIONAL_PROPERTY_FLAG, additionalKeyId, RJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
+  isAdditionalKeyDisabled,
+  RJSFSchema,
+  WrapIfAdditionalTemplateProps,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -1306,8 +1312,9 @@ const schema: RJSFSchema = {
 function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
   const {
     id,
+    disabled,
+    readonly,
     keyName,
-    onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
     schema,
@@ -1327,9 +1334,21 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
   return (
     <div className={classNames} style={style}>
       <label htmlFor={additionalKeyId(id)}>Custom Field Key</label>
-      <input className='form-control' type='text' id={additionalKeyId(id)} onBlur={onKeyRenameBlur} defaultValue={keyName} />
+      <input
+        className='form-control'
+        type='text'
+        id={additionalKeyId(id)}
+        disabled={isAdditionalKeyDisabled(props)}
+        onBlur={onKeyRenameBlur}
+        defaultValue={keyName}
+      />
       <div>{children}</div>
-      <RemoveButton onClick={onRemoveProperty} uiSchema={uiSchema} />
+      <RemoveButton
+        disabled={disabled || readonly || !onRemoveProperty}
+        onClick={onRemoveProperty}
+        uiSchema={uiSchema}
+        registry={registry}
+      />
     </div>
   );
 }
@@ -1358,7 +1377,7 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
 - `onKeyRename`: Optional callback used to handle the changing of an additional property key's name with the new value. It is `undefined` for a field `ObjectField` doesn't render, such as the root or an array item, as `onKeyRenameBlur` and `onRemoveProperty` are, so check for it before calling it
-- `onKeyRenameBlur`: Optional callback used to handle the changing of an additional property key's name when the input is blurred. The event's target's value will be used as the new value. Its a wrapper callback around `onKeyRename`
+- `onKeyRenameBlur`: Optional callback used to handle the changing of an additional property key's name when the input is blurred. The event's target's value will be used as the new value. Its a wrapper callback around `onKeyRename`. Disable the key input of a disabled or read-only field and of one handed no `onKeyRenameBlur`, which [`isAdditionalKeyDisabled()`](../api-reference/utility-functions.md#isadditionalkeydisabled) works out
 - `onRemoveProperty`: Optional callback used to handle the removal of the additionalProperty
 - `propertyNamesEnum`: The key names this property may be renamed to, derived from the parent schema's [`propertyNames.enum`](../json-schema/objects.md#constraining-key-names-with-propertynames) and narrowed to the names its siblings have not already taken; `undefined` when the parent schema does not enumerate its property names. Render the key as a dropdown of those names when it is provided, which the `AdditionalPropertyKeySelect` component from `@rjsf/utils` does using the theme's own `SelectWidget`
 - `keyNotAllowed`: Whether the parent schema forbids this property's key, which its row's errors then say. Mark the key input invalid while it is, which `getAdditionalKeyAttributes()` from `@rjsf/utils` does

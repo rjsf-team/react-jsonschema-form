@@ -6,6 +6,7 @@ import {
   buttonId,
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
+  isAdditionalKeyDisabled,
   joinClassNames,
   TranslatableString,
 } from '@rjsf/utils';
@@ -95,7 +96,7 @@ export default function WrapIfAdditionalTemplate<
               id={keyId}
               aria-label={hasKeyLabel ? undefined : keyLabel}
               {...keyAttributes}
-              disabled={!onKeyRenameBlur}
+              disabled={isAdditionalKeyDisabled<T, S, F>(props)}
               onBlur={onKeyRenameBlur}
               defaultValue={keyName}
             />

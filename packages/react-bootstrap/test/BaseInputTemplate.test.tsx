@@ -1,6 +1,8 @@
+import { callerInputPropsTests } from '@rjsf/snapshot-tests';
 import { render } from '@testing-library/react';
 
 import BaseInputTemplate from '../src/BaseInputTemplate/index.ts';
+import Form from '../src/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 describe('BaseInputTemplate', () => {
@@ -72,3 +74,5 @@ describe('BaseInputTemplate', () => {
     expect(container.querySelector('input')).toHaveClass('x', 'is-invalid', 'form-range');
   });
 });
+
+callerInputPropsTests(Form);

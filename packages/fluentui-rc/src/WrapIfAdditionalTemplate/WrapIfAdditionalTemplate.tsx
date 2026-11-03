@@ -9,6 +9,7 @@ import {
   buttonId,
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
+  isAdditionalKeyDisabled,
   TranslatableString,
 } from '@rjsf/utils';
 
@@ -133,7 +134,7 @@ export default function WrapIfAdditionalTemplate<
               {...keyAttributes}
               required={required}
               defaultValue={keyName}
-              disabled={disabled || readonly || !onKeyRenameBlur}
+              disabled={isAdditionalKeyDisabled<T, S, F>(props)}
               id={keyId}
               name={keyId}
               onBlur={!readonly ? onKeyRenameBlur : undefined}

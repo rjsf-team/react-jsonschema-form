@@ -452,7 +452,11 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `NumberField` to stop taking a string `value` prop, such as `'3.'`, as the pending text of a custom field that renders it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `BaseInputTemplate` replacing an `accept` a widget passes it as a prop with `ui:options.accept` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root, and the key input enabled in a disabled or read-only form, where editing it renamed the key ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix the submit button crashing when a JSON uiSchema sets `ui:submitButtonOptions.props` to `null` ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
+- **BREAKING CHANGE:** Change the `templates` prop of `Form`, and a theme's `templates` passed to `withTheme()`, to check a declared template against its own props, where it accepted any component, and a custom template written inline in it to have a type on its `props`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#the-templates-prop-of-form-and-withtheme-checks-declared-templates-breaking-change) ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
+- Fix `onAddClick` filling a tuple's missing fixed item with an `additionalItems` value instead of a value of that item's own schema ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
+- Fix the add button throwing on an array whose `items` is a list holding a boolean, which renders its items with an empty schema ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 
 ## @rjsf/daisyui
 
@@ -703,7 +707,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change a text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `FileWidget` to show the clear button for a stored file, including one that can't be read ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `DateWidget` and `DateTimeWidget` to use their default `valueFormat` and `displayFormat` for an option that isn't a string ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop, and a `number` field a widget passes an `inputMode` or `onChangeOverride` getting a native number input that blocked a decimal rather than the text input the other themes render ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/mui
@@ -1228,6 +1232,11 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Make `onKeyRename`, `onKeyRenameBlur` and `onRemoveProperty` optional in `FieldTemplateProps` and `WrapIfAdditionalTemplateProps`, as they are undefined for a field `ObjectField` doesn't render, such as the root or an array item. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Add `callerInputProps()`, the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `AdditionalPropertyKeySelect` to take an optional `onKeyRename` and render disabled without one ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- **BREAKING CHANGE:** Change `GridTemplateProps` and `ui:submitButtonOptions.props`, whose undeclared props were `any`, to take any object, of which only the declared props read back: `GridTemplateProps` now also declares `className` and `style`, and `props` declares `disabled`, `className`, `onClick` and `onClickCapture`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
+- Change `getSubmitButtonOptions()` to always return `props`, the default ones when the uiSchema's are missing or a JSON uiSchema sets them to `null` ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
+- Change `useAltDateWidgetProps()` to read only a string value, so a number or `Date` value, which the widget can't write back, renders every alt-date widget's selects blank, where it showed that date ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- **BREAKING CHANGE:** Change a nested entry read from an untyped `UiSchema`, or a field typed `any` in a typed one, from `any` to `unknown`, so an untyped `UiSchema` no longer fits a `UiSchema<T>` whose `T` has a string index signature, nor does the rest of a generic `UiSchema<T>` left by a destructure. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5680](https://github.com/rjsf-team/react-jsonschema-form/pull/5680))
+- Add `isAdditionalKeyDisabled()`, whether a `WrapIfAdditionalTemplate` disables its free-text key input: for a disabled or read-only field, and one handed no `onKeyRenameBlur` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/validator-ajv8
 

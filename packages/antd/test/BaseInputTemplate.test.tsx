@@ -1,3 +1,4 @@
+import { callerInputPropsTests } from '@rjsf/snapshot-tests';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -68,3 +69,5 @@ describe('BaseInputTemplate', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 });
+
+callerInputPropsTests(Form);

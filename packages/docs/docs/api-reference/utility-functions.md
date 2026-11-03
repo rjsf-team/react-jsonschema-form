@@ -2194,6 +2194,18 @@ Return a consistent `id` for the field help element.
 
 - string: The consistent id for the field help element from the given `id`
 
+### isAdditionalKeyDisabled&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#isadditionalkeydisabled}
+
+Whether a `WrapIfAdditionalTemplate` disables the free-text key input of an `additionalProperties` entry, which it does for a disabled or read-only field, whose key must not be renamed on blur, and for one it is handed no `onKeyRenameBlur`, such as the root, which `ObjectField` doesn't render.
+
+#### Parameters
+
+- props: Pick&lt;WrapIfAdditionalTemplateProps&lt;T, S, F>, 'disabled' | 'readonly' | 'onKeyRenameBlur'> - The `disabled`, `readonly` and `onKeyRenameBlur` of the `WrapIfAdditionalTemplate`
+
+#### Returns
+
+- boolean: True when the key input is disabled
+
 ### isCollapsedByOptionalDataControls&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#iscollapsedbyoptionaldatacontrols}
 
 Determines whether the Optional Data Controls render the property of an object collapsed, showing only its Add button: it holds no data, it is not required, read from its own `ui:required` before the object's `required`, and [`isOptionalDataControlsType()`](#isoptionaldatacontrolstype) is true for it.

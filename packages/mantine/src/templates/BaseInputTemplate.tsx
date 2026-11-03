@@ -53,7 +53,11 @@ export default function BaseInputTemplate<
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   const callerProps = callerInputProps(props);
-  const inputProps = { ...getInputProps<T, S, F>(schema, type, options, false), ...callerProps };
+  // Mantine's `NumberInput` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared
+  // to receive, and sets an `inputMode` of its own over any it is given, so a widget that supplies either gets the plain
+  // input every other theme renders for a numeric field.
+  const plainInput = Boolean(onChangeOverride) || callerProps.inputMode !== undefined;
+  const inputProps = getInputProps<T, S, F>(schema, type, options, plainInput);
   // `ui:options` spreads onto the input as Mantine props, so the props a widget passes go after it to win
   const themeProps = { ...cleanupOptions(options, props), ...callerProps };
   const descriptionProps = getDescriptionProps(props);
@@ -121,13 +125,7 @@ export default function BaseInputTemplate<
 
   const { min, max, ...restInputProps } = inputProps;
 
-  // Mantine's `NumberInput` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared
-  // to receive, and sets an `inputMode` of its own over any it is given, so a widget that supplies either gets the plain
-  // input every other theme renders for a numeric field.
-  const isNumeric =
-    !onChangeOverride &&
-    !('inputMode' in callerProps) &&
-    (inputProps.type === 'number' || inputProps.type === 'integer');
+  const isNumeric = !plainInput && (inputProps.type === 'number' || inputProps.type === 'integer');
 
   const ariaDescribedByProps = useInputAriaProps<T, S, F>(
     isNumeric ? 'NumberInput' : 'TextInput',
