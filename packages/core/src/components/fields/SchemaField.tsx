@@ -11,7 +11,6 @@ import type {
   FormContextType,
   GlobalFormOptions,
   GlobalUISchemaOptions,
-  ONE_OF_KEY,
   Registry,
   RJSFMarkedSchema,
   RJSFSchema,
@@ -39,17 +38,23 @@ import {
   getTemplates,
   getUiOptions,
   getUnionTypes,
+  getXxxOfKey,
   GUESSED_TYPE_FLAG,
   hasOwnContentBesideOptions,
+  hasWidget,
   isComponentType,
   isConstant,
+  isConstantOptionList,
   isFormDataAvailable,
   isLabelledByTemplate,
   isSchemaObject,
   logOnce,
   omitConsumedStyling,
+  ONE_OF_KEY,
+  optionsList,
   rendersOwnFieldBesideOption,
   resolveUiSchema,
+  resolveWidget,
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
   toConstant,
@@ -132,6 +137,158 @@ function inferSelectWidget<
         options.some((option) => toConstant<S>(option) === null) ||
         (Array.isArray(schema.type) && getSelectFieldType(schema.type) !== 'boolean')));
   return needsSelect ? 'select' : undefined;
+}
+
+/** Whether a `oneOf` that labels its options sits behind a non-empty `anyOf`, which `getXxxOfKey()`, and so every reader of
+ * the options, reads first. Only a labelled `oneOf` counts, since one written only to validate loses nothing by not being
+ * rendered
+ *
+ * @param schema - The retrieved schema of the field
+ * @param keyword - The keyword the schema's options are read from, if it has any
+ * @param uiSchema - The `uiSchema` for the field
+ * @returns - True when the `anyOf` hides the labels of the `oneOf`
+ */
+function hidesLabelledOneOf<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(schema: S, keyword: SelectSchemaInfo<S>['xxxOfKey'], uiSchema: UiSchema<T, S, F>) {
+  return (
+    keyword === ANY_OF_KEY &&
+    Array.isArray(schema[ONE_OF_KEY]) &&
+    hasOptionLabels<T, S, F>(schema[ONE_OF_KEY], ONE_OF_KEY, uiSchema)
+  );
+}
+
+/** What a warning says when an `anyOf` hides the labels of a `oneOf`, before its advice */
+const HIDDEN_ONE_OF_WARNING =
+  "has both an `anyOf` and a `oneOf`, and the `anyOf` is read first, so the `oneOf` isn't rendered and its titles " +
+  "aren't shown.";
+
+/** Whether a field's options come from its `enum`. `BooleanField` reads constant options before an `enum` so they can
+ * title its values, where `optionsList()`, which every other field's widget is given the options by, reads the `enum`
+ * first
+ *
+ * @param field - The field component rendered
+ * @param selectSchemaInfo - The `SelectSchemaInfo` of the retrieved schema for the field
+ * @param fields - The registered fields
+ * @returns - True when the field shows its `enum`
+ */
+function showsEnum<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  field: Field<T, S, F>,
+  { schema, constantOptions }: SelectSchemaInfo<S>,
+  fields: Registry<T, S, F>['fields'],
+) {
+  return Boolean(schema.enum) && !(constantOptions && field === fields.BooleanField);
+}
+
+/** Whether a field's widget is known to list its options, which only a select and radios are. A checkbox, a hidden field
+ * or a custom widget such as a toggle may show no option labels, and a field `getFieldWidget()` knows no widget of may
+ * read the keywords itself, so warning about any of them would be noise
+ *
+ * @param field - The field component rendered
+ * @param schema - The retrieved schema of the field
+ * @param uiSchema - The `uiSchema` the field is rendered with
+ * @param registry - The registry
+ * @returns - True when the widget lists the options
+ */
+function widgetListsOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  field: Field<T, S, F>,
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  registry: Registry<T, S, F>,
+) {
+  const { widgets } = registry;
+  const widget = getFieldWidget<T, S, F>(field, schema, uiSchema, registry);
+  // A custom field registered for the type may render a widget `getWidget()` has none of, so it mustn't throw here
+  const Widget =
+    widget && hasWidget<T, S, F>(schema, widget, widgets) && resolveWidget<T, S, F>(schema, widget, widgets).Widget;
+  return Widget === widgets.SelectWidget || Widget === widgets.RadioWidget;
+}
+
+/** Warns once when a field's widget lists options other than the ones its `uiSchema` or `anyOf`/`oneOf` names: the
+ * `ui:enumNames` of constant options, which it applies only to `enum` values, or the titles of options behind an `enum`,
+ * whether its `anyOf`/`oneOf` options or a `oneOf` behind them. A checkbox `BooleanField` defaulted to over several
+ * options, with no select inferred or asked for, warns about the names too, because nothing labels them, which the names
+ * were meant to do
+ *
+ * @param field - The field component rendered
+ * @param selectSchemaInfo - The `SelectSchemaInfo` of the retrieved schema for the field
+ * @param uiSchema - The `uiSchema` the field is rendered with, holding any widget `inferSelectWidget()` inferred
+ * @param ownUiOptions - The ui options read from that `uiSchema`
+ * @param registry - The registry
+ * @param fieldLabel - Names the field's uiSchema entry in a warning
+ */
+function warnOfUnshownOptionLabels<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  field: Field<T, S, F>,
+  selectSchemaInfo: SelectSchemaInfo<S>,
+  uiSchema: UiSchema<T, S, F>,
+  { enumNames, widget: namedWidget }: UIOptionsType<T, S, F>,
+  registry: Registry<T, S, F>,
+  fieldLabel: () => string,
+) {
+  const { schema, xxxOfKey: keyword, constantOptions } = selectSchemaInfo;
+  const options = keyword && schema[keyword];
+  if (!options) {
+    return;
+  }
+  const { fields } = registry;
+  const enumShown = showsEnum<T, S, F>(field, selectSchemaInfo, fields);
+  if (constantOptions && !enumShown) {
+    if (Object.keys(enumNames ?? {}).length === 0) {
+      return;
+    }
+    const listsOptions = widgetListsOptions<T, S, F>(field, schema, uiSchema, registry);
+    if (listsOptions || (field === fields.BooleanField && !namedWidget && constantOptions.length > 1)) {
+      // A checkbox shows no option labels, and dropping the `anyOf`/`oneOf` wouldn't turn it into a widget that shows
+      // the `enum`, so only a widget that lists the options is pointed at the `enum`, and only at one with values to
+      // show
+      const showsOverEnum = listsOptions && Boolean(schema.enum?.length);
+      // Dropping the keyword shows the `enum` only when the other keyword wouldn't take its place with constants
+      const nextKey = getXxxOfKey<S>({ ...schema, [keyword]: undefined });
+      const enumBehind = !nextKey || !isConstantOptionList<S>(schema[nextKey]);
+      const source = showsOverEnum
+        ? `it shows its constant \`${keyword}\` options rather than its \`enum\``
+        : `its options come from its constant \`${keyword}\``;
+      const alternative = showsOverEnum && enumBehind ? `, or drop the \`${keyword}\` to show the \`enum\`` : '';
+      logOnce(
+        `${fieldLabel()} sets ui:enumNames, which applies only to \`enum\` values, but ${source}, so it is ignored. ` +
+          `Label those options with a \`title\` or a \`ui:title\` in \`uiSchema.${keyword}\`${alternative}.`,
+      );
+    }
+    return;
+  }
+  if (!enumShown) {
+    return;
+  }
+  const hidesOwnLabels = hasOptionLabels<T, S, F>(options, keyword, uiSchema);
+  if (
+    (!hidesOwnLabels && !hidesLabelledOneOf<T, S, F>(schema, keyword, uiSchema)) ||
+    !widgetListsOptions<T, S, F>(field, schema, uiSchema, registry)
+  ) {
+    return;
+  }
+  const unnamedValues = new Set<unknown>();
+  const shownOptions = optionsList<T, S, F>({ enum: schema.enum } as S, uiSchema, (value) => {
+    // `optionsList()` calls the fallback for each value `ui:enumNames` doesn't name, and for no other
+    unnamedValues.add(value);
+    return undefined;
+  });
+  // Checked on the options left once `ui:enumOrder` has dropped any, since an unnamed value it drops isn't shown
+  if (shownOptions?.some(({ value }) => unnamedValues.has(value))) {
+    logOnce(
+      hidesOwnLabels
+        ? `${fieldLabel()} has an \`enum\` beside \`${keyword}\` options, so its options come from the \`enum\` and the ` +
+            `\`${keyword}\` titles aren't shown. Label the \`enum\` values with ui:enumNames, or drop the \`enum\` and ` +
+            `make every \`${keyword}\` option a \`const\` schema.`
+        : `${fieldLabel()} ${HIDDEN_ONE_OF_WARNING} Its options come from its \`enum\`, so label those values with ` +
+            'ui:enumNames.',
+    );
+  }
 }
 
 /** Returns the `uiSchema` a field is rendered with: its resolved `uiSchema` with the widget inferred for its select, if
@@ -1165,6 +1322,7 @@ export function useSchemaFieldPlan<
     namedFieldAbove,
     namedAbove,
     framedAbove,
+    selectSchemaInfo,
     schema,
     xxxOfKey,
     uiField,
@@ -1235,6 +1393,7 @@ function SchemaFieldRender<
     namedFieldAbove,
     namedAbove,
     framedAbove,
+    selectSchemaInfo,
     schema,
     xxxOfKey,
     uiField,
@@ -1435,6 +1594,28 @@ function SchemaFieldRender<
   // share it too, since nothing here tells them apart
   for (const message of uiField.ignored) {
     logOnce(message);
+  }
+  if (xxxOfKey && !hidden) {
+    // Named by the uiSchema entry, so a mistake in an `items` or `additionalProperties` entry warns once, not once per row
+    warnOfUnshownOptionLabels<T, S, F>(
+      FieldComponent,
+      selectSchemaInfo,
+      uiSchema,
+      ownUiOptions,
+      registry,
+      templateEntry.label,
+    );
+    // A field named for the schema may read the `oneOf` itself. Where the options come from an `enum`, moving labels to
+    // the `anyOf` wouldn't show them either, so `warnOfUnshownOptionLabels()` has warned about naming the `enum` instead
+    if (
+      !rendersNamedField &&
+      !showsEnum<T, S, F>(FieldComponent, selectSchemaInfo, fields) &&
+      hidesLabelledOneOf<T, S, F>(schema, xxxOfKey, uiSchema)
+    ) {
+      logOnce(
+        `${templateEntry.label()} ${HIDDEN_ONE_OF_WARNING} Move the labels to the \`anyOf\`, or merge the two lists.`,
+      );
+    }
   }
 
   let XxxOfField: Field<T, S, F> | undefined;

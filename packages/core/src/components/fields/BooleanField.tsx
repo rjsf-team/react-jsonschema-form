@@ -1,27 +1,15 @@
 import { useCallback } from 'react';
-import type {
-  FieldProps,
-  FormContextType,
-  EnumOptionsType,
-  ErrorSchema,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { FieldProps, FormContextType, ErrorSchema, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ANY_OF_KEY,
   fieldPathToName,
   getUiOptions,
   getXxxOfKey,
   isConstantOptionList,
-  logOnce,
-  ONE_OF_KEY,
   optionsList,
   resolveWidget,
   TranslatableString,
 } from '@rjsf/utils';
 
-import fieldLabelForLog from '../../fieldLabelForLog.ts';
-import hasOptionLabels from '../../hasOptionLabels.ts';
 import { getBooleanFieldWidget, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
@@ -59,7 +47,7 @@ function BooleanField<
   const { widgets, translateString, globalUiOptions } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const {
-    widget,
+    widget: _widget,
     title: uiTitle,
     // Unlike the other fields, don't use `getDisplayLabel()` since it always returns false for the boolean type
     label: displayLabel = true,
@@ -71,15 +59,11 @@ function BooleanField<
   const { Widget } = resolveWidget<T, S, F>(schema, getBooleanFieldWidget<T, S, F>(uiOptions), widgets);
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
-  let enumOptions: EnumOptionsType<S>[] | undefined;
   const labelProps = getWidgetLabelProps<T, S, F>(
     presentation,
     uiTitle ?? schemaTitle ?? title ?? name,
     () => displayLabel,
   );
-  // Only a select and radios are known to list the options, so only they can drop a label. A checkbox, a
-  // hidden field or a custom widget such as a toggle may show no option labels, which would make the warnings noise
-  const showsOptions = Widget === widgets.SelectWidget || Widget === widgets.RadioWidget;
   // The label `optionsList()` falls back to for a value nothing else names; any other value is labelled with itself
   const yesNoLabel = (value: unknown) => {
     if (typeof value !== 'boolean') {
@@ -91,75 +75,11 @@ function BooleanField<
   // `optionsList()`, which lists an `enum` first, a boolean's constant options win over its `enum`, so they can title
   // its values
   const altKey = getXxxOfKey<S>(schema);
-  const altSchemas = altKey ? schema[altKey] : undefined;
-  if (altKey && isConstantOptionList<S>(altSchemas)) {
-    // A checkbox `SchemaField` defaulted to over several options, rather than one the uiSchema asked for, is there
-    // because nothing labels them, which these names were meant to do. A single option keeps its checkbox however it is
-    // labelled, so naming it could never show
-    if (showsOptions || (!widget && altSchemas.length > 1)) {
-      const { enumNames } = getUiOptions<T, S, F>(uiSchema);
-      if (Object.keys(enumNames ?? {}).length > 0) {
-        // A checkbox shows no option labels, and dropping the `anyOf`/`oneOf` wouldn't turn it into a widget that shows
-        // the `enum`, so only a widget that lists the options is pointed at the `enum`, and only at one with values to
-        // show
-        const showsOverEnum = showsOptions && Boolean(schema.enum?.length);
-        // Dropping the keyword shows the `enum` only when the other keyword wouldn't take its place with constants
-        const nextKey = getXxxOfKey<S>({ ...schema, [altKey]: undefined });
-        const enumBehind = !nextKey || !isConstantOptionList<S>(schema[nextKey]);
-        const source = showsOverEnum
-          ? `it shows its constant \`${altKey}\` options rather than its \`enum\``
-          : `its options come from its constant \`${altKey}\``;
-        const alternative = showsOverEnum && enumBehind ? `, or drop the \`${altKey}\` to show the \`enum\`` : '';
-        logOnce(
-          `${fieldLabelForLog(fieldId, fieldPath)} sets ui:enumNames, which applies only to \`enum\` values, but ` +
-            `${source}, so it is ignored. Label those options with a \`title\` or a \`ui:title\` in ` +
-            `\`uiSchema.${altKey}\`${alternative}.`,
-        );
-      }
-    }
-    // Without the `enum`, which `optionsList()` would list instead
-    enumOptions = optionsList<T, S, F>({ ...schema, enum: undefined }, uiSchema, yesNoLabel);
-  } else {
-    // Only tracked when the warning below can fire, since this runs on every render of every boolean field
-    const unnamedValues = showsOptions && schema.enum && altSchemas ? new Set<unknown>() : undefined;
-    enumOptions = optionsList<T, S, F>(
-      { enum: schema.enum ?? [true, false] } as S,
-      uiSchema,
-      unnamedValues
-        ? (value) => {
-            // `optionsList()` calls the fallback for each value `ui:enumNames` doesn't name, and for no other
-            unnamedValues.add(value);
-            return yesNoLabel(value);
-          }
-        : yesNoLabel,
-    );
-    if (
-      unnamedValues &&
-      altKey &&
-      altSchemas &&
-      // Checked on the options left once `ui:enumOrder` has dropped any, since an unnamed value it drops isn't shown
-      enumOptions?.some(({ value }) => unnamedValues.has(value))
-    ) {
-      if (hasOptionLabels<T, S, F>(altSchemas, altKey, uiSchema)) {
-        logOnce(
-          `${fieldLabelForLog(fieldId, fieldPath)} has an \`enum\` beside \`${altKey}\` options that aren't all ` +
-            `\`const\` schemas, so its options come from the \`enum\` and the \`${altKey}\` titles aren't shown. ` +
-            `Label the \`enum\` values with ui:enumNames, or make every \`${altKey}\` option a \`const\` schema.`,
-        );
-      } else if (
-        // `getXxxOfKey()` reads a non-empty `anyOf` first, so a titled `oneOf` behind it is hidden as well
-        altKey === ANY_OF_KEY &&
-        Array.isArray(schema[ONE_OF_KEY]) &&
-        hasOptionLabels<T, S, F>(schema[ONE_OF_KEY], ONE_OF_KEY, uiSchema)
-      ) {
-        logOnce(
-          `${fieldLabelForLog(fieldId, fieldPath)} has an \`enum\` beside an \`anyOf\` whose options aren't all ` +
-            `\`const\` schemas and which is read before its \`oneOf\`, so its options come from the \`enum\` and ` +
-            `the \`oneOf\` titles aren't shown. Label the \`enum\` values with ui:enumNames.`,
-        );
-      }
-    }
-  }
+  const enumOptions =
+    altKey && isConstantOptionList<S>(schema[altKey])
+      ? // Without the `enum`, which `optionsList()` would list instead
+        optionsList<T, S, F>({ ...schema, enum: undefined }, uiSchema, yesNoLabel)
+      : optionsList<T, S, F>({ enum: schema.enum ?? [true, false] } as S, uiSchema, yesNoLabel);
   const onWidgetChange = useCallback(
     (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => onChange(value, fieldPath, errorSchema, id),
     [onChange, fieldPath],

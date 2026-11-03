@@ -838,11 +838,15 @@ describe('BooleanField', () => {
       });
 
       expect(texts(node)).toEqual(['', 'Yes', 'No']);
-      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledTimes(2);
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining(
           'but it shows its constant `anyOf` options rather than its `enum`, so it is ignored. Label those ' +
             'options with a `title` or a `ui:title` in `uiSchema.anyOf`.',
         ),
+      );
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Move the labels to the `anyOf`, or merge the two lists.'),
       );
     });
 
@@ -1072,10 +1076,7 @@ describe('BooleanField', () => {
 
       expect(texts(node)).toEqual(['', 'Yes', 'No']);
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        expect.stringContaining(
-          '"root" has an `enum` beside an `anyOf` whose options aren\'t all `const` schemas and which is read ' +
-            "before its `oneOf`, so its options come from the `enum` and the `oneOf` titles aren't shown.",
-        ),
+        expect.stringContaining('"root" has both an `anyOf` and a `oneOf`, and the `anyOf` is read first'),
       );
     });
   });

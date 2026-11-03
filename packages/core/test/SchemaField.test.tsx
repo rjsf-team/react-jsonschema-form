@@ -29,6 +29,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import BooleanField from '../src/components/fields/BooleanField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import Form, { generateTheme, generateWidgets } from '../src/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
@@ -1540,6 +1541,279 @@ describe('SchemaField', () => {
       createFormComponent({ schema: { type: 'string' }, uiSchema: { 'ui:field': 'Own' }, fields: { Own } });
 
       expect(received).toHaveBeenLastCalledWith(expect.objectContaining({ 'ui:field': 'Own' }));
+    });
+  });
+
+  describe('option labels a field does not show', () => {
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+    const CustomWidget = () => <div id='custom' />;
+    const OwnField = () => <div id='own-field' />;
+    const WrappedBooleanField = (props: FieldProps) => <BooleanField {...props} />;
+    const selectUi: UiSchema = { 'ui:widget': 'select' };
+    const stringEnum = { type: 'string', enum: ['a', 'b'] } satisfies RJSFSchema;
+    const numberEnum = { type: 'number', enum: [1, 2] } satisfies RJSFSchema;
+    const booleanEnum = { type: 'boolean', enum: [true, false] } satisfies RJSFSchema;
+    const titles = [{ title: 'First' }, { title: 'Second' }];
+    const enumBesideTitles = { ...stringEnum, oneOf: titles } satisfies RJSFSchema;
+    const stringConstants = { type: 'string', oneOf: [{ const: 'a' }, { const: 'b' }] } satisfies RJSFSchema;
+
+    describe('titles of options behind an enum', () => {
+      const hiddenTitles = expect.stringContaining('has an `enum` beside');
+
+      it.each<[string, RJSFSchema, UiSchema]>([
+        ['string anyOf', { ...stringEnum, anyOf: titles }, {}],
+        ['number oneOf', { ...numberEnum, oneOf: titles }, {}],
+        ['boolean oneOf', { ...booleanEnum, oneOf: titles }, selectUi],
+        ['string oneOf as radios', enumBesideTitles, { 'ui:widget': 'radio' }],
+        [
+          'string oneOf titled through uiSchema.oneOf',
+          { ...stringEnum, oneOf: [{ description: 'x' }, { description: 'y' }] },
+          { oneOf: [{ 'ui:title': 'First' }, {}] },
+        ],
+        [
+          'string oneOf of titled constants, which the enum is read before',
+          {
+            ...stringEnum,
+            oneOf: [
+              { const: 'a', title: 'First' },
+              { const: 'b', title: 'Second' },
+            ],
+          },
+          {},
+        ],
+        ['string oneOf, with ui:enumNames naming part of the enum', enumBesideTitles, { 'ui:enumNames': { a: 'A' } }],
+      ])('should warn once for a %s', (_, schema, uiSchema) => {
+        createFormComponent({ schema, uiSchema });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(hiddenTitles);
+      });
+
+      it('should name the field and show the enum', () => {
+        const { node } = createFormComponent({ schema: enumBesideTitles });
+
+        expect(Array.from(node.querySelectorAll('option')).map((option) => option.textContent)).toEqual(['', 'a', 'b']);
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('"root" has an `enum` beside `oneOf` options, so its options come from the `enum`'),
+        );
+      });
+
+      it.each<[string, RJSFSchema, UiSchema]>([
+        ['ui:enumNames names the enum', enumBesideTitles, { 'ui:enumNames': ['A', 'B'] }],
+        [
+          'ui:enumOrder drops the value ui:enumNames leaves unnamed',
+          enumBesideTitles,
+          { 'ui:enumNames': { a: 'A' }, 'ui:enumOrder': ['a'] },
+        ],
+        ['the oneOf has no titles', { ...stringEnum, oneOf: [{ description: 'x' }, { description: 'y' }] }, {}],
+        ['the enum is empty', { type: 'string', enum: [], oneOf: titles }, {}],
+        ['the widget is a custom one', enumBesideTitles, { 'ui:widget': CustomWidget }],
+        ['the widget is hidden', enumBesideTitles, { 'ui:widget': 'hidden' }],
+        ['the widget is a boolean checkbox', { ...booleanEnum, oneOf: titles }, { 'ui:widget': 'checkbox' }],
+        ['a ui:field replaces the field', enumBesideTitles, { 'ui:field': OwnField }],
+      ])('should not warn when %s', (_, schema, uiSchema) => {
+        createFormComponent({ schema, uiSchema });
+
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(hiddenTitles);
+      });
+
+      it('should not throw for a widget nothing registers, which a custom field for the type may render anyway', () => {
+        const StringField = () => <div id='own-string-field' />;
+        const { node } = createFormComponent({
+          schema: enumBesideTitles,
+          uiSchema: { 'ui:widget': 'notRegistered' },
+          fields: { StringField },
+        });
+
+        expect(node.querySelector('#own-string-field')).toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(hiddenTitles);
+      });
+    });
+
+    describe('ui:enumNames beside constant options', () => {
+      const ignoredNames = expect.stringContaining('sets ui:enumNames');
+      const enumNames = ['A', 'B'];
+
+      it.each<[string, RJSFSchema, UiSchema]>([
+        ['string', stringConstants, {}],
+        ['string anyOf', { type: 'string', anyOf: [{ const: 'a' }, { const: 'b' }] }, {}],
+        ['number', { type: 'number', oneOf: [{ const: 1 }, { const: 2 }] }, {}],
+        ['typeless', { oneOf: [{ const: 'a' }, { const: 'b' }] }, {}],
+        ['boolean select', { type: 'boolean', oneOf: [{ const: true }, { const: false }] }, selectUi],
+        ['string as radios', stringConstants, { 'ui:widget': 'radio' }],
+        ['boolean defaulted to a checkbox', { type: 'boolean', oneOf: [{ const: true }, { const: false }] }, {}],
+      ])('should warn once for a %s field', (_, schema, uiSchema) => {
+        createFormComponent({ schema, uiSchema: { ...uiSchema, 'ui:enumNames': enumNames } });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('"root" sets ui:enumNames, which applies only to `enum` values'),
+        );
+      });
+
+      it.each<[string, RJSFSchema, UiSchema]>([
+        [
+          'an enum beside the constants of a string, which it labels',
+          { ...stringEnum, oneOf: [{ const: 'a' }, { const: 'b' }] },
+          {},
+        ],
+        ['a custom widget', stringConstants, { 'ui:widget': CustomWidget }],
+        ['a hidden field', stringConstants, { 'ui:widget': 'hidden' }],
+        [
+          'a checkbox the uiSchema asks for',
+          { type: 'boolean', oneOf: [{ const: true }, { const: false }] },
+          { 'ui:widget': 'checkbox' },
+        ],
+        ['a ui:field', stringConstants, { 'ui:field': OwnField }],
+      ])('should not warn for %s', (_, schema, uiSchema) => {
+        createFormComponent({ schema, uiSchema: { ...uiSchema, 'ui:enumNames': enumNames } });
+
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(ignoredNames);
+      });
+
+      it.each<[string, UiSchema['ui:enumOrder'], string[]]>([
+        ['reorders', ['b', 'a'], ['', 'b', 'a']],
+        ['drops', ['a'], ['', 'a']],
+      ])(
+        'should not warn about a ui:enumOrder that %s the constant options, which it applies to',
+        (_, order, labels) => {
+          const { node } = createFormComponent({
+            schema: stringConstants,
+            uiSchema: { 'ui:enumOrder': order },
+          });
+
+          expect(Array.from(node.querySelectorAll('option')).map((option) => option.textContent)).toEqual(labels);
+          expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+        },
+      );
+
+      it('should not tell a custom field wrapping BooleanField to title options that are titled', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'boolean',
+            oneOf: [
+              { const: true, title: 'Yes please' },
+              { const: false, title: 'No thanks' },
+            ],
+          },
+          uiSchema: { 'ui:field': 'WrappedBooleanField', 'ui:enumNames': ['Accept', 'Decline'] },
+          fields: { WrappedBooleanField },
+        });
+
+        expect(node.querySelector('input[type=checkbox]')).toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
+    });
+
+    it.each<[string, RJSFSchema, unknown, string]>([
+      [
+        'array items',
+        { type: 'array', items: enumBesideTitles },
+        ['a', 'b', 'a'],
+        '"root_[]" ([]) has an `enum` beside',
+      ],
+      [
+        'additional properties',
+        { type: 'object', additionalProperties: enumBesideTitles },
+        { x: 'a', y: 'b' },
+        '"root_{}" ({}) has an `enum` beside',
+      ],
+    ])('should warn once for the entry that renders many %s', (_, schema, initialFormData, message) => {
+      createFormComponent({ schema, initialFormData });
+
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.stringContaining(message));
+    });
+
+    describe('a titled oneOf behind an anyOf', () => {
+      const hiddenOneOf = expect.stringContaining(
+        '"root" has both an `anyOf` and a `oneOf`, and the `anyOf` is read first',
+      );
+      const titledOneOf = [
+        { const: true, title: 'On' },
+        { const: false, title: 'Off' },
+      ];
+
+      it.each<[string, RJSFSchema, UiSchema]>([
+        ['boolean with no enum', { type: 'boolean', anyOf: [{ type: 'boolean' }], oneOf: titledOneOf }, selectUi],
+        ['string', { type: 'string', anyOf: [{ maxLength: 1 }, { maxLength: 2 }], oneOf: titles }, {}],
+        ['number', { type: 'number', anyOf: [{ maximum: 1 }, { maximum: 2 }], oneOf: titles }, {}],
+        [
+          'object option selector',
+          {
+            type: 'object',
+            anyOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'string' } } }],
+            oneOf: [
+              { title: 'C', properties: { c: { type: 'string' } } },
+              { title: 'D', properties: { d: { type: 'string' } } },
+            ],
+          },
+          {},
+        ],
+        [
+          'oneOf titled through uiSchema.oneOf',
+          { type: 'string', anyOf: [{ maxLength: 1 }], oneOf: [{ maxLength: 2 }] },
+          { oneOf: [{ 'ui:title': 'Short' }] },
+        ],
+      ])('should warn once for a %s', (_, schema, uiSchema) => {
+        createFormComponent({ schema, uiSchema });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(hiddenOneOf);
+      });
+
+      it.each<[string, RJSFSchema, UiSchema]>([
+        ['string', { ...stringEnum, anyOf: [{ maxLength: 1 }], oneOf: titles }, {}],
+        [
+          'string beside a constant anyOf',
+          { ...stringEnum, anyOf: [{ const: 'a' }, { const: 'b' }], oneOf: titles },
+          {},
+        ],
+        ['number', { ...numberEnum, anyOf: [{ maximum: 1 }], oneOf: titles }, {}],
+        ['boolean', { ...booleanEnum, anyOf: [{ not: { const: null } }], oneOf: titledOneOf }, selectUi],
+      ])('should point a %s field whose enum supplies the options at ui:enumNames', (_, schema, uiSchema) => {
+        createFormComponent({ schema, uiSchema });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('Its options come from its `enum`, so label those values with ui:enumNames.'),
+        );
+      });
+
+      it('should still say to move the labels when a boolean shows its constant anyOf rather than its enum', () => {
+        createFormComponent({
+          schema: { ...booleanEnum, anyOf: [{ const: true }, { const: false }], oneOf: titledOneOf },
+          uiSchema: selectUi,
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('Move the labels to the `anyOf`, or merge the two lists.'),
+        );
+      });
+
+      it.each<[string, UiSchema]>([
+        ['ui:enumNames names every value', { 'ui:enumNames': ['A', 'B'] }],
+        [
+          'ui:enumOrder drops the value ui:enumNames leaves unnamed',
+          { 'ui:enumNames': { a: 'A' }, 'ui:enumOrder': ['a'] },
+        ],
+        ['a custom widget shows no option labels', { 'ui:widget': CustomWidget }],
+      ])('should not warn about an enum beside an anyOf and a titled oneOf when %s', (_, uiSchema) => {
+        createFormComponent({ schema: { ...stringEnum, anyOf: [{ maxLength: 1 }], oneOf: titles }, uiSchema });
+
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+      });
+
+      it.each<[string, RJSFSchema, UiSchema]>([
+        ['the anyOf is empty, so the oneOf is rendered', { type: 'boolean', anyOf: [], oneOf: titledOneOf }, selectUi],
+        ['the oneOf has no titles', { type: 'string', anyOf: [{ maxLength: 1 }], oneOf: [{ maxLength: 2 }] }, {}],
+        ['there is only a oneOf', { type: 'string', oneOf: titles }, {}],
+        ['a ui:field is set', { type: 'string', anyOf: [{ maxLength: 1 }], oneOf: titles }, { 'ui:field': OwnField }],
+        [
+          'the field is hidden',
+          { type: 'string', anyOf: [{ maxLength: 1 }], oneOf: titles },
+          { 'ui:widget': 'hidden' },
+        ],
+      ])('should not warn when %s', (_, schema, uiSchema) => {
+        createFormComponent({ schema, uiSchema });
+
+        expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalledWith(hiddenOneOf);
+      });
     });
   });
 
