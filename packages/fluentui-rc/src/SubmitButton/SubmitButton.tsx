@@ -26,11 +26,11 @@ export default function SubmitButton<
   F extends FormContextType = FormContextType,
 >({ uiSchema, pending }: SubmitButtonProps<T, S, F>) {
   const classes = useStyles();
-  const { submitText, norender, props: submitButtonProps = {} } = getSubmitButtonOptions(uiSchema);
+  const { submitText, norender, props: submitButtonProps } = getSubmitButtonOptions(uiSchema);
   if (norender) {
     return null;
   }
-  const { onClick, onClickCapture } = submitButtonProps;
+  const { onClick, onClickCapture } = submitButtonProps ?? {};
   // Fluent's `Button` calls no `onClick` while it is `aria-disabled`, as the form makes it while pending, so the form's
   // `onClick`, which calls the app's and cancels the click, runs in the capture phase meanwhile, after the app's own
   // capture handler, as it would outside the pending state, even when that handler throws

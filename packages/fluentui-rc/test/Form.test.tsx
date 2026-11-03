@@ -790,6 +790,16 @@ describe("fluentui-rc's anyOf option error state", () => {
   );
 });
 
+describe('fluentui-rc SubmitButton', () => {
+  it('draws the button when a JSON uiSchema sets `props` to null', () => {
+    const uiSchema: UiSchema = JSON.parse('{"ui:submitButtonOptions": {"props": null, "submitText": "Send"}}');
+
+    render(<Form schema={{ type: 'string' }} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole('button', { name: 'Send' })).toBeInTheDocument();
+  });
+});
+
 wrapIfAdditionalErrorStateTests(Form);
 
 submitPendingTests(Form);
