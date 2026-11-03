@@ -1,6 +1,7 @@
 import { createRef } from 'react';
 import type { FieldTemplateProps, RJSFMarkedSchema, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   englishStringTranslator,
   GUESSED_TYPE_FLAG,
   JSON_SCHEMA_TYPES,
@@ -1249,6 +1250,23 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // Only an additional property stores a cleared value as the empty string; anywhere else it is a `string` like
       // any other, so the selector must follow it rather than leave the array UI standing over string data
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
+      expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
+    });
+
+    it('gives way to an empty string in a field whose additional-property flag is false', () => {
+      const val: RJSFMarkedSchema = { type: ['boolean', 'string'], [ADDITIONAL_PROPERTY_FLAG]: false };
+      const schema: RJSFSchema = { type: 'object', properties: { val } };
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
+        schema,
+        useFallbackUiForUnsupportedType: true,
+        initialFormData: { val: true },
+      });
+
+      act(() => handleOf(ref).setFieldValue('', { val: '' }));
+
       const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
     });
