@@ -171,7 +171,7 @@ describe('field ids', () => {
   it('gives the type selector of an option offering types of its own an id of its own', () => {
     const schema: RJSFSchema = {
       type: 'object',
-      properties: { x: { type: ['string', 'number'], anyOf: [{ type: ['string', 'boolean'] }, { minimum: 1 }] } },
+      properties: { x: { type: ['object', 'number'], anyOf: [{ type: ['string', 'boolean'] }, { minimum: 1 }] } },
     };
     const { node } = createFormComponent({ schema, useFallbackUiForUnsupportedType: true });
 

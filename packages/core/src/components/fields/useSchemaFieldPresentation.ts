@@ -16,6 +16,8 @@ import {
   ANY_OF_KEY,
   getFieldTypeForUiSchema,
   getPresentationDeclaration,
+  getSchemaOwnTypes,
+  guessType,
   ITEMS_KEY,
   resolveFieldPresentation,
   schemaRequiresTrueValue,
@@ -74,6 +76,8 @@ export interface SchemaFieldPresentationInputs<
    * under its id. Undefined where it renders none, or the option is a `$ref` cycle, which names no field
    */
   shownOptionField?: ShownOptionField<T, S, F> | null;
+  /** The field's form data, which says the type of the value a type selector below a field above is on */
+  formData?: unknown;
 }
 
 /** The field the `anyOf`/`oneOf` option shown renders with, as `SchemaField` resolves the option's own `SchemaField` */
@@ -134,6 +138,7 @@ function shownOptionLabelledBy<
  * @param registry - The registry, whose `fields`, `globalFormOptions`, `schemaUtils` and `globalUiOptions` are read
  * @param schema - The schema the field renders
  * @param uiSchema - The uiSchema the field renders
+ * @param [headingType] - The type with a heading of its own that a `FallbackField`'s value holds, if any
  * @returns - False for a container, `NullField`, or `FallbackField` rendering the unsupported-field template, or a
  *   value its own field labels, true otherwise, a custom field included
  */
@@ -147,6 +152,7 @@ function rendersControl<
   registry: Registry<T, S, F>,
   schema: S,
   uiSchema: UiSchema<T, S, F>,
+  headingType?: 'object' | 'array',
 ) {
   const { fields, globalFormOptions } = registry;
   if (field === fields.ArrayField) {
@@ -155,8 +161,11 @@ function rendersControl<
   if (field === fields.FallbackField) {
     // The fallback UI labels its value from outside where this call says the value is a control, and otherwise leaves
     // the value field to draw its own heading or label. The call matches `ui:widget` by name (#5581)
+    const valueSchema =
+      headingType && getSchemaOwnTypes<S>(schema)?.includes(headingType) ? { ...schema, type: headingType } : schema;
     return (
-      Boolean(globalFormOptions.useFallbackUiForUnsupportedType) && displaysLabel<T, S, F>(registry, schema, uiSchema)
+      Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
+      displaysLabel<T, S, F>(registry, valueSchema, uiSchema)
     );
   }
   return !CONTROLLESS_FIELD_KEYS.some((key) => fields[key] === field);
@@ -195,6 +204,7 @@ export default function useSchemaFieldPresentation<
     required,
     inherited,
     shownOptionField,
+    formData,
   } = inputs;
   const { fields, globalFormOptions } = registry;
   let plannedField = field;
@@ -208,13 +218,17 @@ export default function useSchemaFieldPresentation<
     () => (field && xxxOfKey === undefined ? getFieldWidget<T, S, F>(field, schema, uiSchema, registry) : undefined),
     [field, xxxOfKey, schema, uiSchema, registry],
   );
+  // A type selector within an `anyOf`/`oneOf` option renders below the option's selector, so an option holding an object
+  // or an array draws its description under its heading, below that selector, as it does beneath a selector around them
+  const heldType = guessType(formData);
+  const headingType = inherited && (heldType === 'object' || heldType === 'array') ? heldType : undefined;
   // Memoized, since a `FallbackField` asks `getDisplayLabel()`
   const hasControl = useMemo(
     () =>
       plannedField !== undefined &&
       !hidden &&
-      rendersControl<T, S, F>(plannedField, widget, registry, schema, uiSchema),
-    [plannedField, hidden, widget, registry, schema, uiSchema],
+      rendersControl<T, S, F>(plannedField, widget, registry, schema, uiSchema, headingType),
+    [plannedField, hidden, widget, registry, schema, uiSchema, headingType],
   );
   const fallbackDrawsNoControl = plannedField === fields.FallbackField && !hidden && !hasControl;
   const usesFallbackUi = Boolean(globalFormOptions.useFallbackUiForUnsupportedType);

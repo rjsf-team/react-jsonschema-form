@@ -245,11 +245,19 @@ The field for an `object` type whose schema names no `properties`, `patternPrope
 Those keys are outside what the schema describes, so [`omitExtraData`](../api-reference/form-props.md#omitextradata) drops them, as it does for any such object whether or not its type is a union.
 Declaring `additionalProperties: true` on the schema keeps them.
 
-A schema that pairs multiple types with an `anyOf` or `oneOf` renders both selectors, the type selector wrapping the option selector.
+A schema that pairs multiple types with an `anyOf` or `oneOf` whose options name no type renders both selectors, the type selector wrapping the option selector.
 Each option renders for whichever type is currently chosen, so every member of the union is reachable from within an option, and changing the type re-renders the option for the new one.
+An option that only implies its type, such as one declaring `properties`, names none.
+A list with an option naming a type of its own gets no selector around it, since that type would override the one the selector pinned, leaving the screen as it was while the value was cast on every switch.
+The option selector is what chooses the type there, and an option in that list naming no type takes the schema's types and renders a type selector of its own, within that option.
+A `type` an option gets through a `$ref` counts as its own.
+A list mixing the two on a schema whose first type is `object` keeps the selector around it, since that is what takes the schema's own `properties` off screen when another type is chosen, as does a fully typed list on such a schema whose `ui:field` or `$id` names the fallback field.
+Whichever it is, those `properties` render only beside an option that can hold an object.
 A schema that pins its value with an `enum`, a `const`, or an `anyOf`/`oneOf` whose options are all constants gets no type selector, since switching type would only cast the chosen value into one the schema rejects.
 A field whose `ui:widget` is a component gets none either, the same way one with a `ui:field` does: a control written for that schema handles the types it allows, so wrapping it would pin the schema to one of them and cast the value on every switch.
 A `ui:widget` naming a widget by string renders within the selector instead, since it is a theme's control for a single type, and is dropped for a chosen type the theme has no implementation of.
+An option selector or an option with no `ui:widget` of its own drops the field's the same way when the theme has no implementation of it for that selector or option.
+An option selector doesn't take `text`, `updown` or `range` from a field whose options inherit them, since they would show the option's index as a number to edit; it stays a select and the widget renders on the option.
 A schema that allows a single type gets no selector either, since one type is nothing to choose between, and the field for that type renders alone.
 Such a schema is otherwise rendered by the field for the type it names, so this only arises when something else sent it here: a `ui:field` or a `$id` naming the fallback field, a `type` list that names one recognized type alongside unrecognized ones, or an `enum` or `const` whose values all have one type alongside an unrecognized `type`.
 A schema that only implies its type counts as naming it, so one declaring `properties` and no `type` renders those properties, the way it does with nothing naming the fallback field for it.

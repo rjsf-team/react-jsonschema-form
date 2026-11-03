@@ -22,14 +22,22 @@ import {
   ANY_OF_KEY,
   fieldPathEndsWithIndex,
   getDescribedControlAttributes,
+  getSchemaType,
+  getSelectFieldType,
   getUiOptions,
   getXxxOfKey,
+  guessType,
+  isConstantOptionList,
+  isConstantSelect,
   isCustomWidget,
   isFixedItems,
   ITEMS_KEY,
   ONE_OF_KEY,
   resolveDefaultWidget,
+  toConstant,
   UI_GLOBAL_OPTIONS_KEY,
+  UI_OPTIONS_KEY,
+  UI_WIDGET_KEY,
   uiBooleanOption,
 } from '@rjsf/utils';
 
@@ -516,4 +524,65 @@ export function withoutDescribers(
       attributes: { ...attributes, ...getDescribedControlAttributes(shownDescribers, errors.messages) },
     },
   };
+}
+
+/** What `SchemaField` needs to know about a retrieved schema that may be a select */
+export interface SelectSchemaInfo<S extends StrictRJSFSchema> {
+  /** The retrieved schema, with a `type` inferred from its constants when it is a typeless `oneOf`/`anyOf` select */
+  schema: S;
+  /** Whether the `type` was inferred rather than declared */
+  hasInferredType: boolean;
+  /** The keyword the schema's options are read from, if it has any */
+  xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined;
+  /** The non-empty constant options of that keyword, when they all are constants */
+  constantOptions: S[] | undefined;
+  /** Whether the schema is an `enum`, empty or not, or a `oneOf`/`anyOf` of constants, see `isConstantSelect()` */
+  isSelectSchema: boolean;
+  /** Whether that select offers at least one option */
+  hasConstantOptions: boolean;
+}
+
+/** Works out whether a retrieved schema is a select, reading its options from the same keyword `isSelect()` and
+ * `optionsList()` read. A `oneOf`/`anyOf` whose options are all constants renders as a select through the field for the
+ * schema's `type`, but JSON Schema doesn't require that `type`, and without it neither a field nor a widget can be
+ * resolved, so it is inferred from the constant values.
+ *
+ * @param retrievedSchema - The retrieved schema for the field
+ * @returns - The `SelectSchemaInfo` for the schema
+ */
+export function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedSchema: S): SelectSchemaInfo<S> {
+  const xxxOfKey = getXxxOfKey<S>(retrievedSchema);
+  const options = xxxOfKey && retrievedSchema[xxxOfKey];
+  const constantOptions = isConstantOptionList<S>(options) ? options : undefined;
+  let schema = retrievedSchema;
+  if (constantOptions && getSchemaType<S>(retrievedSchema) === undefined) {
+    // `toConstant()` throws for an option that isn't a constant, which is why only a list of them is mapped
+    const types = [...new Set(constantOptions.map((option) => guessType(toConstant<S>(option))))];
+    schema = { ...retrievedSchema, type: getSelectFieldType(types) };
+  }
+  return {
+    schema,
+    hasInferredType: schema !== retrievedSchema,
+    xxxOfKey,
+    constantOptions,
+    // The schema is already retrieved, so it's checked directly rather than through `isSelect()`, which would resolve
+    // it again. As for `isSelect()`, an empty `enum` still counts as a select, with nothing to choose. A list already
+    // found to be all constants isn't scanned again, which a long one makes worth skipping
+    isSelectSchema: constantOptions !== undefined || isConstantSelect<S>(schema, true),
+    hasConstantOptions: constantOptions !== undefined || isConstantSelect<S>(schema),
+  };
+}
+
+/** Returns `uiSchema` without a `ui:widget` in either of the spellings `getUiOptions()` reads, for a control that has no
+ * implementation of it, since `getWidget()` throws rather than falling back
+ *
+ * @param uiSchema - The uiSchema to drop the widget from
+ * @returns - The uiSchema without the widget
+ */
+export function withoutUiWidget<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiSchema: UiSchema<T, S, F>,
+): UiSchema<T, S, F> {
+  const { [UI_WIDGET_KEY]: _widget, ...rest } = uiSchema;
+  const { widget: _optionWidget, ...options } = uiSchema[UI_OPTIONS_KEY] ?? {};
+  return { ...rest, [UI_OPTIONS_KEY]: options };
 }

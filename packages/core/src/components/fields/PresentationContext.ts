@@ -8,8 +8,8 @@ export interface InheritedPresentation {
   id: string;
   /** The plan it built */
   plan: FieldPresentation;
-  /** Its title, without the Deprecated marker its label may carry, which a field below titled the same takes the label
-   * of
+  /** The title its label shows, without the Deprecated marker that label may carry, which a field below titled the same
+   * takes the label of
    */
   title: string;
   /** The description its schema declares, which a field below declaring the same doesn't declare of its own */

@@ -211,6 +211,7 @@ The flag needs a `ui:field` or a `$id` that resolves to a field.
 A name no field is registered under names nothing for the `anyOf`/`oneOf` to give way to, so the options are rendered as though the flag were absent: dropping them would leave an object union with no way to reach the `properties` of any option while the validator still required them.
 A `ui:field` naming `SchemaField` names no custom field, so the options are rendered as without one, and a `ui:field` naming `FallbackField` does not take them away either, whatever [`useFallbackUiForUnsupportedType`](./form-props.md#usefallbackuiforunsupportedtype) says.
 With that prop on, the [fallback UI](../json-schema/single.md#multiple-types) renders the options itself, against the schema whose type its selector has pinned.
+The exception is a `type` list with an option naming a type of its own, unless its first type is `object`: it gets no selector to pin a type, so the options render as they do without the `ui:field`.
 With it off the same name renders the unsupported-field template, which renders nothing of the schema, so there is nothing for the options to give way to and they are rendered in its place.
 
 An `anyOf`/`oneOf` that is empty, or left `undefined`, offers no options to give way to, so the field renders as it does for a schema without the keyword, and `ui:disabled` applies to it as to any other field.

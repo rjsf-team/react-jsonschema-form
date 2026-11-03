@@ -9,6 +9,7 @@ import {
   getTemplates,
   getUiOptions,
   getValidationTarget,
+  hasWidget,
   isFormDataAvailable,
   logOnce,
   optionSelectorId,
@@ -31,6 +32,9 @@ import NamedFieldContext from './NamedFieldContext.ts';
 import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
+
+/** The widgets the option index has an implementation of that would show the index as a number to edit */
+const VALUE_ENTRY_WIDGETS = new Set<unknown>(['text', 'updown', 'range', 'TextWidget', 'UpDownWidget', 'RangeWidget']);
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It shows
  * the option `useOptionSelection()` holds for the field, selects another when the user picks one, and cleans up any
@@ -120,7 +124,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   const option = selectedOption >= 0 ? options[selectedOption] || null : null;
   // A parent allowing several types passes all of them on: when the fallback UI is on, it pins one type on the schema
-  // it hands down, so such a union only reaches here with the fallback UI off
+  // it hands down, so such a union only reaches here with the fallback UI off or with options that leave the choice of
+  // type to themselves
   // Memoized, since the meet walks every subschema the two share. `SchemaField` retrieves the options afresh when the
   // data changes, so this only spares a render that leaves the data as it was, and the switch away from the option
   const renderedOption = useMemo(() => (option ? getRenderedOptionSchema<S>(schema, option) : null), [schema, option]);
@@ -153,8 +158,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   }
   // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed
   const optionFieldUiSchema = useMemo(
-    () => getOptionFieldUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema),
-    [optionUiSchema, uiSchema, schema, option],
+    () => getOptionFieldUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema, renderedOption, registry),
+    [optionUiSchema, uiSchema, schema, option, renderedOption, registry],
   );
 
   // The option's `SchemaField` renders at this field's own `fieldPath`, so left to its own path its
@@ -266,7 +271,16 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // whatever its own uiSchema says about the controls
   const hiddenBehindControlsBeside = use(OptionalControlsBesideContext) === fieldPath && !hasFormData;
 
-  const { Widget } = resolveWidget<T, S, F>({ type: 'number' }, widget, widgets);
+  // A `ui:widget` the options inherit that enters a value rather than choosing one, or one named for a type the option
+  // index isn't, renders the option, not this selector. Where every option has a `uiSchema` entry of its own none
+  // inherits it, so such a widget is written for the selector
+  const selectorSchema = { type: 'number' } as const;
+  const rendersOnOption = optionsUiSchema.length < options.length && VALUE_ENTRY_WIDGETS.has(widget);
+  const { Widget } = resolveWidget<T, S, F>(
+    selectorSchema,
+    !rendersOnOption && hasWidget<T, S, F>(selectorSchema, widget, widgets) ? widget : 'select',
+    widgets,
+  );
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
   delete fieldErrorSchema[ERRORS_KEY];

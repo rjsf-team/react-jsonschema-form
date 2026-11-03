@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType, WidgetProps } from '@rjsf/utils';
 import { englishStringTranslator, JSON_SCHEMA_TYPES, templateDrawsLabel, TranslatableString } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -513,6 +513,514 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       expect(node.querySelector('#root_multi__internalTypeSelector')).toBeInTheDocument();
       expect(node.querySelector('#root_multi__anyof_select')).toBeInTheDocument();
+    });
+
+    describe('with an option naming a type of its own', () => {
+      const TYPE_SELECTOR = '#root_val__internalTypeSelector';
+      const OPTION_SELECTOR = '#root_val__anyof_select';
+      const TYPED_OPTIONS: RJSFSchema[] = [{ type: 'string' }, { type: 'number' }];
+      const MIXED_OPTIONS: RJSFSchema[] = [{ type: 'string', title: 'S' }, { title: 'B' }];
+      const withVal = (val: RJSFSchema, rest: RJSFSchema = {}): RJSFSchema => ({
+        type: 'object',
+        properties: { val },
+        ...rest,
+      });
+      const unionOf = (anyOf: RJSFSchema['anyOf'], rest?: RJSFSchema) =>
+        withVal({ type: ['string', 'number'], anyOf }, rest);
+      const refOptions = unionOf([{ $ref: '#/definitions/s' }, { $ref: '#/definitions/n' }], {
+        definitions: { s: { type: 'string' }, n: { type: 'number' } },
+      });
+
+      it.each<[string, RJSFSchema, UiSchema?]>([
+        ['every option names one', unionOf(TYPED_OPTIONS)],
+        ['the options name theirs through a $ref', refOptions],
+        ['a ui:field names the fallback field', unionOf(TYPED_OPTIONS), { val: { 'ui:field': 'FallbackField' } }],
+        [
+          'a $id names the fallback field',
+          withVal({ $id: 'FallbackField', type: ['string', 'number'], anyOf: TYPED_OPTIONS }),
+        ],
+      ])('leaves the value and the choice to the option selector when %s', async (_, schema, uiSchema) => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          uiSchema,
+          initialFormData: { val: 'abc' },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        // A type selector here could only cast the value away, since the option's own type overrides the one it pins
+        expect(node.querySelector(TYPE_SELECTOR)).not.toBeInTheDocument();
+        expect(elementOf(node, '#root_val', HTMLInputElement)).toHaveValue('abc');
+        expect(node.querySelector('.rjsf-field-number')).not.toBeInTheDocument();
+
+        const optionSelect = elementOf(node, OPTION_SELECTOR, HTMLSelectElement);
+        await user.selectOptions(optionSelect, optionSelect.options[1]);
+
+        expect(node.querySelector('.rjsf-field-number')).toBeInTheDocument();
+        expect(node.querySelector(TYPE_SELECTOR)).not.toBeInTheDocument();
+        expectToHaveBeenCalledWithFormData(onChange, {}, 'root_val__anyof_select');
+      });
+
+      it.each<[string, unknown, string]>([
+        ['textarea', 'abc', 'textarea'],
+        ['textarea', 5, 'input[type="text"]'],
+        ['updown', 'abc', 'input[type="text"]'],
+        ['updown', 5, 'input[type="number"]'],
+      ])("renders a ui:widget '%s' on the option it has an implementation for, given %s", (widget, val, control) => {
+        const { node } = createFormComponent({
+          schema: unionOf(TYPED_OPTIONS),
+          uiSchema: { val: { 'ui:widget': widget } },
+          initialFormData: { val },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(elementOf(node, '#root_val').matches(control)).toBe(true);
+        expect(node.querySelector(OPTION_SELECTOR)).toBeInTheDocument();
+      });
+
+      it('drops a ui:widget for an option switched to that has no implementation of it', async () => {
+        const { node } = createFormComponent({
+          schema: unionOf(TYPED_OPTIONS),
+          uiSchema: { val: { 'ui:options': { widget: 'textarea' } } },
+          initialFormData: { val: 'abc' },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(elementOf(node, '#root_val').tagName).toBe('TEXTAREA');
+
+        const optionSelect = elementOf(node, OPTION_SELECTOR, HTMLSelectElement);
+        await user.selectOptions(optionSelect, optionSelect.options[1]);
+
+        expect(node.querySelector('.rjsf-field-number')).toBeInTheDocument();
+        expect(node.querySelector('textarea')).not.toBeInTheDocument();
+      });
+
+      it('plans the label of an option without a ui:widget it has no implementation of', () => {
+        const { node } = createFormComponent({
+          schema: withVal({ title: 'Val', anyOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }] }),
+          uiSchema: { val: { 'ui:widget': 'textarea' } },
+          initialFormData: { val: ['a'] },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(elementOf(node, '#root_val').tagName).toBe('FIELDSET');
+        expect(node.querySelector('label[for="root_val"]')).not.toBeInTheDocument();
+      });
+
+      it('renders the type selector within an option naming no type, where choosing a type changes the field', async () => {
+        const { node, onChange } = createFormComponent({
+          schema: unionOf(MIXED_OPTIONS),
+          initialFormData: { val: 'abc' },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(node.querySelector(TYPE_SELECTOR)).not.toBeInTheDocument();
+        expect(elementOf(node, '#root_val', HTMLInputElement)).toHaveValue('abc');
+
+        await user.selectOptions(elementOf(node, OPTION_SELECTOR), 'B');
+        await user.selectOptions(elementOf(node, TYPE_SELECTOR), 'number');
+        expect(node.querySelector('.rjsf-field-number')).toBeInTheDocument();
+
+        await user.type(elementOf(node, '#root_val'), '12');
+        expectToHaveBeenCalledWithFormData(onChange, { val: 12 }, 'root_val');
+
+        await user.selectOptions(elementOf(node, TYPE_SELECTOR), 'string');
+        expectToHaveBeenCalledWithFormData(onChange, { val: '12' }, 'root_val');
+        expect(elementOf(node, '#root_val', HTMLInputElement)).toHaveValue('12');
+        expect(elementOf(node, OPTION_SELECTOR)).toHaveDisplayValue('B');
+
+        await user.selectOptions(elementOf(node, OPTION_SELECTOR), 'S');
+        expect(node.querySelector(TYPE_SELECTOR)).not.toBeInTheDocument();
+      });
+
+      it('renders one type selector, within the option, when a ui:field names the fallback field for mixed options', async () => {
+        const { node } = createFormComponent({
+          schema: unionOf(MIXED_OPTIONS),
+          uiSchema: { val: { 'ui:field': 'FallbackField' } },
+          initialFormData: { val: 'abc' },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(node.querySelector(TYPE_SELECTOR)).not.toBeInTheDocument();
+
+        await user.selectOptions(elementOf(node, OPTION_SELECTOR), 'B');
+
+        expect(node.querySelectorAll(TYPE_SELECTOR)).toHaveLength(1);
+        expect(node.querySelector('#root_val__internalTypeSelector2')).not.toBeInTheDocument();
+      });
+
+      it('opens a value only a typeless option accepts on that option, with its own type selected', () => {
+        const { node } = createFormComponent({
+          schema: unionOf(MIXED_OPTIONS),
+          initialFormData: { val: 5 },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(elementOf(node, OPTION_SELECTOR)).toHaveDisplayValue('B');
+        expect(elementOf(node, TYPE_SELECTOR)).toHaveDisplayValue('number');
+      });
+
+      describe('the heading of a typeless option whose type selector is on a type with one', () => {
+        const withSecondOption = (option: RJSFSchema, type: RJSFSchema['type'] = ['string', 'object', 'array']) =>
+          withVal({ title: 'Val', type, items: { type: 'string' }, anyOf: [{ type: 'string', title: 'S' }, option] });
+        const OPTION = { properties: { a: { type: 'string' } } } satisfies RJSFSchema;
+        const VALUES_WITH_A_HEADING: [string, unknown][] = [
+          ['object', { a: 'x' }],
+          ['array', ['x']],
+        ];
+
+        it.each(VALUES_WITH_A_HEADING)("is the option's title for an %s", (_, val) => {
+          const { node } = createFormComponent({
+            schema: withSecondOption({ ...OPTION, title: 'B' }),
+            initialFormData: { val },
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(elementOf(node, 'legend')).toHaveTextContent('B');
+        });
+
+        it.each(VALUES_WITH_A_HEADING)(
+          'draws its description beneath it and the type selector above it for an %s',
+          (_, val) => {
+            const { node } = createFormComponent({
+              schema: withSecondOption({ ...OPTION, title: 'B', description: 'DB' }),
+              initialFormData: { val },
+              useFallbackUiForUnsupportedType: true,
+            });
+
+            const typeSelector = elementOf(node, TYPE_SELECTOR);
+            const legend = elementOf(node, 'legend');
+            const description = screen.getByText('DB');
+            expect(typeSelector.compareDocumentPosition(legend)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+            expect(legend.compareDocumentPosition(description)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+          },
+        );
+
+        it("draws no label of the option's title for a type with a control of its own", async () => {
+          const { node } = createFormComponent({
+            schema: withSecondOption({ ...OPTION, title: 'B' }),
+            initialFormData: { val: 'abc' },
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          await user.selectOptions(elementOf(node, OPTION_SELECTOR), 'B');
+          await user.selectOptions(elementOf(node, TYPE_SELECTOR), 'string');
+
+          expect(screen.queryByText('B', { selector: 'label' })).not.toBeInTheDocument();
+          expect(elementOf(node, 'label[for="root_val"]')).toHaveTextContent('Val');
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['names no title', OPTION],
+          ["repeats the field's title", { ...OPTION, title: 'Val' }],
+        ])('is not drawn for an option that %s, whose label is already on screen', (_, option) => {
+          const { node } = createFormComponent({
+            schema: withSecondOption(option),
+            initialFormData: { val: { a: 'x' } },
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(node.querySelector('legend')).not.toBeInTheDocument();
+        });
+
+        it('is the title of an option of an unrecognized type', () => {
+          const { node } = createFormComponent({
+            schema: withSecondOption({ ...OPTION, title: 'B' }, 'foo' as RJSFSchema['type']),
+            initialFormData: { val: { a: 'x' } },
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(elementOf(node, 'legend')).toHaveTextContent('B');
+        });
+      });
+
+      describe('a ui:widget that enters a value', () => {
+        it.each<[string, unknown, boolean]>([
+          ['updown', 'abc', true],
+          ['updown', 5, true],
+          ['updown', 5, false],
+          ['range', 5, true],
+          ['text', 'abc', true],
+          ['TextWidget', 5, true],
+          ['UpDownWidget', 5, true],
+          ['RangeWidget', 5, true],
+        ])("leaves the option selector a select for '%s' given %s, with the opt-in %s", (widget, val, optIn) => {
+          const { node } = createFormComponent({
+            schema: unionOf(TYPED_OPTIONS),
+            uiSchema: { val: { 'ui:widget': widget } },
+            initialFormData: { val },
+            useFallbackUiForUnsupportedType: optIn,
+          });
+
+          expect(elementOf(node, OPTION_SELECTOR).tagName).toBe('SELECT');
+        });
+
+        it('leaves a widget that chooses between options on the option selector', () => {
+          const { node } = createFormComponent({
+            schema: unionOf(TYPED_OPTIONS),
+            uiSchema: { val: { 'ui:widget': 'radio' } },
+            initialFormData: { val: 'abc' },
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(node.querySelector('select')).not.toBeInTheDocument();
+          expect(node.querySelectorAll('input[type="radio"]')).toHaveLength(2);
+        });
+
+        it('leaves the option selector a select when only some options have uiSchema entries of their own', () => {
+          const { node } = createFormComponent({
+            schema: unionOf(TYPED_OPTIONS),
+            uiSchema: { val: { 'ui:widget': 'range', anyOf: [{}] } },
+            initialFormData: { val: 5 },
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(elementOf(node, OPTION_SELECTOR).tagName).toBe('SELECT');
+          expect(elementOf(node, '#root_val')).toHaveAttribute('type', 'range');
+        });
+
+        it('stays on the option selector when the options have uiSchema entries of their own, which inherit none', () => {
+          const { node } = createFormComponent({
+            schema: unionOf(TYPED_OPTIONS),
+            uiSchema: { val: { 'ui:widget': 'range', anyOf: [{}, {}] } },
+            initialFormData: { val: 5 },
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(elementOf(node, OPTION_SELECTOR)).toHaveAttribute('type', 'range');
+          expect(elementOf(node, '#root_val')).not.toHaveAttribute('type', 'range');
+        });
+      });
+
+      it.each<[string, RJSFSchema, unknown, string]>([
+        [
+          'a select of constants',
+          { anyOf: [{ oneOf: [{ const: 'a' }, { const: 'b' }] }, { type: 'number' }] },
+          'a',
+          '#root_val input[type="radio"]',
+        ],
+        [
+          'options of its own',
+          { anyOf: [{ anyOf: [{ type: 'string' }, { type: 'number' }] }, { type: 'boolean' }] },
+          'a',
+          '#root_val__anyof_select2 input[type="radio"]',
+        ],
+      ])('hands a ui:widget on through an option with no type that holds %s', (_, val, data, control) => {
+        const { node } = createFormComponent({
+          schema: withVal(val),
+          uiSchema: { val: { 'ui:widget': 'radio' } },
+          initialFormData: { val: data },
+        });
+
+        expect(node.querySelector(control)).toBeInTheDocument();
+      });
+
+      it("leaves a typeless option's ui:widget to its type selector, whichever type the list resolves to", async () => {
+        const { node } = createFormComponent({
+          schema: withVal({
+            type: ['array', 'string'],
+            items: { type: 'string' },
+            anyOf: [{ type: 'number', title: 'N' }, { title: 'L' }],
+          }),
+          uiSchema: { val: { 'ui:widget': 'textarea' } },
+          initialFormData: { val: 'abc' },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(elementOf(node, '#root_val').tagName).toBe('TEXTAREA');
+
+        await user.selectOptions(elementOf(node, TYPE_SELECTOR), 'array');
+
+        expect(node.querySelector('textarea')).not.toBeInTheDocument();
+      });
+
+      it('drops a ui:widget for a select of constants the widget has no implementation for', () => {
+        const { node } = createFormComponent({
+          schema: withVal({ anyOf: [{ oneOf: [{ const: 1 }, { const: 2 }] }, { type: 'string' }] }),
+          uiSchema: { val: { 'ui:widget': 'textarea' } },
+          initialFormData: { val: 1 },
+        });
+
+        expect(elementOf(node, '#root_val').tagName).toBe('SELECT');
+      });
+
+      it('keeps the type selector of an option listing several types', () => {
+        const { node } = createFormComponent({
+          schema: unionOf([{ type: ['string', 'boolean'] }, { type: 'number' }]),
+          initialFormData: { val: 'abc' },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        const selects = Array.from(node.querySelectorAll('select')).map((select) => select.id);
+        expect(selects).toEqual(['root_val__anyof_select', 'root_val__internalTypeSelector']);
+      });
+
+      it('renders the properties of a string-first union within its typeless option', async () => {
+        const { node } = createFormComponent({
+          schema: withVal({
+            type: ['string', 'object'],
+            properties: { shared: { type: 'string' } },
+            oneOf: [
+              { type: 'string', title: 'S' },
+              { title: 'O', properties: { a: { type: 'string' } } },
+            ],
+          }),
+          initialFormData: { val: 'abc' },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(node.querySelector('#root_val_shared')).not.toBeInTheDocument();
+
+        await user.selectOptions(elementOf(node, '#root_val__oneof_select'), 'O');
+        // Chosen explicitly, since a `liveOmit` on change drops the empty object the switch proposes, leaving no data for
+        // the selector to start on `object` from
+        await user.selectOptions(elementOf(node, TYPE_SELECTOR), 'object');
+
+        expect(elementOf(node, TYPE_SELECTOR)).toHaveDisplayValue('object');
+        expect(node.querySelector('#root_val_shared')).toBeInTheDocument();
+        expect(node.querySelector('#root_val_a')).toBeInTheDocument();
+      });
+
+      describe('on an object-first union', () => {
+        const objectFirst = (oneOf: RJSFSchema['oneOf']) =>
+          withVal({ type: ['object', 'string'], properties: { shared: { type: 'string' } }, oneOf });
+        const TYPED: RJSFSchema['oneOf'] = [
+          { type: 'object', properties: { a: { type: 'string' } } },
+          { type: 'string' },
+        ];
+
+        it('keeps its own properties beside typed options, with no type selector', () => {
+          const { node } = createFormComponent({
+            schema: objectFirst(TYPED),
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(node.querySelector(TYPE_SELECTOR)).not.toBeInTheDocument();
+          expect(node.querySelector('#root_val_shared')).toBeInTheDocument();
+          expect(node.querySelector('#root_val_a')).toBeInTheDocument();
+        });
+
+        it('renders its own properties only beside an option that can hold an object', async () => {
+          const { node, onChange } = createFormComponent({
+            schema: objectFirst(TYPED),
+            initialFormData: { val: 'abc' },
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(node.querySelector('#root_val_shared')).not.toBeInTheDocument();
+          expect(node.querySelector('legend')).not.toBeInTheDocument();
+          expect(elementOf(node, '#root_val', HTMLInputElement)).toHaveValue('abc');
+
+          await user.selectOptions(elementOf(node, '#root_val__oneof_select'), 'Option 1');
+          await user.type(elementOf(node, '#root_val_shared'), 'x');
+
+          expect(node.querySelector('#root_val_a')).toBeInTheDocument();
+          expectToHaveBeenCalledWithFormData(onChange, { val: { shared: 'x' } }, 'root_val_shared');
+        });
+
+        it('keeps its own properties and the type selector when a ui:field names the fallback field', () => {
+          const { node } = createFormComponent({
+            schema: objectFirst(TYPED),
+            uiSchema: { val: { 'ui:field': 'FallbackField' } },
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(node.querySelector(TYPE_SELECTOR)).toBeInTheDocument();
+          expect(node.querySelector('#root_val_shared')).toBeInTheDocument();
+        });
+
+        it('leaves an object nested in an option with its own properties, as one with no type selector above it', async () => {
+          const { node } = createFormComponent({
+            schema: withVal({
+              anyOf: [
+                {
+                  title: 'Outer',
+                  type: 'object',
+                  properties: { shared: { type: 'string' } },
+                  anyOf: [{ title: 'O' }, { title: 'N', type: 'null' }],
+                },
+                { title: 'Num', type: 'number' },
+              ],
+            }),
+            initialFormData: { val: {} },
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          await user.selectOptions(elementOf(node, '#root_val__anyof_select2'), 'N');
+
+          expect(node.querySelector('#root_val_shared')).toBeInTheDocument();
+        });
+
+        it('keeps the type selector around mixed options, which takes its own properties off screen', async () => {
+          const { node } = createFormComponent({
+            schema: objectFirst([
+              { title: 'O', properties: { a: { type: 'string' } } },
+              { type: 'string', title: 'S' },
+            ]),
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          expect(node.querySelector('#root_val_shared')).toBeInTheDocument();
+
+          await user.selectOptions(elementOf(node, TYPE_SELECTOR), 'string');
+
+          expect(node.querySelector('#root_val_shared')).not.toBeInTheDocument();
+          expect(elementOf(node, '#root_val')).toHaveAttribute('type', 'text');
+        });
+
+        it('takes its own properties off screen for an option of another type chosen with the type selector on object', async () => {
+          const { node } = createFormComponent({
+            schema: objectFirst([
+              { title: 'O', properties: { a: { type: 'string' } } },
+              { type: 'string', title: 'S' },
+            ]),
+            useFallbackUiForUnsupportedType: true,
+          });
+
+          await user.selectOptions(elementOf(node, '#root_val__oneof_select'), 'S');
+
+          expect(elementOf(node, TYPE_SELECTOR)).toHaveDisplayValue('object');
+          expect(node.querySelector('#root_val_shared')).not.toBeInTheDocument();
+          expect(elementOf(node, '#root_val')).toHaveAttribute('type', 'text');
+
+          await user.selectOptions(elementOf(node, '#root_val__oneof_select'), 'O');
+
+          expect(node.querySelector('#root_val_shared')).toBeInTheDocument();
+        });
+      });
+
+      it('leaves the fields beside the one being typed in alone, whatever the options retrieve', async () => {
+        const rendersOfB = vi.fn();
+        const TextWidget = ({ id, value, onChange }: WidgetProps) => {
+          if (id === 'root_val_b') {
+            rendersOfB();
+          }
+          return <input id={id} value={String(value ?? '')} onChange={(event) => onChange(event.target.value)} />;
+        };
+        const { node } = createFormComponent({
+          schema: unionOf([{ type: 'object', additionalProperties: { type: 'string' } }, { type: 'string' }]),
+          initialFormData: { val: { a: '', b: 'kept' } },
+          widgets: { TextWidget },
+          useFallbackUiForUnsupportedType: true,
+        });
+        expect(node.querySelector('#root_val_b')).toBeInTheDocument();
+        rendersOfB.mockClear();
+
+        await user.type(elementOf(node, '#root_val_a'), 'xyz');
+
+        expect(rendersOfB).not.toHaveBeenCalled();
+      });
+
+      it('leaves an option that only implies its type under the type selector', () => {
+        const { node } = createFormComponent({
+          schema: withVal({
+            type: ['object', 'string'],
+            anyOf: [{ properties: { a: {} } }, { properties: { b: {} } }],
+          }),
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        expect(node.querySelector(TYPE_SELECTOR)).toBeInTheDocument();
+      });
     });
 
     it('offers no type selector for a union whose oneOf is a select', () => {
