@@ -1,7 +1,13 @@
 import type { FocusEvent, KeyboardEvent } from 'react';
 import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getGroupAttributes, ratingStarCount, ratingStoresString, toInputValue, toNumericValue } from '@rjsf/utils';
+import {
+  getGroupAttributes,
+  numericWidgetStoresString,
+  ratingStarCount,
+  toInputValue,
+  toNumericValue,
+} from '@rjsf/utils';
 
 /** How far each key moves from the focused star, choosing the star it lands on */
 const STAR_KEY_STEPS: Partial<Record<string, number>> = {

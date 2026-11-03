@@ -28,9 +28,8 @@ type NonBuiltInObject = object & {
  * `StrictUiSchema`'s `Checks` type parameter to narrow `ui:widget`/`ui:field`/`ui:options` to `@rjsf/core`'s own
  * vocabulary; union it with a `Checks` union of your own to extend it, since it isn't included automatically.
  *
- * This is intentionally a starting set covering the options `@rjsf/core`'s own widgets and fields read, including
- * ones `UIOptionsType` leaves undeclared such as `format` and `shape` - it does not attempt to model every
- * widget/option combination (for example, per-widget options like `RangeWidget`'s min/max
+ * This is intentionally a starting set covering the options `@rjsf/core`'s own widgets and fields read - it does not
+ * attempt to model every widget/option combination (for example, per-widget options like `RangeWidget`'s min/max
  * come from the JSON Schema itself, not from `ui:options`, so they are not repeated here). Widget names include both
  * the registered PascalCase component name and the lowercase alias(es) `getWidget` resolves for that schema type
  * (`WidgetAliasFor`), since either spelling is a valid `ui:widget` value at runtime.
@@ -60,19 +59,18 @@ export type CoreUiOptionsChecks =
         field?: 'StringField';
         placeholder?: string;
         rows?: number;
-        stars?: number | string;
         shape?: 'star' | 'heart';
+        stars?: number;
         inputType?: string;
         autocomplete?: HTMLInputElement['autocomplete'];
         autocapitalize?: HTMLInputElement['autocapitalize'];
         emptyValue?: string;
         accept?: string;
         filePreview?: boolean;
-        accept?: string | readonly string[];
-        yearsRange?: readonly (number | string)[];
         format?: DateElementFormat;
-        hideNowButton?: boolean;
         hideClearButton?: boolean;
+        hideNowButton?: boolean;
+        yearsRange?: readonly [number, number];
         inline?: boolean;
         enumDisabled?: EnumValue[];
         enumNames?: string[] | Record<string | number, string>;
@@ -96,8 +94,6 @@ export type CoreUiOptionsChecks =
           | WidgetAliasFor<'number'>;
         field?: 'NumberField';
         placeholder?: string;
-        stars?: number | string;
-        shape?: 'star' | 'heart';
         inputType?: string;
         autocomplete?: HTMLInputElement['autocomplete'];
         autocapitalize?: HTMLInputElement['autocapitalize'];
@@ -156,7 +152,7 @@ export type CoreUiOptionsChecks =
         copyable?: boolean;
         itemLabel?: string;
         inline?: boolean;
-        accept?: string | readonly string[];
+        accept?: string;
         filePreview?: boolean;
         placeholder?: string;
         emptyValue?: unknown[];

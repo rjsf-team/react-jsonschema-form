@@ -772,12 +772,7 @@ export type ReservedUiOptionName =
   | keyof UIOptionsDeclaredType
   | 'fieldReplacesAnyOrOneOf'
   | 'enumOptions'
-  | OverridableTemplateName
-  | 'expandable'
-  | 'format'
-  | 'hideClearButton'
-  | 'hideNowButton'
-  | 'shape';
+  | OverridableTemplateName;
 
 /** Checks the keys an extension of `GlobalUISchemaOptions` adds: each one also in `Reserved` is mapped to `never`, so
  * an extension declaring one doesn't satisfy it, and so is an extension with a string index signature, which would
@@ -2058,16 +2053,6 @@ type UIOptionsDeclaredType<
     rows?: number;
     /** If submitButtonOptions is provided it should match the `UISchemaSubmitButtonOptions` type */
     submitButtonOptions?: UISchemaSubmitButtonOptions;
-    /** The file types a `FileWidget` accepts: a comma-separated list, or an array of them */
-    accept?: string | readonly string[];
-    /** The number of stars a `RatingWidget` shows, from 1 to 5, when the schema has no `maximum`; a numeric string reads
-     * as its number
-     */
-    stars?: number | string;
-    /** The first and last year an `AltDateWidget` offers, as `[first, last]`, both counted from the current year when
-     * neither is positive; a numeric string reads as its number
-     */
-    yearsRange?: readonly (number | string)[];
     /** Allows RJSF to override the default widget implementation by specifying either the name of a widget that is used
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */

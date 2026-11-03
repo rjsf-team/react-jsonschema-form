@@ -254,11 +254,11 @@ Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTempla
 
 #### Parameters
 
-- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'pattern'> - The props of the `BaseInputTemplate`
+- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick&lt;BaseInputTemplateProps, 'accept' | 'pattern'>: The `pattern` and `accept` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'>: The `pattern`, `inputMode` and `accept` to spread after the derived input props
 
 ### callWithDeferredThrow()
 
@@ -2724,21 +2724,18 @@ Returns the `[first, last]` years to pass `getDateElementProps()` for a `yearsRa
 
 - [number, number] | undefined: The range, or `undefined` for the default years
 
-### offersClearButton()
+### numericWidgetStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Reports whether an input with `allowClearTextInputs` offers its clear button: when it shows a value that isn't the number `0`.
-A `number`, `date`, `datetime-local`, `month`, `time` or `week` input shows only a value in its type's [syntax](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html) and blanks anything else, `false` included.
-It reads that syntax alone, so a day past its month's end counts as shown.
-Any other input shows whatever isn't an empty string.
+Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The schema's type decides, and a type that allows a number too writes one. The value only speaks for a schema with no type.
 
 #### Parameters
 
-- inputValue: string | number - The input's `value`, as [toInputValue()](#toinputvalue) gives it
-- [type]: string - Optional `type` of the input
+- schema: S - The schema of the field
+- value: unknown - The widget's value
 
 #### Returns
 
-- boolean: True if the input offers its clear button
+- boolean: True if the widget writes a string
 
 ### optionalControlsId()
 
@@ -3037,19 +3034,6 @@ Returns the number of stars a rating widget draws: the schema's `maximum` if it 
 #### Returns
 
 - number: The number of stars to draw
-
-### ratingStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Reports whether a rating widget writes its value as a string. The schema's type decides, and a type that allows a number too writes one. The value only speaks for a schema with no type.
-
-#### Parameters
-
-- schema: S - The schema of the field
-- value: unknown - The widget's value
-
-#### Returns
-
-- boolean: True if a star writes a string
 
 ### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

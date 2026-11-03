@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../src/index.ts';
-import { ratingStarCount, ratingStoresString, toNumericValue } from '../src/index.ts';
+import { numericWidgetStoresString, ratingStarCount, toNumericValue } from '../src/index.ts';
 
 describe('toNumericValue()', () => {
   it.each([
