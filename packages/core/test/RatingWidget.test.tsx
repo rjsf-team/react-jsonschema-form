@@ -309,6 +309,17 @@ describe('RatingWidget numeric strings', () => {
     expect(screen.getAllByRole('radio')).toHaveLength(5);
   });
 
+  it('reads numeric-string bounds as their numbers, as it does a `stars` option', () => {
+    const stringBounds = { type: 'integer', minimum: '1', maximum: '3' };
+    createFormComponent({
+      schema: stringBounds as unknown as RJSFSchema,
+      uiSchema: { 'ui:widget': 'RatingWidget' },
+    });
+
+    expect(screen.getAllByRole('radio')).toHaveLength(3);
+    expect(screen.getByRole('radio', { name: '1 star' })).toBeInTheDocument();
+  });
+
   it('falls back to the `stars` option and a first star of 0 for Ajv `$data` bounds', () => {
     const dataBounds = { type: 'integer', maximum: { $data: '1/limit' }, minimum: { $data: '1/floor' } };
     createFormComponent({

@@ -123,18 +123,6 @@ Without its field's plan, `hideLabel` turns it off as well, and it renders under
 
 ## Non-Validator utility functions
 
-### acceptAttribute()
-
-Returns the value of a file input's `accept` attribute for an `accept` option: a string, or an array of them joined with commas. Whatever isn't a string, or is a blank one, is left out.
-
-#### Parameters
-
-- accept: unknown - The `accept` option
-
-#### Returns
-
-- string | undefined: The attribute's value, or undefined when the option names no file types
-
 ### additionalKeyId()
 
 Return a consistent `id` for the input a `WrapIfAdditionalTemplate` renders to edit an additional property's key
@@ -248,17 +236,17 @@ Return a consistent `id` for the `btn` button element
 
 - string: The consistent id for the button from the given `id` and `btn` type
 
-### callerInputProps()
+### callerInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` or `inputMode` the caller names counts even when it is undefined, which is how a caller turns the derived one off. [`getBaseInputProps()`](#getbaseinputprops) merges them for you.
 
 #### Parameters
 
-- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'> - The props of the `BaseInputTemplate`
+- props: BaseInputTemplateProps&lt;T, S, F> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'>: The `pattern`, `inputMode` and `accept` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps&lt;T, S, F>, 'accept' | 'pattern'>: The `pattern` and `accept` to spread after the derived input props
 
 ### callWithDeferredThrow()
 
@@ -2007,9 +1995,7 @@ Gets the type whose field renders a widget for a schema, matching the widget's a
 
 ### getXxxOfKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the keyword whose options are rendered for the `schema`. Only a non-empty array offers options: a keyword left
-`undefined` by a schema assembled in code, or holding an empty list, describes nothing to choose between, so the schema
-reads as one without it and is handled through its own type. `anyOf` wins when both keywords offer options.
+Returns the keyword whose options are rendered for the `schema`. `anyOf` wins when a schema carries both keywords, unless its list is empty and the `oneOf`'s is not.
 Every reader of the options (`isSelect()`, `optionsList()`, `sanitizeDataForNewSchema()`, `findFieldInSchema()` and
 the fields in `@rjsf/core`) goes through it, so they all agree on the one list that is on screen.
 
@@ -2019,7 +2005,7 @@ the fields in `@rjsf/core`) goes through it, so they all agree on the one list t
 
 #### Returns
 
-- `'anyOf'` | `'oneOf'` | undefined: `anyOf` or `oneOf` when that keyword holds a non-empty array, otherwise `undefined`
+- `'anyOf'` | `'oneOf'` | undefined: `anyOf` or `oneOf` when that keyword holds an array, otherwise `undefined`
 
 ### getXxxOfOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2290,35 +2276,36 @@ This happens when either the schema has an `enum` array with a single value or t
 ### isConstantOptionList&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Checks whether `options` is a list of constant schemas (see `isConstant()`), the shape of an `anyOf` or `oneOf` rendered
-as a select. An empty list passes, since every one of its options is vacuously a constant; a list read through
-`getXxxOfKey()` is never empty.
+as a select. An empty list passes unless `nonEmpty` is set, since every one of its options is vacuously a constant but
+it offers nothing to select.
 
 #### Parameters
 
 - options: unknown - The `anyOf` or `oneOf` list, or anything else
+- [nonEmpty=false]: boolean - Whether an empty list is rejected
 
 #### Returns
 
-- boolean: True if `options` is an array whose every entry is a constant schema object
+- boolean: True if `options` is an array whose every entry is a constant schema object, and which has at least one entry
+  when `nonEmpty` is set
 
 ### isConstantSelect&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Checks whether the value of `schema` is picked from a list of constants, whatever its `type`: an `enum`, or an
 `anyOf`/`oneOf` of constants read from the keyword `getXxxOfKey()` picks. An `object` or `array` schema that passes is a
 select for its whole value (see `isWholeValueSelect()`) rather than a container whose contents are edited, pruned or
-sanitized. An empty `enum` offers no option, so it passes only when `allowEmpty` is set, which is how `isSelect()` checks
-a schema, and otherwise leaves the `anyOf`/`oneOf` to decide. An empty `anyOf`/`oneOf` is no option list at all (see
-`getXxxOfKey()`), so it never passes. Unlike `isSelect()`, `schema` is not resolved first.
+sanitized. An empty list offers no option, so it passes only when `allowEmpty` is set, which is how `isSelect()` checks a schema; an empty `enum`
+otherwise leaves the `anyOf`/`oneOf` to decide. Unlike `isSelect()`, `schema` is not resolved first.
 
 #### Parameters
 
 - schema: S - The already-resolved schema to check
-- [allowEmpty=false]: boolean - Whether an empty `enum` counts as a select
+- [allowEmpty=false]: boolean - Whether an empty `enum` or `anyOf`/`oneOf` counts as a select
 
 #### Returns
 
 - boolean: True if `schema` offers a list of constant values to choose from, which is non-empty unless `allowEmpty` is
-  set and the list is an `enum`
+  set
 
 ### isCustomWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -2562,20 +2549,6 @@ Converts a local Date string into a UTC date string
 #### Returns
 
 - string | null | undefined: A UTC date string if `dateString` is truthy and names a valid date; `undefined` for an empty value, and `null` for a value `Date` can't read, as `toJSON()` gives for an invalid date. Years 1-9999 are the supported range, as in `getDateTimeLocalValue()`; a five or six digit year is read all the same, up to the last instant `Date` holds, 275760-09-13T00:00Z, so the string it gives keeps that year and fails `date-time` validation instead of `null` wiping the value
-
-### logGridSpanWarning()
-
-Logs, through [`logOnce()`](#logonce), why a layout grid column's `span` won't lay out as given, for a theme's `GridTemplate`.
-When the column has a width of its own, which the template lets win over `span`, it warns that the `span` is ignored; otherwise, when the theme's grid needs a whole number of twelfths and `span` isn't one, it warns about that.
-Nothing is logged for a column without a `span`.
-
-#### Parameters
-
-- fieldId: string | undefined - The column's `fieldId`, which the warning names
-- span: number | undefined - The column's `span`
-- [options]: `{ ownWidth?: string; wholeSpansOnly?: boolean }` - What the theme's grid makes of the `span`:
-  - [ownWidth]: string - What the column has of its own that wins over `span`, such as ``"a `size`"``, when it has one
-  - [wholeSpansOnly=false]: boolean - Whether the theme's grid needs a whole number of twelfths
 
 ### logOnce()
 
@@ -3028,7 +3001,7 @@ propertyToPath('.'); // []
 
 ### rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.
+Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`. A numeric string counts as its number, and anything else an input can't show, such as an Ajv `$data` reference, sets nothing.
 
 #### Parameters
 
@@ -3040,7 +3013,7 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 
 ### ratingStarValues&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the values of the stars a rating widget draws: one for each whole number from the schema's `minimum` (0 if it has none) up to its `maximum`, but no more than the `stars` option, or the default 5 for a `stars` that isn't a number, and within 1-5. A numeric string counts as its number.
+Returns the number of stars a rating widget draws: the schema's `maximum` if it reads as a number other than 0, a numeric string included, otherwise the `stars` option, or the default 5 for a `stars` that isn't a number, limited to 1-5 and rounded down to whole stars.
 
 #### Parameters
 
@@ -3550,7 +3523,7 @@ Appends `segment` to `parentPath`, returning the `FieldPath` of the child field.
 ### toInputValue()
 
 Turns a widget's `value`, which can hold anything, into what an input's `value` prop accepts.
-A string or a number is kept, so a numeric input stays numeric, a boolean, a bigint or a `Date` is stringified and an array joined with commas the way React renders them, so a hidden multi-select still submits its items, and anything else, `undefined` and `null` included, becomes an empty string.
+A string or a number is kept, so a numeric input stays numeric, a boolean or a bigint is stringified and an array joined with commas the way React renders them, so a hidden multi-select still submits its items, and anything else, `undefined` and `null` included, becomes an empty string.
 
 #### Parameters
 
@@ -4059,7 +4032,7 @@ Checks to see if the `schema` combination represents a multi-select
 
 ### isSelect&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Checks to see if the `schema` combination represents a select: an `enum`, empty or not, or a non-empty `anyOf`/`oneOf` whose options are all constants (see `isConstantOptionList()`).
+Checks to see if the `schema` combination represents a select: an `enum`, or an `anyOf`/`oneOf` whose options are all constants (see `isConstantOptionList()`).
 When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey()`), as it is in `optionsList()`.
 
 #### Parameters

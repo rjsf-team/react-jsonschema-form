@@ -75,13 +75,14 @@ describe('ratingStarValues()', () => {
   ])('$schema with stars $stars', ({ schema, stars, expected }) => {
     expect(ratingStarValues(schema, stars)).toHaveLength(expected);
   });
-  it.each([
-    ['a string that is not a number', '{"maximum": "abc"}'],
-    ['a `$data` reference', '{"maximum": {"$data": "1/max"}}'],
-    ['null', '{"maximum": null}'],
-  ])('falls back to the `stars` option for a JSON schema `maximum` of %s', (_, json) => {
-    const schema: RJSFSchema = JSON.parse(json);
-    expect(ratingStarValues(schema, 3)).toHaveLength(3);
+  it.each<{ maximum: string; stars: unknown; expected: number }>([
+    { maximum: '3', stars: 5, expected: 3 },
+    { maximum: '0', stars: 3, expected: 3 },
+    { maximum: '0.5', stars: 2, expected: 1 },
+    { maximum: 'three', stars: 2, expected: 2 },
+  ])('a string maximum of $maximum with stars $stars', ({ maximum, stars, expected }) => {
+    // @ts-expect-error `maximum` is a number, but a schema that skips Ajv's meta-schema can hold a string
+    expect(ratingStarCount({ maximum }, stars)).toBe(expected);
   });
   it('reads a numeric string `minimum` and `maximum` from a JSON schema as their numbers', () => {
     const schema: RJSFSchema = JSON.parse('{"minimum": "1", "maximum": "3"}');

@@ -408,6 +408,10 @@ describe('getInputProps', () => {
       vi.resetModules();
     });
   });
+  it('reads a numeric-string bound as its number', () => {
+    const stringBounds = { minimum: '5', maximum: '9' };
+    expect(getInputProps(stringBounds as unknown as RJSFSchema)).toMatchObject({ min: 5, max: 9 });
+  });
   it("sets no min or max from an Ajv `$data` reference, which names another value's bound", () => {
     const schema: RJSFSchema = { formatMinimum: { $data: '1/start' }, formatMaximum: { $data: '1/end' } };
     expect(getInputProps(schema, 'date')).toEqual({ type: 'date' });
