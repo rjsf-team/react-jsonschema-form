@@ -814,7 +814,14 @@ export function useGroupAriaProps<
   );
   // The label the widget draws, shown or hidden, where the plan names the group by no other
   const role = component === 'RadioGroup' ? 'radiogroup' : 'group';
-  const { group, option } = getGroupAttributes<T, S, F>(widgetProps, role, label ? titleId(id) : undefined);
+  // An `aria-label` in the options lands on Mantine's wrapper rather than the group, so it names the group where no
+  // label does, over the generic prompt, as it does a `SelectWidget`
+  const optionsAriaLabel = typeof options['aria-label'] === 'string' ? options['aria-label'] : undefined;
+  const { group, option } = getGroupAttributes<T, S, F>(
+    { ...widgetProps, label: widgetProps.label || optionsAriaLabel },
+    role,
+    label ? titleId(id) : undefined,
+  );
   const shownLabel = labelValue(label, hideLabel, false);
   // A `radiogroup` no label names is named by the hidden title, as one whose label is hidden is, since the group takes
   // its name from the `InputWrapper` context's `labelId` rather than an `aria-label`

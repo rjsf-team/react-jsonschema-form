@@ -162,6 +162,12 @@ describe('aria-labelledby', () => {
     expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Choose an option');
   });
 
+  test('radio widget names its group by the aria-label its ui:options give it when the field has no label', () => {
+    renderField(enumSchema, { 'ui:widget': 'radio', 'ui:options': { 'aria-label': 'Fruit' } });
+
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Fruit');
+  });
+
   test.each([
     ['checkboxes', 'ui:options', 'group', checkboxesSchema, 'checkboxes'],
     ['checkboxes', 'theme', 'group', checkboxesSchema, 'checkboxes'],
