@@ -589,8 +589,9 @@ export type MarkdownTemplateProps<
   children: string;
 };
 
-/** The templates RJSF declares. Separate from `TemplatesType` because `Omit` and `Pick` on a type with a string index
- * signature collapse to that signature, so `Omit<TemplatesType, 'ButtonTemplates'>` would leave every template unchecked.
+/** The templates RJSF declares. Separate from `TemplatesType` because `Omit` with literal keys on a type with a string
+ * index signature collapses to that signature, so `Omit<TemplatesType, 'ButtonTemplates'>` would leave every template
+ * unchecked.
  * Object types rather than an `interface`, which gets no implicit index signature and so wouldn't fit
  * `CustomTemplateEntries`. `ButtonTemplates` is a second one because a lone object type must be an `interface` to lint
  */

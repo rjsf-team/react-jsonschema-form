@@ -1538,17 +1538,28 @@ const uiSchema: UiSchema = { 'ui:ArrayFieldTemplate': 'CustomArrayFieldTemplate'
 
 ### Typing a set of templates
 
-`TemplatesType` is two exported types put together: `DeclaredTemplatesType` holds the templates RJSF declares, each checked against its own props, and `CustomTemplateEntries` is the string index signature for your own templates and groups of them. `Omit` or `Pick` on `TemplatesType` collapses to that signature and checks nothing, so build your own type from the two parts:
+`Partial<TemplatesType>` types a set of templates, as every theme's `generateTemplates()` returns: it checks each template RJSF declares, such as `FieldTemplate`, against its own props, and takes your own templates and groups of them beside those:
 
 ```tsx
-import { CustomTemplateEntries, DeclaredTemplatesType } from '@rjsf/utils';
+import { TemplatesType } from '@rjsf/utils';
 import MyFieldTemplate from './MyFieldTemplate';
 import MyTemplate from './MyTemplate';
 
-const templates: Partial<DeclaredTemplatesType> & CustomTemplateEntries = {
+const templates: Partial<TemplatesType> = {
   FieldTemplate: MyFieldTemplate,
   MyTemplate,
 };
 ```
 
-`Partial` reaches only the top level, so a `ButtonTemplates` entry in this type has to hold every button. The `templates` prop of `Form` itself takes any of the buttons on their own.
+`Partial` reaches only the top level, so a `ButtonTemplates` entry in this type has to hold every button. For a value headed to the `templates` prop of `Form`, use `FormProps['templates']`, which takes any of the buttons on their own:
+
+```tsx
+import { FormProps } from '@rjsf/core';
+import MySubmitButton from './MySubmitButton';
+
+const templates: FormProps['templates'] = {
+  ButtonTemplates: { SubmitButton: MySubmitButton },
+};
+```
+
+`TemplatesType` is two exported types put together: `DeclaredTemplatesType` holds the templates RJSF declares, and `CustomTemplateEntries` is the string index signature for your own. `Omit` with literal keys on `TemplatesType`, such as `Omit<TemplatesType, 'ButtonTemplates'>`, collapses to that signature and checks none of the declared templates, so omit from `DeclaredTemplatesType` instead, and add `CustomTemplateEntries` when the type holds your own templates too: `Partial<Omit<DeclaredTemplatesType, 'ButtonTemplates'>> & CustomTemplateEntries`. `Pick` keeps the templates it picks checked.

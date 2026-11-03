@@ -1,7 +1,15 @@
 import { Component, createElement, forwardRef, lazy, memo } from 'react';
+import type { ComponentType } from 'react';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
-import type { DeclaredTemplatesType, MergedClassMap, Registry, TemplatesType, UIOptionsType } from '../src/index.ts';
+import type {
+  CustomTemplateEntries,
+  DeclaredTemplatesType,
+  MergedClassMap,
+  Registry,
+  TemplatesType,
+  UIOptionsType,
+} from '../src/index.ts';
 import {
   createSchemaUtils,
   englishStringTranslator,
@@ -351,16 +359,15 @@ describe('a custom entry in TemplatesType', () => {
     }
   }
   const FunctionTemplate = (props: CustomProps) => props.label;
-  const templates: Registry['templates'] = {
-    ...registry.templates,
-    ClassTemplate,
-    FunctionTemplate,
-    MemoTemplate: memo(FunctionTemplate),
-    ForwardRefTemplate: forwardRef<HTMLSpanElement, CustomProps>((props, ref) =>
-      createElement('span', { ref }, props.label),
-    ),
-    LazyTemplate: lazy(async () => ({ default: FunctionTemplate })),
-    CustomGroup: { ClassTemplate, FunctionTemplate },
+  const MemoTemplate = memo(FunctionTemplate);
+  const customRegistry: Registry = {
+    ...registry,
+    templates: {
+      ...registry.templates,
+      FunctionTemplate,
+      MemoTemplate,
+      CustomGroup: { ClassTemplate, FunctionTemplate },
+    },
   };
 
   it('fits a whole set of declared templates', () => {
@@ -368,19 +375,56 @@ describe('a custom entry in TemplatesType', () => {
   });
 
   it('accepts any kind of component, alone or in a group', () => {
-    expect(templates.ClassTemplate).toBe(ClassTemplate);
-    expect(templates.CustomGroup).toEqual({ ClassTemplate, FunctionTemplate });
+    type Entry = CustomTemplateEntries[string];
+    expectTypeOf<typeof ClassTemplate>().toExtend<Entry>();
+    expectTypeOf(FunctionTemplate).toExtend<Entry>();
+    expectTypeOf(MemoTemplate).toExtend<Entry>();
+    expectTypeOf(
+      forwardRef<HTMLSpanElement, CustomProps>((props, ref) => createElement('span', { ref }, props.label)),
+    ).toExtend<Entry>();
+    expectTypeOf(lazy(async () => ({ default: FunctionTemplate }))).toExtend<Entry>();
+    expectTypeOf({ ClassTemplate, FunctionTemplate }).toExtend<Entry>();
   });
 
-  it("can't be rendered once read back until the lookup names its props", () => {
-    const readBack = templates.FunctionTemplate;
-    if (typeof readBack === 'function') {
+  it("is read back from getTemplate() and getTemplates() with props that can't be rendered until the lookup names them", () => {
+    const fromGetTemplate = getTemplate('FunctionTemplate', customRegistry);
+    const fromGetTemplates = getTemplates(customRegistry).FunctionTemplate;
+    if (typeof fromGetTemplate === 'function') {
       // @ts-expect-error a custom entry's props type is `never`
-      createElement(readBack, { label: 'Label' });
+      createElement(fromGetTemplate, { label: 'Label' });
     }
-    if (!isComponentType<CustomProps>(readBack)) {
+    expectTypeOf(fromGetTemplates).toEqualTypeOf(fromGetTemplate);
+    if (!isComponentType<CustomProps>(fromGetTemplate) || !isComponentType<CustomProps>(fromGetTemplates)) {
       throw new Error('a function template is a component');
     }
-    expect(createElement(readBack, { label: 'Label' }).props).toEqual({ label: 'Label' });
+    expectTypeOf(fromGetTemplate).toEqualTypeOf<ComponentType<CustomProps>>();
+    expect(fromGetTemplate).toBe(FunctionTemplate);
+    expect(fromGetTemplates).toBe(FunctionTemplate);
+  });
+
+  it('resolves a custom name a field option points at another custom entry', () => {
+    const uiOptions: UIOptionsType = { FunctionTemplate: 'MemoTemplate' };
+    expect(getTemplate('FunctionTemplate', customRegistry, uiOptions)).toBe(MemoTemplate);
+    expect(getTemplates(customRegistry, uiOptions).FunctionTemplate).toBe(MemoTemplate);
+  });
+
+  it('finds a group and its member with the narrowing the upgrade guide documents', () => {
+    const findMember = (groupName: string, memberName: string) => {
+      const group = getTemplate(groupName, customRegistry);
+      if (typeof group !== 'object' || isComponentType(group)) {
+        return undefined;
+      }
+      const member = group[memberName];
+      if (!isComponentType<CustomProps>(member)) {
+        return undefined;
+      }
+      expectTypeOf(member).toEqualTypeOf<ComponentType<CustomProps>>();
+      return member;
+    };
+    expect(findMember('CustomGroup', 'FunctionTemplate')).toBe(FunctionTemplate);
+    expect(findMember('CustomGroup', 'ClassTemplate')).toBe(ClassTemplate);
+    expect(findMember('CustomGroup', 'Missing')).toBeUndefined();
+    expect(findMember('MemoTemplate', 'type')).toBeUndefined();
+    expect(findMember('Missing', 'FunctionTemplate')).toBeUndefined();
   });
 });
