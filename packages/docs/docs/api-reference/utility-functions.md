@@ -2167,17 +2167,18 @@ One with neither renders as the field holding its options, which leaves the cont
 
 ### hasSchemaMarker()
 
-Whether `schema` carries the `marker` the schema utilities set on the schemas they build, such as the `ADDITIONAL_PROPERTY_FLAG` `retrieveSchema()` sets on a property an `additionalProperties` adds.
+Whether `schema` carries the flag `marker` the schema utilities set on the schemas they build, such as the `ADDITIONAL_PROPERTY_FLAG` `retrieveSchema()` sets on a property an `additionalProperties` adds.
 A boolean subschema, which can stand wherever a schema can, carries none.
+It takes only the markers that hold a flag: `ADDITIONAL_PROPERTY_FLAG`, `EXTRA_KEYS_ELSEWHERE_FLAG`, `GUESSED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`. A flag set to `undefined` or `false` reads as unset.
 
 #### Parameters
 
 - schema: unknown - The schema to check, which may be a boolean subschema
-- marker: symbol - The symbol of the marker
+- marker: typeof ADDITIONAL_PROPERTY_FLAG | typeof EXTRA_KEYS_ELSEWHERE_FLAG | typeof GUESSED_TYPE_FLAG | typeof RJSF_REF_CYCLE_KEY - The symbol of the flag marker
 
 #### Returns
 
-- boolean: Whether the marker is set on `schema`
+- boolean: Whether the flag is set on `schema`
 
 ### hasVisibleErrors()
 

@@ -457,6 +457,22 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
     expect(bad).toBeDefined();
   });
 
+  it("checks a key declared beside a wider index signature against the index signature's value type", () => {
+    type Checked = StrictUiSchema<ExampleChecks, { name: string; [key: string]: string | number }>;
+
+    const wide: Checked = { name: { 'ui:widget': 'ExampleRangeWidget' } };
+    const typo: Checked = {
+      // @ts-expect-error TS2353, an undeclared ui: key is still rejected
+      name: { 'ui:wigdet': 'ExampleTextWidget' },
+    };
+
+    expectTypeOf<UiSchema<{ name: string; [key: string]: string | number }>['name']>().toEqualTypeOf<
+      UiSchema<string | number> | undefined
+    >();
+    expect(wide.name?.['ui:widget']).toBe('ExampleRangeWidget');
+    expect(typo).toBeDefined();
+  });
+
   it('lets a theme/consumer extend the widget and option vocabulary via a Checks union', () => {
     type MyThemeChecks =
       | UiOptionsCheck<boolean, { widget?: 'ToggleWidget' }>

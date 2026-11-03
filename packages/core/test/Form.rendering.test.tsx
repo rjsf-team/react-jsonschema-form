@@ -1,10 +1,10 @@
 import { createRef } from 'react';
-import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType, WidgetProps } from '@rjsf/utils';
+import type { FieldTemplateProps, RJSFMarkedSchema, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import {
   englishStringTranslator,
+  GUESSED_TYPE_FLAG,
   JSON_SCHEMA_TYPES,
   templateDrawsLabel,
-  toInputValue,
   TranslatableString,
 } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
@@ -109,6 +109,15 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       await user.selectOptions(screen.getByRole('combobox'), 'object');
 
       expect(node.querySelector('.rjsf-object-property-expand')).toBeInTheDocument();
+    });
+
+    it.each([undefined, false])('renders a schema whose guessed-type flag is %s as a plain field', (flag) => {
+      const extra: RJSFMarkedSchema = { type: 'string', [GUESSED_TYPE_FLAG]: flag };
+      const schema: RJSFSchema = { type: 'object', properties: { extra } };
+      const { node } = createFormComponent({ useFallbackUiForUnsupportedType: true, schema });
+
+      expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
+      expect(screen.getByRole('textbox')).toBeInTheDocument();
     });
 
     it('will render fallback ui when useFallbackUiForUnsupportedType is true', async () => {

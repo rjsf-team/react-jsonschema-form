@@ -924,6 +924,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `submitPendingTests()`, checking that the theme's `SubmitButton` is `aria-disabled` but enabled while a promise `onSubmit` returned is pending, idle once it settles, and that a click on it while pending is canceled ([#5649](https://github.com/rjsf-team/react-jsonschema-form/pull/5649))
 - Add `renderGridColumn()`, which renders a one-column layout grid with the given `ui:col` and `ui:row` props, for a theme's tests of how its `GridTemplate` reads them ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Add `clearButtonTests()`, which checks that a theme's `allowClearTextInputs` clear button shows for a value and renders nothing beside the input for `0` ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Add `wrapIfAdditionalFlagTests()`, which checks that a theme's `WrapIfAdditionalTemplate` draws the key input for a field whose `ADDITIONAL_PROPERTY_FLAG` is set and none for one whose flag is `undefined` or `false` ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
 
 ## @rjsf/utils
 
@@ -1249,7 +1250,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `getInputProps()` and `rangeSpec()` to read a numeric-string bound such as `minimum: '5'` as its number, which they passed on as a string ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 - Fix `RJSFSchema` checking nothing where a package manager doesn't hoist `@types/json-schema`, which is now a dependency of `@rjsf/utils` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 - **BREAKING CHANGE:** Change `RJSFMarkedSchema` to a schema with the symbol markers `retrieveSchema()` adds, without the `any` index for other keys, and its symbol values from `boolean | string` to `unknown`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
-- Add `hasSchemaMarker()`, which reads a marker such as `ADDITIONAL_PROPERTY_FLAG` off a schema, a boolean subschema included ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
+- Add `hasSchemaMarker()`, which reads a flag marker such as `ADDITIONAL_PROPERTY_FLAG` off a schema, a boolean subschema included ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
 - Change `getFieldLabel()`, `getSchemaOwnTypes()` and `sanitizeDataForNewSchema()` to read `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` by their truth rather than their presence ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
 
 ## @rjsf/validator-ajv8
