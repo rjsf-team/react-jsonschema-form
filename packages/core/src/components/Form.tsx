@@ -404,29 +404,6 @@ function withoutAbsentValues(data: unknown): unknown {
   return normalize(data, true);
 }
 
-/** Returns `errorSchema` without the messages any of `others` holds at the same path. A field that passes back the
- * errors it was handed, as `ArrayField` does when it re-indexes its items, hands back `extraErrors` and custom errors
- * merged in, which must not be stored as if the validator had produced them
- *
- * @param errorSchema - The error schema to strip
- * @param others - The error schemas whose messages are removed, each read at the same path as `errorSchema`
- */
-function withoutMessagesOf(errorSchema: unknown, others: unknown[]): unknown {
-  if (!isObject(errorSchema)) {
-    return errorSchema;
-  }
-  return Object.fromEntries(
-    Object.entries(errorSchema).map(([key, value]) => {
-      const othersAtKey = others.map((other) => (isObject(other) ? other[key] : undefined));
-      if (key === ERRORS_KEY && Array.isArray(value)) {
-        const known = new Set(othersAtKey.flatMap((messages) => (Array.isArray(messages) ? messages : [])));
-        return [key, value.filter((message) => !known.has(message))];
-      }
-      return [key, withoutMessagesOf(value, othersAtKey)];
-    }),
-  );
-}
-
 /** A change made to a field, which an updater queued by the `onChange` handler applies
  */
 interface FieldChange<T> {
@@ -1134,7 +1111,9 @@ export default class Form<
           const result = state as FormState<T, S, F>;
           outcome = { prevState, props, isLast, result };
         } catch (error) {
-          const validation = isLast ? this.validateBeforeThrow(prevState, props) : undefined;
+          // Only a burst has earlier changes that skipped validation; a lone change leaves the state as it was
+          const isBurst = prevState !== this.state;
+          const validation = isLast && isBurst ? this.validateBeforeThrow(prevState, props) : undefined;
           const result = (validation ?? null) as FormState<T, S, F> | null;
           outcome = { prevState, props, isLast, result, error };
         }
@@ -1150,6 +1129,12 @@ export default class Form<
         // A change that threw reports the validation of the changes before it, without its own id, since the data
         // does not hold it
         const reportedId: [id?: string] = isThrown ? [] : [id];
+        if (isThrown) {
+          // Scheduled first, so a throwing parent `onChange` below does not lose the change's own error
+          setTimeout(() => {
+            throw error;
+          });
+        }
         if (result) {
           if (changeNumber < this.lastReportedChange) {
             // React rebased the later changes already reported onto this one, so only the committed state holds both
@@ -1164,11 +1149,6 @@ export default class Form<
               ...reportedId,
             );
           }
-        }
-        if (isThrown) {
-          setTimeout(() => {
-            throw error;
-          });
         }
       },
     );
@@ -1316,7 +1296,7 @@ export default class Form<
       );
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
-      if (newState.schemaUtils !== schemaUtils) {
+      if (newState.schemaUtils !== schemaUtils && !deepEquals(newState.schema, schema)) {
         // The parent changed what the schema utils are built from in the same batch, so the rest of the change, and the
         // state it reports, use the schema the defaults just came from
         ({ schemaUtils, schema } = newState);
@@ -1359,15 +1339,12 @@ export default class Form<
       if (oldValidationError && Object.keys(oldValidationError).length > 0) {
         // Apply the user-supplied newErrorSchema onto a clone of the AJV-only base, so that
         // mergeErrors below sees the user's error at this path without mutating shared state.
-        const extraAtPath = isRootPath ? extraErrors : getByPath(extraErrors, path);
-        const customAtPath = isRootPath ? customErrors?.ErrorSchema : getByPath(customErrors?.ErrorSchema, path);
-        const replacement = withoutMessagesOf(newErrorSchema, [extraAtPath, customAtPath]) as ErrorSchema<T>;
         if (!isRootPath) {
           mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
           // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-          setByPath(mergeBaseErrorSchema, path, replacement, true);
+          setByPath(mergeBaseErrorSchema, path, newErrorSchema, true);
         } else {
-          mergeBaseErrorSchema = replacement;
+          mergeBaseErrorSchema = newErrorSchema;
         }
       } else {
         // A copy, since the builder in `prevState` is the state's own, which a change that throws must leave as it was
@@ -1385,8 +1362,28 @@ export default class Form<
       }
     } else if (customErrors && getByPath<unknown[]>(customErrors.ErrorSchema, [...path, ERRORS_KEY])?.length) {
       // If we have custom errors and the path has an error, then we need to clear it, on a copy as above
+      const cleared = new Set(getByPath<string[]>(customErrors.ErrorSchema, [...path, ERRORS_KEY]));
       customErrors = new ErrorSchemaBuilder<T>(customErrors.ErrorSchema);
       customErrors.clearErrors(path);
+      if (!noValidate && !(mustValidate && isLast)) {
+        // Only the cleared messages leave the errors shown, rather than rebuilding every field's errors from the
+        // AJV-only ones, which do not hold what other widgets replaced
+        const errorSchema = structuredClone(prevState.errorSchema || {});
+        const shownAtPath = getByPath<string[]>(errorSchema, [...path, ERRORS_KEY]);
+        if (shownAtPath) {
+          setByPath(
+            errorSchema,
+            [...path, ERRORS_KEY],
+            shownAtPath.filter((message) => !cleared.has(message)),
+            true,
+          );
+        }
+        const property = `.${path.join('.')}`;
+        const errors = (prevState.errors || []).filter(
+          (error) => error.property !== property || !cleared.has(error.message ?? ''),
+        );
+        state = { ...state, errorSchema, errors };
+      }
     }
     if (customErrors !== prevState.customErrors) {
       // Kept even when not validating, so the errors are merged back in once validation is turned on
@@ -1405,15 +1402,14 @@ export default class Form<
         props,
       );
       state = { ...state, ...liveValidation };
-    } else if (!noValidate && (newErrorSchema || customErrors !== prevState.customErrors)) {
-      // The errors this change raised or cleared, merged onto the AJV-only errors, which hold neither. A replacement of
-      // an AJV error is kept in them, so a later rebuild, such as another field's clear, does not bring the AJV error back
+    } else if (!noValidate && newErrorSchema) {
+      // The errors this change raised, merged onto the AJV-only errors, which hold none of them
       const mergedErrors = Form.mergeErrors<T>(
         { errorSchema: mergeBaseErrorSchema, errors: prevState.schemaValidationErrors || [] },
         extraErrors,
         customErrors,
       );
-      state = { ...state, ...mergedErrors, schemaValidationErrorSchema: mergeBaseErrorSchema };
+      state = { ...state, ...mergedErrors };
     }
 
     return state;

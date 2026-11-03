@@ -1799,22 +1799,58 @@ describe('Form change handler under a parent', () => {
     expect(container).toHaveTextContent('extra on foo');
     expect(container).not.toHaveTextContent('custom on foo');
   });
-  it('should drop extraErrors an array passed back on removing an item once the parent removes them', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: { list: { type: 'array', items: { type: 'string', minLength: 3 } } },
-    };
-    const validator = customizeValidator<GenericObjectType>();
-    const extraErrors = { list: { 0: { __errors: ['server'] } } } as unknown as ErrorSchema;
-    const props = { schema, validator, formData: { list: ['a', 'b'] } };
-    const { container, rerender } = render(<Form {...props} extraErrors={extraErrors} />);
+  it.each([
+    ['after the item with the error', ['a', 'b'], 0, 1],
+    ['before the item with the error, which shifts it', ['a', 'b', 'c'], 1, 0],
+  ])(
+    'should drop extraErrors an array passed back on removing an item %s once the parent removes them',
+    async (_, list, errorIndex, removeIndex) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { list: { type: 'array', items: { type: 'string', minLength: 3 } } },
+      };
+      const validator = customizeValidator<GenericObjectType>();
+      const extraErrors = { list: { [errorIndex]: { __errors: ['server'] } } } as unknown as ErrorSchema;
+      const props = { schema, validator, formData: { list } };
+      const { container, rerender } = render(<Form {...props} extraErrors={extraErrors} />);
 
-    await submitForm(container, user);
-    await user.click(container.querySelectorAll('.rjsf-array-item-remove')[1]);
-    rerender(<Form {...props} extraErrors={undefined} />);
-    expect(container).not.toHaveTextContent('server');
+      await submitForm(container, user);
+      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[removeIndex]);
+      rerender(<Form {...props} extraErrors={undefined} />);
 
-    rerender(<Form {...props} extraErrors={{ ...extraErrors }} />);
-    expect(container.querySelectorAll('#root_list_0__error li')).toHaveLength(2);
+      expect(container).not.toHaveTextContent('server');
+    },
+  );
+  it('should leave the errors as they were when a lone change throws', () => {
+    vi.useFakeTimers();
+    try {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+      const onChange = vi.fn();
+      const { container } = render(
+        <Form
+          schema={schema}
+          validator={customizeValidator<GenericObjectType>()}
+          formData={{ foo: 'a' }}
+          liveValidate
+          customValidate={(formData, errors) => {
+            if (formData?.foo === 'boom') {
+              throw new Error('customValidate failed');
+            }
+            return errors;
+          }}
+          onChange={onChange}
+        />,
+      );
+      onChange.mockClear();
+
+      // fireEvent, since user-event waits on timers, which hang under the fake timers flushing the rethrow
+      fireEvent.change(container.querySelector('#root_foo')!, { target: { value: 'boom' } });
+
+      expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
+      expect(onChange).not.toHaveBeenCalled();
+      expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
