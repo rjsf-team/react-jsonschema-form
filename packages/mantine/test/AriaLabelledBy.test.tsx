@@ -162,11 +162,57 @@ describe('aria-labelledby', () => {
     expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Choose an option');
   });
 
-  test('radio widget names its group by the aria-label its ui:options give it when the field has no label', () => {
-    renderField(enumSchema, { 'ui:widget': 'radio', 'ui:options': { 'aria-label': 'Fruit' } });
+  describe.each([
+    ['radio', 'radiogroup', enumSchema, 'RadioWidget'],
+    ['checkboxes', 'group', checkboxesSchema, 'CheckboxesWidget'],
+  ] as [string, string, RJSFSchema, string][])(
+    '%s widget given an aria-label by its ui:options',
+    (widget, role, schema, widgetKey) => {
+      const uiOptions = { 'ui:widget': widget, 'ui:options': { 'aria-label': 'Fruit' } };
 
-    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Fruit');
-  });
+      test("names its group by it where the field has no label, rather than Mantine's wrapper", () => {
+        const { container } = renderField(schema, uiOptions);
+
+        expect(screen.getByRole(role)).toHaveAccessibleName('Fruit');
+        expect(container.querySelector('.mantine-InputWrapper-root')).not.toHaveAttribute('aria-label');
+      });
+
+      test('names its group by it over a label ui:label: false hides', () => {
+        renderField({ ...schema, title: 'T' }, { ...uiOptions, 'ui:label': false });
+
+        expect(screen.getByRole(role)).toHaveAccessibleName('Fruit');
+      });
+
+      test('names its group by it over a label inputWrapperOrder leaves out', () => {
+        renderField(
+          { ...schema, title: 'T' },
+          { ...uiOptions, 'ui:options': { ...uiOptions['ui:options'], inputWrapperOrder: orderWithoutLabel } },
+        );
+
+        expect(screen.getByRole(role)).toHaveAccessibleName('Fruit');
+      });
+
+      test('leaves its group named by a label Mantine shows', () => {
+        renderField({ ...schema, title: 'T' }, uiOptions);
+
+        expect(screen.getByRole(role)).toHaveAccessibleName('T');
+      });
+
+      test('leaves its group named by a label the template draws, with no hidden title beside it', () => {
+        render(
+          <WrappedForm
+            schema={{ ...schema, title: 'T' }}
+            uiSchema={uiOptions}
+            presentation={{ widgets: { [widgetKey]: { label: 'template' } } }}
+            validator={validator}
+          />,
+        );
+
+        expect(screen.getByRole(role)).toHaveAccessibleName('T');
+        expect(screen.queryByText('Fruit')).not.toBeInTheDocument();
+      });
+    },
+  );
 
   test.each([
     ['checkboxes', 'ui:options', 'group', checkboxesSchema, 'checkboxes'],
