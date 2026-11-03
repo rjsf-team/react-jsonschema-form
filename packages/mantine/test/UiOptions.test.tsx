@@ -96,6 +96,15 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
     }
   });
 
+  it('does not pass colorFormat on to a widget other than ColorWidget', () => {
+    const { container } = render(
+      <Form schema={{ type: 'string' }} uiSchema={{ 'ui:options': { colorFormat: 'rgba' } }} validator={validator} />,
+    );
+
+    expect(container.querySelector('[colorformat]')).toBeNull();
+    expect(unrecognizedProps()).not.toContain('colorFormat');
+  });
+
   it("does not pass ObjectFieldTemplate's grid options on from the global options", () => {
     const { container } = render(
       <Form

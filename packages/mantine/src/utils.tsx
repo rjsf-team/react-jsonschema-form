@@ -63,14 +63,16 @@ type DeclaredKeys<T> = keyof { [K in keyof T as string extends K ? never : K]: T
 /** The options rjsf reads from a widget's `options`, which `ReservedUiOptionName` lists: those `ui:options` declares,
  * `enumOptions`, every template `getTemplates()` matches in `ui:options` by name and `ui:fieldReplacesAnyOrOneOf`.
  * `ButtonTemplates` is added, which `TemplatesType` declares though `getTemplate()` ignores an override of it, and so
- * are the theme's own global options. `FileWidget` passes `accept` on itself, since Mantine's `FileInput` takes an
- * option of that name.
+ * are the theme's own global options and `colorFormat`, which `ColorWidget` hands `ColorInput` as its `format`, a name
+ * `ui:options` declares for the alt-date widgets' order of date parts, and which no Mantine component takes as a prop.
+ * `FileWidget` passes `accept` on itself, since Mantine's `FileInput` takes an option of that name.
  */
-type StrippedOptionName = ReservedUiOptionName | 'ButtonTemplates' | keyof MantineGlobalUiOptionsKeys;
+type StrippedOptionName = ReservedUiOptionName | 'ButtonTemplates' | 'colorFormat' | keyof MantineGlobalUiOptionsKeys;
 
 const strippedOptionNames = new Set<string>([
   ...RESERVED_UI_OPTION_NAMES,
   'ButtonTemplates',
+  'colorFormat',
   ...MANTINE_GLOBAL_UI_OPTIONS_KEYS,
 ]);
 

@@ -1201,7 +1201,7 @@ Given date & time information with optional yearRange & format, returns props fo
 
 - date: DateObject - Object containing date with optional time information
 - time: boolean - Determines whether to include time or not
-- [yearRange=[1900, new Date().getFullYear() + 2]]: [number, number] - Controls the list of years to be displayed
+- [yearRange=[1900, new Date().getFullYear() + 2]]: readonly [number, number] - Controls the list of years to be displayed
 - [format='YMD']: DateElementFormat - Controls the order in which day, month and year input element will be displayed
 
 #### Returns

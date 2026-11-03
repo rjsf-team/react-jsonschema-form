@@ -122,6 +122,16 @@ describe('UiSchema type', () => {
     expect([wrongNames, wrongOptions]).toHaveLength(2);
   });
 
+  it('accepts an `as const` uiSchema for the options that take a tuple or a literal', () => {
+    const asConst = {
+      'ui:yearsRange': [2000, 2030],
+      'ui:options': { yearsRange: [2000, 2030], shape: 'heart', format: 'MDY' },
+    } as const;
+    const ui: UiSchema = asConst;
+
+    expect(ui['ui:options']?.yearsRange).toEqual([2000, 2030]);
+  });
+
   it('accepts a key from any branch of a union-typed field', () => {
     const ui: Known = {
       thing: {

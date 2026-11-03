@@ -66,12 +66,15 @@ describe('CoreUiOptionsChecks', () => {
       CoreUiOptionsChecks,
       { born: string; upload: string[]; score: number; extras: { name: string } }
     >;
+    // Outside the literal, since an `as const` array written where a mutable tuple is expected isn't made read-only
+    const years = [2000, 2030] as const;
 
     const ui: Checked = {
       born: {
         'ui:widget': 'alt-date',
         'ui:options': { format: 'MDY', yearsRange: [2000, 2030], hideNowButton: true, hideClearButton: true },
         'ui:accept': '.pdf',
+        'ui:yearsRange': years,
       },
       upload: { 'ui:accept': '.pdf' },
       score: { 'ui:widget': 'RatingWidget', 'ui:stars': 3, 'ui:shape': 'heart' },

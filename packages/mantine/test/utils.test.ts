@@ -22,6 +22,7 @@ describe('cleanupOptions()', () => {
     'rows',
     'enumOptions',
     'accept',
+    'colorFormat',
     'expandable',
     'format',
     'gridCols',

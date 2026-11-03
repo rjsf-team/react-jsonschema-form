@@ -6,9 +6,6 @@ import { labelValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
 
-// `ColorInput` takes this option as `format`, a name `ui:options` declares for the alt-date widgets' order of date parts
-const colorExcludedKeys = new Set(['colorFormat']);
-
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
  *
  * @param props - The `WidgetProps` for this component
@@ -35,7 +32,7 @@ export default function ColorWidget<
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
-  const themeProps = cleanupOptions(options, props, colorExcludedKeys);
+  const themeProps = cleanupOptions(options, props);
 
   const handleChange = useCallback(
     (nextValue: string) => {

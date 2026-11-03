@@ -1979,7 +1979,7 @@ type UIOptionsDeclaredType<
     /** The first and last years an alt-date widget's year select offers. Both above 0, or both at most 0 to count back
      * from the current year: a negative beside a positive throws
      */
-    yearsRange?: [number, number];
+    yearsRange?: readonly [number, number];
   };
 
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to
