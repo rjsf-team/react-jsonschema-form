@@ -437,6 +437,11 @@ describe('getInputProps', () => {
     };
     expect(getInputProps(timeBounds, 'time')).toEqual({ type: 'time', min: '09:00', max: '17:00' });
   });
+  it('sets no bound from an empty `minimum` or `maximum` on a date or time input', () => {
+    // @ts-expect-error these keywords are numbers, but a schema that skips Ajv's meta-schema can hold strings
+    const emptyBounds: RJSFSchema = { type: 'string', format: 'date', minimum: '', maximum: '' };
+    expect(getInputProps(emptyBounds, 'date')).toEqual({ type: 'date' });
+  });
   it('sets no bound from a string `minimum` or `maximum` on an input that is no date or time', () => {
     // @ts-expect-error these keywords are numbers, but a schema that skips Ajv's meta-schema can hold strings
     const textBounds: RJSFSchema = { type: 'string', minimum: 'a', maximum: 'z' };

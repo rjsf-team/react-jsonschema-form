@@ -136,7 +136,8 @@ The file also has to be a module, with an `import` or an `export`, as the exampl
 In a file with neither, such as a `.d.ts` of its own, `declare module` replaces `json-schema` instead of adding to it, and TypeScript reports TS2353 on `type` and every other keyword until you add `export {};`.
 
 An augmentation adds keywords but can't change the type of one `JSONSchema7` already declares (TS2717).
-So Ajv's `$data` reference, which `formatMinimum` and its siblings take, doesn't type-check in `minimum`, `maximum`, `multipleOf` or another keyword typed as a number, even though a validator built with `customizeValidator({ ajvOptionsOverrides: { $data: true } })` validates it and the built-in widgets pass over it.
+So Ajv's `$data` reference, which `formatMinimum` and its siblings take, doesn't type-check in `minimum`, `maximum`, `multipleOf` or another keyword typed as a number, even though a validator built with `customizeValidator({ ajvOptionsOverrides: { $data: true } })` validates it.
+The built-in widgets pass over a `$data` reference in `minimum`, `maximum` and `multipleOf` only; one in another keyword, such as `maxItems`, isn't handled yet, so an array with `maxItems: { $data: '1/limit' }` shows no Add button.
 Convert such a schema through `unknown`, since a direct `as RJSFSchema` fails with TS2352:
 
 ```ts

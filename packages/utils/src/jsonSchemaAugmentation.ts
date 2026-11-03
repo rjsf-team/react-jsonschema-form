@@ -3,7 +3,8 @@ import type { JSONSchema7 } from 'json-schema';
 /**
  * This file is used to augment the `json-schema` module with the keywords RJSF or its validators read beyond draft 7:
  * `deprecated` and the other keywords of later drafts it supports, OpenAPI's `discriminator` and `components`, Ajv's
- * `formatMinimum`/`formatMaximum`/`formatExclusiveMinimum`/`formatExclusiveMaximum` and ajv-errors' `errorMessage`.
+ * `nullable` and `formatMinimum`/`formatMaximum`/`formatExclusiveMinimum`/`formatExclusiveMaximum` and ajv-errors'
+ * `errorMessage`.
  *
  * It is a dedicated file because `json-schema` is a type-only package. Standard augmentation
  * using `import 'json-schema'` in a file with other imports can cause module resolution
@@ -62,6 +63,8 @@ declare module 'json-schema' {
     maxContains?: number;
     /** The fewest items that must match `contains` (draft 2019-09) */
     minContains?: number;
+    /** Whether `null` is valid as well as the `type`, which Ajv reads by default (OpenAPI) */
+    nullable?: boolean;
     /** The schemas of the array's leading items, by position (draft 2020-12) */
     prefixItems?: JSONSchema7Definition[];
     /** The schema of the items no other keyword evaluates (draft 2019-09) */

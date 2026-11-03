@@ -145,10 +145,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
     it('reads a definition no $ref of the root reaches as the form reads it, the keywords beside a chained $ref merged in', () => {
       const unreached: RJSFSchema = { components };
-      const reached: RJSFSchema = {
-        components,
-        properties: { x: { $ref: '#/components/schemas/M' } },
-      };
+      const reached: RJSFSchema = { components, properties: { x: { $ref: '#/components/schemas/M' } } };
       const expected = {
         type: 'object',
         properties: { b: { type: 'string' }, a: { type: 'string' } },
