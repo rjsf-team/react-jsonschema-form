@@ -147,6 +147,22 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
     expect(other).not.toHaveAttribute('data-variant', 'compact');
   });
 
+  it.each([
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }],
+    ['radio', { type: 'string', enum: ['a', 'b'] }],
+  ] as const)("does not pass the text inputs' Mantine props on to the %s group", (widget, schema) => {
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ 'ui:widget': widget, 'ui:options': { leftSection: 'L', rightSectionWidth: 20 } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('[leftsection], [rightsectionwidth]')).toBeNull();
+    expect(unrecognizedProps()).toEqual([]);
+  });
+
   it("passes an anyOf field's own Mantine prop on to its option selector beside a declared global of the same name", () => {
     const { container } = render(
       <Form

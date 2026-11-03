@@ -1,11 +1,16 @@
 import type { ReactElement, ReactNode } from 'react';
 import { createContext, Fragment, use, useCallback, useMemo } from 'react';
 import type {
+  __BaseInputProps,
   BoxProps,
+  CheckboxGroupProps,
   ElementProps,
+  InputFactory,
+  InputProps,
   InputWrapperFactory,
   InputWrapperProps,
   MantineStyleProps,
+  RadioGroupProps,
   StylesApiProps,
 } from '@mantine/core';
 import {
@@ -562,6 +567,38 @@ export function useHiddenTitle(
 
 export type OwnKeys<P, Base> = Exclude<keyof P, keyof Base>;
 
+/** The Mantine input props `Checkbox.Group` and `Radio.Group` don't take, which they would pass on to their root
+ * element as unknown attributes
+ */
+type GroupExcludedKey = Exclude<
+  keyof __BaseInputProps | OwnKeys<InputProps, BoxProps & StylesApiProps<InputFactory>>,
+  keyof CheckboxGroupProps | keyof RadioGroupProps | `__${string}`
+>;
+
+// A record, not a list, so that a prop a later Mantine release adds fails typecheck until it is listed here
+const groupExcludedKeyRecord: Record<GroupExcludedKey, true> = {
+  inputSize: true,
+  leftSection: true,
+  leftSectionPointerEvents: true,
+  leftSectionProps: true,
+  leftSectionWidth: true,
+  loading: true,
+  loadingPosition: true,
+  multiline: true,
+  pointer: true,
+  radius: true,
+  rightSection: true,
+  rightSectionPointerEvents: true,
+  rightSectionProps: true,
+  rightSectionWidth: true,
+  rootRef: true,
+  withAria: true,
+  withErrorStyles: true,
+  withSuccessStyles: true,
+};
+/** The options `cleanupOptions()` leaves out for `CheckboxesWidget` and `RadioWidget`, besides rjsf's own */
+export const groupExcludedKeys: ReadonlySet<string> = new Set(Object.keys(groupExcludedKeyRecord));
+
 /** The `InputWrapper` options a widget's options can set; rjsf renders the title, description and errors itself */
 export type FieldWrapperOptionKey = Exclude<
   OwnKeys<InputWrapperProps, BoxProps & StylesApiProps<InputWrapperFactory> & ElementProps<'div'>>,
@@ -580,6 +617,15 @@ const fieldWrapperOptionKeyRecord: Record<FieldWrapperOptionKey, true> = {
   success: true,
   successProps: true,
   withAsterisk: true,
+};
+// They style the title, description and errors too, which only the field's wrapper renders
+const stylesApiKeyRecord: Record<keyof StylesApiProps<InputWrapperFactory>, true> = {
+  attributes: true,
+  classNames: true,
+  styles: true,
+  unstyled: true,
+  variant: true,
+  vars: true,
 };
 const fieldWrapperOptionKeys = Object.keys(fieldWrapperOptionKeyRecord) as FieldWrapperOptionKey[];
 const fieldWrapperPickedKeys = [...fieldWrapperOptionKeys, 'wrapperProps'];
@@ -608,30 +654,47 @@ function renderChildren(children: ReactNode): ReactNode {
  * render it; it goes beside the wrapper rather than in it, since a custom `inputContainer`, like Mantine's `Tooltip`,
  * may only accept the single element Mantine's own inputs pass it. The wrapper options are
  * resolved as Mantine's inputs resolve them, from the widget's options and `Input`'s and `InputWrapper`'s theme
- * `defaultProps`; the widget's own component's theme `defaultProps` aren't read, since Mantine would spread them on its
- * root element. The wrapper gets no `id`, which Mantine would put on its root element and point the title's `for` at,
- * though the widget's inputs have their own ids; the title gets no `for`.
+ * `defaultProps`; the widget's own component's theme `defaultProps` aren't applied to the wrapper, since Mantine would
+ * spread them on its root element. The wrapper gets no `id`, which Mantine would put on its root element and point the
+ * title's `for` at, though the widget's inputs have their own ids; the title gets no `for`.
  *
  * @param widgetProps - The props of the widget, from which the label, description, errors and options are derived
+ * @param inputComponent - The Mantine component of the widget's inputs, whose theme `defaultProps` size them over the
+ *   wrapper's theme, as Mantine sizes an input
  * @param [containerOnInputs=false] - Whether the widget's inputs render the `inputContainer` themselves, each in its
  *   own wrapper, so that the field's wrapper mustn't render it again
  * @returns - The `wrapperProps` to spread on `Input.Wrapper`, the `inputWrapperOrder` they resolve to, whether the
  *   field is `invalid`, for its inputs to say so too, the `successId` of the wrapper's success message, for its
- *   inputs to be described by through `useShownSuccessId()` while it is shown, and `slotlessErrors`, the errors to
- *   render beside the wrapper where its `inputWrapperOrder` leaves out the error slot
+ *   inputs to be described by through `useShownSuccessId()` while it is shown, the `size` of its inputs, the field's
+ *   own, `ui:options.size` before `wrapperProps.size`, else their component's theme size, else the wrapper's, and
+ *   `slotlessErrors`, the errors to render beside the wrapper where its `inputWrapperOrder` leaves out the error slot
  */
 export function useFieldWrapperProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(widgetProps: WidgetProps<T, S, F>, containerOnInputs = false) {
+>(widgetProps: WidgetProps<T, S, F>, inputComponent: 'Slider' | 'Select', containerOnInputs = false) {
   const { id, label, required, options } = widgetProps;
   const hideLabel = !widgetDrawsLabel<T, S, F>(widgetProps);
   const { description } = getDescriptionProps(widgetProps);
+  const pickedOptions = pickOptions(options, fieldWrapperPickedKeys);
+  const inputThemeSize: unknown = useProps<GenericObjectType>(inputComponent, {}, {}).size;
+  // As a Mantine input takes its top-level `size`, while `wrapperProps.size` sizes only its wrapper
+  const ownSize: unknown = options.size ?? asObject(options.wrapperProps)?.size;
+  // Inputs that render their own wrappers apply the theme's `wrapperProps` to them, so only its wrapper options and
+  // Styles API props, which style the parts only the field's wrapper renders, reach the field's wrapper, where
+  // `withOwnRootProps()` drops their `root` entries
+  const themeWrapperOptions = Object.fromEntries(
+    Object.entries(asObject(useProps<GenericObjectType>(wrapperThemeNames, {}, {}).wrapperProps) ?? {}).filter(
+      ([key]) => Object.hasOwn(fieldWrapperOptionKeyRecord, key) || Object.hasOwn(stylesApiKeyRecord, key),
+    ),
+  );
   const { labelElement, wrapperProps: inputWrapperProps } = useInputProps(
     'InputWrapper',
     {},
-    pickOptions(options, fieldWrapperPickedKeys),
+    containerOnInputs && pickedOptions.wrapperProps == null
+      ? { ...pickedOptions, wrapperProps: themeWrapperOptions }
+      : pickedOptions,
   );
   // `Input.Wrapper` would size its title, description and errors by the `size` in `__stylesApiProps`, the top-level
   // props, rather than by its own, which a `wrapperProps.size` may have replaced
@@ -661,6 +724,7 @@ export function useFieldWrapperProps<
       successProps: { ...ownSuccessProps, id: successId },
     },
     inputWrapperOrder: resolved.inputWrapperOrder as unknown,
+    size: (ownSize ?? inputThemeSize ?? wrapperProps.size) as InputWrapperProps['size'],
     invalid: !!error,
     successId,
     slotlessErrors: getSlotlessErrors<T, S, F>(widgetProps, resolved.inputWrapperOrder),
@@ -680,8 +744,11 @@ export function useFieldWrapperProps<
  * @param id - The id of the field the input belongs to
  * @param options - The widget's options, whose own `inputContainer`, if any, is still applied inside the override
  * @param settings - `describedBy`, the ids to describe the input by, `alsoDescribedBy`, further ids to describe it by,
- *   `wrapperOverrides`, set over the `wrapperProps` the input would otherwise take, rather than replacing them, and
- *   `slotlessErrors`, which gets what to render after the input from the `inputWrapperOrder` it resolves to
+ *   `wrapperOverrides`, set over the `wrapperProps` the input would otherwise take, rather than replacing them,
+ *   `slotlessErrors`, which gets what to render after the input from the `inputWrapperOrder` it resolves to, and
+ *   `label`, the input's own label, which names it through `aria-label` where that `inputWrapperOrder` leaves the label
+ *   out, since Mantine then renders no label to name it, unless the options or the theme give an `aria-label` of
+ *   their own
  * @returns - An object to spread on the props of the Mantine input, after the theme props
  */
 export function useAriaDescribedByProps(
@@ -693,11 +760,13 @@ export function useAriaDescribedByProps(
     alsoDescribedBy,
     wrapperOverrides,
     slotlessErrors,
+    label,
   }: {
     describedBy?: string;
     alsoDescribedBy?: string;
     wrapperOverrides?: GenericObjectType;
     slotlessErrors?: (inputWrapperOrder: unknown) => ReactNode;
+    label?: string;
   },
 ) {
   const props = useProps<GenericObjectType>(themeComponentNames[component], {}, pickOptions(options, inputPickedKeys));
@@ -715,7 +784,7 @@ export function useAriaDescribedByProps(
     Object.fromEntries(inputOptionKeys.map((name) => [name, fromWrapper(name)])),
   );
   const ownSuccessProps = asObject(resolved.successProps);
-  return useAriaContainerProps({
+  const containerProps = useAriaContainerProps({
     id,
     successId: ownIdOr(ownSuccessProps, partId(id, 'success')),
     describedBy: [describedBy, alsoDescribedBy].filter(Boolean).join(' '),
@@ -729,13 +798,21 @@ export function useAriaDescribedByProps(
     wrapperObject,
     after: slotlessErrors?.(resolved.inputWrapperOrder),
   });
+  return label &&
+    !options['aria-label'] &&
+    !props['aria-label'] &&
+    !rendersWrapperPart(resolved.inputWrapperOrder, 'label')
+    ? { ...containerProps, 'aria-label': label }
+    : containerProps;
 }
 
 /**
  * A props hook for a widget's Mantine input, which takes the `error` `getWidgetError()` gives: its field's plan,
  * through `useAriaDescribedByProps()`. The input is described and named by the `aria-describedby`, `aria-labelledby`
  * and `aria-label` it is given, those `getControlAttributes()` gives by default, the second for a label drawn
- * elsewhere with no `for` and the third for a label `ui:label: false` hides, and the errors the widget draws are
+ * elsewhere with no `for` and the third for a label `ui:label: false` hides, else by its own label through
+ * `aria-label` where its `inputWrapperOrder` leaves the label out and neither its options nor the theme give an
+ * `aria-label`, and the errors the widget draws are
  * rendered by the registry's `FieldErrorTemplate` where its `inputWrapperOrder` leaves out Mantine's error slot.
  *
  * @param component - The Mantine input the props are spread on
@@ -762,6 +839,8 @@ export function useInputAriaProps<
   const ariaProps = useAriaDescribedByProps(component, id, options, {
     describedBy,
     slotlessErrors: (inputWrapperOrder) => getSlotlessErrors<T, S, F>(widgetProps, inputWrapperOrder),
+    // Only a label the widget draws, which `inputWrapperOrder` may leave out; one drawn elsewhere names the input already
+    label: widgetDrawsLabel<T, S, F>(widgetProps) ? getOwnLabel<T, S, F>(widgetProps) : undefined,
   });
   // Each left out rather than `undefined` where none is given, so one in the options still applies
   return {

@@ -127,7 +127,10 @@ export default function RangeWidget<
 
   const themeProps = cleanupOptions(options, props, sliderExcludedKeys);
   const { min, max, step } = rangeSpec(schema);
-  const { wrapperProps, inputWrapperOrder, invalid, successId, slotlessErrors } = useFieldWrapperProps(props);
+  const { wrapperProps, inputWrapperOrder, size, invalid, successId, slotlessErrors } = useFieldWrapperProps(
+    props,
+    'Slider',
+  );
   const { 'aria-labelledby': labelledBy, 'aria-describedby': describedBy } = getControlAttributes<T, S, F>(props);
   // The slider is named by `titleId(id)`, so the title is kept, hidden, when Mantine doesn't render it
   const hiddenTitle = useHiddenTitle(id, label, hideLabel, inputWrapperOrder);
@@ -177,6 +180,7 @@ export default function RangeWidget<
           onBlur={handleBlur}
           onFocus={handleFocus}
           {...themeProps}
+          size={size}
           successId={successId}
           invalid={invalid}
           thumbProps={thumbProps}

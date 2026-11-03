@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Flex, Box, Group, Button, Select, Input } from '@mantine/core';
+import type { SelectProps } from '@mantine/core';
 import type {
   DateElementProp,
   DateObject,
@@ -33,6 +34,8 @@ interface AltDatePartProps {
   invalid: boolean;
   success: boolean;
   label?: string;
+  /** The size `useFieldWrapperProps()` resolves for the field's inputs */
+  size?: SelectProps['size'];
   translateString: Registry['translateString'];
   onChange: (property: keyof DateObject, value?: string) => void;
   onBlur: (id: string, value: unknown) => void;
@@ -53,6 +56,7 @@ function AltDatePart({
   invalid,
   success,
   label,
+  size,
   translateString,
   onChange,
   onBlur,
@@ -77,6 +81,7 @@ function AltDatePart({
         aria-label={dateElementAriaLabel(partLabel, translateString, label)}
         disabled={disabled}
         autoFocus={autofocus}
+        size={size}
         // The parts are read-only while `searchable` is false, so this adds no constraint validation
         required={required}
         // Booleans mark and style the part invalid or successful, without Mantine rendering the field's messages again
@@ -148,7 +153,7 @@ export default function AltDateWidget<
   const { id, disabled, readonly, autofocus, required, label, options, registry, onBlur, onFocus } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
-  const { wrapperProps, invalid, successId, slotlessErrors } = useFieldWrapperProps(props, true);
+  const { wrapperProps, size, invalid, successId, slotlessErrors } = useFieldWrapperProps(props, 'Select', true);
   const { inputContainer, wrapperProps: fieldWrapperProps } = options;
   // Each part renders the field's `inputContainer` in its own wrapper, rather than the field's wrapper around them all,
   // resolved as for any input. The field's own wrapper applies the rest of its `wrapperProps`, so only their
@@ -179,6 +184,7 @@ export default function AltDateWidget<
             // The text `ui:label: false` hides names the parts, as it names the field's other controls; where the
             // template draws the label, the parts still name themselves after it
             label={getOwnLabel<T, S, F>(props) ?? label}
+            size={size}
             translateString={translateString}
             fieldSuccessId={successId}
             onChange={handleChange}
