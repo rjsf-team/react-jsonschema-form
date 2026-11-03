@@ -1560,7 +1560,10 @@ export function formTests(Form: ComponentType<FormProps>) {
       };
       const { asFragment } = render(<Form schema={schema} initialFormData='foo' validator={validator} />);
       expect(document.querySelectorAll('#root__description')).toHaveLength(1);
-      expect(screen.getByRole('combobox')).toHaveAccessibleDescription('Pick a plan Foo description');
+      // In the order the theme draws them, which `selectedOptionDescriptionTests()` pins
+      expect(screen.getByRole('combobox')).toHaveAccessibleDescription(
+        expect.stringMatching(/^(Pick a plan Foo description|Foo description Pick a plan)$/),
+      );
       expect(asFragment()).toMatchSnapshot();
     });
   });

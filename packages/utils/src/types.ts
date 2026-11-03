@@ -981,13 +981,24 @@ export interface ThemePresentation {
    * render no widget to leave it to, since one leaving it to a widget it renders takes the widget's
    */
   fieldDefault?: Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'>;
+  /** Where the theme's `SelectWidget` draws the selected option's description among the field's description and help,
+   * so `widgetAriaProps()` announces them in the order they are drawn, `'afterDescription'` where no layer declares it.
+   * A form whose `SelectWidget` or `FieldTemplate` draws them elsewhere than its theme's declares its own
+   */
+  selectedOptionDescription?: SelectedOptionDescriptionPlacement;
 }
+
+/** Where a `SelectWidget` draws the selected option's description: after the field's description and before its help,
+ * before the field's description, or after the help, as a `FieldTemplate` drawing the help above the widget does
+ */
+export type SelectedOptionDescriptionPlacement = 'afterDescription' | 'beforeDescription' | 'afterHelp';
 
 /** A form's `ThemePresentation` once `mergeThemePresentation()` merged its layers: an entry in `widgets` for every key
  * any layer declares, with each layer's `default` beneath that layer's own entry, the layered `default` for a key no
- * layer declares, and the layered `fieldDefault`
+ * layer declares, the layered `fieldDefault`, and the top layer's `selectedOptionDescription` that declares one
  */
-export type MergedThemePresentation = Required<ThemePresentation>;
+export type MergedThemePresentation = Required<Omit<ThemePresentation, 'selectedOptionDescription'>> &
+  Pick<ThemePresentation, 'selectedOptionDescription'>;
 
 /** The class names a theme or a form gives the elements `@rjsf/core` renders, one key per element rather than per
  * concept, since CSS frameworks put a concept's class on different elements: Bootstrap 3 puts `checkbox` on the

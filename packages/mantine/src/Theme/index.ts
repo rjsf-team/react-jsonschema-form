@@ -37,6 +37,8 @@ function createPresentation(widgetKeys: readonly string[]): ThemePresentation {
       FallbackField: { label: 'self', labelPlacement: 'above' },
       ObjectField: { errors: 'self' },
     },
+    // `SelectWidget` draws the selected option's description before the field's description
+    selectedOptionDescription: 'beforeDescription',
   };
 }
 

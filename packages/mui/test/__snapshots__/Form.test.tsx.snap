@@ -48060,7 +48060,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-2"
           >
             <div
-              aria-describedby="root__description root__selectedOptionDescription"
+              aria-describedby="root__selectedOptionDescription root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."

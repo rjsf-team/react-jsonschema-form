@@ -12178,7 +12178,7 @@ exports[`single fields > select widget with selected oneOf option description be
           >
             <button
               aria-controls="_r_2g_"
-              aria-describedby="root__description root__selectedOptionDescription"
+              aria-describedby="root__selectedOptionDescription root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-label="Select ..."

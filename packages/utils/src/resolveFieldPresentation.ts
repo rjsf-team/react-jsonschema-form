@@ -65,7 +65,7 @@ export interface FieldPresentationInputs {
 const NONE: readonly string[] = Object.freeze([]);
 
 /** Whether a part with this placement renders an element here */
-function rendersHere(by: PartPlacement) {
+export function rendersHere(by: PartPlacement) {
   return by === 'template' || by === 'self';
 }
 

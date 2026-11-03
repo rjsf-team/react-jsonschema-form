@@ -2604,6 +2604,7 @@ A layer's `default` is layered beneath that layer's own entry for every widget k
 So a theme's or the `Form` props' `default` overrides the parts it declares in the layers beneath it, even under a key one of them declares, while parts it doesn't declare keep theirs.
 The layers' `fieldDefault`s are layered over one another only, since the field default sits beneath the merged field entries.
 Neither a `default` nor a `fieldDefault` keeps an `uncheckedIsFalse` its layer gives it anyway, as a theme written in JavaScript can, since it describes one control and is declared under the key of the widget, or of a field drawing the control itself.
+The top layer that declares a `selectedOptionDescription` gives it, and it is left out where none does.
 
 #### Parameters
 
@@ -2611,7 +2612,7 @@ Neither a `default` nor a `fieldDefault` keeps an `uncheckedIsFalse` its layer g
 
 #### Returns
 
-- MergedThemePresentation: The merged `default`, `widgets`, `fields` and `fieldDefault`
+- MergedThemePresentation: The merged `default`, `widgets`, `fields` and `fieldDefault`, and the `selectedOptionDescription` where a layer declares one
 
 ### normalizeUri()
 
@@ -3607,6 +3608,8 @@ A select shows its value rather than a name, so where neither gives one, it take
 A select rendered inside another widget, such as each date part of an `AltDateWidget`, has an id of its own that no help or error element is rendered for, so `DateElement` gives it a plan of its own, through which it is described by its field's parts.
 Without a plan, the caller's ids, even an empty `aria-describedby`, replace the `ariaDescribedByIds(props.id)` a select rendered without one falls back to, whose ids no element may have.
 The selected option's description id, [selectedOptionDescriptionId()](#selectedoptiondescriptionid) under its field's plan and `descriptionId(props.id)` without one, is added only while the select shows that description, the one element it renders itself: a date part, a `multiple` select, one whose label is hidden and one whose selected option has no description render none, and its id may be another field's description id.
+Under a plan it is listed where the registry's `presentation.selectedOptionDescription` says the select draws it, so a screen reader announces it in the order it is shown, among the description and help of its plan and of the plans above it: after the descriptions and before the helps under `'afterDescription'`, the default, before the descriptions as well under `'beforeDescription'`, or after them all under `'afterHelp'`, for a template that draws the help above the widget. With none of them it is listed last.
+A part a field above draws itself, as an `anyOf`/`oneOf` field's selector does above the select, is listed before it whatever the placement.
 Every theme's `SelectWidget` gives the result to its control, and a replacement `SelectWidget` should do the same; no other widget is required to.
 
 #### Parameters
