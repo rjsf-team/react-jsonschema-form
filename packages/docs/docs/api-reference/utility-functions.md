@@ -125,7 +125,7 @@ Without its field's plan, `hideLabel` turns it off as well, and it renders under
 
 ### acceptAttribute()
 
-Returns the value of a file input's `accept` attribute for an `accept` option: a string, or an array of them joined with commas. Whatever isn't a string is left out.
+Returns the value of a file input's `accept` attribute for an `accept` option: a string, or an array of them joined with commas. Whatever isn't a string, or is a blank one, is left out.
 
 #### Parameters
 
@@ -254,11 +254,11 @@ Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTempla
 
 #### Parameters
 
-- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'pattern'> - The props of the `BaseInputTemplate`
+- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick&lt;BaseInputTemplateProps, 'accept' | 'pattern'>: The `pattern` and `accept` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'>: The `pattern`, `inputMode` and `accept` to spread after the derived input props
 
 ### callWithDeferredThrow()
 

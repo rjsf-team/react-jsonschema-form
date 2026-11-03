@@ -5,7 +5,7 @@ import {
   getGroupAttributes,
   rangeSpec,
   ratingStarCount,
-  ratingStoresString,
+  numericWidgetStoresString,
   toInputValue,
   toNumericValue,
 } from '@rjsf/utils';
@@ -61,7 +61,7 @@ export default function RatingWidget<
 
   const numStars = ratingStarCount<S>(schema, stars);
   const { min = 0 } = rangeSpec<S>(schema);
-  const storesString = ratingStoresString<S>(schema, value);
+  const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
   const tabStopIndex = Math.max(
