@@ -534,6 +534,23 @@ describe('SelectWidget', () => {
       expect(screen.getByRole('option', { name: 'Łódź' })).toHaveFocus();
     });
 
+    test('takes a letter of two UTF-16 units, stepping through the labels starting with it', async () => {
+      const adlam = [
+        { label: '𞤀𞤣𞤤𞤢𞤥', value: 'first' },
+        { label: '𞤀𞤤𞤢𞤥', value: 'second' },
+      ];
+      renderCities({ options: { enumOptions: adlam } });
+      // user-event's key syntax reads one UTF-16 unit at a time, so the letter can only be reached through a key's code
+      const adlamUser = userEvent.setup({ keyboardMap: [{ code: 'KeyA', key: '𞤢' }] });
+
+      await adlamUser.click(screen.getByRole('combobox'));
+      await adlamUser.keyboard('[KeyA]');
+      expect(screen.getByRole('option', { name: adlam[0].label })).toHaveFocus();
+
+      await adlamUser.keyboard('[KeyA]');
+      expect(screen.getByRole('option', { name: adlam[1].label })).toHaveFocus();
+    });
+
     test('starts a new search once an option is chosen', async () => {
       renderCities({ multiple: true, value: [] });
 
@@ -589,6 +606,7 @@ describe('SelectWidget', () => {
     test.each([
       ['End', 'n{End}b'],
       ['Escape', 'n{Escape}b'],
+      ['Shift+Tab', 'n{Shift>}{Tab}{/Shift}b'],
     ])('starts a new search after %s', async (_, keys) => {
       renderCities();
 

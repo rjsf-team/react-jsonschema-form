@@ -25,9 +25,9 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-/** The options a user moves between with the arrow keys: every one but those `ui:enumDisabled` disables, as a disabled
- * or readonly field's options stay reachable so its value stays readable. Marked by an attribute of their own, since a
- * disabled field's options carry `aria-disabled` too, and every option is out of the tab order
+/** The options a user moves between with the arrow keys or by typing: every one but those `ui:enumDisabled` disables,
+ * as a disabled or readonly field's options stay reachable so its value stays readable. Marked by an attribute of their
+ * own, since a disabled field's options carry `aria-disabled` too, and every option is out of the tab order
  */
 const REACHABLE_OPTION = '[role="option"]:not([data-enum-disabled])';
 
@@ -92,10 +92,13 @@ function optionToType(listbox: HTMLElement, from: EventTarget, typed: string) {
         // As drawn: a browser shows a run of whitespace as one space, and none at the start of a label
         option.textContent.replace(/\s+/g, ' ').trimStart().toLocaleLowerCase().startsWith(prefix),
     );
-  const isOneLetterRepeated = typed === typed[0].repeat(typed.length);
+  // By code point, since a letter of a script such as Adlam takes two UTF-16 units
+  const [firstLetter] = typed;
+  const isOneLetter = typed === firstLetter;
+  const isOneLetterRepeated = typed.replaceAll(firstLetter, '') === '';
   return (
-    (typed.length > 1 ? firstFrom(Math.max(current, 0), typed) : undefined) ??
-    (isOneLetterRepeated ? firstFrom(current + 1, typed[0]) : undefined)
+    (isOneLetter ? undefined : firstFrom(Math.max(current, 0), typed)) ??
+    (isOneLetterRepeated ? firstFrom(current + 1, firstLetter) : undefined)
   );
 }
 
@@ -297,7 +300,8 @@ export default function SelectWidget<
         moveTo(option);
         return;
       }
-      if (key.length === 1 && !hasCommandModifier) {
+      // A named key, such as `Enter` or `F1`, is more than one code point; a printable one, whatever its script, is one
+      if (/^.$/u.test(key) && !hasCommandModifier) {
         const now = Date.now();
         const pending = now - typeAhead.current.at < TYPE_AHEAD_INTERVAL ? typeAhead.current.typed : '';
         const typed = pending + key.toLocaleLowerCase();
