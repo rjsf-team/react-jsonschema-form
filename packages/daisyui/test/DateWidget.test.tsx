@@ -484,7 +484,7 @@ describe('DateWidget', () => {
       expect(document.activeElement).toHaveTextContent(/^3$/);
     });
 
-    test('moves focus into its open picker on Down Arrow in a form rendered in a shadow root', async () => {
+    test('moves focus into its open picker on Down Arrow, and back on Escape, in a form rendered in a shadow root', async () => {
       const host = document.body.appendChild(document.createElement('div'));
       onTestFinished(() => host.remove());
       const shadowRoot = host.attachShadow({ mode: 'open' });
@@ -499,6 +499,12 @@ describe('DateWidget', () => {
 
       expect(within(container).getByRole('grid')).toContainElement(shadowRoot.activeElement as HTMLElement);
       expect(shadowRoot.activeElement).toHaveTextContent(/^3$/);
+
+      // Where the document's `activeElement` is the shadow host, which the popup doesn't contain, so reading it there
+      // leaves the focus to fall out of the form as the popup unmounts
+      await user.keyboard('{Escape}');
+      expect(within(container).queryByRole('dialog')).not.toBeInTheDocument();
+      expect(shadowRoot.activeElement).toBe(trigger);
     });
 
     test('opens no picker on Down Arrow where the field is read-only', async () => {

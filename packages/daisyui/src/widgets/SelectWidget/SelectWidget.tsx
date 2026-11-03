@@ -25,11 +25,19 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-/** The options a user moves between with the arrow keys: every one but those `ui:enumDisabled` disables, as a disabled
- * or readonly field's options stay reachable so its value stays readable. Marked by an attribute of their own, since a
- * disabled field's options carry `aria-disabled` too, and every option is out of the tab order
+/** The options a user moves between with the arrow keys or by typing: every one but those `ui:enumDisabled` disables,
+ * as a disabled or readonly field's options stay reachable so its value stays readable. Marked by an attribute of their
+ * own, since a disabled field's options carry `aria-disabled` too, and every option is out of the tab order
  */
 const REACHABLE_OPTION = '[role="option"]:not([data-enum-disabled])';
+
+const isReachable = (option: HTMLElement) => option.matches(REACHABLE_OPTION);
+
+/** The keys that move between the options, which `optionToFocus()` answers for */
+const OPTION_MOVE_KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'];
+
+/** How long after a printable key the next one still adds to what is being typed, in milliseconds */
+const TYPE_AHEAD_INTERVAL = 500;
 
 /** The option an arrow key, Home or End moves to from the one holding focus, or for the trigger, which Down and Up
  * Arrow open the listbox from, the selected option, else the first one (Down) or the last (Up), and Home and End open
@@ -38,14 +46,10 @@ const REACHABLE_OPTION = '[role="option"]:not([data-enum-disabled])';
  * @param listbox - The listbox
  * @param from - The element the key was pressed on, the trigger, an option or an element inside one
  * @param key - The key pressed
- * @returns - The option to focus, or `undefined` where the key moves nowhere
+ * @returns - The option to focus, or `undefined` where no option can be reached
  */
 function optionToFocus(listbox: HTMLElement, from: EventTarget, key: string) {
-  if (key !== 'ArrowDown' && key !== 'ArrowUp' && key !== 'Home' && key !== 'End') {
-    return undefined;
-  }
   const options = Array.from(listbox.querySelectorAll<HTMLElement>('[role="option"]'));
-  const isReachable = (option: HTMLElement) => option.matches(REACHABLE_OPTION);
   if (key === 'Home') {
     return options.find(isReachable);
   }
@@ -63,6 +67,39 @@ function optionToFocus(listbox: HTMLElement, from: EventTarget, key: string) {
   const current = options.indexOf(fromOption);
   const next = down ? options.slice(current + 1).find(isReachable) : options.slice(0, current).findLast(isReachable);
   return next ?? fromOption;
+}
+
+/** The option typing `typed` moves to, as a native select finds it: the first a user can reach, going on from the one
+ * holding focus or, from the trigger, the selected one, and wrapping around, whose label starts with it. A longer `typed`
+ * starts its search at that option, which still matches as more of its label is typed. One letter typed over and over
+ * steps through the labels starting with it, unless a label starts with the repeat, as `11` does among a date's days
+ *
+ * @param listbox - The listbox
+ * @param from - The element the key was pressed on, the trigger, an option or an element inside one
+ * @param typed - What has been typed, in lower case
+ * @returns - The option to focus, or `undefined` where no label starts with `typed`
+ */
+function optionToType(listbox: HTMLElement, from: EventTarget, typed: string) {
+  const options = Array.from(listbox.querySelectorAll<HTMLElement>('[role="option"]'));
+  const fromOption = (from as Element).closest?.<HTMLElement>('[role="option"]');
+  const current = options.findIndex((option) =>
+    fromOption ? option === fromOption : option.getAttribute('aria-selected') === 'true',
+  );
+  const firstFrom = (start: number, prefix: string) =>
+    [...options.slice(start), ...options.slice(0, start)].find(
+      (option) =>
+        isReachable(option) &&
+        // As drawn: a browser shows a run of whitespace as one space, and none at the start of a label
+        option.textContent.replace(/\s+/g, ' ').trimStart().toLocaleLowerCase().startsWith(prefix),
+    );
+  // By code point, since a letter of a script such as Adlam takes two UTF-16 units
+  const [firstLetter] = typed;
+  const isOneLetter = typed === firstLetter;
+  const isOneLetterRepeated = typed.replaceAll(firstLetter, '') === '';
+  return (
+    (isOneLetter ? undefined : firstFrom(Math.max(current, 0), typed)) ??
+    (isOneLetterRepeated ? firstFrom(current + 1, firstLetter) : undefined)
+  );
 }
 
 function getDisplayValue(val: unknown) {
@@ -179,6 +216,8 @@ export default function SelectWidget<
       reopenFocus.current = null;
     }
   }, [dismissed]);
+  const typeAhead = useRef({ typed: '', at: 0 });
+  const spacePressedOn = useRef<EventTarget | null>(null);
   // Focus moves between the button and the options while the dropdown is in use, so only entering or leaving the
   // dropdown as a whole counts as focusing or blurring the widget, which reports the current selection
   const handleBlur = useCallback(
@@ -203,11 +242,21 @@ export default function SelectWidget<
   );
 
   // The keys the combobox role promises: Down and Up Arrow open the listbox and move into it, Home and End open it onto
-  // its first or last option, the arrows, Home and End move between its options, and Escape closes it, returning focus
-  // to the trigger. Enter and Space stay with the trigger's own press and each option's handler
+  // its first or last option, the arrows, Home and End move between its options, a printable key moves to the option
+  // whose label starts with what is being typed, and Escape closes it, returning focus to the trigger. Enter and Space
+  // stay with the trigger's own press and each option's handler, unless Space goes on with a label being typed
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLElement>) => {
       const { key, target } = event;
+      // Space presses what it went down and came up on, as on a native button, so moving focus between presses nothing,
+      // and a held key's repeats are the same press
+      if (key === ' ' && !event.repeat) {
+        spacePressedOn.current = target;
+      }
+      // Moving or closing ends the search, so a letter or Space right after it isn't read as more of the old label
+      if (key === 'Tab' || key === 'Escape' || OPTION_MOVE_KEYS.includes(key)) {
+        typeAhead.current.typed = '';
+      }
       // The options are out of the tab order, so Shift+Tab from one goes back to the trigger, which is inside the
       // dropdown and so would keep it open; it closes, as Escape does, and a second press leaves the widget. Focus is
       // moved here rather than by the browser, since `dropdown-close` hides the focused option before its default runs
@@ -227,16 +276,44 @@ export default function SelectWidget<
         }
         return;
       }
-      const option = listboxRef.current ? optionToFocus(listboxRef.current, target, key) : undefined;
-      if (!option) {
+      const listbox = listboxRef.current;
+      if (!listbox) {
         return;
       }
-      event.preventDefault();
-      if (dismissed) {
-        reopenFocus.current = option;
-        setDismissed(false);
-      } else {
-        option.focus();
+      const moveTo = (option: HTMLElement | undefined) => {
+        if (option && dismissed) {
+          reopenFocus.current = option;
+          setDismissed(false);
+        } else {
+          option?.focus();
+        }
+      };
+      // Some browsers report AltGr, which types a character on many keyboards, as Ctrl+Alt
+      const hasCommandModifier =
+        (event.ctrlKey || event.metaKey || event.altKey) && !event.getModifierState('AltGraph');
+      if (OPTION_MOVE_KEYS.includes(key)) {
+        const option = optionToFocus(listbox, target, key);
+        // With no option to move to, the browser would otherwise scroll the page, though a browser shortcut is its own
+        if (option || !hasCommandModifier) {
+          event.preventDefault();
+        }
+        moveTo(option);
+        return;
+      }
+      // A named key, such as `Enter` or `F1`, is more than one code point; a printable one, whatever its script, is one
+      if (/^.$/u.test(key) && !hasCommandModifier) {
+        const now = Date.now();
+        const pending = now - typeAhead.current.at < TYPE_AHEAD_INTERVAL ? typeAhead.current.typed : '';
+        const typed = pending + key.toLocaleLowerCase();
+        const option = optionToType(listbox, target, typed);
+        // Space only goes on with a label, such as "New York", otherwise it presses what holds focus
+        if (key === ' ' && !option) {
+          return;
+        }
+        spacePressedOn.current = null;
+        event.preventDefault();
+        typeAhead.current = { typed, at: now };
+        moveTo(option);
       }
     },
     [expanded, dismissed],
@@ -266,6 +343,7 @@ export default function SelectWidget<
         return;
       }
       handleOptionClick(e);
+      typeAhead.current.typed = '';
       // A choice in a single select, by key or by a click, which is how VoiceOver activates an option too, closes the
       // listbox and returns focus to the combobox, which announces it, as Escape does
       if (!isMultiple) {
@@ -299,7 +377,7 @@ export default function SelectWidget<
         }}
         // Space chooses on its release, as it presses a button: chosen on its press, the focus it returns to the
         // combobox would take the release, which Firefox turns into a click that reopens the listbox
-        onKeyUp={(e) => e.key === ' ' && choose(e)}
+        onKeyUp={(e) => e.key === ' ' && spacePressedOn.current === e.currentTarget && choose(e)}
         data-value={option.index}
       >
         <div className='flex items-center gap-2'>
