@@ -460,7 +460,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `FileWidget` to set no `accept` for an `accept` option that isn't a string or an array of them, where it stringified anything truthy ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Fix `RatingWidget` for an Ajv `$data` reference: a `maximum` rendered no stars, and a `minimum` wrote values such as `'[object Object]0'`, and for a numeric-string `minimum`, which wrote values such as `'10'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 - Change a schema's `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` to count when they are truthy rather than present, so a schema spread with one set to `undefined` renders as a plain field ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
-- Fix a `LayoutGridField` cell whose `name` isn't a string crashing the form ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
+- Fix a `LayoutGridField` cell whose `name` isn't a string crashing the form: a number names its field, and a cell with no `render` whose `name` is any other value or `''` now renders nothing, where it rendered the whole parent again ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 - **BREAKING CHANGE:** Change the values of the exported `GridProps` and of an object `LayoutGridSchemaType` from `any` to `unknown`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 
 ## @rjsf/daisyui
@@ -718,7 +718,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` dropping a `pattern` or `accept` a widget passes it as a prop ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `FileWidget` to set no `accept` for an `accept` option that isn't a string or an array of them, where it stringified anything truthy ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `WrapIfAdditionalTemplate` to read `ADDITIONAL_PROPERTY_FLAG` by its truth rather than its presence, so a schema spread with it set to `undefined` renders as a plain field ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
-- Fix a `ui:options` value of the wrong shape reaching Mantine, which now leaves it out: a `thumbProps` that isn't an object and a `thumbLabel` that isn't a string on `RangeWidget`, and an `inputContainer` that isn't a function ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
+- Fix a `ui:options` value of the wrong shape reaching Mantine, which now leaves it out: a `thumbProps` that isn't an object and a `thumbLabel` that isn't a string, at the top level or in `thumbProps`, on `RangeWidget`, and an `inputContainer` that isn't a function ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 
 ## @rjsf/mui
 
@@ -777,7 +777,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `WrapIfAdditionalTemplate` to read `ADDITIONAL_PROPERTY_FLAG` by its truth rather than its presence, so a schema spread with it set to `undefined` renders as a plain field ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
 - **BREAKING CHANGE:** Change the values of the `mui` option in the exported `UiSchema` and `MuiGlobalUiOptionsKeys` from `any` to `unknown`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 - Fix a `mui` option that isn't an object landing on the control as attributes named `0`, `1`, `2` ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
-- Fix `FieldTemplate` dropping the `sx` and `className` of `rjsfSlotProps.fieldFormControl` when the root option leaves them unset ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
+- Fix `FieldTemplate` dropping the `sx` and `className` of `rjsfSlotProps.fieldFormControl`: when the root option sets them too, the two `sx` are now merged, the root's winning a clash, and the two class names joined, where the root's replaced the slot's ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 - Fix `BaseInputTemplate` passing a `rjsfSlotProps` option to the `TextField`, whose DOM logged a React warning for it ([#5696](https://github.com/rjsf-team/react-jsonschema-form/pull/5696))
 
 ## @rjsf/react-bootstrap

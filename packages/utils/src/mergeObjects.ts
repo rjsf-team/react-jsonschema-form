@@ -20,7 +20,7 @@ export default function mergeObjects(
   // a JS caller passes
   const first = obj1 as GenericObjectType;
   const second = obj2 as GenericObjectType;
-  const result = Object.keys(obj2).reduce(
+  return Object.keys(obj2).reduce(
     (acc, key) => {
       // Only an own member of `obj1` takes part: a JSON-sourced `__proto__` or `constructor` key would otherwise
       // read the inherited member and merge into a copy of `Object.prototype`
@@ -42,5 +42,4 @@ export default function mergeObjects(
     },
     { ...obj1 },
   ); // Prevent mutation of source object.
-  return result;
 }

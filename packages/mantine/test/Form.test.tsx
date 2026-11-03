@@ -232,6 +232,21 @@ describe('mantine FieldTemplate', () => {
     expect(screen.getByRole('slider')).toHaveAccessibleName('X');
   });
 
+  test("leaves out a thumbLabel in a range's thumbProps that isn't a string", () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'number', title: 'X' } } }}
+        uiSchema={{ x: { 'ui:widget': 'range', 'ui:options': { thumbProps: { thumbLabel: 5 } } } }}
+        presentation={{ widgets: { RangeWidget: { label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).not.toHaveAttribute('aria-label', '5');
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', 'root_x__label');
+    expect(screen.getByRole('slider')).toHaveAccessibleName('X');
+  });
+
   test("leaves out an inputContainer that isn't a function", () => {
     render(
       <WrappedForm

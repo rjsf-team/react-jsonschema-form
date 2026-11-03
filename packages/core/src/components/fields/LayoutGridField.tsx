@@ -605,9 +605,9 @@ function columnFieldId<
   const { registry, schema, formData, fieldPath, id } = props;
   for (const child of children) {
     const name: unknown = typeof child === 'string' ? child : (child as GenericObjectType).name;
-    if (typeof name === 'string' && name !== '') {
+    if ((typeof name === 'string' && name !== '') || typeof name === 'number') {
       // A name the schema doesn't hold, such as a `render` cell's, renders no field
-      const details = getSchemaDetailsForField<T, S, F>(registry, name, schema, formData, fieldPath);
+      const details = getSchemaDetailsForField<T, S, F>(registry, String(name), schema, formData, fieldPath);
       if (details.schema) {
         return fieldPathToId(details.fieldPath, registry.globalFormOptions);
       }
@@ -842,7 +842,8 @@ function LayoutGridFieldComponent<
     return uiComponentProps.rendered;
   }
 
-  if (schema) {
+  // A cell naming no field would otherwise get its parent's schema and render the whole parent again
+  if (schema && name) {
     if (namesIgnoredField) {
       logOnce(
         `ui:field for cell '${name}' in ${fieldLabelForLog(id, parentFieldPath)} is ignored, since a cell with ` +

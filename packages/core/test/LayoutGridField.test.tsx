@@ -1554,6 +1554,17 @@ describe('LayoutGridField', () => {
 
     expect(screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent)).toBeInTheDocument();
   });
+  test('renders nothing for a cell whose name is an object and has no render, rather than the parent again', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo: { type: 'string' }, bar: { type: 'string' } } },
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': { children: ['foo', { name: { field: 'x' } }] } },
+      },
+    });
+
+    expect(Array.from(node.querySelectorAll('input'), (input) => input.id)).toEqual(['root_foo']);
+  });
   test('renders nothing when there is no uiSchema', () => {
     const props = getProps();
     render(<LayoutGridField {...props} />);
@@ -2105,6 +2116,7 @@ describe("a column's fieldId", () => {
       b: { type: 'string' },
       person: { type: 'object', properties: { first: { type: 'string' } } },
       list: { type: 'array', items: { type: 'string' } },
+      5: { type: 'string' },
     },
   };
   const recordFieldIds = (row: GenericObjectType) => {
@@ -2143,6 +2155,12 @@ describe("a column's fieldId", () => {
     expect(recordFieldIds({ children: [{ 'ui:col': { children: ['list.1'] } }] })).toEqual([
       { column: undefined, fieldId: 'root' },
       { column: true, fieldId: 'root_list_1' },
+    ]);
+  });
+  test('is the id of the field a column names by a number, as a JSON layout can', () => {
+    expect(recordFieldIds({ children: [{ 'ui:col': { children: [{ name: 5 }] } }] })).toEqual([
+      { column: undefined, fieldId: 'root' },
+      { column: true, fieldId: 'root_5' },
     ]);
   });
   test("is the grid's own id for a ui:col naming no field of its own", () => {

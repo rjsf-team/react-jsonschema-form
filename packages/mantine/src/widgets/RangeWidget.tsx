@@ -118,6 +118,20 @@ function FieldSlider({
   );
 }
 
+/** Returns the `thumbProps` option when it is an object, without a `thumbLabel` in it that isn't a string
+ *
+ * @param value - The `thumbProps` option
+ * @returns - The `thumbProps` to give the slider, or `undefined`
+ */
+function thumbPropsOption(value: unknown): FieldSliderProps['thumbProps'] {
+  const thumbProps = asObject(value);
+  if (thumbProps?.thumbLabel !== undefined && typeof thumbProps.thumbLabel !== 'string') {
+    const { thumbLabel: _notString, ...otherThumbProps } = thumbProps;
+    return otherThumbProps;
+  }
+  return thumbProps;
+}
+
 /** The `RangeWidget` component renders a Mantine `Slider` inside `Input.Wrapper`, which renders the field's title,
  * description and errors.
  *
@@ -145,7 +159,7 @@ export default function RangeWidget<
     'Slider',
     {},
     {
-      thumbProps: asObject(options.thumbProps),
+      thumbProps: thumbPropsOption(options.thumbProps),
       thumbLabel: typeof options.thumbLabel === 'string' ? options.thumbLabel : undefined,
     },
   );

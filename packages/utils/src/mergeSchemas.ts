@@ -13,11 +13,11 @@ import type { GenericObjectType } from './types.ts';
  * @returns - The merged schema object
  */
 export default function mergeSchemas(obj1: object, obj2: object): GenericObjectType {
-  const acc: GenericObjectType = { ...obj1 }; // Prevent mutation of source object.
+  const acc: Record<PropertyKey, unknown> = { ...obj1 }; // Prevent mutation of source object.
   // These two are read by key for each key of each merge, where `Reflect.get()` would cost more and throw on a primitive
   // a JS caller passes
   const first = obj1 as GenericObjectType;
-  const second = obj2 as GenericObjectType;
+  const second = obj2 as Record<PropertyKey, unknown>;
   const result = Object.keys(obj2).reduce((accumulator, key) => {
     // Only an own member of `obj1` takes part, so a JSON-sourced `__proto__` or `toString` key doesn't read an
     // inherited member
@@ -41,7 +41,7 @@ export default function mergeSchemas(obj1: object, obj2: object): GenericObjectT
   }, acc);
   // Copy own Symbol-keyed properties from obj2 (Object.keys skips them).
   for (const sym of Object.getOwnPropertySymbols(obj2)) {
-    Reflect.set(result, sym, Reflect.get(obj2, sym));
+    result[sym] = second[sym];
   }
   return result;
 }
