@@ -169,6 +169,16 @@ function canAddItem<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   return addable;
 }
 
+/** `canAddItem()` for the rows a handler reads, among which a tuple's fixed items count even while its data is shorter */
+function canAddToRows<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(registry: Registry<T[], S, F>, schema: S, rows: readonly unknown[], uiSchema?: UiSchema<T[], S, F>) {
+  const fixedItemCount = Array.isArray(schema.items) ? schema.items.length : 0;
+  return canAddItem<T, S, F>(registry, schema, new Array<T>(Math.max(rows.length, fixedItemCount)), uiSchema);
+}
+
 /** The `onAddClick` a template gets, which does what the array's add button can. A refused press still prevents the
  * default, so a template's button that isn't `type='button'` doesn't submit the form
  *
@@ -643,8 +653,10 @@ function ArrayFieldItemInner<
   title: string | undefined;
   itemName?: string;
   canAdd: boolean;
+  /** `canAdd` whatever the number of items, since the handlers ask `maxItems` about the items at the call */
+  addable: boolean;
   /** Whether an item can go after this one, which only the last fixed item of a tuple and its additional items allow */
-  canAddAfter: boolean;
+  canAddAfter?: boolean;
   canRemove?: boolean;
   canMoveUp: boolean;
   canMoveDown: boolean;
@@ -674,7 +686,8 @@ function ArrayFieldItemInner<
     uiOptions,
     parentUiSchema,
     canAdd,
-    canAddAfter,
+    addable,
+    canAddAfter = true,
     canRemove = true,
     canMoveUp,
     canMoveDown,
@@ -798,8 +811,8 @@ function ArrayFieldItemInner<
   // What decides each button, so a template calling these from its own control can't do what the button can't. A
   // refused press still prevents the default, so a template's button that isn't `type='button'` doesn't submit the form
   const locked = lockedDisabled || lockedReadonly;
-  const addsItem = canAddAfter && !disabled && !readonly;
-  const copiesItem = has.copy && !locked;
+  const addsItem = addable && canAddAfter && !disabled && !readonly;
+  const copiesItem = copyable && addable && !locked;
   const removesItem = has.remove && !locked;
   const movesUp = has.moveUp && !locked;
   const movesDown = has.moveDown && !locked;
@@ -860,7 +873,7 @@ function ArrayFieldItemInner<
       id: fieldId,
       disabled: lockedDisabled,
       readonly: lockedReadonly,
-      canAdd,
+      canAdd: canAdd && canAddAfter,
       hasCopy: has.copy,
       hasMoveUp: has.moveUp,
       hasMoveDown: has.moveDown,
@@ -959,11 +972,12 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiSchema, uiOptions);
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T[]>(formDataFromProps);
+  const addable = uiOptions.addable !== false && (!renderOptionalField || hasFormData);
   const canAdd = useMemo(
-    () => canAddItem<T, S, F>(registry, schema, formData, uiSchema) && (!renderOptionalField || hasFormData),
-    [registry, schema, formData, uiSchema, renderOptionalField, hasFormData],
+    () => addable && canAddItem<T, S, F>(registry, schema, formData, uiSchema),
+    [registry, schema, formData, uiSchema, addable],
   );
-  const onAddClick = useAddClick(handleAppendItem, canAdd && !disabled && !readonly);
+  const onAddClick = useAddClick(handleAppendItem, addable && !disabled && !readonly);
   const actualFormData = hasFormData ? keyedFormData : [];
   const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
   const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
@@ -993,7 +1007,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
         itemName: itemNames?.[index],
         canAdd,
-        canAddAfter: canAdd,
+        addable,
         canMoveUp: index > 0,
         canMoveDown: index < formData.length - 1,
         rawItemSchema: schemaItems,
@@ -1086,8 +1100,10 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
 
   // These are the props passed into the render function
-  const canAdd = canAddTupleItem<T, S, F>(registry, schema, items, uiSchema) && (!renderOptionalField || hasFormData);
-  const onAddClick = useAddClick(handleAppendItem, canAdd && !disabled && !readonly);
+  const addable =
+    isObject(schema.additionalItems) && uiOptions.addable !== false && (!renderOptionalField || hasFormData);
+  const canAdd = addable && canAddItem<T, S, F>(registry, schema, items, uiSchema);
+  const onAddClick = useAddClick(handleAppendItem, addable && !disabled && !readonly);
   const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiSchema, uiOptions, schemaItems.length);
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
@@ -1132,7 +1148,8 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
         itemName: itemNames?.[index],
         canAdd,
-        canAddAfter: canAdd && index >= schemaItems.length - 1,
+        addable,
+        canAddAfter: index >= schemaItems.length - 1,
         canRemove: additional,
         canMoveUp: index >= schemaItems.length + 1,
         canMoveDown: additional && index < items.length - 1,
@@ -1360,6 +1377,10 @@ export default function ArrayField<
       }
 
       const rows = readRows();
+      if (!canAddToRows<T, S, F>(registry, schema, rows, uiSchema)) {
+        return;
+      }
+
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         ...newRowId(rows),
         item: getNewFormDataRow<T, S, F>(registry, schema, index ?? rows.length, uiSchema),
@@ -1395,7 +1416,7 @@ export default function ArrayField<
       }
 
       const rows = readRows();
-      if (index >= rows.length) {
+      if (index >= rows.length || !canAddToRows<T, S, F>(registry, schema, rows, uiSchema)) {
         return;
       }
 
@@ -1411,7 +1432,7 @@ export default function ArrayField<
       }
       commitRows(rows, newKeyedFormData);
     },
-    [commitRows, readRows, newRowId],
+    [registry, schema, uiSchema, commitRows, readRows, newRowId],
   );
 
   /** Callback handler for when the user clicks on the remove button on an existing array element. Removes the row of

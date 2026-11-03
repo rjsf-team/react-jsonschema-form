@@ -1403,7 +1403,7 @@ export type ArrayFieldItemButtonsTemplateProps<
   style?: ButtonHTMLAttributes<HTMLButtonElement>['style'];
   /** Whether the array item's buttons are disabled, by the array's lock or the item's own; its inputs can stay enabled, under an item's `ui:disabled: false` */
   disabled?: boolean;
-  /** A boolean value stating whether new items can be added to the array */
+  /** A boolean value stating whether a new item can be added below this one, which is when `onAddItem` acts */
   canAdd: boolean;
   /** A boolean value stating whether the array item can be copied, assumed false if missing */
   hasCopy: boolean;

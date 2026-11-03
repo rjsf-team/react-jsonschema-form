@@ -284,7 +284,7 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 
 - `className`: The className string.
 - `disabled`: Whether the array item's buttons are disabled, by the array's lock or the item's own. Its inputs can stay enabled, under an item's `ui:disabled: false`.
-- `canAdd`: A boolean value stating whether new elements can be added to the array.
+- `canAdd`: A boolean value stating whether a new item can be added below this one, which is when `onAddItem` acts.
 - `hasCopy`: A boolean value stating whether the array item can be copied.
 - `hasMoveDown`: A boolean value stating whether the array item can be moved down.
 - `hasMoveUp`: A boolean value stating whether the array item can be moved up.

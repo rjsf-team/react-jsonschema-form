@@ -5929,6 +5929,169 @@ describe('ArrayField', () => {
         expect(onSubmit).not.toHaveBeenCalled();
       });
 
+      describe('against the items at the call, so calls chained in one handler', () => {
+        function ChainedCallsItemTemplate(props: ArrayFieldItemTemplateProps) {
+          const { onAddItem, onCopyItem, onRemoveItem } = props.buttonsProps;
+          return (
+            <div className='rjsf-array-item'>
+              {props.children}
+              <button
+                type='button'
+                onClick={() => {
+                  onRemoveItem();
+                  onAddItem();
+                }}
+              >
+                {`Remove ${props.index}, then add`}
+              </button>
+              <button
+                type='button'
+                onClick={() => {
+                  onRemoveItem();
+                  onCopyItem();
+                }}
+              >
+                {`Remove ${props.index}, then copy`}
+              </button>
+              <button
+                type='button'
+                onClick={() => {
+                  onAddItem();
+                  onAddItem();
+                }}
+              >
+                {`Add twice after ${props.index}`}
+              </button>
+              <button
+                type='button'
+                onClick={() => {
+                  onCopyItem();
+                  onCopyItem();
+                }}
+              >
+                {`Copy ${props.index} twice`}
+              </button>
+            </div>
+          );
+        }
+
+        it.each([
+          { button: 'Remove 0, then add', initialFormData: ['a', 'b'], expected: ['b', 'new'] },
+          { button: 'Remove 0, then copy', initialFormData: ['a', 'b', 'c'], maxItems: 3, expected: ['b', 'b', 'c'] },
+          { button: 'Add twice after 0', initialFormData: ['a'], expected: ['a', 'new'] },
+          { button: 'Copy 0 twice', initialFormData: ['a'], expected: ['a', 'a'] },
+        ])('$button keeps to maxItems', async ({ button, initialFormData, maxItems = 2, expected }) => {
+          const { getFormData } = createFormComponent({
+            schema: { type: 'array', items: { type: 'string', default: 'new' }, maxItems },
+            uiSchema: { 'ui:copyable': true },
+            initialFormData,
+            templates: { ArrayFieldItemTemplate: ChainedCallsItemTemplate },
+          });
+
+          await user.click(screen.getByRole('button', { name: button }));
+
+          expect(getFormData()).toEqual(expected);
+        });
+
+        it('keeps onAddClick called twice to maxItems', async () => {
+          function AppendTwiceTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
+            return (
+              <div>
+                {items}
+                <button
+                  type='button'
+                  onClick={() => {
+                    onAddClick();
+                    onAddClick();
+                  }}
+                >
+                  Append twice
+                </button>
+              </div>
+            );
+          }
+          const { getFormData } = createFormComponent({
+            schema: { type: 'array', items: { type: 'string', default: 'new' }, maxItems: 2 },
+            initialFormData: ['a'],
+            templates: { ArrayFieldTemplate: AppendTwiceTemplate },
+          });
+
+          await user.click(screen.getByRole('button', { name: 'Append twice' }));
+
+          expect(getFormData()).toEqual(['a', 'new']);
+        });
+
+        it('keeps onAddClick to maxItems when a tuple renders fewer items than it fixes', async () => {
+          function AppendTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
+            return (
+              <div>
+                {items}
+                <button type='button' onClick={onAddClick}>
+                  Append
+                </button>
+              </div>
+            );
+          }
+          const { getFormData } = createFormComponent({
+            schema: {
+              type: 'array',
+              items: [{ type: 'string' }, { type: 'number' }],
+              additionalItems: { type: 'boolean', default: true },
+              maxItems: 2,
+            },
+            initialFormData: ['a'],
+            templates: { ArrayFieldTemplate: AppendTemplate },
+          });
+          const before = getFormData();
+
+          await user.click(screen.getByRole('button', { name: 'Append' }));
+
+          expect(getFormData()).toEqual(before);
+        });
+      });
+
+      describe('and say so in buttonsProps.canAdd', () => {
+        function CanAddItemTemplate(props: ArrayFieldItemTemplateProps) {
+          const { canAdd, onAddItem } = props.buttonsProps;
+          return (
+            <div className='rjsf-array-item'>
+              {props.children}
+              {canAdd && <button type='button' onClick={() => onAddItem()}>{`Insert below ${props.index}`}</button>}
+            </div>
+          );
+        }
+
+        it('offers adding only after the last fixed item of a tuple and its additional items', async () => {
+          const { getFormData } = createFormComponent({
+            schema: {
+              type: 'array',
+              items: [{ type: 'string' }, { type: 'number' }],
+              additionalItems: { type: 'boolean', default: true },
+            },
+            initialFormData: ['a', 1, false],
+            templates: { ArrayFieldItemTemplate: CanAddItemTemplate },
+          });
+
+          expect(screen.queryByRole('button', { name: 'Insert below 0' })).not.toBeInTheDocument();
+
+          await user.click(screen.getByRole('button', { name: 'Insert below 1' }));
+          expect(getFormData()).toEqual(['a', 1, true, false]);
+
+          await user.click(screen.getByRole('button', { name: 'Insert below 3' }));
+          expect(getFormData()).toEqual(['a', 1, true, false, true]);
+        });
+
+        it('offers nothing at maxItems', () => {
+          createFormComponent({
+            schema: { type: 'array', items: { type: 'string' }, maxItems: 1 },
+            initialFormData: ['a'],
+            templates: { ArrayFieldItemTemplate: CanAddItemTemplate },
+          });
+
+          expect(screen.queryByRole('button', { name: 'Insert below 0' })).not.toBeInTheDocument();
+        });
+      });
+
       it.each(['onAddItem', 'onCopyItem', 'onRemoveItem', 'onMoveUpItem', 'onMoveDownItem'] as const)(
         'keeps a refused %s from submitting the form',
         async (handler) => {
