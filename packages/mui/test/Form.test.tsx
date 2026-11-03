@@ -517,6 +517,24 @@ describe("mui widgets are named by their label and carry the field's id on the e
     expect(document.getElementById('root_foo__key')).toHaveAccessibleName('foo Key');
   });
 
+  test('draws a thumb for each numeric string of a range of several values', () => {
+    const { RangeWidget } = generateWidgets();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { r: { type: 'array', items: { type: 'string' } } } }}
+        // The `range` name is registered for numbers alone, so an array is handed the widget itself
+        uiSchema={{ r: { 'ui:widget': RangeWidget } }}
+        initialFormData={{ r: ['2', '5'] }}
+        validator={validator}
+      />,
+    );
+
+    const thumbs = screen.getAllByRole('slider');
+    expect(thumbs).toHaveLength(2);
+    expect(thumbs[0]).toHaveAttribute('aria-valuenow', '2');
+    expect(thumbs[1]).toHaveAttribute('aria-valuenow', '5');
+  });
+
   test("keeps the field's id on the slider's root for a range of several values, whose every thumb takes its input slot", () => {
     const { RangeWidget } = generateWidgets();
     const { container } = render(

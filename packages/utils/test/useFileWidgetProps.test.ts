@@ -196,6 +196,19 @@ describe('useFileWidgetProps()', () => {
       expect(onChange).toHaveBeenCalledWith(FILE_3_STR);
     });
   });
+  test('Bad initial value, multiple, the next selection replaces a lone value that is not a data URL', async () => {
+    const { result } = renderHook(() => useFileWidgetProps('not-a-data-url', onChange, true));
+    expect(result.current.filesInfo).toEqual([]);
+    await result.current.handleChange(toFileList([FILE_3]));
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalledWith([FILE_3_STR]);
+    });
+  });
+  test('File initial value, multiple, handleRemove of a lone data URL', () => {
+    const { result } = renderHook(() => useFileWidgetProps(FILE_2_STR, onChange, true));
+    result.current.handleRemove(0);
+    expect(onChange).toHaveBeenCalledWith([]);
+  });
   test('null, single, handleChange, NO dataURL', async () => {
     FN_RESULT = { target: null };
     const { result } = renderHook(() => useFileWidgetProps(null, onChange));

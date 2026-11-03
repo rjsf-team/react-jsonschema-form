@@ -26,6 +26,11 @@ describe('toInputValue', () => {
   it('turns an object into an empty string', () => {
     expect(toInputValue({ a: 1 })).toBe('');
   });
+  it('stringifies a Date the way React renders a value prop', () => {
+    const date = new Date(0);
+    expect(toInputValue(date)).toBe(String(date));
+    expect(toInputValue([date, 'b'])).toBe(`${String(date)},b`);
+  });
   it('turns NaN into an empty string', () => {
     expect(toInputValue(Number.NaN)).toBe('');
   });

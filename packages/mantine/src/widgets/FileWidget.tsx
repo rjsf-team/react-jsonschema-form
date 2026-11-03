@@ -49,8 +49,9 @@ export default function FileWidget<
   // `FileInput` holds `File`s, while the form data holds data URLs. It only reads whether it holds any, to choose
   // between `ValueComponent` and the placeholder and to show its clear button, so a stored file is handed over as a
   // `File` carrying its name and type. An item that can't be read, such as the `null` stored for a file that couldn't
-  // be, counts too, or the field would show no clear button for an item the next selection is appended after
-  const unreadableItems = Array.isArray(value) ? value.length - filesInfo.length : 0;
+  // be or a string that isn't a data URL, counts too, or the field would show no clear button for it
+  const storedItems = Array.isArray(value) ? value.length : Number(Boolean(value));
+  const unreadableItems = storedItems - filesInfo.length;
   const selectedFiles = useMemo(
     () => [
       ...filesInfo.map(({ name, type }) => new File([], name, { type })),

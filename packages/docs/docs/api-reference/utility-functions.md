@@ -3436,7 +3436,7 @@ Appends `segment` to `parentPath`, returning the `FieldPath` of the child field.
 ### toInputValue()
 
 Turns a widget's `value`, which can hold anything, into what an input's `value` prop accepts.
-A string or a number is kept, so a numeric input stays numeric, a boolean or a bigint is stringified and an array joined with commas the way React renders them, so a hidden multi-select still submits its items, and anything else, `undefined` and `null` included, becomes an empty string.
+A string or a number is kept, so a numeric input stays numeric, a boolean, a bigint or a `Date` is stringified and an array joined with commas the way React renders them, so a hidden multi-select still submits its items, and anything else, `undefined` and `null` included, becomes an empty string.
 
 #### Parameters
 

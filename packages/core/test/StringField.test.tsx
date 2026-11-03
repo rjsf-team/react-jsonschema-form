@@ -514,6 +514,23 @@ describe('StringField', () => {
     });
   });
 
+  describe('a Date in the form data', () => {
+    const date = new Date(0);
+
+    it('shows as its text in a text input', () => {
+      const { node } = createFormComponent({ schema: { type: 'string' }, initialFormData: date });
+      expect(node.querySelector('#root')).toHaveValue(String(date));
+    });
+    it('keeps its text in a hidden input', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'string' },
+        uiSchema: { 'ui:widget': 'hidden' },
+        initialFormData: date,
+      });
+      expect(node.querySelector('input[type=hidden]')).toHaveValue(String(date));
+    });
+  });
+
   describe('SelectWidget', () => {
     it('renders the selected oneOf option description', async () => {
       const { node } = createFormComponent({

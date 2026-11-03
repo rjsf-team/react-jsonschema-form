@@ -64,8 +64,8 @@ export default function RangeWidget<
       rootRef.current?.querySelector('input')?.focus();
     }
   }, []);
-  const isNumberRange = isRangeOfValues && value.every((part): part is number => typeof part === 'number');
-  const sliderValue = isNumberRange ? value : toNumericValue(value);
+  const rangeParts = isRangeOfValues ? value.map((part) => toNumericValue(part)) : undefined;
+  const sliderValue = rangeParts?.every((part) => part !== undefined) ? rangeParts : toNumericValue(value);
   const sliderProps = { value: sliderValue, name: htmlName || id, ...rangeSpec<S>(schema) };
 
   const handleChange: NonNullable<SliderProps['onChange']> = (_, newValue) => onChange(newValue);

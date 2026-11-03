@@ -1174,6 +1174,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add the `RawValidationResult` type, what `ValidatorType.rawValidation()` returns, so a stored result can be typed without a `ReturnType` chain ([#5678](https://github.com/rjsf-team/react-jsonschema-form/pull/5678))
 - Add the `RawValidationResult` type, what `ValidatorType.rawValidation()` returns ([#5678](https://github.com/rjsf-team/react-jsonschema-form/pull/5678))
 - Add `toNumericValue()`, which reads a widget's `value` as a number, and `ratingStoresString()`, which reports whether a rating widget writes a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `useFileWidgetProps()` appending the next selection after a lone value of a multiple field that isn't a data URL, which the field doesn't show: the selection now replaces it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/validator-ajv8
 

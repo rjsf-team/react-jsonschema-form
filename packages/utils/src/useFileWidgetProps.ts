@@ -99,19 +99,6 @@ function extractFileInfo(items: unknown[]): { filesInfo: FileInfoType[]; itemInd
   return { filesInfo, itemIndexes };
 }
 
-/** The items a `FileWidget` value stores: the list a multiple value holds, kept as it is so an edit never drops an item
- * it can't read, or a single data URL as a list of one
- *
- * @param value - The current value of the `FileWidget`
- * @returns - The stored items
- */
-function storedItems(value: unknown): unknown[] {
-  if (Array.isArray(value)) {
-    return value;
-  }
-  return typeof value === 'string' && value !== '' ? [value] : [];
-}
-
 /** Hook which encapsulates the logic needed to read and convert a `value` of `File` or `File[]` into the
  * `filesInfo: FileInfoType[]` and the two callback implementations needed to change the list or to remove a
  * `File` from the list. To be used by theme specific `FileWidget` implementations.
@@ -126,8 +113,13 @@ export default function useFileWidgetProps(
   onChange: (value?: unknown) => void,
   multiple = false,
 ): UseFileWidgetPropsResult {
-  const stored = useMemo(() => storedItems(value), [value]);
-  const { filesInfo, itemIndexes } = useMemo(() => extractFileInfo(stored), [stored]);
+  const { filesInfo, itemIndexes } = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
+  // A list is kept as it is, so an edit never drops an item it can't read, while a lone value that isn't a file is no
+  // item at all: the field shows nothing for it, so a selection must not be appended after it
+  const stored = useMemo(
+    (): unknown[] => (Array.isArray(value) ? value : filesInfo.map(({ dataURL }) => dataURL)),
+    [value, filesInfo],
+  );
 
   const handleChange = useCallback(
     async (files: FileList | File[]) => {
