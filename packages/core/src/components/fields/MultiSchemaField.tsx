@@ -5,7 +5,6 @@ import {
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
-  getRenderedOptionUiSchema,
   getSelectorPresentation,
   getTemplates,
   getUiOptions,
@@ -17,7 +16,6 @@ import {
   selectOptionUiSchema,
   shouldRenderOptionalField,
   TranslatableString,
-  UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
@@ -27,35 +25,12 @@ import { retrievedOptionListOf } from '../uiState.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps, optionsKeywordOf } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
+import getOptionFieldUiSchema from './getOptionFieldUiSchema.ts';
 import { lookUpUiField } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
 import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
-
-/** Returns the field's `uiSchema` for an option that declares none of its own, without the field's title and
- * description, which the field's plan already carries to the option's, so the option keeps the title and description
- * its own schema gives it rather than taking the field's in their place. Shadowed in `ui:options` as well, as
- * `getUiOptions()` reads either spelling
- *
- * @param uiSchema - The field's uiSchema
- * @returns - The uiSchema the option renders with
- */
-function withoutFieldText<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  uiSchema: UiSchema<T, S, F>,
-): UiSchema<T, S, F> {
-  const options = uiSchema[UI_OPTIONS_KEY];
-  if (
-    !('ui:title' in uiSchema) &&
-    !('ui:description' in uiSchema) &&
-    options?.title === undefined &&
-    options?.description === undefined
-  ) {
-    return uiSchema;
-  }
-  const { 'ui:title': _title, 'ui:description': _description, ...rest } = uiSchema;
-  return { ...rest, [UI_OPTIONS_KEY]: { ...options, title: undefined, description: undefined } };
-}
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It shows
  * the option `useOptionSelection()` holds for the field, selects another when the user picks one, and cleans up any
@@ -177,12 +152,10 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     }
   }
   // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed
-  const optionFieldUiSchema = useMemo(() => {
-    if (uiSchema && optionUiSchema === uiSchema) {
-      return withoutFieldText<T, S, F>(uiSchema);
-    }
-    return option ? getRenderedOptionUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema) : optionUiSchema;
-  }, [optionUiSchema, uiSchema, schema, option]);
+  const optionFieldUiSchema = useMemo(
+    () => getOptionFieldUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema),
+    [optionUiSchema, uiSchema, schema, option],
+  );
 
   // The option's `SchemaField` renders at this field's own `fieldPath`, so left to its own path its
   // template-override warnings would name this field's entry, and the two entries' mistakes would read as one under

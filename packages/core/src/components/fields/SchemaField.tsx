@@ -31,6 +31,8 @@ import {
   getFieldClassNames,
   getFieldLabel,
   getFieldTypeForWidget,
+  getOptionUiSchema,
+  getRenderedOptionSchema,
   getSchemaOwnTypes,
   getSchemaType,
   getSelectFieldType,
@@ -68,13 +70,14 @@ import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
-import {
+import getFieldWidget, {
   getDeprecatedTemplateProps,
   getFieldErrorProps,
   getTemplateParts,
   withoutAdditionalFlag,
   withoutDescribers,
 } from './fieldWidgetUtils.ts';
+import getOptionFieldUiSchema from './getOptionFieldUiSchema.ts';
 import { lookUpUiField, resolveNamedField, withoutNamedField } from './namedField.ts';
 import type { NamedFieldResolution } from './namedField.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
@@ -85,6 +88,7 @@ import { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
 import useAdditionalDepths from './useAdditionalDepths.ts';
+import type { ShownOptionField } from './useSchemaFieldPresentation.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
 /** The map of component type to FieldName */
@@ -631,6 +635,85 @@ function planFieldComponent<T, S extends StrictRJSFSchema, F extends FormContext
   );
 }
 
+/** Creates the function a field rendering its `anyOf`/`oneOf` options plans the option shown by, from the schema and
+ * `uiSchema` `AnyOfField` hands the option's `SchemaField`, so the field's label is drawn for the control the option
+ * renders (#5709). As `useMemo()`s would, each step runs again only once its own inputs change: the option keeps its
+ * identity as the data changes, and so do the resolver's parts while the option retrieves the same, so a run of edits
+ * plans the option's field and widget once
+ *
+ * @returns - The planner, which keeps each step's last result, so each field plans its option through one of its own.
+ *            It returns the option's field, null where no option renders, or undefined for a `$ref` cycle
+ */
+function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormContextType>() {
+  const { resolve } = createFieldWidgetResolver<T, S, F>();
+  const optionInput = memoizeLast(
+    (
+      schema: S,
+      uiSchema: UiSchema<T, S, F>,
+      xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY,
+      option: S,
+      index: number,
+    ) => ({
+      schema: getRenderedOptionSchema<S>(schema, option),
+      uiSchema: getOptionFieldUiSchema<T, S, F>(
+        schema,
+        option,
+        uiSchema,
+        getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, index),
+      ),
+    }),
+  );
+  // Keyed on the resolver's parts rather than its result, a new object with every change of the data
+  const planField = memoizeLast(
+    (
+      selectSchemaInfo: FieldWidgetPlan<T, S, F>['selectSchemaInfo'],
+      uiField: FieldWidgetPlan<T, S, F>['uiField'],
+      uiSchema: FieldWidgetPlan<T, S, F>['uiSchema'],
+      ownUiOptions: FieldWidgetPlan<T, S, F>['ownUiOptions'],
+      hidden: boolean,
+      registry: Registry<T, S, F>,
+    ): ShownOptionField<T, S, F> | undefined => {
+      const plan = planFieldComponent<T, S, F>({ selectSchemaInfo, uiField, ownUiOptions }, registry);
+      if (!plan) {
+        return undefined;
+      }
+      return {
+        field: plan.FieldComponent,
+        fieldKey: plan.fieldKey,
+        schema: selectSchemaInfo.schema,
+        uiSchema,
+        widget: getFieldWidget<T, S, F>(plan.FieldComponent, selectSchemaInfo.schema, uiSchema, registry),
+        hidden,
+        rendersOptionSelector: plan.rendersOptionSelector && !plan.rendersOptionsItself,
+      };
+    },
+  );
+  return (
+    schema: S,
+    uiSchema: UiSchema<T, S, F>,
+    xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY,
+    option: S | undefined,
+    index: number,
+    formData: T | undefined,
+    fieldPath: FieldPath,
+    registry: Registry<T, S, F>,
+    namedAbove: boolean,
+  ): ShownOptionField<T, S, F> | null | undefined => {
+    if (!option) {
+      return null;
+    }
+    const input = optionInput(schema, uiSchema, xxxOfKey, option, index);
+    const isRefCycle = Boolean((input.schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+    const resolved = resolve(input.schema, input.uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove);
+    const { selectSchemaInfo, uiField, uiSchema: optionUiSchema, ownUiOptions, hidden } = resolved;
+    // `AnyOfField` renders no `null` option, whatever field it names, and `SchemaField` nothing for an empty schema
+    if (input.schema.type === 'null' || Object.keys(selectSchemaInfo.schema).length === 0) {
+      return null;
+    }
+    return planField(selectSchemaInfo, uiField, optionUiSchema, ownUiOptions, hidden, registry);
+  };
+}
+
 /** Whether a field planned as `plan` draws its Optional Data Controls beside the `anyOf`/`oneOf` options it renders
  * itself, keeping the selected option off screen until Add: its own `ObjectField` renders beside them, which a pure
  * union, an object with nothing of its own beside its options, doesn't. Whether the controls apply to the field at all
@@ -791,6 +874,34 @@ function isLabelUndrawnForLackOfControl({ label, control, showLabel }: FieldPres
   return label.by === 'none' && control === undefined && showLabel && label.text !== '';
 }
 
+/** Whether the `anyOf`/`oneOf` option shown draws the label of the field above it, as an option with no title of its
+ * own, or that field's, does
+ *
+ * @param option - The field the option shown renders with
+ * @param title - The title of the field above, without its Deprecated marker
+ * @param titledAsNamer - False where a `ui:field` gave the `SchemaField` it wraps a title over its own, which an option
+ *   with no title doesn't draw, as it takes the label of the field that named it
+ * @param translateString - The registry's `translateString`
+ * @returns - True when the option draws that label
+ */
+function optionDrawsFieldLabel<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  option: ShownOptionField<T, S, F> | null | undefined,
+  title: string,
+  titledAsNamer: boolean,
+  translateString: Registry<T, S, F>['translateString'],
+) {
+  if (!option || option.hidden) {
+    return false;
+  }
+  // The option's own options alone, since its `ui:label` otherwise falls to the field above's, not `ui:globalOptions`
+  const uiOptions = getUiOptions<T, S, F>(option.uiSchema);
+  if (uiBooleanOption(uiOptions.label) === false) {
+    return false;
+  }
+  const optionTitle = getFieldLabel<T, S, F>({ ...option.schema, deprecated: false }, uiOptions, translateString);
+  return optionTitle ? optionTitle === title : titledAsNamer;
+}
+
 /** Resolves the field a `SchemaField` renders and plans who draws its parts, from the props it is handed and from the
  * fields above it rendering the same path or id. The array item holding a field plans it with the props it hands the
  * item's `SchemaField`, so the item's template is laid out by the plan the field's own template draws by
@@ -880,14 +991,10 @@ export function useSchemaFieldPlan<
   // control to name, as while an optional field's option selector isn't on screen, isn't drawn, so it is the field
   // below's heading
   let label = ownLabel;
-  if (inheritedPresentation) {
-    const untitled = !getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, {
-      ...labelSources,
-      name: undefined,
-    });
-    if (inheritedPresentation.title === title || untitled) {
-      label = inheritedPresentation.plan.label.text;
-    }
+  const isUntitled = () =>
+    !getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, { ...labelSources, name: undefined });
+  if (inheritedPresentation && (inheritedPresentation.title === title || isUntitled())) {
+    label = inheritedPresentation.plan.label.text;
   }
   // When the option selector is an optional data control AND it does not have form data, the control is not on screen
   // yet. This is decided here rather than with the `XxxOfField` below because the fallback UI renders that same selector
@@ -949,8 +1056,9 @@ export function useSchemaFieldPlan<
     getDiscriminatorFieldFromSchema<S>(schema),
   );
   const shownOption = useMemo(
-    () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
-    [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
+    () =>
+      xxxOfOptions ? { fieldPath, options: xxxOfOptions, uiSchema, list, selectedOption, selectOption } : undefined,
+    [xxxOfOptions, uiSchema, list, selectedOption, selectOption, fieldPath],
   );
   // The field below a named one is the field beside the options the `SchemaField` that named it renders. Read there
   // alone: the options are retrieved afresh with every change of the data, so a field reading them re-renders with
@@ -973,6 +1081,48 @@ export function useSchemaFieldPlan<
     fieldToRender?.yieldsToOptions === true &&
     !hasOwnContentBesideOptions<T, S, F>(schemaUtils, fieldSchema, fieldUiSchema, formData);
   const plannedAsOptions = fieldToRender?.isWithheld === true || isPureUnion;
+  // Kept only by a field rendering its options, so the many that render none don't hold a planner they never call
+  const planShownOption = useMemo(
+    () => (plannedAsOptions ? createShownOptionPlanner<T, S, F>() : undefined),
+    [plannedAsOptions],
+  );
+  const shownOptionField = useMemo(
+    () =>
+      planShownOption && xxxOfKey !== undefined && fieldShownOption
+        ? planShownOption(
+            schema,
+            // Below a named field the options render above, so the option shown and its uiSchema are read from there
+            fieldShownOption.uiSchema as UiSchema<T, S, F>,
+            xxxOfKey,
+            fieldShownOption.options[optionBeside] as S | undefined,
+            optionBeside,
+            formData,
+            fieldPath,
+            registry,
+            namedAbove,
+          )
+        : undefined,
+    [planShownOption, xxxOfKey, fieldShownOption, schema, optionBeside, formData, fieldPath, registry, namedAbove],
+  );
+  // What the field that named this one hands it. This field renders under the id beside the options, so it inherits
+  // none of that, though the option takes that field's label and draws its help
+  const namerBelow = optionsRenderedAbove ? use(PresentationContext) : undefined;
+  // Below a named field the options render beside that field rather than here, so this label has no control to name,
+  // and the option draws it where it would only say the same
+  const labelDrawnByOption =
+    optionsRenderedAbove &&
+    optionDrawsFieldLabel<T, S, F>(
+      shownOptionField,
+      title,
+      isUntitled() || title === namerBelow?.title,
+      registry.translateString,
+    );
+  // A field with no title has only the property name to say, where the label is already drawn above the field naming it
+  const labelDrawnAbove = namerBelow?.plan.label.by === 'above' && isUntitled();
+  const optionDescription =
+    labelDrawnByOption && shownOptionField
+      ? getUiOptions<T, S, F>(shownOptionField.uiSchema).description || shownOptionField.schema.description
+      : undefined;
   const renderedComponent = fieldToRender?.FieldComponent;
   // The `SchemaField` that named the field takes its own errors out of the `errorSchema` it hands on, and passes them
   // to the field framed inside its template through the context, whatever the named field does with its `rawErrors`
@@ -987,15 +1137,22 @@ export function useSchemaFieldPlan<
     field: renderedComponent,
     fieldKey: fieldToRender?.fieldKey,
     xxxOfKey: plannedAsOptions ? xxxOfKey : undefined,
-    label,
+    // Its text rather than `showLabel`, which also hides the description, that the option doesn't draw for it
+    label: labelDrawnByOption || labelDrawnAbove ? '' : label,
     showLabel,
-    description: fieldDescription,
-    help: ownUiOptions.help,
+    description: optionDescription === fieldDescription ? '' : fieldDescription,
+    // The field that named this one draws its help unless it declares it its own, which leaves it to this field and to
+    // an option inheriting its uiSchema alike; a wrapper can set a different one
+    help:
+      namerBelow?.plan.help.by !== 'none' && ownUiOptions.help === namerBelow?.plan.help.text
+        ? undefined
+        : ownUiOptions.help,
     errors: ownErrors,
     hideError,
     hidden: hidden || isOptedOut,
     required: effectiveRequired,
     inherited: inheritedPresentation?.plan,
+    shownOptionField: optionsRenderedAbove ? null : shownOptionField,
   });
   // The lock the form, its schema or its uiSchema puts on the field, planned here so an array item's buttons follow it.
   // `SchemaFieldRender` adds the states that only leave its control unusable, which still let an item be removed

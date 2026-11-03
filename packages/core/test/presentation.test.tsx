@@ -886,7 +886,7 @@ describe('the plan SchemaField builds', () => {
   });
 });
 
-describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => {
+describe('an anyOf/oneOf whose label follows the option it shows', () => {
   const pet: RJSFSchema = {
     title: 'Pet',
     oneOf: [
@@ -908,13 +908,27 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
     expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
   });
 
-  it('keeps the for where an option of another type renders a control under the field id', () => {
-    const { outerTemplatePlans } = renderPlans({
-      type: 'object',
-      properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { title: 'Name', type: 'string' }] } },
-    });
+  it('keeps the for while an option of another type renders a control under the field id', () => {
+    const { outerTemplatePlans } = renderPlans(
+      { type: 'object', properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { title: 'Name', type: 'string' }] } } },
+      { initialFormData: { pet: 'Rex' } },
+    );
 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBeUndefined();
+  });
+
+  it('keeps a declared aria-labelledby while an option of another type renders a control under the field id', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { title: 'Name', type: 'string' }] } },
+      },
+      initialFormData: { pet: 'Rex' },
+      presentation: { fields: { OneOfField: { labelledBy: 'aria-labelledby' } } },
+    });
+
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
+    expect(node.querySelector('input#root_pet')).toHaveAttribute('aria-labelledby', fieldLabelId('root_pet'));
   });
 
   it.each<[string, RJSFSchema]>([
@@ -930,8 +944,8 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBe(fieldLabelId('root_pet'));
   });
 
-  it('names a multi-select array option by the field label through aria-labelledby', () => {
-    createFormComponent({
+  it('names a multi-select array option by the for of the field label', () => {
+    const { node } = createFormComponent({
       schema: {
         type: 'object',
         properties: {
@@ -947,11 +961,12 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
     });
 
     const select = screen.getByRole('listbox');
-    expect(select).toHaveAttribute('aria-labelledby', fieldLabelId('root_pet'));
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).toHaveAttribute('for', select.id);
+    expect(select).not.toHaveAttribute('aria-labelledby');
     expect(select).toHaveAccessibleName('Pet');
   });
 
-  it('names a file array option by the field label through aria-labelledby', () => {
+  it('names a file array option by the for of the field label', () => {
     const { node } = createFormComponent({
       schema: {
         type: 'object',
@@ -964,19 +979,185 @@ describe('an anyOf/oneOf whose options are all objects, arrays or nulls', () => 
       },
     });
 
-    const input = node.querySelector('input[type="file"]');
-    expect(input).toHaveAttribute('aria-labelledby', fieldLabelId('root_pet'));
+    const input = node.querySelector('input[type="file"]')!;
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).toHaveAttribute('for', input.id);
+    expect(input).not.toHaveAttribute('aria-labelledby');
     expect(input).toHaveAccessibleName('Pet');
   });
 
-  it('keeps the for where an option is a $ref it does not resolve', () => {
-    const { outerTemplatePlans } = renderPlans({
-      type: 'object',
-      definitions: { name: { type: 'string' } },
-      properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { $ref: '#/definitions/name' }] } },
-    });
+  it('keeps the for while an option given by a $ref renders a control under the field id', () => {
+    const { outerTemplatePlans } = renderPlans(
+      {
+        type: 'object',
+        definitions: { name: { type: 'string' } },
+        properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { $ref: '#/definitions/name' }] } },
+      },
+      { initialFormData: { pet: 'Rex' } },
+    );
 
     expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBeUndefined();
+  });
+
+  describe('an option rendering options of its own', () => {
+    const nested = (inner: RJSFSchema[]): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        pet: {
+          title: 'Pet',
+          anyOf: [
+            { title: 'Inner', anyOf: inner },
+            { title: 'Other', type: 'object', properties: { b: { type: 'number' } } },
+          ],
+        },
+      },
+    });
+
+    it("draws no for while its object option shows, since a for can't name the fieldset", () => {
+      const { node } = createFormComponent({
+        schema: nested([
+          { type: 'object', properties: { a: { type: 'string' } } },
+          { type: 'object', properties: { c: { type: 'string' } } },
+        ]),
+        initialFormData: { pet: { a: 'x' } },
+      });
+
+      expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
+    });
+
+    it('names a control its option shows through aria-labelledby', () => {
+      const { node } = createFormComponent({
+        schema: nested([{ type: 'string' }, { type: 'number' }]),
+        initialFormData: { pet: 'x' },
+      });
+
+      const input = node.querySelector('input#root_pet');
+      expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
+      expect(input).toHaveAttribute('aria-labelledby', expect.stringContaining(fieldLabelId('root_pet')));
+      expect(input).toHaveAccessibleName(expect.stringContaining('Pet'));
+    });
+  });
+
+  it('keeps the for while an option that is a select of constants shows', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          pet: {
+            title: 'Pet',
+            anyOf: [{ type: 'string', oneOf: [{ const: 'a' }, { const: 'b' }] }, { type: 'number' }],
+          },
+        },
+      },
+      initialFormData: { pet: 'a' },
+    });
+
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).toHaveAttribute('for', 'root_pet');
+    expect(node.querySelector('select#root_pet')).toHaveAccessibleName('Pet');
+  });
+});
+
+describe("an anyOf/oneOf field's label, by the field SchemaField renders the option shown with (#5709)", () => {
+  /** Every `for` on the page names an element a `for` can label */
+  function expectEveryForToNameAControl(node: Element) {
+    for (const label of node.querySelectorAll('label[for]')) {
+      const target = document.getElementById(label.getAttribute('for')!);
+      expect(target?.matches('input, select, textarea, button, meter, output, progress')).toBe(true);
+    }
+  }
+
+  it('draws no for where a type list option renders an alt-date', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { when: { title: 'When', anyOf: [{ type: ['string', 'null'] }, { type: 'number' }] } },
+      },
+      uiSchema: { when: { anyOf: [{ 'ui:widget': 'alt-date' }, {}] } },
+    });
+
+    expect(node.querySelector(`#${fieldLabelId('root_when')}`)?.closest('label')).not.toHaveAttribute('for');
+    expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+  });
+
+  it('names the select an option of array constants renders by the for', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { pet: { title: 'Pet', anyOf: [{ type: 'array', enum: [[1], [2]] }, { type: 'string' }] } },
+      },
+      initialFormData: { pet: [1] },
+    });
+
+    const select = node.querySelector('select#root_pet')!;
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).toHaveAttribute('for', 'root_pet');
+    expect(select).not.toHaveAttribute('aria-labelledby');
+    expect(select).toHaveAccessibleName('Pet');
+  });
+
+  it('draws no for where an untyped option renders no control', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { pet: { title: 'Pet', anyOf: [{}, { type: 'number' }] } } },
+      initialFormData: { pet: 'x' },
+    });
+
+    expect(node.querySelector('#root_pet')).toBeNull();
+    expectEveryForToNameAControl(node);
+  });
+
+  describe('an option that renders nothing, whatever would render it', () => {
+    function NamedControl({ id }: FieldProps) {
+      return <input id={id} />;
+    }
+
+    it.each<[string, RJSFSchema, NoValFormProps['uiSchema'], boolean]>([
+      ['an empty option under the fallback UI', {}, undefined, true],
+      ['an empty option a ui:field names', {}, { pet: { anyOf: [{ 'ui:field': NamedControl }, {}] } }, false],
+      [
+        'a null option a ui:field names',
+        { type: 'null' },
+        { pet: { anyOf: [{ 'ui:field': NamedControl }, {}] } },
+        false,
+      ],
+    ])('draws no for for %s', (_name, option, uiSchema, useFallbackUiForUnsupportedType) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { pet: { title: 'Pet', anyOf: [option, { type: 'number' }] } } },
+        uiSchema,
+        initialFormData: { pet: option.type === 'null' ? null : 'x' },
+        useFallbackUiForUnsupportedType,
+      });
+
+      expect(node.querySelector('#root_pet')).toBeNull();
+      expectEveryForToNameAControl(node);
+    });
+  });
+
+  it("names whatever the fallback UI renders for a multi-type option, through the for or the label's id", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { pet: { title: 'Pet', anyOf: [{ type: ['string', 'number'] }, { type: 'boolean' }] } },
+      },
+      initialFormData: { pet: 'x' },
+      useFallbackUiForUnsupportedType: true,
+    });
+
+    expectEveryForToNameAControl(node);
+  });
+
+  it('draws no for where an option a $id names renders a field declared as named through aria-labelledby', () => {
+    function GroupField({ id, presentation }: FieldProps) {
+      return <div role='group' id={id} aria-labelledby={presentation?.control?.attributes['aria-labelledby']} />;
+    }
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { pet: { title: 'Pet', anyOf: [{ $id: 'GroupField', type: 'string' }, { type: 'number' }] } },
+      },
+      fields: { GroupField },
+      presentation: { fields: { GroupField: { labelledBy: 'aria-labelledby' } } },
+    });
+
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
+    expect(screen.getByRole('group', { name: 'Pet' })).toHaveAttribute('id', 'root_pet');
   });
 });
 
@@ -1161,6 +1342,274 @@ describe('a ui:field wrapping SchemaField under its own id', () => {
     expect(screen.getAllByText('About pet')).toHaveLength(1);
     // Once as the object's heading and once as the selector's first option
     expect(screen.getAllByText('Pet')).toHaveLength(2);
+  });
+
+  it('draws no for on the label of a union it wraps while the option shown is an object', () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          x: {
+            title: 'X',
+            oneOf: [
+              { type: 'object', title: 'A', properties: { a: { type: 'string' } } },
+              { type: 'object', title: 'B', properties: { b: { type: 'string' } } },
+            ],
+          },
+        },
+      },
+      uiSchema: { x: { 'ui:field': Wrapper } },
+    });
+
+    expect(screen.getByText('X').closest('label')).not.toHaveAttribute('for');
+  });
+
+  describe('a union it wraps', () => {
+    function renderWrappedUnion(
+      option: RJSFSchema,
+      formData: unknown,
+      optionUiSchema: UiSchema = {},
+      field: RJSFSchema = {},
+      fieldUiSchema: UiSchema = {},
+    ) {
+      return createFormComponent({
+        schema: { type: 'object', properties: { x: { title: 'X', ...field, oneOf: [option, { type: 'number' }] } } },
+        uiSchema: { x: { 'ui:field': Wrapper, ...fieldUiSchema, oneOf: [optionUiSchema, {}] } },
+        initialFormData: { x: formData },
+      }).node;
+    }
+    function wrapperHanding(hand: (props: FieldProps, ownUiSchema: UiSchema) => Partial<FieldProps>) {
+      return function HandingWrapper(props: FieldProps) {
+        const { SchemaField } = props.registry.fields;
+        const { 'ui:field': _field, ...ownUiSchema } = props.uiSchema ?? {};
+        return <SchemaField {...props} uiSchema={ownUiSchema} {...hand(props, ownUiSchema)} />;
+      };
+    }
+    const belowWrapperLabel = '#root_x__XxxOf__label';
+    const untitledOptions: [string, RJSFSchema, unknown][] = [
+      ['a string', { type: 'string' }, 'a'],
+      ['a boolean', { type: 'boolean' }, true],
+      ['an object', { type: 'object', properties: { a: { type: 'string' } } }, { a: 'a' }],
+      ['an array of items', { type: 'array', items: { type: 'string' } }, ['a']],
+    ];
+
+    it.each(untitledOptions)(
+      'draws its label once where the option shown is %s with no title',
+      (_name, option, formData) => {
+        const node = renderWrappedUnion(option, formData);
+
+        expect(screen.getAllByText('X')).toHaveLength(1);
+        expect(node.querySelector(belowWrapperLabel)).toBeNull();
+        expect(node.querySelector('[for="root_x__XxxOf"]')).toBeNull();
+      },
+    );
+
+    it.each<[string, RJSFSchema]>([
+      ['titled the same', { type: 'string', title: 'X' }],
+      ['deprecated and titled the same', { type: 'string', title: 'X', deprecated: true }],
+    ])('leaves its label to an option %s', (_name, option) => {
+      const node = renderWrappedUnion(option, 'a');
+
+      expect(node.querySelector(belowWrapperLabel)).toBeNull();
+      expect(node.querySelector('label[for="root_x"]')).toHaveTextContent('X');
+    });
+
+    it('leaves its label to an option with no ui:label of its own under a ui:label its field gives over the form-wide one', () => {
+      createFormComponent({
+        schema: { type: 'object', properties: { x: { title: 'X', oneOf: [{ type: 'string' }, { type: 'number' }] } } },
+        uiSchema: {
+          'ui:globalOptions': { label: false },
+          x: { 'ui:field': Wrapper, 'ui:label': true, oneOf: [{}, {}] },
+        },
+        initialFormData: { x: 'a' },
+      });
+
+      expect(screen.getAllByText('X')).toHaveLength(1);
+    });
+
+    it.each<[string, RJSFSchema, unknown, UiSchema?]>([
+      ['titled differently', { type: 'string', title: 'S' }, 'a'],
+      ['of type null', { type: 'null' }, null],
+      ['hidden', { type: 'string' }, 'a', { 'ui:widget': 'hidden' }],
+      ['with its label turned off', { type: 'string' }, 'a', { 'ui:label': false }],
+    ])('keeps its label, with no for, where the option shown is %s', (_name, option, formData, optionUiSchema) => {
+      const node = renderWrappedUnion(option, formData, optionUiSchema);
+
+      expect(screen.getAllByText('X')).toHaveLength(1);
+      expect(node.querySelector(belowWrapperLabel)?.closest('label')).not.toHaveAttribute('for');
+    });
+
+    it.each(untitledOptions)(
+      "keeps the field's description, once, where the option shown is %s and draws the label",
+      (_name, option, formData) => {
+        renderWrappedUnion(option, formData, {}, { description: 'About x' });
+
+        expect(screen.getAllByText('About x')).toHaveLength(1);
+        expect(screen.getAllByText('X')).toHaveLength(1);
+      },
+    );
+
+    it('keeps a ui:description where the option shown draws the label', () => {
+      renderWrappedUnion({ type: 'string' }, 'a', {}, {}, { 'ui:description': 'About x' });
+
+      expect(screen.getAllByText('About x')).toHaveLength(1);
+    });
+
+    it("keeps the field's description beside one of the option's own where the option draws the label", () => {
+      renderWrappedUnion({ type: 'string', description: 'Own' }, 'a', {}, { description: 'About x' });
+
+      expect(screen.getAllByText('About x')).toHaveLength(1);
+      expect(screen.getAllByText('Own')).toHaveLength(1);
+    });
+
+    it("draws the field's description once where the option shown draws the label and repeats it", () => {
+      renderWrappedUnion({ type: 'string', description: 'About x' }, 'a', {}, { description: 'About x' });
+
+      expect(screen.getAllByText('About x')).toHaveLength(1);
+    });
+
+    it('hides the description under the ui:label: false of its field', () => {
+      renderWrappedUnion({ type: 'string' }, 'a', {}, { description: 'About x' }, { 'ui:label': false });
+
+      expect(screen.queryByText('About x')).toBeNull();
+    });
+
+    it('draws its ui:help once', () => {
+      renderWrappedUnion({ type: 'string' }, 'a', {}, {}, { 'ui:help': 'Help me' });
+
+      expect(screen.getAllByText('Help me')).toHaveLength(1);
+    });
+
+    it.each<[string, UiSchema, string[]]>([
+      ['with none on its field', {}, ['Inner help']],
+      ['beside the one on its field', { 'ui:help': 'Help me' }, ['Help me', 'Inner help']],
+    ])('draws a ui:help the wrapper sets itself %s', (_name, fieldUiSchema, drawn) => {
+      const helpingWrapper = wrapperHanding((_props, ownUiSchema) => ({
+        uiSchema: { ...ownUiSchema, 'ui:help': 'Inner help' },
+      }));
+      renderWrappedUnion({ type: 'string' }, 'a', {}, {}, { 'ui:field': helpingWrapper, ...fieldUiSchema });
+
+      for (const help of drawn) {
+        expect(screen.getAllByText(help)).toHaveLength(1);
+      }
+    });
+
+    it('keeps its ui:help where the wrapper declares it its own and draws it nowhere', () => {
+      createFormComponent({
+        schema: { type: 'object', properties: { x: { title: 'X', oneOf: [{ type: 'string' }, { type: 'number' }] } } },
+        uiSchema: { x: { 'ui:field': 'Helpless', 'ui:help': 'Help me', oneOf: [{}, {}] } },
+        fields: { Helpless: Wrapper },
+        presentation: { fields: { Helpless: { help: 'self' } } },
+        initialFormData: { x: 'a' },
+      });
+
+      expect(screen.getAllByText('Help me')).toHaveLength(1);
+    });
+
+    it.each<[string, RJSFSchema]>([
+      ['no title', { type: 'string' }],
+      ['a title', { type: 'string', title: 'S' }],
+    ])(
+      "draws the field's label once where an option with no title wraps options of its own, showing one with %s",
+      (_name, shown) => {
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              x: {
+                title: 'X',
+                oneOf: [{ oneOf: [shown, { type: 'number' }] }, { type: 'boolean' }],
+              },
+            },
+          },
+          uiSchema: { x: { oneOf: [{ 'ui:field': Wrapper }, {}] } },
+          initialFormData: { x: 'a' },
+        });
+
+        expect(screen.queryByText('x')).toBeNull();
+      },
+    );
+
+    describe('a wrapper changing what it hands the field below', () => {
+      it.each<[string, (props: FieldProps, ownUiSchema: UiSchema) => Partial<FieldProps>]>([
+        ['ui:title', (_props, ownUiSchema) => ({ uiSchema: { ...ownUiSchema, 'ui:title': 'Inner' } })],
+        ['schema title', ({ schema }) => ({ schema: { ...schema, title: 'Inner' } })],
+      ])('draws the %s it sets itself beside the label an untitled option draws', (_name, hand) => {
+        const node = renderWrappedUnion({ type: 'string' }, 'a', {}, {}, { 'ui:field': wrapperHanding(hand) });
+
+        expect(node.querySelector(belowWrapperLabel)).toHaveTextContent('Inner');
+        expect(node.querySelector(belowWrapperLabel)?.closest('label')).not.toHaveAttribute('for');
+        expect(node.querySelector('label[for="root_x"]')).toHaveTextContent('X');
+      });
+
+      it('draws the ui:title it sets itself where the field that named it has no title', () => {
+        createFormComponent({
+          schema: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+          uiSchema: {
+            'ui:field': wrapperHanding((_props, ownUiSchema) => ({
+              uiSchema: { ...ownUiSchema, 'ui:title': 'Inner' },
+            })),
+          },
+          initialFormData: 'a',
+        });
+
+        expect(screen.getAllByText('Inner')).toHaveLength(1);
+      });
+
+      it.each<
+        [string, RJSFSchema, UiSchema, (props: FieldProps, ownUiSchema: UiSchema) => Partial<FieldProps>, string]
+      >([
+        ['the schema title', { title: 'X' }, {}, ({ schema: { title: _title, ...schema } }) => ({ schema }), 'X'],
+        ['the ui:title', {}, { 'ui:title': 'T' }, (_props, { 'ui:title': _title, ...uiSchema }) => ({ uiSchema }), 'T'],
+      ])("draws the field's label once where it leaves out %s", (_name, field, fieldUiSchema, hand, drawn) => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { x: { ...field, oneOf: [{ type: 'string' }, { type: 'number' }] } },
+          },
+          uiSchema: { x: { 'ui:field': wrapperHanding(hand), ...fieldUiSchema, oneOf: [{}, {}] } },
+          initialFormData: { x: 'a' },
+        });
+
+        expect(node.querySelector(belowWrapperLabel)).toBeNull();
+        expect(node.querySelector('label[for="root_x"]')).toHaveTextContent(drawn);
+      });
+
+      it('draws the title it sets itself once where the option shown has the same title', () => {
+        const node = renderWrappedUnion(
+          { type: 'string', title: 'Inner' },
+          'a',
+          {},
+          {},
+          {
+            'ui:field': wrapperHanding((_props, ownUiSchema) => ({
+              uiSchema: { ...ownUiSchema, 'ui:title': 'Inner' },
+            })),
+          },
+        );
+
+        expect(node.querySelector(belowWrapperLabel)).toBeNull();
+        expect(node.querySelector('label[for="root_x"]')).toHaveTextContent('Inner');
+      });
+
+      it.each<[string, UiSchema, string | null]>([
+        ['titled by a ui:title', { 'ui:title': 'Opt' }, 'Opt'],
+        ['with its label turned off', { 'ui:label': false }, null],
+      ])('keeps its label where the option shown is %s in a uiSchema it leaves out', (_name, optionUiSchema, drawn) => {
+        const node = renderWrappedUnion(
+          { type: 'string' },
+          'a',
+          optionUiSchema,
+          {},
+          {
+            'ui:field': wrapperHanding((_props, { oneOf: _oneOf, ...ownUiSchema }) => ({ uiSchema: ownUiSchema })),
+          },
+        );
+
+        expect(node.querySelector(belowWrapperLabel)).toHaveTextContent('X');
+        expect(node.querySelector('label[for="root_x"]')?.textContent ?? null).toBe(drawn);
+      });
+    });
   });
 });
 
@@ -1398,6 +1847,34 @@ describe('an alt-date field', () => {
 
     expect(node.querySelector(`#${fieldLabelId('root_start')}`)?.textContent).toBe(label);
     expect(screen.getByRole('combobox', { name: `${label}, year` })).toBeInTheDocument();
+  });
+
+  describe('as the option an anyOf field shows (#5578)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { when: { title: 'When', anyOf: [{ type: 'string' }, { type: 'number' }] } },
+    };
+
+    it.each(['alt-date', 'alt-datetime'])(
+      "names the %s parts' group by the field label, which draws no for",
+      (widget) => {
+        const { node } = createFormComponent({ schema, uiSchema: { when: { anyOf: [{ 'ui:widget': widget }, {}] } } });
+
+        expect(node.querySelector(`#${fieldLabelId('root_when')}`)?.closest('label')).not.toHaveAttribute('for');
+        expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+      },
+    );
+
+    it('keeps the for while the option shown renders an input', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { when: { anyOf: [{ 'ui:widget': 'alt-date' }, {}] } },
+        initialFormData: { when: 5 },
+      });
+
+      expect(node.querySelector(`#${fieldLabelId('root_when')}`)?.closest('label')).toHaveAttribute('for', 'root_when');
+      expect(node.querySelector('input#root_when')).toHaveAccessibleName('When');
+    });
   });
 });
 

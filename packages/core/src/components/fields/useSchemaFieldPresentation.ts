@@ -16,10 +16,7 @@ import {
   ANY_OF_KEY,
   getFieldTypeForUiSchema,
   getPresentationDeclaration,
-  getSchemaType,
-  isObject,
   ITEMS_KEY,
-  REF_KEY,
   resolveFieldPresentation,
   schemaRequiresTrueValue,
 } from '@rjsf/utils';
@@ -73,37 +70,61 @@ export interface SchemaFieldPresentationInputs<
   required: boolean;
   /** The plan of the field above rendering the same id */
   inherited?: FieldPresentation;
+  /** The field the `anyOf`/`oneOf` option shown renders with, null where the field renders its options and none renders
+   * under its id. Undefined where it renders none, or the option is a `$ref` cycle, which names no field
+   */
+  shownOptionField?: ShownOptionField<T, S, F> | null;
 }
 
-/** Whether the options of a field's `anyOf`/`oneOf` are taken to render no control under the field's id for a label's
- * `for` to name: each is an object, an array or a `null`, so the field's label is drawn with no `for` and names what
- * it names through `aria-labelledby`. An array counts whatever its widget, since the option's widget isn't resolved
- * here, so a multi-select or file array's control, which does carry the field's id, is named by the label through
- * `aria-labelledby`, as the selector is. An option naming no type renders with the field's, as
- * `getRenderedOptionSchema()` gives it. An option given by a `$ref` isn't resolved here and counts as one that may
- * render a control
+/** The field the `anyOf`/`oneOf` option shown renders with, as `SchemaField` resolves the option's own `SchemaField` */
+export interface ShownOptionField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> {
+  /** The field component the option renders */
+  field: Field<T, S, F>;
+  /** The registry key that named it, if one did */
+  fieldKey: string | undefined;
+  /** The schema it renders */
+  schema: S;
+  /** The uiSchema it renders */
+  uiSchema: UiSchema<T, S, F>;
+  /** The single widget it renders, if any */
+  widget: Widget<T, S, F> | string | undefined;
+  /** Whether it renders hidden */
+  hidden: boolean;
+  /** Whether it renders an option selector of its own, for options of its own */
+  rendersOptionSelector: boolean;
+}
+
+/** How the label of a field rendering its `anyOf`/`oneOf` options reaches the control the option shown renders under
+ * the field's id: by its `for`, unless the option renders no control there, as an object, a `null`, an array of items
+ * or a hidden field does, or one a `for` can't name, as the group of an alt-date's parts is, so the label names it
+ * through `aria-labelledby` instead (#5578). An option rendering options of its own is named that way too, since the
+ * option it shows may be an object, whose `<fieldset>` a `for` can't name, and a control it shows is named by the label
+ * all the same
  *
- * @param schema - The schema of the field rendering the options
- * @param xxxOfKey - The keyword its options are under
- * @returns - True when every option is an object, an array or a `null`
+ * @param registry - The registry, whose `fields` and `presentation` are read
+ * @param option - The field the option shown renders with, null where none renders under the field's id
+ * @returns - How the label reaches the option's control
  */
-function optionsRenderNoControl<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY,
-) {
-  const options: unknown = schema[xxxOfKey];
-  const fieldType = getSchemaType<S>(schema);
-  return (
-    Array.isArray(options) &&
-    options.length > 0 &&
-    options.every((option) => {
-      if (!isObject(option) || Object.hasOwn(option, REF_KEY)) {
-        return false;
-      }
-      const type = getSchemaType<S>(option as S) ?? fieldType;
-      return type === 'object' || type === 'array' || type === 'null';
-    })
-  );
+function shownOptionLabelledBy<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  registry: Registry<T, S, F>,
+  option: ShownOptionField<T, S, F> | null,
+): ResolvedPresentationDeclaration['labelledBy'] {
+  if (!option || option.hidden || option.rendersOptionSelector) {
+    return 'aria-labelledby';
+  }
+  const { field, fieldKey, schema, uiSchema, widget } = option;
+  if (!rendersControl<T, S, F>(field, widget, registry, schema, uiSchema)) {
+    return 'aria-labelledby';
+  }
+  return getPresentationDeclaration<T, S, F>(registry, { schema, field, fieldKey, widget }).labelledBy;
 }
 
 /** Whether the field renders a control for a template label to name
@@ -173,6 +194,7 @@ export default function useSchemaFieldPresentation<
     hidden,
     required,
     inherited,
+    shownOptionField,
   } = inputs;
   const { fields, globalFormOptions } = registry;
   let plannedField = field;
@@ -202,6 +224,12 @@ export default function useSchemaFieldPresentation<
   // id, which draws them as its heading: the field rendering withheld options, and the fallback UI's field while its
   // value is one that draws its own heading or label
   const handsLabelDown = xxxOfKey === undefined ? fallbackDrawsNoControl && usesFallbackUi : hidden;
+  // A string, so a new plan of the option shown that labels it the same way, as the option shown changing for another
+  // of the same kind, leaves the declaration as it was
+  const optionLabelledBy = useMemo(
+    () => (shownOptionField === undefined ? undefined : shownOptionLabelledBy<T, S, F>(registry, shownOptionField)),
+    [shownOptionField, registry],
+  );
   const declaration = useMemo(() => {
     if (!plannedField) {
       return undefined;
@@ -222,16 +250,20 @@ export default function useSchemaFieldPresentation<
     if (rendersUnsupportedTemplate) {
       return { ...declared, label: 'self' as const, description: 'self' as const };
     }
-    if (xxxOfKey === undefined) {
-      return declared;
-    }
-    // A `for` at the field's id is taken to name nothing where every option is taken to render no control there, so
-    // the label names through `aria-labelledby` any control an option does render there, as a multi-select or file
-    // array does
-    return optionsRenderNoControl<S>(schema, xxxOfKey)
-      ? { ...declared, labelledBy: 'aria-labelledby' as const }
+    // A declared `aria-labelledby` is kept, since it never leaves a `for` naming an element a `for` can't label
+    return optionLabelledBy && declared.labelledBy !== 'aria-labelledby'
+      ? { ...declared, labelledBy: optionLabelledBy }
       : declared;
-  }, [registry, schema, plannedField, plannedKey, widget, xxxOfKey, handsLabelDown, rendersUnsupportedTemplate]);
+  }, [
+    registry,
+    schema,
+    plannedField,
+    plannedKey,
+    widget,
+    handsLabelDown,
+    rendersUnsupportedTemplate,
+    optionLabelledBy,
+  ]);
   // A control holding `false` left alone, as an unchecked checkbox does, would fail the browser's own check of a native
   // `required` for a value the schema accepts, so it is required, by its attribute and its marker alike, only where the
   // schema demands `true` (#5388). It holds that `false` only where `getDefaultFormState()` seeds it, which it does by
