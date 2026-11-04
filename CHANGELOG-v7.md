@@ -458,6 +458,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix an option nested in an option of an `additionalProperties` entry snapping back to the previous choice when switched to ([#5735](https://github.com/rjsf-team/react-jsonschema-form/pull/5735), [#5623](https://github.com/rjsf-team/react-jsonschema-form/issues/5623))
 - Fix the fallback UI moving a boolean's label and description across the type selector depending on how `ui:widget` names its checkbox; a boolean widget declared to draw its own label now draws it below the type selector, as the checkbox does ([#5734](https://github.com/rjsf-team/react-jsonschema-form/pull/5734), [#5581](https://github.com/rjsf-team/react-jsonschema-form/issues/5581))
 - Fix an `additionalProperties` key renamed onto a declared property reading the key as its label until another key was renamed or the form remounted; it now reads that property's title straight away ([#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
+- Fix renaming an `additionalProperties` key remounting the field of the key renamed before it, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/daisyui
 
