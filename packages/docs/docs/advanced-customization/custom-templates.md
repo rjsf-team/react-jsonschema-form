@@ -109,7 +109,7 @@ Please see the [customArray.tsx sample](https://github.com/rjsf-team/react-jsons
 
 The following props are passed to each `ArrayFieldTemplate`:
 
-- `canAdd`: A boolean value stating whether the array has room for a new item and its options allow one. It doesn't cover `disabled` or `readonly`, under which `onAddClick` does nothing, so an add button drawn from it has to be disabled on `disabled || readonly` too.
+- `canAdd`: A boolean value stating whether the array has room for a new item and its options allow one. It is false for an optional array without data, whose data its `optionalDataControl` starts, and `onAddClick` does nothing there. It doesn't cover `disabled` or `readonly`, under which `onAddClick` does nothing, so an add button drawn from it has to be disabled on `disabled || readonly` too.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array is disabled.
 - `id`: The id of the field in the hierarchy.

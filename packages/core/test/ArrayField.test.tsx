@@ -5993,6 +5993,18 @@ describe('ArrayField', () => {
         expect(onSubmit).not.toHaveBeenCalled();
       });
 
+      it("keeps onAddClick from starting an optional array's data, which its optional data control starts", async () => {
+        const { getFormData } = createFormComponent({
+          schema: { type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } },
+          uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } },
+          templates: { ArrayFieldTemplate: AppendTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Append' }));
+
+        expect(getFormData()).toEqual({});
+      });
+
       describe('with onAddClick', () => {
         it("fills a tuple's missing fixed item from that item's own schema", async () => {
           const { getFormData } = createFormComponent({
