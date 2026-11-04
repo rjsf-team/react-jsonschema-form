@@ -523,6 +523,21 @@ describe('mantine FieldHelpTemplate', () => {
   });
 });
 
+describe('mantine keeps a field on its form data', () => {
+  test('RangeWidget ignores ui:options.value', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'integer' }}
+        uiSchema={{ 'ui:widget': 'range', 'ui:options': { value: 7 } }}
+        initialFormData={3}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '3');
+  });
+});
+
 describe('mantine focuses its groups as core does', () => {
   test.each<[string, RJSFSchema, string]>([
     ['radio', { type: 'string', enum: ['red', 'green'] }, 'radio'],

@@ -16,6 +16,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
+import { Slider } from '../src/components/ui/slider.tsx';
 import Form, { generateClassMap, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
@@ -149,25 +150,57 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
     }
   });
 
-  test('gives the field id and ui:autofocus to the first thumb alone of a range of several values, naming every thumb', async () => {
+  test("gives a slider's id to its first thumb alone and its name to every thumb", () => {
+    const { container } = render(<Slider value={[2, 5]} thumbProps={{ id: 'volume', 'aria-label': 'Volume' }} />);
+
+    const thumbs = screen.getAllByRole('slider');
+    expect(thumbs).toHaveLength(2);
+    expect(container.querySelectorAll('#volume')).toHaveLength(1);
+    expect(thumbs[0]).toHaveAttribute('id', 'volume');
+    expect(thumbs[0]).toHaveAccessibleName('Volume');
+    expect(thumbs[1]).toHaveAccessibleName('Volume');
+  });
+
+  test('ignores ui:options.props on a range', async () => {
+    const onChange = vi.fn();
+    const onValueChange = vi.fn();
     const { container } = render(
       <Form
         schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
         uiSchema={{
-          volume: { 'ui:widget': 'range', 'ui:autofocus': true, 'ui:options': { props: { value: [2, 5] } } },
+          volume: {
+            'ui:widget': 'range',
+            'ui:options': {
+              // @ts-expect-error: TS2322, the type rejects `props`, for a form that isn't type-checked
+              props: {
+                value: [2, 5],
+                defaultValue: [2, 5],
+                min: 1,
+                max: 9,
+                disabled: true,
+                name: 'level',
+                onValueChange,
+              },
+            },
+          },
         }}
+        initialFormData={{ volume: 3 }}
         validator={validator}
+        onChange={onChange}
       />,
     );
 
-    const thumbs = screen.getAllByRole('slider');
-    expect(thumbs).toHaveLength(2);
-    expect(container.querySelectorAll('#root_volume')).toHaveLength(1);
-    expect(thumbs[0]).toHaveAttribute('id', 'root_volume');
-    await waitFor(() => expect(thumbs[0]).toHaveFocus());
-    for (const thumb of thumbs) {
-      expect(thumb).toHaveAccessibleName('Volume');
-    }
+    const thumb = screen.getByRole('slider');
+    expect(thumb).toHaveAttribute('aria-valuenow', '3');
+    expect(thumb).toHaveAttribute('aria-valuemin', '0');
+    expect(thumb).toHaveAttribute('aria-valuemax', '100');
+    expect(container.querySelector('input[name="level"]')).not.toBeInTheDocument();
+    await user.tab();
+    await user.keyboard('{ArrowRight}');
+
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ volume: 4 });
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '4');
   });
 
   test("draws an empty range's thumb at its minimum without giving the form that value", async () => {
@@ -293,12 +326,12 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
       expect(onChange).not.toHaveBeenCalled();
     });
 
-    test('commits nothing for a press on an empty range that ui:options.props disables', async () => {
+    test('commits nothing for a press on a disabled empty range', async () => {
       const onChange = vi.fn();
       render(
         <Form
           schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume', minimum: 2 } } }}
-          uiSchema={{ volume: { 'ui:widget': 'range', 'ui:options': { props: { disabled: true } } } }}
+          uiSchema={{ volume: { 'ui:widget': 'range', 'ui:disabled': true } }}
           onChange={onChange}
           validator={validator}
         />,
@@ -330,38 +363,6 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
     await user.keyboard('{/Home}');
 
     expect(onChange).not.toHaveBeenCalled();
-  });
-
-  test('gives an empty range no form value under a name ui:options.props sets', () => {
-    const { container } = render(
-      <Form
-        schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume', minimum: 2 } } }}
-        uiSchema={{ volume: { 'ui:widget': 'range', 'ui:options': { props: { name: 'level' } } } }}
-        validator={validator}
-      />,
-    );
-
-    expect(container.querySelector('input[name="level"]')).not.toBeInTheDocument();
-  });
-
-  test('calls an onValueChange ui:options.props gives a range, and still commits only the value a key moves it to', async () => {
-    const onChange = vi.fn();
-    const onValueChange = vi.fn();
-    render(
-      <Form
-        schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume', minimum: 2 } } }}
-        uiSchema={{ volume: { 'ui:widget': 'range', 'ui:options': { props: { onValueChange } } } }}
-        onChange={onChange}
-        validator={validator}
-      />,
-    );
-
-    await user.tab();
-    await user.keyboard('{ArrowRight}');
-
-    expect(onValueChange).toHaveBeenCalledWith([3]);
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange.mock.lastCall?.[0].formData).toEqual({ volume: 3 });
   });
 
   test('leaves a range that started empty empty when its form is reset', async () => {
@@ -409,25 +410,6 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
     });
 
     expect(screen.getByRole('slider')).not.toHaveFocus();
-  });
-
-  test("draws an empty range's thumb at the minimum ui:options gives its slider, and commits that", async () => {
-    const onChange = vi.fn();
-    render(
-      <Form
-        schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
-        uiSchema={{ volume: { 'ui:widget': 'range', 'ui:options': { props: { min: 5 } } } }}
-        onChange={onChange}
-        validator={validator}
-      />,
-    );
-
-    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '5');
-    await user.tab();
-    await user.keyboard('{Home}');
-
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange.mock.lastCall?.[0].formData).toEqual({ volume: 5 });
   });
 
   test("commits only the value a key moves an empty range's thumb to", async () => {
