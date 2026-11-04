@@ -24,6 +24,7 @@ import {
   errorId,
   mergeThemePresentation,
   toFieldPath,
+  toInputValue,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -299,7 +300,7 @@ describe('SchemaField', () => {
 
     describe('registered under a built-in alias', () => {
       function NumericTextarea({ id, value, onChange }: WidgetProps) {
-        return <textarea id={id} value={String(value ?? '')} onChange={(event) => onChange(event.target.value)} />;
+        return <textarea id={id} value={toInputValue(value)} onChange={(event) => onChange(event.target.value)} />;
       }
       const widgets = { textarea: NumericTextarea };
 
