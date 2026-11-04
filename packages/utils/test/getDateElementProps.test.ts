@@ -148,7 +148,7 @@ describe('normalizeYearsRange()', () => {
     expect(normalizeYearsRange([800, 2030])).toEqual([800, 2030]);
     expect(normalizeYearsRange([-10000, 0])).toEqual([-10000, 0]);
   });
-  it('keeps entries after the first two', () => {
+  it('ignores entries after the first two', () => {
     expect(normalizeYearsRange([1990, 2030, 'junk'])).toEqual([1990, 2030]);
   });
   it.each([

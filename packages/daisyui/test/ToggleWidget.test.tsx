@@ -21,6 +21,12 @@ describe('ToggleWidget', () => {
     expect(getByRole('checkbox').className).not.toContain('toggle-');
   });
 
+  test('trims the space around a `size` option', () => {
+    const { getByRole } = render(<ToggleWidget {...makeWidgetMockProps({ options: { size: ' lg' } })} />);
+
+    expect(getByRole('checkbox')).toHaveClass('toggle-lg');
+  });
+
   test('renders correctly', () => {
     const { asFragment } = render(<ToggleWidget {...makeWidgetMockProps()} />);
     expect(asFragment()).toMatchSnapshot();

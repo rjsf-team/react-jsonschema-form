@@ -240,7 +240,7 @@ This allows you to programmatically trigger the browser's file selector, which c
 
 ### `accept` option
 
-You can use the accept attribute to specify a filter for what file types the user can upload, as a comma-separated string or an array of them:
+You can use the accept attribute to specify a filter for what file types the user can upload, as a comma-separated string such as `'.png,.jpg'`. `UiSchema` types it as a string; an array of them is joined with commas too, but only from a uiSchema that isn't typed, such as one loaded as JSON:
 
 ```ts
 import { RJSFSchema, UiSchema } from '@rjsf/utils';

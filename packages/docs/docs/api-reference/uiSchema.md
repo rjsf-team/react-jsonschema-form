@@ -77,7 +77,8 @@ const globalOptions: GlobalUISchemaOptions<{ density?: 'compact' | 'comfortable'
 const uiSchema: UiSchema = { 'ui:globalOptions': globalOptions };
 
 function DensityWidget({ options }: WidgetProps) {
-  const { density } = options;
+  // `options` doesn't carry the extension's types, so check the option's value before use
+  const density = options.density === 'compact' ? 'compact' : 'comfortable';
   // ...
 }
 

@@ -65,10 +65,11 @@ export const DAISY_GLOBAL_UI_OPTIONS_KEYS = Object.keys({ daisy: true } satisfie
 /** Reads an option a class name is built from, such as a `size` or `color`, which a JSON uiSchema can hold as anything
  *
  * @param option - The option
- * @returns - The option, or `undefined` when it isn't a string or is blank
+ * @returns - The option, trimmed, or `undefined` when it isn't a string or is blank
  */
 export function classNameOption(option: unknown): string | undefined {
-  return typeof option === 'string' && option.trim() !== '' ? option : undefined;
+  const trimmed = typeof option === 'string' ? option.trim() : '';
+  return trimmed === '' ? undefined : trimmed;
 }
 
 /** Reads the `daisy` props from a field's options, as `getUiOptions(uiSchema, registry.globalUiOptions)` returns them,

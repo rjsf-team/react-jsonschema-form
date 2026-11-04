@@ -61,6 +61,15 @@ describe('RatingWidget', () => {
     expect(getAllByRole('radio')[0]).toHaveClass('bg-orange-400');
   });
 
+  test('trims the space around a `size` and `color` option', () => {
+    const { getAllByRole, getByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ options: { size: ' lg', color: ' red ' } })} />,
+    );
+
+    expect(getByRole('radiogroup')).toHaveClass('rating gap-1 rating-lg', { exact: true });
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-red-400');
+  });
+
   test.each([['false'], [1], [{}]])('draws no gradient for a `colorGradient` option of %j', (colorGradient) => {
     const jsonOptions: Record<string, unknown> = { colorGradient };
     const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
