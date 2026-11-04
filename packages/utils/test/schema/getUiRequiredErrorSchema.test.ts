@@ -135,7 +135,7 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
     });
     describe('whose widget renders another listed type', () => {
-      const textarea: UiSchema = { v: { ...uiSchema.v, 'ui:widget': 'textarea' } };
+      const textarea: UiSchema = { v: { a: { 'ui:required': true }, 'ui:widget': 'textarea' } };
       it.each(['hello', null, undefined])('requires no property of a %j value, as no input is shown', (v) => {
         const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, textarea, { v });
         expect(toErrorList(errorSchema)).toEqual([]);
