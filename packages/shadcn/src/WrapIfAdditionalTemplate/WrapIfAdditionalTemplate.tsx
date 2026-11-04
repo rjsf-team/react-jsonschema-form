@@ -9,6 +9,7 @@ import {
   hasAdditionalKeyLabel,
   hasSchemaMarker,
   isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
   TranslatableString,
 } from '@rjsf/utils';
 
@@ -123,7 +124,7 @@ export default function WrapIfAdditionalTemplate<
                 {...keyAttributes}
                 required={required}
                 defaultValue={keyName}
-                disabled={isAdditionalKeyDisabled<T, S, F>(props)}
+                disabled={isAdditionalKeyDisabled(props)}
                 id={keyId}
                 name={keyId}
                 onBlur={!readonly ? onKeyRenameBlur : undefined}

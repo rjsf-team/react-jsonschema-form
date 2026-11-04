@@ -9,6 +9,7 @@ import {
   hasAdditionalKeyLabel,
   hasSchemaMarker,
   isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
   joinClassNames,
   TranslatableString,
 } from '@rjsf/utils';

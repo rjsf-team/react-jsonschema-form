@@ -1301,6 +1301,7 @@ import {
   additionalKeyId,
   hasSchemaMarker,
   isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
   RJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';

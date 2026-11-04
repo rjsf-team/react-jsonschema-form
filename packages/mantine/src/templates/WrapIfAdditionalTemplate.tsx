@@ -16,6 +16,7 @@ import {
   hasAdditionalKeyLabel,
   hasSchemaMarker,
   isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
   TranslatableString,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
