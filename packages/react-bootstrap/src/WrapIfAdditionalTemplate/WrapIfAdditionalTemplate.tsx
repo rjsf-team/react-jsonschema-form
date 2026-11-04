@@ -58,7 +58,7 @@ export default function WrapIfAdditionalTemplate<
   const padding = hasKeyLabel ? 4 + descPadding : 1;
 
   return (
-    <Row className={classNames} style={style} key={keyId}>
+    <Row className={classNames} style={style}>
       <Col xs={5}>
         <Form.Group>
           {hasKeyLabel && <Form.Label htmlFor={keyId}>{keyLabel}</Form.Label>}

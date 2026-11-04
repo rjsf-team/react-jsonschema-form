@@ -1,6 +1,6 @@
 import { Box, Button, FieldsetRoot } from '@chakra-ui/react';
 import type { DateElementProp, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, dateElementId, getGroupAttributes, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, getGroupAttributes, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 import { getChakra, labelledByOrNone } from '../utils.ts';
 
@@ -35,25 +35,22 @@ function AltDateWidget<
       {...chakraProps}
     >
       <Box display='flex' flexWrap='wrap' alignItems='center'>
-        {elements.map((elemProps: DateElementProp, i) => {
-          const elemId = dateElementId(id, elemProps.type);
-          return (
-            <Box key={elemId} mr='2' mb='2' width='20'>
-              <DateElement<T, S, F>
-                {...props}
-                {...elemProps}
-                autofocus={autofocus && i === 0}
-                disabled={disabled}
-                rootId={id}
-                onBlur={onBlur}
-                onFocus={onFocus}
-                readonly={readonly}
-                registry={registry}
-                select={handleChange}
-              />
-            </Box>
-          );
-        })}
+        {elements.map((elemProps: DateElementProp, i) => (
+          <Box key={elemProps.type} mr='2' mb='2' width='20'>
+            <DateElement<T, S, F>
+              {...props}
+              {...elemProps}
+              autofocus={autofocus && i === 0}
+              disabled={disabled}
+              rootId={id}
+              onBlur={onBlur}
+              onFocus={onFocus}
+              readonly={readonly}
+              registry={registry}
+              select={handleChange}
+            />
+          </Box>
+        ))}
       </Box>
       <Box display='flex'>
         {!options.hideNowButton && (

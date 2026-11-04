@@ -74,7 +74,7 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <Flex column fill key={element.name} style={{ marginBottom: '10px' }}>
+            <Flex column fill key={element.content.key} style={{ marginBottom: '10px' }}>
               {element.content}
             </Flex>
           ),

@@ -67,7 +67,11 @@ export default function CheckboxesWidget<
           const indexOptionId = optionId(id, index);
 
           return (
-            <div className='flex items-center gap-2' key={indexOptionId}>
+            <div
+              className='flex items-center gap-2'
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
+            >
               <Checkbox
                 id={indexOptionId}
                 name={htmlName || id}

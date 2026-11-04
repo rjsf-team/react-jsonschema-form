@@ -1,5 +1,5 @@
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, dateElementId, getGroupAttributes, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, getGroupAttributes, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 import { Row, Col, Button } from 'antd';
 
 export default function AltDateWidget<
@@ -28,26 +28,23 @@ export default function AltDateWidget<
 
   return (
     <Row id={id} gutter={[Math.floor(rowGutter / 2), Math.floor(rowGutter / 2)]} {...group}>
-      {elements.map((elemProps, i) => {
-        const elemId = dateElementId(id, elemProps.type);
-        return (
-          <Col flex='88px' key={elemId}>
-            <DateElement
-              rootId={id}
-              label={label}
-              select={handleChange}
-              {...elemProps}
-              disabled={disabled}
-              readonly={readonly}
-              registry={registry}
-              onBlur={onBlur}
-              onFocus={onFocus}
-              autofocus={autofocus && i === 0}
-              presentation={presentation}
-            />
-          </Col>
-        );
-      })}
+      {elements.map((elemProps, i) => (
+        <Col flex='88px' key={elemProps.type}>
+          <DateElement
+            rootId={id}
+            label={label}
+            select={handleChange}
+            {...elemProps}
+            disabled={disabled}
+            readonly={readonly}
+            registry={registry}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            autofocus={autofocus && i === 0}
+            presentation={presentation}
+          />
+        </Col>
+      ))}
       {!options.hideNowButton && (
         <Col flex='88px'>
           <Button

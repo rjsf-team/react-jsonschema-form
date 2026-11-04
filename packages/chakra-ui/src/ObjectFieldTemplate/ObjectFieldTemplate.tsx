@@ -66,7 +66,7 @@ export default function ObjectFieldTemplate<
           <GridItem>{optionalDataControl}</GridItem>
         ) : undefined}
         {properties.map((element) =>
-          element.hidden ? element.content : <GridItem key={element.name}>{element.content}</GridItem>,
+          element.hidden ? element.content : <GridItem key={element.content.key}>{element.content}</GridItem>,
         )}
         {schemaUtils.canExpand(schema, uiSchema, formData) && (
           <GridItem justifySelf='flex-end'>

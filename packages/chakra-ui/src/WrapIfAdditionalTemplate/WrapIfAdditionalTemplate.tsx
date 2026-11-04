@@ -56,14 +56,7 @@ export default function WrapIfAdditionalTemplate<
   }
 
   return (
-    <Grid
-      key={keyId}
-      templateColumns='repeat(11, 1fr)'
-      className={classNames}
-      style={style}
-      alignItems='center'
-      gap={2}
-    >
+    <Grid templateColumns='repeat(11, 1fr)' className={classNames} style={style} alignItems='center' gap={2}>
       <GridItem colSpan={5} style={{ marginTop: hasDescription ? '36px' : undefined }}>
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>

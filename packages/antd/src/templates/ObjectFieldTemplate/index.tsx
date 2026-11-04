@@ -154,7 +154,7 @@ export default function ObjectFieldTemplate<
           <Col span={24}>{optionalDataControl}</Col>
         ) : undefined}
         {visibleProperties.map((element) => (
-          <Col key={element.name} span={calculateColSpan(element)}>
+          <Col key={element.content.key} span={calculateColSpan(element)}>
             {element.content}
           </Col>
         ))}

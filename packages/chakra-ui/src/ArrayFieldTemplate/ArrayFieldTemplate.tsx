@@ -49,7 +49,7 @@ export default function ArrayFieldTemplate<
         registry={registry}
         presentation={presentation}
       />
-      <Grid key={`array-item-list-${id}`}>
+      <Grid>
         <GridItem>
           {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
           {items}

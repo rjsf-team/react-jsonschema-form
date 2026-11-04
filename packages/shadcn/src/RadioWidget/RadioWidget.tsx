@@ -79,7 +79,11 @@ export default function RadioWidget<
           enumOptions.map((option, index) => {
             const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
             return (
-              <div className='flex items-center gap-2' key={optionId(id, index)}>
+              <div
+                className='flex items-center gap-2'
+                // oxlint-disable-next-line react/no-array-index-key
+                key={index}
+              >
                 <RadioGroupItem
                   value={domValues[index]}
                   id={optionId(id, index)}

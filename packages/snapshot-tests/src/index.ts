@@ -18,6 +18,8 @@ export { optionErrorStateTests } from './optionErrorStateTests.tsx';
 
 export { controlNameTests } from './controlNameTests.tsx';
 
+export { renamedKeyTests } from './renamedKeyTests.tsx';
+
 export { selectedOptionDescriptionTests } from './selectedOptionDescriptionTests.tsx';
 
 export { submitPendingTests } from './submitPendingTests.tsx';
