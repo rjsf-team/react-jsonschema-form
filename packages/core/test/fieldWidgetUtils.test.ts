@@ -17,4 +17,11 @@ describe('withoutAdditionalFlag()', () => {
     expect(withoutAdditionalFlag(flagged)).toEqual({ type: 'string' });
     expect(ADDITIONAL_PROPERTY_FLAG in withoutAdditionalFlag(flagged)).toBe(false);
   });
+
+  it('returns a schema whose flag is set to false as it is', () => {
+    const unflagged: RJSFSchema = { type: 'string' };
+    Reflect.set(unflagged, ADDITIONAL_PROPERTY_FLAG, false);
+
+    expect(withoutAdditionalFlag(unflagged)).toBe(unflagged);
+  });
 });

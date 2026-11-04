@@ -360,7 +360,8 @@ export function declaresProperty<S extends StrictRJSFSchema = RJSFSchema>(
  * an extra key, for a field whose key is edited elsewhere or not at all
  *
  * @param schema - The field's schema, which may be a boolean subschema
- * @returns - The schema without `ADDITIONAL_PROPERTY_FLAG`, or `schema` itself where it has none
+ * @returns - The schema without `ADDITIONAL_PROPERTY_FLAG`, or `schema` itself where the flag is unset, as it is when
+ *   absent, `undefined` or `false`
  */
 export function withoutAdditionalFlag<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
   if (!hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG)) {

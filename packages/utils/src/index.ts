@@ -114,6 +114,7 @@ import guessType from './guessType.ts';
 import hasAdditionalKeyLabel from './hasAdditionalKeyLabel.ts';
 import hashForSchema, { hashObject, hashString, schemaKey, sortedJSONStringify } from './hashForSchema.ts';
 import hasSchemaMarker from './hasSchemaMarker.ts';
+import type { SchemaFlagMarker } from './hasSchemaMarker.ts';
 import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
 import hasWidgetErrors from './hasWidgetErrors.ts';
@@ -256,6 +257,7 @@ export type {
   ObjectPath,
   PresentationSource,
   PresentationSubject,
+  SchemaFlagMarker,
   SelectedOptionDescriptionProps,
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,

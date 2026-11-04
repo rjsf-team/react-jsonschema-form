@@ -6,7 +6,7 @@ import type {
 } from './constants.ts';
 
 /** The markers that hold a flag rather than a value */
-type SchemaFlagMarker =
+export type SchemaFlagMarker =
   | typeof ADDITIONAL_PROPERTY_FLAG
   | typeof EXTRA_KEYS_ELSEWHERE_FLAG
   | typeof GUESSED_TYPE_FLAG

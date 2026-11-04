@@ -2174,7 +2174,7 @@ It takes only the markers that hold a flag: `ADDITIONAL_PROPERTY_FLAG`, `EXTRA_K
 #### Parameters
 
 - schema: unknown - The schema to check, which may be a boolean subschema
-- marker: typeof ADDITIONAL_PROPERTY_FLAG | typeof EXTRA_KEYS_ELSEWHERE_FLAG | typeof GUESSED_TYPE_FLAG | typeof RJSF_REF_CYCLE_KEY - The symbol of the flag marker
+- marker: SchemaFlagMarker - The symbol of the flag marker, the exported union `typeof ADDITIONAL_PROPERTY_FLAG | typeof EXTRA_KEYS_ELSEWHERE_FLAG | typeof GUESSED_TYPE_FLAG | typeof RJSF_REF_CYCLE_KEY`
 
 #### Returns
 

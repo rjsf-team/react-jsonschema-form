@@ -104,4 +104,26 @@ describe('form data inference', () => {
     );
     expect(container.querySelectorAll('#root_name')).toHaveLength(2);
   });
+
+  it('takes record data with ui: keys of its own when T is widened to unknown values', () => {
+    const record: Record<string, string | undefined> = { b: 'x', a: 'y' };
+    const recordSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+    const order = { 'ui:order': ['a', '*'] };
+    // @ts-expect-error -- a Record<string, string> uiSchema reads `ui:order` as an entry of the data
+    const inferred = <Form schema={recordSchema} validator={validator} initialFormData={record} uiSchema={order} />;
+    const { container } = render(
+      <Form<Record<string, unknown>>
+        schema={recordSchema}
+        validator={validator}
+        initialFormData={record}
+        uiSchema={order}
+      />,
+    );
+
+    expect(inferred).toBeDefined();
+    expect(Array.from(container.querySelectorAll('input[id$="__key"]'), (input) => input.getAttribute('id'))).toEqual([
+      'root_a__key',
+      'root_b__key',
+    ]);
+  });
 });
