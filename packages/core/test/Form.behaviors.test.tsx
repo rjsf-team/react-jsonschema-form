@@ -556,76 +556,29 @@ describe('Form omitExtraData and liveOmit', () => {
 });
 
 describe('omitExtraData on submit', () => {
-  it('should call omitExtraData when the omitExtraData prop is true', async () => {
+  it.each([
+    ['keeps', false, { foo: 'bar', baz: 'baz' }],
+    ['omits', true, { foo: 'bar' }],
+  ])('%s the extra data it validates and submits when omitExtraData is %s', async (_, omitExtraData, submitted) => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
-        foo: {
-          type: 'string',
-        },
+        foo: { type: 'string' },
       },
     };
-    const formData = {
-      foo: '',
-    };
-    const omitExtraData = true;
-    const ref = createRef<Form>();
-    const { node } = createFormComponent({
-      ref,
+    const customValidate = vi.fn((_formData, errors) => errors);
+    const { node, onSubmit } = createFormComponent({
       schema,
-      formData,
+      formData: { foo: 'bar', baz: 'baz' },
       omitExtraData,
+      customValidate,
     });
 
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
-
     await submitForm(node, user);
 
-    expect(theSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it('Should call validateFormWithFormData with the current formData if omitExtraData is false', async () => {
-    const omitExtraData = false;
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: { type: 'string' },
-      },
-    };
-    const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
-    const props: NoValFormProps = {
-      ref: formRef,
-      schema,
-      formData,
-      omitExtraData,
-    };
-    const { node } = createFormComponent(props);
-    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
-    await submitForm(node, user);
-    expect(theSpy).toHaveBeenCalledWith(formData);
-  });
-
-  it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', async () => {
-    const omitExtraData = true;
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: { type: 'string' },
-      },
-    };
-    const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
-    const props: NoValFormProps = {
-      ref: formRef,
-      schema,
-      formData,
-      omitExtraData,
-    };
-    const { node } = createFormComponent(props);
-    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
-    await submitForm(node, user);
-    expect(theSpy).toHaveBeenCalledWith({ foo: 'bar' });
+    expect(customValidate.mock.lastCall![0]).toEqual(submitted);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onSubmit.mock.lastCall![0].formData).toEqual(submitted);
   });
 });
 
