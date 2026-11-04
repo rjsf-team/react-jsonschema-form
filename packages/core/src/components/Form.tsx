@@ -565,6 +565,9 @@ export default class Form<
       // result of the onChange from the existing state formData
       const stateDataChangedFields = getChangedFields(this.props.formData, this.state.formData);
       const isSchemaChanged = !deepEquals(prevProps.schema, this.props.schema);
+      // A change applied in the same batch as the new schema has already moved the state to it and validated against
+      // it, so its errors are kept rather than reset as for a schema the state has yet to see
+      const isStateSchemaChanged = isSchemaChanged && !deepEquals(this.state.schema, this.props.schema);
       // When formData is not an object, getChangedFields returns an empty array.
       // In this case, deepEquals is most needed to check again.
       const isFormDataChanged =
@@ -578,7 +581,7 @@ export default class Form<
         // Or if the `formData` changes, for example in the case of a schema with dependencies that need to
         //  match one of the subSchemas, the retrieved schema must be updated.
         isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
-        isSchemaChanged,
+        isStateSchemaChanged,
         // Only the error clearing needs the path of each changed field, and it runs only when live validation does
         // not, so the walk that produces them is left for `getStateFromProps` to ask for
         () => getChangedFields(this.props.formData, prevProps.formData, true),
@@ -1294,8 +1297,16 @@ export default class Form<
           setByPath(formData, path, valueForPath);
         }
       }
+      // A schema the parent changed in the same batch differs from the retrieved schema for reasons other than this
+      // change, so sanitizing for that difference would drop data the change never touched
       const shouldSanitize =
-        retrievedSchema && !isRootPath && !isObject(newValue) && !Array.isArray(newValue) && !disabled && !readonly;
+        retrievedSchema &&
+        !isRootPath &&
+        !isObject(newValue) &&
+        !Array.isArray(newValue) &&
+        !disabled &&
+        !readonly &&
+        deepEquals(props.schema, prevState.schema);
       // Skip live validation here; it runs later in this function.
       const newState = this.getStateFromProps(
         props,
@@ -1583,24 +1594,22 @@ export default class Form<
     if (noValidate || this.validateFormWithFormData(newFormData)) {
       // There are no errors generated through schema validation.
       // Check for user provided errors and update state accordingly.
-      const errorSchema = extraErrors || {};
-      const errors = extraErrors ? toErrorList(extraErrors) : [];
+      const submittedState = {
+        formData: newFormData,
+        errors: extraErrors ? toErrorList(extraErrors) : [],
+        errorSchema: extraErrors || {},
+        schemaValidationErrors: [],
+        schemaValidationErrorSchema: {},
+      };
       this.setState(
         (prevState) =>
           // A change queued in the same event is applied before this, so its data and errors are kept rather than
           // replaced by those from before it, which are what was validated and is submitted
-          prevState.formData === formData
-            ? {
-                formData: newFormData,
-                errors,
-                errorSchema,
-                schemaValidationErrors: [],
-                schemaValidationErrorSchema: {},
-              }
-            : null,
+          prevState.formData === formData ? submittedState : null,
         () => {
           if (onSubmit) {
-            onSubmit(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event);
+            // Built from what was submitted, since a change kept above leaves the state with the errors of its own data
+            onSubmit(toIChangeEvent({ ...this.state, ...submittedState }, 'submitted'), event);
           }
         },
       );
@@ -1717,8 +1726,18 @@ export default class Form<
    */
   validateFormWithFormData = (formData?: T): boolean => {
     const { extraErrors, extraErrorsBlockSubmit, focusOnFirstError, onError } = this.props;
-    const { errors: prevErrors } = this.state;
+    const { errors: prevErrors, formData: validatedFormData } = this.state;
     const schemaValidation = this.validate(formData);
+    // A live validated change queued in the same event is applied before these errors, which are of the data from
+    // before it, so they are written only where they would not replace that change's own
+    const setValidationState = (validationState: Partial<FormState<T, S, F>>, callback?: () => void) =>
+      this.setState(
+        (prevState, props) =>
+          prevState.formData !== validatedFormData && Form.isLiveValidatedOnChange(props)
+            ? null
+            : (validationState as FormState<T, S, F>),
+        callback,
+      );
     // Always merge extraErrors so they remain visible in state regardless of extraErrorsBlockSubmit.
     const { errors, errorSchema } = extraErrors ? Form.mergeErrors<T>(schemaValidation, extraErrors) : schemaValidation;
     // hasError gates submission: schema errors always block; extraErrors only block when
@@ -1732,7 +1751,7 @@ export default class Form<
           this.focusOnError(errors[0]);
         }
       }
-      this.setState(
+      setValidationState(
         {
           errors,
           errorSchema,
@@ -1750,14 +1769,14 @@ export default class Form<
       );
     } else if (errors.length > 0) {
       // Non-blocking extraErrors are present — update display state without triggering onError.
-      this.setState({
+      setValidationState({
         errors,
         errorSchema,
         schemaValidationErrors: [],
         schemaValidationErrorSchema: {},
       });
     } else if (prevErrors.length > 0) {
-      this.setState({
+      setValidationState({
         errors: [],
         errorSchema: {},
         schemaValidationErrors: [],

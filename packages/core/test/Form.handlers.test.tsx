@@ -2012,4 +2012,148 @@ describe('Form change handler under a parent', () => {
       expect(errors.map((error: { message: string }) => error.message)).toEqual([message]);
     },
   );
+  it.each([
+    ['live validated changes keep their own errors', true, ['ab', 'abcd'], 0],
+    ['changes that skip validation show the errors', false, ['abcd'], 1],
+  ])(
+    'should keep the data of a change made in the same event as a submit that fails, and %s',
+    async (_, liveValidate, values, errorCount) => {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+      const ref = createRef<Form>();
+      const onError = vi.fn();
+      const { container } = render(
+        <Form
+          ref={ref}
+          schema={schema}
+          validator={customizeValidator<GenericObjectType>()}
+          formData={{ foo: 'x' }}
+          liveValidate={liveValidate}
+          onError={onError}
+        />,
+      );
+
+      await act(async () => {
+        values.forEach((value) => ref.current!.setFieldValue('foo', value));
+        ref.current!.submit();
+      });
+
+      expect(container.querySelector('#root_foo')).toHaveValue('abcd');
+      expect(container.querySelectorAll('#root_foo__error li')).toHaveLength(errorCount);
+      expect(onError).toHaveBeenCalledTimes(1);
+    },
+  );
+  it('should report the errors of the submitted data when a change in the same event is kept', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+    const ref = createRef<Form>();
+    const onSubmit = vi.fn();
+    render(
+      <Form
+        ref={ref}
+        schema={schema}
+        validator={customizeValidator<GenericObjectType>()}
+        formData={{ foo: 'abcd' }}
+        liveValidate
+        onSubmit={onSubmit}
+      />,
+    );
+
+    await act(async () => {
+      ref.current!.setFieldValue('foo', 'x');
+      ref.current!.submit();
+    });
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    const [event] = onSubmit.mock.lastCall!;
+    expect(event.formData).toEqual({ foo: 'abcd' });
+    expect(event.errors).toEqual([]);
+    expect(event.errorSchema).toEqual({});
+  });
+  it.each([
+    ['changes the type of', { bar: { type: 'number' } }],
+    ['removes', {}],
+  ] as const)(
+    'should keep unrelated data in a change made in the same event as a schema that %s it',
+    async (_, barProperties) => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+      };
+      const newSchema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, ...barProperties } };
+      const TypeWidget = ({ onChange, registry }: WidgetProps) => (
+        <button
+          type='button'
+          onClick={() => {
+            registry.formContext.changeSchema();
+            onChange('b');
+          }}
+        >
+          type
+        </button>
+      );
+      const onChange = vi.fn();
+      function Parent() {
+        const [schema, setSchema] = useState(oldSchema);
+        const [formData, setFormData] = useState<GenericObjectType | undefined>({ foo: 'a', bar: 'x' });
+        return (
+          <Form
+            schema={schema}
+            uiSchema={{ foo: { 'ui:widget': TypeWidget } }}
+            validator={customizeValidator<GenericObjectType>()}
+            formContext={{ changeSchema: () => setSchema(newSchema) }}
+            formData={formData}
+            onChange={(event, id) => {
+              onChange(event, id);
+              setFormData(event.formData);
+            }}
+          />
+        );
+      }
+      const { container } = render(<Parent />);
+
+      await user.click(container.querySelector('button')!);
+
+      const changeEvent = onChange.mock.calls.find(([, id]) => id === 'root_foo');
+      expect(changeEvent).toBeDefined();
+      expect(changeEvent![0].formData).toEqual({ foo: 'b', bar: 'x' });
+    },
+  );
+  it('should keep the errors a change reported when it was applied with the schema the parent set in the same event', async () => {
+    const fooSchema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const barSchema: RJSFSchema = {
+      type: 'object',
+      properties: { foo: { type: 'string' }, bar: { type: 'string', default: 'bar default', minLength: 20 } },
+    };
+    const TypeWidget = ({ onChange, registry }: WidgetProps) => (
+      <button
+        type='button'
+        onClick={() => {
+          registry.formContext.addBar();
+          onChange('a');
+        }}
+      >
+        type
+      </button>
+    );
+    const onChange = vi.fn();
+    function Parent() {
+      const [schema, setSchema] = useState(fooSchema);
+      return (
+        <Form
+          schema={schema}
+          uiSchema={{ foo: { 'ui:widget': TypeWidget } }}
+          validator={customizeValidator<GenericObjectType>()}
+          formContext={{ addBar: () => setSchema(barSchema) }}
+          liveValidate
+          onChange={onChange}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('button')!);
+
+    const [event] = onChange.mock.lastCall!;
+    expect(event.errors.map(({ property }: { property: string }) => property)).toEqual(['.bar']);
+    expect(container.querySelectorAll('#root_bar__error li')).toHaveLength(1);
+  });
 });
