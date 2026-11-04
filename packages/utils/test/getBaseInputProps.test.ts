@@ -19,9 +19,20 @@ describe('getBaseInputProps()', () => {
         registry,
         accept: '.png',
         inputMode: 'tel',
-        multiple: true,
       }),
-    ).toEqual({ type: 'text', accept: '.png', inputMode: 'tel', multiple: true, title: undefined });
+    ).toEqual({ type: 'text', accept: '.png', inputMode: 'tel', title: undefined });
+  });
+
+  it('puts a multiple on a file input', () => {
+    expect(
+      getBaseInputProps({ schema: { type: 'string' }, type: 'file', options: {}, registry, multiple: true }),
+    ).toMatchObject({ type: 'file', multiple: true });
+  });
+
+  it('leaves a multiple off an input that is not a file input', () => {
+    expect(
+      getBaseInputProps({ schema: { type: 'string' }, type: 'email', options: {}, registry, multiple: true }).multiple,
+    ).toBeUndefined();
   });
 
   it('drops the title of a derived pattern that a widget replaces', () => {

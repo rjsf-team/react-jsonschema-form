@@ -52,12 +52,16 @@ export default function BaseInputTemplate<
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   // Mantine's `NumberInput` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared
-  // to receive, and sets an `inputMode` of its own over any it is given, so a widget that supplies either gets the plain
+  // to receive, and sets an `inputMode` of its own over any it is given, so a widget that names either gets the plain
   // input every other theme renders for a numeric field.
-  const plainInput = Boolean(onChangeOverride) || props.inputMode !== undefined;
+  const plainInput = Boolean(onChangeOverride) || 'inputMode' in props;
   const inputProps = getBaseInputProps<T, S, F>(props, plainInput);
   // `ui:options` spreads onto the input as Mantine props, so the props a widget passes go after it to win
-  const themeProps = { ...cleanupOptions(options, props), ...callerInputProps(props) };
+  const themeProps = {
+    ...cleanupOptions(options, props),
+    ...callerInputProps(props),
+    multiple: inputProps.multiple,
+  };
   const descriptionProps = getDescriptionProps(props);
 
   // `NumberInput` reports a number once its text parses as one, and on blur trims leading zeroes by parsing the text,

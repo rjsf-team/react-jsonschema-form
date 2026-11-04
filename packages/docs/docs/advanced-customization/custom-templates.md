@@ -499,7 +499,7 @@ The following props are passed to the `BaseInputTemplate`:
 - `label`: The computed label for this widget, as a string
 - `multiple`: A boolean value stating if the widget can accept multiple values;
 - `type`: The `type` of the input, which the widgets rendering a `BaseInputTemplate` set, such as `'number'` or `'date'`;
-- `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it, `inputMode` and `accept` over the input props `getInputProps()` derives and adds `multiple`, and [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns those four on their own. A `pattern` counts even when it is undefined, which turns the derived one off;
+- `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it, `inputMode` and `accept` over the input props `getInputProps()` derives and adds `multiple` to a `file` input, and [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns those four on their own. A `pattern` counts even when it is undefined, which turns the derived one off;
 - `inputMode`: An `inputMode` a widget passes for the input, which replaces the one the schema derives, and which `callerInputProps()` returns the way it returns `pattern`;
 - `accept`: The file types a widget passes for the input, which replace `ui:options.accept`, and which `callerInputProps()` returns too;
 - `onChange`: The value change event handler; call it with the new value every time it changes;

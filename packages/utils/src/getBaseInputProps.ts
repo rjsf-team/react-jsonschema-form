@@ -13,7 +13,8 @@ import type {
 /** The props a theme's `BaseInputTemplate` puts on its input: the ones `getInputProps()` derives from the schema and
  * options, overridden by those `callerInputProps()` picks from the widget's props, and the `title` that names the
  * derived numeric `pattern`, which is left out when the widget replaces that pattern so it doesn't describe a rule no
- * longer in force
+ * longer in force. The widget's `multiple` is kept only for a file input: `ArrayField` passes it to any widget of a
+ * multi-select, and on an `email` input it would accept a comma-separated list
  *
  * @param props - The props of the `BaseInputTemplate`
  * @param [plainNativeInput=true] - Passed on to `getInputProps()`
@@ -35,6 +36,7 @@ export default function getBaseInputProps<
   return {
     ...derived,
     ...caller,
+    multiple: derived.type === 'file' ? caller.multiple : undefined,
     title: 'pattern' in caller ? undefined : getNumericInputTitle(derived, props.registry.translateString),
   };
 }

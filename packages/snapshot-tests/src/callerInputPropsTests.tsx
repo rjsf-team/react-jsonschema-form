@@ -27,7 +27,7 @@ function ChangeOverrideWidget(props: WidgetProps) {
 /** Checks that a theme's `BaseInputTemplate` puts a `pattern`, an `accept` and an `inputMode` a widget passes it on the
  * input, over the ones the schema and options derive, drops the numeric title that names the derived pattern, and
  * accepts a decimal on the input a widget's `inputMode` or `onChangeOverride` gets a `number` field, and lets a file
- * input for an array take several files
+ * input for an array take several files while no other input takes a `multiple`
  *
  * @param Form - The theme's `Form`
  */
@@ -98,5 +98,16 @@ export function callerInputPropsTests(Form: ComponentType<FormProps>) {
     );
     expect(container.querySelector('input[type=file]')).toHaveAttribute('multiple');
     expect(container.querySelector('[multiple]:not(input)')).toBeNull();
+  });
+
+  test('BaseInputTemplate leaves the multiple of a multi-select array off an input that is not a file input', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'array', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } }}
+        uiSchema={{ 'ui:widget': 'EmailWidget' }}
+        validator={validator}
+      />,
+    );
+    expect(container.querySelector('#root')).not.toHaveAttribute('multiple');
   });
 }

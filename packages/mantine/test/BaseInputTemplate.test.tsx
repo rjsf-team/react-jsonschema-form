@@ -154,6 +154,20 @@ describe('mantine BaseInputTemplate', () => {
     expect(container.querySelector('input')).toHaveAttribute('title', 'Enter a number');
   });
 
+  test('renders the text input with no inputMode for a `number` field passed an `inputMode` named as undefined', () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      inputMode: undefined,
+    });
+
+    const input = container.querySelector('input');
+    expect(input).toHaveAttribute('title', 'Enter a number');
+    expect(input).not.toHaveAttribute('inputmode');
+  });
+
   describe('a string field rendered as a number input', () => {
     function renderStringNumberForm(initialFormData: string, onChange = vi.fn()) {
       render(

@@ -998,7 +998,7 @@ An array rendered without a plan draws its `ui:description` or schema `descripti
 
 ### getBaseInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getbaseinputprops}
 
-Returns the props a `BaseInputTemplate` puts on its input: the ones `getInputProps()` derives from the schema and options, overridden by those [`callerInputProps()`](#callerinputprops) picks from the widget's props, and the `title` from [`getNumericInputTitle()`](#getnumericinputtitle) that names the derived numeric `pattern`, which is left out when the widget replaces that pattern.
+Returns the props a `BaseInputTemplate` puts on its input: the ones `getInputProps()` derives from the schema and options, overridden by those [`callerInputProps()`](#callerinputprops) picks from the widget's props, and the `title` from [`getNumericInputTitle()`](#getnumericinputtitle) that names the derived numeric `pattern`, which is left out when the widget replaces that pattern. The widget's `multiple` is kept only for a `file` input, as `ArrayField` passes it to whatever widget renders a multi-select.
 
 #### Parameters
 
