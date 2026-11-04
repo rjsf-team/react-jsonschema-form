@@ -238,15 +238,15 @@ Return a consistent `id` for the `btn` button element
 
 ### callerInputProps()
 
-Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` or `inputMode` the caller names counts even when it is undefined, which is how a caller turns the derived one off.
+Returns the `pattern`, `inputMode`, `accept` and `multiple` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` or `inputMode` the caller names counts even when it is undefined, which is how a caller turns the derived one off. [`getBaseInputProps()`](#getbaseinputprops) merges them for you.
 
 #### Parameters
 
-- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'> - The props of the `BaseInputTemplate`
+- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'multiple' | 'pattern'> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'>: The `pattern`, `inputMode` and `accept` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'multiple' | 'pattern'>: The `pattern`, `inputMode`, `accept` and `multiple` to spread after the derived input props
 
 ### callWithDeferredThrow()
 
@@ -995,6 +995,19 @@ An array rendered without a plan draws its `ui:description` or schema `descripti
 #### Returns
 
 - string | undefined: The description the template draws, or undefined when it draws none
+
+### getBaseInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getbaseinputprops}
+
+Returns the props a `BaseInputTemplate` puts on its input: the ones `getInputProps()` derives from the schema and options, overridden by those [`callerInputProps()`](#callerinputprops) picks from the widget's props, and the `title` from [`getNumericInputTitle()`](#getnumericinputtitle) that names the derived numeric `pattern`, which is left out when the widget replaces that pattern.
+
+#### Parameters
+
+- props: Pick&lt;BaseInputTemplateProps&lt;T, S, F>, 'schema' | 'type' | 'options' | 'accept' | 'inputMode' | 'multiple' | 'pattern'> & \{ registry: Pick&lt;Registry, 'translateString'> } - The props of the `BaseInputTemplate`
+- [plainNativeInput=true]: boolean - Passed on to `getInputProps()`
+
+#### Returns
+
+- InputPropsType & \{ multiple?: boolean; title?: string }: The input props, with the `title` to put before them so a `title` the caller sets wins
 
 ### getByPath&lt;R = unknown>() {#getbypath}
 
@@ -2208,17 +2221,29 @@ A number input shows only a [valid floating-point number](https://html.spec.what
 
 - boolean: True if the input shows a value
 
-### isAdditionalKeyDisabled&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#isadditionalkeydisabled}
+### isAdditionalKeyDisabled()
 
 Whether a `WrapIfAdditionalTemplate` disables the free-text key input of an `additionalProperties` entry, which it does for a disabled or read-only field, whose key must not be renamed on blur, and for one it is handed no `onKeyRenameBlur`, such as the root, which `ObjectField` doesn't render.
 
 #### Parameters
 
-- props: Pick&lt;WrapIfAdditionalTemplateProps&lt;T, S, F>, 'disabled' | 'readonly' | 'onKeyRenameBlur'> - The `disabled`, `readonly` and `onKeyRenameBlur` of the `WrapIfAdditionalTemplate`
+- props: Pick&lt;WrapIfAdditionalTemplateProps, 'disabled' | 'readonly' | 'onKeyRenameBlur'> - The `disabled`, `readonly` and `onKeyRenameBlur` of the `WrapIfAdditionalTemplate`
 
 #### Returns
 
 - boolean: True when the key input is disabled
+
+### isAdditionalRemoveDisabled()
+
+Whether a `WrapIfAdditionalTemplate` disables the remove button of an `additionalProperties` entry, which it does for a disabled or read-only field and for one it is handed no `onRemoveProperty`, such as the root, which `ObjectField` doesn't render.
+
+#### Parameters
+
+- props: Pick&lt;WrapIfAdditionalTemplateProps, 'disabled' | 'readonly' | 'onRemoveProperty'> - The `disabled`, `readonly` and `onRemoveProperty` of the `WrapIfAdditionalTemplate`
+
+#### Returns
+
+- boolean: True when the remove button is disabled
 
 ### isCollapsedByOptionalDataControls&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#iscollapsedbyoptionaldatacontrols}
 

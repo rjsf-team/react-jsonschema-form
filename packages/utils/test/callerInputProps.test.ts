@@ -5,11 +5,12 @@ describe('callerInputProps()', () => {
     expect(callerInputProps({})).toEqual({});
   });
 
-  it('keeps a pattern, an inputMode and an accept', () => {
-    expect(callerInputProps({ pattern: '[A-Z]+', inputMode: 'tel', accept: '.png' })).toEqual({
+  it('keeps a pattern, an inputMode, an accept and a multiple', () => {
+    expect(callerInputProps({ pattern: '[A-Z]+', inputMode: 'tel', accept: '.png', multiple: true })).toEqual({
       pattern: '[A-Z]+',
       inputMode: 'tel',
       accept: '.png',
+      multiple: true,
     });
   });
 
@@ -21,7 +22,7 @@ describe('callerInputProps()', () => {
     expect(Object.keys(callerInputProps({ inputMode: undefined }))).toEqual(['inputMode']);
   });
 
-  it('leaves out an accept that is undefined', () => {
-    expect(Object.keys(callerInputProps({ accept: undefined }))).toEqual([]);
+  it('leaves out an accept and a multiple that are undefined', () => {
+    expect(Object.keys(callerInputProps({ accept: undefined, multiple: undefined }))).toEqual([]);
   });
 });

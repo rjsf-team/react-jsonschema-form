@@ -378,9 +378,8 @@ For instance, say you have a `CustomTextInput` component that you want to integr
 import { ChangeEvent, FocusEvent } from 'react';
 import {
   BaseInputTemplateProps,
-  callerInputProps,
+  getBaseInputProps,
   getControlAttributes,
-  getInputProps,
   hasWidgetErrors,
   RJSFSchema,
   toInputValue,
@@ -426,7 +425,7 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
   const onTextBlur = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onBlur(id, val);
   const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
 
-  const inputProps = { ...rest, ...getInputProps(schema, type, options), ...callerInputProps(props) };
+  const inputProps = { ...rest, ...getBaseInputProps(props) };
   // The field's plan leaves out the errors `ui:hideError` hides, and `hasWidgetErrors()` reads the `aria-invalid` it
   // gives the control, falling back to `rawErrors` with `hideError` for a widget rendered without a plan. The messages
   // are drawn here only where the plan has the widget draw them, under the id the control's `aria-describedby` names,
@@ -500,7 +499,7 @@ The following props are passed to the `BaseInputTemplate`:
 - `label`: The computed label for this widget, as a string
 - `multiple`: A boolean value stating if the widget can accept multiple values;
 - `type`: The `type` of the input, which the widgets rendering a `BaseInputTemplate` set, such as `'number'` or `'date'`;
-- `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns it to spread after the input props `getInputProps()` derives, even when it is undefined, which turns the derived one off;
+- `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it, `inputMode` and `accept` over the input props `getInputProps()` derives and adds `multiple`, and [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns those four on their own. A `pattern` counts even when it is undefined, which turns the derived one off;
 - `inputMode`: An `inputMode` a widget passes for the input, which replaces the one the schema derives, and which `callerInputProps()` returns the way it returns `pattern`;
 - `accept`: The file types a widget passes for the input, which replace `ui:options.accept`, and which `callerInputProps()` returns too;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
@@ -1299,6 +1298,7 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   additionalKeyId,
   isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
   RJSFSchema,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
@@ -1312,8 +1312,6 @@ const schema: RJSFSchema = {
 function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
   const {
     id,
-    disabled,
-    readonly,
     keyName,
     onKeyRenameBlur,
     onRemoveProperty,
@@ -1344,7 +1342,7 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
       />
       <div>{children}</div>
       <RemoveButton
-        disabled={disabled || readonly || !onRemoveProperty}
+        disabled={isAdditionalRemoveDisabled(props)}
         onClick={onRemoveProperty}
         uiSchema={uiSchema}
         registry={registry}
@@ -1378,7 +1376,7 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `uiSchema`: The uiSchema object for this field.
 - `onKeyRename`: Optional callback used to handle the changing of an additional property key's name with the new value. It is `undefined` for a field `ObjectField` doesn't render, such as the root or an array item, as `onKeyRenameBlur` and `onRemoveProperty` are, so check for it before calling it
 - `onKeyRenameBlur`: Optional callback used to handle the changing of an additional property key's name when the input is blurred. The event's target's value will be used as the new value. Its a wrapper callback around `onKeyRename`. Disable the key input of a disabled or read-only field and of one handed no `onKeyRenameBlur`, which [`isAdditionalKeyDisabled()`](../api-reference/utility-functions.md#isadditionalkeydisabled) works out
-- `onRemoveProperty`: Optional callback used to handle the removal of the additionalProperty
+- `onRemoveProperty`: Optional callback used to handle the removal of the additionalProperty. Disable the remove button of a disabled or read-only field and of one handed no `onRemoveProperty`, which [`isAdditionalRemoveDisabled()`](../api-reference/utility-functions.md#isadditionalremovedisabled) works out
 - `propertyNamesEnum`: The key names this property may be renamed to, derived from the parent schema's [`propertyNames.enum`](../json-schema/objects.md#constraining-key-names-with-propertynames) and narrowed to the names its siblings have not already taken; `undefined` when the parent schema does not enumerate its property names. Render the key as a dropdown of those names when it is provided, which the `AdditionalPropertyKeySelect` component from `@rjsf/utils` does using the theme's own `SelectWidget`
 - `keyNotAllowed`: Whether the parent schema forbids this property's key, which its row's errors then say. Mark the key input invalid while it is, which `getAdditionalKeyAttributes()` from `@rjsf/utils` does
 

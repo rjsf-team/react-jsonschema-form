@@ -47,6 +47,7 @@ import findSchemaDefinition from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getAdditionalKeyAttributes from './getAdditionalKeyAttributes.ts';
 import getArrayDescription from './getArrayDescription.ts';
+import getBaseInputProps from './getBaseInputProps.ts';
 import getChangedFields from './getChangedFields.ts';
 import getControlAriaLabel from './getControlAriaLabel.ts';
 import getControlAttributes from './getControlAttributes.ts';
@@ -139,6 +140,7 @@ import {
 } from './idGenerators.ts';
 import inputShowsValue from './inputShowsValue.ts';
 import isAdditionalKeyDisabled from './isAdditionalKeyDisabled.ts';
+import isAdditionalRemoveDisabled from './isAdditionalRemoveDisabled.ts';
 import isComponentType from './isComponentType.ts';
 import isConstant from './isConstant.ts';
 import isConstantOptionList from './isConstantOptionList.ts';
@@ -316,6 +318,7 @@ export {
   getAdditionalKeyAttributes,
   getAdditionalPropertySchema,
   getArrayDescription,
+  getBaseInputProps,
   getChangedFields,
   getControlAriaLabel,
   getControlAttributes,
@@ -385,6 +388,7 @@ export {
   hashString,
   helpId,
   isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
   isCollapsedByOptionalDataControls,
   isComponentType,
   isConstant,

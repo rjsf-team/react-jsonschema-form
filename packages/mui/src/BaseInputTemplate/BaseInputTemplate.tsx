@@ -15,12 +15,11 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
-  callerInputProps,
   examplesId,
+  getBaseInputProps,
   getControlAttributes,
   getExampleSuggestions,
-  getInputProps,
-  getNumericInputTitle,
+  inputShowsValue,
   hasWidgetErrors,
   labelValue,
   offersClearButton,
@@ -115,13 +114,17 @@ export default function BaseInputTemplate<
     pattern: _pattern,
     accept: _accept,
     inputMode: _inputMode,
+    multiple: _multiple,
     ...textFieldProps
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
-  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  const { step, min, max, accept, inputMode, pattern, autoCapitalize, ...rest } = derivedInputProps;
+  const { title, step, min, max, accept, inputMode, pattern, autoCapitalize, multiple, ...rest } = getBaseInputProps<
+    T,
+    S,
+    F
+  >(props);
 
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
@@ -136,12 +139,9 @@ export default function BaseInputTemplate<
     textFieldId,
     textFieldOverrides.helperText,
   );
-  const numericTitle = getNumericInputTitle(derivedInputProps, registry.translateString);
-  const callerProps = callerInputProps(props);
   // The derived attributes and the field's plan come first so a caller's `slotProps.htmlInput` overrides any of them.
   // The plan goes on the `<input>` a user focuses rather than on the `TextField`'s root, where its own props go. The
-  // title explains the derived `pattern`, so a caller replacing that pattern drops it rather than describing a rule no
-  // longer in force. A caller may give `htmlInput` as MUI's `(ownerState) => props`, so the slot is handed on in that
+  // title explains the derived `pattern`, so a `pattern` in `htmlInput` drops it as a passed `pattern` does. A caller may give `htmlInput` as MUI's `(ownerState) => props`, so the slot is handed on in that
   // form, for MUI to resolve
   const htmlInputProps = (ownerState: TextFieldOwnerState) => {
     const callerHtmlInput = {
@@ -149,7 +149,7 @@ export default function BaseInputTemplate<
       ...resolveSlotProps(muiSlotProps?.htmlInput, ownerState),
     };
     return {
-      title: 'pattern' in callerHtmlInput || 'pattern' in callerProps ? undefined : numericTitle,
+      title: 'pattern' in callerHtmlInput ? undefined : title,
       step,
       min,
       max,
@@ -157,7 +157,7 @@ export default function BaseInputTemplate<
       inputMode,
       pattern,
       autoCapitalize,
-      ...callerProps,
+      multiple,
       ...controlAttributes,
       ...callerHtmlInput,
       ...(hasExamples ? { list: examplesId(id) } : undefined),
@@ -179,7 +179,7 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
   const inputProps = { ...InputProps, ...slotProps?.input, ...muiSlotProps?.input };
-  if (options.allowClearTextInputs && offersClearButton(inputValue, derivedInputProps.type) && !readonly && !disabled) {
+  if (options.allowClearTextInputs && inputValue && inputShowsValue(value, rest.type) && !readonly && !disabled) {
     const clearAdornment = (
       <InputAdornment position='end'>
         <ClearButton registry={registry} onClick={handleClear} />

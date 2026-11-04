@@ -7,9 +7,8 @@ import {
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
-  callerInputProps,
-  getInputProps,
-  getNumericInputTitle,
+  getBaseInputProps,
+  inputShowsValue,
   hasWidgetErrors,
   labelValue,
   offersClearButton,
@@ -28,7 +27,6 @@ export default function BaseInputTemplate<
   const {
     id,
     htmlName,
-    type,
     value,
     label,
     schema,
@@ -46,9 +44,7 @@ export default function BaseInputTemplate<
     presentation,
   } = props;
   const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
-  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  const callerProps = callerInputProps(props);
-  const inputProps = { ...derivedInputProps, ...callerProps };
+  const { title, ...inputProps } = getBaseInputProps<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
@@ -89,7 +85,7 @@ export default function BaseInputTemplate<
         onFocus={handleFocus}
         autoFocus={autofocus}
         placeholder={placeholder}
-        title={'pattern' in callerProps ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
+        title={title}
         {...inputProps}
         list={hasExamples ? examplesId(id) : undefined}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}

@@ -19,9 +19,15 @@ function DecimalWidget(props: WidgetProps) {
   return <BaseInputTemplate {...props} inputMode='decimal' />;
 }
 
+function ChangeOverrideWidget(props: WidgetProps) {
+  const { BaseInputTemplate } = props.registry.templates;
+  return <BaseInputTemplate {...props} onChangeOverride={(event) => props.onChange(event.target.value)} />;
+}
+
 /** Checks that a theme's `BaseInputTemplate` puts a `pattern`, an `accept` and an `inputMode` a widget passes it on the
  * input, over the ones the schema and options derive, drops the numeric title that names the derived pattern, and
- * accepts a decimal on the input a widget's `inputMode` gets a `number` field
+ * accepts a decimal on the input a widget's `inputMode` or `onChangeOverride` gets a `number` field, and lets a file
+ * input for an array take several files
  *
  * @param Form - The theme's `Form`
  */
@@ -71,5 +77,26 @@ export function callerInputPropsTests(Form: ComponentType<FormProps>) {
       input.value = '1.5';
     }
     expect(input?.validity.valid).toBe(true);
+  });
+
+  test('BaseInputTemplate accepts a decimal on the input a widget passes an onChangeOverride for a number', () => {
+    const { container } = render(
+      <Form schema={{ type: 'number' }} uiSchema={{ 'ui:widget': ChangeOverrideWidget }} validator={validator} />,
+    );
+    const input = container.querySelector<HTMLInputElement>('input#root');
+    expect(input).toHaveAttribute('title', 'Enter a number');
+    // Written through the DOM for the reason the test above gives
+    if (input) {
+      input.value = '1.5';
+    }
+    expect(input?.validity.valid).toBe(true);
+  });
+
+  test('BaseInputTemplate lets the file input of an array take several files', () => {
+    const { container } = render(
+      <Form schema={{ type: 'array', items: { type: 'string', format: 'data-url' } }} validator={validator} />,
+    );
+    expect(container.querySelector('input[type=file]')).toHaveAttribute('multiple');
+    expect(container.querySelector('[multiple]:not(input)')).toBeNull();
   });
 }

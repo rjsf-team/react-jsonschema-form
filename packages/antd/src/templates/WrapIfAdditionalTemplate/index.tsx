@@ -12,6 +12,7 @@ import {
   buttonId,
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
+  isAdditionalRemoveDisabled,
   TranslatableString,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
@@ -146,7 +147,7 @@ export default function WrapIfAdditionalTemplate<
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'
-            disabled={disabled || readonly || !onRemoveProperty}
+            disabled={isAdditionalRemoveDisabled(props)}
             onClick={onRemoveProperty}
             uiSchema={buttonUiOptions}
             registry={registry}

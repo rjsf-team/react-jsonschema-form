@@ -1,0 +1,40 @@
+import callerInputProps from './callerInputProps.ts';
+import getInputProps from './getInputProps.ts';
+import getNumericInputTitle from './getNumericInputTitle.ts';
+import type {
+  BaseInputTemplateProps,
+  FormContextType,
+  InputPropsType,
+  Registry,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from './types.ts';
+
+/** The props a theme's `BaseInputTemplate` puts on its input: the ones `getInputProps()` derives from the schema and
+ * options, overridden by those `callerInputProps()` picks from the widget's props, and the `title` that names the
+ * derived numeric `pattern`, which is left out when the widget replaces that pattern so it doesn't describe a rule no
+ * longer in force
+ *
+ * @param props - The props of the `BaseInputTemplate`
+ * @param [plainNativeInput=true] - Passed on to `getInputProps()`
+ * @returns - The input props, with the `title` to put before them so a `title` the caller sets wins
+ */
+export default function getBaseInputProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  props: Pick<
+    BaseInputTemplateProps<T, S, F>,
+    'schema' | 'type' | 'options' | 'accept' | 'inputMode' | 'multiple' | 'pattern'
+  > & { registry: Pick<Registry, 'translateString'> },
+  plainNativeInput = true,
+): InputPropsType & { multiple?: boolean; title?: string } {
+  const derived = getInputProps<T, S, F>(props.schema, props.type, props.options, plainNativeInput);
+  const caller = callerInputProps(props);
+  return {
+    ...derived,
+    ...caller,
+    title: 'pattern' in caller ? undefined : getNumericInputTitle(derived, props.registry.translateString),
+  };
+}

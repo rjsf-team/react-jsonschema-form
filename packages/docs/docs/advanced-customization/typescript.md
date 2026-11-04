@@ -203,11 +203,10 @@ import React from 'react';
 import { SlotComponent, WidgetProps } from '@rjsf/utils';
 import { type ThemeProps, withTheme } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
-import { type MuiBaseInputTemplateProps, Theme } from '@rjsf/mui';
+import { type MuiBaseInputTemplateProps, Templates, Theme } from '@rjsf/mui';
 
 // `BaseInputTemplateProps` doesn't declare `TextField`'s `size`, which `MuiBaseInputTemplateProps` does
-const OldBaseInputTemplate: SlotComponent<MuiBaseInputTemplateProps> =
-  Theme.templates.BaseInputTemplate;
+const OldBaseInputTemplate: SlotComponent<MuiBaseInputTemplateProps> = Templates.BaseInputTemplate;
 
 // Force the underlying `TextField` component to always use size="small"
 function MyBaseInputTemplate(props: WidgetProps) {

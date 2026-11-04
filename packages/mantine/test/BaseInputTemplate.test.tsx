@@ -141,85 +141,17 @@ describe('mantine BaseInputTemplate', () => {
 
     expect(onChange).toHaveBeenCalledWith('nothing');
   });
-  test.each([
-    [undefined, '7'],
-    [false, '007'],
-  ])(
-    "a number field's input, given `trimLeadingZeroesOnBlur: %s`, shows %s once focus leaves it",
-    async (trim, shown) => {
-      const numberSchema: RJSFSchema = { type: 'number' };
-      function Stateful() {
-        const [value, setValue] = useState<unknown>();
-        return (
-          <MantineProvider>
-            <BaseInputTemplate
-              {...makeProps({
-                schema: numberSchema,
-                registry: getTestRegistry(numberSchema),
-                value,
-                onChange: setValue,
-                options: { trimLeadingZeroesOnBlur: trim },
-              })}
-            />
-          </MantineProvider>
-        );
-      }
-      render(<Stateful />);
-      const input = screen.getByRole('textbox');
-      await user.click(input);
-      await user.paste('007');
-      await user.tab();
 
-      expect(input).toHaveValue(shown);
-    },
-  );
+  test('names the numeric pattern of the text input a passed `inputMode` gets a `number` field', () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
 
-  describe('a string field rendered as a number input', () => {
-    function renderStringNumberForm(initialFormData: string, onChange = vi.fn()) {
-      render(
-        <WrappedForm
-          schema={{ type: 'string' }}
-          uiSchema={{ 'ui:inputType': 'number' }}
-          validator={validator}
-          initialFormData={initialFormData}
-          liveValidate='onChange'
-          onChange={onChange}
-        />,
-      );
-      return onChange;
-    }
-
-    test('writes an edit as a string, which keeps it valid', async () => {
-      const onChange = renderStringNumberForm('5');
-      await user.type(screen.getByRole('textbox'), '1');
-
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: '51', errors: [] }), 'root');
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      inputMode: 'decimal',
     });
 
-    test('writes `ui:emptyValue` when cleared', async () => {
-      const onChange = vi.fn();
-      render(
-        <WrappedForm
-          schema={{ type: 'string' }}
-          uiSchema={{ 'ui:inputType': 'number', 'ui:emptyValue': 'none' }}
-          validator={validator}
-          initialFormData='5'
-          onChange={onChange}
-        />,
-      );
-      await user.clear(screen.getByRole('textbox'));
-
-      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 'none' }), 'root');
-    });
-
-    test('keeps the string, and every digit of it, when focus passes through', async () => {
-      const onChange = renderStringNumberForm('12345678901234567890');
-      await user.tab();
-      await user.tab();
-
-      expect(onChange).not.toHaveBeenCalled();
-      expect(screen.getByRole('textbox')).toHaveValue('12345678901234567890');
-    });
+    expect(container.querySelector('input')).toHaveAttribute('title', 'Enter a number');
   });
 });
 

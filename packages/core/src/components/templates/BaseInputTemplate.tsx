@@ -5,10 +5,8 @@ import {
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
-  callerInputProps,
-  getInputProps,
-  getNumericInputTitle,
-  offersClearButton,
+  getBaseInputProps,
+  inputShowsValue,
   toInputValue,
 } from '@rjsf/utils';
 
@@ -61,12 +59,8 @@ export default function BaseInputTemplate<
     console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
-  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  // `pattern`, `inputMode` and `accept` are the derived props a caller can also mean to set, so the ones a widget passes
-  // win. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the title with
-  // it rather than describing a rule no longer in force
-  const callerProps = callerInputProps(props);
-  const inputProps = { ...rest, ...derivedInputProps, ...callerProps };
+  const { title, ...baseInputProps } = getBaseInputProps<T, S, F>(props);
+  const inputProps = { ...rest, ...baseInputProps };
 
   const inputValue = toInputValue(value);
 
@@ -107,7 +101,7 @@ export default function BaseInputTemplate<
         disabled={disabled}
         autoFocus={autofocus}
         value={inputValue}
-        title={'pattern' in callerProps ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
+        title={title}
         {...inputProps}
         list={hasExamples ? examplesId(id) : undefined}
         onChange={onChangeOverride ?? handleChange}

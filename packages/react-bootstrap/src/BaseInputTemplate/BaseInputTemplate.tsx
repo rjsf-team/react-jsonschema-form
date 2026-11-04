@@ -7,8 +7,8 @@ import {
   getControlAttributes,
   getExampleSuggestions,
   callerInputProps,
-  getInputProps,
-  getNumericInputTitle,
+  getBaseInputProps,
+  inputShowsValue,
   hasWidgetErrors,
   offersClearButton,
   toInputValue,
@@ -41,7 +41,6 @@ export default function BaseInputTemplate<
     required,
     readonly,
     disabled,
-    type,
     value,
     onChange,
     onChangeOverride,
@@ -56,12 +55,9 @@ export default function BaseInputTemplate<
     presentation,
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
-  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  // `pattern`, `inputMode` and `accept` are the derived props a caller can also mean to set, so the ones the widget
-  // passes, as props or in `extraProps`, win. The title names the rule the derived `pattern` imposes, so a caller
-  // replacing that pattern drops the title with it rather than describing a rule no longer in force
-  const callerProps = { ...callerInputProps(props), ...callerInputProps({ ...extraProps }) };
-  const inputProps = { ...extraProps, ...derivedInputProps, ...callerProps };
+  // The `pattern`, `inputMode`, `accept` and `multiple` in `extraProps` count as the widget's own, over its props
+  const { title, ...baseInputProps } = getBaseInputProps<T, S, F>({ ...props, ...callerInputProps({ ...extraProps }) });
+  const inputProps = { ...extraProps, ...baseInputProps };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
@@ -86,7 +82,7 @@ export default function BaseInputTemplate<
     autoFocus: autofocus,
     required,
     disabled,
-    title: 'pattern' in callerProps ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString),
+    title,
     readOnly: readonly,
     list: hasExamples ? examplesId(id) : undefined,
     ...inputProps,
