@@ -23,8 +23,15 @@ import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import { retrievedOptionListOf } from '../uiState.ts';
+import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
-import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps, optionsKeywordOf } from './fieldWidgetUtils.ts';
+import {
+  displaysLabel,
+  getWidgetErrorProps,
+  getWidgetLabelProps,
+  optionsKeywordOf,
+  withoutOptionalControls,
+} from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import getOptionFieldUiSchema from './getOptionFieldUiSchema.ts';
 import { lookUpUiField } from './namedField.ts';
@@ -157,11 +164,20 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       );
     }
   }
-  // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed
-  const optionFieldUiSchema = useMemo(
-    () => getOptionFieldUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema, renderedOption, registry),
-    [optionUiSchema, uiSchema, schema, option, renderedOption, registry],
-  );
+  const isEntryPath = use(AdditionalEntryContext) === fieldPath;
+  // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed. An option's own uiSchema
+  // or `ui:definitions` entry doesn't inherit the entry's Optional Data Controls being off, so it is turned off here too
+  const optionFieldUiSchema = useMemo(() => {
+    const fieldUiSchema = getOptionFieldUiSchema<T, S, F>(
+      schema,
+      option,
+      uiSchema,
+      optionUiSchema,
+      renderedOption,
+      registry,
+    );
+    return isEntryPath ? withoutOptionalControls<T, S, F>(fieldUiSchema) : fieldUiSchema;
+  }, [optionUiSchema, uiSchema, schema, option, renderedOption, registry, isEntryPath]);
 
   // The option's `SchemaField` renders at this field's own `fieldPath`, so left to its own path its
   // template-override warnings would name this field's entry, and the two entries' mistakes would read as one under

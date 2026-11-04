@@ -453,6 +453,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RatingWidget` making every star a tab stop with no arrow keys: the group is now one tab stop, on the checked star or the first, the arrow keys move to and check the next or previous star, and Space no longer scrolls the page ([#5731](https://github.com/rjsf-team/react-jsonschema-form/pull/5731), [#5598](https://github.com/rjsf-team/react-jsonschema-form/issues/5598))
 - Fix `RatingWidget` filling its first star for a `null` value, as if it were rated ([#5731](https://github.com/rjsf-team/react-jsonschema-form/pull/5731), [#5598](https://github.com/rjsf-team/react-jsonschema-form/issues/5598))
 - Fix `RatingWidget` not telling assistive technology that a disabled or read-only rating can't be changed ([#5731](https://github.com/rjsf-team/react-jsonschema-form/pull/5731), [#5598](https://github.com/rjsf-team/react-jsonschema-form/issues/5598))
+- Fix an `anyOf`/`oneOf` `null` option of an `additionalProperties` entry being stored as `''`, which blocked submit or reloaded as another option; it is stored as `null` ([#5623](https://github.com/rjsf-team/react-jsonschema-form/issues/5623))
+- **BREAKING CHANGE:** Change an `additionalProperties` entry to show no Optional Data Controls, whose Remove stored `''` and blocked submit. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#an-additionalproperties-entry-never-renders-the-optional-data-controls-breaking-change) ([#5623](https://github.com/rjsf-team/react-jsonschema-form/issues/5623))
+- Fix an option nested in an option of an `additionalProperties` entry snapping back to the previous choice when switched to ([#5623](https://github.com/rjsf-team/react-jsonschema-form/issues/5623))
 
 ## @rjsf/daisyui
 

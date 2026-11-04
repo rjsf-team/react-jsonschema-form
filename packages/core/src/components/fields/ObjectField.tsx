@@ -58,6 +58,7 @@ import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
+import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import {
   declaresProperty,
   getContainerErrorProps,
@@ -65,6 +66,7 @@ import {
   isAdditionalPropertySchema,
   storedValue,
   withGlobalUiOptions,
+  withoutOptionalControls,
 } from './fieldWidgetUtils.ts';
 import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import { createIsSchemaFieldHidden } from './SchemaField.tsx';
@@ -298,6 +300,10 @@ function ObjectFieldPropertyFn<
   );
   const { SchemaField } = fields;
   const innerFieldId = fieldPathToId(fieldPath, globalFormOptions);
+  const entryUiSchema = useMemo(
+    () => (addedByAdditionalProperties ? withoutOptionalControls<T, S, F>(uiSchema) : uiSchema),
+    [addedByAdditionalProperties, uiSchema],
+  );
 
   /** The `onChange` handler installed on this property's `SchemaField`. A change at this property's own path is
    * stored as `storedValue()` says, so a cleared `additionalProperties` entry keeps its key and its key input. Every
@@ -348,29 +354,31 @@ function ObjectFieldPropertyFn<
   }, [propertyName, handleRemoveProperty]);
 
   return (
-    <SchemaField
-      name={propertyName}
-      required={required}
-      schema={schema}
-      uiSchema={uiSchema}
-      errorSchema={shownErrorSchema}
-      fieldPath={fieldPath}
-      id={innerFieldId}
-      formData={formData}
-      wasPropertyKeyModified={wasPropertyKeyModified}
-      onKeyRename={onKeyRename}
-      onKeyRenameBlur={onKeyRenameBlur}
-      onRemoveProperty={onRemoveProperty}
-      propertyNamesEnum={propertyNamesEnum}
-      keyNotAllowed={keyNotAllowed}
-      onChange={onPropertyChange}
-      onBlur={onBlur}
-      onFocus={onFocus}
-      registry={registry}
-      disabled={disabled}
-      readonly={readonly}
-      hideError={hideError}
-    />
+    <AdditionalEntryContext value={addedByAdditionalProperties ? fieldPath : undefined}>
+      <SchemaField
+        name={propertyName}
+        required={required}
+        schema={schema}
+        uiSchema={entryUiSchema}
+        errorSchema={shownErrorSchema}
+        fieldPath={fieldPath}
+        id={innerFieldId}
+        formData={formData}
+        wasPropertyKeyModified={wasPropertyKeyModified}
+        onKeyRename={onKeyRename}
+        onKeyRenameBlur={onKeyRenameBlur}
+        onRemoveProperty={onRemoveProperty}
+        propertyNamesEnum={propertyNamesEnum}
+        keyNotAllowed={keyNotAllowed}
+        onChange={onPropertyChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        registry={registry}
+        disabled={disabled}
+        readonly={readonly}
+        hideError={hideError}
+      />
+    </AdditionalEntryContext>
   );
 }
 

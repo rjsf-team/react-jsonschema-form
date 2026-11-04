@@ -5,12 +5,14 @@ import {
   deepEqualsUndefinedAsMissing,
   getRenderedOptionSchema,
   getXxxOfKey,
+  isConstant,
   isPlainObject,
   isWholeValueSelect,
+  toConstant,
 } from '@rjsf/utils';
 
+import AdditionalEntryContext from '../components/fields/AdditionalEntryContext.ts';
 import { declaresProperty, isAdditionalPropertySchema, storedValue } from '../components/fields/fieldWidgetUtils.ts';
-import FixedKeyCellContext from '../components/fields/FixedKeyCellContext.ts';
 import useSendMove from './useSendMove.ts';
 
 /** The options of an `anyOf`/`oneOf` field a switch leaves and selects, each with the uiSchema its field renders with */
@@ -82,7 +84,7 @@ function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextT
  */
 export default function useSendOptionSwitch(fieldPath: FieldPath) {
   const sendMove = useSendMove(fieldPath);
-  const isFixedKeyCell = use(FixedKeyCellContext) === fieldPath;
+  const isEntryPath = use(AdditionalEntryContext) === fieldPath;
   return useCallback(
     <T, S extends StrictRJSFSchema, F extends FormContextType, V>(
       schema: S,
@@ -119,7 +121,16 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       const isKept = (key: string) => isKeptProperty(key) || (/^\d+$/.test(key) && isKeptItem(Number(key)));
       const held = typeof formData === 'object' && formData !== null ? Object.keys(formData) : [];
       const gone = new Set([...Object.keys(declaredByOld), ...held].filter((key) => !isKept(key)));
-      const value = storedValue(newFormData, fieldPath, isFixedKeyCell || isAdditionalPropertySchema(schema));
+      const isEntry = isEntryPath || isAdditionalPropertySchema(schema);
+      // An entry's `null` option holds `null` rather than the `''` of a cleared value, which no such option takes and
+      // which would reload as another option. Elsewhere it holds nothing, see `formDataForNewOption()`
+      const isNullOption =
+        newOption !== undefined &&
+        (newOption.type === 'null' || (isConstant<S>(newOption) && toConstant<S>(newOption) === null));
+      const value =
+        isEntry && newFormData === undefined && isNullOption
+          ? (null as V)
+          : storedValue(newFormData, fieldPath, isEntry);
       return sendMove(
         {
           value,
@@ -130,6 +141,6 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
         () => send(value),
       );
     },
-    [sendMove, fieldPath, isFixedKeyCell],
+    [sendMove, fieldPath, isEntryPath],
   );
 }

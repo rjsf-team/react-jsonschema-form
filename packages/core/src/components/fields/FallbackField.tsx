@@ -35,8 +35,8 @@ import {
 import type { JSONSchema7TypeName } from 'json-schema';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
+import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import { isAdditionalPropertySchema, withoutUiWidget } from './fieldWidgetUtils.ts';
-import FixedKeyCellContext from './FixedKeyCellContext.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 
@@ -350,7 +350,7 @@ function FallbackUiField<
     presentation,
   } = props;
   const { translateString, fields, widgets, globalUiOptions } = registry;
-  const isFixedKeyCell = use(FixedKeyCellContext) === fieldPath;
+  const isEntryPath = use(AdditionalEntryContext) === fieldPath;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(
@@ -389,7 +389,7 @@ function FallbackUiField<
   // the value would take the key it is stored under with it. That is the cleared state of whichever type the selector
   // is on, not evidence of a `string`, so a selection the user just made must survive it: reading it as data of
   // another type would put the selector back on `string` and leave the other types out of reach from a cleared value
-  const isAdditionalEntry = isAdditionalPropertySchema(schema) || isFixedKeyCell;
+  const isAdditionalEntry = isAdditionalPropertySchema(schema) || isEntryPath;
   const isClearedProperty = emptiesToNothing && isAdditionalEntry && (formData as unknown) === '';
   const isEmptyValue = formData === undefined || isClearedProperty;
   const isSelectionUsable =

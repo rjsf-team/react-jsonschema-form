@@ -41,9 +41,14 @@ import {
 
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
+import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
-import { isAdditionalPropertySchema, storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
-import FixedKeyCellContext from './FixedKeyCellContext.ts';
+import {
+  isAdditionalPropertySchema,
+  storedValue,
+  withoutAdditionalFlag,
+  withoutOptionalControls,
+} from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
@@ -791,22 +796,21 @@ function LayoutGridFieldComponent<
   // `getUiOptions()` reads the two in key order and `SchemaField` merges a `ui:definitions` entry beneath this
   // `uiSchema`, whose own spelling of either would otherwise come first or last as that entry orders it
   const hasDiscriminator = optionsInfo?.hasDiscriminator ?? false;
-  const cellUiSchema = useMemo<UiSchema<T, S, F>>(
-    () =>
-      hasDiscriminator
-        ? {
-            ...fieldUiSchema,
-            [UI_FIELD_KEY]: 'LayoutMultiSchemaField',
-            'ui:fieldReplacesAnyOrOneOf': true,
-            [UI_OPTIONS_KEY]: {
-              ...(isObject(fieldUiSchema[UI_OPTIONS_KEY]) ? fieldUiSchema[UI_OPTIONS_KEY] : {}),
-              field: 'LayoutMultiSchemaField',
-              fieldReplacesAnyOrOneOf: true,
-            },
-          }
-        : fieldUiSchema,
-    [hasDiscriminator, fieldUiSchema],
-  );
+  const cellUiSchema = useMemo<UiSchema<T, S, F>>(() => {
+    const namedUiSchema = hasDiscriminator
+      ? {
+          ...fieldUiSchema,
+          [UI_FIELD_KEY]: 'LayoutMultiSchemaField',
+          'ui:fieldReplacesAnyOrOneOf': true,
+          [UI_OPTIONS_KEY]: {
+            ...(isObject(fieldUiSchema[UI_OPTIONS_KEY]) ? fieldUiSchema[UI_OPTIONS_KEY] : {}),
+            field: 'LayoutMultiSchemaField',
+            fieldReplacesAnyOrOneOf: true,
+          },
+        }
+      : fieldUiSchema;
+    return isAdditionalProperty ? withoutOptionalControls<T, S, F>(namedUiSchema) : namedUiSchema;
+  }, [hasDiscriminator, fieldUiSchema, isAdditionalProperty]);
   // A field the cell names never renders, since the grid names `LayoutMultiSchemaField` over it, so it is warned about,
   // as `MultiSchemaField` warns about an option's. Naming `SchemaField` is not: `SchemaField` reads a `ui:field` naming
   // itself as naming no field, so a cell naming it asks for its default rendering, which for a discriminated cell is the
@@ -869,7 +873,7 @@ function LayoutGridFieldComponent<
     } = otherProps;
 
     return (
-      <FixedKeyCellContext value={isAdditionalProperty ? fieldPath : undefined}>
+      <AdditionalEntryContext value={isAdditionalProperty ? fieldPath : undefined}>
         <SchemaField
           data-testid={
             hasDiscriminator ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField : LAYOUT_GRID_FIELD_TEST_IDS.field
@@ -889,7 +893,7 @@ function LayoutGridFieldComponent<
           onFocus={onFocus}
           registry={registry}
         />
-      </FixedKeyCellContext>
+      </AdditionalEntryContext>
     );
   }
 

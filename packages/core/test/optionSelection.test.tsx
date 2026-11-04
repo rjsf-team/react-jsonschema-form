@@ -614,13 +614,18 @@ describe('option selection as form state', () => {
       expect(getFormData()).toEqual({ p: { a: 'A', shared: 'x' } });
     });
 
-    it('a null option left in an additionalProperties entry', async () => {
+    it.each<[string, UiSchema]>([
+      ['a plain entry', {}],
+      ['a layout grid cell', { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['p'] }] } }],
+    ])('left by clearing the text option of %s', async (_title, uiSchema) => {
       const { node, getFormData } = createFormComponent({
         schema: { type: 'object', additionalProperties: entry },
-        initialFormData: { p: { a: 'k' } },
+        initialFormData: { p: 'abc' },
+        uiSchema,
       });
 
-      await user.selectOptions(selectOf(node, 'root_p__oneof_select'), 'None');
+      // A plain entry's key input is a textbox too
+      await user.clear(node.querySelector('input[id="root_p"]')!);
       expect(getFormData()).toEqual({ p: '' });
       await user.selectOptions(selectOf(node, 'root_p__oneof_select'), 'Obj');
 
