@@ -8,8 +8,9 @@ import {
   getControlAttributes,
   getExampleSuggestions,
   getInputProps,
-  inputShowsValue,
   labelValue,
+  numericWidgetStoresString,
+  offersClearButton,
   toInputValue,
   widgetDrawsLabel,
 } from '@rjsf/utils';
@@ -54,7 +55,13 @@ export default function BaseInputTemplate<
   const themeProps = cleanupOptions(options, props);
   const descriptionProps = getDescriptionProps(props);
 
-  const handleNumberChange = useCallback((newValue: number | string) => onChange(newValue), [onChange]);
+  // `NumberInput` reports a number once its text parses as one, and on blur trims leading zeroes by parsing the text,
+  // which rounds the digits past a number's precision, so a string field turns that trim off and gets a string back
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const handleNumberChange = useCallback(
+    (newValue: number | string) => onChange(storesString ? String(newValue) : newValue),
+    [onChange, storesString],
+  );
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -122,6 +129,7 @@ export default function BaseInputTemplate<
       {...restInputProps}
       {...themeProps}
       step={typeof inputProps.step === 'number' ? inputProps.step : 1}
+      trimLeadingZeroesOnBlur={!storesString}
       type='text'
       {...ariaDescribedByProps}
       {...descriptionProps}
@@ -144,11 +152,9 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
-      {options.allowClearTextInputs &&
-        !readonly &&
-        !disabled &&
-        Boolean(inputValue) &&
-        inputShowsValue(value, inputProps.type) && <ClearButton registry={registry} onClick={handleClear} />}
+      {options.allowClearTextInputs && !readonly && !disabled && offersClearButton(inputValue, inputProps.type) && (
+        <ClearButton registry={registry} onClick={handleClear} />
+      )}
       {children}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>

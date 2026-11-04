@@ -175,11 +175,10 @@ export default function useAltDateWidgetProps<
 
   const handleChange = useCallback(
     (property: keyof DateObject, newValue?: unknown) => {
-      const nextState = {
-        ...state,
-        // A select that reports its cleared choice as `null`, through an `emptyValue` of `null`, picks nothing either
-        [property]: newValue === undefined || newValue === null || newValue === '' ? -1 : Number(newValue),
-      };
+      // A select that reports its cleared choice as `null`, through an `emptyValue` of `null`, picks nothing either, as
+      // does a value that is no number, which `Number()` would read as `0` or `NaN`
+      const part = newValue === null || newValue === '' ? Number.NaN : Number(newValue);
+      const nextState = { ...state, [property]: Number.isFinite(part) ? part : -1 };
 
       if (readyForChange(nextState)) {
         setDraft(undefined);

@@ -136,7 +136,6 @@ import {
   selectedOptionDescriptionId,
   titleId,
 } from './idGenerators.ts';
-import inputShowsValue from './inputShowsValue.ts';
 import isComponentType from './isComponentType.ts';
 import isConstant from './isConstant.ts';
 import isConstantOptionList from './isConstantOptionList.ts';
@@ -167,6 +166,7 @@ import mergeThemePresentation from './mergeThemePresentation.ts';
 import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators.ts';
 import noop from './noop.ts';
 import numericWidgetStoresString from './numericWidgetStoresString.ts';
+import offersClearButton from './offersClearButton.ts';
 import offsetTimeToLocalTime from './offsetTimeToLocalTime.ts';
 import omitConsumedStyling from './omitConsumedStyling.ts';
 import optionsList from './optionsList.ts';
@@ -456,7 +456,7 @@ export {
   toErrorSchema,
   numericWidgetStoresString,
   toInputValue,
-  inputShowsValue,
+  offersClearButton,
   toNumericValue,
   ROOT_FIELD_PATH,
   toFieldPath,

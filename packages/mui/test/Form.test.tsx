@@ -553,6 +553,28 @@ describe("mui widgets are named by their label and carry the field's id on the e
     expect(thumbs[1]).toHaveAttribute('aria-valuenow', '5');
   });
 
+  test('writes each part of a range of numeric strings as a string, which keeps it valid', async () => {
+    const { RangeWidget } = generateWidgets();
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { r: { type: 'array', items: { type: 'string' } } } }}
+        uiSchema={{ r: { 'ui:widget': RangeWidget } }}
+        initialFormData={{ r: ['2', '5'] }}
+        validator={validator}
+        liveValidate='onChange'
+        onChange={onChange}
+      />,
+    );
+    await user.tab();
+    await user.keyboard('{ArrowRight}');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { r: ['3', '5'] }, errors: [] }),
+      'root_r',
+    );
+  });
+
   test("keeps the field's id on the slider's root for a range of several values, whose every thumb takes its input slot", () => {
     const { RangeWidget } = generateWidgets();
     const { container } = render(

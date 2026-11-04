@@ -9,9 +9,9 @@ import {
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
-  inputShowsValue,
   hasWidgetErrors,
   labelValue,
+  offersClearButton,
   toInputValue,
   widgetDrawsLabelText,
 } from '@rjsf/utils';
@@ -91,11 +91,9 @@ export default function BaseInputTemplate<
         list={hasExamples ? examplesId(id) : undefined}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs &&
-        !readonly &&
-        !disabled &&
-        Boolean(inputValue) &&
-        inputShowsValue(value, inputProps.type) && <ClearButton registry={registry} onClick={onClear} />}
+      {options.allowClearTextInputs && !readonly && !disabled && offersClearButton(inputValue, inputProps.type) && (
+        <ClearButton registry={registry} onClick={onClear} />
+      )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </Field>
   );

@@ -8,8 +8,8 @@ import {
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
-  inputShowsValue,
   hasWidgetErrors,
+  offersClearButton,
   toInputValue,
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
@@ -98,11 +98,9 @@ export default function BaseInputTemplate<
       ) : (
         <Form.Control isInvalid={isInvalid} {...controlProps} />
       )}
-      {options.allowClearTextInputs &&
-        !readonly &&
-        !disabled &&
-        Boolean(inputValue) &&
-        inputShowsValue(value, inputProps.type) && <ClearButton registry={registry} onClick={handleClear} />}
+      {options.allowClearTextInputs && !readonly && !disabled && offersClearButton(inputValue, inputProps.type) && (
+        <ClearButton registry={registry} onClick={handleClear} />
+      )}
       {children}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>

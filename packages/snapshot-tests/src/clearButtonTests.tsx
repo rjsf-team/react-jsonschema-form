@@ -73,5 +73,19 @@ export function clearButtonTests(Form: ComponentType<FormProps>, clearButtonName
       );
       expect(screen.getByRole('button', { name: clearButtonName })).toBeInTheDocument();
     });
+    test('offers no clear button for a string a date input blanks, as it is no date', () => {
+      function NoDateInput(props: WidgetProps) {
+        const { BaseInputTemplate } = props.registry.templates;
+        return <BaseInputTemplate {...props} type='date' value='not-a-date' />;
+      }
+      render(
+        <Form
+          schema={{ type: 'string', title: 'Amount' }}
+          uiSchema={{ 'ui:widget': NoDateInput, 'ui:allowClearTextInputs': true }}
+          validator={validator}
+        />,
+      );
+      expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
+    });
   });
 }

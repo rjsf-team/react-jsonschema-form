@@ -271,7 +271,7 @@ interface ArrayAsFieldProps<
   F extends FormContextType = FormContextType,
 > extends FieldProps<T, S, F> {
   /** The callback used to update the array when the selector changes */
-  onSelectChange: (value: T) => void;
+  onSelectChange: (value: unknown) => void;
   /** The HTML name for the widget, generated with the multi-value flag since these widgets accept several values */
   htmlName?: string;
 }
@@ -1476,7 +1476,7 @@ export default function ArrayField<
 
   /** Callback handler used to change the value for a checkbox */
   const onSelectChange = useCallback(
-    (value: T[] | undefined) => {
+    (value: unknown) => {
       onChange(value, fieldPath, undefined, fieldId);
     },
     [onChange, fieldPath, fieldId],

@@ -1,4 +1,4 @@
-import type { StrictRJSFSchema } from './types.ts';
+import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The
  * schema's type decides, so a change makes invalid data valid, and a type that allows a number too writes one. The
@@ -8,7 +8,10 @@ import type { StrictRJSFSchema } from './types.ts';
  * @param value - The widget's value
  * @returns - True if the widget writes a string
  */
-export default function numericWidgetStoresString<S extends StrictRJSFSchema>(schema: S, value: unknown): boolean {
+export default function numericWidgetStoresString<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  value: unknown,
+): boolean {
   if (schema.type === undefined) {
     return typeof value === 'string';
   }

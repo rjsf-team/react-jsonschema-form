@@ -7,8 +7,8 @@ import {
   getControlAttributes,
   getExampleSuggestions,
   getInputProps,
-  inputShowsValue,
   numericWidgetStoresString,
+  offersClearButton,
   toInputValue,
 } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
@@ -88,9 +88,7 @@ export default function BaseInputTemplate<
 
   const inputValue = toInputValue(value);
   // `InputNumber` shows whatever string or number it's given, where a native number input blanks all but a number
-  const showsValue = isNumeric
-    ? Boolean(toInputValue(numberValue))
-    : Boolean(inputValue) && inputShowsValue(value, inputProps.type);
+  const showsValue = isNumeric ? Boolean(toInputValue(numberValue)) : offersClearButton(inputValue, inputProps.type);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []);

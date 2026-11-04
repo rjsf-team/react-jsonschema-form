@@ -8,6 +8,7 @@ import {
   TranslatableString,
   getControlAttributes,
   getLabelId,
+  isSchemaObject,
   labelValue,
   numericWidgetStoresString,
   rangeSpec,
@@ -70,8 +71,22 @@ export default function RangeWidget<
   const sliderProps = { value: sliderValue, name: htmlName || id, ...rangeSpec<S>(schema) };
 
   const storesString = numericWidgetStoresString<S>(schema, value);
-  const handleChange: NonNullable<SliderProps['onChange']> = (_, newValue) =>
-    onChange(storesString && typeof newValue === 'number' ? String(newValue) : newValue);
+  const { items } = schema;
+  const writePart = (part: number, index: number) => {
+    const itemSchema = Array.isArray(items) ? items[index] : items;
+    const original: unknown = isRangeOfValues ? value[index] : undefined;
+    const partStoresString = isSchemaObject<S>(itemSchema)
+      ? numericWidgetStoresString<S>(itemSchema, original)
+      : typeof original === 'string';
+    return partStoresString ? String(part) : part;
+  };
+  const handleChange: NonNullable<SliderProps['onChange']> = (_, newValue) => {
+    if (Array.isArray(newValue)) {
+      onChange(newValue.map(writePart));
+    } else {
+      onChange(storesString ? String(newValue) : newValue);
+    }
+  };
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
