@@ -1342,10 +1342,13 @@ describe("the fallback UI's label, however its ui:field is spelled (#5389)", () 
 });
 
 describe("the fallback UI's label of a boolean, however its widget is spelled (#5581)", () => {
-  const spellings: [string, UiSchema][] = [
-    ['no ui:widget', {}],
+  const namedCheckboxes: [string, UiSchema][] = [
     ["ui:widget: 'checkbox'", { 'ui:widget': 'checkbox' }],
     ["ui:widget: 'CheckboxWidget'", { 'ui:widget': 'CheckboxWidget' }],
+  ];
+  const spellings: [string, UiSchema][] = [
+    ['no ui:widget', {}],
+    ...namedCheckboxes,
     ["ui:options.widget: 'checkbox'", { 'ui:options': { widget: 'checkbox' } }],
     ['a key of its own', { 'ui:widget': 'OwnCheckbox' }],
   ];
@@ -1357,27 +1360,39 @@ describe("the fallback UI's label of a boolean, however its widget is spelled (#
       presentation,
       useFallbackUiForUnsupportedType: true,
     });
-
-  it.each(spellings)('is drawn by the checkbox below the type selector under %s', (_, valUiSchema) => {
-    const { node } = renderVal({ type: ['boolean', 'string'] }, valUiSchema);
-
-    const typeSelect = screen.getByRole('combobox', { name: 'Type' });
-    const checkbox = screen.getByRole('checkbox', { name: 'Val' });
-    expect(typeSelect.compareDocumentPosition(checkbox)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  function expectLabelDrawnByCheckbox(node: Element) {
+    screen.getByRole('checkbox', { name: 'Val' });
     expect(screen.getAllByText('Val')).toHaveLength(1);
     expect(node.querySelector('label[for="root_val"]')).not.toBeInTheDocument();
-  });
+  }
+  function expectLabelAboveTypeSelector(node: Element) {
+    const label = node.querySelector('label[for="root_val"]');
+    expect(label).toHaveTextContent('Val');
+    expect(label!.compareDocumentPosition(screen.getByRole('combobox', { name: 'Type' }))).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  }
 
   it.each<[string, UiSchema]>([
-    ["ui:widget: 'checkbox'", { 'ui:widget': 'checkbox' }],
-    ["ui:widget: 'CheckboxWidget'", { 'ui:widget': 'CheckboxWidget' }],
-  ])(
+    ...spellings,
+    // No boolean widget goes by these names, so the checkbox renders in their place
+    ["ui:widget: 'updown'", { 'ui:widget': 'updown' }],
+    ['a ui:widget naming nothing', { 'ui:widget': 'Nope' }],
+  ])('is drawn by the checkbox below the type selector under %s', (_, valUiSchema) => {
+    const { node } = renderVal({ type: ['boolean', 'string'] }, valUiSchema);
+
+    expectLabelDrawnByCheckbox(node);
+    expect(screen.getByRole('combobox', { name: 'Type' }).compareDocumentPosition(screen.getByRole('checkbox'))).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  });
+
+  it.each(namedCheckboxes)(
     'starts on the boolean and is drawn by the checkbox whatever the order of the types under %s',
     (_, valUiSchema) => {
       const { node } = renderVal({ type: ['string', 'boolean'] }, valUiSchema);
 
-      screen.getByRole('checkbox', { name: 'Val' });
-      expect(node.querySelector('label[for="root_val"]')).not.toBeInTheDocument();
+      expectLabelDrawnByCheckbox(node);
     },
   );
 
@@ -1388,11 +1403,7 @@ describe("the fallback UI's label of a boolean, however its widget is spelled (#
         widgets: { CheckboxWidget: { label: 'template', description: 'template' } },
       });
 
-      const label = node.querySelector('label[for="root_val"]');
-      expect(label).toHaveTextContent('Val');
-      expect(label!.compareDocumentPosition(screen.getByRole('combobox', { name: 'Type' }))).toBe(
-        Node.DOCUMENT_POSITION_FOLLOWING,
-      );
+      expectLabelAboveTypeSelector(node);
       expect(screen.getAllByText('Val')).toHaveLength(1);
     },
   );
@@ -1410,23 +1421,7 @@ describe("the fallback UI's label of a boolean, however its widget is spelled (#
   ])('is drawn by the template above the type selector for a %s, which leaves its label to it', (_, valUiSchema) => {
     const { node } = renderVal({ type: ['boolean', 'string'] }, valUiSchema);
 
-    const label = node.querySelector('label[for="root_val"]');
-    expect(label).toHaveTextContent('Val');
-    expect(label!.compareDocumentPosition(screen.getByRole('combobox', { name: 'Type' }))).toBe(
-      Node.DOCUMENT_POSITION_FOLLOWING,
-    );
-  });
-
-  // No boolean widget goes by these names, so the checkbox renders in their place
-  it.each<[string, UiSchema]>([
-    ["ui:widget: 'updown'", { 'ui:widget': 'updown' }],
-    ['a ui:widget naming nothing', { 'ui:widget': 'Nope' }],
-  ])('is drawn by the checkbox the value falls back to under %s', (_, valUiSchema) => {
-    const { node } = renderVal({ type: ['boolean', 'string'] }, valUiSchema);
-
-    screen.getByRole('checkbox', { name: 'Val' });
-    expect(screen.getAllByText('Val')).toHaveLength(1);
-    expect(node.querySelector('label[for="root_val"]')).not.toBeInTheDocument();
+    expectLabelAboveTypeSelector(node);
   });
 
   // With one type there is no selector, so the value field renders alone, and a label from the template would sit above
@@ -1436,9 +1431,7 @@ describe("the fallback UI's label of a boolean, however its widget is spelled (#
     (_, valUiSchema) => {
       const { node } = renderVal({ type: 'boolean' }, { ...valUiSchema, 'ui:field': 'FallbackField' });
 
-      screen.getByRole('checkbox', { name: 'Val' });
-      expect(screen.getAllByText('Val')).toHaveLength(1);
-      expect(node.querySelector('label[for="root_val"]')).not.toBeInTheDocument();
+      expectLabelDrawnByCheckbox(node);
     },
   );
 });

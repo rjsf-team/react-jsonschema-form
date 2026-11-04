@@ -86,8 +86,8 @@ export function fallbackDescriptionTests(Form: ComponentType<FormProps>, descrip
       const isAbove = (element: Element) =>
         element.compareDocumentPosition(typeSelector) === Node.DOCUMENT_POSITION_FOLLOWING;
       const layout = {
-        label: screen.getAllByText('Val').map(isAbove),
-        description: screen.getAllByText('Desc').map(isAbove),
+        label: isAbove(screen.getByText('Val')),
+        description: isAbove(screen.getByText('Desc')),
       };
       unmount();
       return layout;
@@ -98,11 +98,7 @@ export function fallbackDescriptionTests(Form: ComponentType<FormProps>, descrip
       ["ui:widget: 'CheckboxWidget'", { 'ui:widget': 'CheckboxWidget' }],
       ["ui:options.widget: 'checkbox'", { 'ui:options': { widget: 'checkbox' } }],
     ])('are drawn once, where they are with no ui:widget, under %s', (_, valUiSchema) => {
-      const layout = renderedLayout(valUiSchema);
-
-      expect(layout.label).toHaveLength(1);
-      expect(layout.description).toHaveLength(1);
-      expect(layout).toEqual(renderedLayout({}));
+      expect(renderedLayout(valUiSchema)).toEqual(renderedLayout({}));
     });
   });
 }

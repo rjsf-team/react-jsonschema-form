@@ -19,14 +19,18 @@ import {
   getSchemaOwnTypes,
   getUiOptions,
   guessType,
-  hasWidget,
   ITEMS_KEY,
   resolveFieldPresentation,
   schemaRequiresTrueValue,
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import getFieldWidget, { displaysLabel, getBooleanFieldWidget, withoutDescribers } from './fieldWidgetUtils.ts';
+import getFieldWidget, {
+  displaysLabel,
+  fallbackValueKeepsWidget,
+  getBooleanFieldWidget,
+  withoutDescribers,
+} from './fieldWidgetUtils.ts';
 
 /** The fields of core's that render no control for a template label to name: a container, whose label is its own
  * heading, and `NullField`, which renders nothing. `ArrayField` is one only when it renders no widget
@@ -175,16 +179,16 @@ function rendersControl<
     if (getFieldTypeForUiSchema<T, S, F>(valueSchema, uiSchema) !== 'boolean') {
       return displaysLabel<T, S, F>(registry, valueSchema, uiSchema);
     }
-    const booleanSchema = { ...valueSchema, type: 'boolean' };
-    const namedWidget = getBooleanFieldWidget<T, S, F>(getUiOptions<T, S, F>(uiSchema));
+    const uiOptions = getUiOptions<T, S, F>(uiSchema);
+    const { label } = { ...registry.globalUiOptions, ...uiOptions };
+    const keepsWidget = fallbackValueKeepsWidget<T, S, F>(valueSchema, 'boolean', uiOptions.widget, registry.widgets);
     return (
-      uiBooleanOption(getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions).label) !== false &&
+      uiBooleanOption(label) !== false &&
       getPresentationDeclaration<T, S, F>(registry, {
-        schema: booleanSchema,
+        schema: { ...valueSchema, type: 'boolean' },
         field: fields.BooleanField,
         fieldKey: 'BooleanField',
-        // The fallback UI drops a widget a boolean has no implementation of, which leaves its value the checkbox
-        widget: hasWidget<T, S, F>(booleanSchema, namedWidget, registry.widgets) ? namedWidget : 'checkbox',
+        widget: getBooleanFieldWidget<T, S, F>(keepsWidget ? uiOptions : {}),
       }).label === 'template'
     );
   }

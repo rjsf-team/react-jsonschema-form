@@ -27,6 +27,7 @@ import {
   getUiOptions,
   getXxxOfKey,
   guessType,
+  hasWidget,
   isConstantOptionList,
   isConstantSelect,
   isCustomWidget,
@@ -41,6 +42,7 @@ import {
   UI_WIDGET_KEY,
   uiBooleanOption,
 } from '@rjsf/utils';
+import type { JSONSchema7TypeName } from 'json-schema';
 
 import { getFirstOption, getSelectorField, resolveSelectorWidget } from './layoutMultiSchemaFieldSelector.ts';
 
@@ -616,4 +618,23 @@ export function withoutUiWidget<T, S extends StrictRJSFSchema, F extends FormCon
   const { [UI_WIDGET_KEY]: _widget, ...rest } = uiSchema;
   const { widget: _optionWidget, ...options } = uiSchema[UI_OPTIONS_KEY] ?? {};
   return { ...rest, [UI_OPTIONS_KEY]: options };
+}
+
+/** Whether the fallback UI's value field keeps its `ui:widget` on `type`, which `withoutUiWidget()` otherwise drops, since
+ * a widget named for one member of a union has no implementation for the others. Read both to render the value and to
+ * plan the field around it, so the plan can't label one widget while another renders
+ *
+ * @param schema - The schema the fallback UI renders
+ * @param type - The type the value is on
+ * @param widget - The field's own `ui:widget`, if any
+ * @param widgets - The registered widgets
+ * @returns - True when there is no widget to drop or one implements it for `type`
+ */
+export function fallbackValueKeepsWidget<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  type: JSONSchema7TypeName,
+  widget: UIOptionsType<T, S, F>['widget'],
+  widgets: Registry<T, S, F>['widgets'],
+): boolean {
+  return !widget || hasWidget<T, S, F>({ ...schema, type }, widget, widgets);
 }
