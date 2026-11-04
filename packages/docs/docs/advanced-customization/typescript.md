@@ -77,10 +77,10 @@ render(<Form<FormData> schema={schema} validator={validator} initialFormData={fo
 ### S
 
 The generic `S` is used to represent the type of the `schema` property passed into `Form`.
-If you are using something like the [Ajv utility types for schemas](https://ajv.js.org/guide/typescript.html#utility-types-for-schemas) typing system, you can override this generic as follows:
+It has to extend `StrictRJSFSchema`, the `JSONSchema7` of `@types/json-schema`, and defaults to `RJSFSchema`, which is the same type.
+A type of your own that extends it can declare a keyword on the root schema, and you can override this generic with it as follows:
 
 ```tsx
-import { JSONSchemaType } from 'ajv';
 import { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Form from '@rjsf/core';
@@ -90,10 +90,11 @@ interface FormData {
   bar?: number;
 }
 
-type MySchema = JSONSchemaType<FormData>;
+type MySchema = RJSFSchema & { 'x-version'?: number };
 
 const schema: MySchema = {
   type: 'object',
+  'x-version': 2,
   properties: {
     foo: { type: 'string' },
     bar: { type: 'number' },
@@ -102,15 +103,13 @@ const schema: MySchema = {
 
 const validator = customizeValidator<MySchema>();
 
-render(<Form<any, MySchema> schema={schema} validator={validator} />, document.getElementById('app'));
-
-// Alternatively since you have the type, you could also use this
-// render((
-//  <Form<FormData, MySchema> schema={schema} validator={validator} />
-//), document.getElementById("app"));
+render(<Form<FormData, MySchema> schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-> NOTE: using this `Ajv typing system` has not been tested extensively with RJSF, so use carefully
+A subschema is still a `JSONSchema7Definition`, so a keyword declared this way type-checks on the root alone; to declare one at every depth, see [Keywords of your own](#keywords-of-your-own).
+
+The [Ajv utility types for schemas](https://ajv.js.org/guide/typescript.html#utility-types-for-schemas) don't fit `S`: `JSONSchemaType<FormData>` holds `readonly` arrays, such as its `anyOf`, where `JSONSchema7` takes mutable ones, so `Form<FormData, JSONSchemaType<FormData>>` fails with TS2344.
+Type the schema as `RJSFSchema` and the data with `T` instead.
 
 #### Keywords of your own
 

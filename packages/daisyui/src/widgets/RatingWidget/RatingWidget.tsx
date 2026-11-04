@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { rangeSpec, ratingStarCount, numericWidgetStoresString, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
+import { numericWidgetStoresString, rangeSpec, ratingStarCount, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { classNameOption, getGroupAndOptionProps } from '../../utils.ts';
 

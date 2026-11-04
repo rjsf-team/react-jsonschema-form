@@ -3,9 +3,9 @@ import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   getGroupAttributes,
+  numericWidgetStoresString,
   rangeSpec,
   ratingStarCount,
-  numericWidgetStoresString,
   toInputValue,
   toNumericValue,
 } from '@rjsf/utils';

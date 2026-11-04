@@ -11,7 +11,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  */
 export default function getDiscriminatorFieldFromSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
   let discriminator: string | undefined;
-  const maybeString: unknown = getByPath(schema, DISCRIMINATOR_PATH);
+  const maybeString = getByPath(schema, DISCRIMINATOR_PATH);
   if (typeof maybeString === 'string') {
     discriminator = maybeString;
   } else if (maybeString !== undefined) {

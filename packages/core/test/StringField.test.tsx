@@ -1554,6 +1554,15 @@ describe('StringField', () => {
       expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('12:30:00');
     });
 
+    it('should preserve seconds in the dom for a `multipleOf` of 0', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'string', format: 'time', multipleOf: 0 },
+        initialFormData: '12:30:00',
+      });
+
+      expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('12:30:00');
+    });
+
     it('should preserve non-zero seconds in the dom', () => {
       const { node } = createFormComponent({
         schema: {
