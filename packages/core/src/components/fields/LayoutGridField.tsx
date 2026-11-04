@@ -287,7 +287,9 @@ export function findChildrenAndProps<
   if (!Array.isArray(children)) {
     throw new TypeError(`Expected array for "${schemaKey}" in ${JSON.stringify(layoutGridSchema)}`);
   }
-  return { children, gridProps };
+  // An `undefined` cell, such as a conditional one a layout built in code leaves out, is no cell: handed on, it would
+  // read as a grid handed no layout and render the grid's own layout inside itself
+  return { children: children.filter((child) => child !== undefined), gridProps };
 }
 
 /** Computes the `rawSchema` and array `index` for a `schema` and a `potentialIndex`. If the `schema` is of type

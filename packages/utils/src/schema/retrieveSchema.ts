@@ -965,10 +965,9 @@ export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchem
  * registered under an `$id` is for the schema that carries it, and routing every sibling property to such a field for a
  * type the schema never named would be the form's doing, not the schema's.
  *
- * The copy is spread rather than rebuilt key by key so that the symbol markers a resolved schema carries survive,
- * `RJSF_REF_KEY` above all: `resolveUiSchema()` reads that marker off the stub to apply the `ui:definitions` entry of
- * the `$ref` the property was described through, which `Object.entries()` would cost the property by not enumerating
- * it.
+ * The copy has to keep the symbol markers a resolved schema carries, `RJSF_REF_KEY` above all: `resolveUiSchema()`
+ * reads that marker off the stub to apply the `ui:definitions` entry of the `$ref` the property was described through.
+ * `withoutKeys()` keeps them.
  *
  * @param subSchema - The schema describing the additional property
  * @returns - The copy to build the stub from

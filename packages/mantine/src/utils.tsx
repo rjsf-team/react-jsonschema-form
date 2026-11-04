@@ -222,6 +222,12 @@ type CleanedOptions<T> = {
 
 const noExtraKeys: ReadonlySet<string> = new Set();
 
+// The options Mantine calls or maps over without checking them, so one of another shape would throw
+const checkedOptions = new Map<string, (value: unknown) => boolean>([
+  ['inputContainer', (value) => typeof value === 'function'],
+  ['inputWrapperOrder', Array.isArray],
+]);
+
 /** Leaves out of a widget's `options` the ones rjsf reads, so that the rest, Mantine's own props, can be spread onto
  * its Mantine component. A key of the registry's `globalUiOptions` is left out too unless the field sets it itself:
  * every field hands its widget the extension keys a form declares, which are meant for the user's own components
@@ -231,7 +237,8 @@ const noExtraKeys: ReadonlySet<string> = new Set();
  * @param source - The widget's `registry`, whose `globalUiOptions` are left out, and its `uiSchema`, whose own options
  *   are kept
  * @param [extraKeys] - Further keys to leave out, as a `Set` or an array
- * @returns - The options that aren't rjsf's, a global one the field doesn't set or in `extraKeys`
+ * @returns - The options that aren't rjsf's, a global one the field doesn't set or in `extraKeys`, or an
+ *   `inputContainer` that isn't a function or an `inputWrapperOrder` that isn't an array
  */
 export function cleanupOptions<
   O extends object,
@@ -252,6 +259,7 @@ export function cleanupOptions<
     if (
       !strippedOptionNames.has(key) &&
       !extraKeySet.has(key) &&
+      (checkedOptions.get(key)?.(options[key]) ?? true) &&
       !(
         globalUiOptions &&
         Object.hasOwn(globalUiOptions, key) &&

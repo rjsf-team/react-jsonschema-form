@@ -2229,6 +2229,17 @@ describe('a layout read from JSON', () => {
   test('skips a null cell in a ui:col', () => {
     expect(renderedIds({ 'ui:row': { children: [{ 'ui:col': { children: [null, 'a'] } }] } })).toEqual(['root_a']);
   });
+  test('skips an undefined cell, such as a conditional one a layout built in code leaves out', () => {
+    expect(renderedIds({ 'ui:row': { children: ['a', undefined] } })).toEqual(['root_a']);
+  });
+  test('skips an undefined cell in a ui:col', () => {
+    expect(renderedIds({ 'ui:row': { children: [{ 'ui:col': { children: [undefined, 'a'] } }] } })).toEqual(['root_a']);
+  });
+  test('skips an undefined column of a ui:columns', () => {
+    expect(renderedIds({ 'ui:row': { children: [{ 'ui:columns': { children: ['a', undefined] } }] } })).toEqual([
+      'root_a',
+    ]);
+  });
   test('renders the field a number cell names, as it does for a name that is a number', () => {
     expect(renderedIds({ 'ui:row': { children: [5] } })).toEqual(['root_5']);
   });
