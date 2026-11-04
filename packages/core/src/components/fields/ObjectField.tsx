@@ -57,6 +57,7 @@ import useReadFieldData from '../../hooks/useReadFieldData.ts';
 import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
+import FormDataContext from '../FormDataContext.ts';
 import RichDescription from '../RichDescription.tsx';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import {
@@ -268,8 +269,10 @@ interface ObjectFieldPropertyProps<
   propertyName: string;
   /** Flag indicating whether this property was added by the additionalProperties UI */
   addedByAdditionalProperties: boolean;
-  /** Callback that handles the rename of an additionalProperties-based property key */
-  handleKeyRename: (oldKey: string, newKey: string) => void;
+  /** Callback that handles the rename of an additionalProperties-based property key, given the control focus is on its
+   * way to when the rename comes from a blur
+   */
+  handleKeyRename: (oldKey: string, newKey: string, focusHeadedTo?: Element | null) => void;
   /** Callback that handles the removal of an additionalProperties-based property with key */
   handleRemoveProperty: (keyName: string) => void;
   /** The key names this property may be renamed to, when the parent schema's `propertyNames` constrains them */
@@ -361,10 +364,11 @@ function ObjectFieldPropertyFn<
     (event: FocusEvent<HTMLInputElement>) => {
       const {
         target: { value },
+        relatedTarget,
       } = event;
-      onKeyRename(value);
+      handleKeyRename(propertyName, value, relatedTarget);
     },
-    [onKeyRename],
+    [propertyName, handleKeyRename],
   );
 
   /** The property drop/removal event handler; Called when a field is removed in an additionalProperty context
@@ -466,6 +470,17 @@ export default function ObjectField<
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
   const [renamedKeys, setRenamedKeys] = useState<ReadonlyMap<string, string>>(() => new Map());
+  const formAccess = use(FormDataContext);
+  // A rename can remount the field, as one onto a declared property or under a template that keys its rows by name does,
+  // or hand it to the option that declares the name, so focus on its way to a control the rename's commit removed would
+  // otherwise end up on the page. Kept here since the property's own instance may not survive that commit
+  const renameFocus = useRef<{ headedTo: Element; fieldPath: FieldPath } | undefined>(undefined);
+  useLayoutEffect(() => {
+    if (renameFocus.current?.headedTo.isConnected === false) {
+      formAccess?.focusField(renameFocus.current.fieldPath);
+    }
+    renameFocus.current = undefined;
+  });
   /** The seed the add button wrote for each property it added here and nothing has written to since, which are the only
    * ones a rename re-seeds. Held in a ref rather than state: it is read and written by the add and rename handlers,
    * neither of which renders anything of it, and a property added and renamed in the same tick has to see the add. The
@@ -827,10 +842,11 @@ export default function ObjectField<
    *
    * @param oldKey - The old key for the field
    * @param newKey - The new key for the field
+   * @param [focusHeadedTo] - The control focus is on its way to, when the rename comes from a blur
    * @returns - The key change callback function
    */
   const handleKeyRename = useCallback(
-    (oldKey: string, newKey: string) => {
+    (oldKey: string, newKey: string, focusHeadedTo?: Element | null) => {
       if (oldKey !== newKey) {
         const currentFormData = readData();
         const actualNewKey = getAvailableKey(newKey, currentFormData);
@@ -871,6 +887,9 @@ export default function ObjectField<
           outcome?.kind !== 'refused' &&
           (!rewrittenKeys || (rewrittenKeys.includes(actualNewKey) && !rewrittenKeys.includes(oldKey)))
         ) {
+          if (focusHeadedTo) {
+            renameFocus.current = { headedTo: focusHeadedTo, fieldPath: toFieldPath(actualNewKey, fieldPath) };
+          }
           const properties = schemaRef.current.properties ?? {};
           setRenamedKeys((previous) => {
             const key = stableKeyOf(previous, oldKey, properties);

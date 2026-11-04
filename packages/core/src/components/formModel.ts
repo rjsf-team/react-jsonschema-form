@@ -357,17 +357,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    */
   const formWindow = () => formElement?.ownerDocument.defaultView;
 
-  /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
-   * field, then converts that path into the id the field renders under, as `fieldPathToId()` does for every field. Then
-   * the input element with that id is attempted to be found in the form element. If it is located, then it is focused.
+  /** Attempts to focus on the field at `fieldPath`. Converts that path into the id the field renders under, as
+   * `fieldPathToId()` does for every field. Then the input element with that id is attempted to be found in the form
+   * element. If it is located, then it is focused.
    *
-   * @param error - The error on which to focus
+   * @param fieldPath - The `FieldPath` of the field on which to focus
    */
-  const focusOnError = (error: RJSFValidationError) => {
-    const elementId = fieldPathToId(
-      fieldPathFromList(propertyToPath(error.property)),
-      current().registry.globalFormOptions,
-    );
+  const focusField = (fieldPath: FieldPath) => {
+    const elementId = fieldPathToId(fieldPath, current().registry.globalFormOptions);
     const view = formWindow();
     if (!formElement || !view) {
       return;
@@ -391,6 +388,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (![...candidates].some((element) => takesFocus(element, view))) {
       focusForId(formElement, exact, elementId, candidates, view);
     }
+  };
+
+  /** Attempts to focus on the field associated with the `error`, using the `property` field to compute its path.
+   *
+   * @param error - The error on which to focus
+   */
+  const focusOnError = (error: RJSFValidationError) => {
+    focusField(fieldPathFromList(propertyToPath(error.property)));
   };
 
   /** Validates the data `readFormData` returns for a submission or a programmatic validation, committing the errors it
@@ -847,6 +852,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     setFormElement: (element: HTMLElement | null) => {
       formElement = element;
     },
+    focusField,
     /** Calls `send` with `fieldPath` as the path of the blur it sends and `touches` as what it touches, unless a field
      * this one holds has named the same blur already, see `FormDataAccess.sendBlur()`
      */
