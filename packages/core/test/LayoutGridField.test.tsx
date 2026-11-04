@@ -1678,12 +1678,17 @@ describe('LayoutGridField', () => {
         );
       },
     );
-    test.each(['', false, 0, null])('renderField does not warn about a render of %j, which asks for none', (empty) => {
-      const props = getProps({ uiSchema: { [LAYOUT_GRID_OPTION]: { render: empty } } });
-      render(<LayoutGridField {...props} />);
-      expect(screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent)).not.toBeInTheDocument();
-      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
-    });
+    test.each(['', false, 0, null])(
+      'renderField warns about a render of %j as a cell with no render, since it asks for none',
+      (empty) => {
+        const props = getProps({ uiSchema: { [LAYOUT_GRID_OPTION]: { render: empty } } });
+        render(<LayoutGridField {...props} />);
+        expect(screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent)).not.toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `ui:layoutGrid cell in "${props.id}" (${props.fieldPath}) names no field, so it renders nothing.`,
+        );
+      },
+    );
     test('renderField names a cell whose name resolves to no schema in the warning', () => {
       const props = getProps({
         schema: SAMPLE_SCHEMA,
@@ -2271,5 +2276,19 @@ describe('a layout read from JSON', () => {
     expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
       'ui:layoutGrid in "root" is not an object, so the LayoutGridField renders nothing.',
     );
+  });
+  test.each([
+    ['a misspelled name', { nmae: 'a' }],
+    ['an empty name', { name: '' }],
+    ['an empty string', ''],
+  ])('warns, and renders nothing, for a cell with %s and no render', (_, cell) => {
+    expect(renderedIds({ 'ui:row': { children: ['a', cell] } })).toEqual(['root_a']);
+    expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
+      'ui:layoutGrid cell in "root" names no field, so it renders nothing.',
+    );
+  });
+  test('does not warn for a null cell, which renders nothing', () => {
+    expect(renderedIds({ 'ui:row': { children: ['a', null] } })).toEqual(['root_a']);
+    expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
   });
 });

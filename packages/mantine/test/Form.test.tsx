@@ -303,6 +303,29 @@ describe('mantine FieldTemplate', () => {
   );
 
   test.each([
+    ['text', { type: 'string' }],
+    ['textarea', { type: 'string' }],
+    ['select', { type: 'string', enum: ['a', 'b'] }],
+    ['radio', { type: 'string', enum: ['a', 'b'] }],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }],
+    ['range', { type: 'number' }],
+    ['alt-date', { type: 'string' }],
+  ] satisfies [string, RJSFSchema][])(
+    "leaves out the %s widget's wrapperProps.inputWrapperOrder that isn't an array",
+    (widget, fieldSchema) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { x: { ...fieldSchema, title: 'X' } } }}
+          uiSchema={{ x: { 'ui:widget': widget, 'ui:options': { wrapperProps: { inputWrapperOrder: 5 } } } }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getAllByText('X').length).toBeGreaterThan(0);
+    },
+  );
+
+  test.each([
     ['alt-date', 'AltDateWidget'],
     ['alt-datetime', 'AltDateTimeWidget'],
   ])("draws the template's label of an %s with no for, since no element carries the field's id", (widget, key) => {

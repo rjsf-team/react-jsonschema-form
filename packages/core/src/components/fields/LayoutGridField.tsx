@@ -946,6 +946,11 @@ function LayoutGridFieldComponent<
       `${LAYOUT_GRID_OPTION} render for ${cellName} in ${fieldLabelForLog(id, parentFieldPath)} ${description}, so it ` +
         'is ignored.',
     );
+  } else if (!name && gridSchema !== null) {
+    // A `null` cell is the one a layout leaves empty on purpose
+    logOnce(
+      `${LAYOUT_GRID_OPTION} cell in ${fieldLabelForLog(id, parentFieldPath)} names no field, so it renders nothing.`,
+    );
   }
   return null;
 }

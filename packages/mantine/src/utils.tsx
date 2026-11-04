@@ -352,6 +352,21 @@ export function asObject(value: unknown): GenericObjectType | undefined {
   return isObject(value) ? value : undefined;
 }
 
+/** Returns the `wrapperProps` option when it is an object, without an `inputWrapperOrder` in it that isn't an array,
+ * which Mantine would map over
+ *
+ * @param value - The `wrapperProps` the options and the theme resolve to
+ * @returns - The `wrapperProps` to resolve and spread, or `undefined`
+ */
+function wrapperPropsOption(value: unknown): GenericObjectType | undefined {
+  const wrapperProps = asObject(value);
+  if (wrapperProps?.inputWrapperOrder !== undefined && !Array.isArray(wrapperProps.inputWrapperOrder)) {
+    const { inputWrapperOrder: _notArray, ...otherWrapperProps } = wrapperProps;
+    return otherWrapperProps;
+  }
+  return wrapperProps;
+}
+
 /** Whether `value` is an `inputContainer`, the function Mantine calls with an input to render the element around it */
 function isInputContainer(value: unknown): value is NonNullable<InputWrapperProps['inputContainer']> {
   return typeof value === 'function';
@@ -859,10 +874,10 @@ export function useAriaDescribedByProps(
   },
 ) {
   const props = useProps<GenericObjectType>(themeComponentNames[component], {}, pickOptions(options, inputPickedKeys));
-  const wrapperObject = useMemo(
-    () => (wrapperOverrides ? { ...asObject(props.wrapperProps), ...wrapperOverrides } : asObject(props.wrapperProps)),
-    [props.wrapperProps, wrapperOverrides],
-  );
+  const wrapperObject = useMemo(() => {
+    const ownWrapperProps = wrapperPropsOption(props.wrapperProps);
+    return wrapperOverrides ? { ...ownWrapperProps, ...wrapperOverrides } : ownWrapperProps;
+  }, [props.wrapperProps, wrapperOverrides]);
   // As in Mantine's `useInputProps`, a key present in `wrapperProps` wins even when `undefined`, which `Input.Wrapper`
   // then resolves from `InputWrapper`'s theme `defaultProps`
   const fromWrapper = (name: string): unknown =>
@@ -970,7 +985,7 @@ export function useGroupAriaProps<
   const hideLabel = !widgetDrawsLabel<T, S, F>(widgetProps);
   const label = getOwnLabel<T, S, F>(widgetProps);
   const props = useProps<GenericObjectType>(component, {}, pickOptions(options, inputPickedKeys));
-  const wrapperObject = asObject(props.wrapperProps);
+  const wrapperObject = wrapperPropsOption(props.wrapperProps);
   // A group spreads its own props after `wrapperProps`, the reverse of an input, then `Input.Wrapper` falls back to
   // `InputWrapper`'s theme `defaultProps`
   const resolved = useProps<GenericObjectType>(
