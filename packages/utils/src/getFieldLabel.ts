@@ -11,8 +11,6 @@ export interface FieldLabelSources<S extends StrictRJSFSchema = RJSFSchema> {
   title?: string;
   /** The schema as the parent wrote it, before `retrieveSchema()` resolved it, whose `title` sits beside a `$ref` */
   unresolvedSchema?: S;
-  /** Whether the user renamed the key of the `additionalProperties` entry this field renders */
-  wasPropertyKeyModified?: boolean;
 }
 
 /** Computes the label of a field: the label its `FieldTemplate` shows, and the one its field component hands its
@@ -36,10 +34,10 @@ export default function getFieldLabel<
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
   translateString: Registry<T, S, F>['translateString'],
-  { name = '', title, unresolvedSchema, wasPropertyKeyModified = false }: FieldLabelSources<S> = {},
+  { name = '', title, unresolvedSchema }: FieldLabelSources<S> = {},
 ): string {
   const label =
-    wasPropertyKeyModified || ADDITIONAL_PROPERTY_FLAG in schema
+    ADDITIONAL_PROPERTY_FLAG in schema
       ? name
       : uiOptions.title || unresolvedSchema?.title || schema.title || title || name;
   return label && getDeprecatedHandling<T, S, F>(schema, uiOptions) === 'label'

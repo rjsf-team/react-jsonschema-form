@@ -1118,7 +1118,6 @@ export function useSchemaFieldPlan<
     name,
     required = false,
     registry,
-    wasPropertyKeyModified = false,
   } = props;
   const { schemaUtils, globalUiOptions } = registry;
   const namedFieldAbove = use(NamedFieldContext);
@@ -1177,7 +1176,6 @@ export function useSchemaFieldPlan<
     name: labelledAbove ? undefined : name,
     title: labelledAbove ? undefined : props.title,
     unresolvedSchema: props.schema,
-    wasPropertyKeyModified,
   };
   const ownLabel = getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, labelSources);
   const title = schema.deprecated

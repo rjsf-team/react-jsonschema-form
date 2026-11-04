@@ -1277,7 +1277,7 @@ That spelling is this function's to change, in one place for every field that ca
 Computes the label of a field: the label its `FieldTemplate` shows, and the one its field component hands its widget, so the two can't disagree.
 The label is the first non-empty one of the `ui:title`, the unresolved schema's `title` (the one beside a `$ref`), the resolved schema's `title`, the `title` prop and the property name, so an empty `title` falls through to the name.
 The schema's `title` comes before the `title` prop, as in the label the `FieldTemplate` shows, so an array item whose `items` schema has a `title` is labelled by it rather than by the numbered title (`Tags-1`) `ArrayField` hands each item.
-An `additionalProperties` entry, or one whose key the user renamed, is labelled by its key.
+An `additionalProperties` entry is labelled by its key.
 A deprecated field's label is decorated with the `DeprecatedLabel` marker under the `label` [deprecated handling](#getdeprecatedhandling), but only a label there is: a field with no title and no name, such as the root or an item of an array that has no name or title of its own, stays unlabelled.
 
 #### Parameters
@@ -1285,7 +1285,7 @@ A deprecated field's label is decorated with the `DeprecatedLabel` marker under 
 - schema: S - The resolved schema of the field
 - uiOptions: UIOptionsType&lt;T, S, F> - The resolved UI options of the field, read for `title` and `deprecatedHandling`
 - translateString: Registry&lt;T, S, F>['translateString'] - The registry's `translateString`, which decorates a deprecated field's label
-- [sources=\{}]: FieldLabelSources&lt;S> - The other sources the label can come from: `name`, `title`, `unresolvedSchema` and `wasPropertyKeyModified`
+- [sources=\{}]: FieldLabelSources&lt;S> - The other sources the label can come from: `name`, `title` and `unresolvedSchema`
 
 #### Returns
 

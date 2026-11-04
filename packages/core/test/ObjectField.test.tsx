@@ -1348,9 +1348,9 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { newFirst: 1, first: undefined }, 'root');
     });
 
-    // Renamed onto a declared property, the entry is no longer an additional property, so the rename alone is what
-    // labels it by its key rather than by that property's title
-    it("should label a renamed key's field and its widget's parts by the new key", async () => {
+    // The data can't say a declared property's value came from a rename, so the label can't depend on one: it would
+    // differ after a remount of the same data
+    it("should label a key renamed onto a declared property, and its widget's parts, by that property's title", async () => {
       const { node } = createFormComponent({
         schema: {
           type: 'object',
@@ -1358,16 +1358,19 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'string', format: 'date', title: 'Date' },
         },
         uiSchema: { end: { 'ui:widget': 'alt-date' }, additionalProperties: { 'ui:widget': 'alt-date' } },
-        initialFormData: { start: '2020-05-03' },
+        initialFormData: { start: '2020-05-03', other: '2021-06-04' },
       });
 
-      const textNode = elementOf(node, '#root_start__key');
-      await user.clear(textNode);
-      await user.type(textNode, 'end');
-      await user.tab();
+      const expectLabelledByTitle = () => {
+        expect(node.querySelector(`#${fieldLabelId('root_end')}`)?.textContent).toBe('End date');
+        expect(screen.getByRole('combobox', { name: 'End date, year' })).toBeInTheDocument();
+      };
 
-      expect(node.querySelector(`#${fieldLabelId('root_end')}`)?.textContent).toBe('end');
-      expect(screen.getByRole('combobox', { name: 'end, year' })).toBeInTheDocument();
+      await renameKey(node, 'start', 'end');
+      expectLabelledByTitle();
+
+      await renameKey(node, 'other', 'other2');
+      expectLabelledByTitle();
     });
 
     // A `JSON.parse()`d `__proto__` key is a property like any other, which a rename must neither drop nor turn into

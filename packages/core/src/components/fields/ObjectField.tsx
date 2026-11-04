@@ -282,7 +282,6 @@ function ObjectFieldPropertyFn<
     propertyNamesEnum,
     keyNotAllowed,
   } = props;
-  const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields, translateString } = registry;
   // Memoized so the row's error schema keeps its identity across renders and `SchemaField` below isn't re-rendered
   const shownErrorSchema = useMemo<ErrorSchema<T> | undefined>(
@@ -326,9 +325,6 @@ function ObjectFieldPropertyFn<
    */
   const onKeyRename = useCallback(
     (value: string) => {
-      if (propertyName !== value) {
-        setWasPropertyKeyModified(true);
-      }
       handleKeyRename(propertyName, value);
     },
     [propertyName, handleKeyRename],
@@ -364,7 +360,6 @@ function ObjectFieldPropertyFn<
         fieldPath={fieldPath}
         id={innerFieldId}
         formData={formData}
-        wasPropertyKeyModified={wasPropertyKeyModified}
         onKeyRename={onKeyRename}
         onKeyRenameBlur={onKeyRenameBlur}
         onRemoveProperty={onRemoveProperty}
@@ -384,8 +379,8 @@ function ObjectFieldPropertyFn<
 
 const ObjectFieldProperty = memo(ObjectFieldPropertyFn) as typeof ObjectFieldPropertyFn;
 
-/** The `ObjectField` component is used to render a field in the schema that is of type `object`. It tracks whether an
- * additional property key was modified and what it was modified to
+/** The `ObjectField` component is used to render a field in the schema that is of type `object`. It tracks which
+ * additional property key was last modified and what it was modified to
  *
  * @param props - The `FieldProps` for this template
  */

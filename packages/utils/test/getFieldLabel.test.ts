@@ -29,15 +29,6 @@ describe('getFieldLabel()', () => {
     expect(getFieldLabel(schema, { title: 'Ui' }, translateString, { name: 'key' })).toBe('key');
   });
 
-  it('labels a renamed key by the name the user typed', () => {
-    expect(
-      getFieldLabel({ type: 'string', title: 'Entry' }, {}, translateString, {
-        name: 'typed',
-        wasPropertyKeyModified: true,
-      }),
-    ).toBe('typed');
-  });
-
   it('decorates the label of a deprecated field', () => {
     expect(getFieldLabel({ type: 'string', title: 'Old', deprecated: true }, {}, translateString)).toBe(
       'Old (deprecated)',
