@@ -1537,7 +1537,10 @@ export type ArrayFieldTemplateProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > = ContainerFieldTemplateProps<T, S, F> & {
-  /** A boolean value stating whether new elements can be added to the array */
+  /** A boolean value stating whether the array has room for a new item and its options allow one. It doesn't cover
+   * `disabled` or `readonly`, under which `onAddClick` does nothing, so an add button drawn from it has to be disabled
+   * on `disabled || readonly` too
+   */
   canAdd?: boolean;
   /** An array of React elements representing the items in the array */
   items: ReactElement[];

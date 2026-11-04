@@ -197,6 +197,33 @@ function useButtonHandler<I, J>(
   );
 }
 
+/** The add rule an array's add button and its items' add and copy buttons share
+ *
+ * @param schema - The array's schema
+ * @param uiOptions - The array's `ui:options`
+ * @param isTuple - Whether the array is a tuple
+ * @param hasData - False for an optional array without data, whose add goes through its optional data control
+ * @param itemCount - The number of items the array renders
+ * @param locked - Whether the array is disabled or read-only
+ * @param handleAddItem - The array's add handler
+ * @returns - `canAdd`, whether the add button shows, which it does disabled on a locked array; `addsItem`, whether an
+ *   add acts, leaving `maxItems` to the handlers, which ask it about the items at the call; and the `onAddClick` handler
+ */
+function useAddRule<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  uiOptions: UIOptionsType<T[], S, F>,
+  isTuple: boolean,
+  hasData: boolean,
+  itemCount: number,
+  locked: boolean,
+  handleAddItem: (event: ArrayButtonEvent, index?: number) => void,
+) {
+  const addable = isAddable<T, S, F>(schema, uiOptions, isTuple) && hasData;
+  const addsItem = addable && !locked;
+  const onAddClick = useButtonHandler(addsItem, handleAddItem, undefined, undefined);
+  return { canAdd: addable && belowMaxItems(schema, itemCount), addsItem, onAddClick };
+}
+
 /** Returns the default form information for an item based on the schema for that item. Deals with the possibility
  * that the schema is fixed and allows additional items.
  *
@@ -565,8 +592,8 @@ function useButtonTitle(
 /** The names `ui:options.itemLabel` gives the items of an array, read from each item's data at that path, or from the
  * item itself for `'.'`. Items are named when their options give them buttons, not when a button shows right now, as a
  * lone item can't move and an array at `maxItems` can't copy, so that reaching those limits doesn't renumber them. A
- * tuple passes its `fixedItemCount`: its fixed items can only show Copy, so they're named only when Copy can ever show,
- * which in a tuple also needs `additionalItems`.
+ * tuple passes its `fixedItemCount`: its fixed items can only show Copy, and only the last of them, so that one is named
+ * only when Copy can ever show, which in a tuple also needs `additionalItems`.
  */
 function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
   keyedItems: readonly KeyedFormDataType<T>[],
@@ -596,7 +623,8 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const segments = toPath(itemLabel);
     return segments.length > 0 ? segments : undefined;
   }, [labelled, hasButtons, itemLabel]);
-  const firstNamedIndex = canCopy ? 0 : (fixedItemCount ?? 0);
+  // Of a tuple's fixed items, only the last can show Copy, since a copy goes below its item
+  const firstNamedIndex = Math.max((fixedItemCount ?? 0) - (canCopy ? 1 : 0), 0);
   // Serialized, so that the numbering below reruns only when a name or the items' order changes, not on every edit to
   // another field
   const namesKey = useMemo(
@@ -641,9 +669,11 @@ function ArrayFieldItemInner<
   title: string | undefined;
   itemName?: string;
   canAdd: boolean;
-  /** `canAdd` whatever the number of items, since the handlers ask `maxItems` about the items at the call */
-  addable: boolean;
-  /** Whether an item can go after this one, which only the last fixed item of a tuple and its additional items allow */
+  /** Whether an add to the array acts, from `useAddRule()` */
+  addsItem: boolean;
+  /** Whether an item can go after this one, by an add or a copy, which only the last fixed item of a tuple and its
+   * additional items allow
+   */
   canAddAfter?: boolean;
   canRemove?: boolean;
   canMoveUp: boolean;
@@ -674,7 +704,7 @@ function ArrayFieldItemInner<
     uiOptions,
     parentUiSchema,
     canAdd,
-    addable,
+    addsItem,
     canAddAfter = true,
     canRemove = true,
     canMoveUp,
@@ -763,7 +793,7 @@ function ArrayFieldItemInner<
   const has: Record<string, boolean> = {
     moveUp: orderable && canMoveUp,
     moveDown: orderable && canMoveDown,
-    copy: copyable && canAdd,
+    copy: copyable && canAdd && canAddAfter,
     remove: removable && canRemove,
     toolbar: false,
   };
@@ -798,15 +828,15 @@ function ArrayFieldItemInner<
 
   // What decides each button, so a template calling these from its own control can't do what the button can't
   const locked = lockedDisabled || lockedReadonly;
-  const addsItem = addable && canAddAfter && !disabled && !readonly;
-  const copiesItem = copyable && addable && !locked;
+  const addsAfter = addsItem && canAddAfter;
+  const copiesItem = copyable && addsAfter && !locked;
   const removesItem = has.remove && !locked;
   const movesUp = has.moveUp && !locked;
   // Not `has.moveDown`, which counts the items at render, when an add earlier in the same handler gives the last item
   // one below it. Only a tuple's fixed items can't remove, and they can't move down either; `handleReorderItems()`
   // refuses a move past the rows at the call
   const movesDown = orderable && canRemove && !locked;
-  const onAddItem = useButtonHandler(addsItem, handleAddItem, index + 1, undefined);
+  const onAddItem = useButtonHandler(addsAfter, handleAddItem, index + 1, undefined);
   const onCopyItem = useButtonHandler(copiesItem, handleCopyItem, index, undefined);
   const onRemoveItem = useButtonHandler(removesItem, handleRemoveItem, index, undefined);
   const onMoveUpItem = useButtonHandler(movesUp, handleReorderItems, index, index - 1);
@@ -818,7 +848,7 @@ function ArrayFieldItemInner<
       id: fieldId,
       disabled: lockedDisabled,
       readonly: lockedReadonly,
-      canAdd: canAdd && addsItem,
+      canAdd: canAdd && addsAfter,
       hasCopy: has.copy,
       hasMoveUp: has.moveUp,
       hasMoveDown: has.moveDown,
@@ -914,9 +944,15 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiOptions);
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T[]>(formDataFromProps);
-  const addable = isAddable<T, S, F>(schema, uiOptions, false) && (!renderOptionalField || hasFormData);
-  const canAdd = addable && belowMaxItems(schema, formData.length);
-  const onAddClick = useButtonHandler(addable && !disabled && !readonly, handleAddItem, undefined, undefined);
+  const { canAdd, addsItem, onAddClick } = useAddRule<T, S, F>(
+    schema,
+    uiOptions,
+    false,
+    !renderOptionalField || hasFormData,
+    formData.length,
+    disabled || readonly,
+    handleAddItem,
+  );
   const actualFormData = hasFormData ? keyedFormData : [];
   const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
   const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
@@ -946,7 +982,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
         itemName: itemNames?.[index],
         canAdd,
-        addable,
+        addsItem,
         canMoveUp: index > 0,
         canMoveDown: index < formData.length - 1,
         rawItemSchema: schemaItems,
@@ -1038,9 +1074,15 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
 
   // These are the props passed into the render function
-  const addable = isAddable<T, S, F>(schema, uiOptions, true) && (!renderOptionalField || hasFormData);
-  const canAdd = addable && belowMaxItems(schema, items.length);
-  const onAddClick = useButtonHandler(addable && !disabled && !readonly, handleAddItem, undefined, undefined);
+  const { canAdd, addsItem, onAddClick } = useAddRule<T, S, F>(
+    schema,
+    uiOptions,
+    true,
+    !renderOptionalField || hasFormData,
+    items.length,
+    disabled || readonly,
+    handleAddItem,
+  );
   const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiOptions, schemaItems.length);
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
@@ -1085,7 +1127,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
         itemName: itemNames?.[index],
         canAdd,
-        addable,
+        addsItem,
         canAddAfter: index >= schemaItems.length - 1,
         canRemove: additional,
         canMoveUp: index >= schemaItems.length + 1,

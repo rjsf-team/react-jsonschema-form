@@ -2102,6 +2102,22 @@ describe('ArrayField', () => {
       expect(label).toHaveTextContent('Custom title*');
     });
 
+    it('shows Copy only from the last fixed item on, since a copy goes below its item', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: [{ type: 'string' }, { type: 'number' }],
+          additionalItems: { type: 'boolean' },
+        },
+        uiSchema: { 'ui:copyable': true },
+        initialFormData: ['a', 1, true],
+      });
+
+      expect(node.querySelector('#root_0__copy')).toBeNull();
+      expect(node.querySelector('#root_1__copy')).not.toBeNull();
+      expect(node.querySelector('#root_2__copy')).not.toBeNull();
+    });
+
     it('should have an add button if additionalItems is an object', () => {
       const { node } = createFormComponent({ schema: schemaAdditional });
       expect(node.querySelector('.rjsf-array-item-add')).not.toBeNull();
@@ -3143,6 +3159,19 @@ describe('ArrayField', () => {
         [...copyable.querySelectorAll('.rjsf-array-item-copy')].map((button) => button.getAttribute('title')),
       ).toEqual(['Copy x (1)', 'Copy x (2)']);
       expect(removeTitles(copyable)).toEqual(['Remove x (2)']);
+    });
+
+    it("doesn't count a tuple's fixed items before the last, which can't show Copy", () => {
+      const named = { type: 'object', properties: { name: { type: 'string' } } } as const;
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: [named, named], additionalItems: named },
+        initialFormData: [{ name: 'x' }, { name: 'x' }, { name: 'x' }],
+        uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
+      });
+
+      expect([...node.querySelectorAll('.rjsf-array-item-copy')].map((button) => button.getAttribute('title'))).toEqual(
+        ['Copy x (1)', 'Copy x (2)'],
+      );
     });
 
     it('names the additional items of a fixed-items array', () => {
@@ -5927,6 +5956,8 @@ describe('ArrayField', () => {
       it.each([
         { button: 'Add after 0', expected: ['a', 1], caseName: 'not after a fixed item before the last' },
         { button: 'Add after 1', expected: ['a', 1, true], caseName: 'after the last fixed item' },
+        { button: 'Copy 0', expected: ['a', 1], caseName: 'no copy of a fixed item before the last' },
+        { button: 'Copy 1', expected: ['a', 1, 1], caseName: 'a copy of the last fixed item' },
       ])('$caseName of a tuple', async ({ button, expected }) => {
         const { getFormData } = createFormComponent({
           schema: {
@@ -5934,6 +5965,7 @@ describe('ArrayField', () => {
             items: [{ type: 'string' }, { type: 'number' }],
             additionalItems: { type: 'boolean', default: true },
           },
+          uiSchema: { 'ui:copyable': true },
           initialFormData: ['a', 1],
           templates: { ArrayFieldItemTemplate: DirectCallItemTemplate },
         });

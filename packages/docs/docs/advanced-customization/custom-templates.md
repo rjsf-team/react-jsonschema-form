@@ -68,8 +68,12 @@ const schema: RJSFSchema = {
 function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   return (
     <div>
-      {props.items.map((element) => element.children)}
-      {props.canAdd && <button type='button' onClick={props.onAddClick}></button>}
+      {props.items}
+      {props.canAdd && (
+        <button type='button' onClick={props.onAddClick} disabled={props.disabled || props.readonly}>
+          Add
+        </button>
+      )}
     </div>
   );
 }
@@ -105,7 +109,7 @@ Please see the [customArray.tsx sample](https://github.com/rjsf-team/react-jsons
 
 The following props are passed to each `ArrayFieldTemplate`:
 
-- `canAdd`: A boolean value stating whether new elements can be added to the array.
+- `canAdd`: A boolean value stating whether the array has room for a new item and its options allow one. It doesn't cover `disabled` or `readonly`, under which `onAddClick` does nothing, so an add button drawn from it has to be disabled on `disabled || readonly` too.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array is disabled.
 - `id`: The id of the field in the hierarchy.
@@ -244,8 +248,7 @@ Currently, only the `core` them has an implementation of this template as the bu
 If you want to change how an array field item's buttons are rendered you can customize this template (for instance to remove the move up/down and remove buttons).
 
 ```tsx
-import { useMemo } from 'react';
-import { ArrayFieldTemplateItemButtonsType, buttonId, RJSFSchema } from '@rjsf/utils';
+import { ArrayFieldItemButtonsTemplateProps, buttonId, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -255,10 +258,9 @@ const schema: RJSFSchema = {
   },
 };
 
-function ArrayFieldItemButtonsTemplate(props: ArrayFieldTemplateItemButtonsType) {
-  const { disabled, readonly, hasCopy, id, index, onCopyIndexClick, registry, uiSchema } = props;
+function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps) {
+  const { disabled, readonly, hasCopy, id, onCopyItem, registry, uiSchema } = props;
   const { CopyButton } = registry.templates.ButtonTemplates;
-  const onCopyClick = useMemo(() => onCopyIndexClick(index), [index, onCopyIndexClick]);
   if (!hasCopy) {
     return undefined;
   }
@@ -267,7 +269,7 @@ function ArrayFieldItemButtonsTemplate(props: ArrayFieldTemplateItemButtonsType)
       id={buttonId(id, 'copy')}
       className='array-item-copy'
       disabled={disabled || readonly}
-      onClick={onCopyClick}
+      onClick={onCopyItem}
       uiSchema={uiSchema}
       registry={registry}
     />
