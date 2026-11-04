@@ -46,7 +46,7 @@ export function lookUpUiField<
  * @param fields - The registered fields
  * @returns - Whether a field is named that is neither `SchemaField` nor `FallbackField`
  */
-function isWrittenField<
+export function isWrittenField<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,

@@ -1038,3 +1038,5 @@ Set to false by default.
 ## widgets
 
 Dictionary of registered widgets in the form. See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md) for more information.
+
+Register a widget under a built-in alias, such as `textarea`, from the first render. Adding or removing one later can switch a field whose `type` is a list to another type's field, and the form's data keeps the defaults of the field it had.

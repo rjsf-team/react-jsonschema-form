@@ -14,11 +14,11 @@ import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
 import getRenderedOptionUiSchema from '../getRenderedOptionUiSchema.ts';
-import getSchemaType from '../getSchemaType.ts';
-import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getUiOptions from '../getUiOptions.ts';
+import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
+import guessType from '../guessType.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject from '../isObject.ts';
@@ -154,6 +154,25 @@ function drawsControlsBesideOptions<T, S extends StrictRJSFSchema, F extends For
   );
 }
 
+/** Gets the type of the field on screen at `path`, whose children are the only ones that can be required of the user.
+ * A selector for the type starts on the type of the value, whatever the list resolves to
+ */
+function shownFieldType<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  { schemaContext, fieldState }: WalkContext<T, S, F>,
+  path: (string | number)[],
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  formData: unknown,
+): string | undefined {
+  const hasSelector =
+    formData !== undefined &&
+    Array.isArray(schema.type) &&
+    fieldState?.rendersFallbackUi?.(fieldPathFromList(path), schema, uiSchema, formData);
+  return hasSelector
+    ? guessType(formData)
+    : getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, schemaContext.widgets, formData);
+}
+
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: WalkContext<T, S, F>,
   schema: S,
@@ -239,17 +258,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ) {
     return;
   }
-  // A value of another type a `type` list allows, such as a string under a `['null', 'object', 'string']`, has no
-  // properties to require. A `null` is read as the type the list resolves to, since `ObjectField` still renders the
-  // properties of an object field holding one
-  const schemaType = getSchemaType<S>(retrieved);
-  if (schemaType === 'object' && (formData === null || getSchemaTypeForValue<S>(retrieved, formData) === schemaType)) {
+  // Whatever the value, `ObjectField` renders its properties: a string under a `['null', 'object', 'string']` isn't an
+  // object, yet the inputs for them are on screen unless the field for another type is
+  const shownType = shownFieldType<T, S, F>(ctx, path, retrieved, branchUiSchema, formData);
+  if (shownType === 'object') {
     // Matches computeDefaults()'s own `isObject(rawFormData)` handling: when the schema resolves to an object here
     // but `formData` still holds a primitive (e.g. a leftover string from a previous oneOf/anyOf branch, or mismatched
     // caller data), indexing the primitive directly (`'abc'['0']` yields `'a'`, not `undefined`) can make a genuinely
     // missing required child look present.
     const data = isObject(formData) ? formData : ({} as GenericObjectType);
-    const childParentPresent = formData !== undefined;
+    const childParentPresent = isObject(formData);
     Object.entries(retrieved.properties ?? {}).forEach(([key, propertySchema]) => {
       if (typeof propertySchema === 'boolean') {
         return;
@@ -261,7 +279,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       const childRequired = Boolean(retrieved.required?.includes(key));
       walk(ctx, propertySchema as S, childUiSchema, data[key], [...path, key], childRequired, childParentPresent);
     });
-  } else if (Array.isArray(formData)) {
+  } else if (Array.isArray(formData) && (!Array.isArray(retrieved.type) || shownType === 'array')) {
     // Only names the array in the error a throwing function-form `uiSchema.items` logs, so it isn't worth deriving for
     // the arrays that don't have one — this walks every field of the form on every validation pass
     const arrayFieldPath = typeof branchUiSchema.items === 'function' ? fieldPathFromList(path) : undefined;

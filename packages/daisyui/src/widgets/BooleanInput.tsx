@@ -70,7 +70,7 @@ export default function BooleanInput<
   // it renders. On any other field an unchecked box answers nothing, and this widget's own label is the only one
   // rendered, so the marker has nowhere else to come from
   const { widget } = getUiOptions<T, S, F>(uiSchema);
-  const isBooleanField = getFieldTypeForWidget<S>(schema, widget) === 'boolean';
+  const isBooleanField = getFieldTypeForWidget<S>(schema, widget, registry.widgets) === 'boolean';
   const marksRequired = presentation
     ? presentation.label.requiredMarker
     : required && (trueValueRequired || !isBooleanField);

@@ -1132,6 +1132,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
 
   const foldedType = foldedTypeOf<T, S, F>(
+    context,
     view,
     props,
     defaults,
@@ -2134,6 +2135,7 @@ type FoldedType = 'whole' | 'object' | 'array' | 'boolean' | 'primitive' | undef
  * defaults are not computed from its contents, or `undefined` for an untyped field and for a `type` list holding, or
  * defaulting to, a value of another listed type than the object or array it renders, which is left as it is.
  *
+ * @param context - The `SchemaContext`, whose `widgets` a `type` list's widget is read against
  * @param view - The field's view
  * @param props - The props of the field
  * @param defaults - The defaults computed for the field so far
@@ -2144,6 +2146,7 @@ type FoldedType = 'whole' | 'object' | 'array' | 'boolean' | 'primitive' | undef
  * @returns - The kind of value the field's defaults are computed as
  */
 function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
   view: DefaultsView<S>,
   { uiSchema, rawFormData }: FoldProps<T, S, F>,
   defaults: unknown,
@@ -2158,13 +2161,13 @@ function foldedTypeOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // A `ui:widget` that `SchemaField` renders through another listed type's field takes that type's default, so a
   // required `['null', 'boolean', 'string']` shown as a `textarea` isn't seeded with a `false` the textarea can't show
   const { schema } = view;
-  const type = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema);
-  // A value of another type a `type` list names is left as it is, as `omitExtraData()` and
-  // `getUiRequiredErrorSchema()` leave it: an object held by a `['null', 'array', 'object']` has no array items spread
-  // into it, and a `null` held by a `['null', 'object']` is not filled in with the object's defaults. With no value,
-  // a default of another listed type is kept the same way, so a `default: 'abc'` on a `['null', 'object', 'string']`
-  // isn't replaced by the object's. A field's own `null` default is left to `computeDefaultBasedOnSchemaTypeAndDefaults()`
+  // A value of another type a `type` list names is left as it is, as `omitExtraData()` leaves it: an object held by a
+  // `['null', 'array', 'object']` has no array items spread into it, and a `null` held by a `['null', 'object']` is not
+  // filled in with the object's defaults. With no value, a default of another listed type is kept the same way, so a
+  // `default: 'abc'` on a `['null', 'object', 'string']` isn't replaced by the object's. A field's own `null` default
+  // is left to `computeDefaultBasedOnSchemaTypeAndDefaults()`
   const value = rawFormData === undefined && (defaults !== null || inheritsNull) ? defaults : rawFormData;
+  const type = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, context.widgets, value);
   if (
     Array.isArray(schema.type) &&
     (type === 'object' || type === 'array') &&
@@ -2349,7 +2352,7 @@ export function getDefaultBasedOnSchemaType<
       view,
       computeDefaultsProps,
       defaults,
-      foldedTypeOf<T, S, F>(view, computeDefaultsProps, defaults, isWholeValue),
+      foldedTypeOf<T, S, F>(context, view, computeDefaultsProps, defaults, isWholeValue),
     ),
   );
 }

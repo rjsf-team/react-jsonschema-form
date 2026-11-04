@@ -118,13 +118,103 @@ describe('getUiRequiredErrorSchema()', () => {
       properties: { v: { type: ['null', 'object', 'string'], properties: { a: { type: 'string' } } } },
     };
     const uiSchema: UiSchema = { v: { a: { 'ui:required': true } } };
-    it('requires no property of a string value', () => {
-      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v: 'hello' });
-      expect(toErrorList(errorSchema)).toEqual([]);
-    });
     it.each([{}, null])('still reports a missing property of a %j value', (v) => {
       const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v });
       expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+    });
+    it('reports a missing property of a string value, as ObjectField still renders the input', () => {
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v: 'hello' });
+      expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+    });
+    it('reports a schema-required property of a string value, which the validator has no object to require it of', () => {
+      const requiring: RJSFSchema = {
+        type: 'object',
+        properties: { v: { ...(schema.properties!.v as RJSFSchema), required: ['a'] } },
+      };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, requiring, uiSchema, { v: 'hello' });
+      expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+    });
+    describe('whose widget renders another listed type', () => {
+      const textarea: UiSchema = { v: { ...uiSchema.v, 'ui:widget': 'textarea' } };
+      it.each(['hello', null, undefined])('requires no property of a %j value, as no input is shown', (v) => {
+        const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, textarea, { v });
+        expect(toErrorList(errorSchema)).toEqual([]);
+      });
+      it('reports a missing property of an object value, which keeps its own field', () => {
+        const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, textarea, { v: {} });
+        expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+      });
+      it('reports it for a widget the form registers under the alias, which leaves the object field', () => {
+        const errorSchema = getUiRequiredErrorSchema(
+          { validator: testValidator, widgets: { textarea: () => null } },
+          schema,
+          textarea,
+          { v: 'hello' },
+        );
+        expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+      });
+    });
+  });
+
+  describe('a type list under a type selector', () => {
+    const fieldState: FormFieldState = {
+      selectedOption: () => 0,
+      isExpanded: () => false,
+      rendersFallbackUi: () => true,
+    };
+    const walkOf = (type: RJSFSchema['type'], v: unknown) =>
+      toErrorList(
+        getUiRequiredErrorSchema<GenericObjectType>(
+          { validator: testValidator },
+          {
+            type: 'object',
+            properties: {
+              v: {
+                type,
+                properties: { a: { type: 'string' } },
+                items: { type: 'object', properties: { a: { type: 'string' } } },
+              },
+            },
+          },
+          { v: { a: { 'ui:required': true }, items: { a: { 'ui:required': true } } } },
+          { v },
+          undefined,
+          undefined,
+          undefined,
+          fieldState,
+        ),
+      ).map((error) => error.property);
+    it.each<[RJSFSchema['type']]>([[['string', 'object']], [['object', 'string']]])(
+      'reports a missing property of an object held by %j, whose field the selector starts on',
+      (type) => {
+        expect(walkOf(type, {})).toEqual(['.v.a']);
+      },
+    );
+    it.each<[RJSFSchema['type'], unknown]>([
+      [['null', 'object', 'string'], 'hello'],
+      [['null', 'object', 'string'], null],
+    ])('requires no property of what %j holds as %j, whose own field is on screen', (type, v) => {
+      expect(walkOf(type, v)).toEqual([]);
+    });
+    it('reports a missing property with no value, as the selector starts on the field the list resolves to', () => {
+      expect(walkOf(['object', 'string'], undefined)).toEqual(['.v.a']);
+    });
+    it('walks the items of an array under the selector, whichever type the list resolves to', () => {
+      expect(walkOf(['string', 'array'], [{}])).toEqual(['.v.0.a']);
+    });
+  });
+
+  describe('a type list that resolves to a scalar', () => {
+    it('requires no item of an array its field shows no input for', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: { type: ['string', 'array'], items: { type: 'object', properties: { a: { type: 'string' } } } },
+        },
+      };
+      const uiSchema: UiSchema = { v: { items: { a: { 'ui:required': true } } } };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v: [{}] });
+      expect(toErrorList(errorSchema)).toEqual([]);
     });
   });
 

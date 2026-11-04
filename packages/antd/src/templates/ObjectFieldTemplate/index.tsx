@@ -10,6 +10,7 @@ import type {
 import {
   getByPath,
   getFieldTypeForWidget,
+  getSchemaType,
   getTemplates,
   getUiOptions,
   isComponentType,
@@ -81,12 +82,30 @@ export default function ObjectFieldTemplate<
     const propertyUiSchema: UiSchema<T, S, F> = resolveUiSchema<T, S, F>(rawSchema, rawUiSchema, registry);
     const propertyUiOptions = getUiOptions<T, S, F>(propertyUiSchema);
     // The select `SchemaField` infers for a boolean with labelled options is not modelled here (see #5516)
-    const { widget, field: uiField } = propertyUiOptions;
-    const type = getFieldTypeForWidget<S>(propertySchema, widget);
+    const { widget: ownWidget, field: uiField } = propertyUiOptions;
+    const lookUpField = (name: unknown): unknown =>
+      typeof name === 'string' ? getByPath(registry.fields, name) : name;
+    const ownField = lookUpField(uiField);
+    // A `$id` names the field when the `ui:field` names none, as in `resolveNamedField()`
+    const namedField = isComponentType(ownField) ? ownField : lookUpField(propertySchema.$id);
+    const isWrittenField =
+      isComponentType(namedField) &&
+      namedField !== registry.fields.SchemaField &&
+      namedField !== registry.fields.FallbackField;
+    // A field written for the schema renders in place of the one its widget would pick, so `SchemaField` leaves the widget
+    // out of the type its class names
+    const type = isWrittenField
+      ? getSchemaType<S>(propertySchema)
+      : getFieldTypeForWidget<S>(propertySchema, ownWidget, registry.widgets, propertyFormData);
+    // A value keeping the field of its own type drops another type's widget in `SchemaField`, unless a field written for
+    // the schema reads its `uiSchema` as given
+    const widget =
+      isWrittenField || getFieldTypeForWidget<S>(propertySchema, ownWidget, registry.widgets) === type
+        ? ownWidget
+        : undefined;
     // The `ui:field` names the rendered field, as `SchemaField` resolves it, only when it names a registered one; the map
     // is keyed by name, so a field given as a component has no entry
-    const field =
-      typeof uiField === 'string' && isComponentType(getByPath(registry.fields, uiField)) ? uiField : undefined;
+    const field = typeof uiField === 'string' && isComponentType(ownField) ? uiField : undefined;
 
     const defaultColSpan =
       visibleProperties.length < 2 || // Single or no visible field in object.

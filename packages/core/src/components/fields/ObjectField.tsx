@@ -676,7 +676,7 @@ export default function ObjectField<
       // a typeless `enum` of numbers as the number its values hold where a field's own type would call it a string
       const optionsResolvedKeySchema = schemaUtils.retrieveSchema(resolvedKeySchema, undefined, true);
       const type = Array.isArray(resolvedKeySchema.type)
-        ? getFieldTypeForWidget(resolvedKeySchema, widget)
+        ? getFieldTypeForWidget(resolvedKeySchema, widget, registry.widgets)
         : getAdditionalPropertyType<S>(optionsResolvedKeySchema);
       // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
       // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled
@@ -727,7 +727,7 @@ export default function ObjectField<
       }
       return firstOption ? firstOption.value : getDefaultValue<T, S, F>(translateString, type);
     },
-    [rootSchema, schemaUtils, translateString, uiSchemaDefinitions, globalUiOptions],
+    [rootSchema, schemaUtils, translateString, uiSchemaDefinitions, globalUiOptions, registry.widgets],
   );
 
   /** Returns the value a property added or renamed to `key` starts out holding, read from the very schema the object

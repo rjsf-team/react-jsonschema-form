@@ -115,6 +115,8 @@ class SchemaUtils<
       !deepEquals(this.rootSchema, rootSchema) ||
       !deepEquals(this.context.defaultFormStateBehavior ?? {}, context.defaultFormStateBehavior ?? {}) ||
       this.context.customMergeAllOf !== context.customMergeAllOf ||
+      // By name alone, as only the names are read, so a `widgets` object rebuilt each render keeps the caches
+      Object.keys(this.context.widgets ?? {}).join() !== Object.keys(context.widgets ?? {}).join() ||
       readsAbsentAsAllowed<S, F>(this.context) !== readsAbsentAsAllowed<S, F>(context)
     );
   }

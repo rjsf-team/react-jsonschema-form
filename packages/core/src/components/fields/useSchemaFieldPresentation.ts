@@ -287,9 +287,9 @@ export default function useSchemaFieldPresentation<
     () =>
       required &&
       (!declaration?.uncheckedIsFalse ||
-        getFieldTypeForUiSchema<T, S, F>(schema, uiSchema) !== 'boolean' ||
+        getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, registry.widgets) !== 'boolean' ||
         schemaRequiresTrueValue<S>(schema)),
-    [required, declaration, schema, uiSchema],
+    [required, declaration, schema, uiSchema, registry.widgets],
   );
   const presentation = useMemo(() => {
     if (!declaration) {

@@ -5,6 +5,12 @@ describe('getFieldClassNames()', () => {
     expect(getFieldClassNames({ type: 'string' }, false)).toBe('rjsf-field rjsf-field-string');
   });
 
+  it('names the type of the field rendered when it is given', () => {
+    expect(getFieldClassNames({ type: ['null', 'number', 'string'] }, false, undefined, 'string')).toBe(
+      'rjsf-field rjsf-field-string',
+    );
+  });
+
   it('derives the type the way getSchemaType() does', () => {
     expect(getFieldClassNames({ properties: { name: { type: 'string' } } }, false)).toBe(
       'rjsf-field rjsf-field-object',

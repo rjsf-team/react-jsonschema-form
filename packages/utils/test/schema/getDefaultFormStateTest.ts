@@ -670,6 +670,40 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           );
         });
 
+        describe('a type list resolving to a container whose widget renders another listed type', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              v: {
+                type: ['null', 'object', 'string'],
+                properties: { a: { type: 'string', default: 'x' }, b: { type: 'string', default: 'y' } },
+              },
+            },
+          };
+          const uiSchema: UiSchema = { v: { 'ui:widget': 'textarea' } };
+          it("doesn't fill the object in behind the textarea", () => {
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, uiSchema })).toEqual(
+              {},
+            );
+          });
+          it('fills in an object it already holds, which keeps its own field', () => {
+            expect(
+              getDefaultFormState(
+                { validator: testValidator },
+                { schema, rootSchema: schema, uiSchema, formData: { v: { a: 'q' } } },
+              ),
+            ).toEqual({ v: { a: 'q', b: 'y' } });
+          });
+          it('fills the object in for a widget the form registers under the alias', () => {
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, widgets: { textarea: () => null } },
+                { schema, rootSchema: schema, uiSchema },
+              ),
+            ).toEqual({ v: { a: 'x', b: 'y' } });
+          });
+        });
+
         it('sets no false for a select over a type list naming boolean first among several non-null types', () => {
           const schema: RJSFSchema = {
             type: 'object',

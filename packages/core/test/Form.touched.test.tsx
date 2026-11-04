@@ -971,3 +971,38 @@ describe('a blur a parent field causes before it sends its own', () => {
     expect(handle.getStatus().touchedFields).toEqual({ address: { street: true, city: true } });
   });
 });
+
+describe('touched under a type list resolving to object', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { val: { type: ['null', 'object', 'string'], properties: { a: { type: 'string' } } } },
+  };
+
+  it('touches the field itself when the textarea its widget picks blurs', async () => {
+    const { handle } = mountWithHandle({ schema, uiSchema: { val: { 'ui:widget': 'textarea' } } });
+
+    await user.click(screen.getByRole('textbox'));
+    await user.tab();
+
+    expect(handle.getStatus().touchedFields).toEqual({ val: true });
+  });
+
+  it('reads a named field as a container, whatever its widget would pick', async () => {
+    const NamedField = ({ id, fieldPath, onBlur }: FieldProps) => (
+      <input id={id} onBlur={() => onBlur(fieldPath, undefined)} />
+    );
+    const blurred = async (widget?: string) => {
+      const { handle, unmount } = mountWithHandle({
+        schema,
+        uiSchema: { val: { 'ui:field': NamedField, ...(widget && { 'ui:widget': widget }) } },
+      });
+      await user.click(screen.getByRole('textbox'));
+      await user.tab();
+      const { touchedFields } = handle.getStatus();
+      unmount();
+      return touchedFields;
+    };
+
+    expect(await blurred('textarea')).toEqual(await blurred());
+  });
+});

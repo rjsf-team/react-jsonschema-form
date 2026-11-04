@@ -44,7 +44,7 @@ import isDevelopment from '../isDevelopment.ts';
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import { copyAlongPath, getAt, isPathPrefix, replaceErrorSchemaNode } from './dataPaths.ts';
-import { schemaFieldDrawsControlsBesideOptions } from './fields/SchemaField.tsx';
+import { schemaFieldDrawsControlsBesideOptions, schemaFieldRendersFallbackUi } from './fields/SchemaField.tsx';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
 import keepClears from './keepClears.ts';
@@ -664,12 +664,14 @@ function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContext
   props: FormProps<T, S, F>,
   prev: Pick<RenderContext<T, S, F>, 'schemaUtils'> | undefined,
 ): SchemaUtilsType<T, S, F> {
-  const { schema, validator, defaultFormStateBehavior, customMergeAllOf, additionalPropertiesWhenAbsent } = props;
+  const { schema, validator, defaultFormStateBehavior, customMergeAllOf, additionalPropertiesWhenAbsent, widgets } =
+    props;
   const schemaContext: SchemaContext<S, F> = {
     validator,
     defaultFormStateBehavior,
     customMergeAllOf,
     additionalPropertiesWhenAbsent,
+    widgets,
   };
   if (prev && !prev.schemaUtils.doesSchemaUtilsDiffer(schemaContext, schema)) {
     return prev.schemaUtils;
@@ -808,6 +810,14 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
     heldPath,
     (fieldPath, fieldSchema, fieldUiSchema, data) =>
       schemaFieldDrawsControlsBesideOptions<T, S, F>(
+        context.registry,
+        fieldPath,
+        fieldSchema,
+        fieldUiSchema,
+        asFieldValue<T>(data),
+      ),
+    (fieldPath, fieldSchema, fieldUiSchema, data) =>
+      schemaFieldRendersFallbackUi<T, S, F>(
         context.registry,
         fieldPath,
         fieldSchema,
@@ -1152,9 +1162,9 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   const schemaUtils = resolveSchemaUtils(props, current);
   const { formData, retrievedSchema } = settleFormData(current, inputFormData, options, props, schemaUtils);
   // Always derived, never skipped on the grounds that the schema utilities were reused: the registry is built from
-  // `idPrefix`, `widgets`, `templates`, `fields`, `formContext` and `uiSchema` too, none of which the utilities are
-  // resolved from. `deriveRenderContext()` shares its result against `current`, so an unchanged context keeps every
-  // reference the fields hold.
+  // `idPrefix`, the components in `widgets`, `templates`, `fields`, `formContext` and `uiSchema` too, none of which the
+  // utilities are resolved from. `deriveRenderContext()` shares its result against `current`, so an unchanged context
+  // keeps every reference the fields hold.
   const context = deriveRenderContext(props, retrievedSchema, current, schemaUtils);
   return { formData, context, areSchemaUtilsReused: schemaUtils === current?.schemaUtils };
 }
