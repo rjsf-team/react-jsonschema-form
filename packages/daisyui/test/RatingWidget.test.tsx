@@ -164,6 +164,20 @@ describe('RatingWidget', () => {
     expect(elementOf(container, 'input[value="2.3"]')).toHaveFocus();
   });
 
+  test('autofocuses the first star when rounding moves it off the minimum and none is checked', () => {
+    const { container } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          schema: { type: 'number', minimum: 1.0000000001, maximum: 5 },
+          value: undefined,
+          autofocus: true,
+        })}
+      />,
+    );
+
+    expect(elementOf(container, 'input[value="1"]')).toHaveFocus();
+  });
+
   test('names its radios by htmlName where the form generates one', () => {
     const { container } = render(<RatingWidget {...makeWidgetMockProps({ htmlName: 'root[stars]' })} />);
 

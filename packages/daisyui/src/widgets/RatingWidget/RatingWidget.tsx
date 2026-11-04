@@ -116,7 +116,7 @@ export default function RatingWidget<
   });
 
   // The checked star, where Tab into the group lands, as `RadioWidget` gives it its checked radio, else the first
-  const autofocusValue = starValues.includes(value) ? value : min;
+  const autofocusValue = starValues.includes(value) ? value : starValues[0];
 
   return (
     <div className='form-control w-full'>
