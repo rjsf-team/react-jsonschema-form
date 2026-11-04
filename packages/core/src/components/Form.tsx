@@ -564,10 +564,12 @@ export default class Form<
       const stateDataChangedFields = getChangedFields(this.props.formData, this.state.formData);
       const isSchemaChanged = !deepEquals(prevProps.schema, this.props.schema);
       // A live validated change applied in the same batch as the new schema has already moved the state to it and
-      // validated against it, so its errors are kept. Any other errors are of the old schema and are reset
+      // validated against it, so its errors are kept. Any other errors are of the old schema and are reset. The state's
+      // own schemas are compared, since `SchemaUtils` rewrites the `$ref`s of a schema with an `$id`, so the state's
+      // never equals the prop's
       const isSchemaNewToErrors =
         isSchemaChanged &&
-        (!deepEquals(this.state.schema, this.props.schema) || !Form.isLiveValidatedOnChange(this.props));
+        (deepEquals(this.state.schema, prevState.schema) || !Form.isLiveValidatedOnChange(this.props));
       // When formData is not an object, getChangedFields returns an empty array.
       // In this case, deepEquals is most needed to check again.
       const isFormDataChanged =
@@ -733,6 +735,11 @@ export default class Form<
     }
 
     const rootSchema = schemaUtils.getRootSchema();
+    // A schema the parent changed in the same batch differs from the retrieved schema for reasons other than this
+    // change, so sanitizing for that difference would drop data the change never touched. A dependency the change
+    // switches in that same batch is left unsanitized too, since the two differences cannot be told apart here. Both
+    // sides have been through `SchemaUtils`, which rewrites the `$ref`s of a schema with an `$id`
+    const canSanitize = shouldSanitize && deepEquals(rootSchema, state.schema);
 
     // Compute the formData for getDefaultFormState() function based on the inputFormData, isUncontrolled and state
     let defaultsFormData = inputFormData;
@@ -753,17 +760,17 @@ export default class Form<
         state.initialDefaultsGenerated,
       ) as T;
       // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
-      const formHash = shouldSanitize ? hashObject({ formData }) : '';
+      const formHash = canSanitize ? hashObject({ formData }) : '';
       computedRetrievedSchema = Form.updateRetrievedSchema(
         retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
         state.retrievedSchema,
       );
       if (
-        shouldSanitize &&
+        canSanitize &&
         !preventInfiniteSanitize.includes(formHash) &&
         (hasNestedConditionalSchema || !deepEquals(computedRetrievedSchema, state.retrievedSchema))
       ) {
-        // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
+        // Sanitize the form data if canSanitize is true, we haven't already processed this same formData AND
         // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
         const sanitizedFormData = schemaUtils.sanitizeDataForNewSchema(
           computedRetrievedSchema,
@@ -792,15 +799,11 @@ export default class Form<
       if (props.noValidate || isSchemaChanged) {
         return { errors: [], errorSchema: {} };
       }
-      if (!props.liveValidate) {
-        return {
-          errors: state.schemaValidationErrors || [],
-          errorSchema: state.schemaValidationErrorSchema || {},
-        };
-      }
+      // The schema validation errors rather than the shown ones, which already hold the `extraErrors` and custom
+      // errors merged in below, so they are added exactly once
       return {
-        errors: state.errors || [],
-        errorSchema: state.errorSchema || {},
+        errors: state.schemaValidationErrors || [],
+        errorSchema: state.schemaValidationErrorSchema || {},
       };
     };
 
@@ -1298,18 +1301,8 @@ export default class Form<
           setByPath(formData, path, valueForPath);
         }
       }
-      // A schema the parent changed in the same batch differs from the retrieved schema for reasons other than this
-      // change, so sanitizing for that difference would drop data the change never touched. A dependency this change
-      // switches in that same batch is left unsanitized too, since the two differences cannot be told apart here
-      const isSchemaUnchangedInBatch = deepEquals(props.schema, prevState.schema);
       const shouldSanitize =
-        retrievedSchema &&
-        !isRootPath &&
-        !isObject(newValue) &&
-        !Array.isArray(newValue) &&
-        !disabled &&
-        !readonly &&
-        isSchemaUnchangedInBatch;
+        retrievedSchema && !isRootPath && !isObject(newValue) && !Array.isArray(newValue) && !disabled && !readonly;
       // Skip live validation here; it runs later in this function.
       const newState = this.getStateFromProps(
         props,
@@ -1646,7 +1639,12 @@ export default class Form<
         }
         const { prevState, props, state, errors, hasError } = outcome;
         if (hasError) {
-          this.focusFirstError(errors, props);
+          // Rethrown from a timeout, since a throw from a commit callback would unmount the form
+          try {
+            this.focusFirstError(errors, props);
+          } catch (error) {
+            Form.rethrowLater(error);
+          }
           Form.reportErrors(errors, props);
         } else if (props.onSubmit) {
           props.onSubmit(toIChangeEvent({ ...prevState, ...state }, 'submitted'), event);
@@ -1856,7 +1854,7 @@ export default class Form<
     }
   }
 
-  /** Validates the form using the given `formData`. For use on form submission or on programmatic validation.
+  /** Validates the form using the given `formData`. For programmatic validation; a submit does not call this.
    * If `onError` is provided, then it will be called with the list of errors.
    *
    * @param formData - The form data to validate

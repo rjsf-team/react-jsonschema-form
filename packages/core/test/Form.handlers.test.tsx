@@ -1,9 +1,11 @@
-import { StrictMode, createRef, startTransition, useEffect, useLayoutEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { Component, StrictMode, createRef, startTransition, useEffect, useLayoutEffect, useState } from 'react';
 import type { ErrorSchema, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplate, getUiOptions } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import Ajv2020 from 'ajv/dist/2020';
 
 import type { FormProps, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
@@ -2084,6 +2086,168 @@ describe('Form change handler under a parent', () => {
       }
     },
   );
+  it.each([
+    ['without', {}],
+    ['with', { $id: 'https://example.com/kind.json' }],
+  ])('should sanitize the data a change switches out of a 2020-12 schema %s an `$id`', (_, idProps) => {
+    const schema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      ...idProps,
+      type: 'object',
+      $defs: { kind: { type: 'string', enum: ['a', 'b'] } },
+      properties: { kind: { $ref: '#/$defs/kind' } },
+      if: { properties: { kind: { const: 'a' } } },
+      then: { properties: { x: { type: 'string' } } },
+      else: { properties: { x: { type: 'number' } } },
+    } as RJSFSchema;
+    const ref = createRef<Form>();
+    const onChange = vi.fn();
+    render(
+      <Form
+        ref={ref}
+        schema={schema}
+        validator={customizeValidator<GenericObjectType>({ AjvClass: Ajv2020 })}
+        formData={{ kind: 'a', x: 'hello' }}
+        onChange={onChange}
+      />,
+    );
+
+    act(() => ref.current!.setFieldValue('kind', 'b'));
+
+    expect(onChange.mock.lastCall![0].formData).toEqual({ kind: 'b' });
+  });
+  it('should keep the errors a change reported when it was applied with a schema with an `$id` the parent set in the same event', async () => {
+    const draft = 'https://json-schema.org/draft/2020-12/schema';
+    const fooSchema = {
+      $schema: draft,
+      $id: 'https://example.com/foo.json',
+      type: 'object',
+      $defs: { text: { type: 'string' } },
+      properties: { foo: { $ref: '#/$defs/text' } },
+    } as RJSFSchema;
+    const barSchema = {
+      $schema: draft,
+      $id: 'https://example.com/bar.json',
+      type: 'object',
+      $defs: { text: { type: 'string' } },
+      properties: { foo: { $ref: '#/$defs/text' }, bar: { type: 'string', default: 'bar default', minLength: 20 } },
+    } as RJSFSchema;
+    const ref = createRef<Form>();
+    const onChange = vi.fn();
+    function Parent() {
+      const [schema, setSchema] = useState(fooSchema);
+      return (
+        <>
+          <button
+            type='button'
+            id='add-bar'
+            onClick={() => {
+              setSchema(barSchema);
+              ref.current!.setFieldValue('foo', 'a');
+            }}
+          >
+            add bar
+          </button>
+          <Form
+            ref={ref}
+            schema={schema}
+            validator={customizeValidator<GenericObjectType>({ AjvClass: Ajv2020 })}
+            liveValidate
+            onChange={onChange}
+          />
+        </>
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('#add-bar')!);
+
+    const [event] = onChange.mock.lastCall!;
+    expect(event.errors.map(({ property }: { property: string }) => property)).toEqual(['.bar']);
+    expect(ref.current!.state.errors.map(({ property }) => property)).toEqual(['.bar']);
+    expect(container.querySelectorAll('#root_bar__error li')).toHaveLength(1);
+  });
+  it('should merge the extraErrors once when a change is applied with the schema the parent set in the same event', async () => {
+    const narrow: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    const wide: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, bar: { type: 'string' } } };
+    const ref = createRef<Form>();
+    function Parent() {
+      const [schema, setSchema] = useState(narrow);
+      return (
+        <>
+          <button
+            type='button'
+            id='widen'
+            onClick={() => {
+              setSchema(wide);
+              ref.current!.setFieldValue('bar', 'y');
+            }}
+          >
+            widen
+          </button>
+          <Form
+            ref={ref}
+            schema={schema}
+            validator={customizeValidator<GenericObjectType>()}
+            liveValidate
+            extraErrors={{ bar: { __errors: ['server'] } } as unknown as ErrorSchema}
+          />
+        </>
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('#widen')!);
+
+    expect(ref.current!.state.errors.map(({ message }) => message)).toEqual(['server']);
+    expect(container.querySelectorAll('#root_bar__error li')).toHaveLength(1);
+  });
+  it('should keep the form mounted and still call onError when focusOnFirstError throws on submit', () => {
+    vi.useFakeTimers();
+    class Boundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+      constructor(props: { children: ReactNode }) {
+        super(props);
+        this.state = { failed: false };
+      }
+
+      static getDerivedStateFromError() {
+        return { failed: true };
+      }
+
+      render() {
+        const { failed } = this.state;
+        const { children } = this.props;
+        return failed ? <p id='failed'>failed</p> : children;
+      }
+    }
+    try {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+      const onError = vi.fn();
+      const { container } = render(
+        <Boundary>
+          <Form
+            schema={schema}
+            validator={customizeValidator<GenericObjectType>()}
+            formData={{ foo: 'a' }}
+            focusOnFirstError={() => {
+              throw new Error('focus failed');
+            }}
+            onError={onError}
+          />
+        </Boundary>,
+      );
+
+      // fireEvent, since user-event waits on timers, which hang under the fake timers flushing the rethrow
+      fireEvent.submit(container.querySelector('form')!);
+
+      expect(() => vi.runOnlyPendingTimers()).toThrow('focus failed');
+      expect(container.querySelector('#failed')).not.toBeInTheDocument();
+      expect(container.querySelector('#root_foo')).toBeInTheDocument();
+      expect(onError).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
   it('should keep the form mounted when the live validation of a blur throws', () => {
     vi.useFakeTimers();
     try {
@@ -2174,22 +2338,31 @@ describe('Form change handler under a parent', () => {
     const onSubmit = vi.fn();
     const onError = vi.fn();
     const { container } = render(
-      <Form
-        ref={ref}
-        schema={schema}
-        validator={customizeValidator<GenericObjectType>()}
-        formData={{ foo: 'x', extra: 'dropped' }}
-        omitExtraData
-        liveValidate={liveValidate}
-        onSubmit={onSubmit}
-        onError={onError}
-      />,
+      <>
+        <button
+          type='button'
+          onClick={() => {
+            values.forEach((value) => ref.current!.setFieldValue('foo', value));
+            ref.current!.submit();
+          }}
+        >
+          change and submit
+        </button>
+        <Form
+          ref={ref}
+          schema={schema}
+          validator={customizeValidator<GenericObjectType>()}
+          formData={{ foo: 'x', extra: 'dropped' }}
+          omitExtraData
+          liveValidate={liveValidate}
+          onSubmit={onSubmit}
+          onError={onError}
+        />
+      </>,
     );
 
-    await act(async () => {
-      values.forEach((value) => ref.current!.setFieldValue('foo', value));
-      ref.current!.submit();
-    });
+    // From a click, since outside a browser event the changes have a lower priority than the submit event
+    await user.click(container.querySelector('button[type="button"]')!);
 
     const last = values[values.length - 1];
     const isValid = last.length >= 3;
