@@ -924,15 +924,19 @@ export default function ObjectField<
       if (outcome?.kind !== 'refused' && (outcome?.kind !== 'rewritten' || outcome.kept === undefined)) {
         setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
         const properties = schemaRef.current.properties ?? {};
-        // The key it held goes free, but the property under that name took another while it was held, and keeps that one
+        // The key it held goes free, but a property that took a variant of it while it was held keeps that variant
         setRenamedKeys((previous) => {
-          const heldKey = previous.get(key);
-          return heldKey === undefined
-            ? previous
-            : new Map([...previous].filter(([property]) => property !== key)).set(
-                heldKey,
-                stableKeyOf(previous, heldKey, properties),
-              );
+          if (!previous.has(key)) {
+            return previous;
+          }
+          const next = new Map([...previous].filter(([property]) => property !== key));
+          for (const property of Object.keys(properties)) {
+            const shown = stableKeyOf(previous, property, properties);
+            if (property !== key && shown !== stableKeyOf(next, property, properties)) {
+              next.set(property, shown);
+            }
+          }
+          return next;
         });
       }
       forgetChangedSeeds(key);

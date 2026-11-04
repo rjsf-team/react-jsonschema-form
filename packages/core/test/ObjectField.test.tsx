@@ -1568,6 +1568,23 @@ describe('ObjectField', () => {
         expect(elementOf(node, '#root_newKey')).toBe(added);
       });
 
+      it('should keep the instance of a property holding a variant of the key a removed property held', async () => {
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: { newKey: 'one' },
+        });
+        await renameKey(node, 'newKey', 'first');
+        await user.click(elementOf(node, '.rjsf-object-property-expand'));
+        await renameKey(node, 'newKey', 'second');
+        await user.click(elementOf(node, '.rjsf-object-property-expand'));
+        const added = elementOf(node, '#root_newKey');
+
+        await user.click(node.querySelectorAll('.rjsf-object-property-remove')[1]);
+
+        expect(node.querySelector('#root_second')).toBeNull();
+        expect(elementOf(node, '#root_newKey')).toBe(added);
+      });
+
       it('should keep the instance of a property when a rename takes the name of a removed one', async () => {
         const { node } = createFormComponent({
           schema,
