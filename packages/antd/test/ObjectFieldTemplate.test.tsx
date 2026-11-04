@@ -239,6 +239,112 @@ describe('ObjectFieldTemplate colSpan map', () => {
     expect(container.querySelector('fieldset > .ant-row > .ant-col')).toHaveClass('ant-col-4');
   });
 
+  describe('a type list holding an object, whose ui:field names a field', () => {
+    const MyField = () => <div />;
+    const spanOf = (uiField: UiSchema['ui:field'], colSpan: Record<string, number>) => {
+      const { container } = render(
+        <Form
+          schema={{
+            type: 'object',
+            properties: {
+              val: { type: ['object', 'string'], properties: { a: { type: 'string' } } },
+              other: { type: 'string' },
+            },
+          }}
+          uiSchema={{ val: { 'ui:field': uiField, 'ui:widget': 'textarea' } }}
+          fields={{ MyField }}
+          validator={validator}
+          initialFormData={{ val: { a: 'q' } }}
+          formContext={{ colSpan }}
+        />,
+      );
+      return container.querySelector('fieldset > .ant-row > .ant-col');
+    };
+
+    it.each<[string, UiSchema['ui:field']]>([
+      ['a registered name', 'MyField'],
+      ['a component', MyField],
+    ])('keys it by the widget a field named by %s still receives', (_, uiField) => {
+      expect(spanOf(uiField, { textarea: 8, object: 4, MyField: 6 })).toHaveClass('ant-col-8');
+    });
+
+    it.each(['SchemaField', 'FallbackField'])(
+      'keys it by its type when the name is %s, which renders the data with the widget dropped',
+      (uiField) => {
+        expect(spanOf(uiField, { textarea: 8, object: 4 })).toHaveClass('ant-col-4');
+      },
+    );
+  });
+
+  describe('a type list whose field the widget would switch, with a field named for it', () => {
+    const schemaOf = (val: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { val, other: { type: 'string' } },
+    });
+    const objectOrString: RJSFSchema = { type: ['object', 'string'], properties: { a: { type: 'string' } } };
+    const MyField = () => <div />;
+    const spanOf = (
+      val: RJSFSchema,
+      uiSchema: UiSchema,
+      colSpan: Record<string, number>,
+      initialFormData?: Record<string, unknown>,
+    ) => {
+      const { container } = render(
+        <Form
+          schema={schemaOf(val)}
+          uiSchema={{ val: uiSchema }}
+          fields={{ MyField }}
+          validator={validator}
+          initialFormData={initialFormData}
+          formContext={{ colSpan }}
+        />,
+      );
+      return container.querySelector('fieldset > .ant-row > .ant-col');
+    };
+
+    it('keys a $id naming the field by the widget it still receives', () => {
+      const span = spanOf(
+        { ...objectOrString, $id: 'MyField' },
+        { 'ui:widget': 'textarea' },
+        { textarea: 8, object: 4 },
+        { val: { a: 'q' } },
+      );
+      expect(span).toHaveClass('ant-col-8');
+    });
+
+    it('keys a $id behind a ui:field that names nothing by the widget it still receives', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      try {
+        const span = spanOf(
+          { ...objectOrString, $id: 'MyField' },
+          { 'ui:field': 'unknownField', 'ui:widget': 'textarea' },
+          { textarea: 8, object: 4, unknownField: 6 },
+          { val: { a: 'q' } },
+        );
+        expect(span).toHaveClass('ant-col-8');
+        expect(warnSpy).toHaveBeenCalledExactlyOnceWith(
+          `ui:field for "root_val" (val) names no registered field ('unknownField'), so it is ignored and the ` +
+            'field is rendered as though no ui:field were given.',
+        );
+      } finally {
+        warnSpy.mockRestore();
+      }
+    });
+
+    it('keys the field by the type its class names rather than the type the widget would switch to', () => {
+      const uiSchema: UiSchema = { 'ui:field': 'MyField', 'ui:widget': 'textarea' };
+      expect(spanOf(objectOrString, uiSchema, { object: 4, string: 6 })).toHaveClass('ant-col-4');
+      expect(spanOf({ type: ['null', 'number', 'string'] }, uiSchema, { number: 4, string: 6 })).toHaveClass(
+        'ant-col-4',
+      );
+    });
+
+    it('defaults the span of the field by the type its class names', () => {
+      const uiSchema: UiSchema = { 'ui:field': 'MyField', 'ui:widget': 'password' };
+      expect(spanOf(objectOrString, uiSchema, {})).toHaveClass('ant-col-24');
+    });
+  });
+
   describe('a property whose type depends on its form data', () => {
     const textOrNumber: RJSFSchema = { if: { const: 'text' }, then: { type: 'string' }, else: { type: 'number' } };
     const getSpan = (formSchema: RJSFSchema, formData: unknown) => {
