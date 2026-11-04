@@ -1200,7 +1200,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Remove the `Result` type argument from `ValidatorType.rawValidation()`, which now returns the new `RawValidationResult`, whose errors are `unknown[]`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5678](https://github.com/rjsf-team/react-jsonschema-form/pull/5678))
 - Add the `RawValidationResult` type, what `ValidatorType.rawValidation()` returns ([#5678](https://github.com/rjsf-team/react-jsonschema-form/pull/5678))
 - **BREAKING CHANGE:** Change a custom template's entry in `TemplatesType`, alone or in a group, from `ComponentType<any>` to `SlotComponent<never>`, so one read back from `registry.templates`, `getTemplate()` or `getTemplates()` under a custom name can't be rendered without its props type, and one written inline needs a type on its props. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
-- Add the `DeclaredTemplatesType` and `CustomTemplateEntries` types, the two parts of `TemplatesType` ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
+- Add the `DeclaredTemplatesType` and `CustomTemplateEntries` types, the two parts of `TemplatesType`, and `PartialTemplatesType`, the type of the `templates` prop of `Form` ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
 
 ## @rjsf/validator-ajv8
 

@@ -2,9 +2,9 @@ import describeUnresolvedComponent from './describeUnresolvedComponent.ts';
 import logOnce from './logOnce.ts';
 import type { DeclaredTemplatesType } from './types.ts';
 
-/** The names of the templates `TemplatesType` declares that a field's options may override (every one but
+/** The names of the templates `DeclaredTemplatesType` declares that a field's options may override (every one but
  * `ButtonTemplates`, which `getTemplate()` reads from the registry alone), as an object checked against
- * `TemplatesType` so that a template added there without being listed here is a type error. The one list of these
+ * `DeclaredTemplatesType` so that a template declared there without being listed here is a type error. The one list of these
  * names: `isTemplateName()` checks against it and `globalUiOptionsKeys.ts` spreads it into
  * `RESERVED_UI_OPTION_NAMES`, so a new template goes in here only. Exported for `globalUiOptionsKeys.ts` alone; this
  * module is internal (see below), so the map stays out of the public API.

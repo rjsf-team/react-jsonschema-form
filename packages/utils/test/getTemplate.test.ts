@@ -7,6 +7,7 @@ import type {
   DeclaredTemplatesType,
   MergedClassMap,
   Registry,
+  SlotComponent,
   TemplatesType,
   UIOptionsType,
 } from '../src/index.ts';
@@ -389,6 +390,9 @@ describe('a custom entry in TemplatesType', () => {
   it("is read back from getTemplate() and getTemplates() with props that can't be rendered until the lookup names them", () => {
     const fromGetTemplate = getTemplate('FunctionTemplate', customRegistry);
     const fromGetTemplates = getTemplates(customRegistry).FunctionTemplate;
+    expectTypeOf(fromGetTemplate).toEqualTypeOf<
+      SlotComponent<never> | Record<string, SlotComponent<never>> | undefined
+    >();
     if (typeof fromGetTemplate === 'function') {
       // @ts-expect-error a custom entry's props type is `never`
       createElement(fromGetTemplate, { label: 'Label' });

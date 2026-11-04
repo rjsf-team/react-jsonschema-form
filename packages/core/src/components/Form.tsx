@@ -10,9 +10,7 @@ import {
   useSyncExternalStore,
 } from 'react';
 import type {
-  CustomTemplateEntries,
   CustomValidator,
-  DeclaredTemplatesType,
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
@@ -32,6 +30,7 @@ import type {
   DefaultFormStateBehavior,
   CustomMergeAllOf,
   NameGeneratorFunction,
+  PartialTemplatesType,
 } from '@rjsf/utils';
 import {
   getTemplates,
@@ -120,9 +119,7 @@ export interface FormProps<
   /** The dictionary of registered fields in the form */
   fields?: RegistryFieldsType<Uninferred<T>, S, F>;
   /** The dictionary of registered templates in the form; any subset of them may be provided beyond the defaults */
-  templates?: Partial<Omit<DeclaredTemplatesType<Uninferred<T>, S, F>, 'ButtonTemplates'>> & {
-    ButtonTemplates?: Partial<DeclaredTemplatesType<Uninferred<T>, S, F>['ButtonTemplates']>;
-  } & CustomTemplateEntries;
+  templates?: PartialTemplatesType<Uninferred<T>, S, F>;
   /** The dictionary of registered widgets in the form */
   widgets?: RegistryWidgetsType<Uninferred<T>, S, F>;
   /** Which parts of a field the registered fields and widgets draw themselves, layered over the theme's declarations,
