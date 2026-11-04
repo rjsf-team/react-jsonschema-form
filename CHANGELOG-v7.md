@@ -449,6 +449,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change the `templates` prop of `Form`, and a theme's `templates` passed to `withTheme()`, to check a declared template against its own props, where it accepted any component, and a custom template written inline in it to have a type on its `props`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#the-templates-prop-of-form-and-withtheme-checks-declared-templates-breaking-change) ([#5679](https://github.com/rjsf-team/react-jsonschema-form/pull/5679))
 - Fix `onAddClick` filling a tuple's missing fixed item with an `additionalItems` value instead of a value of that item's own schema ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 - Fix the add button throwing on an array whose `items` is a list holding a boolean, which renders its items with an empty schema ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
+- Fix Copy on a tuple's fixed item before the last inserting the copy among the fixed items, which shifted the items after it into positions of another schema: Copy now shows only from the last fixed item on ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 
 ## @rjsf/daisyui
 
