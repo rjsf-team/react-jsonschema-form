@@ -67,6 +67,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change a text input holding `false`, which it shows, to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RangeWidget` drawing a numeric string, and posting it, at its minimum ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RangeWidget` and `InputNumber` writing a number into a string field, which then failed validation and, for `InputNumber`, lost the digits past a number's precision: they now write a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change the number input to show nothing, and offer no clear button, for a boolean or object value ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change `RatingWidget`'s hidden input to submit `0` for a rating of `0`, where it submitted an empty string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change `PasswordWidget` to show a value of `0` or `false`, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/bootstrap3
 
@@ -461,6 +464,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `onAddClick` filling a tuple's missing fixed item with an `additionalItems` value instead of a value of that item's own schema ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 - Fix the add button throwing on an array whose `items` is a list holding a boolean, which renders its items with an empty schema ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 - Fix Copy on a tuple's fixed item before the last inserting the copy among the fixed items, which shifted the items after it into positions of another schema: Copy now shows only from the last fixed item on ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
+- Change `RatingWidget`'s hidden input to submit `0` for a rating of `0`, where it submitted an empty string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/daisyui
 
@@ -718,6 +722,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change a textarea holding `0` or `false` to show that value, where it was empty, and a text input holding `false`, which it shows, to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `FileWidget` to show the clear button for a stored file, including one that can't be read ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RangeWidget`, and the number input of a string field with `ui:inputType: 'number'`, writing a number into a string field, which then failed validation and, for the number input, lost the digits past a number's precision when focus left it: they now write a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change `PasswordWidget` to show a value of `0` or `false`, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix the number input writing an empty string when cleared, which ignored `ui:emptyValue` and let a required string field with `ui:inputType: 'number'` pass empty: it now writes `ui:emptyValue`, as the text input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/mui
 
@@ -1233,7 +1239,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change `useFileWidgetProps()` to take an `unknown` value and an `onChange` that takes one, and `DateElementProps.value` to `number | undefined`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Add `toInputValue()`, which turns a widget's `value` into what an input's `value` prop takes ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useFileWidgetProps()`'s `handleRemove` removing the wrong file when an earlier item of a multiple value isn't a readable data URL, such as the `null` stored for a file that couldn't be read: it now takes the index of the file in `filesInfo`, as every theme passes it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Fix `useAltDateWidgetProps()` reading a date part cleared to `null`, as a select with an `emptyValue` of `null` reports it, as a picked `0`, which built a date with a day, month or year of `0`, and a part set to a value that is no number, such as `'abc'`, as `NaN`, which threw for a date-only widget ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `useAltDateWidgetProps()` reading a date part cleared to `null`, as a select with an `emptyValue` of `null` reports it, as a picked `0`, which built a date with a day, month or year of `0`, and a part set to a value that is no number, such as `'abc'`, `false` or `[]`, as `NaN` or `0`, which threw for a date-only widget or built such a date ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Add `toNumericValue()`, which reads a widget's `value`, a number or a plain decimal string, as a number, and `numericWidgetStoresString()`, which reports whether a widget that draws a number, such as a rating or a slider, writes a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useFileWidgetProps()` appending the next selection after a lone value of a multiple field that isn't a data URL, which the field doesn't show: the selection now replaces it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `useAltDateWidgetProps()` to read only a string value, so a number or `Date` value, which the widget can't write back, renders every alt-date widget's selects blank, where it showed that date ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))

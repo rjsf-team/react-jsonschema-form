@@ -11,6 +11,7 @@ import getNestedControlPresentation from './getNestedControlPresentation.ts';
 import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
+import toNumericValue from './toNumericValue.ts';
 import type {
   DateObject,
   FieldPresentation,
@@ -177,8 +178,7 @@ export default function useAltDateWidgetProps<
     (property: keyof DateObject, newValue?: unknown) => {
       // A select that reports its cleared choice as `null`, through an `emptyValue` of `null`, picks nothing either, as
       // does a value that is no number, which `Number()` would read as `0` or `NaN`
-      const part = newValue === null || newValue === '' ? Number.NaN : Number(newValue);
-      const nextState = { ...state, [property]: Number.isFinite(part) ? part : -1 };
+      const nextState = { ...state, [property]: toNumericValue(newValue) ?? -1 };
 
       if (readyForChange(nextState)) {
         setDraft(undefined);

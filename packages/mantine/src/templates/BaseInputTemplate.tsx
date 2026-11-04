@@ -59,8 +59,14 @@ export default function BaseInputTemplate<
   // which rounds the digits past a number's precision, so a string field turns that trim off and gets a string back
   const storesString = numericWidgetStoresString<S>(schema, value);
   const handleNumberChange = useCallback(
-    (newValue: number | string) => onChange(storesString ? String(newValue) : newValue),
-    [onChange, storesString],
+    (newValue: number | string) => {
+      if (newValue === '') {
+        onChange(options.emptyValue);
+      } else {
+        onChange(storesString ? String(newValue) : newValue);
+      }
+    },
+    [onChange, storesString, options.emptyValue],
   );
 
   const handleChange = useCallback(
@@ -129,7 +135,7 @@ export default function BaseInputTemplate<
       {...restInputProps}
       {...themeProps}
       step={typeof inputProps.step === 'number' ? inputProps.step : 1}
-      trimLeadingZeroesOnBlur={!storesString}
+      {...(storesString && { trimLeadingZeroesOnBlur: false })}
       type='text'
       {...ariaDescribedByProps}
       {...descriptionProps}

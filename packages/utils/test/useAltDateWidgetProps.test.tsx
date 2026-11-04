@@ -134,6 +134,11 @@ describe('useAltDateWidgetProps()', () => {
     ['day', 'null', null],
     ['month', 'a string that is no number', 'abc'],
     ['day', 'a string that is no number', 'abc'],
+    ['day', 'false', false],
+    ['day', 'true', true],
+    ['day', 'an empty array', []],
+    ['day', 'a blank string', ' '],
+    ['day', 'a hex string', '0x3'],
   ] as const)('clearing %s with %s leaves the date incomplete', (part, _name, cleared) => {
     const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, value: DATE_STR }));
     act(() => result.current.handleChange(part, cleared));

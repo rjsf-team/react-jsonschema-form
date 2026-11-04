@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { BaseInputTemplateProps, RJSFSchema } from '@rjsf/utils';
@@ -122,6 +123,39 @@ describe('mantine BaseInputTemplate', () => {
 
     expect(onChange).toHaveBeenCalledWith('nothing');
   });
+  test.each([
+    [undefined, '7'],
+    [false, '007'],
+  ])(
+    "a number field's input, given `trimLeadingZeroesOnBlur: %s`, shows %s once focus leaves it",
+    async (trim, shown) => {
+      const numberSchema: RJSFSchema = { type: 'number' };
+      function Stateful() {
+        const [value, setValue] = useState<unknown>();
+        return (
+          <MantineProvider>
+            <BaseInputTemplate
+              {...makeProps({
+                schema: numberSchema,
+                registry: getTestRegistry(numberSchema),
+                value,
+                onChange: setValue,
+                options: { trimLeadingZeroesOnBlur: trim },
+              })}
+            />
+          </MantineProvider>
+        );
+      }
+      render(<Stateful />);
+      const input = screen.getByRole('textbox');
+      await user.click(input);
+      await user.paste('007');
+      await user.tab();
+
+      expect(input).toHaveValue(shown);
+    },
+  );
+
   describe('a string field rendered as a number input', () => {
     function renderStringNumberForm(initialFormData: string, onChange = vi.fn()) {
       render(
@@ -142,6 +176,22 @@ describe('mantine BaseInputTemplate', () => {
       await user.type(screen.getByRole('textbox'), '1');
 
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: '51', errors: [] }), 'root');
+    });
+
+    test('writes `ui:emptyValue` when cleared', async () => {
+      const onChange = vi.fn();
+      render(
+        <WrappedForm
+          schema={{ type: 'string' }}
+          uiSchema={{ 'ui:inputType': 'number', 'ui:emptyValue': 'none' }}
+          validator={validator}
+          initialFormData='5'
+          onChange={onChange}
+        />,
+      );
+      await user.clear(screen.getByRole('textbox'));
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 'none' }), 'root');
     });
 
     test('keeps the string, and every digit of it, when focus passes through', async () => {
