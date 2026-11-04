@@ -1652,7 +1652,11 @@ export default class Form<
           }
           Form.reportErrors(errors, props);
         } else if (props.onSubmit) {
-          props.onSubmit(toIChangeEvent({ ...prevState, ...state }, 'submitted'), event);
+          const submitted = { ...prevState, ...state } as FormState<T, S, F>;
+          props.onSubmit(
+            toIChangeEvent({ ...submitted, ...Form.getDerivedStateFromProps(props, submitted) }, 'submitted'),
+            event,
+          );
         }
       },
     );
@@ -1870,7 +1874,8 @@ export default class Form<
       this.props,
     );
     // A live validated change queued in the same event is applied before these errors, which are of the data from
-    // before it, so they are written only where they would not replace that change's own
+    // before it, so they are written only where they would not replace that change's own. The data is compared by value,
+    // since a prop change queues an equal copy of it that is no change of the user's
     const setValidationState = (
       validationState: Pick<
         FormState<T, S, F>,
@@ -1880,7 +1885,9 @@ export default class Form<
     ) =>
       this.setState(
         (prevState, props) =>
-          prevState.formData !== validatedFormData && Form.isLiveValidatedOnChange(props) ? null : validationState,
+          !deepEquals(prevState.formData, validatedFormData) && Form.isLiveValidatedOnChange(props)
+            ? null
+            : validationState,
         callback,
       );
     if (hasError) {

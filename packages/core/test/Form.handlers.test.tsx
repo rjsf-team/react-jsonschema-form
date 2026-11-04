@@ -2283,6 +2283,83 @@ describe('Form change handler under a parent', () => {
       expect(shownErrors(container)).toEqual({ list: 1, field: 1 });
     });
   });
+  it('should show the errors of a validateForm() a parent calls from an effect after a prop change, with liveValidate', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+    const ref = createRef<Form>();
+    function Parent() {
+      const [help, setHelp] = useState('before');
+      const [formData, setFormData] = useState<GenericObjectType | undefined>({ foo: 'a' });
+      useEffect(() => {
+        if (help === 'after') {
+          ref.current!.validateForm();
+        }
+      }, [help]);
+      return (
+        <>
+          <button type='button' id='validate' onClick={() => setHelp('after')}>
+            validate
+          </button>
+          <Form
+            ref={ref}
+            schema={schema}
+            uiSchema={{ foo: { 'ui:help': help } }}
+            validator={customizeValidator<GenericObjectType>()}
+            liveValidate
+            formData={formData}
+            onChange={(event) => setFormData(event.formData)}
+          />
+        </>
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('#validate')!);
+
+    expect(container.querySelectorAll('.panel-danger li')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_foo__error li')).toHaveLength(1);
+  });
+  it('should report a custom error to onSubmit when the parent sets extraErrors in the same event', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, bar: { type: 'string' } } };
+    const RaiseWidget = ({ onChange }: WidgetProps) => (
+      <button type='button' id='raise' onClick={() => onChange('x', { __errors: ['custom'] } as ErrorSchema)}>
+        raise
+      </button>
+    );
+    const ref = createRef<Form>();
+    const onSubmit = vi.fn();
+    function Parent() {
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
+      return (
+        <>
+          <button
+            type='button'
+            id='submit'
+            onClick={() => {
+              setExtraErrors({ bar: { __errors: ['server'] } } as unknown as ErrorSchema);
+              ref.current!.submit();
+            }}
+          >
+            submit
+          </button>
+          <Form
+            ref={ref}
+            schema={schema}
+            uiSchema={{ foo: { 'ui:widget': RaiseWidget } }}
+            validator={customizeValidator<GenericObjectType>()}
+            extraErrors={extraErrors}
+            onSubmit={onSubmit}
+          />
+        </>
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.click(container.querySelector('#raise')!);
+    await user.click(container.querySelector('#submit')!);
+
+    const [{ errors }] = onSubmit.mock.lastCall!;
+    expect(errors.map(({ message }: { message: string }) => message).sort()).toEqual(['custom', 'server']);
+  });
   it('should keep the form mounted and still call onError when focusOnFirstError throws on submit', () => {
     vi.useFakeTimers();
     class Boundary extends Component<{ children: ReactNode }, { failed: boolean }> {
