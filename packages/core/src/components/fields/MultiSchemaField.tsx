@@ -32,6 +32,7 @@ import NamedFieldContext from './NamedFieldContext.ts';
 import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 import TemplateWarnEntryContext from './TemplateWarnEntryContext.ts';
+import type { TemplateWarnEntry } from './TemplateWarnEntryContext.ts';
 
 /** The widgets the option index has an implementation of that would show the index as a number to edit */
 const VALUE_ENTRY_WIDGETS = new Set<unknown>(['text', 'updown', 'range', 'TextWidget', 'UpDownWidget', 'RangeWidget']);
@@ -133,15 +134,15 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // The `SchemaField` rendering this has already added its own key's depth to the context
   const additionalDepths = use(AdditionalPropertyDepthsContext);
   const entryAbove = use(TemplateWarnEntryContext);
-  // The label of the entry this field renders from, which the `SchemaField` rendering it provides, so an option nested
-  // in another option's entry names both. Memoized, since the option entry's label below is built on it
-  const entryLabel = useMemo(
-    () =>
-      entryAbove?.fieldPath === fieldPath
-        ? entryAbove.label
-        : () => entryLabelForLog(fieldPath, globalFormOptions, additionalDepths),
-    [entryAbove, fieldPath, globalFormOptions, additionalDepths],
-  );
+  // The entry this field renders from, which the `SchemaField` rendering it provides, so an option nested in another
+  // option's entry names both. Memoized, since the option entry's labels below are built on it
+  const entry = useMemo<TemplateWarnEntry>(() => {
+    if (entryAbove?.fieldPath === fieldPath) {
+      return entryAbove;
+    }
+    const label = () => entryLabelForLog(fieldPath, globalFormOptions, additionalDepths);
+    return { fieldPath, label, schemaLabel: label };
+  }, [entryAbove, fieldPath, globalFormOptions, additionalDepths]);
   // Below a field named for this path the option renders as though no field were named, which its `SchemaField` can't
   // tell apart from a `uiSchema` it inherits, so a field the option's own entry names is warned about here instead,
   // unless it is `SchemaField`, which renders the option the same either way
@@ -150,7 +151,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     const optionField = getUiOptions<T, S, F>(optionUiSchema).field;
     if (optionField && lookUpUiField<T, S, F>(optionField, fields) !== fields.SchemaField) {
       logOnce(
-        `ui:field in uiSchema.${xxxOfKey}[${selectedOption}] for ${entryLabel()} is ` +
+        `ui:field in uiSchema.${xxxOfKey}[${selectedOption}] for ${entry.label()} is ` +
           'ignored, since a field is already named for that path, so the option is rendered as though no ui:field ' +
           'were given.',
       );
@@ -165,14 +166,20 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // The option's `SchemaField` renders at this field's own `fieldPath`, so left to its own path its
   // template-override warnings would name this field's entry, and the two entries' mistakes would read as one under
   // `logOnce()`. It is handed the option entry's label instead, the way the `ui:field` warning above names it, or
-  // this field's own where it renders from this field's entry. Memoized: a fresh label each render would re-render the
-  // option past its `memo`, and the label is read only when an override is actually invalid
-  const optionEntry = useMemo(() => {
-    if (!rendersOption || optionUiSchema === uiSchema) {
-      return entryAbove;
-    }
-    return { fieldPath, label: () => `the uiSchema.${xxxOfKey}[${selectedOption}] entry of ${entryLabel()}` };
-  }, [rendersOption, optionUiSchema, uiSchema, xxxOfKey, selectedOption, fieldPath, entryLabel, entryAbove]);
+  // this field's own where it renders from this field's entry. The option's schema is its own either way. Memoized: a
+  // fresh label each render would re-render the option past its `memo`, and the labels are read only when something is
+  // actually invalid
+  const optionEntry = useMemo<TemplateWarnEntry>(
+    () => ({
+      fieldPath,
+      label:
+        optionUiSchema === uiSchema
+          ? entry.label
+          : () => `the uiSchema.${xxxOfKey}[${selectedOption}] entry of ${entry.label()}`,
+      schemaLabel: () => `the ${xxxOfKey}[${selectedOption}] option of ${entry.schemaLabel()}`,
+    }),
+    [optionUiSchema, uiSchema, xxxOfKey, selectedOption, fieldPath, entry],
+  );
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to

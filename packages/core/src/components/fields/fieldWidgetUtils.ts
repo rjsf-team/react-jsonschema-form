@@ -151,6 +151,17 @@ export function getBooleanFieldWidget<
   return uiOptions.widget ?? 'checkbox';
 }
 
+/** Whether `BooleanField` lists a schema's constant `anyOf`/`oneOf` options. Unlike `optionsList()`, which reads an `enum`
+ * first, it reads them before an `enum`, so they can title its values
+ *
+ * @param schema - The retrieved schema of the field
+ * @returns - True when the options come from the constants rather than any `enum`
+ */
+export function booleanListsConstantOptions<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
+  const keyword = getXxxOfKey<S>(schema);
+  return keyword !== undefined && isConstantOptionList<S>(schema[keyword]);
+}
+
 /** Gets the single widget `ArrayField` renders an array with, or `undefined` when it renders a list of items or the
  * unsupported-field template
  *
