@@ -567,7 +567,7 @@ export default class Form<
       // validated against it, so its errors are kept. Any other errors are of the old schema and are reset. The state's
       // own schemas are compared, since `SchemaUtils` rewrites the `$ref`s of a schema with an `$id`, so the state's
       // never equals the prop's
-      const isSchemaNewToErrors =
+      const resetErrorsForSchema =
         isSchemaChanged &&
         (deepEquals(this.state.schema, prevState.schema) || !Form.isLiveValidatedOnChange(this.props));
       // When formData is not an object, getChangedFields returns an empty array.
@@ -583,7 +583,7 @@ export default class Form<
         // Or if the `formData` changes, for example in the case of a schema with dependencies that need to
         //  match one of the subSchemas, the retrieved schema must be updated.
         isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
-        isSchemaNewToErrors,
+        resetErrorsForSchema,
         // Only the error clearing needs the path of each changed field, and it runs only when live validation does
         // not, so the walk that produces them is left for `getStateFromProps` to ask for
         () => getChangedFields(this.props.formData, prevProps.formData, true),
@@ -671,7 +671,7 @@ export default class Form<
    * @param props - The props passed to the `Form`
    * @param inputFormData - The new or current data for the `Form`
    * @param retrievedSchema - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`.
-   * @param [isSchemaChanged=false] - A flag indicating whether the schema has changed.
+   * @param [resetErrorsForSchema=false] - Whether the errors are reset because the schema changed under them
    * @param [getFormDataChangedFields=() => []] - Optional function returning the path of each `formData` field that
    *          changed, only called when those paths are needed, which is when live validation is not going to run
    * @param [skipLiveValidate=false] - Optional flag, if true, means that we are not running live validation
@@ -686,7 +686,7 @@ export default class Form<
     props: FormProps<T, S, F>,
     inputFormData?: T,
     retrievedSchema?: S,
-    isSchemaChanged = false,
+    resetErrorsForSchema = false,
     getFormDataChangedFields: () => string[] = () => [],
     skipLiveValidate = false,
     shouldSanitize = false,
@@ -794,9 +794,9 @@ export default class Form<
     } while (wasSanitized);
 
     const getCurrentErrors = (): ValidationData<T> => {
-      // If the `props.noValidate` option is set or the schema has changed, we reset the error state.
+      // If the `props.noValidate` option is set or the schema changed under the errors, we reset the error state.
       // oxlint-disable-next-line typescript/no-deprecated
-      if (props.noValidate || isSchemaChanged) {
+      if (props.noValidate || resetErrorsForSchema) {
         return { errors: [], errorSchema: {} };
       }
       // The schema validation errors rather than the shown ones, which already hold the `extraErrors` and custom
@@ -833,6 +833,13 @@ export default class Form<
       const currentErrors = getCurrentErrors();
       errors = currentErrors.errors;
       errorSchema = currentErrors.errorSchema;
+      // The next update builds on the schema validation errors, so the reset ones must go too or they would come back.
+      // Without live validation nothing would validate again when `noValidate` is turned off, so those are kept for then
+      // oxlint-disable-next-line typescript/no-deprecated
+      if (resetErrorsForSchema || (props.liveValidate && props.noValidate)) {
+        schemaValidationErrors = [];
+        schemaValidationErrorSchema = {};
+      }
       // We only update the error schema for changed fields if mustValidate is false
       if (!mustValidate) {
         const formDataChangedFields = getFormDataChangedFields();
@@ -1101,63 +1108,38 @@ export default class Form<
   onChange = (newValue: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
     this.changeCount += 1;
     const changeNumber = this.changeCount;
-    let outcome:
-      | {
-          prevState: FormState<T, S, F>;
-          props: FormProps<T, S, F>;
-          isLast: boolean;
-          result: FormState<T, S, F> | null;
-          error?: unknown;
-        }
-      | undefined;
-    this.setState(
-      (prevState, props) => {
-        const isLast = changeNumber === this.changeCount;
-        // React reruns an updater with the same arguments, under `StrictMode` say, and commits the first result, so the
-        // rerun returns that result rather than building new objects that differ from what is committed and reported
-        const isRerun = outcome?.prevState === prevState && outcome.props === props && outcome.isLast === isLast;
-        if (!outcome || !isRerun) {
-          try {
-            const state = this.processChange({ newValue, path, newErrorSchema }, isLast, prevState, props);
-            outcome = { prevState, props, isLast, result: state as FormState<T, S, F> };
-          } catch (error) {
-            const validation =
-              isLast && prevState.isLiveValidationPending ? this.validateBeforeThrow(prevState, props) : undefined;
-            const result = (validation ?? null) as FormState<T, S, F> | null;
-            outcome = { prevState, props, isLast, result, error };
-          }
-        }
-        return outcome.result;
-      },
-      () => {
-        if (!outcome) {
+    this.queueUpdate<{ state: Partial<FormState<T, S, F>> | null }, boolean>(
+      (prevState, props, isLast) => ({
+        state: this.processChange({ newValue, path, newErrorSchema }, isLast, prevState, props),
+      }),
+      ({ state }, prevState, props, isThrown) => {
+        if (!state) {
           return;
         }
-        const { result, error, prevState, props } = outcome;
-        const isThrown = 'error' in outcome;
-        outcome = undefined;
         // A change that threw reports the validation of the changes before it, without its own id, since the data
         // does not hold it
         const reportedId: [id?: string] = isThrown ? [] : [id];
-        if (isThrown) {
-          // Scheduled first, so a throwing parent `onChange` below does not lose the change's own error
-          Form.rethrowLater(error);
+        if (changeNumber < this.lastReportedChange) {
+          // React rebased the later changes already reported onto this one, so only the committed state holds both
+          this.reportChange(toIChangeEvent(this.state), ...reportedId);
+        } else {
+          this.lastReportedChange = changeNumber;
+          // React applies `getDerivedStateFromProps` after the batch's updaters, so what it adds, such as new
+          // `extraErrors`, is applied here too, while later changes of the batch stay out of this one's event
+          const changed = { ...prevState, ...state } as FormState<T, S, F>;
+          this.reportChange(
+            toIChangeEvent({ ...changed, ...Form.getDerivedStateFromProps(props, changed) }),
+            ...reportedId,
+          );
         }
-        if (result) {
-          if (changeNumber < this.lastReportedChange) {
-            // React rebased the later changes already reported onto this one, so only the committed state holds both
-            this.reportChange(toIChangeEvent(this.state), ...reportedId);
-          } else {
-            this.lastReportedChange = changeNumber;
-            // React applies `getDerivedStateFromProps` after the batch's updaters, so what it adds, such as new
-            // `extraErrors`, is applied here too, while later changes of the batch stay out of this one's event
-            const changed = { ...prevState, ...result };
-            this.reportChange(
-              toIChangeEvent({ ...changed, ...Form.getDerivedStateFromProps(props, changed) }),
-              ...reportedId,
-            );
-          }
-        }
+      },
+      {
+        // Whether no later change has been queued, which decides whether this one live validates
+        getKey: () => changeNumber === this.changeCount,
+        // The changes before a throwing last change skipped live validation for it, so they are validated in its place
+        recover: (prevState, props, isLast) => ({
+          state: (isLast && prevState.isLiveValidationPending && this.validateBeforeThrow(prevState, props)) || null,
+        }),
       },
     );
   };
@@ -1504,6 +1486,10 @@ export default class Form<
    * was provided. Also runs any live validation and/or live omit operations if the flags indicate they should happen
    * during `onBlur`.
    *
+   * A blur has a higher priority than a change made in a transition, so React reruns it on top of that change once the
+   * transition commits, without reporting what the rerun did. The change's own `onChange` event then lacks the blur's
+   * omit and validation.
+   *
    * @param id - The unique `id` of the field that was blurred
    * @param data - The data associated with the field that was blurred
    */
@@ -1554,31 +1540,46 @@ export default class Form<
 
   /** Queues `compute` as a `setState` updater, committing the `state` it returns, and hands its result to `onCommit`
    * once committed. React reruns an updater with the same arguments, under `StrictMode` say, and commits the first
-   * result, so a rerun returns that result rather than computing objects that were not committed. A throw leaves the
-   * state as it was and is rethrown from a timeout, since the updater runs while React renders, where a throw would
-   * unmount the form
+   * result, so a rerun returns that result rather than computing objects that were not committed. A throw is rethrown
+   * from a timeout, since the updater runs while React renders, where a throw would unmount the form, and commits what
+   * `recover` returns, or leaves the state as it was without one
    *
    * @param compute - Computes the state to commit, and whatever else `onCommit` needs, from the updater's arguments
-   * @param onCommit - Called once the state is committed, with the result and the arguments it was computed from
+   * @param onCommit - Called once the state is committed, with the result, the arguments it was computed from and
+   *          whether `compute` threw
+   * @param [options] - `getKey` returns a value a rerun must also match, which is handed to `compute`, and `recover`
+   *          computes the result to commit in place of a `compute` that threw
    */
-  private queueUpdate<R extends { state: Partial<FormState<T, S, F>> | null }>(
-    compute: (prevState: FormState<T, S, F>, props: FormProps<T, S, F>) => R,
-    onCommit: (result: R, prevState: FormState<T, S, F>, props: FormProps<T, S, F>) => void,
+  private queueUpdate<R extends { state: Partial<FormState<T, S, F>> | null }, K = undefined>(
+    compute: (prevState: FormState<T, S, F>, props: FormProps<T, S, F>, key: K) => R,
+    onCommit: (result: R, prevState: FormState<T, S, F>, props: FormProps<T, S, F>, isThrown: boolean) => void,
+    options: {
+      getKey?: () => K;
+      recover?: (prevState: FormState<T, S, F>, props: FormProps<T, S, F>, key: K) => R;
+    } = {},
   ) {
-    type Outcome = { prevState: FormState<T, S, F>; props: FormProps<T, S, F> } & ({ result: R } | { error: unknown });
+    const { getKey, recover } = options;
+    interface Outcome {
+      prevState: FormState<T, S, F>;
+      props: FormProps<T, S, F>;
+      key: K;
+      result?: R;
+      thrown?: { error: unknown };
+    }
     let outcome: Outcome | undefined;
     this.setState(
       (prevState, props) => {
+        const key = getKey?.() as K;
         let current = outcome;
-        if (current?.prevState !== prevState || current.props !== props) {
+        if (current?.prevState !== prevState || current.props !== props || current.key !== key) {
           try {
-            current = { prevState, props, result: compute(prevState, props) };
+            current = { prevState, props, key, result: compute(prevState, props, key) };
           } catch (error) {
-            current = { prevState, props, error };
+            current = { prevState, props, key, result: recover?.(prevState, props, key), thrown: { error } };
           }
           outcome = current;
         }
-        return 'error' in current ? null : (current.result.state as FormState<T, S, F> | null);
+        return (current.result?.state ?? null) as FormState<T, S, F> | null;
       },
       () => {
         const committed = outcome;
@@ -1586,11 +1587,13 @@ export default class Form<
         if (!committed) {
           return;
         }
-        if ('error' in committed) {
-          Form.rethrowLater(committed.error);
-          return;
+        if (committed.thrown) {
+          // Scheduled first, so a throw from `onCommit`, such as from a parent's `onChange`, does not lose this one
+          Form.rethrowLater(committed.thrown.error);
         }
-        onCommit(committed.result, committed.prevState, committed.props);
+        if (committed.result) {
+          onCommit(committed.result, committed.prevState, committed.props, committed.thrown !== undefined);
+        }
       },
     );
   }
@@ -1910,6 +1913,9 @@ export default class Form<
   /** Programmatically validate the form.  If `omitExtraData` is true, the `formData` will first be filtered to remove
    * any extra data not in a form field. If `onError` is provided, then it will be called with the list of errors the
    * same way as would happen on form submission.
+   *
+   * It validates the committed `formData`, since it returns its result at once, so a change queued in the same event,
+   * such as by `setFieldValue()`, is not part of it. A submit in the same event does include that change.
    *
    * @returns - True if the form is valid, false otherwise.
    */

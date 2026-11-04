@@ -2202,6 +2202,87 @@ describe('Form change handler under a parent', () => {
     expect(ref.current!.state.errors.map(({ message }) => message)).toEqual(['server']);
     expect(container.querySelectorAll('#root_bar__error li')).toHaveLength(1);
   });
+  describe('errors reset by a new schema or noValidate', () => {
+    const strict: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
+    const loose: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
+    let parent: {
+      setSchema: (schema: RJSFSchema) => void;
+      setNoValidate: (noValidate: boolean) => void;
+      setHelp: (help: string) => void;
+    };
+    function Parent({ liveValidate, initial }: { liveValidate: FormProps['liveValidate']; initial: string }) {
+      const [schema, setSchema] = useState(strict);
+      const [noValidate, setNoValidate] = useState(false);
+      const [help, setHelp] = useState('before');
+      const [formData, setFormData] = useState<GenericObjectType | undefined>({ foo: initial });
+      parent = { setSchema, setNoValidate, setHelp };
+      return (
+        <Form
+          schema={schema}
+          uiSchema={{ foo: { 'ui:help': help } }}
+          validator={customizeValidator<GenericObjectType>()}
+          liveValidate={liveValidate}
+          // oxlint-disable-next-line typescript/no-deprecated
+          noValidate={noValidate}
+          noHtml5Validate
+          formData={formData}
+          onChange={(event) => setFormData(event.formData)}
+        />
+      );
+    }
+    const shownErrors = (container: HTMLElement) => ({
+      list: container.querySelectorAll('.panel-danger li').length,
+      field: container.querySelectorAll('#root_foo__error li').length,
+    });
+    // Raises the `minLength` error the way each `liveValidate` value does: on the change, on a blur or on a submit
+    const raiseError = async (container: HTMLElement, liveValidate: FormProps['liveValidate']) => {
+      if (liveValidate === false) {
+        await submitForm(container.querySelector('form')!, user);
+      } else {
+        await user.click(container.querySelector('#root_foo')!);
+        await user.paste('b');
+        await user.tab();
+      }
+      expect(shownErrors(container)).toEqual({ list: 1, field: 1 });
+    };
+
+    it.each<[FormProps['liveValidate']]>([[true], ['onBlur'], [false]])(
+      'should not bring back the errors of the old schema when another prop changes, with liveValidate %s',
+      async (liveValidate) => {
+        const { container } = render(<Parent liveValidate={liveValidate} initial='a' />);
+        await raiseError(container, liveValidate);
+
+        act(() => parent.setSchema(loose));
+        expect(shownErrors(container)).toEqual({ list: 0, field: 0 });
+
+        act(() => parent.setHelp('after'));
+        expect(shownErrors(container)).toEqual({ list: 0, field: 0 });
+      },
+    );
+
+    it('should not bring back the error of a value fixed under noValidate when it is turned off', async () => {
+      const { container } = render(<Parent liveValidate initial='a' />);
+      await raiseError(container, true);
+
+      act(() => parent.setNoValidate(true));
+      await user.click(container.querySelector('#root_foo')!);
+      await user.paste('cd');
+      act(() => parent.setNoValidate(false));
+
+      expect(shownErrors(container)).toEqual({ list: 0, field: 0 });
+    });
+
+    it('should bring back the errors of a submit when noValidate is turned off, with live validation off', async () => {
+      const { container } = render(<Parent liveValidate={false} initial='a' />);
+      await raiseError(container, false);
+
+      act(() => parent.setNoValidate(true));
+      expect(shownErrors(container)).toEqual({ list: 0, field: 0 });
+
+      act(() => parent.setNoValidate(false));
+      expect(shownErrors(container)).toEqual({ list: 1, field: 1 });
+    });
+  });
   it('should keep the form mounted and still call onError when focusOnFirstError throws on submit', () => {
     vi.useFakeTimers();
     class Boundary extends Component<{ children: ReactNode }, { failed: boolean }> {
