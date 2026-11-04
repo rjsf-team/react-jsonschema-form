@@ -148,7 +148,7 @@ function shownOptionLabelledBy<
  * @param uiSchema - The uiSchema the field renders
  * @param [headingType] - The type with a heading of its own that a `FallbackField`'s value holds, if any
  * @returns - False for a container, `NullField`, or `FallbackField` rendering the unsupported-field template, or a
- *   value its own field labels, true otherwise, a custom field included
+ *   value it hands its label and description down to, true otherwise, a custom field included
  */
 function rendersControl<
   T = unknown,
@@ -170,26 +170,35 @@ function rendersControl<
     if (!globalFormOptions.useFallbackUiForUnsupportedType) {
       return false;
     }
-    // The fallback UI labels its value from outside where the value is a control that leaves its label to a template,
-    // and otherwise leaves the value field to draw its own heading or label. A boolean's widget says which by its
-    // declaration, so every name it goes by gets the same answer. Only a boolean: a text input declared as labelling
-    // itself keeps its description with the field around the type selector, which the theme draws where it draws it
+    // The fallback UI labels its value from outside when the value is a control, and otherwise leaves the value field to
+    // draw its own heading or label
     const valueSchema =
       headingType && getSchemaOwnTypes<S>(schema)?.includes(headingType) ? { ...schema, type: headingType } : schema;
+    // A boolean's widget decides by its declaration, so every name it goes by gets the same answer. Only a boolean: a
+    // text input declared as labelling itself keeps its description with the field around the type selector
     if (getFieldTypeForUiSchema<T, S, F>(valueSchema, uiSchema) !== 'boolean') {
       return displaysLabel<T, S, F>(registry, valueSchema, uiSchema);
     }
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const { label } = { ...registry.globalUiOptions, ...uiOptions };
-    const keepsWidget = fallbackValueKeepsWidget<T, S, F>(valueSchema, 'boolean', uiOptions.widget, registry.widgets);
+    if (uiBooleanOption(label) === false) {
+      return false;
+    }
+    const value = getPresentationDeclaration<T, S, F>(registry, {
+      schema: { ...schema, type: 'boolean' },
+      field: fields.BooleanField,
+      fieldKey: 'BooleanField',
+      widget: getBooleanFieldWidget<T, S, F>(
+        fallbackValueKeepsWidget<T, S, F>(schema, 'boolean', uiOptions.widget, registry.widgets) ? uiOptions : {},
+      ),
+    });
+    // A `FallbackField` drawing its own label leaves no template label at stake, so there the answer only places the
+    // description: a control with its label beside it hands it down, to go with that label, and a radio or select keeps
+    // it with the field, as a text input does
     return (
-      uiBooleanOption(label) !== false &&
-      getPresentationDeclaration<T, S, F>(registry, {
-        schema: { ...valueSchema, type: 'boolean' },
-        field: fields.BooleanField,
-        fieldKey: 'BooleanField',
-        widget: getBooleanFieldWidget<T, S, F>(keepsWidget ? uiOptions : {}),
-      }).label === 'template'
+      value.label === 'template' ||
+      (value.labelPlacement !== 'beside' &&
+        getPresentationDeclaration<T, S, F>(registry, { schema, field, fieldKey: 'FallbackField' }).label === 'self')
     );
   }
   return !CONTROLLESS_FIELD_KEYS.some((key) => fields[key] === field);
@@ -246,7 +255,7 @@ export default function useSchemaFieldPresentation<
   // or an array draws its description under its heading, below that selector, as it does beneath a selector around them
   const heldType = guessType(formData);
   const headingType = inherited && (heldType === 'object' || heldType === 'array') ? heldType : undefined;
-  // Memoized, since a `FallbackField` asks `getDisplayLabel()`
+  // Memoized, since a `FallbackField` asks `getDisplayLabel()` or looks up its boolean's widget
   const hasControl = useMemo(
     () =>
       plannedField !== undefined &&

@@ -39,7 +39,7 @@ import { generateWidgets } from './components/widgets/index.ts';
 function generatePresentation(): ThemePresentation {
   return {
     widgets: {
-      CheckboxWidget: { label: 'self', description: 'self', uncheckedIsFalse: true },
+      CheckboxWidget: { label: 'self', description: 'self', uncheckedIsFalse: true, labelPlacement: 'beside' },
       CheckboxesWidget: { labelledBy: 'aria-labelledby' },
       RadioWidget: { labelledBy: 'aria-labelledby' },
       RatingWidget: { labelledBy: 'aria-labelledby' },

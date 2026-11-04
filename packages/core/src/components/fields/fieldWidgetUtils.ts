@@ -622,7 +622,8 @@ export function withoutUiWidget<T, S extends StrictRJSFSchema, F extends FormCon
 
 /** Whether the fallback UI's value field keeps its `ui:widget` on `type`, which `withoutUiWidget()` otherwise drops, since
  * a widget named for one member of a union has no implementation for the others. Read both to render the value and to
- * plan the field around it, so the plan can't label one widget while another renders
+ * plan the field around it, so the plan can't label one widget while another renders. Checked against the schema with
+ * its type pinned, which is all of the value schema `getWidget()` reads
  *
  * @param schema - The schema the fallback UI renders
  * @param type - The type the value is on

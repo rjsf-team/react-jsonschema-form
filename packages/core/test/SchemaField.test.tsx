@@ -1243,6 +1243,13 @@ describe('SchemaField', () => {
             displayLabel: true,
           },
           {
+            named: 'a lone boolean radio naming FallbackField, which draws its label above the control',
+            items: { type: 'boolean', title: 'Value' },
+            uiSchema: { items: { 'ui:field': 'FallbackField', 'ui:widget': 'radio' } },
+            value: true,
+            displayLabel: true,
+          },
+          {
             named: 'an object-first type list, whose heading is drawn below the type selector',
             items: { type: ['object', 'string'], title: 'Value' },
             value: {},

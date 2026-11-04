@@ -930,8 +930,10 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
   labelledBy?: 'for' | 'aria-labelledby';
   /** Where a label the component draws itself sits: `'above'` its control, as a theme's text input draws its label over
    * the input, or `'beside'` it, as a checkbox draws its own. It says nothing of a label the template draws. Left out, a
-   * self-drawn label isn't taken to sit above the control. `@rjsf/core` reads it for one thing only: an array item's
-   * `displayLabel`, which lays the item's buttons out level with the control below a label above it
+   * self-drawn label isn't taken to sit above the control. `@rjsf/core` reads it for two things: an array item's
+   * `displayLabel`, which lays the item's buttons out level with the control below a label above it, and, where a theme's
+   * `FallbackField` draws its own label, the fallback UI handing a boolean's description down below its type selector to
+   * a control declared `'beside'`
    */
   labelPlacement?: 'above' | 'beside';
   /** Whether the control, left alone, already holds `false`, as an unchecked checkbox or switch does where its field

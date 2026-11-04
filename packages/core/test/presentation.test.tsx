@@ -8,6 +8,7 @@ import type {
   RJSFSchema,
   UiSchema,
   Widget,
+  WidgetPresentationDeclaration,
   WidgetProps,
 } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionId, titleId } from '@rjsf/utils';
@@ -1356,7 +1357,7 @@ describe("the fallback UI's label of a boolean, however its widget is spelled (#
     createFormComponent({
       schema: { type: 'object', properties: { val: { title: 'Val', ...val } } },
       uiSchema: { val: valUiSchema },
-      widgets: { OwnCheckbox: CoreCheckboxWidget },
+      widgets: { OwnCheckbox: CoreCheckboxWidget, OwnSwitch: CoreCheckboxWidget },
       presentation,
       useFallbackUiForUnsupportedType: true,
     });
@@ -1371,6 +1372,7 @@ describe("the fallback UI's label of a boolean, however its widget is spelled (#
     expect(label!.compareDocumentPosition(screen.getByRole('combobox', { name: 'Type' }))).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     );
+    expect(screen.getAllByText('Val')).toHaveLength(1);
   }
 
   it.each<[string, UiSchema]>([
@@ -1404,7 +1406,6 @@ describe("the fallback UI's label of a boolean, however its widget is spelled (#
       });
 
       expectLabelAboveTypeSelector(node);
-      expect(screen.getAllByText('Val')).toHaveLength(1);
     },
   );
 
@@ -1422,6 +1423,26 @@ describe("the fallback UI's label of a boolean, however its widget is spelled (#
     const { node } = renderVal({ type: ['boolean', 'string'] }, valUiSchema);
 
     expectLabelAboveTypeSelector(node);
+  });
+
+  // Under a `FallbackField` drawing its own label no template label is at stake, so where a widget's label sits decides
+  // where its description goes, and `uncheckedIsFalse`, which is about `required`, has no say in it
+  it.each<[string, Partial<WidgetPresentationDeclaration>, number]>([
+    ["labelPlacement: 'beside', below", { labelPlacement: 'beside' }, Node.DOCUMENT_POSITION_PRECEDING],
+    ['uncheckedIsFalse alone, above', { uncheckedIsFalse: true }, Node.DOCUMENT_POSITION_FOLLOWING],
+  ])('places the description of a widget declaring %s the type selector', (_, declared, position) => {
+    renderVal(
+      { type: ['boolean', 'string'], description: 'Desc' },
+      { 'ui:widget': 'OwnSwitch' },
+      {
+        fields: { FallbackField: { label: 'self' } },
+        widgets: { OwnSwitch: { label: 'self', description: 'self', ...declared } },
+      },
+    );
+
+    expect(screen.getByText('Desc').compareDocumentPosition(screen.getByRole('combobox', { name: 'Type' }))).toBe(
+      position,
+    );
   });
 
   // With one type there is no selector, so the value field renders alone, and a label from the template would sit above

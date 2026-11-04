@@ -358,8 +358,6 @@ function FallbackUiField<
   );
   // What `getUiOptions(uiSchema, globalUiOptions)` returns for the label, without reading the `uiSchema` a second time
   const { label } = { ...globalUiOptions, ...uiOptions };
-  // Whether the value field keeps its widget on a given type. Checked against the schema with its type pinned, which is
-  // all of the value schema `getWidget()` reads
   const keepsWidget = useCallback(
     (aType: JSONSchema7TypeName) => fallbackValueKeepsWidget<T, S, F>(schema, aType, uiOptions.widget, widgets),
     [uiOptions.widget, schema, widgets],
