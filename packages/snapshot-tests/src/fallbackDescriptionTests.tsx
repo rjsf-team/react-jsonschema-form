@@ -6,7 +6,8 @@ import { render, screen } from '@testing-library/react';
 
 /** Pins that a field's own `ui:field` naming `FallbackField` or nothing leaves the fallback UI's description where the
  * theme draws it with no `ui:field` at all, rather than moving it between the template above the type selector and the
- * value field below it (#5389).
+ * value field below it (#5389), and that naming a boolean's checkbox leaves its label and description where they are
+ * with no `ui:widget` at all (#5581).
  *
  * @param Form - The theme's `Form` component
  * @param descriptionAbove - Whether the theme draws the description above the type selector rather than below it
@@ -65,6 +66,43 @@ export function fallbackDescriptionTests(Form: ComponentType<FormProps>, descrip
         owner = owner.parentElement;
       }
       expect(owner).toContainElement(typeSelector);
+    });
+  });
+
+  describe("the fallback UI's label and description of a boolean, however its checkbox is spelled (#5581)", () => {
+    function renderedLayout(valUiSchema: UiSchema) {
+      const { unmount } = render(
+        <Form
+          schema={{
+            type: 'object',
+            properties: { val: { type: ['boolean', 'string'], title: 'Val', description: 'Desc' } },
+          }}
+          uiSchema={{ val: valUiSchema }}
+          validator={validator}
+          useFallbackUiForUnsupportedType
+        />,
+      );
+      const typeSelector = screen.getByRole('combobox', { name: 'Type' });
+      const isAbove = (element: Element) =>
+        element.compareDocumentPosition(typeSelector) === Node.DOCUMENT_POSITION_FOLLOWING;
+      const layout = {
+        label: screen.getAllByText('Val').map(isAbove),
+        description: screen.getAllByText('Desc').map(isAbove),
+      };
+      unmount();
+      return layout;
+    }
+
+    test.each<[string, UiSchema]>([
+      ["ui:widget: 'checkbox'", { 'ui:widget': 'checkbox' }],
+      ["ui:widget: 'CheckboxWidget'", { 'ui:widget': 'CheckboxWidget' }],
+      ["ui:options.widget: 'checkbox'", { 'ui:options': { widget: 'checkbox' } }],
+    ])('are drawn once, where they are with no ui:widget, under %s', (_, valUiSchema) => {
+      const layout = renderedLayout(valUiSchema);
+
+      expect(layout.label).toHaveLength(1);
+      expect(layout.description).toHaveLength(1);
+      expect(layout).toEqual(renderedLayout({}));
     });
   });
 }

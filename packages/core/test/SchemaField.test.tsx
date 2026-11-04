@@ -1215,7 +1215,7 @@ describe('SchemaField', () => {
           presentation: { ...selfLabelled, fields: { FallbackField: { label: 'self', labelPlacement: 'above' } } },
         },
       ])('under the fallback UI, its type selector labelled by $theme', ({ presentation }) => {
-        it.each<{ named: string; items: RJSFSchema; uiSchema?: UiSchema; displayLabel: boolean }>([
+        it.each<{ named: string; items: RJSFSchema; uiSchema?: UiSchema; value?: unknown; displayLabel: boolean }>([
           { named: 'a titled type list', items: { ...typeList, title: 'Value' }, displayLabel: true },
           { named: 'an untitled type list', items: typeList, displayLabel: true },
           {
@@ -1237,16 +1237,56 @@ describe('SchemaField', () => {
             displayLabel: false,
           },
           {
+            named: 'a boolean-first type list, whose checkbox draws its own label below the type selector',
+            items: { type: ['boolean', 'string'], title: 'Value' },
+            value: true,
+            displayLabel: true,
+          },
+          {
+            named: "a boolean-first type list under ui:widget: 'checkbox'",
+            items: { type: ['boolean', 'string'], title: 'Value' },
+            uiSchema: { items: { 'ui:widget': 'checkbox' } },
+            value: true,
+            displayLabel: true,
+          },
+          {
+            named: "a boolean-first type list under ui:widget: 'CheckboxWidget'",
+            items: { type: ['boolean', 'string'], title: 'Value' },
+            uiSchema: { items: { 'ui:widget': 'CheckboxWidget' } },
+            value: true,
+            displayLabel: true,
+          },
+          {
+            named: 'a boolean-first type list with ui:label false',
+            items: { type: ['boolean', 'string'], title: 'Value' },
+            uiSchema: { items: { 'ui:label': false } },
+            value: true,
+            displayLabel: false,
+          },
+          {
+            named: 'a boolean-first type list with a hidden value',
+            items: { type: ['boolean', 'string'], title: 'Value' },
+            uiSchema: { items: { 'ui:widget': 'hidden' } },
+            value: true,
+            displayLabel: false,
+          },
+          {
+            named: 'an object-first type list, whose heading is drawn below the type selector',
+            items: { type: ['object', 'string'], title: 'Value' },
+            value: {},
+            displayLabel: true,
+          },
+          {
             named: 'a hidden text input, which renders no type selector',
             items: titled,
             uiSchema: { items: { 'ui:widget': 'hidden' } },
             displayLabel: false,
           },
-        ])('with $named', ({ items, uiSchema, displayLabel }) => {
+        ])('with $named', ({ items, uiSchema, value = 'a', displayLabel }) => {
           const labels = renderItemLabels({
             schema: { type: 'array', items },
             uiSchema,
-            initialFormData: ['a'],
+            initialFormData: [value],
             presentation,
             useFallbackUiForUnsupportedType: true,
           });

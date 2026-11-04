@@ -17,13 +17,16 @@ import {
   getFieldTypeForUiSchema,
   getPresentationDeclaration,
   getSchemaOwnTypes,
+  getUiOptions,
   guessType,
+  hasWidget,
   ITEMS_KEY,
   resolveFieldPresentation,
   schemaRequiresTrueValue,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
-import getFieldWidget, { displaysLabel, withoutDescribers } from './fieldWidgetUtils.ts';
+import getFieldWidget, { displaysLabel, getBooleanFieldWidget, withoutDescribers } from './fieldWidgetUtils.ts';
 
 /** The fields of core's that render no control for a template label to name: a container, whose label is its own
  * heading, and `NullField`, which renders nothing. `ArrayField` is one only when it renders no widget
@@ -135,7 +138,8 @@ function shownOptionLabelledBy<
  *
  * @param field - The field component planned
  * @param widget - The single widget it renders, if any
- * @param registry - The registry, whose `fields`, `globalFormOptions`, `schemaUtils` and `globalUiOptions` are read
+ * @param registry - The registry, whose `fields`, `widgets`, `presentation`, `globalFormOptions`, `schemaUtils` and
+ *   `globalUiOptions` are read
  * @param schema - The schema the field renders
  * @param uiSchema - The uiSchema the field renders
  * @param [headingType] - The type with a heading of its own that a `FallbackField`'s value holds, if any
@@ -159,13 +163,29 @@ function rendersControl<
     return widget !== undefined;
   }
   if (field === fields.FallbackField) {
-    // The fallback UI labels its value from outside where this call says the value is a control, and otherwise leaves
-    // the value field to draw its own heading or label. The call matches `ui:widget` by name (#5581)
+    if (!globalFormOptions.useFallbackUiForUnsupportedType) {
+      return false;
+    }
+    // The fallback UI labels its value from outside where the value is a control that leaves its label to a template,
+    // and otherwise leaves the value field to draw its own heading or label. A boolean's widget says which by its
+    // declaration, so every name it goes by gets the same answer. Only a boolean: a text input declared as labelling
+    // itself keeps its description with the field around the type selector, which the theme draws where it draws it
     const valueSchema =
       headingType && getSchemaOwnTypes<S>(schema)?.includes(headingType) ? { ...schema, type: headingType } : schema;
+    if (getFieldTypeForUiSchema<T, S, F>(valueSchema, uiSchema) !== 'boolean') {
+      return displaysLabel<T, S, F>(registry, valueSchema, uiSchema);
+    }
+    const booleanSchema = { ...valueSchema, type: 'boolean' };
+    const namedWidget = getBooleanFieldWidget<T, S, F>(getUiOptions<T, S, F>(uiSchema));
     return (
-      Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
-      displaysLabel<T, S, F>(registry, valueSchema, uiSchema)
+      uiBooleanOption(getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions).label) !== false &&
+      getPresentationDeclaration<T, S, F>(registry, {
+        schema: booleanSchema,
+        field: fields.BooleanField,
+        fieldKey: 'BooleanField',
+        // The fallback UI drops a widget a boolean has no implementation of, which leaves its value the checkbox
+        widget: hasWidget<T, S, F>(booleanSchema, namedWidget, registry.widgets) ? namedWidget : 'checkbox',
+      }).label === 'template'
     );
   }
   return !CONTROLLESS_FIELD_KEYS.some((key) => fields[key] === field);

@@ -627,3 +627,25 @@ fallbackDescriptionTests(WrappedForm, true);
 wrapIfAdditionalErrorStateTests(WrappedForm);
 
 submitPendingTests(WrappedForm);
+
+describe("the fallback UI's description of a boolean radio (#5581)", () => {
+  // The radio declares drawing its own label, as the checkbox does, so the description goes below the type selector
+  // with that label rather than above it, where a text input's stays
+  it('is drawn once, below the type selector, with the label the radio draws', () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { val: { type: ['boolean', 'string'], title: 'Val', description: 'Desc' } },
+        }}
+        uiSchema={{ val: { 'ui:widget': 'radio' } }}
+        validator={validator}
+        useFallbackUiForUnsupportedType
+      />,
+    );
+
+    const typeSelector = screen.getByRole('combobox', { name: 'Type' });
+    expect(screen.getByText('Desc').compareDocumentPosition(typeSelector)).toBe(Node.DOCUMENT_POSITION_PRECEDING);
+    expect(screen.getByText('Val').compareDocumentPosition(typeSelector)).toBe(Node.DOCUMENT_POSITION_PRECEDING);
+  });
+});
