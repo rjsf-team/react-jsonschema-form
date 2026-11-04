@@ -477,7 +477,7 @@ export default function ObjectField<
   const renameFocus = useRef<{ headedTo: Element; fieldPath: FieldPath } | undefined>(undefined);
   useLayoutEffect(() => {
     if (renameFocus.current?.headedTo.isConnected === false) {
-      formAccess?.focusField(renameFocus.current.fieldPath);
+      formAccess?.focusField(renameFocus.current.fieldPath, true);
     }
     renameFocus.current = undefined;
   });

@@ -29,8 +29,10 @@ interface FormDataAccess {
    * is stored at
    */
   sendBlur(id: string, fieldPath: FieldPath, touches: BlurTouch, send: () => void, replaces?: boolean): void;
-  /** Focuses the field at `fieldPath`, the way the form focuses the field of an error */
-  focusField(fieldPath: FieldPath): void;
+  /** Focuses the field at `fieldPath`, the way the form focuses the field of an error, and with `entersContainer` the
+   * first control inside an object or array, whose own error focuses none of them
+   */
+  focusField(fieldPath: FieldPath, entersContainer?: boolean): void;
   /** The form's current data at `path` */
   readField<D>(path: FieldPath): D;
   /** The form's data at `path` as its last commit rendered it, which a field rendered in that commit was handed */

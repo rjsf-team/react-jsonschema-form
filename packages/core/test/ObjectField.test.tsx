@@ -1432,6 +1432,20 @@ describe('ObjectField', () => {
         expect(screen.getByRole('combobox', { name: 'End date, year' })).toHaveFocus();
       });
 
+      it.each<[string, RJSFSchema, unknown, string]>([
+        ['object', { type: 'object', properties: { inner: { type: 'string' } } }, { inner: 'one' }, '#root_end_inner'],
+        ['array', { type: 'array', items: { type: 'string' } }, ['one'], '#root_end_0'],
+      ])('should move focus to the first control of a declared %s field', async (_, value, data, firstControl) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { end: value }, additionalProperties: value },
+          initialFormData: { start: data },
+        });
+
+        await renameKey(node, 'start', 'end');
+
+        expect(elementOf(node, firstControl)).toHaveFocus();
+      });
+
       it('should move focus to a declared field a template remounts by keying its rows by name', async () => {
         const { node } = createFormComponent({
           schema: dateSchema,

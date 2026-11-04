@@ -143,6 +143,8 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
  * @param elementId - The field's id
  * @param tried - The elements already tried, which aren't tried again
  * @param view - The window of the form
+ * @param entersContainer - Whether a container's `<fieldset>` is searched too, for focus on its way into the field
+ *   rather than an error about the container itself
  */
 function focusForId(
   formElement: Element,
@@ -150,8 +152,9 @@ function focusForId(
   elementId: string,
   tried: ReadonlySet<Node | null | undefined>,
   view: Window & typeof globalThis,
+  entersContainer: boolean,
 ): void {
-  if (exact instanceof view.HTMLFieldSetElement) {
+  if (exact instanceof view.HTMLFieldSetElement && !entersContainer) {
     return;
   }
   if (exact) {
@@ -362,8 +365,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * element. If it is located, then it is focused.
    *
    * @param fieldPath - The `FieldPath` of the field on which to focus
+   * @param [entersContainer=false] - Whether a container's controls are focused as well, see `focusForId()`
    */
-  const focusField = (fieldPath: FieldPath) => {
+  const focusField = (fieldPath: FieldPath, entersContainer = false) => {
     const elementId = fieldPathToId(fieldPath, current().registry.globalFormOptions);
     const view = formWindow();
     if (!formElement || !view) {
@@ -386,7 +390,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const namedControls = named instanceof view.RadioNodeList ? Array.from(named) : [named];
     const candidates = new Set([exact, ...namedControls]);
     if (![...candidates].some((element) => takesFocus(element, view))) {
-      focusForId(formElement, exact, elementId, candidates, view);
+      focusForId(formElement, exact, elementId, candidates, view, entersContainer);
     }
   };
 
