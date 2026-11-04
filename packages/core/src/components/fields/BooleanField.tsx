@@ -1,16 +1,13 @@
 import { useCallback } from 'react';
 import type { FieldProps, FormContextType, ErrorSchema, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import {
-  fieldPathToName,
-  getUiOptions,
-  getXxxOfKey,
-  isConstantOptionList,
-  optionsList,
-  resolveWidget,
-  TranslatableString,
-} from '@rjsf/utils';
+import { fieldPathToName, getUiOptions, optionsList, resolveWidget, TranslatableString } from '@rjsf/utils';
 
-import { getBooleanFieldWidget, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
+import {
+  booleanListsConstantOptions,
+  getBooleanFieldWidget,
+  getWidgetErrorProps,
+  getWidgetLabelProps,
+} from './fieldWidgetUtils.ts';
 
 /** The `BooleanField` component is used to render a field in the schema is boolean. It constructs `enumOptions` for the
  * two boolean values based on the various alternatives in the schema.
@@ -71,15 +68,11 @@ function BooleanField<
     }
     return value ? yes : no;
   };
-  // Read from the keyword `SchemaField` picks the widget from, so the widget and the options come from one list. Unlike
-  // `optionsList()`, which lists an `enum` first, a boolean's constant options win over its `enum`, so they can title
-  // its values
-  const altKey = getXxxOfKey<S>(schema);
-  const enumOptions =
-    altKey && isConstantOptionList<S>(schema[altKey])
-      ? // Without the `enum`, which `optionsList()` would list instead
-        optionsList<T, S, F>({ ...schema, enum: undefined }, uiSchema, yesNoLabel)
-      : optionsList<T, S, F>({ enum: schema.enum ?? [true, false] } as S, uiSchema, yesNoLabel);
+  // Read from the keyword `SchemaField` picks the widget from, so the widget and the options come from one list
+  const enumOptions = booleanListsConstantOptions<S>(schema)
+    ? // Without the `enum`, which `optionsList()` would list instead
+      optionsList<T, S, F>({ ...schema, enum: undefined }, uiSchema, yesNoLabel)
+    : optionsList<T, S, F>({ enum: schema.enum ?? [true, false] } as S, uiSchema, yesNoLabel);
   const onWidgetChange = useCallback(
     (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => onChange(value, fieldPath, errorSchema, id),
     [onChange, fieldPath],

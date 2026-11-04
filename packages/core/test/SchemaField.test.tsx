@@ -1588,6 +1588,26 @@ describe('SchemaField', () => {
         expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(hiddenTitles);
       });
 
+      it('should only ask for constants when the options are not constants already', () => {
+        createFormComponent({
+          schema: {
+            ...stringEnum,
+            oneOf: [
+              { const: 'a', title: 'First' },
+              { const: 'b', title: 'Second' },
+            ],
+          },
+        });
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenLastCalledWith(
+          expect.stringMatching(/ui:enumNames, or drop the `enum`\.$/),
+        );
+
+        createFormComponent({ schema: enumBesideTitles });
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenLastCalledWith(
+          expect.stringMatching(/ui:enumNames, or drop the `enum` and make every `oneOf` option a `const` schema\.$/),
+        );
+      });
+
       it('should name the field and show the enum', () => {
         const { node } = createFormComponent({ schema: enumBesideTitles });
 
@@ -1720,6 +1740,83 @@ describe('SchemaField', () => {
       createFormComponent({ schema, initialFormData });
 
       expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(expect.stringContaining(message));
+    });
+
+    describe('a field rendered as an anyOf option', () => {
+      const otherOption = { type: 'number' } satisfies RJSFSchema;
+      const enumOption = { type: 'object', anyOf: [enumBesideTitles, otherOption] } satisfies RJSFSchema;
+
+      it.each<[string, UiSchema]>([
+        ['no uiSchema of its own', {}],
+        ['a uiSchema of its own', { anyOf: [{}, {}] }],
+      ])('should name the option holding an enum beside titles, with %s', (_, uiSchema) => {
+        createFormComponent({ schema: enumOption, uiSchema });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('the anyOf[0] option of "root" has an `enum` beside `oneOf` options'),
+        );
+      });
+
+      it('should name the option holding a titled oneOf behind an anyOf', () => {
+        createFormComponent({
+          schema: { anyOf: [{ type: 'string', anyOf: [{ maxLength: 1 }], oneOf: titles }, otherOption] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('the anyOf[0] option of "root" has both an `anyOf` and a `oneOf`'),
+        );
+      });
+
+      it('should name the option holding a titled oneOf behind an anyOf beside an enum', () => {
+        createFormComponent({
+          schema: { anyOf: [{ ...stringEnum, anyOf: [{ maxLength: 1 }], oneOf: titles }, otherOption] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringMatching(/^the anyOf\[0\] option of "root" has both .* label those values with ui:enumNames\.$/),
+        );
+      });
+
+      it('should name both options when one is nested in the other', () => {
+        createFormComponent({ schema: { anyOf: [{ anyOf: [enumBesideTitles, otherOption] }, otherOption] } });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('the anyOf[0] option of the anyOf[0] option of "root" has an `enum` beside'),
+        );
+      });
+
+      it('should warn separately for two options with the same mistake', async () => {
+        const { node } = createFormComponent({ schema: { anyOf: [enumBesideTitles, enumBesideTitles] } });
+
+        await user.selectOptions(node.querySelector('select')!, 'Option 2');
+
+        expect(consoleWarnSuppression.consoleSpy.mock.calls.map(([message]) => String(message).slice(0, 40))).toEqual([
+          'the anyOf[0] option of "root" has an `en',
+          'the anyOf[1] option of "root" has an `en',
+        ]);
+      });
+
+      it('should warn once for an option an items entry renders many of', () => {
+        createFormComponent({
+          schema: { type: 'array', items: { anyOf: [enumBesideTitles, otherOption] } },
+          initialFormData: ['a', 'b', 'a'],
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('the anyOf[0] option of "root_[]" ([]) has an `enum` beside'),
+        );
+      });
+
+      it('should still name the uiSchema entry for ignored ui:enumNames', () => {
+        createFormComponent({
+          schema: { anyOf: [stringConstants, otherOption] },
+          uiSchema: { anyOf: [{ 'ui:enumNames': ['A', 'B'] }, {}] },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining('the uiSchema.anyOf[0] entry of "root" sets ui:enumNames'),
+        );
+      });
     });
 
     describe('a titled oneOf behind an anyOf', () => {
