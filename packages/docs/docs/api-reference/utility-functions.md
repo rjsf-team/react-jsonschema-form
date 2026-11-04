@@ -254,11 +254,11 @@ Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTempla
 
 #### Parameters
 
-- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'> - The props of the `BaseInputTemplate`
+- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'multiple' | 'pattern'> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'>: The `pattern`, `inputMode` and `accept` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'multiple' | 'pattern'>: The `pattern`, `inputMode`, `accept` and `multiple` to spread after the derived input props
 
 ### callWithDeferredThrow()
 
