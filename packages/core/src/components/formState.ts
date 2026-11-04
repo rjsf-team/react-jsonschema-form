@@ -822,7 +822,8 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
         context.registry,
         fieldPath,
         fieldSchema,
-        fieldUiSchema,
+        // As above, `FormFieldState` hands back the `UiSchema<T, S, F>` `getUiRequiredErrorSchema()` gave it
+        fieldUiSchema as UiSchema<T, S, F>,
         asFieldValue<T>(data),
       ),
   );
