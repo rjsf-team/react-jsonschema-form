@@ -7,8 +7,8 @@ import {
   getBaseInputProps,
   getControlAttributes,
   getExampleSuggestions,
-  inputShowsValue,
   numericWidgetStoresString,
+  offersClearButton,
   toInputValue,
 } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';

@@ -8,7 +8,6 @@ import {
   getExampleSuggestions,
   callerInputProps,
   getBaseInputProps,
-  inputShowsValue,
   hasWidgetErrors,
   offersClearButton,
   toInputValue,

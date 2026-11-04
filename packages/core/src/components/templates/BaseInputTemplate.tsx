@@ -6,7 +6,7 @@ import {
   getControlAttributes,
   getExampleSuggestions,
   getBaseInputProps,
-  inputShowsValue,
+  offersClearButton,
   toInputValue,
 } from '@rjsf/utils';
 

@@ -9,7 +9,6 @@ import {
   getExampleSuggestions,
   callerInputProps,
   getBaseInputProps,
-  inputShowsValue,
   labelValue,
   numericWidgetStoresString,
   offersClearButton,

@@ -8,7 +8,6 @@ import {
   getControlAttributes,
   getExampleSuggestions,
   getBaseInputProps,
-  inputShowsValue,
   hasWidgetErrors,
   labelValue,
   offersClearButton,

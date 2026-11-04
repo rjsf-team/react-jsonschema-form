@@ -19,7 +19,6 @@ import {
   getBaseInputProps,
   getControlAttributes,
   getExampleSuggestions,
-  inputShowsValue,
   hasWidgetErrors,
   labelValue,
   offersClearButton,
@@ -179,7 +178,7 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
   const inputProps = { ...InputProps, ...slotProps?.input, ...muiSlotProps?.input };
-  if (options.allowClearTextInputs && inputValue && inputShowsValue(value, rest.type) && !readonly && !disabled) {
+  if (options.allowClearTextInputs && offersClearButton(inputValue, rest.type) && !readonly && !disabled) {
     const clearAdornment = (
       <InputAdornment position='end'>
         <ClearButton registry={registry} onClick={handleClear} />

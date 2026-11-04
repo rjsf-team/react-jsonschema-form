@@ -9,7 +9,6 @@ import {
   getControlAttributes,
   getExampleSuggestions,
   getBaseInputProps,
-  inputShowsValue,
   labelValue,
   offersClearButton,
   toInputValue,
