@@ -254,11 +254,11 @@ Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTempla
 
 #### Parameters
 
-- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'> - The props of the `BaseInputTemplate`
+- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'multiple' | 'pattern'> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'>: The `pattern`, `inputMode` and `accept` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'multiple' | 'pattern'>: The `pattern`, `inputMode`, `accept` and `multiple` to spread after the derived input props
 
 ### callWithDeferredThrow()
 
@@ -2736,6 +2736,22 @@ Reports whether a widget that draws a number, such as a rating or a slider, writ
 #### Returns
 
 - boolean: True if the widget writes a string
+
+### offersClearButton()
+
+Reports whether an input with `allowClearTextInputs` offers its clear button: when it shows a value that isn't the number `0`.
+A `number`, `date`, `datetime-local`, `month`, `time` or `week` input shows only a value in its type's [syntax](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html) and blanks anything else, `false` included.
+It reads that syntax alone, so a day past its month's end counts as shown.
+Any other input shows whatever isn't an empty string.
+
+#### Parameters
+
+- inputValue: string | number - The input's `value`, as [toInputValue()](#toinputvalue) gives it
+- [type]: string - Optional `type` of the input
+
+#### Returns
+
+- boolean: True if the input offers its clear button
 
 ### optionalControlsId()
 
