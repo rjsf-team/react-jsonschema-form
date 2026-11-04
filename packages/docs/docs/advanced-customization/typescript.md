@@ -50,7 +50,7 @@ The generic `T` is used to represent the type of the `formData` property passed 
 If you are working with a simple, unchanging JSON Schema and you have defined a type for the `formData` you are working with, you can override this generic as follows:
 
 ```tsx
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Form from '@rjsf/core';
 
@@ -81,7 +81,7 @@ It has to extend `StrictRJSFSchema`, the `JSONSchema7` of `@types/json-schema`, 
 A type of your own that extends it can declare a keyword on the root schema, and you can override this generic with it as follows:
 
 ```tsx
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Form from '@rjsf/core';
 
@@ -154,7 +154,7 @@ The generic `F` is used to represent the type of the `formContext` property pass
 If you have a type for this data, you can override this generic as follows:
 
 ```tsx
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Form from '@rjsf/core';
 
@@ -190,7 +190,7 @@ As shown in previous examples, overriding the default `Form` from `@rjsf/core` i
 Using the `withTheme()` function is just as easy:
 
 ```tsx
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { withTheme, type ThemeProps } from '@rjsf/core';
 
@@ -199,7 +199,7 @@ interface FormData {
   bar?: number;
 }
 
-type MySchema = JSONSchemaType<FormData>;
+type MySchema = RJSFSchema;
 
 const schema: MySchema = {
   type: 'object',
@@ -236,7 +236,7 @@ If you are doing something like the following to create a new theme based on `@r
 
 ```tsx
 import React from 'react';
-import { SlotComponent, WidgetProps } from '@rjsf/utils';
+import type { SlotComponent, WidgetProps } from '@rjsf/utils';
 import { type ThemeProps, withTheme } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 import { type MuiBaseInputTemplateProps, Templates, Theme } from '@rjsf/mui';
@@ -266,7 +266,7 @@ Then you would use the new `generateTheme()` and `generateForm()` functions as f
 
 ```tsx
 import React from 'react';
-import { SlotComponent, WidgetProps } from '@rjsf/utils';
+import type { RJSFSchema, SlotComponent, WidgetProps } from '@rjsf/utils';
 import { type ThemeProps, withTheme } from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { type MuiBaseInputTemplateProps, Templates, generateTheme } from '@rjsf/mui';
@@ -276,7 +276,7 @@ interface FormData {
   bar?: number;
 }
 
-type MySchema = JSONSchemaType<FormData>;
+type MySchema = RJSFSchema;
 
 const schema: MySchema = {
   type: 'object',

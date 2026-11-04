@@ -6,6 +6,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  DISCRIMINATOR_PATH,
   ELSE_KEY,
   IF_KEY,
   ITEMS_KEY,
@@ -23,7 +24,6 @@ import { getByPath } from '../../pathUtils.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
-import { stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
 import { declaredProperties, dependencyCondition, targetOf } from './validationTargets.ts';
@@ -1000,12 +1000,13 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       dependencies,
     };
     this.readsData ||= this.policy.selectOption !== undefined;
+    const propertyName = getByPath(provider.node.raw, DISCRIMINATOR_PATH);
     const chosen = this.policy.selectOption?.({
       ...request,
       graph: this.graph,
       data: this.data,
       depData: this.depData,
-      discriminator: stringKeyword(provider.node.raw.discriminator, 'propertyName'),
+      discriminator: typeof propertyName === 'string' ? propertyName : undefined,
     });
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
     this.choices.push({ ...request, selected });

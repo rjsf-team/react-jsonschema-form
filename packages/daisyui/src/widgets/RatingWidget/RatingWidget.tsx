@@ -113,8 +113,10 @@ export default function RatingWidget<
   });
 
   // The checked star, where Tab into the group lands, as `RadioWidget` gives it its checked radio, else the first
-  const autofocusValue =
-    rating !== undefined && Number.isInteger(rating - min) && rating >= min && rating < min + numStars ? rating : min;
+  const autofocusIndex = Math.max(
+    Array.from({ length: numStars }, (_, index) => min + index).findIndex((starValue) => starValue === rating),
+    0,
+  );
 
   return (
     <div className='form-control w-full'>
@@ -134,7 +136,7 @@ export default function RatingWidget<
               className={`mask ${maskClass} ${getColorClass(index)}`}
               disabled={disabled || readonly}
               required={required}
-              autoFocus={autofocus && starValue === autofocusValue}
+              autoFocus={autofocus && index === autofocusIndex}
               aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
               {...optionAttributes}
             />

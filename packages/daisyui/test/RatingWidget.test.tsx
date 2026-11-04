@@ -78,6 +78,16 @@ describe('RatingWidget', () => {
     expect(getAllByRole('radio')[0]).toHaveFocus();
   });
 
+  test('autofocuses the checked star numbered from a fractional `minimum`', () => {
+    const { getAllByRole } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({ autofocus: true, value: 1.4, schema: { type: 'number', minimum: 0.4 } })}
+      />,
+    );
+
+    expect(getAllByRole('radio')[1]).toHaveFocus();
+  });
+
   test('uses the default size and color for a `size` or `color` option that is not a string', () => {
     const jsonOptions: Record<string, unknown> = { size: 5, color: true };
     const { getAllByRole, getByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);

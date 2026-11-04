@@ -638,6 +638,19 @@ describe('buildPlan()', () => {
       expect(selectOption).toHaveBeenCalledWith(expect.objectContaining({ keyword: 'anyOf', data, graph: plan.graph }));
       expect(plan.choices.map(({ selected }) => selected)).toEqual([1, 0]);
     });
+    it('passes selectOption an own `discriminator.propertyName`, and not one the discriminator inherits', () => {
+      class InheritedPropertyName {
+        declare readonly propertyName: string;
+      }
+      Object.defineProperty(InheritedPropertyName.prototype, 'propertyName', { value: 'kind' });
+      const discriminatorOf = (discriminator: { propertyName: string }) => {
+        const selectOption = vi.fn((_: { discriminator?: string }) => 0);
+        planOf({ discriminator, oneOf: [{}] }, { policy: { allOf: true, selectOption } });
+        return selectOption.mock.calls.map(([request]) => request.discriminator);
+      };
+      expect(discriminatorOf({ propertyName: 'kind' })).toEqual(['kind']);
+      expect(discriminatorOf(new InheritedPropertyName())).toEqual([undefined]);
+    });
     it('merges none for a choice out of range', () => {
       const plan = planOf(schema, { policy: { allOf: true, selectOption: () => 5 } });
       expect(plan.choices.map(({ selected }) => selected)).toEqual([undefined, undefined]);
