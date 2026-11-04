@@ -227,6 +227,32 @@ describe('withTheme', () => {
       expect(fromTheme.node.querySelectorAll('.unrelated-template')).toHaveLength(1);
     });
 
+    it('checks each button of `ButtonTemplates` against its own props', () => {
+      const UnrelatedButton = ({ unrelated }: { unrelated: string }) => (
+        <button type='button' className='unrelated-button'>
+          {unrelated}
+        </button>
+      );
+      const formTemplates: FormProps['templates'] = {
+        // @ts-expect-error `SubmitButton` takes `SubmitButtonProps`, which hold no `unrelated`
+        ButtonTemplates: { SubmitButton: UnrelatedButton },
+      };
+      const theme: ThemeProps = {
+        // @ts-expect-error `withTheme()` checks a theme's `SubmitButton` as `Form` does
+        templates: { ButtonTemplates: { SubmitButton: UnrelatedButton } },
+      };
+
+      const fromForm = createComponent(WrapperClassComponent({}), {
+        schema: { type: 'string' },
+        validator,
+        templates: formTemplates,
+      });
+      const fromTheme = createComponent(withTheme(theme), { schema: { type: 'string' }, validator });
+
+      expect(fromForm.node.querySelectorAll('.unrelated-button')).toHaveLength(1);
+      expect(fromTheme.node.querySelectorAll('.unrelated-button')).toHaveLength(1);
+    });
+
     it('gives a declared template written inline with no type on its props the props it declares', () => {
       const ThemedForm = withTheme({
         templates: {

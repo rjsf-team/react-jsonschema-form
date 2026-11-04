@@ -1588,7 +1588,7 @@ const templates: PartialTemplatesType = {
 
 `Partial<TemplatesType>`, as every theme's `generateTemplates()` returns, checks the declared templates too, but `Partial` reaches only the top level, so a `ButtonTemplates` entry in it has to hold every button.
 
-`TemplatesType` is two exported types put together: `DeclaredTemplatesType` holds the templates RJSF declares, and `CustomTemplateEntries` is the string index signature for your own. `Omit` with literal keys on `TemplatesType`, such as `Omit<TemplatesType, 'ButtonTemplates'>`, collapses to that signature and checks none of the declared templates, so omit from `DeclaredTemplatesType` instead, and add `CustomTemplateEntries` when the type holds your own templates too. That signature takes a key you omitted unchecked, so declare it again with the type you want, such as a set that has to hold a `FieldTemplate`:
+`TemplatesType` is two exported types put together: `DeclaredTemplatesType` holds the templates RJSF declares, and `CustomTemplateEntries` is the string index signature for your own. `Omit` with literal keys on `TemplatesType` or `PartialTemplatesType`, which has the same signature, such as `Omit<TemplatesType, 'ButtonTemplates'>`, collapses to that signature and checks none of the declared templates, so omit from `DeclaredTemplatesType` instead, and add `CustomTemplateEntries` when the type holds your own templates too. That signature takes a key you omitted unchecked, so declare it again with the type you want, such as a set that has to hold a `FieldTemplate`:
 
 ```ts
 import { CustomTemplateEntries, DeclaredTemplatesType } from '@rjsf/utils';
