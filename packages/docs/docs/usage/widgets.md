@@ -136,7 +136,7 @@ Years from 1900-2002 will be shown. You can also specify the dates with the high
 
 Years from 2030-1980 and 2002-1900, respectively will be shown.
 
-A `yearsRange` spanning more than 10,000 years, which would build an option for each year, shows the default years instead, as one the widget can't read does: 1900 to two years from now.
+A `yearsRange` mixing a negative and a positive year, or spanning more than 10,000 years, which would build an option for each year, shows the default years instead, as one the widget can't read does: 1900 to two years from now.
 
 ## For `number` and `integer` fields
 

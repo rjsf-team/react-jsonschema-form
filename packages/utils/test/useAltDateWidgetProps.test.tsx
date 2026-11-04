@@ -201,7 +201,7 @@ describe('useAltDateWidgetProps()', () => {
 
   test.each([
     ['orders the elements by a date `format`', 'DMY', ['day', 'month', 'year']],
-    ['keeps the default order for a `format` of another widget, such as a color', 'hex', ['year', 'month', 'day']],
+    ['keeps the default order for a `format` that is no date order', 'hex', ['year', 'month', 'day']],
   ])('%s, with the default years range', (_, format, order) => {
     const jsonOptions: Record<string, unknown> = { format };
     const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: jsonOptions }));

@@ -2334,7 +2334,7 @@ Checks to see if the `uiSchema` names a `widget` and that the widget is not `hid
 
 ### isDateElementFormat()
 
-Reports whether a `format` option is a `DateElementFormat`, the order of an `AltDateWidget`'s date elements. Another widget can read `format` as a format of its own, such as a color's
+Reports whether a `format` option is a `DateElementFormat`, the order of an `AltDateWidget`'s date elements, which a JSON uiSchema can hold as anything
 
 #### Parameters
 

@@ -9,8 +9,8 @@ const MAX_YEARS_SPAN = 10000;
 /** Available options for re-ordering date input element */
 export type DateElementFormat = 'DMY' | 'MDY' | 'YMD';
 
-/** Whether `value` is a `DateElementFormat`, as the `format` option an `AltDateWidget` reads, which another widget can
- * read as a format of its own, such as a color's
+/** Whether `value` is a `DateElementFormat`, as the `format` option an `AltDateWidget` reads, which a JSON uiSchema
+ * can hold as anything
  *
  * @param value - The value of the `format` option
  * @returns - Whether `value` orders the date elements
