@@ -1512,68 +1512,88 @@ export default class Form<
     if (onBlur) {
       onBlur(id, data);
     }
-    let blurred:
-      | ({ prevState: FormState<T, S, F>; props: FormProps<T, S, F> } & (
-          | { state: Partial<FormState<T, S, F>> | null; hasChanges: boolean }
-          | { error: unknown }
-        ))
-      | undefined;
     // An updater, as for a change, so a change queued in the same event is blurred with the schema and props it was
-    // applied with rather than replaced by the data from before it, and a throw is rethrown from a timeout rather than
-    // unmounting the form
-    this.setState(
+    // applied with rather than replaced by the data from before it
+    this.queueUpdate(
       (prevState, props) => {
-        // React reruns an updater with the same arguments, under `StrictMode` say, and commits the first result, so
-        // the rerun returns that result rather than validating again and reporting objects that were not committed
-        if (blurred?.prevState === prevState && blurred.props === props) {
-          return 'error' in blurred ? null : (blurred.state as FormState<T, S, F> | null);
-        }
         const { omitExtraData, liveOmit, liveValidate } = props;
         const isOmitted = omitExtraData === true && liveOmit === 'onBlur';
         const isValidated = liveValidate === 'onBlur';
         if (!isOmitted && !isValidated) {
-          blurred = { prevState, props, state: null, hasChanges: false };
-          return null;
+          return { state: null, hasChanges: false };
         }
-        try {
-          const { formData, schema, schemaUtils, errorSchema, customErrors, retrievedSchema } = prevState;
-          const newFormData = isOmitted ? schemaUtils.omitExtraData(schema, formData) : formData;
-          let state: Partial<FormState<T, S, F>> = { formData: newFormData };
-          if (isValidated) {
-            const liveValidation = this.liveValidate(
-              schema,
-              schemaUtils,
-              errorSchema,
-              newFormData,
-              props.extraErrors,
-              customErrors,
-              retrievedSchema,
-              false,
-              props,
-            );
-            state = { ...state, ...liveValidation, isLiveValidationPending: false };
-          }
-          const hasChanges = (['formData', 'errors', 'errorSchema'] as const).some(
-            (key) => key in state && !deepEquals(prevState[key], state[key]),
+        const { formData, schema, schemaUtils, errorSchema, customErrors, retrievedSchema } = prevState;
+        const newFormData = isOmitted ? schemaUtils.omitExtraData(schema, formData) : formData;
+        let state: Partial<FormState<T, S, F>> = { formData: newFormData };
+        if (isValidated) {
+          const liveValidation = this.liveValidate(
+            schema,
+            schemaUtils,
+            errorSchema,
+            newFormData,
+            props.extraErrors,
+            customErrors,
+            retrievedSchema,
+            false,
+            props,
           );
-          blurred = { prevState, props, state, hasChanges };
-          return state as FormState<T, S, F>;
-        } catch (error) {
-          blurred = { prevState, props, error };
-          return null;
+          state = { ...state, ...liveValidation, isLiveValidationPending: false };
         }
+        const hasChanges = (['formData', 'errors', 'errorSchema'] as const).some(
+          (key) => key in state && !deepEquals(prevState[key], state[key]),
+        );
+        return { state, hasChanges };
       },
-      () => {
-        const outcome = blurred;
-        blurred = undefined;
-        if (outcome && 'error' in outcome) {
-          Form.rethrowLater(outcome.error);
-        } else if (outcome?.hasChanges) {
-          this.reportChange(toIChangeEvent({ ...this.state, ...outcome.state }), id);
+      ({ state, hasChanges }) => {
+        if (hasChanges) {
+          this.reportChange(toIChangeEvent({ ...this.state, ...state }), id);
         }
       },
     );
   };
+
+  /** Queues `compute` as a `setState` updater, committing the `state` it returns, and hands its result to `onCommit`
+   * once committed. React reruns an updater with the same arguments, under `StrictMode` say, and commits the first
+   * result, so a rerun returns that result rather than computing objects that were not committed. A throw leaves the
+   * state as it was and is rethrown from a timeout, since the updater runs while React renders, where a throw would
+   * unmount the form
+   *
+   * @param compute - Computes the state to commit, and whatever else `onCommit` needs, from the updater's arguments
+   * @param onCommit - Called once the state is committed, with the result and the arguments it was computed from
+   */
+  private queueUpdate<R extends { state: Partial<FormState<T, S, F>> | null }>(
+    compute: (prevState: FormState<T, S, F>, props: FormProps<T, S, F>) => R,
+    onCommit: (result: R, prevState: FormState<T, S, F>, props: FormProps<T, S, F>) => void,
+  ) {
+    type Outcome = { prevState: FormState<T, S, F>; props: FormProps<T, S, F> } & ({ result: R } | { error: unknown });
+    let outcome: Outcome | undefined;
+    this.setState(
+      (prevState, props) => {
+        let current = outcome;
+        if (current?.prevState !== prevState || current.props !== props) {
+          try {
+            current = { prevState, props, result: compute(prevState, props) };
+          } catch (error) {
+            current = { prevState, props, error };
+          }
+          outcome = current;
+        }
+        return 'error' in current ? null : (current.result.state as FormState<T, S, F> | null);
+      },
+      () => {
+        const committed = outcome;
+        outcome = undefined;
+        if (!committed) {
+          return;
+        }
+        if ('error' in committed) {
+          Form.rethrowLater(committed.error);
+          return;
+        }
+        onCommit(committed.result, committed.prevState, committed.props);
+      },
+    );
+  }
 
   /** Callback function to handle when a field on the form is focused. Calls the `onFocus` callback for the `Form` if it
    * was provided.
@@ -1590,9 +1610,13 @@ export default class Form<
 
   /** Callback function to handle when the form is submitted. First, it prevents the default event behavior. Nothing
    * happens if the target and currentTarget of the event are not the same. It will omit any extra data in the
-   * `formData`, including the changes queued in the same event, if `omitExtraData` is true. It will validate the resulting `formData`, reporting errors
-   * via the `onError()` callback unless validation is disabled. Finally, it will add in any `extraErrors` and then call
-   * back the `onSubmit` callback if it was provided.
+   * `formData`, including the changes queued in the same event, if `omitExtraData` is true. It will validate the
+   * resulting `formData`, reporting errors via the `onError()` callback unless validation is disabled. Finally, it will
+   * add in any `extraErrors` and then call back the `onSubmit` callback if it was provided.
+   *
+   * A submit event has a higher priority than a change made outside a React event, such as after an `await`, or in a
+   * transition, so it is validated and reported without that change. React then reruns it with the change applied and
+   * commits that state, without calling `onSubmit` or `onError` for it.
    *
    * @param event - The submit HTML form event
    */
@@ -1603,41 +1627,11 @@ export default class Form<
     }
 
     event.persist();
-    let submission:
-      | ({ prevState: FormState<T, S, F>; props: FormProps<T, S, F> } & (
-          | { state: Partial<FormState<T, S, F>>; errors: RJSFValidationError[]; hasError: boolean }
-          | { error: unknown }
-        ))
-      | undefined;
     // An updater, so a change queued in the same event is part of what is validated and submitted, along with the
-    // schema and props it was applied with, and a throw is rethrown from a timeout rather than unmounting the form
-    this.setState(
-      (prevState, props) => {
-        // React reruns an updater with the same arguments, under `StrictMode` say, and commits the first result, so
-        // the rerun returns that result rather than validating again
-        if (submission?.prevState === prevState && submission.props === props) {
-          return 'error' in submission ? null : (submission.state as FormState<T, S, F>);
-        }
-        try {
-          const result = this.validateSubmission(prevState, props);
-          submission = { prevState, props, ...result };
-          return result.state as FormState<T, S, F>;
-        } catch (error) {
-          submission = { prevState, props, error };
-          return null;
-        }
-      },
-      () => {
-        const outcome = submission;
-        submission = undefined;
-        if (!outcome) {
-          return;
-        }
-        if ('error' in outcome) {
-          Form.rethrowLater(outcome.error);
-          return;
-        }
-        const { prevState, props, state, errors, hasError } = outcome;
+    // schema and props it was applied with
+    this.queueUpdate(
+      (prevState, props) => this.validateSubmission(prevState, props),
+      ({ state, errors, hasError }, prevState, props) => {
         if (hasError) {
           // Rethrown from a timeout, since a throw from a commit callback would unmount the form
           try {
@@ -1666,16 +1660,16 @@ export default class Form<
     const { schema, schemaUtils } = prevState;
     const formData =
       omitExtraData === true ? schemaUtils.omitExtraData(schema, prevState.formData) : prevState.formData;
-    const submittedState: Partial<FormState<T, S, F>> = {
+    const getSubmittedState = (): Partial<FormState<T, S, F>> => ({
       formData,
       errors: extraErrors ? toErrorList(extraErrors) : [],
       errorSchema: extraErrors || {},
       schemaValidationErrors: [],
       schemaValidationErrorSchema: {},
       isLiveValidationPending: false,
-    };
+    });
     if (noValidate) {
-      return { state: submittedState, errors: [], hasError: false };
+      return { state: getSubmittedState(), errors: [], hasError: false };
     }
     const { schemaValidation, errors, errorSchema, hasError } = this.validateWithExtraErrors(
       formData,
@@ -1684,7 +1678,7 @@ export default class Form<
       props,
     );
     if (!hasError) {
-      return { state: submittedState, errors, hasError };
+      return { state: getSubmittedState(), errors, hasError };
     }
     const failedState: Partial<FormState<T, S, F>> = {
       errors,
