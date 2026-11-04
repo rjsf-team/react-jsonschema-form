@@ -448,6 +448,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change `onAddClick`, `onAddItem`, `onCopyItem`, `onRemoveItem`, `onMoveUpItem` and `onMoveDownItem` to do nothing where the button can't act, such as on a disabled or read-only array, under `ui:orderable: false` or for the first item up, when a template calls them directly, and `buttonsProps.canAdd` to tell whether `onAddItem` acts. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#an-array-items-handlers-do-only-what-its-buttons-can-breaking-change) ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 - Fix `onAddClick` filling a tuple's missing fixed item with an `additionalItems` value instead of a value of that item's own schema ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 - Fix the add button throwing on an array whose `items` is a list holding a boolean, which renders its items with an empty schema ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
+- Fix Copy on a tuple's fixed item before the last inserting the copy among the fixed items, which shifted the items after it into positions of another schema: Copy now shows only from the last fixed item on ([#5677](https://github.com/rjsf-team/react-jsonschema-form/pull/5677))
 
 ## @rjsf/daisyui
 
