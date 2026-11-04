@@ -2329,6 +2329,36 @@ describe('Form change handler under a parent', () => {
       vi.useRealTimers();
     }
   });
+  it('should rethrow a throw from the rerun React makes when it rebases a change onto a transition', () => {
+    vi.useFakeTimers();
+    try {
+      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, baz: { type: 'string' } } };
+      const ref = createRef<Form>();
+      render(
+        <Form
+          ref={ref}
+          schema={schema}
+          validator={customizeValidator<GenericObjectType>()}
+          liveValidate
+          customValidate={(formData, errors) => {
+            if (formData?.foo && formData?.baz) {
+              throw new Error('customValidate failed');
+            }
+            return errors;
+          }}
+        />,
+      );
+
+      act(() => {
+        startTransition(() => ref.current!.setFieldValue('foo', 'in transition'));
+        ref.current!.setFieldValue('baz', 'urgent');
+      });
+
+      expect(() => vi.runOnlyPendingTimers()).toThrow('customValidate failed');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
   it('should keep the form mounted when the live validation of a blur throws', () => {
     vi.useFakeTimers();
     try {

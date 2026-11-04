@@ -1095,10 +1095,11 @@ export default class Form<
    * rethrown from a timeout, since the updater runs while React renders, where a throw would unmount the form. Live
    * validation runs once per batch, for its last change, so a change in a later lane, such as one in a transition,
    * defers the validation of the changes before it until that lane commits. When React rebases an urgent change onto a
-   * transition it reruns the change without its callback, so a throw in that rerun drops the change unreported, and a
-   * transition change that commits after a later urgent one was reported reports the whole committed state under its
-   * own id, later changes in that lane included. Only changes are tracked for this, so a transition change that commits
-   * under an urgent update of another kind, such as a `reset()`, reports its own data although the reset replaced it.
+   * transition it reruns the change without its callback, so a throw in that rerun is rethrown but drops the change
+   * unreported, and a transition change that commits after a later urgent one was reported reports the whole committed
+   * state under its own id, later changes in that lane included. Only changes are tracked for this, so a transition
+   * change that commits under an urgent update of another kind, such as a `reset()`, reports its own data although the
+   * reset replaced it.
    *
    * @param newValue - The new form data from a change to a field
    * @param path - The path to the change into which to set the formData
@@ -1542,7 +1543,8 @@ export default class Form<
    * once committed. React reruns an updater with the same arguments, under `StrictMode` say, and commits the first
    * result, so a rerun returns that result rather than computing objects that were not committed. A throw is rethrown
    * from a timeout, since the updater runs while React renders, where a throw would unmount the form, and commits what
-   * `recover` returns, or leaves the state as it was without one
+   * `recover` returns, or leaves the state as it was without one. A throw in a rerun React makes when it rebases the
+   * update, which does not call `onCommit`, is rethrown too
    *
    * @param compute - Computes the state to commit, and whatever else `onCommit` needs, from the updater's arguments
    * @param onCommit - Called once the state is committed, with the result, the arguments it was computed from and
@@ -1567,6 +1569,7 @@ export default class Form<
       thrown?: { error: unknown };
     }
     let outcome: Outcome | undefined;
+    let isCommitted = false;
     this.setState(
       (prevState, props) => {
         const key = getKey?.() as K;
@@ -1576,12 +1579,17 @@ export default class Form<
             current = { prevState, props, key, result: compute(prevState, props, key) };
           } catch (error) {
             current = { prevState, props, key, result: recover?.(prevState, props, key), thrown: { error } };
+            // A rerun after the commit is React rebasing this update, which never calls the callback again
+            if (isCommitted) {
+              Form.rethrowLater(error);
+            }
           }
           outcome = current;
         }
         return (current.result?.state ?? null) as FormState<T, S, F> | null;
       },
       () => {
+        isCommitted = true;
         const committed = outcome;
         outcome = undefined;
         if (!committed) {
@@ -1617,9 +1625,9 @@ export default class Form<
    * resulting `formData`, reporting errors via the `onError()` callback unless validation is disabled. Finally, it will
    * add in any `extraErrors` and then call back the `onSubmit` callback if it was provided.
    *
-   * A submit event has a higher priority than a change made outside a React event, such as after an `await`, or in a
-   * transition, so it is validated and reported without that change. React then reruns it with the change applied and
-   * commits that state, without calling `onSubmit` or `onError` for it.
+   * With `createRoot`, a submit event has a higher priority than a change made outside a React event, such as after an
+   * `await`, or in a transition, so it is validated and reported without that change. React then reruns it with the
+   * change applied and commits that state, without calling `onSubmit` or `onError` for it.
    *
    * @param event - The submit HTML form event
    */
@@ -1663,34 +1671,30 @@ export default class Form<
     const { schema, schemaUtils } = prevState;
     const formData =
       omitExtraData === true ? schemaUtils.omitExtraData(schema, prevState.formData) : prevState.formData;
-    const getSubmittedState = (): Partial<FormState<T, S, F>> => ({
+    let errors: RJSFValidationError[] = [];
+    if (!noValidate) {
+      const validation = this.validateWithExtraErrors(formData, schema, schemaUtils, props);
+      if (validation.hasError) {
+        const failedState: Partial<FormState<T, S, F>> = {
+          errors: validation.errors,
+          errorSchema: validation.errorSchema,
+          schemaValidationErrors: validation.schemaValidation.errors,
+          schemaValidationErrorSchema: validation.schemaValidation.errorSchema,
+          isLiveValidationPending: false,
+        };
+        return { state: failedState, errors: validation.errors, hasError: true };
+      }
+      ({ errors } = validation);
+    }
+    const submittedState: Partial<FormState<T, S, F>> = {
       formData,
       errors: extraErrors ? toErrorList(extraErrors) : [],
       errorSchema: extraErrors || {},
       schemaValidationErrors: [],
       schemaValidationErrorSchema: {},
       isLiveValidationPending: false,
-    });
-    if (noValidate) {
-      return { state: getSubmittedState(), errors: [], hasError: false };
-    }
-    const { schemaValidation, errors, errorSchema, hasError } = this.validateWithExtraErrors(
-      formData,
-      schema,
-      schemaUtils,
-      props,
-    );
-    if (!hasError) {
-      return { state: getSubmittedState(), errors, hasError };
-    }
-    const failedState: Partial<FormState<T, S, F>> = {
-      errors,
-      errorSchema,
-      schemaValidationErrors: schemaValidation.errors,
-      schemaValidationErrorSchema: schemaValidation.errorSchema,
-      isLiveValidationPending: false,
     };
-    return { state: failedState, errors, hasError };
+    return { state: submittedState, errors, hasError: false };
   }
 
   /** Validates `formData` as a submit does, merging in the `extraErrors`, which block it only when
