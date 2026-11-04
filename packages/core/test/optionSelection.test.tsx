@@ -589,6 +589,45 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#root_extra')).toHaveValue('from-root');
   });
 
+  describe("restores the field's own default switching to an object option from an empty string", () => {
+    const entry: RJSFSchema = {
+      default: { shared: 'x' },
+      oneOf: [
+        { title: 'Text', type: 'string' },
+        {
+          title: 'Obj',
+          type: 'object',
+          properties: { a: { type: 'string', default: 'A' }, shared: { type: 'string' } },
+        },
+        { title: 'None', type: 'null' },
+      ],
+    };
+
+    it('held by a declared field', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'object', properties: { p: entry } },
+        initialFormData: { p: '' },
+      });
+
+      await user.selectOptions(selectOf(node, 'root_p__oneof_select'), 'Obj');
+
+      expect(getFormData()).toEqual({ p: { a: 'A', shared: 'x' } });
+    });
+
+    it('a null option left in an additionalProperties entry', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'object', additionalProperties: entry },
+        initialFormData: { p: { a: 'k' } },
+      });
+
+      await user.selectOptions(selectOf(node, 'root_p__oneof_select'), 'None');
+      expect(getFormData()).toEqual({ p: '' });
+      await user.selectOptions(selectOf(node, 'root_p__oneof_select'), 'Obj');
+
+      expect(getFormData()).toEqual({ p: { a: 'A', shared: 'x' } });
+    });
+  });
+
   it.each([
     ['a null option', null],
     ['another object option', {}],

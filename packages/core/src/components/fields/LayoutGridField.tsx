@@ -23,7 +23,6 @@ import {
   hashObject,
   isComponentType,
   describeUnresolvedComponent,
-  isConstantSelect,
   isObject,
   isPlainObject,
   isSchemaObject,
@@ -44,6 +43,7 @@ import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import { isAdditionalPropertySchema, storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
+import FixedKeyCellContext from './FixedKeyCellContext.ts';
 import { lookUpUiField } from './namedField.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
@@ -825,23 +825,16 @@ function LayoutGridFieldComponent<
     return namedField !== fields.LayoutMultiSchemaField && namedField !== fields.SchemaField;
   }, [hasDiscriminator, schema, fieldUiSchema, registry, fields]);
   // The cell is cleared as `ObjectField` clears an `additionalProperties` entry, see `storedValue()`, so its key and the
-  // cell with it outlive a round trip through JSON. A `oneOf`/`anyOf` cell's option switch announces its key moves with
-  // the value it sends, which a form takes only unchanged, and a discriminated cell's `''` would fail every option's
-  // object. A `oneOf`/`anyOf` of constants renders as a select, as an `enum` does, with no option switch
-  const storesAsAdditional =
-    isAdditionalProperty &&
-    !hasDiscriminator &&
-    schema !== undefined &&
-    (getXxxOfKey<S>(schema) === undefined || isConstantSelect<S>(schema, true));
+  // cell with it outlive a round trip through JSON
   const onCellChange = useCallback<FieldProps<T, S, F>['onChange']>(
     (value, path, newErrorSchema, changedId) =>
       onChange(
-        storesAsAdditional && path === fieldPath ? storedValue(value, path, true) : value,
+        isAdditionalProperty && path === fieldPath ? storedValue(value, path, true) : value,
         path,
         newErrorSchema,
         changedId,
       ),
-    [onChange, storesAsAdditional, fieldPath],
+    [onChange, isAdditionalProperty, fieldPath],
   );
 
   if (uiComponentProps.rendered) {
@@ -876,25 +869,27 @@ function LayoutGridFieldComponent<
     } = otherProps;
 
     return (
-      <SchemaField
-        data-testid={
-          hasDiscriminator ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField : LAYOUT_GRID_FIELD_TEST_IDS.field
-        }
-        {...cellProps}
-        name={name}
-        required={isRequired}
-        readonly={uiReadonly}
-        schema={schema}
-        uiSchema={cellUiSchema}
-        errorSchema={getByPath(errorSchema, namePath)}
-        fieldPath={fieldPath}
-        id={fieldPathToId(fieldPath, registry.globalFormOptions)}
-        formData={getByPath(formData, namePath)}
-        onChange={onCellChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        registry={registry}
-      />
+      <FixedKeyCellContext value={isAdditionalProperty ? fieldPath : undefined}>
+        <SchemaField
+          data-testid={
+            hasDiscriminator ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField : LAYOUT_GRID_FIELD_TEST_IDS.field
+          }
+          {...cellProps}
+          name={name}
+          required={isRequired}
+          readonly={uiReadonly}
+          schema={schema}
+          uiSchema={cellUiSchema}
+          errorSchema={getByPath(errorSchema, namePath)}
+          fieldPath={fieldPath}
+          id={fieldPathToId(fieldPath, registry.globalFormOptions)}
+          formData={getByPath(formData, namePath)}
+          onChange={onCellChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          registry={registry}
+        />
+      </FixedKeyCellContext>
     );
   }
 

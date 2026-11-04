@@ -6,7 +6,7 @@ import { userEvent } from '@testing-library/user-event';
 import FieldTemplate from '../src/components/templates/FieldTemplate/index.ts';
 import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
 import { SIMPLE_ONEOF, SIMPLE_ONEOF_SCHEMAS, withTypelessSelector } from './testData/layoutData.ts';
-import { createFormComponent, setupConsoleWarnSuppression } from './testUtils.tsx';
+import { createFormComponent, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -17,6 +17,8 @@ const schema: RJSFSchema = {
     pick: SIMPLE_ONEOF,
   },
 };
+
+const UNION_ENTRY: RJSFSchema = { anyOf: [{ type: 'string' }, { type: 'number' }] };
 
 function schemaWithPick(pick: RJSFSchema): RJSFSchema {
   return { ...schema, properties: { ...schema.properties, pick } };
@@ -45,6 +47,14 @@ function gridUiSchema(cellUiSchemas: UiSchema = {}): UiSchema {
     'ui:field': 'LayoutGridField',
     'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['note', 'pick'] }] },
     ...cellUiSchemas,
+  };
+}
+
+function extraUiSchema(cell: UiSchema = {}): UiSchema {
+  return {
+    'ui:field': 'LayoutGridField',
+    'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['extra'] }] },
+    extra: cell,
   };
 }
 
@@ -281,12 +291,23 @@ describe('a discriminated cell of a layout grid', () => {
     expect(screen.queryByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
   });
 
+  it.each<[string, RJSFSchema, UiSchema, unknown]>([
+    ['an anyOf', { title: 'Extra', ...UNION_ENTRY }, {}, 'x'],
+    ['a discriminated oneOf', { ...SIMPLE_ONEOF, title: 'Extra' }, { 'ui:widget': 'select' }, { answer: '2' }],
+  ])('labels a cell of %s by its title and draws no key input or remove button', (_title, entry, cell, held) => {
+    const { templateProps } = renderGrid(extraUiSchema(cell), {
+      type: 'object',
+      additionalProperties: entry,
+      default: { extra: held },
+    } as RJSFSchema);
+
+    expect(ADDITIONAL_PROPERTY_FLAG in templateProps.get('root_extra')!.schema).toBe(false);
+    expect(templateProps.get('root_extra')!.label).toBe('Extra');
+    expect(screen.queryByRole('textbox', { name: /Key/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Remove' })).not.toBeInTheDocument();
+  });
+
   describe('a cleared cell the layout names by an additionalProperties key', () => {
-    const extraUiSchema = (cell: UiSchema = {}): UiSchema => ({
-      'ui:field': 'LayoutGridField',
-      'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['extra'] }] },
-      extra: cell,
-    });
     const stringEntries: RJSFSchema = { type: 'object', additionalProperties: { type: 'string', title: 'Extra' } };
 
     it('is stored as an object stores it, so its key and the cell outlive a round trip through JSON', async () => {
@@ -309,29 +330,188 @@ describe('a discriminated cell of a layout grid', () => {
       expect(screen.getByRole('textbox', { name: 'Extra' })).toHaveValue('');
     });
 
-    it('is stored as its ui:emptyValue', async () => {
+    it.each<[string, RJSFSchema, string | undefined]>([
+      ['a plain cell', stringEntries, 'Extra'],
+      ['an anyOf cell', { type: 'object', additionalProperties: UNION_ENTRY }, undefined],
+    ])('is stored as its ui:emptyValue, for %s', async (_title, entries, name) => {
       const { onChange } = createFormComponent({
-        schema: stringEntries,
+        schema: entries,
         initialFormData: { extra: 'x' },
         uiSchema: extraUiSchema({ 'ui:emptyValue': 'none' }),
       });
 
-      await user.clear(screen.getByRole('textbox', { name: 'Extra' }));
+      await user.clear(screen.getByRole('textbox', { name }));
 
       expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: 'none' });
     });
 
-    it('is stored as its option switch sends it when discriminated, without the empty string no option takes', async () => {
-      const { onChange } = createFormComponent({
-        schema: { type: 'object', additionalProperties: SIMPLE_ONEOF },
+    it.each<[string, RJSFSchema]>([
+      ['options', SIMPLE_ONEOF],
+      [
+        'constant options',
+        {
+          ...SIMPLE_ONEOF,
+          oneOf: SIMPLE_ONEOF_SCHEMAS.map((option, index) => ({ ...option, const: { answer: String(index + 1) } })),
+        },
+      ],
+    ])(
+      'is stored as an object stores it when discriminated with %s, so its key and the cell outlive a round trip through JSON',
+      async (_title, entry) => {
+        const discriminatedEntries: RJSFSchema = { type: 'object', additionalProperties: entry };
+        const uiSchema = extraUiSchema({ 'ui:widget': 'select' });
+        const { onChange } = createFormComponent({
+          schema: discriminatedEntries,
+          initialFormData: { extra: { answer: '2' } },
+          uiSchema,
+        });
+        const select = screen.getByRole('combobox');
+
+        await user.selectOptions(select, within(select).getByRole('option', { name: '' }));
+
+        const { formData } = onChange.mock.lastCall![0];
+        expect(formData).toStrictEqual({ extra: '' });
+        cleanup();
+        createFormComponent({
+          schema: discriminatedEntries,
+          initialFormData: JSON.parse(JSON.stringify(formData)),
+          uiSchema,
+        });
+        expect(screen.getByRole('combobox')).toHaveDisplayValue('');
+      },
+    );
+
+    it('holds the submit back until an option is picked when discriminated, since no option takes the empty string', async () => {
+      // Each option holds its own `const`, since `SIMPLE_ONEOF`'s answer matches both options once it is picked
+      const options = SIMPLE_ONEOF_SCHEMAS.map((option) => ({
+        ...option,
+        properties: { answer: { type: 'string' as const, const: (option.properties!.answer as RJSFSchema).default } },
+      }));
+      const { node, onSubmit, onError } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { ...SIMPLE_ONEOF, oneOf: options } },
         initialFormData: { extra: { answer: '2' } },
         uiSchema: extraUiSchema({ 'ui:widget': 'select' }),
       });
       const select = screen.getByRole('combobox');
-
       await user.selectOptions(select, within(select).getByRole('option', { name: '' }));
 
-      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: undefined });
+      await submitForm(node, user);
+
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalledTimes(1);
+
+      await user.selectOptions(screen.getByRole('combobox'), 'Choice 1');
+      await submitForm(node, user);
+
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(onSubmit.mock.lastCall![0].formData).toStrictEqual({ extra: { answer: '1' } });
+    });
+
+    it.each<[string, RJSFSchema, string, (value: string) => GenericObjectType]>([
+      ['the grid', { type: 'object', additionalProperties: UNION_ENTRY }, 'extra', (value) => ({ extra: value })],
+      [
+        'an object within the grid',
+        { type: 'object', properties: { group: { type: 'object', additionalProperties: UNION_ENTRY } } },
+        'group.extra',
+        (value) => ({ group: { extra: value } }),
+      ],
+    ])(
+      'is stored as an object stores it when its anyOf option clears it, in an entry of %s',
+      async (_title, entries, path, held) => {
+        const uiSchema: UiSchema = {
+          'ui:field': 'LayoutGridField',
+          'ui:layoutGrid': { 'ui:row': [{ 'ui:col': [path] }] },
+        };
+        const { onChange } = createFormComponent({ schema: entries, initialFormData: held('abc'), uiSchema });
+
+        await user.clear(screen.getByRole('textbox'));
+
+        const { formData } = onChange.mock.lastCall![0];
+        expect(formData).toStrictEqual(held(''));
+        cleanup();
+        createFormComponent({ schema: entries, initialFormData: JSON.parse(JSON.stringify(formData)), uiSchema });
+        expect(screen.getByRole('textbox')).toHaveValue('');
+      },
+    );
+
+    it('stays on the option an option within its anyOf option switches to, when the switch holds nothing', async () => {
+      const { onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: {
+            anyOf: [
+              {
+                title: 'Scalar',
+                anyOf: [
+                  { title: 'Text', type: 'string' },
+                  { title: 'Count', type: 'number' },
+                ],
+              },
+              { title: 'Flag', type: 'boolean' },
+            ],
+          },
+        },
+        initialFormData: { extra: 'abc' },
+        uiSchema: extraUiSchema(),
+      });
+      const inner = screen.getAllByRole('combobox')[1];
+
+      await user.selectOptions(inner, 'Count');
+
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: '' });
+      expect(screen.getAllByRole('combobox')[1]).toHaveDisplayValue('Count');
+    });
+
+    it('keeps the deprecated marker in the heading of an object it renders', () => {
+      createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: {
+            type: 'object',
+            title: 'Old',
+            deprecated: true,
+            properties: { a: { type: 'string' } },
+          },
+        },
+        initialFormData: { extra: { a: 'x' } },
+        uiSchema: extraUiSchema(),
+      });
+
+      expect(screen.getByText('Old (deprecated)')).toBeInTheDocument();
+    });
+
+    it('is stored as an object stores it when a named field in place of its options clears it', async () => {
+      function ClearingField({ onChange, fieldPath }: FieldProps) {
+        return (
+          <button type='button' onClick={() => onChange(undefined, fieldPath)}>
+            Clear
+          </button>
+        );
+      }
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { oneOf: [{ type: 'string' }, { type: 'number' }] } },
+        initialFormData: { extra: 'abc' },
+        fields: { ClearingField },
+        uiSchema: extraUiSchema({ 'ui:field': 'ClearingField', 'ui:fieldReplacesAnyOrOneOf': true }),
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: '' });
+    });
+
+    it('reaches every type of the fallback UI once cleared', async () => {
+      createFormComponent({
+        schema: { type: 'object', additionalProperties: true },
+        useFallbackUiForUnsupportedType: true,
+        initialFormData: { extra: 'text' },
+        uiSchema: extraUiSchema(),
+      });
+
+      await user.clear(screen.getByRole('textbox'));
+      await user.selectOptions(screen.getByRole('combobox'), 'boolean');
+
+      expect(screen.getByRole('combobox')).toHaveDisplayValue('boolean');
+      expect(screen.getByRole('checkbox')).toBeInTheDocument();
     });
 
     it('keeps the option an anyOf cell switches to, as its option switch sends it', async () => {
@@ -356,6 +536,33 @@ describe('a discriminated cell of a layout grid', () => {
       expect(screen.getByRole('combobox')).toHaveDisplayValue('Num');
     });
 
+    it("fills in the entry's own default when switched back from an option that left it cleared", async () => {
+      const { onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: {
+            default: { shared: 'x' },
+            anyOf: [
+              {
+                title: 'Obj',
+                type: 'object',
+                properties: { a: { type: 'string', default: 'A' }, shared: { type: 'string' } },
+              },
+              { title: 'Nil', type: 'null' },
+            ],
+          },
+        },
+        initialFormData: { extra: { a: 'k' } },
+        uiSchema: extraUiSchema(),
+      });
+
+      await user.selectOptions(screen.getByRole('combobox'), 'Nil');
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: '' });
+
+      await user.selectOptions(screen.getByRole('combobox'), 'Obj');
+      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: { a: 'A', shared: 'x' } });
+    });
+
     it('is stored as an object stores it when its oneOf of constants renders as a select', async () => {
       const { onChange } = createFormComponent({
         schema: { type: 'object', additionalProperties: { title: 'Extra', oneOf: [{ const: 'a' }, { const: 'b' }] } },
@@ -367,23 +574,6 @@ describe('a discriminated cell of a layout grid', () => {
       await user.selectOptions(select, within(select).getByRole('option', { name: '' }));
 
       expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: '' });
-    });
-
-    it('is stored as its option switch sends it when discriminated, though its options are constants', async () => {
-      const constantOptions = SIMPLE_ONEOF_SCHEMAS.map((option, index) => ({
-        ...option,
-        const: { answer: String(index + 1) },
-      }));
-      const { onChange } = createFormComponent({
-        schema: { type: 'object', additionalProperties: { ...SIMPLE_ONEOF, oneOf: constantOptions } },
-        initialFormData: { extra: { answer: '2' } },
-        uiSchema: extraUiSchema({ 'ui:widget': 'select' }),
-      });
-      const select = screen.getByRole('combobox');
-
-      await user.selectOptions(select, within(select).getByRole('option', { name: '' }));
-
-      expect(onChange.mock.lastCall![0].formData).toStrictEqual({ extra: undefined });
     });
   });
 

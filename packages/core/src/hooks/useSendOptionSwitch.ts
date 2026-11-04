@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { use, useCallback } from 'react';
 import type { FieldPath, FormContextType, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   deepEquals,
@@ -10,6 +10,7 @@ import {
 } from '@rjsf/utils';
 
 import { declaresProperty, isAdditionalPropertySchema, storedValue } from '../components/fields/fieldWidgetUtils.ts';
+import FixedKeyCellContext from '../components/fields/FixedKeyCellContext.ts';
 import useSendMove from './useSendMove.ts';
 
 /** The options of an `anyOf`/`oneOf` field a switch leaves and selects, each with the uiSchema its field renders with */
@@ -81,6 +82,7 @@ function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextT
  */
 export default function useSendOptionSwitch(fieldPath: FieldPath) {
   const sendMove = useSendMove(fieldPath);
+  const isFixedKeyCell = use(FixedKeyCellContext) === fieldPath;
   return useCallback(
     <T, S extends StrictRJSFSchema, F extends FormContextType, V>(
       schema: S,
@@ -117,7 +119,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       const isKept = (key: string) => isKeptProperty(key) || (/^\d+$/.test(key) && isKeptItem(Number(key)));
       const held = typeof formData === 'object' && formData !== null ? Object.keys(formData) : [];
       const gone = new Set([...Object.keys(declaredByOld), ...held].filter((key) => !isKept(key)));
-      const value = storedValue(newFormData, fieldPath, isAdditionalPropertySchema(schema));
+      const value = storedValue(newFormData, fieldPath, isFixedKeyCell || isAdditionalPropertySchema(schema));
       return sendMove(
         {
           value,
@@ -128,6 +130,6 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
         () => send(value),
       );
     },
-    [sendMove, fieldPath],
+    [sendMove, fieldPath, isFixedKeyCell],
   );
 }
