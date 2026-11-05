@@ -1,7 +1,7 @@
 import type { KeyboardEvent } from 'react';
 import { useEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { TranslatableString, getControlAttributes, hasWidgetErrors, rangeSpec } from '@rjsf/utils';
+import { getControlAttributes, hasWidgetErrors, rangeSpec } from '@rjsf/utils';
 
 import type { SliderProps } from '../components/ui/slider.tsx';
 import { Slider } from '../components/ui/slider.tsx';
@@ -55,9 +55,7 @@ export default function RangeWidget<
     onFocus,
     id,
     htmlName,
-    label,
     presentation,
-    registry,
   } = props;
   const thumbRef = useRef<HTMLSpanElement>(null);
   // React focuses a form control or button marked `autoFocus` as it mounts, but not the thumb, which is a <span>. Radix
@@ -153,8 +151,6 @@ export default function RangeWidget<
     onBlur(id, value);
   };
   const handleFocus = () => onFocus(id, value);
-  const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
-  const thumbText = controlAttributes['aria-label'] || label;
   return (
     <>
       <Slider
@@ -175,20 +171,12 @@ export default function RangeWidget<
         onLostPointerCapture={cancelInteraction}
         onKeyDown={handleKeyDown}
         onKeyUp={handleKeyUp}
-        // A translation left empty numbers nothing, as it does for an array item's name
-        getAriaLabel={
-          thumbText
-            ? (index) =>
-                registry.translateString(TranslatableString.ItemNameWithNumber, [thumbText, String(index + 1)]) ||
-                thumbText
-            : undefined
-        }
         thumbProps={{
           id,
           ref: thumbRef,
           onBlur: handleBlur,
           onFocus: handleFocus,
-          ...controlAttributes,
+          ...getControlAttributes<T, S, F>({ id, presentation }),
           className: cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }),
         }}
       />
