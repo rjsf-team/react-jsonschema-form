@@ -9,7 +9,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  * @param stars - The `stars` option, which a JSON uiSchema can hold as anything
  * @returns - The number of stars to draw
  */
-export default function ratingStarCount<S extends StrictRJSFSchema>(schema: S, stars: unknown): number {
+export default function ratingStarCount<S extends StrictRJSFSchema = RJSFSchema>(schema: S, stars: unknown): number {
   const minimum = toNumericValue(schema.minimum) ?? 0;
   const maximum = toNumericValue(schema.maximum);
   // Rounded so binary floating point's noise, such as `2.3 - 1.3` falling just short of 1, doesn't lose the last star
