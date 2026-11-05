@@ -61,7 +61,9 @@ export type MuiBaseInputTemplateProps<
   F extends FormContextType = FormContextType,
 > = BaseInputTemplateProps<T, S, F> &
   Pick<BaseInputTemplateMuiProps, 'slotProps'> &
-  Partial<Pick<TextFieldProps, 'size' | 'variant' | 'helperText' | 'multiline' | 'rows'>> & {
+  Partial<
+    Omit<TextFieldProps, keyof BaseInputTemplateProps<T, S, F> | 'slotProps' | 'InputLabelProps' | 'InputProps'>
+  > & {
     /** Props for MUI's `InputLabel`, under the name MUI's `TextField` once took them by */
     InputLabelProps?: Partial<MuiInputLabelProps>;
     /** Props for MUI's `Input`, under the name MUI's `TextField` once took them by */

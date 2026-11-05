@@ -1,4 +1,4 @@
-import type { ChangeEvent, FocusEvent, InputHTMLAttributes, MouseEvent } from 'react';
+import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
@@ -13,6 +13,7 @@ import {
   toInputValue,
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
+import type { FormControlProps } from 'react-bootstrap';
 
 /** The props this theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes
  * `extraProps` to
@@ -22,10 +23,11 @@ export type BootstrapBaseInputTemplateProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > = BaseInputTemplateProps<T, S, F> & {
-  /** Props to spread on the input along with the ones the schema derives. Its `pattern`, `inputMode` and `accept` win
-   * over the derived ones
+  /** Props to spread on the `Form.Control` along with the ones the schema derives, or, without `Form.Control`'s own
+   * `size`, `htmlSize`, `plaintext`, `isValid` and `isInvalid`, on the `Form.Range` of a `range` input. Its `pattern`,
+   * `inputMode` and `accept` win over the derived ones
    */
-  extraProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
+  extraProps?: FormControlProps;
 };
 
 export default function BaseInputTemplate<
@@ -95,13 +97,22 @@ export default function BaseInputTemplate<
     onFocus: handleFocus,
     ...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []),
   };
+  const {
+    size: _size,
+    htmlSize: _htmlSize,
+    plaintext: _plaintext,
+    isValid: _isValid,
+    isInvalid: _isInvalid,
+    ...rangeProps
+  } = controlProps;
   return (
     <>
       {inputProps.type === 'range' ? (
         // `Form.Range` takes Bootstrap's `form-range` class through its prefix, which a `ThemeProvider` can rename, and
-        // has no `isInvalid`, so its error state is the class `Form.Control` would add
+        // renders a bare `<input>` without `Form.Control`'s own props, so its error state is the class `Form.Control`
+        // would add
         <Form.Range
-          {...controlProps}
+          {...rangeProps}
           className={[inputProps.className, isInvalid && 'is-invalid'].filter(Boolean).join(' ') || undefined}
         />
       ) : (

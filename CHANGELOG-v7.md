@@ -492,6 +492,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` replacing an `accept` a widget passes it as a prop with `ui:options.accept` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root, and the key input enabled in a disabled or read-only form, where editing it renamed the key ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - **BREAKING CHANGE:** Change `BaseInputTemplate` to put a `multiple` it is passed on a file input only, as `ArrayField` passes one to the widget of every multi-select, so an `email` input no longer takes several addresses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Add `CoreBaseInputTemplateProps`, the props core's `BaseInputTemplate` takes with the `<input>` attributes it forwards, to type the registry's `BaseInputTemplate` a widget passes them to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/daisyui
 
@@ -879,11 +880,12 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false` to show that value and offer the clear button for it, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `TextareaWidget` keeping its text when its value is cleared, such as by resetting the form to empty data ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Add `BootstrapBaseInputTemplateProps`, the props the theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes `extraProps` to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Add `BootstrapBaseInputTemplateProps`, the props the theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes `extraProps` to, which take `Form.Control`'s props ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it as a prop, so the file input of an array took one file at a time ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `BaseInputTemplate` to put an `accept` a widget passes in `extraProps` on the input over `ui:options.accept`, which replaced it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - **BREAKING CHANGE:** Change `BaseInputTemplate` to put a `multiple` it is passed, in `extraProps` too, on a file input only, as `ArrayField` passes one to the widget of every multi-select, so an `email` input no longer takes several addresses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `BaseInputTemplate` putting `Form.Control`'s own props in `extraProps`, such as `isValid` or `htmlSize`, on the `<input>` of a range ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/shadcn
 

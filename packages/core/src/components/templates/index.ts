@@ -5,6 +5,7 @@ import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate.tsx';
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate.tsx';
 import ArrayFieldTemplate from './ArrayFieldTemplate.tsx';
 import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate.tsx';
+import type { CoreBaseInputTemplateProps } from './BaseInputTemplate.tsx';
 import BaseInputTemplate from './BaseInputTemplate.tsx';
 import { generateButtonTemplates } from './ButtonTemplates/index.ts';
 import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate.tsx';
@@ -24,6 +25,7 @@ import UnsupportedFieldTemplate from './UnsupportedField.tsx';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate.tsx';
 
 export * from './ButtonTemplates/index.ts';
+export type { CoreBaseInputTemplateProps };
 export { default as FieldLabel, type LabelProps as FieldLabelProps } from './FieldTemplate/Label.tsx';
 export {
   ArrayFieldDescriptionTemplate,

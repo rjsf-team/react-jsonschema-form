@@ -89,6 +89,23 @@ describe('BaseInputTemplate', () => {
 
     expect(container.querySelector('input')).toHaveClass('x', 'is-invalid', 'form-range');
   });
+
+  test("leaves the extraProps only Form.Control reads off a range's input", () => {
+    const { container } = render(
+      <BaseInputTemplate
+        type='range'
+        {...makeWidgetMockProps({ value: 3 })}
+        extraProps={{ size: 'sm', htmlSize: 4, plaintext: true, isValid: true, isInvalid: true }}
+      />,
+    );
+
+    const input = container.querySelector('input');
+    expect(input).toHaveClass('form-range');
+    expect(input).not.toHaveClass('is-valid', 'is-invalid', 'form-range-sm');
+    for (const attribute of ['size', 'htmlsize', 'plaintext', 'isvalid', 'isinvalid']) {
+      expect(input).not.toHaveAttribute(attribute);
+    }
+  });
 });
 
 callerInputPropsTests(Form);
