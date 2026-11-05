@@ -52,6 +52,7 @@ describe('UiSchema type', () => {
       additionalProperties: { zip: { 'ui:placeholder': 'Zip' } },
     };
 
+    expectTypeOf<NonNullable<Known['additionalProperties']>>().toEqualTypeOf<UiSchema>();
     expect(open.additionalProperties?.city).toBeDefined();
     expect([indexed, wrong]).toHaveLength(2);
   });
@@ -196,7 +197,12 @@ describe('UiSchema type', () => {
   it('leaves a field whose type says nothing about its data unconstrained', () => {
     const ui: Known = { loose: { nested: { 'ui:title': 'Nested' } } };
 
-    expect(ui.loose?.nested?.['ui:title']).toBe('Nested');
+    expectTypeOf(ui.loose?.nested).toBeUnknown();
+    expect(ui.loose?.nested).toEqual({ 'ui:title': 'Nested' });
+  });
+
+  it('reads a field typed `any` back as `unknown`', () => {
+    expectTypeOf<UiSchema<{ meta: any }>['meta']>().toBeUnknown();
   });
 
   it('keeps the ui: namespace open for theme and application directives', () => {
@@ -205,10 +211,22 @@ describe('UiSchema type', () => {
     expect(ui['ui:myTheme:thing']).toBe(42);
   });
 
-  it('leaves an untyped uiSchema as permissive as it has always been', () => {
+  it('accepts any key in an untyped uiSchema and reads nested entries back as unknown', () => {
     const ui: UiSchema = { whatever: 1, nested: { deeper: { 'ui:widget': 'text' } }, 'ui:wigdet': 'typo' };
 
-    expect(ui.nested.deeper['ui:widget']).toBe('text');
+    expectTypeOf(ui.nested).toBeUnknown();
+    expect(ui.nested).toEqual({ deeper: { 'ui:widget': 'text' } });
+  });
+
+  it('fits an untyped uiSchema into a typed one only where neither the data nor its array element has a string index signature', () => {
+    const ui: UiSchema = { notes: { 'ui:widget': 'textarea' } };
+    const named: UiSchema<{ notes: string }> = ui;
+    // @ts-expect-error TS2322, the untyped entries are `unknown`, not the `UiSchema<string>` each indexed key holds
+    const indexed: UiSchema<Record<string, string>> = ui;
+    // @ts-expect-error TS2322, `items` holds the untyped `unknown` entries where each element's indexed keys need a `UiSchema<string>`
+    const indexedElements: UiSchema<Record<string, string>[]> = ui;
+
+    expect([named, indexed, indexedElements]).toHaveLength(3);
   });
 
   it('rejects a field name the data does not have', () => {

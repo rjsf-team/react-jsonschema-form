@@ -482,7 +482,7 @@ describe('Validation', () => {
           <div className='CustomErrorList'>{errors.length} custom</div>
           <div className='ErrorSchema'>{errorSchema.__errors?.[0]}</div>
           <div className='Schema'>{schema.type}</div>
-          <div className='UiSchema'>{uiSchema?.foo}</div>
+          <div className='UiSchema'>{String(uiSchema?.foo)}</div>
           <div className={className} />
         </div>
       );

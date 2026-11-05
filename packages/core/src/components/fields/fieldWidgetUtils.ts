@@ -617,7 +617,11 @@ export function withoutUiWidget<T, S extends StrictRJSFSchema, F extends FormCon
 ): UiSchema<T, S, F> {
   const { [UI_WIDGET_KEY]: _widget, ...rest } = uiSchema;
   const { widget: _optionWidget, ...options } = uiSchema[UI_OPTIONS_KEY] ?? {};
-  return { ...rest, [UI_OPTIONS_KEY]: options };
+  return {
+    // The rest of a generic `UiSchema<T, S, F>` is a type the checker can't relate back to it
+    ...(rest as UiSchema<T, S, F>),
+    [UI_OPTIONS_KEY]: options,
+  };
 }
 
 /** Whether the fallback UI's value field keeps its `ui:widget` on `type`, which `withoutUiWidget()` otherwise drops, since
