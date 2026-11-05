@@ -973,16 +973,7 @@ describe('antd renders a field a named field wraps once', () => {
 
   test.each<[string, RJSFSchema, UiSchema]>([
     ["ui:field: 'SchemaField'", describedSchema, { val: { 'ui:field': 'SchemaField', 'ui:help': 'Help' } }],
-    [
-      "ui:options.field: 'SchemaField'",
-      describedSchema,
-      { val: { 'ui:options': { field: 'SchemaField' }, 'ui:help': 'Help' } },
-    ],
-    [
-      'a ui:options.field wrapping SchemaField',
-      describedSchema,
-      { val: { 'ui:options': { field: 'wrapping' }, 'ui:help': 'Help' } },
-    ],
+    ['a ui:field wrapping SchemaField', describedSchema, { val: { 'ui:field': 'wrapping', 'ui:help': 'Help' } }],
     [
       'a $id wrapping SchemaField',
       {
@@ -1025,9 +1016,7 @@ describe('antd renders a field a named field wraps once', () => {
 
   test.each<[string, RJSFSchema, UiSchema]>([
     ["ui:field: 'SchemaField'", anyOfSchema, { val: { 'ui:field': 'SchemaField' } }],
-    ["ui:options.field: 'SchemaField'", anyOfSchema, { val: { 'ui:options': { field: 'SchemaField' } } }],
     ['a ui:field wrapping SchemaField', anyOfSchema, { val: { 'ui:field': 'wrapping' } }],
-    ['a ui:options.field wrapping SchemaField', anyOfSchema, { val: { 'ui:options': { field: 'wrapping' } } }],
     [
       'a $id wrapping SchemaField',
       { type: 'object', properties: { val: { $id: 'wrapping', anyOf: [{ type: 'string' }, { type: 'number' }] } } },
@@ -1046,17 +1035,7 @@ describe('antd renders a field a named field wraps once', () => {
 
   test.each<[string, RJSFSchema, UiSchema]>([
     ["ui:field: 'SchemaField'", extraKeySchema, { additionalProperties: { 'ui:field': 'SchemaField' } }],
-    [
-      "ui:options.field: 'SchemaField'",
-      extraKeySchema,
-      { additionalProperties: { 'ui:options': { field: 'SchemaField' } } },
-    ],
     ['a ui:field wrapping SchemaField', extraKeySchema, { additionalProperties: { 'ui:field': 'wrapping' } }],
-    [
-      'a ui:options.field wrapping SchemaField',
-      extraKeySchema,
-      { additionalProperties: { 'ui:options': { field: 'wrapping' } } },
-    ],
     ['a $id wrapping SchemaField', { type: 'object', additionalProperties: { $id: 'wrapping', type: 'string' } }, {}],
   ])('renders one key input and one remove button for an extra key the field %s names', (_, schema, uiSchema) => {
     const { container } = render(

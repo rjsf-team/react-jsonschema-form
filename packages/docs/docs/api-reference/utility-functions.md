@@ -1875,7 +1875,7 @@ This will allow you to use `TEST_IDS.examplePropertyName` within your tests, whi
 Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
 Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
 A global `required` is left out: `ui:required` is a field's own, since validation reads it from the field's own uiSchema alone, so a form-wide one would mark fields required that validation doesn't require.
-`ui:definitions` and `ui:globalOptions` aren't options either.
+`ui:definitions` and `ui:globalOptions` aren't options either. A `field`, `fieldReplacesAnyOrOneOf`, `definitions` or `globalOptions` in `ui:options` is ignored with a warning, since only the `ui:` spelling of each sets it.
 Pass the registry's `globalUiOptions`, which hold only the options RJSF reads there and the extension keys the theme and the `Form` declare, as [`pickGlobalUiOptions()`](#pickglobaluioptions) leaves them. A root uiSchema's `ui:globalOptions` read some other way goes through `pickGlobalUiOptions()` with those keys first, or it keeps only RJSF's own.
 
 #### Parameters

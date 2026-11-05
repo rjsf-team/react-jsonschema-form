@@ -1836,7 +1836,7 @@ describe('LayoutGridField', () => {
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
     const expected = getExpectedPropsForField(props, fieldName, otherProps, otherUIProps);
     // A discriminated cell names the field rendering its selector in place of the options, over the `ui:field` its own
-    // uiSchema names, in both spellings
+    // uiSchema names
     expect(field).toHaveTextContent(
       stringifyProps({
         ...expected,
@@ -1844,11 +1844,6 @@ describe('LayoutGridField', () => {
           ...expected.uiSchema,
           [UI_FIELD_KEY]: 'LayoutMultiSchemaField',
           'ui:fieldReplacesAnyOrOneOf': true,
-          [UI_OPTIONS_KEY]: {
-            ...expected.uiSchema[UI_OPTIONS_KEY],
-            field: 'LayoutMultiSchemaField',
-            fieldReplacesAnyOrOneOf: true,
-          },
         },
       }),
     );

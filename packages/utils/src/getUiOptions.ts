@@ -17,6 +17,11 @@ import type {
 /** The root uiSchema's own keys, which configure the form rather than any one field */
 const FORM_KEYS: readonly string[] = [UI_DEFINITIONS_KEY, UI_GLOBAL_OPTIONS_KEY];
 
+/** The keys the docs list as exceptions to the `ui:XXX`/`ui:options.XXX` equivalence, which only their `ui:` spelling
+ * sets, so a custom widget can't take an option of one of these names through `ui:options`
+ */
+const NOT_UI_OPTIONS: readonly string[] = ['field', 'fieldReplacesAnyOrOneOf', 'definitions', 'globalOptions'];
+
 /** Narrows a uiSchema key to a field's own `ui:` key, so indexing resolves against that index signature */
 function isOptionKey(key: string): key is `ui:${string}` {
   return key.startsWith('ui:') && !FORM_KEYS.includes(key);
@@ -26,7 +31,8 @@ function isOptionKey(key: string): key is `ui:${string}` {
  * stripped off. Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
  * A global `required` is left out: `ui:required` is a field's own, since validation reads it from the field's own
  * uiSchema alone, so a form-wide one would mark fields required that validation doesn't require. `ui:definitions` and
- * `ui:globalOptions` aren't options either.
+ * `ui:globalOptions` aren't options either. A `field`, `fieldReplacesAnyOrOneOf`, `definitions` or `globalOptions` in
+ * `ui:options` is ignored with a warning, since only the `ui:` spelling of each sets it.
  * Pass the registry's `globalUiOptions`, which hold only the options RJSF reads there and the extension keys the theme
  * and the `Form` declare, as `pickGlobalUiOptions()` leaves them. A root uiSchema's `ui:globalOptions` read some other
  * way goes through `pickGlobalUiOptions()` with those keys first, or it keeps only RJSF's own.
@@ -59,7 +65,15 @@ export default function getUiOptions<
         'error',
       );
     } else if (key === UI_OPTIONS_KEY && isObject(value)) {
-      Object.assign(options, value);
+      for (const [name, option] of Object.entries(value)) {
+        if (!NOT_UI_OPTIONS.includes(name)) {
+          options[name] = option;
+        } else if (option !== undefined) {
+          logOnce(
+            `ui:options.${name} is ignored, since ${name} can only be set through ui:${name}. A custom widget's own option needs another name.`,
+          );
+        }
+      }
     } else {
       Object.assign(options, { [key.substring(3)]: value });
     }

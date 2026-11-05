@@ -95,12 +95,11 @@ describe('the plan SchemaField builds', () => {
     expect(templatePlans.get('root_foo')?.label.by).toBe('self');
   });
 
-  describe('a field named by its key, however ui:field is spelled', () => {
+  describe('a field named by its key, whatever ui:field names', () => {
     setupConsoleWarnSuppression();
 
     it.each<[string, UiSchema]>([
       ['its key in ui:field', { 'ui:field': 'StringField' }],
-      ['its key in ui:options.field', { 'ui:options': { field: 'StringField' } }],
       ['a ui:field that names no field', { 'ui:field': 'StringFeild' }],
     ])('plans a field named by %s as one its type picked', (_, fooUiSchema) => {
       const { templatePlans } = renderPlans(
@@ -1281,14 +1280,13 @@ describe('a fallback field with no control for a label to name', () => {
   );
 });
 
-describe("the fallback UI's label, however its ui:field is spelled (#5389)", () => {
+describe("the fallback UI's label, whatever its ui:field names (#5389)", () => {
   setupConsoleWarnSuppression();
 
   it.each<[string, UiSchema]>([
     ['no ui:field', {}],
     ['a ui:field naming FallbackField', { 'ui:field': 'FallbackField' }],
     ['a ui:field naming nothing', { 'ui:field': 'Nope' }],
-    ['a ui:options.field naming nothing', { 'ui:options': { field: 'Nope' } }],
   ])("is drawn once, by the field's template above the type selector, under %s", (_, valUiSchema) => {
     const { node } = createFormComponent({
       schema: { type: 'object', properties: { val: { type: ['string', 'number'], title: 'Val' } } },
@@ -1319,7 +1317,6 @@ describe("the fallback UI's label, however its ui:field is spelled (#5389)", () 
 
   it.each<[string, RJSFSchema, UiSchema]>([
     ['ui:field', val, { val: { 'ui:field': 'OwnFallback' } }],
-    ['ui:options.field', val, { val: { 'ui:options': { field: 'OwnFallback' } } }],
     ["the schema's $id", { ...val, $id: 'OwnFallback' }, {}],
     ['a ui:field it then removes', val, { val: { 'ui:field': 'StrippingFallback' } }],
   ])(

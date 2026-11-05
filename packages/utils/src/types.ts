@@ -2081,9 +2081,17 @@ type UIOptionsDeclaredType<
     yearsRange?: readonly [number, number];
   };
 
-/** The type that represents the Options potentially provided by `ui:options`. Its string index leaves the vocabulary
- * open to any option a theme or custom component reads, typed `unknown` until it is checked, which is also what gives
- * `UiSchema` its `ui:${string}` keys once remapped
+/** The keys only their `ui:` spelling sets, which `getUiOptions()` ignores in `ui:options` */
+interface NotInUiOptions {
+  field?: never;
+  fieldReplacesAnyOrOneOf?: never;
+  definitions?: never;
+  globalOptions?: never;
+}
+
+/** The options `getUiOptions()` returns, which `ui:options` also takes except for the keys in `NotInUiOptions`. Its
+ * string index leaves the vocabulary open to any option a theme or custom component reads, typed `unknown` until it is
+ * checked, which is also what gives `UiSchema` its `ui:${string}` keys once remapped
  */
 export interface UIOptionsType<
   T = unknown,
@@ -2190,9 +2198,9 @@ interface UiOptionsComponentPart<T, S extends StrictRJSFSchema, F extends FormCo
   'ui:field'?: FieldsFor<T, Checks> | Field<T, S, F>;
   'ui:options'?: {
     widget?: WidgetsFor<T, Checks> | Widget<T, S, F>;
-    field?: FieldsFor<T, Checks> | Field<T, S, F>;
   } & RawOptsFor<T, Checks> &
-    CommonUiOptions<T, S, F>;
+    CommonUiOptions<T, S, F> &
+    NotInUiOptions;
 }
 
 /** @internal Common `ui:*` options valid on any field regardless of its type, kept separate from a `Checks` union
@@ -2304,7 +2312,7 @@ export type UiSchema<
   F extends FormContextType = FormContextType,
 > = {
   [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<K, UiSchemaChildData<T>[K], S, F>;
-} & MakeUIType<UIOptionsType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> } & {
+} & MakeUIType<UIOptionsType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> & NotInUiOptions } & {
     /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
      * Registry for use everywhere.
      */

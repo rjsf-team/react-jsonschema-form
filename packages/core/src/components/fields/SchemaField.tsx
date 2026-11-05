@@ -321,9 +321,8 @@ function withInferredWidget<
   const rawUiField = lookUpUiField<T, S, F>(resolvedUiSchema[UI_FIELD_KEY], fields);
   // `BooleanField` is the only field the widget is ever inferred for, and the only one that reads it, so another field
   // named through `ui:field` is handed the caller's `uiSchema` without a widget it never chose — which a field following
-  // `BooleanField`'s lead would otherwise render in place of its own default. A field named through `ui:options.field`
-  // still gets the widget, so one that wraps `BooleanField` keeps its select, as does whichever field renders in place of
-  // a `ui:field` that names nothing, as though none were given
+  // `BooleanField`'s lead would otherwise render in place of its own default. Whichever field renders in place of a
+  // `ui:field` that names nothing keeps its select, as though none were given
   if (isComponentType(rawUiField) && rawUiField !== fields.BooleanField) {
     return resolvedUiSchema;
   }

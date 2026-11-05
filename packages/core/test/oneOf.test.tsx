@@ -2786,16 +2786,13 @@ describe('oneOf', () => {
       expect(node.querySelector('input#root')).toBeNull();
     });
 
-    it.each([
-      ['ui:field', { 'ui:field': CustomField }],
-      ['ui:options.field', { 'ui:options': { field: CustomField } }],
-    ])('renders an object field %s once, and the option with its own field', (_, uiSchema) => {
+    it('renders an object field ui:field once, and the option with its own field', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'object',
           oneOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'number' } } }],
         },
-        uiSchema,
+        uiSchema: { 'ui:field': CustomField },
       });
 
       expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
@@ -3920,7 +3917,7 @@ describe('oneOf', () => {
       expect(uiWidgets.every((widget) => widget === undefined)).toBe(true);
     });
 
-    it('should keep the inferred select for a field named in ui:options that delegates to BooleanField', async () => {
+    it('should render a select for a ui:field that delegates to BooleanField once its uiSchema names the widget', async () => {
       const MyField = (props: FieldProps) => {
         const { BooleanField } = props.registry.fields;
         return <BooleanField {...props} />;
@@ -3936,7 +3933,7 @@ describe('oneOf', () => {
       // A custom field draws its own label unless declared otherwise; this one leaves it to the template
       const { node, onChange } = createFormComponent({
         schema,
-        uiSchema: { 'ui:options': { field: MyField } },
+        uiSchema: { 'ui:field': MyField, 'ui:widget': 'select' },
         presentation: { fieldDefault: { label: 'template' } },
       });
 

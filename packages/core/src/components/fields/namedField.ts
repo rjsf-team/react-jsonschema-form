@@ -10,14 +10,7 @@ import type {
   UIOptionsType,
   UiSchema,
 } from '@rjsf/utils';
-import {
-  describeUnresolvedComponent,
-  getByPath,
-  getUiOptions,
-  isComponentType,
-  UI_FIELD_KEY,
-  UI_OPTIONS_KEY,
-} from '@rjsf/utils';
+import { describeUnresolvedComponent, getByPath, isComponentType, UI_FIELD_KEY } from '@rjsf/utils';
 
 import { entryLabelForLog } from '../../fieldLabelForLog.ts';
 
@@ -26,7 +19,7 @@ import { entryLabelForLog } from '../../fieldLabelForLog.ts';
  * rather than to something off `Object.prototype`, which rendered as a component threw "Objects are not valid as a
  * React child"
  *
- * @param field - The `field` from the UI options
+ * @param field - The `ui:field`
  * @param fields - The registered fields
  * @returns - The value the `ui:field` refers to, which is not necessarily a component
  */
@@ -54,8 +47,7 @@ export function isWrittenField<
   return field !== undefined && field !== fields.SchemaField && field !== fields.FallbackField;
 }
 
-/** Returns `uiSchema` with the field it names removed in both spellings, for what renders at the same data path as the
- * named field
+/** Returns `uiSchema` with the field it names removed, for what renders at the same data path as the named field
  *
  * @param uiSchema - The field's `uiSchema`
  * @returns - `uiSchema` itself when nothing names a field, else a copy naming none
@@ -65,11 +57,10 @@ export function withoutNamedField<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(uiSchema: UiSchema<T, S, F>): UiSchema<T, S, F> {
-  const { field, ...uiOptionsWithoutField } = uiSchema[UI_OPTIONS_KEY] ?? {};
-  if (uiSchema[UI_FIELD_KEY] === undefined && field === undefined) {
+  if (uiSchema[UI_FIELD_KEY] === undefined) {
     return uiSchema;
   }
-  const uiSchemaWithoutField: UiSchema<T, S, F> = { ...uiSchema, [UI_OPTIONS_KEY]: uiOptionsWithoutField };
+  const uiSchemaWithoutField: UiSchema<T, S, F> = { ...uiSchema };
   delete uiSchemaWithoutField[UI_FIELD_KEY];
   return uiSchemaWithoutField;
 }
@@ -152,7 +143,7 @@ export function resolveNamedField<
         ? ownUiSchema
         : withoutNamedField<T, S, F>(ownUiSchema),
   });
-  const ownField = getUiOptions<T, S, F>(ownUiSchema).field;
+  const ownField = ownUiSchema[UI_FIELD_KEY];
   if (ownField) {
     const resolved = lookUpUiField<T, S, F>(ownField, fields);
     if (isComponentType<FieldProps<T, S, F>>(resolved)) {

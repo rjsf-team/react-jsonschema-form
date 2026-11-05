@@ -1,14 +1,6 @@
 import { useMemo } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import {
-  getByPath,
-  setByPath,
-  getOptionUiSchema,
-  fieldPathToName,
-  getUiOptions,
-  toFieldPath,
-  UI_OPTIONS_KEY,
-} from '@rjsf/utils';
+import { getByPath, setByPath, getOptionUiSchema, fieldPathToName, getUiOptions, toFieldPath } from '@rjsf/utils';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
@@ -23,8 +15,8 @@ import {
 } from './layoutMultiSchemaFieldSelector.ts';
 import { withoutNamedField } from './namedField.ts';
 
-/** Returns the field's `uiSchema` without the `field` and `fieldReplacesAnyOrOneOf` that had `SchemaField` render this
- * field in place of the options, in either spelling. A layout grid writes them into a cell's `uiSchema` itself, and
+/** Returns the field's `uiSchema` without the `ui:field` and `ui:fieldReplacesAnyOrOneOf` that had `SchemaField` render
+ * this field in place of the options. A layout grid writes them into a cell's `uiSchema` itself, and
  * they mean nothing to the selector widget or to the option a switch selects, whose uiSchema falls back to this one
  *
  * @param uiSchema - The uiSchema of the field
@@ -37,11 +29,10 @@ function omitFieldDirectives<T, S extends StrictRJSFSchema, F extends FormContex
     return uiSchema;
   }
   const withoutField = withoutNamedField<T, S, F>(uiSchema);
-  const { fieldReplacesAnyOrOneOf, ...selectorUiOptions } = withoutField[UI_OPTIONS_KEY] ?? {};
-  if (withoutField['ui:fieldReplacesAnyOrOneOf'] === undefined && fieldReplacesAnyOrOneOf === undefined) {
+  if (withoutField['ui:fieldReplacesAnyOrOneOf'] === undefined) {
     return withoutField;
   }
-  const strippedUiSchema: UiSchema<T, S, F> = { ...withoutField, [UI_OPTIONS_KEY]: selectorUiOptions };
+  const strippedUiSchema: UiSchema<T, S, F> = { ...withoutField };
   delete strippedUiSchema['ui:fieldReplacesAnyOrOneOf'];
   return strippedUiSchema;
 }

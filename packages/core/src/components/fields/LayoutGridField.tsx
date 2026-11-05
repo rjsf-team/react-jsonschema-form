@@ -809,10 +809,8 @@ function LayoutGridFieldComponent<
     [name, uiProps, uiSchema, isReadonly, readonly],
   );
   // A discriminated cell renders its option selector alone, the field `SchemaField` renders in place of the options
-  // once the cell names it with `fieldReplacesAnyOrOneOf`. It is named over any field the cell names itself, which
-  // would render beside the options the rest of the grid lays out. Both are set in both spellings, since
-  // `getUiOptions()` reads the two in key order and `SchemaField` merges a `ui:definitions` entry beneath this
-  // `uiSchema`, whose own spelling of either would otherwise come first or last as that entry orders it
+  // once the cell names it with `ui:fieldReplacesAnyOrOneOf`. It is named over any field the cell names itself, which
+  // would render beside the options the rest of the grid lays out
   const hasDiscriminator = optionsInfo?.hasDiscriminator ?? false;
   const cellUiSchema = useMemo<UiSchema<T, S, F>>(() => {
     const namedUiSchema = hasDiscriminator
@@ -820,11 +818,6 @@ function LayoutGridFieldComponent<
           ...fieldUiSchema,
           [UI_FIELD_KEY]: 'LayoutMultiSchemaField',
           'ui:fieldReplacesAnyOrOneOf': true,
-          [UI_OPTIONS_KEY]: {
-            ...(isObject(fieldUiSchema[UI_OPTIONS_KEY]) ? fieldUiSchema[UI_OPTIONS_KEY] : {}),
-            field: 'LayoutMultiSchemaField',
-            fieldReplacesAnyOrOneOf: true,
-          },
         }
       : fieldUiSchema;
     return isAdditionalProperty ? withoutOptionalControls<T, S, F>(namedUiSchema) : namedUiSchema;
@@ -839,7 +832,7 @@ function LayoutGridFieldComponent<
     if (!hasDiscriminator || !schema) {
       return false;
     }
-    const { field } = getUiOptions<T, S, F>(resolveUiSchema<T, S, F>(schema, fieldUiSchema, registry));
+    const field = resolveUiSchema<T, S, F>(schema, fieldUiSchema, registry)[UI_FIELD_KEY];
     if (!field) {
       return false;
     }

@@ -555,6 +555,30 @@ describe('GlobalUISchemaOptions (extensions)', () => {
     expectTypeOf<ThemeGlobalUISchemaOptions<{ gridCols?: number }, { gridCols?: string }>>().not.toBeNever();
   });
 
+  it('rejects the keys only their ui: spelling sets in ui:options', () => {
+    const plain: UiSchema = {
+      'ui:options': {
+        // @ts-expect-error: TS2322, only `ui:field` names a field
+        field: 'MyField',
+        // @ts-expect-error: TS2322, only `ui:fieldReplacesAnyOrOneOf` sets this
+        fieldReplacesAnyOrOneOf: true,
+        // @ts-expect-error: TS2322, only `ui:definitions` sets these
+        definitions: {},
+        // @ts-expect-error: TS2322, only `ui:globalOptions` sets these
+        globalOptions: {},
+      },
+    };
+    const strict: StrictUiSchema<never> = {
+      'ui:options': {
+        // @ts-expect-error: TS2322, only `ui:field` names a field
+        field: 'MyField',
+      },
+    };
+
+    expect(plain).toBeDefined();
+    expect(strict).toBeDefined();
+  });
+
   it("hands a theme's options with a user's extension on to the plain type RJSF takes", () => {
     const themeOptions: ThemeGlobalUISchemaOptions<{ gridCols?: number }, { myKey?: string }> = {
       label: false,

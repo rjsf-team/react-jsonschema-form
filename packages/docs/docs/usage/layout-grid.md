@@ -334,7 +334,9 @@ property.
 In its most expanded form, the `ui:col` contains an array of `children` in the form of objects with `"name": "<field id>"`
 as the minimum required property. Any additional properties added within the object will be passed along to the
 underlying `Widget` implementation in the `ui:options` portion of the `uiSchema`. This allows for fine-tuning any
-out-of-the-box or custom widgets. Let's take a look at an example where the `Middle Name` column hides its label adding
+out-of-the-box or custom widgets. The [keys `ui:options` doesn't take](../api-reference/uiSchema.md#exceptions-to-the-equivalence),
+such as `field`, are ignored with a warning, so name a cell's field with `ui:field` in its own `uiSchema` entry.
+Let's take a look at an example where the `Middle Name` column hides its label adding
 a margin to take up the space once occupied by the label, and is reduced in size relative to the `First Name` and
 `Last Name`:
 
