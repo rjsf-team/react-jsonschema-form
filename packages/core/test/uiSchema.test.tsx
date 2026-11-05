@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { forwardRef, lazy, memo, Suspense } from 'react';
 import type { GenericObjectType, GlobalUISchemaOptions, RJSFSchema, UiSchema, Widget, WidgetProps } from '@rjsf/utils';
-import { errorId, noop } from '@rjsf/utils';
+import { errorId, noop, toInputValue } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, fireEvent, act, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -119,7 +119,7 @@ describe('uiSchema', () => {
           <input
             type='text'
             className='custom'
-            value={props.value}
+            value={toInputValue(props.value)}
             defaultValue={props.defaultValue}
             required={props.required}
             onChange={(event) => props.onChange(event.target.value)}
@@ -138,10 +138,10 @@ describe('uiSchema', () => {
       const schema: RJSFSchema = { type: 'string' };
 
       const CustomWidget = (props: WidgetProps) => (
-        <input type='text' className='custom' value={props.value ?? ''} onChange={noop} />
+        <input type='text' className='custom' value={toInputValue(props.value)} onChange={noop} />
       );
       const ForwardedWidget = forwardRef<HTMLInputElement, WidgetProps>((props, ref) => (
-        <input ref={ref} type='text' className='custom' value={props.value ?? ''} onChange={noop} />
+        <input ref={ref} type='text' className='custom' value={toInputValue(props.value)} onChange={noop} />
       ));
 
       const wrappedWidgets: [string, Widget][] = [
@@ -360,7 +360,7 @@ describe('uiSchema', () => {
         <input
           type='text'
           className='custom'
-          value={props.value}
+          value={toInputValue(props.value)}
           defaultValue={props.defaultValue}
           required={props.required}
           onChange={(event) => props.onChange(event.target.value)}
@@ -394,7 +394,7 @@ describe('uiSchema', () => {
 
       const CustomWidget = (props: WidgetProps) => {
         const { value, options } = props;
-        return <input type='text' className={options.className} value={value} />;
+        return <input type='text' className={options.className} value={toInputValue(value)} />;
       };
 
       describe('direct reference', () => {

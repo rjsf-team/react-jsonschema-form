@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { widgetDrawsLabel } from '@rjsf/utils';
+import { numericWidgetStoresString, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { getGroupAndOptionProps } from '../../utils.ts';
 
@@ -50,6 +50,8 @@ export default function RatingWidget<
   const { stars = 5, shape = 'star', color = 'orange', size = 'md', colorGradient = false } = options;
 
   const min = schema.minimum ?? 0;
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const rating = toNumericValue(value);
   const numStars = Math.floor(
     Math.max(Math.min(withoutFloatNoise((schema.maximum ?? Infinity) - min + 1), stars, 5), 1),
   );
@@ -64,9 +66,10 @@ export default function RatingWidget<
   /** Handles change events from radio inputs */
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => {
-      onChange(Number(newValue));
+      const starValue = Number(newValue);
+      onChange(storesString ? String(starValue) : starValue);
     },
-    [onChange],
+    [onChange, storesString],
   );
 
   /** Handles focus events for accessibility */
@@ -116,7 +119,7 @@ export default function RatingWidget<
   });
 
   // The checked star, where Tab into the group lands, as `RadioWidget` gives it its checked radio, else the first
-  const autofocusValue = starValues.includes(value) ? value : starValues[0];
+  const autofocusValue = rating !== undefined && starValues.includes(rating) ? rating : starValues[0];
 
   return (
     <div className='form-control w-full'>
@@ -128,7 +131,7 @@ export default function RatingWidget<
             type='radio'
             name={htmlName || id}
             value={starValue}
-            checked={value === starValue}
+            checked={rating === starValue}
             onChange={handleChange}
             onFocus={handleFocus}
             onBlur={handleBlur}

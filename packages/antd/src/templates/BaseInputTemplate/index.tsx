@@ -2,7 +2,15 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { examplesId, getControlAttributes, getExampleSuggestions, getInputProps } from '@rjsf/utils';
+import {
+  examplesId,
+  getControlAttributes,
+  getExampleSuggestions,
+  getInputProps,
+  numericWidgetStoresString,
+  offersClearButton,
+  toInputValue,
+} from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
 
 import useControlState from '../../controlState.ts';
@@ -47,7 +55,7 @@ export default function BaseInputTemplate<
   const control = useControlState<T, S, F>({ disabled, readonly, registry });
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const handleNumberChange = (nextValue: number | null) => onChange(nextValue ?? options.emptyValue);
+  const handleNumberChange = (nextValue: unknown) => onChange(nextValue ?? options.emptyValue);
 
   const handleTextChange =
     onChangeOverride ??
@@ -72,6 +80,15 @@ export default function BaseInputTemplate<
   // receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
   const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
 
+  // A string is handed over as it is, as a string field that `ui:inputType: 'number'` renders here stores one, and
+  // `InputNumber` keeps the digits a conversion to a number would round. Its `stringMode` writes such a field a string
+  // with those digits too
+  const numberValue = typeof value === 'number' || typeof value === 'string' ? value : undefined;
+  const stringMode = numericWidgetStoresString<S>(schema, value);
+
+  const inputValue = toInputValue(value);
+  // `InputNumber` shows whatever string or number it's given, where a native number input blanks all but a number
+  const showsValue = isNumeric ? Boolean(toInputValue(numberValue)) : offersClearButton(inputValue, inputProps.type);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []);
@@ -94,7 +111,8 @@ export default function BaseInputTemplate<
       min={typeof min === 'number' ? min : undefined}
       max={typeof max === 'number' ? max : undefined}
       type={undefined}
-      value={value}
+      stringMode={stringMode}
+      value={numberValue}
       {...controlAttributes}
     />
   ) : (
@@ -112,7 +130,7 @@ export default function BaseInputTemplate<
       style={INPUT_STYLE}
       list={hasExamples ? examplesId(id) : undefined}
       {...inputProps}
-      value={value}
+      value={value === undefined ? undefined : inputValue}
       {...controlAttributes}
     />
   );
@@ -120,7 +138,7 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && showsValue && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

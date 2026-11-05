@@ -46,6 +46,13 @@ export default function FileWidget<
     [handleChange],
   );
 
+  // `FileInput` holds `File`s, while the form data holds data URLs. It only reads how many it holds, to choose between
+  // `ValueComponent` and the placeholder and to show its clear button, so it's handed a blank `File` per stored item.
+  // An item that can't be read, such as the `null` stored for a file that couldn't be or a string that isn't a data
+  // URL, counts too, or the field would show no clear button for it
+  const storedItems = Array.isArray(value) ? value.length : Number(Boolean(value));
+  const selectedFiles = Array.from({ length: storedItems }, () => new File([], ''));
+
   const ValueComponent = useCallback(() => {
     if (Array.isArray(filesInfo) && filesInfo.length > 0) {
       return (
@@ -81,7 +88,7 @@ export default function FileWidget<
     <FileInput
       id={id}
       name={htmlName || id}
-      value={value || null}
+      value={multiple ? selectedFiles : (selectedFiles[0] ?? null)}
       placeholder={placeholder || undefined}
       accept={options.accept || undefined}
       required={required}

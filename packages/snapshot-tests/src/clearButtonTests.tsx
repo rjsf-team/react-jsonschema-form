@@ -1,0 +1,91 @@
+import type { ComponentType } from 'react';
+import type { FormProps } from '@rjsf/core';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { render, screen } from '@testing-library/react';
+
+const schema: RJSFSchema = { type: 'number', title: 'Amount' };
+const uiSchema: UiSchema = { 'ui:allowClearTextInputs': true };
+
+/** Checks a theme's `allowClearTextInputs` clear button: offered for a value there is to clear, and leaving nothing
+ * beside the input for a value of `0`, which a bare `value && <ClearButton />` renders as the text `0`
+ *
+ * @param Form - The theme's `Form`
+ * @param [clearButtonName=/clear input/i] - The accessible name of the theme's clear button
+ */
+export function clearButtonTests(Form: ComponentType<FormProps>, clearButtonName = /clear input/i) {
+  describe('allowClearTextInputs', () => {
+    test('offers the clear button for a value', () => {
+      render(<Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={5} />);
+      expect(screen.getByRole('button', { name: clearButtonName })).toBeInTheDocument();
+    });
+
+    test('renders nothing beside the input for a value of 0', () => {
+      const { container } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={0} />,
+      );
+      expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
+      expect(container).not.toHaveTextContent(/0/);
+    });
+
+    test('offers no clear button for an object value, which the input shows as nothing', () => {
+      // The form replaces an object a text field holds before a widget sees it, so this hands one to the template
+      function ObjectValueInput(props: WidgetProps) {
+        const { BaseInputTemplate } = props.registry.templates;
+        return <BaseInputTemplate {...props} value={{ a: 1 }} />;
+      }
+      render(
+        <Form
+          schema={{ type: 'string', title: 'Amount' }}
+          uiSchema={{ 'ui:widget': ObjectValueInput, 'ui:allowClearTextInputs': true }}
+          validator={validator}
+        />,
+      );
+      expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
+    });
+
+    test('offers no clear button for false in a number input, which the input shows as nothing', () => {
+      function FalseValueInput(props: WidgetProps) {
+        const { BaseInputTemplate } = props.registry.templates;
+        return <BaseInputTemplate {...props} type='number' value={false} />;
+      }
+      render(
+        <Form
+          schema={schema}
+          uiSchema={{ 'ui:widget': FalseValueInput, 'ui:allowClearTextInputs': true }}
+          validator={validator}
+        />,
+      );
+      expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
+    });
+
+    test('offers the clear button for false in a text input, which shows it', () => {
+      function FalseValueInput(props: WidgetProps) {
+        const { BaseInputTemplate } = props.registry.templates;
+        return <BaseInputTemplate {...props} value={false} />;
+      }
+      render(
+        <Form
+          schema={{ type: 'string', title: 'Amount' }}
+          uiSchema={{ 'ui:widget': FalseValueInput, 'ui:allowClearTextInputs': true }}
+          validator={validator}
+        />,
+      );
+      expect(screen.getByRole('button', { name: clearButtonName })).toBeInTheDocument();
+    });
+    test('offers no clear button for a string a date input blanks, as it is no date', () => {
+      function NoDateInput(props: WidgetProps) {
+        const { BaseInputTemplate } = props.registry.templates;
+        return <BaseInputTemplate {...props} type='date' value='not-a-date' />;
+      }
+      render(
+        <Form
+          schema={{ type: 'string', title: 'Amount' }}
+          uiSchema={{ 'ui:widget': NoDateInput, 'ui:allowClearTextInputs': true }}
+          validator={validator}
+        />,
+      );
+      expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
+    });
+  });
+}

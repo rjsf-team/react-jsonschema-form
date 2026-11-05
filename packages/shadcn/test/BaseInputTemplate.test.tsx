@@ -21,6 +21,14 @@ describe('BaseInputTemplate', () => {
     expect(input).not.toHaveAttribute('title');
   });
 
+  test('shows nothing for an object value', () => {
+    const { container } = render(
+      <BaseInputTemplate {...makeWidgetMockProps({ schema: { type: 'string' }, value: { a: 1 } })} />,
+    );
+
+    expect(container.querySelector('input')).toHaveValue('');
+  });
+
   test('titles a numeric field whose derived pattern extraProps leaves alone', () => {
     const { container } = render(
       <BaseInputTemplate {...makeWidgetMockProps({ schema: { type: 'integer' }, extraProps: { step: 5 } })} />,

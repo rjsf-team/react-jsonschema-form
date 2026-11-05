@@ -4,7 +4,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
 import type { AdditionalPropertyKeySelectProps, Registry, RJSFSchema, WidgetProps } from '../src/index.ts';
-import { AdditionalPropertyKeySelect, widgetAriaProps } from '../src/index.ts';
+import { AdditionalPropertyKeySelect, toInputValue, widgetAriaProps } from '../src/index.ts';
 
 function SelectWidget(props: WidgetProps) {
   const { id, options, value, disabled, readonly, required, onChange } = props;
@@ -13,7 +13,7 @@ function SelectWidget(props: WidgetProps) {
     <select
       id={id}
       {...widgetAriaProps(props)}
-      value={value}
+      value={toInputValue(value)}
       disabled={disabled || readonly}
       required={required}
       onChange={(event) => onChange(event.target.value)}

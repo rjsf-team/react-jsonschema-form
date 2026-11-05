@@ -86,15 +86,15 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 
 #### Props
 
-- value: any - The value currently selected for this element, or `undefined` for none, as `getDateElementProps()` gives it; a `-1`, as a `DateObject` holds an unset part, is handed to the `SelectWidget` as `undefined` too
+- value: number | undefined - The value currently selected for this element, or `undefined` for none, as `getDateElementProps()` gives it; a `-1`, as a `DateObject` holds an unset part, is handed to the `SelectWidget` as `undefined` too
 - [name]: string - Deprecated and ignored: the element takes [dateElementId()](#dateelementid) as its name
 - rootId: string - The id of the field, from which the element derives its own id with [dateElementId()](#dateelementid)
-- select: (property: keyof DateObject, value: any) => void - Records a value for one property of the `DateObject`
+- select: (property: keyof DateObject, value: unknown) => void - Records a value for one property of the `DateObject`
 - type: DateElementProp['type'] - Which element this is, e.g. `year`, `month` or `day`
 - range: DateElementProp['range'] - The inclusive range of values the element offers
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
-- onBlur: (id: string, value: any) => void - Callback for the widget's blur event
-- onFocus: (id: string, value: any) => void - Callback for the widget's focus event
+- onBlur: (id: string, value: unknown) => void - Callback for the widget's blur event
+- onFocus: (id: string, value: unknown) => void - Callback for the widget's focus event
 - [className]: string - Optional class name given to the rendered widget
 - [autofocus]: boolean - Optional flag, if true, the widget autofocuses
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
@@ -113,7 +113,7 @@ Without its field's plan, `hideLabel` turns it off as well, and it renders under
 #### Props
 
 - id: string - The id of the widget, from which the description's own id is derived
-- value: any - The currently selected value, matched against the `enumOptions` to find the option
+- value: unknown - The currently selected value, matched against the `enumOptions` to find the option
 - options: WidgetProps['options'] - The widget's options, whose `enumOptions` carry each option's schema
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `DescriptionFieldTemplate` is resolved
 - [uiSchema]: UiSchema&lt;T, S, F> - The uiSchema for the field, read for the `label` option
@@ -2639,6 +2639,35 @@ A validator package that has to tell which resource of the root a `$ref` names u
 
 - string: The URI in the form two spellings of the same URI share
 
+### numericWidgetStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The schema's type decides, and a type that allows a number too writes one. A schema with no type has only the value to go by, so it writes a number until it holds a string, even for an `enum` of strings.
+
+#### Parameters
+
+- schema: S - The schema of the field
+- value: unknown - The widget's value
+
+#### Returns
+
+- boolean: True if the widget writes a string
+
+### offersClearButton()
+
+Reports whether an input with `allowClearTextInputs` offers its clear button: when it shows a value that isn't the number `0`.
+A `number`, `date`, `datetime-local`, `month`, `time` or `week` input shows only a value in its type's [syntax](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html) and blanks anything else, `false` included.
+It reads that syntax alone, so a day past its month's end counts as shown.
+Any other input shows whatever isn't an empty string.
+
+#### Parameters
+
+- inputValue: string | number - The input's `value`, as [toInputValue()](#toinputvalue) gives it
+- [type]: string - Optional `type` of the input
+
+#### Returns
+
+- boolean: True if the input offers its clear button
+
 ### optionalControlsId()
 
 Return a consistent `id` for the optional data controls `element`
@@ -3420,6 +3449,31 @@ Appends `segment` to `parentPath`, returning the `FieldPath` of the child field.
 
 - FieldPath: The `FieldPath` of the field
 
+### toInputValue()
+
+Turns a widget's `value`, which can hold anything, into what an input's `value` prop accepts.
+A string or a number is kept, so a numeric input stays numeric, a boolean, a bigint or a `Date` is stringified and an array joined with commas the way React renders them, so a hidden multi-select still submits its items, and anything else, `undefined` and `null` included, becomes an empty string.
+
+#### Parameters
+
+- value: unknown - The widget's value
+
+#### Returns
+
+- string | number: The value for an input's `value` prop
+
+### toNumericValue()
+
+Reads a widget's `value` as a number, for a widget that draws one such as a slider or a rating. A finite number is kept and a plain decimal string, such as `'7'`, `' -2.5 '` or `'.5'`, counts as its number. Anything else is no number, including a hex, binary, octal, exponent or `Infinity` string such as `'0x3'` or `'1e1'`.
+
+#### Parameters
+
+- value: unknown - The widget's value
+
+#### Returns
+
+- number | undefined: The number `value` holds, or `undefined` if it holds none
+
 ### toPath()
 
 Converts a dotted path string, such as the `property` of a validation error, into its list of path segments.
@@ -3526,13 +3580,13 @@ Hook which encapsulates the logic needed to read and convert a `value` of `File`
 
 #### Parameters
 
-- value: string | string[] | undefined | null - The current value of the `FileWidget`
-- onChange: (value?: string | null | (string | null)[]) => void - The onChange handler for the `FileWidget`
+- value: unknown - The current value of the `FileWidget`: a data URL or a list of them, anything else holding no files
+- onChange: (value?: unknown) => void - The onChange handler for the `FileWidget`, given the stored items as they are, so an item that isn't a data URL is kept
 - [multiple=false]: boolean - Flag indicating whether the control supports multiple selections
 
 #### Returns
 
-- UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
+- UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation, whose `handleRemove` takes the index of a file in its `filesInfo`
 
 ### useOptionFocusHandlers&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

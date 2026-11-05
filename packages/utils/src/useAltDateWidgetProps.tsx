@@ -11,6 +11,7 @@ import getNestedControlPresentation from './getNestedControlPresentation.ts';
 import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
+import toNumericValue from './toNumericValue.ts';
 import type {
   DateObject,
   FieldPresentation,
@@ -36,8 +37,10 @@ export type DateElementProps<
   F extends FormContextType = FormContextType,
 > = Pick<
   WidgetProps<T, S, F>,
-  'value' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus' | 'className'
+  'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus' | 'className'
 > & {
+  /** The selected value of the date element, `undefined` when none is picked */
+  value: DateElementProp['value'];
   /** The root id of the field */
   rootId: string;
   /** The name of the field. Ignored: each date element is a control of its own, so it is given its own id as its name
@@ -53,7 +56,7 @@ export type DateElementProps<
    */
   elementLabel?: string;
   /** The selector function for a specific prop within the `DateObject`, for a value */
-  select: (property: keyof DateObject, value: any) => void;
+  select: (property: keyof DateObject, value: unknown) => void;
   /** The type of the date element */
   type: DateElementProp['type'];
   /** The range for the date element */
@@ -102,7 +105,7 @@ export function DateElement<
   const id = dateElementId(rootId, type);
   const { widgets, translateString } = registry;
   const { SelectWidget } = widgets;
-  const onChange = useCallback((newValue: any) => select(type as keyof DateObject, newValue), [select, type]);
+  const onChange = useCallback((newValue: unknown) => select(type as keyof DateObject, newValue), [select, type]);
   const elementLabel = translatedElementLabel ?? dateElementLabel(type, translateString);
   const ariaLabel = dateElementAriaLabel(elementLabel, translateString, label);
   const elementPresentation = useMemo(
@@ -138,7 +141,7 @@ export interface UseAltDateWidgetResult {
   /** The list of `DateElementProp` data to render for the `AltDateWidget` */
   elements: DateElementProp[];
   /** The callback that handles the changing of DateElement components */
-  handleChange: (property: keyof DateObject, value?: string) => void;
+  handleChange: (property: keyof DateObject, value?: unknown) => void;
   /** The callback that will clear the `AltDateWidget` when a button is clicked */
   handleClear: (event: MouseEvent) => void;
   /** The callback that will set the `AltDateWidget` to NOW when a button is clicked */
@@ -162,7 +165,13 @@ export default function useAltDateWidgetProps<
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): UseAltDateWidgetResult {
   const { time = false, disabled = false, readonly = false, options, onChange, value } = props;
-  const parsed = useMemo(() => parseDateString(value, time), [value, time]);
+  const parsed = useMemo(() => {
+    try {
+      return parseDateString(typeof value === 'string' ? value : undefined, time);
+    } catch {
+      return parseDateString(undefined, time);
+    }
+  }, [value, time]);
   // A selection that isn't complete yet, kept only for the parse it was made against, so a new value from the parent
   // replaces it. Tagged with that parse rather than with `value`, since the memo builds a new one on every change: a
   // value the parent replaces and then restores must not revive the draft. Dropped whenever a value is sent, so a
@@ -172,11 +181,10 @@ export default function useAltDateWidgetProps<
   const buttonsDisabled = disabled || readonly;
 
   const handleChange = useCallback(
-    (property: keyof DateObject, newValue?: string) => {
-      const nextState = {
-        ...state,
-        [property]: newValue === undefined || newValue === '' ? -1 : Number(newValue),
-      };
+    (property: keyof DateObject, newValue?: unknown) => {
+      // A select that reports its cleared choice as `null`, through an `emptyValue` of `null`, picks nothing either, as
+      // does a value that is no number, which `Number()` would read as `0` or `NaN`
+      const nextState = { ...state, [property]: toNumericValue(newValue) ?? -1 };
 
       if (readyForChange(nextState)) {
         setDraft(undefined);

@@ -23,8 +23,8 @@ export default function TimeWidget<
   const hasSecondPrecision =
     typeof schema.multipleOf === 'number' && Number.isFinite(schema.multipleOf) && schema.multipleOf < 60;
   const handleChange = useCallback(
-    (newValue: any) => {
-      if (!newValue) {
+    (newValue: unknown) => {
+      if (typeof newValue !== 'string' || !newValue) {
         onChange(undefined);
       } else {
         onChange(computeTimeValue(newValue));

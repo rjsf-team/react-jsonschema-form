@@ -183,6 +183,24 @@ describe('mantine FieldTemplate', () => {
     expect(screen.getAllByText('X')).toHaveLength(1);
   });
 
+  test('writes a string from a range on a string field, which keeps it valid', async () => {
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'string', minimum: 0, maximum: 10 }}
+        uiSchema={{ 'ui:widget': 'RangeWidget' }}
+        initialFormData='7'
+        liveValidate='onChange'
+        onChange={onChange}
+        validator={validator}
+      />,
+    );
+    await user.tab();
+    await user.keyboard('{ArrowRight}');
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: '8', errors: [] }), 'root');
+  });
+
   test("keeps a range's thumb named by its thumbLabel beneath the template's label", () => {
     render(
       <WrappedForm

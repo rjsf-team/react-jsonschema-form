@@ -413,6 +413,36 @@ describe('SelectWidget', () => {
     expect(seen).toEqual([['b'], ['b', null]]);
   });
 
+  test('multi-select: reads a lone value as one selected item, as core does', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          multiple: true,
+          value: 'a',
+          onChange,
+          options: {
+            enumOptions: [
+              { label: 'A', value: 'a' },
+              { label: 'B', value: 'b' },
+            ],
+            optionValueFormat: 'realValue',
+          },
+        })}
+      />,
+    );
+
+    await user.click(screen.getByPlaceholderText('Select ...'));
+    expect(screen.queryByRole('option', { name: 'A' })).toBeNull();
+    await user.click(screen.getByRole('option', { name: 'B' }));
+
+    expect(onChange).toHaveBeenLastCalledWith(['a', 'b']);
+  });
+
   test('single select: reports the form data value on focus and blur rather than decoding it', async () => {
     const user = userEvent.setup();
     const onFocus = vi.fn();

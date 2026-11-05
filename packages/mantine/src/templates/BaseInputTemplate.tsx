@@ -9,6 +9,9 @@ import {
   getExampleSuggestions,
   getInputProps,
   labelValue,
+  numericWidgetStoresString,
+  offersClearButton,
+  toInputValue,
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
@@ -52,7 +55,19 @@ export default function BaseInputTemplate<
   const themeProps = cleanupOptions(options, props);
   const descriptionProps = getDescriptionProps(props);
 
-  const handleNumberChange = useCallback((newValue: number | string) => onChange(newValue), [onChange]);
+  // `NumberInput` reports a number once its text parses as one, and on blur trims leading zeroes by parsing the text,
+  // which rounds the digits past a number's precision, so a string field turns that trim off and gets a string back
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const handleNumberChange = useCallback(
+    (newValue: number | string) => {
+      if (newValue === '') {
+        onChange(options.emptyValue);
+      } else {
+        onChange(storesString ? String(newValue) : newValue);
+      }
+    },
+    [onChange, storesString, options.emptyValue],
+  );
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +99,7 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const inputValue = toInputValue(value);
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
   const componentProps = {
@@ -119,10 +135,11 @@ export default function BaseInputTemplate<
       {...restInputProps}
       {...themeProps}
       step={typeof inputProps.step === 'number' ? inputProps.step : 1}
+      {...(storesString && { trimLeadingZeroesOnBlur: false })}
       type='text'
       {...ariaDescribedByProps}
       {...descriptionProps}
-      value={value ?? ''}
+      value={inputValue}
       min={typeof min === 'number' ? min : undefined}
       max={typeof max === 'number' ? max : undefined}
     />
@@ -134,14 +151,19 @@ export default function BaseInputTemplate<
       {...themeProps}
       {...ariaDescribedByProps}
       {...descriptionProps}
-      value={value ?? ''}
+      value={inputValue}
     />
   );
+
+  // `NumberInput` is a text input that shows a partial number such as `5.` or `-`, which a native number input blanks
+  const showsValue = isNumeric
+    ? (typeof value === 'number' || typeof value === 'string') && Boolean(inputValue)
+    : offersClearButton(inputValue, inputProps.type);
 
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && value && (
+      {options.allowClearTextInputs && !readonly && !disabled && showsValue && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}

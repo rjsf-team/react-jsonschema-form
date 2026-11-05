@@ -2,7 +2,14 @@ import type { FocusEvent } from 'react';
 import type { SliderProps } from '@fluentui/react-components';
 import { Label, makeStyles, Slider } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, labelValue, rangeSpec, widgetDrawsLabelText } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  labelValue,
+  numericWidgetStoresString,
+  rangeSpec,
+  toNumericValue,
+  widgetDrawsLabelText,
+} from '@rjsf/utils';
 
 const useStyles = makeStyles({
   // Fluent's `Slider` keeps a 120px minimum width, which would push it out of a narrower layout grid column
@@ -38,7 +45,7 @@ export default function RangeWidget<
   // A label holding only a required field's `*` would name the slider "star", so one is drawn only with text
   const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const sliderProps = {
-    value,
+    value: toNumericValue(value),
     label,
     id,
     name: htmlName || id,
@@ -47,7 +54,9 @@ export default function RangeWidget<
     ...rangeSpec<S>(schema),
   };
 
-  const handleChange: NonNullable<SliderProps['onChange']> = (_, data) => onChange(data.value);
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const handleChange: NonNullable<SliderProps['onChange']> = (_, data) =>
+    onChange(storesString ? String(data.value) : data.value);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 

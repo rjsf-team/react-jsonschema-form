@@ -9,7 +9,7 @@ import type {
   RJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { noop } from '@rjsf/utils';
+import { noop, toInputValue } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -47,7 +47,7 @@ it('an abandoned concurrent render does not publish its schema or callbacks to t
     if (fieldSchema.title === 'pending') {
       use(never);
     }
-    return <span>{value}</span>;
+    return <span>{toInputValue(value)}</span>;
   }
   function Parent() {
     const [isPending, setIsPending] = useState(false);
@@ -99,7 +99,7 @@ it("new props reach a field's layout and passive Effects of the commit that rend
     useEffect(() => {
       phases.push(['passive', value, ref.current?.getFormData()]);
     }, [value]);
-    return <span>{value}</span>;
+    return <span>{toInputValue(value)}</span>;
   }
   const props = { ref, validator, widgets: { TextWidget: ObservingWidget }, onChange: vi.fn() };
   const { rerender } = render(<Form {...props} schema={before} initialFormData={{ name: 'kept' }} />);
@@ -219,7 +219,7 @@ it.each([false, true])(
       return (
         <input
           id={id}
-          value={value ?? ''}
+          value={toInputValue(value)}
           onChange={(event) => onChange(event.target.value)}
           onFocus={(event) => onFocus(id, event.target.value)}
           onBlur={(event) => onBlur(id, event.target.value)}
@@ -336,7 +336,7 @@ it.each(['layout', 'passive'] as const)(
         },
         [onChange],
       );
-      return <span>{String(value ?? '')}</span>;
+      return <span>{String(toInputValue(value))}</span>;
     }
     const { onChange, unmount } = createFormComponent({
       schema,
@@ -363,7 +363,7 @@ it('a blur and a focus a widget reports from its Effect cleanup as the form unmo
       },
       [id, onBlur, onFocus],
     );
-    return <span>{String(value ?? '')}</span>;
+    return <span>{String(toInputValue(value))}</span>;
   }
   const onBlur = vi.fn();
   const onFocus = vi.fn();
@@ -388,7 +388,7 @@ it('a blur and a focus that reach a form hidden by Activity are dropped, and tho
     useEffect(() => {
       reports.set(id, { onBlur, onFocus });
     }, [id, onBlur, onFocus]);
-    return <span>{String(value ?? '')}</span>;
+    return <span>{String(toInputValue(value))}</span>;
   }
   const report = (kind: 'onBlur' | 'onFocus') => reports.get('root_name')?.[kind]('root_name', 'a');
   const calls: string[] = [];
@@ -435,7 +435,7 @@ it('a handle retained past the unmount validates without reporting the errors', 
 it('a draft a widget flushes as its form unmounts does not reach the form that replaces it', async () => {
   function DraftWidget({ onChange, value }: WidgetProps) {
     useEffect(() => () => onChange('draft of A', undefined, 'root_name'), [onChange]);
-    return <span>{String(value ?? '')}</span>;
+    return <span>{String(toInputValue(value))}</span>;
   }
   function Records() {
     const [record, setRecord] = useState<{ id: string; data: unknown }>({ id: 'A', data: { name: 'a' } });

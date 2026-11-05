@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Activity, useState } from 'react';
-import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+import { ChakraProvider, defaultSystem, EnvironmentProvider } from '@chakra-ui/react';
 import { getTestRegistry } from '@rjsf/core/testing';
 import {
   checkboxLabelTests,
@@ -14,12 +14,12 @@ import {
 import type { ArrayFieldItemTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
-import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
@@ -341,6 +341,159 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     );
 
     expect(container.querySelector('[data-scope="radio-group"][data-part="root"]')).toHaveAttribute('data-invalid');
+  });
+
+  test('an empty range submits nothing, until it holds a value', async () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 1, maximum: 9 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+      />,
+    );
+    const form = elementOf(container, 'form', HTMLFormElement);
+
+    expect([...new FormData(form).keys()]).toEqual([]);
+
+    screen.getByRole('slider').focus();
+    await user.keyboard('{End}');
+    // Zag focuses the thumb in the next frame, which throws once the test has unmounted the slider
+    await new Promise(requestAnimationFrame);
+
+    expect(new FormData(form).get('root')).toBe('9');
+  });
+
+  test('a range holding a value submits it', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 1, maximum: 9 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+        initialFormData={5}
+      />,
+    );
+
+    expect(new FormData(elementOf(container, 'form', HTMLFormElement)).get('root')).toBe('5');
+  });
+
+  test('draws a numeric string at its number', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 1, maximum: 9 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+        initialFormData='7'
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '7');
+  });
+
+  test('commits the minimum from an empty range whose thumb a key leaves there', async () => {
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 1, maximum: 9 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    screen.getByRole('slider').focus();
+    await user.keyboard('{Home}');
+    // Zag focuses the thumb in the next frame, which throws once the test has unmounted the slider
+    await new Promise(requestAnimationFrame);
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
+  });
+
+  test('leaves a range that started empty empty when its form is reset, and commits the minimum after', async () => {
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 2, maximum: 9 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+        onChange={onChange}
+      >
+        <button type='reset'>Reset</button>
+      </WrappedForm>,
+    );
+
+    screen.getByRole('slider').focus();
+    await user.keyboard('{ArrowRight}{ArrowRight}');
+    await new Promise(requestAnimationFrame);
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 4 }), 'root');
+    await user.click(screen.getByRole('button', { name: 'Reset' }));
+    expect(onChange.mock.lastCall?.[0].formData).toBeUndefined();
+
+    screen.getByRole('slider').focus();
+    await user.keyboard('{Home}');
+    await new Promise(requestAnimationFrame);
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 2 }), 'root');
+  });
+
+  test('leaves a range that started empty empty when its form inside an iframe is reset', async () => {
+    const iframe = document.createElement('iframe');
+    document.body.append(iframe);
+    const frameDocument = iframe.contentDocument;
+    if (!frameDocument) {
+      throw new Error('The iframe has no document');
+    }
+    const frameUser = userEvent.setup({ document: frameDocument });
+    const onChange = vi.fn();
+    // Zag finds the slider in the document its environment names, as the playground's frame provider names the frame's
+    render(
+      <EnvironmentProvider value={() => frameDocument}>
+        <ChakraProvider value={defaultSystem}>
+          <Form
+            schema={{ type: 'number', minimum: 2, maximum: 9 }}
+            uiSchema={{ 'ui:widget': 'range' }}
+            validator={validator}
+            onChange={onChange}
+          >
+            <button type='reset'>Reset</button>
+          </Form>
+        </ChakraProvider>
+      </EnvironmentProvider>,
+      { container: frameDocument.body },
+    );
+    const frame = within(frameDocument.body);
+
+    frame.getByRole('slider').focus();
+    await frameUser.keyboard('{ArrowRight}{ArrowRight}');
+    await new Promise(requestAnimationFrame);
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 4 }), 'root');
+    await frameUser.click(frame.getByRole('button', { name: 'Reset' }));
+
+    expect(onChange.mock.lastCall?.[0].formData).toBeUndefined();
+    iframe.remove();
+  });
+
+  test('keeps the key that moved an empty range when its onChange is deferred', async () => {
+    const { RangeWidget } = generateWidgets();
+    function DeferringRangeWidget(props: WidgetProps) {
+      return <RangeWidget {...props} onChange={(value) => setTimeout(() => props.onChange(value))} />;
+    }
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 1, maximum: 9 }}
+        uiSchema={{ 'ui:widget': DeferringRangeWidget }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    screen.getByRole('slider').focus();
+    await user.keyboard('{End}');
+    await new Promise(requestAnimationFrame);
+    await new Promise((resolve) => {
+      setTimeout(resolve);
+    });
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 9 }), 'root');
   });
 
   test('focuses the slider thumb under ui:autofocus, as core focuses its range input', () => {
@@ -1141,6 +1294,7 @@ describe('chakra-ui names and focuses its controls as core does', () => {
         uiSchema={{ volume: uiSchema }}
         nameGenerator={bracketNameGenerator}
         validator={validator}
+        initialFormData={{ volume: 5 }}
       />,
     );
 

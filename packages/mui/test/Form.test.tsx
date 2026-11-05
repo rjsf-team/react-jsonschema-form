@@ -427,6 +427,24 @@ describe("mui widgets are named by their label and carry the field's id on the e
     expect(screen.getAllByText('*')).toHaveLength(1);
   });
 
+  test("writes a string field's slider value as a string, which keeps it valid", async () => {
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'string', minimum: 0, maximum: 10 }}
+        uiSchema={{ 'ui:widget': 'RangeWidget' }}
+        validator={validator}
+        initialFormData='7'
+        liveValidate='onChange'
+        onChange={onChange}
+      />,
+    );
+    await user.tab();
+    await user.keyboard('{ArrowRight}');
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: '8', errors: [] }), 'root');
+  });
+
   test('requires the slider of a required range field, as core does', () => {
     render(
       <Form
@@ -515,6 +533,96 @@ describe("mui widgets are named by their label and carry the field's id on the e
     );
 
     expect(document.getElementById('root_foo__key')).toHaveAccessibleName('foo Key');
+  });
+
+  test('draws a thumb for each numeric string of a range of several values', () => {
+    const { RangeWidget } = generateWidgets();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { r: { type: 'array', items: { type: 'string' } } } }}
+        // The `range` name is registered for numbers alone, so an array is handed the widget itself
+        uiSchema={{ r: { 'ui:widget': RangeWidget } }}
+        initialFormData={{ r: ['2', '5'] }}
+        validator={validator}
+      />,
+    );
+
+    const thumbs = screen.getAllByRole('slider');
+    expect(thumbs).toHaveLength(2);
+    expect(thumbs[0]).toHaveAttribute('aria-valuenow', '2');
+    expect(thumbs[1]).toHaveAttribute('aria-valuenow', '5');
+  });
+
+  test('writes each part of a range of numeric strings as a string, which keeps it valid', async () => {
+    const { RangeWidget } = generateWidgets();
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { r: { type: 'array', items: { type: 'string' } } } }}
+        uiSchema={{ r: { 'ui:widget': RangeWidget } }}
+        initialFormData={{ r: ['2', '5'] }}
+        validator={validator}
+        liveValidate='onChange'
+        onChange={onChange}
+      />,
+    );
+    await user.tab();
+    await user.keyboard('{ArrowRight}');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { r: ['3', '5'] }, errors: [] }),
+      'root_r',
+    );
+  });
+
+  test.each([
+    ['no data', undefined, 1, [0, 1]],
+    ['an unset part', [null, 5], 0, [1, 5]],
+  ])(
+    'keeps a thumb for each part of a range of several values with %s, drawing an unset one at the minimum',
+    async (_, r, moved, written) => {
+      const { RangeWidget } = generateWidgets();
+      const onChange = vi.fn();
+      render(
+        <Form
+          schema={{ type: 'object', properties: { r: { type: 'array', minItems: 2, items: { type: 'number' } } } }}
+          uiSchema={{ r: { 'ui:widget': RangeWidget } }}
+          initialFormData={r === undefined ? undefined : { r }}
+          validator={validator}
+          onChange={onChange}
+        />,
+      );
+
+      const thumbs = screen.getAllByRole('slider');
+      expect(thumbs).toHaveLength(2);
+      expect(thumbs[0]).toHaveAttribute('aria-valuenow', '0');
+      await user.keyboard('{Tab}'.repeat(moved + 1));
+      expect(thumbs[moved]).toHaveFocus();
+      await user.keyboard('{ArrowRight}');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { r: written } }), 'root_r');
+    },
+  );
+
+  test("draws an unset part of a range of several values at its item's minimum, which moving another part writes", async () => {
+    const { RangeWidget } = generateWidgets();
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { r: { type: 'array', minItems: 2, items: { type: 'number', minimum: 2, maximum: 9 } } },
+        }}
+        uiSchema={{ r: { 'ui:widget': RangeWidget } }}
+        initialFormData={{ r: [null, 5] }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    const thumbs = screen.getAllByRole('slider');
+    expect(thumbs[0]).toHaveAttribute('aria-valuenow', '2');
+    await user.keyboard('{Tab}{Tab}{ArrowRight}');
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { r: [2, 6] } }), 'root_r');
   });
 
   test("keeps the field's id on the slider's root for a range of several values, whose every thumb takes its input slot", () => {

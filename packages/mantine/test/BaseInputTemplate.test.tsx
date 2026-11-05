@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { BaseInputTemplateProps, RJSFSchema } from '@rjsf/utils';
-import { render } from '@testing-library/react';
+import validator from '@rjsf/validator-ajv8';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import BaseInputTemplate from '../src/templates/BaseInputTemplate.tsx';
+import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
 
@@ -111,6 +114,23 @@ describe('mantine BaseInputTemplate', () => {
     expect(onChange).toHaveBeenCalledWith(42);
   });
 
+  test.each(['5.', '-'])(
+    "offers the clear button for the partial number %s, which a number field's input shows",
+    async (text) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'number', title: 'Amount' }}
+          uiSchema={{ 'ui:allowClearTextInputs': true }}
+          validator={validator}
+        />,
+      );
+      await user.type(screen.getByRole('textbox'), text);
+
+      expect(screen.getByRole('textbox')).toHaveValue(text);
+      expect(screen.getByRole('button', { name: /clear input/i })).toBeInTheDocument();
+    },
+  );
+
   test('sends `options.emptyValue` through `onChange` when the input is cleared', async () => {
     const onChange = vi.fn();
 
@@ -119,5 +139,85 @@ describe('mantine BaseInputTemplate', () => {
     await user.clear(input);
 
     expect(onChange).toHaveBeenCalledWith('nothing');
+  });
+  test.each([
+    [undefined, '7'],
+    [false, '007'],
+  ])(
+    "a number field's input, given `trimLeadingZeroesOnBlur: %s`, shows %s once focus leaves it",
+    async (trim, shown) => {
+      const numberSchema: RJSFSchema = { type: 'number' };
+      function Stateful() {
+        const [value, setValue] = useState<unknown>();
+        return (
+          <MantineProvider>
+            <BaseInputTemplate
+              {...makeProps({
+                schema: numberSchema,
+                registry: getTestRegistry(numberSchema),
+                value,
+                onChange: setValue,
+                options: { trimLeadingZeroesOnBlur: trim },
+              })}
+            />
+          </MantineProvider>
+        );
+      }
+      render(<Stateful />);
+      const input = screen.getByRole('textbox');
+      await user.click(input);
+      await user.paste('007');
+      await user.tab();
+
+      expect(input).toHaveValue(shown);
+    },
+  );
+
+  describe('a string field rendered as a number input', () => {
+    function renderStringNumberForm(initialFormData: string, onChange = vi.fn()) {
+      render(
+        <WrappedForm
+          schema={{ type: 'string' }}
+          uiSchema={{ 'ui:inputType': 'number' }}
+          validator={validator}
+          initialFormData={initialFormData}
+          liveValidate='onChange'
+          onChange={onChange}
+        />,
+      );
+      return onChange;
+    }
+
+    test('writes an edit as a string, which keeps it valid', async () => {
+      const onChange = renderStringNumberForm('5');
+      await user.type(screen.getByRole('textbox'), '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: '51', errors: [] }), 'root');
+    });
+
+    test('writes `ui:emptyValue` when cleared', async () => {
+      const onChange = vi.fn();
+      render(
+        <WrappedForm
+          schema={{ type: 'string' }}
+          uiSchema={{ 'ui:inputType': 'number', 'ui:emptyValue': 'none' }}
+          validator={validator}
+          initialFormData='5'
+          onChange={onChange}
+        />,
+      );
+      await user.clear(screen.getByRole('textbox'));
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 'none' }), 'root');
+    });
+
+    test('keeps the string, and every digit of it, when focus passes through', async () => {
+      const onChange = renderStringNumberForm('12345678901234567890');
+      await user.tab();
+      await user.tab();
+
+      expect(onChange).not.toHaveBeenCalled();
+      expect(screen.getByRole('textbox')).toHaveValue('12345678901234567890');
+    });
   });
 });

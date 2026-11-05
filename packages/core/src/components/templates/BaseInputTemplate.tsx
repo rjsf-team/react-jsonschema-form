@@ -7,7 +7,8 @@ import {
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
-  getSchemaType,
+  offersClearButton,
+  toInputValue,
 } from '@rjsf/utils';
 
 import SchemaExamples from '../SchemaExamples.tsx';
@@ -71,13 +72,7 @@ export default function BaseInputTemplate<
     ...('inputMode' in rest ? { inputMode: rest.inputMode } : undefined),
   };
 
-  const schemaType = getSchemaType(schema);
-  let inputValue;
-  if (schemaType === 'number' || schemaType === 'integer') {
-    inputValue = value || value === 0 ? value : '';
-  } else {
-    inputValue = value ?? '';
-  }
+  const inputValue = toInputValue(value);
 
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
@@ -124,7 +119,7 @@ export default function BaseInputTemplate<
         onFocus={handleFocus}
         {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
-      {options.allowClearTextInputs && !readonly && !disabled && inputValue && (
+      {options.allowClearTextInputs && !readonly && !disabled && offersClearButton(inputValue, inputProps.type) && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />

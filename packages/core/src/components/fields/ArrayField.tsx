@@ -271,7 +271,7 @@ interface ArrayAsFieldProps<
   F extends FormContextType = FormContextType,
 > extends FieldProps<T, S, F> {
   /** The callback used to update the array when the selector changes */
-  onSelectChange: (value: T) => void;
+  onSelectChange: (value: unknown) => void;
   /** The HTML name for the widget, generated with the multi-value flag since these widgets accept several values */
   htmlName?: string;
 }
@@ -1467,7 +1467,7 @@ export default function ArrayField<
    * @param index - The index of the item being changed
    */
   const handleChange = useCallback(
-    (value: any, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
+    (value: unknown, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T[]>, id?: string) => {
       // A cleared item is stored as `null`, and a cleared property inside an item as `undefined`
       onChange(storedValue(value, changedFieldPath, false), changedFieldPath, newErrorSchema, id);
     },
@@ -1476,7 +1476,7 @@ export default function ArrayField<
 
   /** Callback handler used to change the value for a checkbox */
   const onSelectChange = useCallback(
-    (value: any) => {
+    (value: unknown) => {
       onChange(value, fieldPath, undefined, fieldId);
     },
     [onChange, fieldPath, fieldId],

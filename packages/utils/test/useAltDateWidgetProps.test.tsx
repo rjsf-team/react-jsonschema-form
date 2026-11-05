@@ -121,9 +121,27 @@ describe('useAltDateWidgetProps()', () => {
     vi.useRealTimers();
     vi.mocked(PROPS.onChange).mockClear();
   });
-  test.each(['month', 'day'] as const)('clearing %s with an empty string leaves the date incomplete', (part) => {
+  test('clearing a part with no value leaves the date incomplete', () => {
     const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, value: DATE_STR }));
-    act(() => result.current.handleChange(part, ''));
+    act(() => result.current.handleChange('month'));
+    expect(PROPS.onChange).not.toHaveBeenCalled();
+    expect(result.current.elements.find(({ type }) => type === 'month')?.value).toBeUndefined();
+  });
+  test.each([
+    ['month', 'an empty string', ''],
+    ['day', 'an empty string', ''],
+    ['month', 'null', null],
+    ['day', 'null', null],
+    ['month', 'a string that is no number', 'abc'],
+    ['day', 'a string that is no number', 'abc'],
+    ['day', 'false', false],
+    ['day', 'true', true],
+    ['day', 'an empty array', []],
+    ['day', 'a blank string', ' '],
+    ['day', 'a hex string', '0x3'],
+  ] as const)('clearing %s with %s leaves the date incomplete', (part, _name, cleared) => {
+    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, value: DATE_STR }));
+    act(() => result.current.handleChange(part, cleared));
     expect(PROPS.onChange).not.toHaveBeenCalled();
     const expectedDate = { ...parseDateString(DATE_STR), [part]: -1 };
     expect(result.current.elements).toEqual(getDateElementProps(expectedDate, false, PROPS.options.yearsRange));
@@ -195,6 +213,15 @@ describe('useAltDateWidgetProps()', () => {
     rerender({ ...PROPS, value: DATE_STR });
     rerender(PROPS);
     expect(result.current.elements).toEqual(getDateElementProps(parseDateString(), false, PROPS.options.yearsRange));
+  });
+  test.each([
+    ['a date', PROPS, false],
+    ['a date and time', TIME_PROPS, true],
+  ])('a stored string that is no %s renders every part unset', (_name, props, time) => {
+    const { result } = renderHook(() => useAltDateWidgetProps({ ...props, value: 'not-a-date' }));
+    expect(result.current.elements).toEqual(
+      getDateElementProps(parseDateString(undefined, time), time, PROPS.options.yearsRange),
+    );
   });
   describe('with a parent that stores what it is sent', () => {
     const CLEAR_EVENT = { preventDefault: vi.fn() } as unknown as MouseEvent;

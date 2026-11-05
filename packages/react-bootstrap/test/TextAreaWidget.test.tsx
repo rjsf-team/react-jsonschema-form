@@ -20,4 +20,11 @@ describe('TextareaWidget', () => {
     const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps({ required: false })} />);
     expect(asFragment()).toMatchSnapshot();
   });
+
+  test('empties its text when its value is cleared to undefined', () => {
+    const { container, rerender } = render(<TextareaWidget {...makeWidgetMockProps({ value: 'abc' })} />);
+    rerender(<TextareaWidget {...makeWidgetMockProps({ value: undefined })} />);
+
+    expect(container.querySelector('textarea')).toHaveValue('');
+  });
 });

@@ -1,7 +1,7 @@
 import type { FocusEvent, KeyboardEvent } from 'react';
 import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getGroupAttributes } from '@rjsf/utils';
+import { getGroupAttributes, numericWidgetStoresString, toInputValue, toNumericValue } from '@rjsf/utils';
 
 /** How far each key moves from the focused star, choosing the star it lands on */
 const STAR_KEY_STEPS: Partial<Record<string, number>> = {
@@ -58,12 +58,17 @@ export default function RatingWidget<
   );
 
   const min = schema.minimum ?? 0;
+  const storesString = numericWidgetStoresString<S>(schema, value);
+  const rating = toNumericValue(value);
   const numStars = Math.floor(
     Math.max(Math.min(withoutFloatNoise((schema.maximum ?? Infinity) - min + 1), stars, 5), 1),
   );
   const starValues = Array.from({ length: numStars }, (_, index) => withoutFloatNoise(min + index));
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
-  const tabStopIndex = Math.max(starValues.indexOf(value), 0);
+  const tabStopIndex = Math.max(
+    starValues.findIndex((starValue) => starValue === rating),
+    0,
+  );
   // React acts on `autoFocus` only for a form control, which a star isn't, so the star takes focus as it mounts, in the
   // same commit phase as `autoFocus` would give it, and not when `ui:autofocus` turns on later. A disabled or read-only
   // rating takes none, as its stars are out of the tab order
@@ -80,10 +85,10 @@ export default function RatingWidget<
   const handleStarClick = useCallback(
     (starValue: number) => {
       if (!disabled && !readonly) {
-        onChange(starValue);
+        onChange(storesString ? String(starValue) : starValue);
       }
     },
-    [onChange, disabled, readonly],
+    [onChange, disabled, readonly, storesString],
   );
 
   /** Handles the keys a radio group answers to, leaving a browser's own shortcuts, such as Alt+Left, alone */
@@ -94,7 +99,7 @@ export default function RatingWidget<
     }
     event.preventDefault();
     const nextIndex = (index + step + numStars) % numStars;
-    onChange(starValues[nextIndex]);
+    handleStarClick(starValues[nextIndex]);
     event.currentTarget.parentElement?.querySelectorAll<HTMLElement>('[role="radio"]')[nextIndex].focus();
   };
 
@@ -145,7 +150,7 @@ export default function RatingWidget<
       }}
     >
       {starValues.map((starValue, index) => {
-        const isFilled = starValue <= (value ?? -Infinity);
+        const isFilled = rating !== undefined && starValue <= rating;
 
         return (
           <span
@@ -159,7 +164,7 @@ export default function RatingWidget<
             data-value={starValue}
             tabIndex={!disabled && !readonly && index === tabStopIndex ? 0 : -1}
             role='radio'
-            aria-checked={starValue === value}
+            aria-checked={starValue === rating}
             aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
             {...optionAttributes}
             style={{
@@ -176,7 +181,7 @@ export default function RatingWidget<
       <input
         type='hidden'
         name={htmlName || id}
-        value={value ?? ''}
+        value={toInputValue(value)}
         required={required}
         disabled={disabled || readonly}
         aria-hidden='true'

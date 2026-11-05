@@ -165,6 +165,8 @@ import mergeSchemas from './mergeSchemas.ts';
 import mergeThemePresentation from './mergeThemePresentation.ts';
 import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators.ts';
 import noop from './noop.ts';
+import numericWidgetStoresString from './numericWidgetStoresString.ts';
+import offersClearButton from './offersClearButton.ts';
 import offsetTimeToLocalTime from './offsetTimeToLocalTime.ts';
 import omitConsumedStyling from './omitConsumedStyling.ts';
 import optionsList from './optionsList.ts';
@@ -203,6 +205,8 @@ import toConstant from './toConstant.ts';
 import toDateString from './toDateString.ts';
 import toErrorList from './toErrorList.ts';
 import toErrorSchema from './toErrorSchema.ts';
+import toInputValue from './toInputValue.ts';
+import toNumericValue from './toNumericValue.ts';
 import uiBooleanOption from './uiBooleanOption.ts';
 import unwrapErrorHandler from './unwrapErrorHandler.ts';
 import type { DateElementProps, UseAltDateWidgetResult } from './useAltDateWidgetProps.tsx';
@@ -450,6 +454,10 @@ export {
   toDateString,
   toErrorList,
   toErrorSchema,
+  numericWidgetStoresString,
+  toInputValue,
+  offersClearButton,
+  toNumericValue,
   ROOT_FIELD_PATH,
   toFieldPath,
   fieldPathFromList,
