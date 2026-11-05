@@ -50,8 +50,9 @@ export const TranslatableString = {
    * ArrayField
    */
   RemoveItemButton: 'Remove %1',
-  /** The name of an array item named through `ui:options.itemLabel` when another item has the same name, where %1 is
-   * the name and %2 a number that tells the items with that name apart; used by ArrayField
+  /** The name of an array item named through `ui:options.itemLabel` when another item has the same name, or of a thumb
+   * of a range of several values, where %1 is the name and %2 a number that tells them apart; used by ArrayField and by
+   * the RangeWidget of @rjsf/mui
    */
   ItemNameWithNumber: '%1 (%2)',
   /** Now label, used by AltDateWidget */

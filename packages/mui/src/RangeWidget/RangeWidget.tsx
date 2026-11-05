@@ -5,6 +5,7 @@ import type { SliderProps } from '@mui/material/Slider';
 import Slider from '@mui/material/Slider';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
+  TranslatableString,
   getControlAttributes,
   getLabelId,
   labelValue,
@@ -49,6 +50,7 @@ export default function RangeWidget<
     htmlName,
     autofocus,
     presentation,
+    registry,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const rootRef = useRef<HTMLSpanElement>(null);
@@ -82,13 +84,16 @@ export default function RangeWidget<
     ...controlAttributes
   } = getControlAttributes<T, S, F>({ id, presentation });
   // The `Slider` gives its `input` slot to every thumb, so a range of several values keeps the field's id, which only
-  // one element may carry, on the slider's root, which a label's `for` can't name. Its label names every thumb through
-  // `aria-labelledby` instead
+  // one element may carry, on the slider's root, which a label's `for` can't name. Its label names a lone thumb through
+  // `aria-labelledby` instead, while several thumbs each take that label's text and their number, to be told apart
   const labelId = getLabelId<T, S, F>(props);
   const labelledByLabel = isRangeOfValues && widgetDrawsLabelText<T, S, F>(props) ? labelId : undefined;
-  const plannedName = authorNamesSlider
-    ? {}
-    : { 'aria-label': plannedLabel, 'aria-labelledby': plannedLabelledBy ?? labelledByLabel };
+  const thumbText = plannedLabel || label;
+  const namesEachThumb = isRangeOfValues && value.length > 1 && !authorNamesSlider && !!thumbText;
+  const plannedName =
+    authorNamesSlider || namesEachThumb
+      ? {}
+      : { 'aria-label': plannedLabel, 'aria-labelledby': plannedLabelledBy ?? labelledByLabel };
   const labelProps = isRangeOfValues ? { id: labelId } : { htmlFor: id };
   const rootProps = isRangeOfValues ? { id } : {};
   const thumbProps = isRangeOfValues ? {} : { id, autoFocus: autofocus };
@@ -110,6 +115,15 @@ export default function RangeWidget<
         {...authorSlider}
         {...sliderProps}
         {...rootProps}
+        // After the author's props, where a `getAriaLabel: undefined` would leave the thumbs no name. A translation left
+        // empty numbers nothing, as it does for an array item's name
+        getAriaLabel={
+          namesEachThumb
+            ? (index) =>
+                registry.translateString(TranslatableString.ItemNameWithNumber, [thumbText, String(index + 1)]) ||
+                thumbText
+            : authorSlider.getAriaLabel
+        }
         ref={rootRef}
         // The slider's root isn't focusable but its thumb's `<input>` is, so the input carries the field's id and plan
         slotProps={withInputSlot(
