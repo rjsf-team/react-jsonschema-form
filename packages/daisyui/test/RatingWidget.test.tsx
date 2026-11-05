@@ -1,6 +1,8 @@
+import type { RJSFSchema } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import RatingWidget from '../src/widgets/RatingWidget/RatingWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
@@ -42,6 +44,35 @@ describe('RatingWidget', () => {
       />,
     );
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  test.each<[string, RJSFSchema, number | undefined, number[]]>([
+    ['no bounds', {}, undefined, [0, 1, 2, 3, 4]],
+    ['a maximum alone, as a bound rather than a count', { maximum: 3 }, undefined, [0, 1, 2, 3]],
+    ['both bounds, stopping at the maximum', { minimum: 3, maximum: 5 }, undefined, [3, 4, 5]],
+    ['a range wider than five stars', { minimum: 1, maximum: 10 }, undefined, [1, 2, 3, 4, 5]],
+    ['a maximum of 0', { maximum: 0 }, undefined, [0]],
+    ['a maximum below the first star', { maximum: -1 }, undefined, [0]],
+    ['a maximum below the minimum', { minimum: 3, maximum: 1 }, undefined, [3]],
+    ['a fractional maximum', { maximum: 2.5 }, undefined, [0, 1, 2]],
+    ['fractional bounds a whole step apart', { minimum: 1.3, maximum: 2.3 }, undefined, [1.3, 2.3]],
+    ['a fractional minimum', { minimum: 0.57, maximum: 2.57 }, undefined, [0.57, 1.57, 2.57]],
+    ['a stars option beside the bounds', { minimum: 1, maximum: 5 }, 3, [1, 2, 3]],
+    ['a stars option above five', {}, 9, [0, 1, 2, 3, 4]],
+    ['a stars option below one', {}, 0, [0]],
+    ['a fractional stars option', {}, 2.5, [0, 1]],
+  ])('draws the right stars for %s', (_, schema, stars, values) => {
+    const { container } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          schema: { type: 'integer', ...schema },
+          options: { stars },
+        })}
+      />,
+    );
+
+    const radios = [...container.querySelectorAll<HTMLInputElement>('input[type="radio"]')];
+    expect(radios.map((radio) => Number(radio.value))).toEqual(values);
   });
 
   test('renders in disabled state', () => {
@@ -106,6 +137,45 @@ describe('RatingWidget', () => {
     await user.click(inputs[2]);
 
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  test('reports a fractional star as its own value', async () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <RatingWidget {...makeWidgetMockProps({ schema: { type: 'number', minimum: 0.5, maximum: 2 }, onChange })} />,
+    );
+
+    await user.click(elementOf(container, 'input[value="1.5"]'));
+
+    expect(onChange).toHaveBeenCalledWith(1.5);
+  });
+
+  test('autofocuses the checked star under a fractional minimum', () => {
+    const { container } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          schema: { type: 'number', minimum: 0.3, maximum: 3 },
+          value: 2.3,
+          autofocus: true,
+        })}
+      />,
+    );
+
+    expect(elementOf(container, 'input[value="2.3"]')).toHaveFocus();
+  });
+
+  test('autofocuses the first star when rounding moves it off the minimum and none is checked', () => {
+    const { container } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({
+          schema: { type: 'number', minimum: 1.0000000001, maximum: 5 },
+          value: undefined,
+          autofocus: true,
+        })}
+      />,
+    );
+
+    expect(elementOf(container, 'input[value="1"]')).toHaveFocus();
   });
 
   test('names its radios by htmlName where the form generates one', () => {

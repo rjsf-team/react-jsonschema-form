@@ -1733,7 +1733,7 @@ describe('a widget rendering a group of controls', () => {
 
   it('names a rating radiogroup by the label and marks the radiogroup invalid rather than its stars', () => {
     const { node } = createFormComponent({
-      schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo', maximum: 3 } } },
+      schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo', minimum: 1, maximum: 3 } } },
       uiSchema: { foo: { 'ui:widget': 'RatingWidget' } },
       extraErrors: { foo: { __errors: ['is wrong'] } },
     });

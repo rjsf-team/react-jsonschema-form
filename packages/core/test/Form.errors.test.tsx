@@ -569,6 +569,20 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(screen.getAllByRole('radio')[0]).toHaveFocus();
       });
 
+      it("focuses the checked star of a RatingWidget's radiogroup, its one tab stop", async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'integer', minimum: 3, maximum: 5 },
+          uiSchema: { 'ui:widget': 'RatingWidget' },
+          initialFormData: 4,
+          extraErrors: { __errors: ['is wrong'] },
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getByRole('radio', { name: '4 stars' })).toHaveFocus();
+      });
+
       it.each(['alt-date', 'alt-datetime'])("focuses the first part of an %s's group", async (widget) => {
         const { node } = createFormComponent({
           schema: { type: 'string', minLength: 100 },
