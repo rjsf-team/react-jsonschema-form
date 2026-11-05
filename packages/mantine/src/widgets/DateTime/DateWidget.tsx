@@ -11,14 +11,5 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { valueFormat = 'YYYY-MM-DD', displayFormat, ...otherOptions } = props.options;
-
-  return (
-    <DateTimeInput
-      {...props}
-      options={otherOptions}
-      valueFormat={valueFormat}
-      displayFormat={displayFormat || valueFormat}
-    />
-  );
+  return <DateTimeInput {...props} defaultValueFormat='YYYY-MM-DD' />;
 }

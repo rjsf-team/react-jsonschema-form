@@ -17,6 +17,8 @@ import {
   getAdditionalKeyAttributes,
   getUiOptions,
   hasAdditionalKeyLabel,
+  isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
   TranslatableString,
 } from '@rjsf/utils';
 
@@ -139,7 +141,7 @@ export default function WrapIfAdditionalTemplate<
             }}
             error={keyAttributes['aria-invalid']}
             defaultValue={keyName}
-            disabled={disabled || readonly}
+            disabled={isAdditionalKeyDisabled(props)}
             id={keyId}
             name={keyId}
             onBlur={!readonly ? onKeyRenameBlur : undefined}
@@ -156,7 +158,7 @@ export default function WrapIfAdditionalTemplate<
           className='rjsf-object-property-remove'
           iconType='default'
           style={btnStyle}
-          disabled={disabled || readonly}
+          disabled={isAdditionalRemoveDisabled(props)}
           onClick={onRemoveProperty}
           uiSchema={uiSchema}
           registry={registry}

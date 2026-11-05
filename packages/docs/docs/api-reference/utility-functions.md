@@ -66,13 +66,13 @@ that label where `hideLabel` leaves it to the select, or else names the select b
 - label: string - The computed label for the key, as a string
 - value: string - The current key of the property, which is the selected option
 - propertyNamesEnum: string[] - The key names the property is allowed to take
-- onKeyRename: (newKey: string) => void - Callback used to rename the property to the newly selected key name
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `SelectWidget` is resolved
 - [className]: string - Optional class name given to the rendered widget, for a theme that styles the key control itself
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [errorAttributes]: Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'> - Optional attributes the errors its row shows give the key, from [getAdditionalKeyAttributes()](#getadditionalkeyattributes)
 - [hideLabel]: boolean - Optional flag, if true, the widget renders no label of its own, for themes that render one themselves
 - [labelledByTemplate]: boolean - Optional flag, if true, the template draws the key's label beside the widget, with a `for` naming its `id`, so the widget is given no `aria-label` over it
+- [onKeyRename]: (newKey: string) => void - Optional callback used to rename the property to the newly selected key name
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
 - [required]: boolean - Optional flag, if true, the widget is required
 
@@ -235,6 +235,18 @@ Return a consistent `id` for the `btn` button element
 #### Returns
 
 - string: The consistent id for the button from the given `id` and `btn` type
+
+### callerInputProps()
+
+Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` or `inputMode` the caller names counts even when it is undefined, which is how a caller turns the derived one off. [`getBaseInputProps()`](#getbaseinputprops) merges them for you.
+
+#### Parameters
+
+- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'> - The props of the `BaseInputTemplate`
+
+#### Returns
+
+- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'>: The `pattern`, `inputMode` and `accept` to spread after the derived input props
 
 ### callWithDeferredThrow()
 
@@ -983,6 +995,19 @@ An array rendered without a plan draws its `ui:description` or schema `descripti
 #### Returns
 
 - string | undefined: The description the template draws, or undefined when it draws none
+
+### getBaseInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getbaseinputprops}
+
+Returns the props a `BaseInputTemplate` puts on its input: the ones `getInputProps()` derives from the schema and options, overridden by those [`callerInputProps()`](#callerinputprops) picks from the widget's props, and the `title` from [`getNumericInputTitle()`](#getnumericinputtitle) that names the derived numeric `pattern`, which is left out when the widget replaces that pattern. The widget's `multiple` is kept only for a `file` input and is undefined for any other, so it also overrides one spread from the template's other props: `ArrayField` passes it to whatever widget renders a multi-select, and the template can't tell that one from a `multiple` a widget means for an `email` input.
+
+#### Parameters
+
+- props: Pick&lt;BaseInputTemplateProps&lt;T, S, F>, 'schema' | 'type' | 'options' | 'accept' | 'inputMode' | 'multiple' | 'pattern'> & \{ registry: Pick&lt;Registry, 'translateString'> } - The props of the `BaseInputTemplate`
+- [plainNativeInput=true]: boolean - Passed on to `getInputProps()`
+
+#### Returns
+
+- InputPropsType & \{ multiple?: boolean; title?: string }: The input props, with the `title` to put before them so a `title` the caller sets wins
 
 ### getByPath&lt;R = unknown>() {#getbypath}
 
@@ -2181,6 +2206,30 @@ Return a consistent `id` for the field help element.
 #### Returns
 
 - string: The consistent id for the field help element from the given `id`
+
+### isAdditionalKeyDisabled()
+
+Whether a `WrapIfAdditionalTemplate` disables the free-text key input of an `additionalProperties` entry, which it does for a disabled or read-only field, whose key must not be renamed on blur, and for one it is handed no `onKeyRenameBlur`, such as the root, which `ObjectField` doesn't render.
+
+#### Parameters
+
+- props: Pick&lt;WrapIfAdditionalTemplateProps, 'disabled' | 'readonly' | 'onKeyRenameBlur'> - The `disabled`, `readonly` and `onKeyRenameBlur` of the `WrapIfAdditionalTemplate`
+
+#### Returns
+
+- boolean: True when the key input is disabled
+
+### isAdditionalRemoveDisabled()
+
+Whether a `WrapIfAdditionalTemplate` disables the remove button of an `additionalProperties` entry, which it does for a disabled or read-only field and for one it is handed no `onRemoveProperty`, such as the root, which `ObjectField` doesn't render.
+
+#### Parameters
+
+- props: Pick&lt;WrapIfAdditionalTemplateProps, 'disabled' | 'readonly' | 'onRemoveProperty'> - The `disabled`, `readonly` and `onRemoveProperty` of the `WrapIfAdditionalTemplate`
+
+#### Returns
+
+- boolean: True when the remove button is disabled
 
 ### isCollapsedByOptionalDataControls&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#iscollapsedbyoptionaldatacontrols}
 

@@ -7,6 +7,7 @@ import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import asNumber from './asNumber.ts';
+import callerInputProps from './callerInputProps.ts';
 import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
@@ -46,6 +47,7 @@ import findSchemaDefinition from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getAdditionalKeyAttributes from './getAdditionalKeyAttributes.ts';
 import getArrayDescription from './getArrayDescription.ts';
+import getBaseInputProps from './getBaseInputProps.ts';
 import getChangedFields from './getChangedFields.ts';
 import getControlAriaLabel from './getControlAriaLabel.ts';
 import getControlAttributes from './getControlAttributes.ts';
@@ -136,6 +138,8 @@ import {
   selectedOptionDescriptionId,
   titleId,
 } from './idGenerators.ts';
+import isAdditionalKeyDisabled from './isAdditionalKeyDisabled.ts';
+import isAdditionalRemoveDisabled from './isAdditionalRemoveDisabled.ts';
 import isComponentType from './isComponentType.ts';
 import isConstant from './isConstant.ts';
 import isConstantOptionList from './isConstantOptionList.ts';
@@ -270,6 +274,7 @@ export {
   asNumber,
   besideOptionsId,
   buttonId,
+  callerInputProps,
   callWithDeferredThrow,
   canExpand,
   createErrorHandler,
@@ -312,6 +317,7 @@ export {
   getAdditionalKeyAttributes,
   getAdditionalPropertySchema,
   getArrayDescription,
+  getBaseInputProps,
   getChangedFields,
   getControlAriaLabel,
   getControlAttributes,
@@ -380,6 +386,8 @@ export {
   hashObject,
   hashString,
   helpId,
+  isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
   isCollapsedByOptionalDataControls,
   isComponentType,
   isConstant,

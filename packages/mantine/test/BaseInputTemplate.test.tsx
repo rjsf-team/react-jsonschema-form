@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
+import { callerInputPropsTests } from '@rjsf/snapshot-tests';
 import type { BaseInputTemplateProps, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -140,6 +141,94 @@ describe('mantine BaseInputTemplate', () => {
 
     expect(onChange).toHaveBeenCalledWith('nothing');
   });
+
+  test('names the numeric pattern of the text input a passed `inputMode` gets a `number` field', () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      inputMode: 'decimal',
+    });
+
+    expect(container.querySelector('input')).toHaveAttribute('title', 'Enter a number');
+  });
+
+  test('drops the numeric title of the text input a passed `inputMode` gets a `number` field under a `ui:options.pattern`', () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      inputMode: 'decimal',
+      options: { pattern: '[a-z]+' },
+    });
+
+    const input = container.querySelector('input');
+    expect(input).toHaveAttribute('pattern', '[a-z]+');
+    expect(input).not.toHaveAttribute('title');
+  });
+
+  test("leaves `NumberInput`'s own options off the text input a passed `inputMode` gets a `number` field", () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      inputMode: 'decimal',
+      options: { hideControls: true, thousandSeparator: ',' },
+    });
+
+    const input = container.querySelector('input');
+    expect(input).not.toHaveAttribute('thousandseparator');
+    expect(input).not.toHaveAttribute('hidecontrols');
+  });
+
+  test("leaves `NumberInput`'s own options off the text input a `tel` inputType gets a `number` field", () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      options: { inputType: 'tel', hideControls: true, thousandSeparator: ',' },
+    });
+
+    const input = container.querySelector('input');
+    expect(input).toHaveAttribute('type', 'tel');
+    expect(input).not.toHaveAttribute('thousandseparator');
+    expect(input).not.toHaveAttribute('hidecontrols');
+  });
+
+  test("leaves `NumberInput`'s own options off the text input a `number` field gets in a comma-decimal locale", () => {
+    const languages = vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['pl']);
+    onTestFinished(() => languages.mockRestore());
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      options: { hideControls: true, thousandSeparator: ',' },
+    });
+
+    const input = container.querySelector('input');
+    expect(input).not.toHaveAttribute('thousandseparator');
+    expect(input).not.toHaveAttribute('hidecontrols');
+  });
+
+  test('renders the text input with no inputMode for a `number` field passed an `inputMode` named as undefined', () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      inputMode: undefined,
+    });
+
+    const input = container.querySelector('input');
+    expect(input).toHaveAttribute('title', 'Enter a number');
+    expect(input).not.toHaveAttribute('inputmode');
+  });
+
   test.each([
     [undefined, '7'],
     [false, '007'],
@@ -221,3 +310,5 @@ describe('mantine BaseInputTemplate', () => {
     });
   });
 });
+
+callerInputPropsTests(WrappedForm);

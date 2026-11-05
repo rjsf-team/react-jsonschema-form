@@ -7,6 +7,8 @@ import {
   buttonId,
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
+  isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
   TranslatableString,
 } from '@rjsf/utils';
 
@@ -121,7 +123,7 @@ export default function WrapIfAdditionalTemplate<
                 {...keyAttributes}
                 required={required}
                 defaultValue={keyName}
-                disabled={disabled || readonly}
+                disabled={isAdditionalKeyDisabled(props)}
                 id={keyId}
                 name={keyId}
                 onBlur={!readonly ? onKeyRenameBlur : undefined}
@@ -138,7 +140,7 @@ export default function WrapIfAdditionalTemplate<
             id={buttonId(id, 'remove')}
             iconType='block'
             className='rjsf-object-property-remove w-full'
-            disabled={disabled || readonly}
+            disabled={isAdditionalRemoveDisabled(props)}
             onClick={onRemoveProperty}
             uiSchema={uiSchema}
             registry={registry}

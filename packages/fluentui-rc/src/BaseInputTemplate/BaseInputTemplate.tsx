@@ -8,8 +8,7 @@ import {
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
-  getInputProps,
-  getNumericInputTitle,
+  getBaseInputProps,
   labelValue,
   offersClearButton,
   toInputValue,
@@ -45,7 +44,6 @@ export default function BaseInputTemplate<
     required,
     readonly,
     disabled,
-    type,
     value,
     label,
     onChange,
@@ -62,7 +60,7 @@ export default function BaseInputTemplate<
   const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
   const classes = useStyles();
-  const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const { title, ...inputProps } = getBaseInputProps<T, S, F>(props);
   // Now we need to pull out the step, min, max into an inner `inputProps` for fluentui-rc
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
@@ -94,7 +92,7 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        title={getNumericInputTitle(inputProps, registry.translateString)}
+        title={title}
         {...(inputProps as InputProps)}
         input={{
           className: classes.input,

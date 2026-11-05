@@ -4,6 +4,7 @@ export { arrayTests } from './arrayTests.tsx';
 
 export { checkboxLabelTests } from './checkboxLabelTests.tsx';
 
+export { callerInputPropsTests } from './callerInputPropsTests.tsx';
 export { clearButtonTests } from './clearButtonTests.tsx';
 
 export { deprecatedLabelTests } from './deprecatedLabelTests.tsx';
@@ -28,6 +29,7 @@ export { submitPendingTests } from './submitPendingTests.tsx';
 
 export { type GridRenderCustomOptions, gridTests, renderGridColumn } from './gridTests.tsx';
 
+export { wrapIfAdditionalCallbackTests } from './wrapIfAdditionalCallbackTests.tsx';
 export { wrapIfAdditionalErrorStateTests } from './wrapIfAdditionalErrorStateTests.tsx';
 
 export { type ThemeGenerators, themeTests } from './themeTests.ts';

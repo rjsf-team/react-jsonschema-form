@@ -1,17 +1,27 @@
-import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import type { ChangeEvent, FocusEvent, InputHTMLAttributes, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
-  getInputProps,
-  getNumericInputTitle,
+  getBaseInputProps,
   offersClearButton,
   toInputValue,
 } from '@rjsf/utils';
 
 import SchemaExamples from '../SchemaExamples.tsx';
+
+/** The props core's `BaseInputTemplate` takes: the shared `BaseInputTemplateProps`, and the `<input>` attributes it puts
+ * on the element from the props it doesn't read, such as `maxLength`, to type the registry's `BaseInputTemplate` a
+ * widget passes them to
+ */
+export type CoreBaseInputTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = BaseInputTemplateProps<T, S, F> &
+  Omit<InputHTMLAttributes<HTMLInputElement>, keyof BaseInputTemplateProps<T, S, F>>;
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -23,7 +33,7 @@ export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: BaseInputTemplateProps<T, S, F>) {
+>(props: CoreBaseInputTemplateProps<T, S, F>) {
   const {
     id,
     name, // remove this from ...rest
@@ -60,17 +70,8 @@ export default function BaseInputTemplate<
     console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
-  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so a widget passing either keeps
-  // it. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the title with
-  // it rather than describing a rule no longer in force
-  const callerPattern = 'pattern' in rest ? { pattern: rest.pattern } : undefined;
-  const inputProps = {
-    ...rest,
-    ...derivedInputProps,
-    ...callerPattern,
-    ...('inputMode' in rest ? { inputMode: rest.inputMode } : undefined),
-  };
+  const { title, ...baseInputProps } = getBaseInputProps<T, S, F>(props);
+  const inputProps = { ...rest, ...baseInputProps };
 
   const inputValue = toInputValue(value);
 
@@ -111,7 +112,7 @@ export default function BaseInputTemplate<
         disabled={disabled}
         autoFocus={autofocus}
         value={inputValue}
-        title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
+        title={title}
         {...inputProps}
         list={hasExamples ? examplesId(id) : undefined}
         onChange={onChangeOverride ?? handleChange}

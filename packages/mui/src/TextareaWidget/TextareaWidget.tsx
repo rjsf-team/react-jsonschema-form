@@ -1,5 +1,7 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, SlotComponent, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplates } from '@rjsf/utils';
+
+import type { MuiBaseInputTemplateProps } from '../BaseInputTemplate/BaseInputTemplate.tsx';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -11,7 +13,10 @@ export default function TextareaWidget<
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { options, registry } = props;
-  const { BaseInputTemplate } = getTemplates<T, S, F>(registry, options);
+  const BaseInputTemplate: SlotComponent<MuiBaseInputTemplateProps<T, S, F>> = getTemplates<T, S, F>(
+    registry,
+    options,
+  ).BaseInputTemplate;
 
   let rows: string | number = 5;
   if (typeof options.rows === 'string' || typeof options.rows === 'number') {

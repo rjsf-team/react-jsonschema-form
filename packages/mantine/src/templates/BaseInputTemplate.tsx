@@ -7,7 +7,8 @@ import {
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
-  getInputProps,
+  callerInputProps,
+  getBaseInputProps,
   labelValue,
   numericWidgetStoresString,
   offersClearButton,
@@ -15,7 +16,13 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
+import {
+  cleanupOptions,
+  getDescriptionProps,
+  getWidgetError,
+  numberInputOwnKeys,
+  useInputAriaProps,
+} from '../utils.tsx';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -31,7 +38,6 @@ export default function BaseInputTemplate<
   const {
     id,
     htmlName,
-    type,
     schema,
     value,
     placeholder,
@@ -51,8 +57,21 @@ export default function BaseInputTemplate<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const inputProps = getInputProps<T, S, F>(schema, type, options, false);
-  const themeProps = cleanupOptions(options, props);
+  // Mantine's `NumberInput` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared
+  // to receive, and sets an `inputMode` of its own over any it is given, so a widget that names either gets the plain
+  // input every other theme renders for a numeric field.
+  const plainInput = Boolean(onChangeOverride) || 'inputMode' in props;
+  const inputProps = getBaseInputProps<T, S, F>(props, plainInput);
+  const isNumeric = !plainInput && (inputProps.type === 'number' || inputProps.type === 'integer');
+  // `NumberInput`'s own options would land on a `TextInput` as unknown attributes
+  const optionProps = cleanupOptions(options, props, isNumeric ? undefined : numberInputOwnKeys);
+  // `ui:options` spreads onto the input as Mantine props, so the props a widget passes go after it to win. A `pattern`
+  // there replaces the derived one, so it drops the title that names it, as a passed `pattern` does
+  const themeProps = {
+    ...optionProps,
+    ...('pattern' in optionProps && { title: undefined }),
+    ...callerInputProps(props),
+  };
   const descriptionProps = getDescriptionProps(props);
 
   // `NumberInput` reports a number once its text parses as one, and on blur trims leading zeroes by parsing the text,
@@ -117,10 +136,6 @@ export default function BaseInputTemplate<
   };
 
   const { min, max, ...restInputProps } = inputProps;
-
-  // Mantine's `NumberInput` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared
-  // to receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
-  const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
 
   const ariaDescribedByProps = useInputAriaProps<T, S, F>(
     isNumeric ? 'NumberInput' : 'TextInput',

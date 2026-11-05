@@ -6,19 +6,35 @@ import {
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
-  getInputProps,
-  getNumericInputTitle,
+  callerInputProps,
+  getBaseInputProps,
   hasWidgetErrors,
   offersClearButton,
   toInputValue,
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
+import type { FormControlProps } from 'react-bootstrap';
+
+/** The props this theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes
+ * `extraProps` to
+ */
+export type BootstrapBaseInputTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = BaseInputTemplateProps<T, S, F> & {
+  /** Props to spread on the `Form.Control` along with the ones the schema derives, or, without `Form.Control`'s own
+   * `size`, `htmlSize`, `plaintext`, `isValid` and `isInvalid`, on the `Form.Range` of a `range` input. Its `pattern`,
+   * `inputMode` and `accept` win over the derived ones
+   */
+  extraProps?: FormControlProps & Record<`data-${string}`, unknown>;
+};
 
 export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: BaseInputTemplateProps<T, S, F>) {
+>(props: BootstrapBaseInputTemplateProps<T, S, F>) {
   const {
     id,
     htmlName,
@@ -26,7 +42,6 @@ export default function BaseInputTemplate<
     required,
     readonly,
     disabled,
-    type,
     value,
     onChange,
     onChangeOverride,
@@ -41,17 +56,13 @@ export default function BaseInputTemplate<
     presentation,
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
-  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so `extraProps` keeps either one
-  // it carries. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the
-  // title with it rather than describing a rule no longer in force
-  const callerPattern = extraProps && 'pattern' in extraProps ? { pattern: extraProps.pattern } : undefined;
-  const inputProps = {
-    ...extraProps,
-    ...derivedInputProps,
-    ...callerPattern,
-    ...(extraProps && 'inputMode' in extraProps ? { inputMode: extraProps.inputMode } : undefined),
-  };
+  // The `pattern`, `inputMode`, `accept` and `multiple` in `extraProps` count as the widget's own, over its props
+  const { title, ...baseInputProps } = getBaseInputProps<T, S, F>({
+    ...props,
+    ...callerInputProps({ ...extraProps }),
+    multiple: extraProps?.multiple ?? props.multiple,
+  });
+  const inputProps = { ...extraProps, ...baseInputProps };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
@@ -76,7 +87,7 @@ export default function BaseInputTemplate<
     autoFocus: autofocus,
     required,
     disabled,
-    title: callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString),
+    title,
     readOnly: readonly,
     list: hasExamples ? examplesId(id) : undefined,
     ...inputProps,
@@ -86,13 +97,22 @@ export default function BaseInputTemplate<
     onFocus: handleFocus,
     ...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []),
   };
+  const {
+    size: _size,
+    htmlSize: _htmlSize,
+    plaintext: _plaintext,
+    isValid: _isValid,
+    isInvalid: _isInvalid,
+    ...rangeProps
+  } = controlProps;
   return (
     <>
       {inputProps.type === 'range' ? (
         // `Form.Range` takes Bootstrap's `form-range` class through its prefix, which a `ThemeProvider` can rename, and
-        // has no `isInvalid`, so its error state is the class `Form.Control` would add
+        // renders a bare `<input>` without `Form.Control`'s own props, so its error state is the class `Form.Control`
+        // would add
         <Form.Range
-          {...controlProps}
+          {...rangeProps}
           className={[inputProps.className, isInvalid && 'is-invalid'].filter(Boolean).join(' ') || undefined}
         />
       ) : (

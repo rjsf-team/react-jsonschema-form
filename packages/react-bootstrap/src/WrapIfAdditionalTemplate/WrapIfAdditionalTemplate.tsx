@@ -6,6 +6,8 @@ import {
   buttonId,
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
+  isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
   TranslatableString,
 } from '@rjsf/utils';
 import { Col, Form, Row } from 'react-bootstrap';
@@ -85,7 +87,7 @@ export default function WrapIfAdditionalTemplate<
               isInvalid={keyAttributes['aria-invalid']}
               required={required}
               defaultValue={keyName}
-              disabled={disabled || readonly}
+              disabled={isAdditionalKeyDisabled(props)}
               id={keyId}
               name={keyId}
               onBlur={!readonly ? onKeyRenameBlur : undefined}
@@ -99,7 +101,7 @@ export default function WrapIfAdditionalTemplate<
         <RemoveButton
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove w-100'
-          disabled={disabled || readonly}
+          disabled={isAdditionalRemoveDisabled(props)}
           onClick={onRemoveProperty}
           uiSchema={uiSchema}
           registry={registry}

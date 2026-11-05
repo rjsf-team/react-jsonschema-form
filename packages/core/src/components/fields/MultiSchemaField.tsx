@@ -51,12 +51,10 @@ const VALUE_ENTRY_WIDGETS = new Set<unknown>(['text', 'updown', 'range', 'TextWi
  *
  * @param props - The `FieldProps` for this template. `options` holds the option schemas, each already retrieved for
  *   `formData` by `SchemaField`. A field named through `ui:field`, or rendered by a custom field, is handed none, so it
- *   retrieves them from its `schema` as `SchemaField` does. It is not a declared `FieldProps` key, so it would be read
- *   as `any` through `FieldProps`' `GenericObjectType` index signature; declaring it here names what `SchemaField`
- *   passes, but nothing checks it, since `SchemaField` renders this through a `Field` slot that only knows `FieldProps`
+ *   retrieves them from its `schema` as `SchemaField` does
  */
 function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  props: FieldProps<T, S, F> & { options?: S[] },
+  props: FieldProps<T, S, F>,
 ) {
   const {
     name,

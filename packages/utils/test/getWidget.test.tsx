@@ -11,7 +11,6 @@ import {
   getWidget,
   getWidgetType,
   resolveWidget,
-  ROOT_FIELD_PATH,
 } from '../src/index.ts';
 
 const subschema: RJSFSchema = {
@@ -72,14 +71,11 @@ const widgetProps: WidgetProps = {
   autofocus: false,
   disabled: false,
   errorSchema: {},
-  formContext: undefined,
-  formData: undefined,
   onBlur: vi.fn(),
   onChange: vi.fn(),
   onFocus: vi.fn(),
   readonly: false,
   required: false,
-  fieldPath: ROOT_FIELD_PATH,
   schema: {},
   uiSchema: {},
   options: {},

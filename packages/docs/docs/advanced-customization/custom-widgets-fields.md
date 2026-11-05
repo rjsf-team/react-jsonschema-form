@@ -205,7 +205,6 @@ The following props are passed to custom widget components:
 - `hideLabel`: A boolean value, if true, tells the widget not to draw its label, because the field's plan has the template, or a field above rendering the same id, draw it, or `label` in the `UiSchema` turns it off. A widget that draws its own description should take it from [`getWidgetDescription()`](../api-reference/utility-functions.md#getwidgetdescription) rather than decide from `hideLabel`. Deprecated, and kept through v7 for a widget rendered without a plan: read `presentation.label.by === 'self'`, or [`widgetDrawsLabel()`](../api-reference/utility-functions.md#widgetdrawslabel), which falls back to `hideLabel` without a plan, instead;
 - `multiple`: A boolean value stating if the widget can accept multiple values;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
-- `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;
 - `onBlur`: The input blur event handler; call it with the widget id and value;
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).

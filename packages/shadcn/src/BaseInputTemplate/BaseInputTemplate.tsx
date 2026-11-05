@@ -1,4 +1,4 @@
-import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
+import type { ChangeEvent, FocusEvent, InputHTMLAttributes, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
@@ -6,8 +6,8 @@ import {
   examplesId,
   getControlAttributes,
   getExampleSuggestions,
-  getInputProps,
-  getNumericInputTitle,
+  callerInputProps,
+  getBaseInputProps,
   hasWidgetErrors,
   offersClearButton,
   toInputValue,
@@ -15,6 +15,20 @@ import {
 
 import { Input } from '../components/ui/input.tsx';
 import { cn } from '../lib/utils.ts';
+
+/** The props this theme's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes
+ * `extraProps` to
+ */
+export type ShadcnBaseInputTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = BaseInputTemplateProps<T, S, F> & {
+  /** Props to spread on the input along with the ones the schema derives. Its `pattern`, `inputMode` and `accept` win
+   * over the derived ones
+   */
+  extraProps?: InputHTMLAttributes<HTMLInputElement> & Record<`data-${string}`, unknown>;
+};
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -26,7 +40,7 @@ export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: BaseInputTemplateProps<T, S, F>) {
+>(props: ShadcnBaseInputTemplateProps<T, S, F>) {
   const {
     id,
     htmlName,
@@ -34,7 +48,6 @@ export default function BaseInputTemplate<
     required,
     readonly,
     disabled,
-    type,
     value,
     onChange,
     onChangeOverride,
@@ -50,17 +63,13 @@ export default function BaseInputTemplate<
     presentation,
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
-  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
-  // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so `extraProps` keeps either one
-  // it carries. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the
-  // title with it rather than describing a rule no longer in force
-  const callerPattern = extraProps && 'pattern' in extraProps ? { pattern: extraProps.pattern } : undefined;
-  const inputProps = {
-    ...extraProps,
-    ...derivedInputProps,
-    ...callerPattern,
-    ...(extraProps && 'inputMode' in extraProps ? { inputMode: extraProps.inputMode } : undefined),
-  };
+  // The `pattern`, `inputMode`, `accept` and `multiple` in `extraProps` count as the widget's own, over its props
+  const { title, ...baseInputProps } = getBaseInputProps<T, S, F>({
+    ...props,
+    ...callerInputProps({ ...extraProps }),
+    multiple: extraProps?.multiple ?? props.multiple,
+  });
+  const inputProps = { ...extraProps, ...baseInputProps };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
@@ -82,16 +91,15 @@ export default function BaseInputTemplate<
       <Input
         id={id}
         name={htmlName || id}
-        type={type}
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className)}
         list={hasExamples ? examplesId(id) : undefined}
-        title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
+        title={title}
         {...inputProps}
+        className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className, extraProps?.className)}
         value={inputValue}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}

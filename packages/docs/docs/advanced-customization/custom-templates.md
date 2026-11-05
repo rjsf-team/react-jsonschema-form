@@ -376,7 +376,14 @@ For instance, say you have a `CustomTextInput` component that you want to integr
 
 ```tsx
 import { ChangeEvent, FocusEvent } from 'react';
-import { BaseInputTemplateProps, getControlAttributes, getInputProps, hasWidgetErrors, RJSFSchema, toInputValue } from '@rjsf/utils';
+import {
+  BaseInputTemplateProps,
+  getBaseInputProps,
+  getControlAttributes,
+  hasWidgetErrors,
+  RJSFSchema,
+  toInputValue,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import CustomTextInput from '../CustomTextInput';
@@ -418,7 +425,8 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
   const onTextBlur = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onBlur(id, val);
   const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
 
-  const inputProps = { ...rest, ...getInputProps(schema, type, options) };
+  const { title, ...baseInputProps } = getBaseInputProps(props);
+  const inputProps = { ...rest, ...baseInputProps };
   // The field's plan leaves out the errors `ui:hideError` hides, and `hasWidgetErrors()` reads the `aria-invalid` it
   // gives the control, falling back to `rawErrors` with `hideError` for a widget rendered without a plan. The messages
   // are drawn here only where the plan has the widget draw them, under the id the control's `aria-describedby` names,
@@ -441,6 +449,7 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
         onChange={onChangeOverride || onTextChange}
         onBlur={onTextBlur}
         onFocus={onTextFocus}
+        title={title}
         {...inputProps}
         {...getControlAttributes({ id, presentation })}
       />
@@ -490,10 +499,13 @@ The following props are passed to the `BaseInputTemplate`:
 - `readonly`: A boolean value stating if the widget is read-only;
 - `autofocus`: A boolean value stating if the widget should autofocus;
 - `label`: The computed label for this widget, as a string
-- `multiple`: A boolean value stating if the widget can accept multiple values;
+- `multiple`: A boolean value stating if the widget can accept multiple values. `ArrayField` passes it to the widget of any multi-select, so [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it only on a `file` input;
+- `type`: The `type` of the input, which the widgets rendering a `BaseInputTemplate` set, such as `'number'` or `'date'`;
+- `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it, `inputMode` and `accept` over the input props `getInputProps()` derives and adds `multiple` to a `file` input, and [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns those three on their own. A `pattern` counts even when it is undefined, which turns the derived one off;
+- `inputMode`: An `inputMode` a widget passes for the input, which replaces the one the schema derives, and which `callerInputProps()` returns the way it returns `pattern`;
+- `accept`: The file types a widget passes for the input, which replace `ui:options.accept`, and which `callerInputProps()` returns too;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
 - `onChangeOverride`: A `BaseInputTemplate` implements a default `onChange` handler that it passes to the HTML input component to handle the `ChangeEvent`. Sometimes a widget may need to handle the `ChangeEvent` using custom logic. If that is the case, that widget should provide its own handler via this prop;
-- `onKeyChange`: The key change event handler (only called for fields with `additionalProperties` and `patternProperties`); pass the new value every time it changes;
 - `onBlur`: The input blur event handler; call it with the widget id and value;
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](./custom-widgets-fields.md#custom-widget-options)).
@@ -1284,7 +1296,14 @@ You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or
 Core's lays the key, the value and the remove button out on shared grid rows, so the key's input sits level with the value's; see [Lining up a custom `FieldTemplate`](../usage/themes.md#lining-up-a-custom-fieldtemplate).
 
 ```tsx
-import { ADDITIONAL_PROPERTY_FLAG, additionalKeyId, RJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  additionalKeyId,
+  isAdditionalKeyDisabled,
+  isAdditionalRemoveDisabled,
+  RJSFSchema,
+  WrapIfAdditionalTemplateProps,
+} from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -1296,7 +1315,6 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
   const {
     id,
     keyName,
-    onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
     schema,
@@ -1316,9 +1334,21 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
   return (
     <div className={classNames} style={style}>
       <label htmlFor={additionalKeyId(id)}>Custom Field Key</label>
-      <input className='form-control' type='text' id={additionalKeyId(id)} onBlur={onKeyRenameBlur} defaultValue={keyName} />
+      <input
+        className='form-control'
+        type='text'
+        id={additionalKeyId(id)}
+        disabled={isAdditionalKeyDisabled(props)}
+        onBlur={onKeyRenameBlur}
+        defaultValue={keyName}
+      />
       <div>{children}</div>
-      <RemoveButton onClick={onRemoveProperty} uiSchema={uiSchema} />
+      <RemoveButton
+        disabled={isAdditionalRemoveDisabled(props)}
+        onClick={onRemoveProperty}
+        uiSchema={uiSchema}
+        registry={registry}
+      />
     </div>
   );
 }
@@ -1346,9 +1376,9 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `disabled`: A boolean value stating if the field is disabled.
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
-- `onKeyRename`: Callback used to handle the changing of an additional property key's name with the new value
-- `onKeyRenameBlur`: Callback used to handle the changing of an additional property key's name when the input is blurred. The event's target's value will be used as the new value. Its a wrapper callback around `onKeyRename`
-- `onRemoveProperty`: Callback used to handle the removal of the additionalProperty
+- `onKeyRename`: Optional callback used to handle the changing of an additional property key's name with the new value. It is `undefined` for a field `ObjectField` doesn't render, such as the root or an array item, as `onKeyRenameBlur` and `onRemoveProperty` are, so check for it before calling it
+- `onKeyRenameBlur`: Optional callback used to handle the changing of an additional property key's name when the input is blurred. The event's target's value will be used as the new value. Its a wrapper callback around `onKeyRename`. Disable the key input of a disabled or read-only field and of one handed no `onKeyRenameBlur`, which [`isAdditionalKeyDisabled()`](../api-reference/utility-functions.md#isadditionalkeydisabled) works out
+- `onRemoveProperty`: Optional callback used to handle the removal of the additionalProperty. Disable the remove button of a disabled or read-only field and of one handed no `onRemoveProperty`, which [`isAdditionalRemoveDisabled()`](../api-reference/utility-functions.md#isadditionalremovedisabled) works out
 - `propertyNamesEnum`: The key names this property may be renamed to, derived from the parent schema's [`propertyNames.enum`](../json-schema/objects.md#constraining-key-names-with-propertynames) and narrowed to the names its siblings have not already taken; `undefined` when the parent schema does not enumerate its property names. Render the key as a dropdown of those names when it is provided, which the `AdditionalPropertyKeySelect` component from `@rjsf/utils` does using the theme's own `SelectWidget`
 - `keyNotAllowed`: Whether the parent schema forbids this property's key, which its row's errors then say. Mark the key input invalid while it is, which `getAdditionalKeyAttributes()` from `@rjsf/utils` does
 

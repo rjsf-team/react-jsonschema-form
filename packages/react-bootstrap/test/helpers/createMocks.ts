@@ -34,7 +34,6 @@ export function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetPro
     rawErrors: [],
     value: 'value',
     options: {},
-    formContext: {},
     id: '_id',
     name: '_name',
     placeholder: '',

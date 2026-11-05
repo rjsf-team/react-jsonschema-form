@@ -77,6 +77,22 @@ describe('DateTimeWidget', () => {
     expect(container.querySelector<HTMLInputElement>('input#root')).toHaveValue('03.05.2020');
   });
 
+  test('uses the default formats for a `valueFormat` or `displayFormat` option that is not a string', async () => {
+    const onChange = vi.fn();
+    const { getByRole } = renderWidget({
+      onChange,
+      schema: { type: 'string', format: 'iso-date-time' },
+      options: { valueFormat: 5, displayFormat: true },
+    });
+
+    const input = getByRole('textbox');
+    await user.click(input);
+    await user.paste('2024-01-01T10:30:00');
+
+    expect(onChange).toHaveBeenCalledWith('2024-01-01T10:30:00');
+    expect(input).toHaveValue('2024-01-01T10:30:00');
+  });
+
   test('renders a blank input instead of an Invalid Date when the stored value is unparsable', () => {
     expect(() => {
       const { container } = renderWidget({ value: 'not-a-date' });

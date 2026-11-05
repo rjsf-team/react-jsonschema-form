@@ -6,6 +6,7 @@ import {
   formTests,
   submitPendingTests,
   themeTests,
+  wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
 } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
@@ -801,5 +802,7 @@ describe('fluentui-rc SubmitButton', () => {
 });
 
 wrapIfAdditionalErrorStateTests(Form);
+
+wrapIfAdditionalCallbackTests(Form);
 
 submitPendingTests(Form);

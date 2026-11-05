@@ -4,9 +4,9 @@ import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   examplesId,
+  getBaseInputProps,
   getControlAttributes,
   getExampleSuggestions,
-  getInputProps,
   numericWidgetStoresString,
   offersClearButton,
   toInputValue,
@@ -46,12 +46,13 @@ export default function BaseInputTemplate<
     required,
     schema,
     value,
-    type,
     presentation,
   } = props;
-  // InputNumber doesn't use a native <input type="number"> directly - it wraps it and controls the stepping behavior
-  // through its own props. The step prop in Ant Design expects a number, not the string "any"
-  const inputProps = getInputProps<T, S, F>(schema, type, options, false);
+  // `InputNumber` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared to
+  // receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
+  // `InputNumber` wraps its input and steps through its own `step`, which takes a number rather than `'any'`
+  const plainInput = Boolean(onChangeOverride);
+  const inputProps = getBaseInputProps<T, S, F>(props, plainInput);
   const control = useControlState<T, S, F>({ disabled, readonly, registry });
   const { ClearButton } = registry.templates.ButtonTemplates;
 
@@ -76,9 +77,7 @@ export default function BaseInputTemplate<
 
   const { min, max, ...restInputProps } = inputProps;
 
-  // `InputNumber` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared to
-  // receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
-  const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
+  const isNumeric = !plainInput && (inputProps.type === 'number' || inputProps.type === 'integer');
 
   // A string is handed over as it is, as a string field that `ui:inputType: 'number'` renders here stores one, and
   // `InputNumber` keeps the digits a conversion to a number would round. Its `stringMode` writes such a field a string
