@@ -162,6 +162,7 @@ export default function RatingWidget<
 
         return (
           <span
+            // oxlint-disable-next-line react/no-array-index-key
             key={index}
             ref={index === tabStopIndex ? autofocusStar : undefined}
             onClick={() => handleStarClick(starValue)}
