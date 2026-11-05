@@ -27,14 +27,14 @@ describe('RatingWidget', () => {
   );
 
   test.each([
-    ['a `stars` option', {}, { stars: 2.5 }],
-    ['a schema `maximum`', { maximum: 2.5 }, {}],
-  ])('rounds down %s that is not a whole number, rather than crashing the form', (_, schema, options) => {
+    ['a `stars` option', {}, { stars: 2.5 }, 2],
+    ['a schema `maximum`', { maximum: 2.5 }, {}, 3],
+  ])('rounds down %s that is not a whole number, rather than crashing the form', (_, schema, options, count) => {
     const { getAllByRole } = render(
       <RatingWidget {...makeWidgetMockProps({ schema: { type: 'number', ...schema }, options })} />,
     );
 
-    expect(getAllByRole('radio')).toHaveLength(2);
+    expect(getAllByRole('radio')).toHaveLength(count);
   });
 
   test('autofocuses the first star for a value beyond the stars left by rounding down', () => {

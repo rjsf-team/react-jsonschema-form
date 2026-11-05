@@ -11,6 +11,7 @@ import getNestedControlPresentation from './getNestedControlPresentation.ts';
 import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
+import toNumericValue from './toNumericValue.ts';
 import type {
   DateObject,
   FieldPresentation,

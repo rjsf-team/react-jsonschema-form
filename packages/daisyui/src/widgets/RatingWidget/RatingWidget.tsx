@@ -51,13 +51,10 @@ export default function RatingWidget<
   const size = classNameOption(options.size);
   const color = classNameOption(options.color) ?? 'orange';
 
-  const numStars = ratingStarCount<S>(schema, stars);
-  const min = schema.minimum ?? 0;
+  const min = toNumericValue(schema.minimum) ?? 0;
   const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
-  const numStars = Math.floor(
-    Math.max(Math.min(withoutFloatNoise((schema.maximum ?? Infinity) - min + 1), stars, 5), 1),
-  );
+  const numStars = ratingStarCount<S>(schema, stars);
   const starValues = Array.from({ length: numStars }, (_, index) => withoutFloatNoise(min + index));
 
   // Generate shape class
@@ -127,27 +124,25 @@ export default function RatingWidget<
   return (
     <div className='form-control w-full'>
       <div className={`rating gap-1 ${sizeClass}`} {...groupProps}>
-        {Array.from({ length: numStars }, (_, index) => {
-          const starValue = min + index;
-          return (
-            <input
-              key={index}
-              type='radio'
-              name={htmlName || id}
-              value={starValue}
-              checked={rating === starValue}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              className={`mask ${maskClass} ${getColorClass(index)}`}
-              disabled={disabled || readonly}
-              required={required}
-              autoFocus={autofocus && starValue === autofocusValue}
-              aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
-              {...optionAttributes}
-            />
-          );
-        })}
+        {starValues.map((starValue, index) => (
+          <input
+            // oxlint-disable-next-line react/no-array-index-key
+            key={index}
+            type='radio'
+            name={htmlName || id}
+            value={starValue}
+            checked={rating === starValue}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            className={`mask ${maskClass} ${getColorClass(index)}`}
+            disabled={disabled || readonly}
+            required={required}
+            autoFocus={autofocus && starValue === autofocusValue}
+            aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
+            {...optionAttributes}
+          />
+        ))}
       </div>
     </div>
   );

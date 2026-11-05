@@ -62,12 +62,16 @@ describe('ratingStarCount()', () => {
     { schema: {}, stars: 0, expected: 1 },
     { schema: {}, stars: undefined, expected: 5 },
     { schema: {}, stars: true, expected: 5 },
-    { schema: { maximum: 3 }, stars: 5, expected: 3 },
-    { schema: { maximum: 9 }, stars: 2, expected: 5 },
+    { schema: { maximum: 3 }, stars: 5, expected: 4 },
+    { schema: { maximum: 9 }, stars: 2, expected: 2 },
+    { schema: { maximum: 9 }, stars: 7, expected: 5 },
     { schema: { maximum: 0.5 }, stars: 2, expected: 1 },
-    { schema: { maximum: 0 }, stars: 3, expected: 3 },
+    { schema: { maximum: 0 }, stars: 3, expected: 1 },
     { schema: { maximum: -2 }, stars: 2, expected: 1 },
-    { schema: { maximum: 3.7 }, stars: 2, expected: 3 },
+    { schema: { maximum: 3.7 }, stars: 5, expected: 4 },
+    { schema: { minimum: 1, maximum: 3 }, stars: 5, expected: 3 },
+    { schema: { minimum: 1.3, maximum: 2.3 }, stars: 5, expected: 2 },
+    { schema: { minimum: 2 }, stars: 4, expected: 4 },
   ])('$schema with stars $stars', ({ schema, stars, expected }) => {
     expect(ratingStarCount(schema, stars)).toBe(expected);
   });
@@ -78,5 +82,9 @@ describe('ratingStarCount()', () => {
   ])('falls back to the `stars` option for a JSON schema `maximum` of %s', (_, json) => {
     const schema: RJSFSchema = JSON.parse(json);
     expect(ratingStarCount(schema, 3)).toBe(3);
+  });
+  it('reads a numeric string `minimum` and `maximum` from a JSON schema as their numbers', () => {
+    const schema: RJSFSchema = JSON.parse('{"minimum": "1", "maximum": "3"}');
+    expect(ratingStarCount(schema, 5)).toBe(3);
   });
 });
