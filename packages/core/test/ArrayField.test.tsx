@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react';
 import { startTransition, StrictMode, useEffect, useId, useLayoutEffect, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
@@ -623,6 +624,85 @@ describe('ArrayField', () => {
       await user.click(elementOf(node, '.rjsf-array-item-add'));
 
       expect(node.querySelector('.rjsf-array-item')).not.toBeNull();
+    });
+
+    it('appends when the add button passes a second argument to onAddClick', async () => {
+      // Like MUI's ToggleButton `(event, value)`: the extra argument must not be read as an insert index
+      function TwoArgumentButton({ onClick }: { onClick: (event: MouseEvent<HTMLElement>, value: number) => void }) {
+        return (
+          <button type='button' className='rjsf-array-item-add' onClick={(event) => onClick(event, 0)}>
+            Add New
+          </button>
+        );
+      }
+      function TwoArgumentAddTemplate(props: ArrayFieldTemplateProps) {
+        return (
+          <div className='array'>
+            {props.items}
+            <TwoArgumentButton onClick={props.onAddClick} />
+          </div>
+        );
+      }
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: ['foo', 'bar'],
+        templates: { ArrayFieldTemplate: TwoArgumentAddTemplate },
+      });
+
+      await user.click(elementOf(node, '.rjsf-array-item-add'));
+
+      expect(Array.from(node.querySelectorAll('input[type=text]'), (input) => input.getAttribute('value'))).toEqual([
+        'foo',
+        'bar',
+        '',
+      ]);
+    });
+
+    it('keeps onAddClick the same function across renders', async () => {
+      // core's memoized IconButton takes it as `onClick`, so a new function would re-render the add button on every edit
+      const onAddClicks = new Set<ArrayFieldTemplateProps['onAddClick']>();
+      function RecordingTemplate(props: ArrayFieldTemplateProps) {
+        onAddClicks.add(props.onAddClick);
+        return <div className='array'>{props.items}</div>;
+      }
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: ['foo'],
+        templates: { ArrayFieldTemplate: RecordingTemplate },
+      });
+
+      await user.type(elementOf(node, 'input[type=text]'), 'x');
+
+      expectToHaveBeenCalledWithFormData(onChange, ['foox'], 'root_0');
+      expect(onAddClicks.size).toBe(1);
+    });
+
+    it('moves an item when the template calls onMoveDownItem after dispatch ends', async () => {
+      // React clears the event's `currentTarget` once dispatch ends, before the deferred call runs
+      function DeferredMoveItemTemplate(props: ArrayFieldItemTemplateProps) {
+        const { onMoveDownItem } = props.buttonsProps;
+        return (
+          <div className='rjsf-array-item'>
+            {props.children}
+            <button
+              type='button'
+              className='rjsf-array-item-move-down'
+              onClick={(event) => queueMicrotask(() => onMoveDownItem(event))}
+            >
+              Down
+            </button>
+          </div>
+        );
+      }
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: ['foo', 'bar'],
+        templates: { ArrayFieldItemTemplate: DeferredMoveItemTemplate },
+      });
+
+      await user.click(elementOf(node, '.rjsf-array-item-move-down'));
+
+      await waitFor(() => expectToHaveBeenCalledWithFormData(onChange, ['bar', 'foo'], 'root'));
     });
 
     it('should not provide an add button if length equals maxItems', () => {
@@ -2022,6 +2102,22 @@ describe('ArrayField', () => {
       expect(label).toHaveTextContent('Custom title*');
     });
 
+    it('shows Copy only from the last fixed item on, since a copy goes below its item', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: [{ type: 'string' }, { type: 'number' }],
+          additionalItems: { type: 'boolean' },
+        },
+        uiSchema: { 'ui:copyable': true },
+        initialFormData: ['a', 1, true],
+      });
+
+      expect(node.querySelector('#root_0__copy')).toBeNull();
+      expect(node.querySelector('#root_1__copy')).not.toBeNull();
+      expect(node.querySelector('#root_2__copy')).not.toBeNull();
+    });
+
     it('should have an add button if additionalItems is an object', () => {
       const { node } = createFormComponent({ schema: schemaAdditional });
       expect(node.querySelector('.rjsf-array-item-add')).not.toBeNull();
@@ -3063,6 +3159,19 @@ describe('ArrayField', () => {
         [...copyable.querySelectorAll('.rjsf-array-item-copy')].map((button) => button.getAttribute('title')),
       ).toEqual(['Copy x (1)', 'Copy x (2)']);
       expect(removeTitles(copyable)).toEqual(['Remove x (2)']);
+    });
+
+    it("doesn't count a tuple's fixed items before the last, which can't show Copy", () => {
+      const named = { type: 'object', properties: { name: { type: 'string' } } } as const;
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: [named, named], additionalItems: named },
+        initialFormData: [{ name: 'x' }, { name: 'x' }, { name: 'x' }],
+        uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
+      });
+
+      expect([...node.querySelectorAll('.rjsf-array-item-copy')].map((button) => button.getAttribute('title'))).toEqual(
+        ['Copy x (1)', 'Copy x (2)'],
+      );
     });
 
     it('names the additional items of a fixed-items array', () => {
@@ -5643,6 +5752,513 @@ describe('ArrayField', () => {
         expect(getFormData()).toEqual(expected);
       },
     );
+
+    describe('should move an item from a direct call only where its button could', () => {
+      function UnguardedMoveItemTemplate(props: ArrayFieldItemTemplateProps) {
+        const { onMoveUpItem, onMoveDownItem } = props.buttonsProps;
+        return (
+          <div className='rjsf-array-item'>
+            {props.children}
+            <button type='button' onClick={onMoveUpItem}>
+              {`Move ${props.index} up`}
+            </button>
+            <button type='button' onClick={onMoveDownItem}>
+              {`Move ${props.index} down`}
+            </button>
+          </div>
+        );
+      }
+
+      it.each([
+        { button: 'Move 0 up', caseName: 'above the first item' },
+        { button: 'Move 2 down', caseName: 'below the last item' },
+      ])('$caseName', async ({ button }) => {
+        const { onChange, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          initialFormData: ['a', 'b', 'c'],
+          templates: { ArrayFieldItemTemplate: UnguardedMoveItemTemplate },
+        });
+        onChange.mockClear();
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(['a', 'b', 'c']);
+        expect(onChange).not.toHaveBeenCalled();
+        expect(screen.getByRole('button', { name: button })).toHaveFocus();
+      });
+
+      it.each([
+        { button: 'Move 1 up', caseName: 'a fixed tuple item up' },
+        { button: 'Move 2 up', caseName: 'the first additional item into the tuple' },
+        { button: 'Move 0 down', caseName: 'a fixed tuple item down' },
+      ])('$caseName', async ({ button }) => {
+        const { getFormData } = createFormComponent({
+          schema: {
+            type: 'array',
+            items: [{ type: 'string' }, { type: 'string' }],
+            additionalItems: { type: 'string' },
+          },
+          initialFormData: ['a', 'b', 'c', 'd'],
+          templates: { ArrayFieldItemTemplate: UnguardedMoveItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(['a', 'b', 'c', 'd']);
+      });
+
+      it.each([
+        { button: 'Move 1 up', expected: ['b', 'a', 'c'] },
+        { button: 'Move 1 down', expected: ['a', 'c', 'b'] },
+      ])('$button where the button can', async ({ button, expected }) => {
+        const { getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          initialFormData: ['a', 'b', 'c'],
+          templates: { ArrayFieldItemTemplate: UnguardedMoveItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(expected);
+      });
+
+      it('below the last item once an add in the same handler gives it one', async () => {
+        function AddThenMoveDownItemTemplate(props: ArrayFieldItemTemplateProps) {
+          const { onAddItem, onMoveDownItem } = props.buttonsProps;
+          return (
+            <div className='rjsf-array-item'>
+              {props.children}
+              <button
+                type='button'
+                onClick={() => {
+                  onAddItem();
+                  onMoveDownItem();
+                }}
+              >
+                {`Add after ${props.index}, then move it down`}
+              </button>
+            </div>
+          );
+        }
+        const { getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string', default: 'new' } },
+          initialFormData: ['a', 'b'],
+          templates: { ArrayFieldItemTemplate: AddThenMoveDownItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add after 1, then move it down' }));
+
+        expect(getFormData()).toEqual(['a', 'new', 'b']);
+      });
+
+      it.each([
+        { caseName: 'ui:orderable: false', uiOptions: { 'ui:orderable': false } },
+        { caseName: 'a read-only array', uiOptions: { 'ui:readonly': true } },
+        { caseName: 'a disabled array', uiOptions: { 'ui:disabled': true } },
+      ])('not under $caseName', async ({ uiOptions }) => {
+        const { onChange, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          uiSchema: uiOptions,
+          initialFormData: ['a', 'b', 'c'],
+          templates: { ArrayFieldItemTemplate: UnguardedMoveItemTemplate },
+        });
+        onChange.mockClear();
+
+        await user.click(screen.getByRole('button', { name: 'Move 1 up' }));
+        await user.click(screen.getByRole('button', { name: 'Move 1 down' }));
+
+        expect(getFormData()).toEqual(['a', 'b', 'c']);
+        expect(onChange).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('should act on an item from a direct call only where its button could', () => {
+      function DirectCallItemTemplate(props: ArrayFieldItemTemplateProps) {
+        const { onAddItem, onCopyItem, onRemoveItem } = props.buttonsProps;
+        return (
+          <div className='rjsf-array-item'>
+            {props.children}
+            <button type='button' onClick={() => onAddItem()}>{`Add after ${props.index}`}</button>
+            <button type='button' onClick={() => onCopyItem()}>{`Copy ${props.index}`}</button>
+            <button type='button' onClick={() => onRemoveItem()}>{`Remove ${props.index}`}</button>
+          </div>
+        );
+      }
+
+      // A `submit` button, so a test also sees a refused press keep the form from submitting
+      function AppendTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
+        return (
+          <div>
+            {items}
+            <button type='submit' onClick={onAddClick}>
+              Append
+            </button>
+          </div>
+        );
+      }
+
+      it.each([
+        { button: 'Add after 0', caseName: 'adding under a disabled array', uiOptions: { 'ui:disabled': true } },
+        { button: 'Add after 0', caseName: 'adding under a read-only array', uiOptions: { 'ui:readonly': true } },
+        { button: 'Add after 0', caseName: 'adding under ui:addable: false', uiOptions: { 'ui:addable': false } },
+        { button: 'Copy 0', caseName: 'copying under a disabled array', uiOptions: { 'ui:disabled': true } },
+        { button: 'Copy 0', caseName: 'copying where the button hides', uiOptions: {} },
+        { button: 'Remove 0', caseName: 'removing under a read-only array', uiOptions: { 'ui:readonly': true } },
+        { button: 'Remove 0', caseName: 'removing under ui:removable: false', uiOptions: { 'ui:removable': false } },
+      ])('not $caseName', async ({ button, uiOptions }) => {
+        const { onChange, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          uiSchema: uiOptions,
+          initialFormData: ['a', 'b'],
+          templates: { ArrayFieldItemTemplate: DirectCallItemTemplate },
+        });
+        onChange.mockClear();
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(['a', 'b']);
+        expect(onChange).not.toHaveBeenCalled();
+      });
+
+      it.each([
+        { button: 'Add after 0', expected: ['a', undefined, 'b'] },
+        { button: 'Copy 0', expected: ['a', 'a', 'b'] },
+        { button: 'Remove 0', expected: ['b'] },
+      ])('$button where the button can', async ({ button, expected }) => {
+        const { getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          uiSchema: { 'ui:copyable': true },
+          initialFormData: ['a', 'b'],
+          templates: { ArrayFieldItemTemplate: DirectCallItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(expected);
+      });
+
+      it('follows the item own lock for copy and remove, but not for add', async () => {
+        const { getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string', default: 'new' } },
+          uiSchema: { 'ui:copyable': true, items: { 'ui:disabled': true } },
+          initialFormData: ['a', 'b'],
+          templates: { ArrayFieldItemTemplate: DirectCallItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Copy 0' }));
+        await user.click(screen.getByRole('button', { name: 'Remove 0' }));
+        expect(getFormData()).toEqual(['a', 'b']);
+
+        await user.click(screen.getByRole('button', { name: 'Add after 0' }));
+        expect(getFormData()).toEqual(['a', 'new', 'b']);
+      });
+
+      it.each([
+        { button: 'Add after 0', expected: ['a', 1], caseName: 'not after a fixed item before the last' },
+        { button: 'Add after 1', expected: ['a', 1, true], caseName: 'after the last fixed item' },
+        { button: 'Copy 0', expected: ['a', 1], caseName: 'no copy of a fixed item before the last' },
+        { button: 'Copy 1', expected: ['a', 1, 1], caseName: 'a copy of the last fixed item' },
+      ])('$caseName of a tuple', async ({ button, expected }) => {
+        const { getFormData } = createFormComponent({
+          schema: {
+            type: 'array',
+            items: [{ type: 'string' }, { type: 'number' }],
+            additionalItems: { type: 'boolean', default: true },
+          },
+          uiSchema: { 'ui:copyable': true },
+          initialFormData: ['a', 1],
+          templates: { ArrayFieldItemTemplate: DirectCallItemTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: button }));
+
+        expect(getFormData()).toEqual(expected);
+      });
+
+      it.each([
+        { caseName: 'a disabled array', uiSchema: { 'ui:disabled': true }, schema: {} },
+        { caseName: 'a read-only array', uiSchema: { 'ui:readonly': true }, schema: {} },
+        { caseName: 'an array at maxItems', uiSchema: {}, schema: { maxItems: 1 } },
+      ])('keeps onAddClick from appending to $caseName', async ({ uiSchema, schema }) => {
+        const { getFormData, onSubmit } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' }, ...schema },
+          uiSchema,
+          initialFormData: ['a'],
+          templates: { ArrayFieldTemplate: AppendTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Append' }));
+
+        expect(getFormData()).toEqual(['a']);
+        expect(onSubmit).not.toHaveBeenCalled();
+      });
+
+      it("keeps onAddClick from starting an optional array's data, which its optional data control starts", async () => {
+        const { getFormData } = createFormComponent({
+          schema: { type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } },
+          uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } },
+          templates: { ArrayFieldTemplate: AppendTemplate },
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Append' }));
+
+        expect(getFormData()).toEqual({});
+      });
+
+      describe('with onAddClick', () => {
+        it("fills a tuple's missing fixed item from that item's own schema", async () => {
+          const { getFormData } = createFormComponent({
+            schema: {
+              type: 'array',
+              items: [{ type: 'string' }, { type: 'number', default: 5 }],
+              additionalItems: { type: 'boolean', default: true },
+            },
+            initialFormData: ['a'],
+            templates: { ArrayFieldTemplate: AppendTemplate },
+          });
+
+          await user.click(screen.getByRole('button', { name: 'Append' }));
+
+          expect(getFormData()).toEqual(['a', 5]);
+        });
+
+        it('appends to an array whose items list holds a non-object, which renders as a plain array', async () => {
+          const { getFormData } = createFormComponent({
+            schema: { type: 'array', items: [true, true], maxItems: 2 },
+            initialFormData: ['a'],
+            templates: { ArrayFieldTemplate: AppendTemplate },
+          });
+
+          await user.click(screen.getByRole('button', { name: 'Append' }));
+
+          expect(getFormData()).toHaveLength(2);
+        });
+      });
+
+      describe('against the items at the call, so calls chained in one handler', () => {
+        function ChainedCallsItemTemplate(props: ArrayFieldItemTemplateProps) {
+          const { onAddItem, onCopyItem, onRemoveItem } = props.buttonsProps;
+          return (
+            <div className='rjsf-array-item'>
+              {props.children}
+              <button
+                type='button'
+                onClick={() => {
+                  onRemoveItem();
+                  onAddItem();
+                }}
+              >
+                {`Remove ${props.index}, then add`}
+              </button>
+              <button
+                type='button'
+                onClick={() => {
+                  onRemoveItem();
+                  onCopyItem();
+                }}
+              >
+                {`Remove ${props.index}, then copy`}
+              </button>
+              <button
+                type='button'
+                onClick={() => {
+                  onAddItem();
+                  onAddItem();
+                }}
+              >
+                {`Add twice after ${props.index}`}
+              </button>
+              <button
+                type='button'
+                onClick={() => {
+                  onCopyItem();
+                  onCopyItem();
+                }}
+              >
+                {`Copy ${props.index} twice`}
+              </button>
+            </div>
+          );
+        }
+
+        it.each([
+          { button: 'Remove 0, then add', initialFormData: ['a', 'b'], expected: ['b', 'new'] },
+          { button: 'Remove 0, then copy', initialFormData: ['a', 'b', 'c'], maxItems: 3, expected: ['b', 'b', 'c'] },
+          { button: 'Add twice after 0', initialFormData: ['a'], expected: ['a', 'new'] },
+          { button: 'Copy 0 twice', initialFormData: ['a'], expected: ['a', 'a'] },
+        ])('$button keeps to maxItems', async ({ button, initialFormData, maxItems = 2, expected }) => {
+          const { getFormData } = createFormComponent({
+            schema: { type: 'array', items: { type: 'string', default: 'new' }, maxItems },
+            uiSchema: { 'ui:copyable': true },
+            initialFormData,
+            templates: { ArrayFieldItemTemplate: ChainedCallsItemTemplate },
+          });
+
+          await user.click(screen.getByRole('button', { name: button }));
+
+          expect(getFormData()).toEqual(expected);
+        });
+
+        it('keeps onAddClick called twice to maxItems', async () => {
+          function AppendTwiceTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
+            return (
+              <div>
+                {items}
+                <button
+                  type='button'
+                  onClick={() => {
+                    onAddClick();
+                    onAddClick();
+                  }}
+                >
+                  Append twice
+                </button>
+              </div>
+            );
+          }
+          const { getFormData } = createFormComponent({
+            schema: { type: 'array', items: { type: 'string', default: 'new' }, maxItems: 2 },
+            initialFormData: ['a'],
+            templates: { ArrayFieldTemplate: AppendTwiceTemplate },
+          });
+
+          await user.click(screen.getByRole('button', { name: 'Append twice' }));
+
+          expect(getFormData()).toEqual(['a', 'new']);
+        });
+
+        it('keeps onAddClick to maxItems when a tuple renders fewer items than it fixes', async () => {
+          const { getFormData } = createFormComponent({
+            schema: {
+              type: 'array',
+              items: [{ type: 'string' }, { type: 'number' }],
+              additionalItems: { type: 'boolean', default: true },
+              maxItems: 2,
+            },
+            initialFormData: ['a'],
+            templates: { ArrayFieldTemplate: AppendTemplate },
+          });
+          const before = getFormData();
+
+          await user.click(screen.getByRole('button', { name: 'Append' }));
+
+          expect(getFormData()).toEqual(before);
+        });
+      });
+
+      describe('and say so in buttonsProps.canAdd', () => {
+        function CanAddItemTemplate(props: ArrayFieldItemTemplateProps) {
+          const { canAdd, onAddItem } = props.buttonsProps;
+          return (
+            <div className='rjsf-array-item'>
+              {props.children}
+              {canAdd && <button type='button' onClick={() => onAddItem()}>{`Insert below ${props.index}`}</button>}
+            </div>
+          );
+        }
+
+        it('offers adding only after the last fixed item of a tuple and its additional items', async () => {
+          const { getFormData } = createFormComponent({
+            schema: {
+              type: 'array',
+              items: [{ type: 'string' }, { type: 'number' }],
+              additionalItems: { type: 'boolean', default: true },
+            },
+            initialFormData: ['a', 1, false],
+            templates: { ArrayFieldItemTemplate: CanAddItemTemplate },
+          });
+
+          expect(screen.queryByRole('button', { name: 'Insert below 0' })).not.toBeInTheDocument();
+
+          await user.click(screen.getByRole('button', { name: 'Insert below 1' }));
+          expect(getFormData()).toEqual(['a', 1, true, false]);
+
+          await user.click(screen.getByRole('button', { name: 'Insert below 3' }));
+          expect(getFormData()).toEqual(['a', 1, true, false, true]);
+        });
+
+        it.each([
+          { caseName: 'a disabled array', uiSchema: { 'ui:disabled': true } },
+          { caseName: 'a read-only array', uiSchema: { 'ui:readonly': true } },
+        ])('offers nothing on $caseName', ({ uiSchema }) => {
+          createFormComponent({
+            schema: { type: 'array', items: { type: 'string' } },
+            uiSchema,
+            initialFormData: ['a'],
+            templates: { ArrayFieldItemTemplate: CanAddItemTemplate },
+          });
+
+          expect(screen.queryByRole('button', { name: 'Insert below 0' })).not.toBeInTheDocument();
+        });
+
+        it('offers nothing at maxItems', () => {
+          createFormComponent({
+            schema: { type: 'array', items: { type: 'string' }, maxItems: 1 },
+            initialFormData: ['a'],
+            templates: { ArrayFieldItemTemplate: CanAddItemTemplate },
+          });
+
+          expect(screen.queryByRole('button', { name: 'Insert below 0' })).not.toBeInTheDocument();
+        });
+      });
+
+      it.each(['onAddItem', 'onCopyItem', 'onRemoveItem', 'onMoveUpItem', 'onMoveDownItem'] as const)(
+        'keeps a refused %s from submitting the form',
+        async (handler) => {
+          function SubmittingButtonItemTemplate(props: ArrayFieldItemTemplateProps) {
+            return (
+              <div className='rjsf-array-item'>
+                {props.children}
+                <button type='submit' onClick={props.buttonsProps[handler]}>
+                  Press
+                </button>
+              </div>
+            );
+          }
+          const { onSubmit } = createFormComponent({
+            schema: { type: 'array', items: { type: 'string' } },
+            uiSchema: { 'ui:disabled': true },
+            initialFormData: ['a', 'b'],
+            templates: { ArrayFieldItemTemplate: SubmittingButtonItemTemplate },
+          });
+
+          await user.click(screen.getAllByRole('button', { name: 'Press' })[1]);
+
+          expect(onSubmit).not.toHaveBeenCalled();
+        },
+      );
+    });
+
+    it('should report one change when a move down after a remove has no row left to move to', async () => {
+      function RemoveThenMoveDownItemTemplate(props: ArrayFieldItemTemplateProps) {
+        const { onRemoveItem, onMoveDownItem } = props.buttonsProps;
+        return (
+          <div className='rjsf-array-item'>
+            {props.children}
+            <button
+              type='button'
+              onClick={() => {
+                onRemoveItem();
+                onMoveDownItem();
+              }}
+            >
+              {`Remove ${props.index}, then move it down`}
+            </button>
+          </div>
+        );
+      }
+      const { onChange, getFormData } = createFormComponent({
+        schema,
+        initialFormData: ['a', 'b', 'c'],
+        templates: { ArrayFieldItemTemplate: RemoveThenMoveDownItemTemplate },
+      });
+      onChange.mockClear();
+
+      await user.click(screen.getByRole('button', { name: 'Remove 1, then move it down' }));
+
+      expect(getFormData()).toEqual(['a', 'c']);
+      expect(onChange).toHaveBeenCalledTimes(1);
+    });
 
     it('should add no item when a move after a remove names an index the remove took away', async () => {
       const { node, onChange, getFormData } = createFormComponent({
