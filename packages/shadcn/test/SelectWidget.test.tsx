@@ -506,6 +506,146 @@ describe('SelectWidget', () => {
   });
 });
 
+describe('multiple SelectWidget options', () => {
+  // jsdom doesn't implement `scrollIntoView`, which cmdk calls on the option it highlights
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterEach(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
+  const selectWidget = (enumOptions: { label: string; value: unknown }[], onChange = vi.fn()) => (
+    <SelectWidget
+      {...makeWidgetMockProps({
+        autofocus: false,
+        disabled: false,
+        readonly: false,
+        multiple: true,
+        value: [],
+        onChange,
+        options: { enumOptions },
+      })}
+    />
+  );
+  const renderSelect = (enumOptions: { label: string; value: unknown }[]) => {
+    const onChange = vi.fn();
+    render(selectWidget(enumOptions, onChange));
+    return onChange;
+  };
+  const highlighted = () =>
+    screen.getAllByRole('option').map((option) => option.getAttribute('aria-selected') === 'true');
+  const untitled = [
+    { label: '1', value: 1 },
+    { label: '1', value: '1' },
+    { label: '2', value: 2 },
+  ];
+
+  test.each([
+    ['the first', '', [true, false, false], 1],
+    ['the second', '{ArrowDown}', [false, true, false], '1'],
+    ['the last', '{ArrowDown}{ArrowDown}', [false, false, true], 2],
+  ])('highlights %s alone with the arrow keys and chooses it', async (_, keys, expected, chosen) => {
+    const user = userEvent.setup();
+    const onChange = renderSelect(untitled);
+
+    await user.click(screen.getByPlaceholderText('Select ...'));
+    if (keys) {
+      await user.keyboard(keys);
+    }
+    expect(highlighted()).toEqual(expected);
+
+    await user.keyboard('{Enter}');
+    expect(onChange).toHaveBeenCalledExactlyOnceWith([chosen]);
+  });
+
+  test('chooses the option a search leaves with Enter', async () => {
+    const user = userEvent.setup();
+    const onChange = renderSelect([
+      { label: 'Apple', value: 1 },
+      { label: 'Apple too', value: '1' },
+      { label: 'Pear', value: 2 },
+    ]);
+
+    await user.type(screen.getByPlaceholderText('Select ...'), 'Pear{Enter}');
+
+    expect(onChange).toHaveBeenCalledExactlyOnceWith([2]);
+  });
+
+  test.each([
+    ['its label', 'Eig', ['Eight']],
+    ['its value', '7', ['Seven']],
+    ['its index, which it does not show', '1', []],
+  ])('searches an option by %s', async (_, search, found) => {
+    const user = userEvent.setup();
+    renderSelect([
+      { label: 'Seven', value: 7 },
+      { label: 'Eight', value: 8 },
+    ]);
+
+    await user.type(screen.getByPlaceholderText('Select ...'), search);
+
+    expect(screen.queryAllByRole('option').map((option) => option.textContent)).toEqual(found);
+  });
+
+  test.each([
+    ['a label', 'a'],
+    ['a value and a label', 'k'],
+  ])('searches an option by what it shows after it takes %s while the list is open', async (_, newValue) => {
+    const user = userEvent.setup();
+    const { rerender } = render(selectWidget([{ label: 'Apple', value: 'a' }]));
+    const input = screen.getByPlaceholderText('Select ...');
+
+    await user.click(input);
+    rerender(selectWidget([{ label: 'Kiwi', value: newValue }]));
+    await user.type(input, 'Kiwi');
+
+    expect(screen.queryAllByRole('option').map((option) => option.textContent)).toEqual(['Kiwi']);
+  });
+
+  test('keeps the highlight on an option that takes a new label while the list is open', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const { rerender } = render(selectWidget([{ label: 'Apple', value: 'a' }], onChange));
+
+    await user.click(screen.getByPlaceholderText('Select ...'));
+    rerender(selectWidget([{ label: 'Apfel', value: 'a' }], onChange));
+    expect(highlighted()).toEqual([true]);
+
+    await user.keyboard('{Enter}');
+    expect(onChange).toHaveBeenCalledExactlyOnceWith(['a']);
+  });
+
+  test('names an option by its text, pointing at no id, since cmdk replaces the one an option is given', async () => {
+    const user = userEvent.setup();
+    renderSelect([{ label: 'Red', value: 'r' }]);
+
+    await user.click(screen.getByPlaceholderText('Select ...'));
+
+    const option = screen.getByRole('option', { name: 'Red' });
+    expect(option).not.toHaveAttribute('aria-labelledby');
+    expect(option).not.toHaveAttribute('aria-controls');
+  });
+
+  test('highlights, moves past and finds an option whose value is an empty string', async () => {
+    const user = userEvent.setup();
+    renderSelect([
+      { label: 'None', value: '' },
+      { label: 'Two', value: 2 },
+    ]);
+    const input = screen.getByPlaceholderText('Select ...');
+
+    await user.click(input);
+    expect(highlighted()).toEqual([true, false]);
+
+    await user.keyboard('{ArrowDown}');
+    expect(highlighted()).toEqual([false, true]);
+
+    await user.type(input, 'None');
+    expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual(['None']);
+  });
+});
+
 describe('multiple SelectWidget accessible name', () => {
   const colorsSchema = {
     type: 'object' as const,
@@ -1126,13 +1266,13 @@ describe("the single select's combobox while its listbox is open", () => {
       expect(highlightedOption()).toHaveTextContent(name);
     });
 
-    // Space chooses the item the select matches to cmdk's trimmed highlight, while Enter is left to cmdk, which chooses
+    // Space chooses the item the select matches to cmdk's highlight, while Enter is left to cmdk, which chooses
     // through the option's `onSelect`, once the select finds the option cmdk renders for that highlight, so each key
     // takes its own path
     test.each([
       ['Space', ' '],
       ['Enter', '{Enter}'],
-    ])('highlights and chooses an option whose value cmdk trims on %s', async (_, key) => {
+    ])('highlights and chooses an option whose value has leading whitespace on %s', async (_, key) => {
       const user = userEvent.setup();
       const { combobox, onChange } = renderSelect({
         value: undefined,
@@ -1152,6 +1292,37 @@ describe("the single select's combobox while its listbox is open", () => {
 
       expect(onChange).toHaveBeenCalledExactlyOnceWith(' s');
       expect(combobox).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('moves the highlight past options whose values differ only in whitespace, one at a time', async () => {
+      const user = userEvent.setup();
+      const { onChange } = renderSelect({
+        value: undefined,
+        options: {
+          enumOptions: [
+            { label: 'Spaced', value: ' a' },
+            { label: 'Plain', value: 'a' },
+            { label: 'Next', value: 'b' },
+          ],
+          optionValueFormat: 'realValue',
+        },
+      });
+      const highlighted = () =>
+        screen
+          .getAllByRole('option')
+          .filter((option) => option.getAttribute('aria-selected') === 'true')
+          .map((option) => option.textContent);
+
+      await user.tab();
+      await user.keyboard('{Enter}');
+      expect(highlighted()).toEqual(['Spaced']);
+      await user.keyboard('{ArrowDown}');
+      expect(highlighted()).toEqual(['Plain']);
+      await user.keyboard('{ArrowDown}');
+      expect(highlighted()).toEqual(['Next']);
+      await user.keyboard('{Enter}');
+
+      expect(onChange).toHaveBeenCalledExactlyOnceWith('b');
     });
 
     test('closes on Escape without choosing', async () => {

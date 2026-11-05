@@ -149,7 +149,6 @@ export default function SelectWidget<
         />
       ) : (
         <FancyMultiSelect
-          id={id}
           // cmdk names its input by this text alone, so a caller's `aria-label` names it over the field's label, as the
           // fallback name does where the field has no title
           label={ariaLabel || fallbackName}

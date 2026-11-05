@@ -79,14 +79,14 @@ interface FancySelectInterface {
   placeholder: string;
 }
 
-/** The value cmdk holds an item under, trimmed as cmdk trims both the value an item registers and the highlight it
- * reports, so the highlight is matched by it
+/** The value cmdk holds an item under, its index, since cmdk trims the value an item registers and takes it for the
+ * item's identity, so items such as `' a'` and `'a'` would share one and highlight together
  *
  * @param item - The item
- * @returns - Its trimmed value
+ * @returns - Its index, as text
  */
 function cmdkValue(item: FancySelectItem) {
-  return String(item.value).trim();
+  return String(item.index);
 }
 
 /** The option cmdk renders for a value it holds, found by the `data-value` it gives the option, since it keeps the
@@ -160,9 +160,7 @@ export function FancySelect({
 
   // The listbox opens on the option the select holds, as a native select's does, so Enter keeps the value until the
   // highlight is moved, else on the first option a user can choose, rather than on one an earlier opening left
-  // highlighted, which cmdk keeps. The highlight is held trimmed, as cmdk trims the value an item registers under and
-  // the highlight it reports, so an option whose value has leading or trailing whitespace is matched by that value
-  // trimmed
+  // highlighted, which cmdk keeps
   const itemsInOrder = sections ? sections.flatMap((section) => section.items) : items;
   const openList = () => {
     const opening = selectedItem ?? itemsInOrder?.find((item) => !item.disabled);
@@ -227,7 +225,7 @@ export function FancySelect({
         disabled={item.disabled}
         ref={item.value === selected ? selectedRef : undefined}
         key={item.value}
-        value={String(item.value)}
+        value={cmdkValue(item)}
         onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();

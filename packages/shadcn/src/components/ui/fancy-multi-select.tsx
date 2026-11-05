@@ -2,8 +2,8 @@
 
 import type { FocusEvent, FocusEventHandler, KeyboardEvent, ReactElement } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { deepEquals, enumOptionValueLabel, partId } from '@rjsf/utils';
-import { Command as CommandPrimitive } from 'cmdk';
+import { deepEquals, enumOptionValueLabel } from '@rjsf/utils';
+import { Command as CommandPrimitive, defaultFilter } from 'cmdk';
 import { X } from 'lucide-react';
 
 import { cn } from '../../lib/utils.ts';
@@ -46,8 +46,6 @@ interface FancyMultiSelectProps {
   onBlur?: FocusEventHandler<HTMLDivElement>;
   /** Callback function for focus event */
   onFocus?: FocusEventHandler<HTMLDivElement>;
-  /** Unique identifier for the component */
-  id: string;
 }
 
 const NO_ITEMS: FancySelectItem[] = [];
@@ -73,7 +71,6 @@ export function FancyMultiSelect({
   onFocus,
   onBlur,
   className,
-  id,
 }: Readonly<FancyMultiSelectProps>): ReactElement {
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
@@ -178,24 +175,27 @@ export function FancyMultiSelect({
     [onBlur],
   );
 
+  // cmdk holds an option under its index, so this finds an option by its value or label, never by that index, and reads
+  // them here since cmdk rereads `keywords` only as `value` changes.
+  // shortcut: cmdk rescores only as the search or the options change, so an option relabelled mid-search refilters at the
+  // next key, upgrade if options change while users search
+  const searchItem = (value: string, search: string) => {
+    const item = items[Number(value)];
+    return item ? defaultFilter(`${enumOptionValueLabel(item.value)} ${item.label}`, search) : 0;
+  };
+
   function renderItem(item: FancySelectItem) {
-    // Keyed and identified by index, since `String()` turns every object value into `[object Object]`. cmdk searches
-    // its `value`, which stays text spelled the way an untitled option is labelled, and its `keywords`, which carry the
-    // label so a titled option is found by what it shows
-    const itemId = partId(id, `commandItem${item.index}`);
+    // Keyed and identified by index, since cmdk takes `value` for an option's identity, where `1` and `'1'` would share
+    // one as text and `''` would have none, and a highlight it holds is lost as that text changes
     return (
       <CommandItem
         disabled={item.disabled}
         key={item.index}
-        value={enumOptionValueLabel(item.value)}
-        keywords={[item.label]}
+        value={String(item.index)}
         onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();
         }}
-        aria-controls={itemId}
-        aria-labelledby={itemId}
-        id={itemId}
         onSelect={() => handleSelect(item)}
         className='cursor-pointer'
       >
@@ -209,6 +209,7 @@ export function FancyMultiSelect({
   return (
     <Command
       label={label}
+      filter={searchItem}
       onKeyDown={handleKeyDown}
       className={cn('overflow-visible bg-transparent', className)}
       aria-disabled={disabled}
