@@ -293,6 +293,10 @@ describe('chakra-ui SelectWidget', () => {
 });
 
 describe("chakra-ui widgets carry their field's plan on the element a user focuses", () => {
+  // zag refocuses a focused slider thumb a frame later, which throws once the cleanup has unmounted it, and the throw
+  // drops the frame callbacks queued behind it in a later test
+  afterEach(() => new Promise(requestAnimationFrame));
+
   test.each<[string, string, RJSFSchema, UiSchema]>([
     ['text', 'textbox', { type: 'string' }, {}],
     ['textarea', 'textbox', { type: 'string' }, { 'ui:widget': 'textarea' }],
@@ -359,8 +363,6 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
 
     screen.getByRole('slider').focus();
     await user.keyboard('{End}');
-    // Zag focuses the thumb in the next frame, which throws once the test has unmounted the slider
-    await new Promise(requestAnimationFrame);
 
     expect(new FormData(form).get('root')).toBe('9');
   });
@@ -404,8 +406,6 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
 
     screen.getByRole('slider').focus();
     await user.keyboard('{Home}');
-    // Zag focuses the thumb in the next frame, which throws once the test has unmounted the slider
-    await new Promise(requestAnimationFrame);
 
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
   });
@@ -425,14 +425,12 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
 
     screen.getByRole('slider').focus();
     await user.keyboard('{ArrowRight}{ArrowRight}');
-    await new Promise(requestAnimationFrame);
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 4 }), 'root');
     await user.click(screen.getByRole('button', { name: 'Reset' }));
     expect(onChange.mock.lastCall?.[0].formData).toBeUndefined();
 
     screen.getByRole('slider').focus();
     await user.keyboard('{Home}');
-    await new Promise(requestAnimationFrame);
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 2 }), 'root');
   });
 
@@ -465,7 +463,6 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
 
     frame.getByRole('slider').focus();
     await frameUser.keyboard('{ArrowRight}{ArrowRight}');
-    await new Promise(requestAnimationFrame);
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 4 }), 'root');
     await frameUser.click(frame.getByRole('button', { name: 'Reset' }));
 
@@ -490,7 +487,6 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
 
     screen.getByRole('slider').focus();
     await user.keyboard('{End}');
-    await new Promise(requestAnimationFrame);
     await new Promise((resolve) => {
       setTimeout(resolve);
     });
@@ -558,10 +554,14 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     }
     render(<Toggled />);
     expect(screen.getByRole('slider')).toHaveFocus();
+    // Past the frame in which zag refocuses the autofocused thumb, sooner than any click could come
+    await new Promise(requestAnimationFrame);
 
     const toggle = screen.getByRole('button', { name: 'Toggle' });
     await user.click(toggle);
     await user.click(toggle);
+    // Past the frame in which zag would refocus the thumb once it shows again
+    await new Promise(requestAnimationFrame);
     expect(toggle).toHaveFocus();
   });
 
@@ -601,11 +601,6 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     );
 
     await user.click(container.querySelector('#root_x__label')!);
-    // Ark's slider refocuses its thumb on the next frame; letting it run while the form is mounted keeps it from
-    // looking the thumb up in a detached tree, which Vitest reports as an unhandled error
-    await new Promise((resolve) => {
-      requestAnimationFrame(resolve);
-    });
 
     expect(focused()).toHaveFocus();
   });

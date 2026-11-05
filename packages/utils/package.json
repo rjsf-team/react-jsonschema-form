@@ -31,7 +31,7 @@
   "dependencies": {
     "@types/json-schema": "^7.0.15",
     "@x0k/json-schema-merge": "^1.1.0",
-    "fast-equals": "^6.0.4"
+    "fast-equals": "^6.2.2"
   },
   "devDependencies": {
     "deep-freeze-es6": "^5.0.0"

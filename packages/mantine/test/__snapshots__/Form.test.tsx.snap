@@ -16181,6 +16181,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                       </span>
                     </div>
                     <div
+                      aria-disabled="true"
                       aria-selected="false"
                       class="m_92253aa5 mantine-MultiSelect-option m_390b5f4"
                       data-combobox-disabled="true"
@@ -17154,6 +17155,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                       </span>
                     </div>
                     <div
+                      aria-disabled="true"
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-disabled="true"
@@ -18085,6 +18087,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                         </span>
                       </div>
                       <div
+                        aria-disabled="true"
                         aria-selected="false"
                         class="m_92253aa5 mantine-Select-option m_390b5f4"
                         data-combobox-disabled="true"

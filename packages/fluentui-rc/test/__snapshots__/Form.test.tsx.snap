@@ -11853,6 +11853,7 @@ exports[`single fields > slider field 1`] = `
           style="--fui-Slider--direction: 90deg; --fui-Slider--progress: 56.896551724137936%;"
         >
           <input
+            aria-orientation="horizontal"
             class="fui-Slider__input ___18m7y3e_m61uku0 f1k6fduh fk73vx1 f16hsg94 f1nzqi2z fwpfdsa fuur7zz f1mk8lai f1s184ao f1yfdkfd fly5x3f"
             id="root"
             max="100"

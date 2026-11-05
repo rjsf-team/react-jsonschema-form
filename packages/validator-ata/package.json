@@ -29,7 +29,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "ata-validator": "^1.56.0"
+    "ata-validator": "^1.63.0"
   },
   "peerDependencies": {
     "@rjsf/utils": "workspace:^"

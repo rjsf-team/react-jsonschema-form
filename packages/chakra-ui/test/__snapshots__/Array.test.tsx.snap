@@ -105,7 +105,7 @@ exports[`array fields > array 1`] = `
 
   .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-5 :where(svg) {
@@ -322,7 +322,7 @@ exports[`array fields > array icons 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -451,7 +451,7 @@ exports[`array fields > array icons 1`] = `
 
   .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-10 :where(svg) {
@@ -547,7 +547,7 @@ exports[`array fields > array icons 1`] = `
 
   .emotion-27:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-27 :where(svg) {
@@ -1124,7 +1124,7 @@ exports[`array fields > checkboxes 1`] = `
 
   .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-5:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -1413,7 +1413,7 @@ exports[`array fields > checkboxes 1`] = `
 
   .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-22 :where(svg) {
@@ -1557,7 +1557,7 @@ exports[`array fields > checkboxes 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
               >
                 <div
                   aria-label="Select ..."
@@ -1805,7 +1805,7 @@ exports[`array fields > empty errors array 1`] = `
 
   .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -1884,7 +1884,7 @@ exports[`array fields > empty errors array 1`] = `
 
   .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-9 :where(svg) {
@@ -2103,7 +2103,7 @@ exports[`array fields > fixed array 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -2182,7 +2182,7 @@ exports[`array fields > fixed array 1`] = `
 
   .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-16 :where(svg) {
@@ -2604,7 +2604,7 @@ exports[`array fields > has errors 1`] = `
 
   .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -2710,7 +2710,7 @@ exports[`array fields > has errors 1`] = `
 
   .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-19 :where(svg) {
@@ -2995,7 +2995,7 @@ exports[`array fields > no errors 1`] = `
 
   .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -3074,7 +3074,7 @@ exports[`array fields > no errors 1`] = `
 
   .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-9 :where(svg) {
@@ -3325,7 +3325,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 
   .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -3454,7 +3454,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 
   .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-19 :where(svg) {
@@ -3550,7 +3550,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 
   .emotion-43:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-43 :where(svg) {
@@ -4192,7 +4192,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -4321,7 +4321,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
 
   .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-10 :where(svg) {
@@ -4417,7 +4417,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
 
   .emotion-25:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-25 :where(svg) {
@@ -4928,7 +4928,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
 
   .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-5:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -5217,7 +5217,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
 
   .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-22 :where(svg) {
@@ -5361,7 +5361,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
               >
                 <div
                   aria-label="Select ..."
@@ -5601,7 +5601,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -5780,7 +5780,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
 
   .emotion-24:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-24 :where(svg) {
@@ -6118,7 +6118,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
 
   .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -6247,7 +6247,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
 
   .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-15 :where(svg) {
@@ -6343,7 +6343,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
 
   .emotion-30:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-30 :where(svg) {
@@ -7461,7 +7461,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
 
   .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -7590,7 +7590,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
 
   .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-19 :where(svg) {
@@ -7686,7 +7686,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
 
   .emotion-43:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-43 :where(svg) {
@@ -8328,7 +8328,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -8457,7 +8457,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 
   .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-10 :where(svg) {
@@ -8553,7 +8553,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 
   .emotion-25:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-25 :where(svg) {
@@ -9077,7 +9077,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
 
   .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -9206,7 +9206,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
 
   .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-14 :where(svg) {
@@ -9302,7 +9302,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
 
   .emotion-35:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-35 :where(svg) {
@@ -9939,7 +9939,7 @@ exports[`with title and description > array 1`] = `
 
   .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-9 :where(svg) {
@@ -10258,7 +10258,7 @@ exports[`with title and description > array icons 1`] = `
 
   .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-16:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -10387,7 +10387,7 @@ exports[`with title and description > array icons 1`] = `
 
   .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-18 :where(svg) {
@@ -10483,7 +10483,7 @@ exports[`with title and description > array icons 1`] = `
 
   .emotion-39:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-39 :where(svg) {
@@ -11191,7 +11191,7 @@ exports[`with title and description > checkboxes 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -11480,7 +11480,7 @@ exports[`with title and description > checkboxes 1`] = `
 
   .emotion-25:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-25 :where(svg) {
@@ -11645,7 +11645,7 @@ exports[`with title and description > checkboxes 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
               >
                 <div
                   aria-labelledby="root__label"
@@ -11962,7 +11962,7 @@ exports[`with title and description > fixed array 1`] = `
 
   .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-16:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -12041,7 +12041,7 @@ exports[`with title and description > fixed array 1`] = `
 
   .emotion-28:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-28 :where(svg) {
@@ -12416,7 +12416,7 @@ exports[`with title and description from both > array 1`] = `
 
   .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-9 :where(svg) {
@@ -12735,7 +12735,7 @@ exports[`with title and description from both > array icons 1`] = `
 
   .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-16:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -12864,7 +12864,7 @@ exports[`with title and description from both > array icons 1`] = `
 
   .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-18 :where(svg) {
@@ -12960,7 +12960,7 @@ exports[`with title and description from both > array icons 1`] = `
 
   .emotion-39:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-39 :where(svg) {
@@ -13668,7 +13668,7 @@ exports[`with title and description from both > checkboxes 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -13957,7 +13957,7 @@ exports[`with title and description from both > checkboxes 1`] = `
 
   .emotion-25:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-25 :where(svg) {
@@ -14122,7 +14122,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
               >
                 <div
                   aria-labelledby="root__label"
@@ -14439,7 +14439,7 @@ exports[`with title and description from both > fixed array 1`] = `
 
   .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-16:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -14518,7 +14518,7 @@ exports[`with title and description from both > fixed array 1`] = `
 
   .emotion-28:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-28 :where(svg) {
@@ -14893,7 +14893,7 @@ exports[`with title and description from uiSchema > array 1`] = `
 
   .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-9 :where(svg) {
@@ -15212,7 +15212,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
 
   .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-16:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -15341,7 +15341,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
 
   .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-18 :where(svg) {
@@ -15437,7 +15437,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
 
   .emotion-39:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-39 :where(svg) {
@@ -16145,7 +16145,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -16434,7 +16434,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
 
   .emotion-25:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-25 :where(svg) {
@@ -16599,7 +16599,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
               >
                 <div
                   aria-labelledby="root__label"
@@ -16916,7 +16916,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
 
   .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-16:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -16995,7 +16995,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
 
   .emotion-28:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-28 :where(svg) {
@@ -17342,7 +17342,7 @@ exports[`with title and description with global label off > array 1`] = `
 
   .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-5 :where(svg) {
@@ -17559,7 +17559,7 @@ exports[`with title and description with global label off > array icons 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -17688,7 +17688,7 @@ exports[`with title and description with global label off > array icons 1`] = `
 
   .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-10 :where(svg) {
@@ -17784,7 +17784,7 @@ exports[`with title and description with global label off > array icons 1`] = `
 
   .emotion-27:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-27 :where(svg) {
@@ -18363,7 +18363,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
 
   .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-5:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -18652,7 +18652,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
 
   .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-22 :where(svg) {
@@ -18796,7 +18796,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 data-scope="select"
                 dir="ltr"
                 id="select:root:positioner"
-                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
               >
                 <div
                   aria-label="Test field"
@@ -19036,7 +19036,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -19115,7 +19115,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
 
   .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-16 :where(svg) {

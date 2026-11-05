@@ -3719,7 +3719,7 @@ exports[`single fields > Cyclic schema 1`] = `
               >
                 <svg
                   aria-hidden="true"
-                  class="lucide lucide-circle-alert lucide-alert-circle h-4 w-4"
+                  class="lucide lucide-circle-exclamation-point lucide-alert-circle lucide-circle-alert h-4 w-4"
                   fill="none"
                   height="24"
                   stroke="currentColor"
@@ -4937,7 +4937,7 @@ exports[`single fields > help and error display 1`] = `
     >
       <svg
         aria-hidden="true"
-        class="lucide lucide-circle-alert lucide-alert-circle h-4 w-4"
+        class="lucide lucide-circle-exclamation-point lucide-alert-circle lucide-circle-alert h-4 w-4"
         fill="none"
         height="24"
         stroke="currentColor"

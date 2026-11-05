@@ -101,7 +101,7 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
 
   .emotion-4:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-4:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -240,7 +240,7 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8 :where(svg) {
@@ -455,7 +455,7 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
 
   .emotion-4:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-4:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -594,7 +594,7 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8 :where(svg) {
@@ -836,7 +836,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
 
   .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -975,7 +975,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
 
   .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-12 :where(svg) {

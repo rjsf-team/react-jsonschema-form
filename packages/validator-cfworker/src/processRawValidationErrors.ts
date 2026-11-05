@@ -25,6 +25,16 @@ import {
 
 import type { CFWorkerValidationError, SuppressDuplicateFilteringType } from './types.ts';
 
+/** Returns the key a token of a pointer the engine reports names. The engine writes each key as a JSON Pointer token in
+ * a URI fragment (`a/b` as `a~1b`, `a#b` as `a%23b`), where the form keys its data and uiSchema plainly
+ *
+ * @param token - The token of the instance or keyword location
+ * @returns - The key it names
+ */
+function decodePointerToken(token: string): string {
+  return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
+}
+
 /** Converts a cfworker instance location into RJSF's dot-separated property path.
  *
  * @param instanceLocation - The instance location emitted by `@cfworker/json-schema`
@@ -34,7 +44,7 @@ function instanceLocationToProperty(instanceLocation: string): string {
   if (!instanceLocation || instanceLocation === '#') {
     return '';
   }
-  return instanceLocation.replace(/^#?/, '').replace(/\//g, '.');
+  return instanceLocation.replace(/^#?/, '').split('/').map(decodePointerToken).join('.');
 }
 
 /** Extracts the missing property name from a cfworker `required` error.
@@ -118,6 +128,7 @@ export function transformRJSFValidationErrors<
           .replace(/\/properties\//g, '/')
           .split('/')
           .slice(1, -1)
+          .map(decodePointerToken)
           .concat([missingProperty]);
         title = getUiOptions(getByPath<UiSchema<T, S, F> | undefined>(uiSchema, uiSchemaPath)).title;
       }
