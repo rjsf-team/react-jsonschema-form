@@ -60,9 +60,13 @@ export default function RatingWidget<
   const min = schema.minimum ?? 0;
   const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
+  const numStars = Math.floor(
+    Math.max(Math.min(withoutFloatNoise((schema.maximum ?? Infinity) - min + 1), stars, 5), 1),
+  );
+  const starValues = Array.from({ length: numStars }, (_, index) => withoutFloatNoise(min + index));
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
-  const autofocusIndex = Math.max(
-    Array.from({ length: numStars }, (_, index) => min + index).findIndex((starValue) => starValue === rating),
+  const tabStopIndex = Math.max(
+    starValues.findIndex((starValue) => starValue === rating),
     0,
   );
   // React acts on `autoFocus` only for a form control, which a star isn't, so the star takes focus as it mounts, in the
@@ -95,7 +99,7 @@ export default function RatingWidget<
     }
     event.preventDefault();
     const nextIndex = (index + step + numStars) % numStars;
-    onChange(starValues[nextIndex]);
+    handleStarClick(starValues[nextIndex]);
     event.currentTarget.parentElement?.querySelectorAll<HTMLElement>('[role="radio"]')[nextIndex].focus();
   };
 
@@ -145,8 +149,7 @@ export default function RatingWidget<
         cursor: disabled || readonly ? 'default' : 'pointer',
       }}
     >
-      {[...Array(numStars)].map((_, index) => {
-        const starValue = min + index;
+      {starValues.map((starValue, index) => {
         const isFilled = rating !== undefined && starValue <= rating;
 
         return (
