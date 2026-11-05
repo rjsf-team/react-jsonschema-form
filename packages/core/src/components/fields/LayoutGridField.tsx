@@ -594,10 +594,10 @@ function LayoutGridCondition<
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
   const { formData, registry, id, fieldPath } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.CONDITION, registry);
-  const { operator, field = '', value } = gridProps;
+  const { operator, field, value } = gridProps;
   // A JSON layout can hold any value here, though `GridProps` types it as a string
   const fieldName: unknown = field;
-  if (typeof fieldName !== 'string' && typeof fieldName !== 'number') {
+  if (fieldName === '' || (typeof fieldName !== 'string' && typeof fieldName !== 'number')) {
     logOnce(
       `${LAYOUT_GRID_OPTION} ${GridType.CONDITION} in ${fieldLabelForLog(id, fieldPath)} names no field, so it renders ` +
         'nothing.',

@@ -2273,6 +2273,18 @@ describe('a layout read from JSON', () => {
     );
   });
   test.each([
+    ['missing', {}],
+    ['empty', { field: '' }],
+  ])('reads a ui:condition whose field is %s as a condition not met', (_, field) => {
+    const layoutGrid = {
+      'ui:row': { children: [{ 'ui:condition': { ...field, operator: 'none', value: 'yes', children: ['a'] } }] },
+    };
+    expect(renderedIds(layoutGrid, { flag: 1 })).toEqual([]);
+    expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+      'ui:layoutGrid ui:condition in "root" names no field, so it renders nothing.',
+    );
+  });
+  test.each([
     ['missing', undefined],
     ['not an object', 'ui:row'],
   ])('warns, and renders nothing, for a ui:layoutGrid that is %s', (_, layoutGrid) => {
