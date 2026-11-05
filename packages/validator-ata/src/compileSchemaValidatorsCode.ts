@@ -381,11 +381,15 @@ function linkedToForm(
     targets.set(subschema, target);
     return target[ID_KEY] as string;
   };
+  // ata reads the `$id`s of an extra that declares a `$schema` by that dialect, not by the form's
+  const dialect: unknown = getByPath(extra, [SCHEMA_KEY]);
+  const laterDialect =
+    typeof dialect === 'string' ? LATER_DIALECTS.has(dialect.replace(/#$/, '')) : reading.laterDialect;
   const link = (value: unknown, base: string): unknown => {
     if (!isObject(value)) {
       return value;
     }
-    const inner = value === extra ? base : (resourceAt(value, base, reading.laterDialect)?.base ?? base);
+    const inner = value === extra ? base : (resourceAt(value, base, laterDialect)?.base ?? base);
     const copy = Object.fromEntries(
       Object.entries(value).map(([key, child]) => [key, mapKeyword(key, child, (sub) => link(sub, inner))]),
     );

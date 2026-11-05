@@ -1460,6 +1460,7 @@ describe('Form change handler under a parent', () => {
     const { container, rerender } = render(<Form {...props} noValidate />);
 
     await user.click(container.querySelector('#raise')!);
+    expect(fieldErrorsById(container).root_foo).toContain('custom on foo');
     rerender(<Form {...props} />);
     await user.type(container.querySelector('#root_baz')!, 'fine');
 

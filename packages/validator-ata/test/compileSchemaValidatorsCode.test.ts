@@ -575,13 +575,31 @@ describe('compileSchemaValidatorsCode', () => {
       );
     });
 
-    test('serializes a json-schema.org extra once for its size however often it is compiled', () => {
+    test('ignores the $id beside a $ref in a draft-07 extra under a 2020-12 form, as at runtime', () => {
+      const form = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://e.com/f',
+        definitions: { m: { type: 'integer' } },
+        type: 'object',
+        properties: { x: { $ref: 'https://e.com/s/x' } },
+      } as RJSFSchema;
+      const extra = {
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        $id: 'https://e.com/s/x',
+        allOf: [{ $id: 'https://e.com/', $ref: 'f#/definitions/m' }],
+      };
+      const options = { ataOptionsOverrides: { schemas: [extra] } };
+      expect(agree(form, { x: 'a' }, options)).toBe(true);
+      expect(agree(form, { x: 1 }, options)).toBe(true);
+    });
+
+    test('serializes a json-schema.org extra once for its size however often it is compiled', ({ onTestFinished }) => {
       const doc = { $id: 'https://json-schema.org/draft/next/schema', description: 'once' };
       const encode = vi.spyOn(TextEncoder.prototype, 'encode');
+      onTestFinished(() => encode.mockRestore());
       compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [doc] });
       compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [doc] });
       expect(encode.mock.calls.filter(([text]) => text === JSON.stringify(doc))).toHaveLength(1);
-      encode.mockRestore();
     });
 
     test('compiles a record entry under the empty key by its own $id, without the missing-$id warning', () => {
