@@ -77,6 +77,7 @@ export default class ATAValidator<
     this.validators.clear();
     this.lastSeenRootSchema = undefined;
     this.cachedRootSchema = undefined;
+    this.extras = undefined;
     this.hasRegisteredRootSchema = false;
   }
 
