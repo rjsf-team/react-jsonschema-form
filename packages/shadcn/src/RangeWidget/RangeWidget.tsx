@@ -114,7 +114,7 @@ export default function RangeWidget<
     const ownerDocument = startedEmpty.current ? thumb?.ownerDocument : undefined;
     // Radix listens for the reset on the form itself, so it is caught here on its way down, before Radix restores
     const handleReset = ({ target }: Event) => {
-      if (target instanceof HTMLFormElement && target.contains(thumb)) {
+      if (target === thumb?.closest('form')) {
         resettingRef.current = true;
         setTimeout(() => {
           resettingRef.current = false;

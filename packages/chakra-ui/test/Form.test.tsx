@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Activity, useState } from 'react';
-import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
+import { ChakraProvider, defaultSystem, EnvironmentProvider } from '@chakra-ui/react';
 import { getTestRegistry } from '@rjsf/core/testing';
 import {
   checkboxLabelTests,
@@ -14,12 +14,12 @@ import {
 import type { ArrayFieldItemTemplateProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
-import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
@@ -432,6 +432,43 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     await user.keyboard('{Home}');
     await new Promise(requestAnimationFrame);
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 2 }), 'root');
+  });
+
+  test('leaves a range that started empty empty when its form inside an iframe is reset', async () => {
+    const iframe = document.createElement('iframe');
+    document.body.append(iframe);
+    const frameDocument = iframe.contentDocument;
+    if (!frameDocument) {
+      throw new Error('The iframe has no document');
+    }
+    const frameUser = userEvent.setup({ document: frameDocument });
+    const onChange = vi.fn();
+    // Zag finds the slider in the document its environment names, as the playground's frame provider names the frame's
+    render(
+      <EnvironmentProvider value={() => frameDocument}>
+        <ChakraProvider value={defaultSystem}>
+          <Form
+            schema={{ type: 'number', minimum: 2, maximum: 9 }}
+            uiSchema={{ 'ui:widget': 'range' }}
+            validator={validator}
+            onChange={onChange}
+          >
+            <button type='reset'>Reset</button>
+          </Form>
+        </ChakraProvider>
+      </EnvironmentProvider>,
+      { container: frameDocument.body },
+    );
+    const frame = within(frameDocument.body);
+
+    frame.getByRole('slider').focus();
+    await frameUser.keyboard('{ArrowRight}{ArrowRight}');
+    await new Promise(requestAnimationFrame);
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 4 }), 'root');
+    await frameUser.click(frame.getByRole('button', { name: 'Reset' }));
+
+    expect(onChange.mock.lastCall?.[0].formData).toBeUndefined();
+    iframe.remove();
   });
 
   test('keeps the key that moved an empty range when its onChange is deferred', async () => {

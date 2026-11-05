@@ -67,16 +67,22 @@ export default function RangeWidget<
     }
   }, []);
   const spec = rangeSpec<S>(schema);
-  // An unset part is drawn at the minimum, as an empty one-value range is, so the range keeps a thumb for each part
+  const { items } = schema;
+  const itemSchemaAt = (index: number) => (Array.isArray(items) ? items[index] : items);
+  // An unset part is drawn at its item's minimum, as an empty one-value range is at its own, so the range keeps a thumb
+  // for each part, and moving another part writes a number the item accepts
+  const unsetPartAt = (index: number) => {
+    const itemSchema = itemSchemaAt(index);
+    return (isSchemaObject<S>(itemSchema) ? rangeSpec<S>(itemSchema).min : undefined) ?? spec.min ?? 0;
+  };
   const sliderValue = isRangeOfValues
-    ? value.map((part) => toNumericValue(part) ?? spec.min ?? 0)
+    ? value.map((part, index) => toNumericValue(part) ?? unsetPartAt(index))
     : toNumericValue(value);
   const sliderProps = { value: sliderValue, name: htmlName || id, ...spec };
 
   const storesString = numericWidgetStoresString<S>(schema, value);
-  const { items } = schema;
   const writePart = (part: number, index: number) => {
-    const itemSchema = Array.isArray(items) ? items[index] : items;
+    const itemSchema = itemSchemaAt(index);
     const original: unknown = isRangeOfValues ? value[index] : undefined;
     const partStoresString = isSchemaObject<S>(itemSchema)
       ? numericWidgetStoresString<S>(itemSchema, original)
