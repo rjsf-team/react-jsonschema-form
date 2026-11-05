@@ -487,6 +487,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change a number field's text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty, and a text input holding `false` to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - **BREAKING CHANGE:** Change the alt-date and alt-datetime widgets to show a number or `Date` value as empty, where they showed that date, since they can only write a string back. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `RangeWidget`'s readout beside the slider to show a boolean value as `true` or `false`, where it showed nothing, and to separate an array's items with commas ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix the submit button crashing when a JSON uiSchema sets `ui:submitButtonOptions.props` to `null`, or to anything else that isn't an object ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
 
 ## @rjsf/daisyui
 
@@ -671,6 +672,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change a text input or textarea holding `false` to show that value, where they were empty, and the text input to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RangeWidget` writing a number into a string field, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - **BREAKING CHANGE:** Change the alt-date and alt-datetime widgets to show a number or `Date` value as empty, where they showed that date, since they can only write a string back. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix a layout grid `ui:row` whose `columns` is a track count written as `'1e1'` or `'0xa'` getting an invalid column template: it now gets `repeat(10, 1fr)` ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
 
 ## @rjsf/mantine
 
@@ -1300,6 +1302,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change `useAltDateWidgetProps()` to read only a string value, so a number or `Date` value, which the widget can't write back, renders every alt-date widget's selects blank, where it showed that date. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Add `offersClearButton()`, which reports whether an input with `allowClearTextInputs` offers its clear button for the value it's given, as a number, date, date-time, month, time or week input blanks a value outside its type's syntax ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `useAltDateWidgetProps()` throwing during render for a string it can't parse as a date, such as `'not-a-date'`, which unmounted the form; the widget now shows every part unset ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- **BREAKING CHANGE:** Change `GridTemplateProps` and `ui:submitButtonOptions.props`, whose undeclared props were `any`, to take any object, of which only the declared props read back: `GridTemplateProps` now also declares `className` and `style`, and `props` declares `disabled`, `className`, `onClick` and `onClickCapture`. `GridTemplateProps` is no longer an interface, so a props type built on it intersects it rather than extending or augmenting it, and one built with `Omit` adds `OpenProps` back. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
+- Change `getSubmitButtonOptions()` to always return `props`, the default ones when the uiSchema's are missing or a JSON uiSchema sets them to something other than an object ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
+- Add the `OpenProps` type, the open part of `GridTemplateProps` and `ui:submitButtonOptions.props`, `SubmitButtonOptions`, what `getSubmitButtonOptions()` returns, and `AnyUiOptionsCheck`, the constraint of `StrictUiSchema`'s `Checks` ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
 
 ## @rjsf/validator-ajv8
 

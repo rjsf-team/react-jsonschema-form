@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import type { GridTemplateProps } from '@rjsf/utils';
 import { logGridSpanWarning } from '@rjsf/utils';
 
@@ -24,7 +25,7 @@ export default function GridTemplate(props: GridTemplateProps) {
     // shortcut: a custom class setting min-width isn't seen and loses to the inline 0; widen the check if that comes up
     const minWidth = /(?:^|[\s:])min-w-/.test(className ?? '') ? undefined : 0;
     // The row's `gap-4` is 1rem, so a full row of spans fills it exactly
-    const spanStyle =
+    const spanStyle: CSSProperties | undefined =
       span === undefined || ownsWidth
         ? style
         : { flex: `0 0 calc((100% + 1rem) * ${span} / 12 - 1rem)`, minWidth, overflowWrap: 'break-word', ...style };

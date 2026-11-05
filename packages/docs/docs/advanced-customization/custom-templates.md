@@ -882,12 +882,13 @@ The following props are passed to a custom field template component:
 ## GridTemplate
 
 The `GridTemplate` is the template that renders a theme dependent Grid for either a row or column.
-While it has only two explicit properties, it extends the `GenericObjectTemplate` in order to support passing any of the properties associated with a Grid implementation for any theme.
+While it declares only a few properties, it takes any other prop too, in order to support passing any of the properties associated with a Grid implementation for any theme.
+A prop it doesn't declare can't be read from it, so a template that reads one declares it on its own props, as in `GridTemplateProps & { gap?: number }`.
 If you want to customize how grids are rendered you can.
 
 ```tsx
-import { Grid2 } from '@mui/material';
-import { GridTemplateProps } from '@rjsf/utils';
+import Grid from '@mui/material/Grid';
+import type { GridTemplateProps, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import classNames from 'classnames';
 
@@ -897,12 +898,17 @@ const schema: RJSFSchema = {
   description: 'input description',
 };
 
-function GridTemplate(props: FieldHelpProps) {
-  const { children, column, className, fieldId, ...rest } = props;
+function GridTemplate(props: GridTemplateProps) {
+  const { children, column, className, fieldId, span, ...rest } = props;
   return (
-    <Grid2 item={column} {...rest} className={`${className} my-custom-grid-styling`}>
+    <Grid
+      container={!column}
+      size={column ? span : undefined}
+      {...rest}
+      className={classNames(className, 'my-custom-grid-styling')}
+    >
       {children}
-    </Grid2>
+    </Grid>
   );
 }
 
@@ -914,6 +920,8 @@ The following props are passed to the `GridTemplate`:
 - `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
 - `span`: Optional number of twelfths of a row a column spans, which every theme's `GridTemplate` converts to its own grid
+- `className`: Optional class names to add to the grid element
+- `style`: Optional style to apply to the grid element
 - `fieldId`: For a column, the id of the first field it holds; for a row, or a column holding no field of its own, the id of the field whose layout grid holds it. It's for naming the row or column in a warning; keep it off the element you render
 
 ## MarkdownTemplate

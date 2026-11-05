@@ -35,7 +35,7 @@ Simple `ui:row` definition, without additional `GridTemplate` props:
 }
 ```
 
-Complex `ui:row` definition, with additional `GridTemplate` (this example uses `@mui/material/Grid2` native props):
+Complex `ui:row` definition, with additional `GridTemplate` (this example uses `@mui/material/Grid` native props):
 
 ```json
 {
@@ -113,7 +113,7 @@ one-off `render` functional component without a non-field `name` identifier
 ```
 
 Most complicated `ui:col` definition, additional `GridTemplate` props and form 1, 2 and 3 children (this example
-uses @mui/material/Grid2 native props):
+uses @mui/material/Grid native props):
 
 ```json
 {

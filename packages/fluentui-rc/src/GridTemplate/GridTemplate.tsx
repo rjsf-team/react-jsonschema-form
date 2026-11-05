@@ -1,5 +1,6 @@
+import type { CSSProperties } from 'react';
 import { makeStyles, mergeClasses } from '@fluentui/react-components';
-import { GridShim, grid } from '@fluentui/react-migration-v0-v9';
+import { GridShim } from '@fluentui/react-migration-v0-v9';
 import type { GridTemplateProps } from '@rjsf/utils';
 import { logGridSpanWarning } from '@rjsf/utils';
 
@@ -10,6 +11,18 @@ const useStyles = makeStyles({
   fullWidthChildren: { '> *': { gridColumn: '1 / -1' } },
 });
 
+/** The CSS template fluentui's `grid.rows()`/`grid.columns()` build: `repeat(n, 1fr)` for a positive safe integer of tracks,
+ * else the template as given. Built here because those functions are typed as Griffel styles, whose fallback arrays an
+ * inline style can't hold
+ *
+ * @param template - The number of equal tracks, or a CSS template
+ * @returns - The CSS template
+ */
+function gridTemplate(template: string | number): string {
+  const tracks = Number(template);
+  return Number.isSafeInteger(tracks) && tracks > 0 ? `repeat(${tracks}, 1fr)` : String(template);
+}
+
 /** Renders a `GridTemplate` for fluentui-rc, which is expecting the column sizing information coming in via the
  * `style` by the caller, which are spread directly on the `GridShim` if `columns` or `rows` are provided. Otherwise,
  * the `style` is added to a simple grid. This was done because `fluentui-rc` uses the CSS Grid which defines all of
@@ -19,7 +32,14 @@ const useStyles = makeStyles({
  *
  * @param props - The GridTemplateProps, including the extra props containing the fluentui-rc grid positioning details
  */
-export default function GridTemplate(props: GridTemplateProps) {
+export default function GridTemplate(
+  props: GridTemplateProps & {
+    /** The number of equal columns, or a CSS column template */
+    columns?: string | number;
+    /** The number of equal rows, or a CSS row template */
+    rows?: string | number;
+  },
+) {
   const { children, column, columns: ownColumns, fieldId, rows, span, className, style, ...rest } = props;
   const classes = useStyles();
   const twelveTracks =
@@ -34,11 +54,10 @@ export default function GridTemplate(props: GridTemplateProps) {
     });
   }
   if (columns || rows) {
-    // Use the `grid` rows/columns functions to generate the additional grid styling
-    const styles = {
+    const styles: CSSProperties = {
       ...spanStyle,
-      ...(rows ? grid.rows(rows) : undefined),
-      ...(columns ? grid.columns(columns) : undefined),
+      ...(rows ? { gridTemplateRows: gridTemplate(rows) } : undefined),
+      ...(columns ? { gridTemplateColumns: gridTemplate(columns) } : undefined),
     };
     return (
       <GridShim className={mergeClasses(twelveTracks && classes.fullWidthChildren, className)} style={styles} {...rest}>

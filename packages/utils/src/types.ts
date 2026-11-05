@@ -546,8 +546,13 @@ export type FieldHelpProps<
   presentation?: FieldPresentation;
 };
 
-/** The properties that are passed to a `GridTemplate` */
-export interface GridTemplateProps extends GenericObjectType {
+/** The open part of a props type, intersected with its declared props: `object` takes a value typed by an interface,
+ * which has no index signature, and `Record` lets an object literal carry props that aren't declared
+ */
+export type OpenProps = object | Record<string, unknown>;
+
+/** The properties that are passed to a `GridTemplate`, along with the theme's own grid props */
+export type GridTemplateProps = OpenProps & {
   /** The contents of the grid template */
   children?: ReactNode;
   /** Optional flag indicating whether the grid element represents a column, necessary for themes which have components
@@ -563,7 +568,11 @@ export interface GridTemplateProps extends GenericObjectType {
    * them: natively in antd (as 24ths), mui and mantine, and in daisyui; the other themes need whole numbers
    */
   span?: number;
-}
+  /** The class names to add to the grid element */
+  className?: string;
+  /** The style to apply to the grid element */
+  style?: CSSProperties;
+};
 
 /** The set of `Fields` stored in the `Registry` */
 export type RegistryFieldsType<
@@ -1833,15 +1842,20 @@ export interface UISchemaSubmitButtonOptions {
   /** Flag, if `true`, removes the submit button completely from the form */
   norender?: boolean;
   /** Any other props to be passed to the submit button itself */
-  props?: GenericObjectType & {
+  props?: OpenProps & {
     /** A boolean value stating if the submit button is disabled */
     disabled?: boolean;
     /** The class name for the submit button */
     className?: string;
     /** Called for a click on the submit button, also while the form is pending, when the form cancels the click */
     onClick?: Bivariant<[event: MouseEvent<HTMLElement>]>;
+    /** Called for a click on the submit button in the capture phase */
+    onClickCapture?: Bivariant<[event: MouseEvent<HTMLElement>]>;
   };
 }
+
+/** The submit button options `getSubmitButtonOptions()` returns, whose `props` are always present */
+export type SubmitButtonOptions = UISchemaSubmitButtonOptions & Required<Pick<UISchemaSubmitButtonOptions, 'props'>>;
 
 /** Represents a primitive JSON Schema enum value */
 export type EnumValue = string | number | boolean;
@@ -2055,10 +2069,15 @@ export type ArrayElement<A> = A extends readonly (infer E)[] ? E : A;
  * exports it for its users to pass as `Checks` (e.g. `@rjsf/core`'s `CoreUiOptionsChecks`), and a consumer of a
  * theme adds their own domain-specific options the same way, unioned into what they pass.
  */
-export interface UiOptionsCheck<When = unknown, Then = GenericObjectType> {
+export interface UiOptionsCheck<When = unknown, Then = Record<string, unknown>> {
   when: When;
   then: Then;
 }
+
+/** Any `UiOptionsCheck`, including one whose `Then` is an interface, which has no index signature: the constraint of
+ * `StrictUiSchema`'s `Checks`, for a generic type that passes its own `Checks` on to it
+ */
+export type AnyUiOptionsCheck = UiOptionsCheck<unknown, object>;
 
 /** @internal Merges a union of object types into a single object type, unioning each key's value type across every
  * union member that declares it, rather than intersecting them. A plain intersection collapses a key declared with a
@@ -2071,13 +2090,13 @@ type UnionToMergedKeys<U> = {
 };
 
 /** @internal Whether `Then` declares its own `K` key, as opposed to merely admitting one through a string index
- * signature (as `UiOptionsCheck`'s default `Then = GenericObjectType` does). Without this guard, `Then extends {
- * [K]?: infer W }` matches an index-signature `Then` too - inferring `W` as whatever the index signature's value
- * type is (typically `any`) - so a `UiOptionsCheck` written without a `widget`/`field` key would otherwise silently
- * widen the vocabulary for every field its `when` matches, rather than contributing nothing.
+ * signature (as a `Then` typed `Record<string, unknown>` does). Without this guard, `Then extends { [K]?: infer W }`
+ * matches an index-signature `Then` too - inferring `W` as whatever the index signature's value type is - so a
+ * `UiOptionsCheck` written without a `widget`/`field` key would otherwise silently widen the vocabulary for every
+ * field its `when` matches, rather than contributing nothing.
  *
  * TypeScript has no way to tell "a key admitted only by an index signature" apart from "a key admitted by an index
- * signature that also happens to declare it explicitly", so a `Then` combining the two (e.g. `GenericObjectType &
+ * signature that also happens to declare it explicitly", so a `Then` combining the two (e.g. `Record<string, unknown> &
  * { widget: 'Foo' }`) is treated as declaring neither - a narrow, silent under-inclusion rather than a type error.
  * Not a concern for `Then`s written as an explicit object literal, which is the documented, expected shape.
  */
@@ -2219,7 +2238,7 @@ type UiSchemaChild<V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? unknown : UiSchema<V, S, F>;
 
 /** A nested field entry of a `StrictUiSchema`, unconstrained for the same keys as `UiSchemaChild` */
-type StrictUiSchemaChild<Checks extends UiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
+type StrictUiSchemaChild<Checks extends AnyUiOptionsCheck, V, S extends StrictRJSFSchema, F extends FormContextType> =
   IsAny<V> extends true ? unknown : StrictUiSchema<Checks, V, S, F>;
 
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
@@ -2293,7 +2312,7 @@ export type UiSchema<
  * `UiSchema` keeps TypeScript from measuring `UiSchema`'s variance cheaply, for every `UiSchema` in every package.
  */
 export type StrictUiSchema<
-  Checks extends UiOptionsCheck,
+  Checks extends AnyUiOptionsCheck,
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,

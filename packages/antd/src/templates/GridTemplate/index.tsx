@@ -1,5 +1,6 @@
 import type { GridTemplateProps } from '@rjsf/utils';
 import { logGridSpanWarning, logOnce } from '@rjsf/utils';
+import type { ColProps } from 'antd';
 import { Col, Row } from 'antd';
 
 const ROW_SIZE_STYLES = ['flex', 'flexBasis', 'flexGrow', 'width'] as const;
@@ -12,7 +13,7 @@ const ROW_SIZE_STYLES = ['flex', 'flexBasis', 'flexGrow', 'width'] as const;
  *
  * @param props - The GridTemplateProps, including the extra props containing the antd grid positioning details
  */
-export default function GridTemplate(props: GridTemplateProps) {
+export default function GridTemplate(props: GridTemplateProps & Pick<ColProps, 'flex'>) {
   const { children, column, fieldId, span, style, ...rest } = props;
   if (column) {
     // Only a `span` written in antd's 24ths before v7 can be over 12, so this one is surely unmigrated
