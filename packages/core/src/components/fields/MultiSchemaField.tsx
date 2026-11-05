@@ -23,8 +23,16 @@ import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import { retrievedOptionListOf } from '../uiState.ts';
+import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
-import { displaysLabel, getWidgetErrorProps, getWidgetLabelProps, optionsKeywordOf } from './fieldWidgetUtils.ts';
+import {
+  displaysLabel,
+  getWidgetErrorProps,
+  getWidgetLabelProps,
+  isAdditionalPropertySchema,
+  optionsKeywordOf,
+  withoutOptionalControls,
+} from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import getOptionFieldUiSchema from './getOptionFieldUiSchema.ts';
 import { lookUpUiField } from './namedField.ts';
