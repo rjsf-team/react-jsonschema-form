@@ -21,22 +21,25 @@ function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
 }
 
 function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps) {
-  const { hasMoveDown, hasMoveUp, onMoveDownItem, onMoveUpItem, onRemoveItem } = props;
+  const { disabled, readonly, hasMoveDown, hasMoveUp, hasRemove, onMoveDownItem, onMoveUpItem, onRemoveItem } = props;
+  const locked = disabled || readonly;
   return (
     <>
       {hasMoveDown && (
-        <button type='button' onClick={onMoveDownItem}>
+        <button type='button' onClick={onMoveDownItem} disabled={locked}>
           Down
         </button>
       )}
       {hasMoveUp && (
-        <button type='button' onClick={onMoveUpItem}>
+        <button type='button' onClick={onMoveUpItem} disabled={locked}>
           Up
         </button>
       )}
-      <button type='button' onClick={onRemoveItem}>
-        Delete
-      </button>
+      {hasRemove && (
+        <button type='button' onClick={onRemoveItem} disabled={locked}>
+          Delete
+        </button>
+      )}
       <hr />
     </>
   );
