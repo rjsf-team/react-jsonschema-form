@@ -366,11 +366,17 @@ function fitsOption(key: string, value: unknown): boolean {
  * of a shape Mantine would throw on
  *
  * @param value - The `wrapperProps` the options and the theme resolve to
- * @returns - The `wrapperProps` to resolve and spread, or `undefined`
+ * @returns - The `wrapperProps` to resolve and spread, the same object when every key fits, or `undefined`
  */
 export function wrapperPropsOption(value: unknown): GenericObjectType | undefined {
   const wrapperProps = asObject(value);
-  return wrapperProps && Object.fromEntries(Object.entries(wrapperProps).filter(([key, v]) => fitsOption(key, v)));
+  if (!wrapperProps) {
+    return undefined;
+  }
+  const entries = Object.entries(wrapperProps);
+  const fitting = entries.filter(([key, v]) => fitsOption(key, v));
+  // Keeping the uiSchema's own object keeps the memos keyed on it stable across renders
+  return fitting.length === entries.length ? wrapperProps : Object.fromEntries(fitting);
 }
 
 /** Whether `value` is an `inputContainer`, the function Mantine calls with an input to render the element around it */

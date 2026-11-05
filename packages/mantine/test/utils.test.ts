@@ -1,7 +1,7 @@
 import type { GenericObjectType, WidgetProps } from '@rjsf/utils';
 
 import type { MantineGlobalUISchemaOptions } from '../src/index.ts';
-import { cleanupOptions } from '../src/utils.tsx';
+import { cleanupOptions, wrapperPropsOption } from '../src/utils.tsx';
 
 // A registry with no global options, so only the names rjsf reads are left out
 const noGlobals = { registry: {} };
@@ -104,5 +104,16 @@ describe('MantineGlobalUISchemaOptions', () => {
     expectTypeOf<MantineGlobalUISchemaOptions<{ colorFormat?: string }>>().not.toBeNever();
     // @ts-expect-error `useFieldWrapperProps()` reads the `InputWrapper`'s `size`
     expectTypeOf<MantineGlobalUISchemaOptions<{ size?: string }>>().not.toBeNever();
+  });
+});
+
+describe('wrapperPropsOption()', () => {
+  it('keeps the wrapperProps object itself when every key fits', () => {
+    const wrapperProps = { inputWrapperOrder: ['label', 'input'], withAsterisk: true };
+    expect(wrapperPropsOption(wrapperProps)).toBe(wrapperProps);
+  });
+
+  it('drops a key of a shape Mantine would throw on', () => {
+    expect(wrapperPropsOption({ inputContainer: 'div', withAsterisk: true })).toEqual({ withAsterisk: true });
   });
 });
