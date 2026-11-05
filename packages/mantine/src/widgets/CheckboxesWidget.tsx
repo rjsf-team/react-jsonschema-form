@@ -53,7 +53,7 @@ export default function CheckboxesWidget<
   // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
   const selectedValues: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
 
-  const { groupProps, optionProps } = useGroupAriaProps('CheckboxGroup', props);
+  const { groupProps, optionProps, requiredCue } = useGroupAriaProps('CheckboxGroup', props);
 
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   // A group with no options is still drawn, so its errors keep the label and description that say which field they
@@ -90,6 +90,7 @@ export default function CheckboxesWidget<
           }
         </GroupOptions>
       </Flex>
+      {requiredCue && <span {...requiredCue} />}
     </Checkbox.Group>
   );
 }

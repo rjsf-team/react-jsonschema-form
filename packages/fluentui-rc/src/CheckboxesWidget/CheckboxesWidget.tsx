@@ -48,6 +48,7 @@ export default function CheckboxesWidget<
     labelId,
     group: groupAttributes,
     option: optionAttributes,
+    requiredCue,
   } = getGroupLabelling<T, S, F>(props, 'group');
 
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
@@ -82,6 +83,7 @@ export default function CheckboxesWidget<
               />
             );
           })}
+        {requiredCue && <span {...requiredCue} />}
       </Flex>
     </>
   );

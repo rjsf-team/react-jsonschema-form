@@ -879,7 +879,13 @@ describe('chakra-ui CheckboxesWidget', () => {
           type: 'object',
           required: ['c'],
           properties: {
-            c: { type: 'array', title: 'C', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+            c: {
+              type: 'array',
+              title: 'C',
+              items: { type: 'string', enum: ['a', 'b'] },
+              uniqueItems: true,
+              minItems: 1,
+            },
           },
         }}
         uiSchema={{ c: { 'ui:widget': 'checkboxes' } }}
@@ -888,7 +894,7 @@ describe('chakra-ui CheckboxesWidget', () => {
     );
 
     expect(container.querySelector('#root_c__label')).toHaveTextContent(/^C\*$/);
-    expect(container.querySelector('#root_c')).toHaveAccessibleName('C');
+    expect(container.querySelector('#root_c')).toHaveAccessibleName('C required');
   });
 });
 

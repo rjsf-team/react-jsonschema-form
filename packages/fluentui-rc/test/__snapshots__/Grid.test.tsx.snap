@@ -201,12 +201,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   id="root_person_race__label"
                 >
                   Race
-                  <span
-                    aria-hidden="true"
-                    class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
-                  >
-                    *
-                  </span>
                 </label>
                 <div
                   aria-labelledby="root_person_race__label"
@@ -1088,12 +1082,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   id="root_person_race__label"
                 >
                   Race
-                  <span
-                    aria-hidden="true"
-                    class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
-                  >
-                    *
-                  </span>
                 </label>
                 <div
                   aria-labelledby="root_person_race__label"
@@ -2003,12 +1991,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   id="root_person_race__label"
                 >
                   Race
-                  <span
-                    aria-hidden="true"
-                    class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
-                  >
-                    *
-                  </span>
                 </label>
                 <div
                   aria-labelledby="root_person_race__label"
@@ -2736,12 +2718,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   id="root_person_race__label"
                 >
                   Race
-                  <span
-                    aria-hidden="true"
-                    class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
-                  >
-                    *
-                  </span>
                 </label>
                 <div
                   aria-labelledby="root_person_race__label"
@@ -3623,12 +3599,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                   id="root_person_race__label"
                 >
                   Race
-                  <span
-                    aria-hidden="true"
-                    class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
-                  >
-                    *
-                  </span>
                 </label>
                 <div
                   aria-labelledby="root_person_race__label"
@@ -4173,12 +4143,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   id="root_person_race__label"
                 >
                   Race
-                  <span
-                    aria-hidden="true"
-                    class="fui-Label__required ___di7pjm0_79xo450 f1whyuy6 fruq291"
-                  >
-                    *
-                  </span>
                 </label>
                 <div
                   aria-labelledby="root_person_race__label"

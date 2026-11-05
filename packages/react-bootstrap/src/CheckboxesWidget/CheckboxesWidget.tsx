@@ -20,8 +20,7 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, disabled, options, value, autofocus, readonly, onChange, onBlur, onFocus, presentation } =
-    props;
+  const { id, htmlName, disabled, options, value, autofocus, readonly, onChange, onBlur, onFocus } = props;
   const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -39,10 +38,7 @@ export default function CheckboxesWidget<
 
   const invalid = hasWidgetErrors<T, S, F>(props);
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
-  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
-    { id, presentation },
-    'group',
-  );
+  const { group: groupAttributes, option: optionAttributes, requiredCue } = getGroupAttributes<T, S, F>(props, 'group');
 
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
@@ -74,6 +70,7 @@ export default function CheckboxesWidget<
             />
           );
         })}
+      {requiredCue && <span {...requiredCue} />}
     </Form.Group>
   );
 }

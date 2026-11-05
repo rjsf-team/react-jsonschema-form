@@ -173,11 +173,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   Race
                 </span>
-                <span
-                  class="rjsf-required"
-                >
-                  *
-                </span>
               </label>
               <div
                 class="rjsf-field-description"
@@ -1400,11 +1395,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   id="root_person_race__label"
                 >
                   Race
-                </span>
-                <span
-                  class="rjsf-required"
-                >
-                  *
                 </span>
               </label>
               <div
@@ -2655,11 +2645,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   Race
                 </span>
-                <span
-                  class="rjsf-required"
-                >
-                  *
-                </span>
               </label>
               <div
                 class="rjsf-field-description"
@@ -3510,11 +3495,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                   id="root_person_race__label"
                 >
                   Race
-                </span>
-                <span
-                  class="rjsf-required"
-                >
-                  *
                 </span>
               </label>
               <div
@@ -4728,11 +4708,6 @@ exports[`Three even column grid > renders person and address in three columns, n
               >
                 Race
               </span>
-              <span
-                class="rjsf-required"
-              >
-                *
-              </span>
             </label>
             <div
               class="rjsf-field-description"
@@ -5420,11 +5395,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 id="root_person_race__label"
               >
                 Race
-              </span>
-              <span
-                class="rjsf-required"
-              >
-                *
               </span>
             </label>
             <div

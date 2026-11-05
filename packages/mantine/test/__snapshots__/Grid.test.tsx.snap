@@ -338,16 +338,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <div
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-CheckboxGroup-label"
-                          data-required="true"
                           id="root_person_race__title"
                         >
                           Race
-                          <span
-                            aria-hidden="true"
-                            class="m_78a94662 mantine-InputWrapper-required mantine-CheckboxGroup-required"
-                          >
-                             *
-                          </span>
                         </div>
                         <div
                           class="m_fe47ce59 mantine-InputWrapper-description mantine-CheckboxGroup-description"
@@ -3229,16 +3222,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <div
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-CheckboxGroup-label"
-                          data-required="true"
                           id="root_person_race__title"
                         >
                           Race
-                          <span
-                            aria-hidden="true"
-                            class="m_78a94662 mantine-InputWrapper-required mantine-CheckboxGroup-required"
-                          >
-                             *
-                          </span>
                         </div>
                         <div
                           class="m_fe47ce59 mantine-InputWrapper-description mantine-CheckboxGroup-description"
@@ -6163,16 +6149,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <div
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-CheckboxGroup-label"
-                          data-required="true"
                           id="root_person_race__title"
                         >
                           Race
-                          <span
-                            aria-hidden="true"
-                            class="m_78a94662 mantine-InputWrapper-required mantine-CheckboxGroup-required"
-                          >
-                             *
-                          </span>
                         </div>
                         <div
                           class="m_fe47ce59 mantine-InputWrapper-description mantine-CheckboxGroup-description"
@@ -8149,16 +8128,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <div
                           class="m_8fdc1311 mantine-InputWrapper-label mantine-CheckboxGroup-label"
-                          data-required="true"
                           id="root_person_race__title"
                         >
                           Race
-                          <span
-                            aria-hidden="true"
-                            class="m_78a94662 mantine-InputWrapper-required mantine-CheckboxGroup-required"
-                          >
-                             *
-                          </span>
                         </div>
                         <div
                           class="m_fe47ce59 mantine-InputWrapper-description mantine-CheckboxGroup-description"
@@ -10983,16 +10955,9 @@ exports[`Three even column grid > renders person and address in three columns, n
                 >
                   <div
                     class="m_8fdc1311 mantine-InputWrapper-label mantine-CheckboxGroup-label"
-                    data-required="true"
                     id="root_person_race__title"
                   >
                     Race
-                    <span
-                      aria-hidden="true"
-                      class="m_78a94662 mantine-InputWrapper-required mantine-CheckboxGroup-required"
-                    >
-                       *
-                    </span>
                   </div>
                   <div
                     class="m_fe47ce59 mantine-InputWrapper-description mantine-CheckboxGroup-description"
@@ -12537,16 +12502,9 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 >
                   <div
                     class="m_8fdc1311 mantine-InputWrapper-label mantine-CheckboxGroup-label"
-                    data-required="true"
                     id="root_person_race__title"
                   >
                     Race
-                    <span
-                      aria-hidden="true"
-                      class="m_78a94662 mantine-InputWrapper-required mantine-CheckboxGroup-required"
-                    >
-                       *
-                    </span>
                   </div>
                   <div
                     class="m_fe47ce59 mantine-InputWrapper-description mantine-CheckboxGroup-description"

@@ -40,7 +40,7 @@ function generatePresentation(): ThemePresentation {
   return {
     widgets: {
       CheckboxWidget: { label: 'self', description: 'self', uncheckedIsFalse: true, labelPlacement: 'beside' },
-      CheckboxesWidget: { labelledBy: 'aria-labelledby' },
+      CheckboxesWidget: { labelledBy: 'aria-labelledby', uncheckedIsEmpty: true },
       RadioWidget: { labelledBy: 'aria-labelledby' },
       RatingWidget: { labelledBy: 'aria-labelledby' },
       AltDateWidget: { labelledBy: 'aria-labelledby' },

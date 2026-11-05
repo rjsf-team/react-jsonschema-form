@@ -41,6 +41,7 @@ export default function CheckboxesWidget<
     labelId,
     group: groupAttributes,
     option: optionAttributes,
+    requiredCue,
   } = getGroupLabelling<T, S, F>(props, 'group');
 
   const legendStyles = useSlotRecipe({ key: 'fieldset' })().legend;
@@ -103,6 +104,7 @@ export default function CheckboxesWidget<
               );
             })}
         </Stack>
+        {requiredCue && <span {...requiredCue} />}
       </CheckboxGroup>
     </FieldsetRoot>
   );

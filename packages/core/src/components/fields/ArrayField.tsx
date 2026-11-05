@@ -1508,6 +1508,9 @@ export default function ArrayField<
     fieldPath,
     onSelectChange,
     htmlName: fieldPathToName(fieldPath, globalFormOptions, true),
+    // The plan's, which a group of checkboxes the schema lets be empty is not, so a widget written for any theme reads it
+    // as `BooleanField`'s checkbox does (#5573)
+    required: props.presentation?.control ? props.presentation.control.attributes.required === true : props.required,
   };
   const arrayProps: InternalArrayFieldProps<T, S, F> = {
     ...props,

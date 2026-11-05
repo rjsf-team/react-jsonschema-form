@@ -12,12 +12,12 @@ import widgetDrawsLabelText from './widgetDrawsLabelText.ts';
  * group's wrapper, so the group points `aria-labelledby` at it instead, where its field's plan names the group by no
  * other label. A widget draws the label where `widgetDrawsLabelText()` says it does; a group whose label
  * `ui:label: false` hides is named by the `aria-label` its plan gives it, and a `radiogroup` no label names by the one
- * `getGroupAttributes()` gives it, given the `registry`
+ * `getGroupAttributes()` gives it, given the `registry`, which also has a required group of checkboxes say so in its name
  *
- * @param props - The widget's `id`, `label`, `hideLabel` and `presentation`, and for a group of radios its
- *   `placeholder` and `registry`
+ * @param props - The widget's `id`, `label`, `hideLabel` and `presentation`, for a group of radios its `placeholder`, and
+ *   for one of radios or checkboxes its `registry`
  * @param role - The role of the group's wrapper
- * @returns - `drawsLabel` and `labelId` for the label, and the `group` and `option` attributes
+ * @returns - `drawsLabel` and `labelId` for the label, the `group` and `option` attributes, and the `requiredCue` to render
  */
 export default function getGroupLabelling<
   T = unknown,
@@ -30,6 +30,5 @@ export default function getGroupLabelling<
 ) {
   const drawsLabel = widgetDrawsLabelText<T, S, F>(props);
   const labelId = getLabelId<T, S, F>(props);
-  const { group, option } = getGroupAttributes<T, S, F>(props, role, drawsLabel ? labelId : undefined);
-  return { drawsLabel, labelId, group, option };
+  return { drawsLabel, labelId, ...getGroupAttributes<T, S, F>(props, role, drawsLabel ? labelId : undefined) };
 }

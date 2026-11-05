@@ -2,7 +2,7 @@ import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 /** Counts the `*`s a form shows. MUI repeats a label with its marker in the hidden `<legend>` its outline is notched by,
  * which draws no second marker
@@ -120,6 +120,53 @@ export function requiredCueTests(
       );
       expect(countMarkers(container)).toBe(1);
       expect(requiredIds(container)).toEqual(['root_pet']);
+    });
+  });
+  describe('the required cue of a group of checkboxes (#5573)', () => {
+    const colors = (extra: RJSFSchema = {}, required = ['c']): RJSFSchema => ({
+      type: 'object',
+      required,
+      properties: {
+        c: { type: 'array', title: 'Colors', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true, ...extra },
+      },
+    });
+
+    function renderColors(schema: RJSFSchema, uiOptions: UiSchema = {}) {
+      return render(
+        <Form schema={schema} uiSchema={{ c: { 'ui:widget': 'checkboxes', ...uiOptions } }} validator={validator} />,
+      ).container;
+    }
+
+    it('says so in the name of a group that has to have a box checked, and marks its label once', () => {
+      const container = renderColors(colors({ minItems: 1 }));
+      expect(screen.getByRole('group', { name: 'Colors required' })).toBeInTheDocument();
+      expect(countMarkers(container)).toBe(1);
+      expect(requiredIds(container)).toEqual([]);
+    });
+
+    it('says nothing where `required` alone leaves an empty array valid', () => {
+      const container = renderColors(colors());
+      expect(screen.getByRole('group', { name: 'Colors' })).toBeInTheDocument();
+      expect(countMarkers(container)).toBe(0);
+      expect(requiredIds(container)).toEqual([]);
+    });
+
+    it('says nothing where `minItems` applies to a field that is not required', () => {
+      const container = renderColors(colors({ minItems: 1 }, []));
+      expect(screen.getByRole('group', { name: 'Colors' })).toBeInTheDocument();
+      expect(countMarkers(container)).toBe(0);
+    });
+
+    it('says so where `ui:required` asks for it, which nothing seeds a value for', () => {
+      const container = renderColors(colors({}, []), { 'ui:required': true });
+      expect(screen.getByRole('group', { name: 'Colors required' })).toBeInTheDocument();
+      expect(countMarkers(container)).toBe(1);
+      expect(requiredIds(container)).toEqual([]);
+    });
+
+    it('says so in the name a group takes where `ui:label: false` hides its label', () => {
+      renderColors(colors({ minItems: 1 }), { 'ui:label': false });
+      expect(screen.getByRole('group', { name: 'Colors required' })).toBeInTheDocument();
     });
   });
 }

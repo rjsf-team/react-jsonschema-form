@@ -45,10 +45,11 @@ function CheckboxesWidget<
 
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
-  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
-    { id, presentation },
-    'group',
-  );
+  const {
+    group: groupAttributes,
+    option: optionAttributes,
+    requiredCue,
+  } = getGroupAttributes<T, S, F>({ id, presentation, registry }, 'group');
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <div className='rjsf-checkboxes' id={id} {...groupAttributes}>
@@ -106,6 +107,7 @@ function CheckboxesWidget<
             </div>
           );
         })}
+      {requiredCue && <span {...requiredCue} />}
     </div>
   );
 }

@@ -414,7 +414,7 @@ describe("mui widgets are named by their label and carry the field's id on the e
 
   // A required field asks for one checkbox, not each, while a radio is required, as core's are
   test.each([
-    ['checkboxes', { type: 'array', title: 'X', items: letters, uniqueItems: true }, 'checkbox', false],
+    ['checkboxes', { type: 'array', title: 'X', items: letters, uniqueItems: true, minItems: 1 }, 'checkbox', false],
     ['radio', letters, 'radio', true],
   ] as const)('requires each option of a required %s group only where core does', (widget, x, item, required) => {
     render(

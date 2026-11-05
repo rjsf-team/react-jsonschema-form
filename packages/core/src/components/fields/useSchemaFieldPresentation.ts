@@ -315,13 +315,17 @@ export default function useSchemaFieldPresentation<
   // `required` for a value the schema accepts, so it is required, by its attribute and its marker alike, only where the
   // schema demands `true` (#5388). It holds that `false` only where `getDefaultFormState()` seeds it, which it does by
   // the type the field renders: rendered as another type, as a `type` list's string field renders one, an unchecked
-  // box answers nothing
+  // box answers nothing. A group of checkboxes left alone holds an empty array likewise, which only `minItems` turns down,
+  // unless `ui:required` asks for it: nothing seeds that field, so it has no value to submit until it is answered (#5573)
   const controlRequired = useMemo(
     () =>
       required &&
       (!declaration?.uncheckedIsFalse ||
         getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, registry.widgets) !== 'boolean' ||
-        schemaRequiresTrueValue<S>(schema)),
+        schemaRequiresTrueValue<S>(schema)) &&
+      (!declaration?.uncheckedIsEmpty ||
+        (schema.minItems ?? 0) >= 1 ||
+        uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) === true),
     [required, declaration, schema, uiSchema, registry.widgets],
   );
   const presentation = useMemo(() => {

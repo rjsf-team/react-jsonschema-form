@@ -69,6 +69,7 @@ export default function CheckboxesWidget<
     labelId,
     group: groupAttributes,
     option: optionAttributes,
+    requiredCue,
   } = getGroupLabelling<T, S, F>(props, 'group');
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxesWidgetMuiProps>(options);
@@ -117,6 +118,7 @@ export default function CheckboxesWidget<
               />
             );
           })}
+        {requiredCue && <span {...requiredCue} />}
       </FormGroup>
     </>
   );

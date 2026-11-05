@@ -51,6 +51,7 @@ import {
   partId,
   RESERVED_UI_OPTION_NAMES,
   titleId,
+  TranslatableString,
   widgetDrawsLabel,
   templateMarksRequired,
 } from '@rjsf/utils';
@@ -1027,7 +1028,7 @@ export function useGroupAriaProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(component: 'CheckboxGroup' | 'RadioGroup', widgetProps: WidgetProps<T, S, F>) {
-  const { id, required, options } = widgetProps;
+  const { id, required, options, presentation, registry } = widgetProps;
   const hideLabel = !widgetDrawsLabel<T, S, F>(widgetProps);
   const label = getOwnLabel<T, S, F>(widgetProps);
   const props = useProps<GenericObjectType>(component, {}, pickOptions(options, inputPickedKeys));
@@ -1043,16 +1044,25 @@ export function useGroupAriaProps<
   );
   // The label the widget draws, shown or hidden, where the plan names the group by no other
   const role = component === 'RadioGroup' ? 'radiogroup' : 'group';
-  const { group, option } = getGroupAttributes<T, S, F>(widgetProps, role, label ? titleId(id) : undefined);
+  const { group, option, requiredCue } = getGroupAttributes<T, S, F>(
+    widgetProps,
+    role,
+    label ? titleId(id) : undefined,
+  );
   const shownLabel = labelValue(label, hideLabel, false);
   // Mantine's group element takes its name only from the `InputWrapper` context's `labelId`, so any name no shown label
   // gives it is a hidden title. An `aria-label` in the options comes first, as in a `SelectWidget`, though a label on
   // screen, Mantine's or the plan's, still names the group, where it would not name a select
   const optionsAriaLabel = typeof options['aria-label'] === 'string' ? options['aria-label'] : undefined;
+  // It replaces the name `getGroupAttributes()` gives a group no label names, which ends in the required cue
+  const optionsName =
+    optionsAriaLabel && role === 'group' && !requiredCue && presentation?.control?.attributes.required
+      ? `${optionsAriaLabel} ${registry.translateString(TranslatableString.RequiredGroupCue)}`
+      : optionsAriaLabel;
   const labelledByPlan = !label && group['aria-labelledby'];
   const hiddenLabel = useHiddenTitle(
     id,
-    labelledByPlan ? undefined : optionsAriaLabel || (label ?? group['aria-label']),
+    labelledByPlan ? undefined : optionsName || (group['aria-label'] ?? label),
     hideLabel || !label,
     resolved.inputWrapperOrder,
   );
@@ -1096,5 +1106,6 @@ export function useGroupAriaProps<
       ...containerProps,
     },
     optionProps,
+    requiredCue,
   };
 }

@@ -1401,16 +1401,17 @@ A widget that draws its own label for the group, as in a theme whose widgets dra
 Under a plan the id is taken only where the plan gives the widget the label, so a widget can pass it whether or not it draws one; without a plan the caller is trusted.
 A `radiogroup` no label names, such as an untitled field's or option selector's, is named as an untitled select is, by its `label`, its `placeholder` or `TranslatableString.RadioGroupName` ("Choose an option"), where the widget passes its `registry` to translate with.
 A group of stars, such as `RatingWidget`'s, passes none, since its stars name the choices alone.
+A required `group` whose widget passes the `registry`, as a group of checkboxes does, says so in its name, as `TranslatableString.RequiredGroupCue` ("required"), since `group` takes no `aria-required` and a checkbox's would say every box has to be checked ([#5573](https://github.com/rjsf-team/react-jsonschema-form/issues/5573)). A group a label names adds `requiredCue` to that `aria-labelledby`, whatever draws the label and its marker, so the widget renders `{requiredCue && <span {...requiredCue} />}` inside the group; one named by `aria-label` takes the text there. A group of an alt-date's parts passes none, as its parts are required themselves.
 
 #### Parameters
 
-- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'presentation'> & Partial&lt;Pick&lt;WidgetProps&lt;T, S, F>, 'label' | 'placeholder' | 'registry'>> - The widget's `id` and `presentation`, and for a group of radios its `label`, `placeholder` and `registry`
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'presentation'> & Partial&lt;Pick&lt;WidgetProps&lt;T, S, F>, 'label' | 'placeholder' | 'registry'>> - The widget's `id` and `presentation`, for a group of radios its `label` and `placeholder`, and for one of radios or checkboxes its `registry`
 - role: GroupRole - The role of the group's wrapper, `'radiogroup'` for radios and `'group'` for anything else
 - [drawnLabelId]: string | undefined - The id of the label the widget draws for the group itself, where it draws one
 
 #### Returns
 
-- \{ group: Pick&lt;ControlAttributes, 'aria-labelledby' | 'aria-label' | 'aria-invalid'> & \{ role: GroupRole }, option: Omit&lt;ControlAttributes, 'aria-labelledby' | 'aria-label' | 'required'> }: `group`, the `role` and attributes for the group's wrapper, and `option`, those for each control in it
+- \{ group: Pick&lt;ControlAttributes, 'aria-labelledby' | 'aria-label' | 'aria-invalid'> & \{ role: GroupRole }, option: Omit&lt;ControlAttributes, 'aria-labelledby' | 'aria-label' | 'required'>, requiredCue?: \{ id: string, hidden: true, children: string } }: `group`, the `role` and attributes for the group's wrapper, `option`, those for each control in it, and `requiredCue`, the props of the hidden `<span>` a required group's name points at, where it does
 
 #### Example
 
@@ -1435,12 +1436,12 @@ A widget draws the label where [widgetDrawsLabel()](#widgetdrawslabel) says it d
 
 #### Parameters
 
-- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'label' | 'hideLabel' | 'presentation'> & Partial&lt;Pick&lt;WidgetProps&lt;T, S, F>, 'placeholder' | 'registry'>> - The widget's `id`, `label`, `hideLabel` and `presentation`, and for a group of radios its `placeholder` and `registry`
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'label' | 'hideLabel' | 'presentation'> & Partial&lt;Pick&lt;WidgetProps&lt;T, S, F>, 'placeholder' | 'registry'>> - The widget's `id`, `label`, `hideLabel` and `presentation`, for a group of radios its `placeholder`, and for one of radios or checkboxes its `registry`
 - role: GroupRole - The role of the group's wrapper, `'radiogroup'` for radios and `'group'` for anything else
 
 #### Returns
 
-- \{ drawsLabel: boolean, labelId: string, group, option }: whether the widget draws the label and the id of the field's label, which a widget leaving the label to its template can still hand its own label slot, and the `group` and `option` attributes [getGroupAttributes()](#getgroupattributes) returns
+- \{ drawsLabel: boolean, labelId: string, group, option, requiredCue? }: whether the widget draws the label and the id of the field's label, which a widget leaving the label to its template can still hand its own label slot, the `group` and `option` attributes [getGroupAttributes()](#getgroupattributes) returns, and `requiredCue`, the props of the hidden `<span>` a required group's name points at, where it does
 
 #### Example
 
@@ -1618,7 +1619,7 @@ A widget's declaration is the merged `widgets` entry for its key, beneath which 
 An alias is looked up by the key it stands for, and a widget given as a component by the first key it is registered under that declares it, or by the `default` alone when none does.
 A part a field leaves to its widget, with no widget given, falls back to the field default, so a field such as `ArrayField` that renders a single widget only for a multi-select draws its own heading otherwise.
 A field that leaves its label to the widget it renders takes that widget's `labelledBy`, or else its own entry's, but never the `fieldDefault`'s, which reaches only the fields that keep their label or render no widget to leave it to.
-`uncheckedIsFalse` is the widget's when the field renders one, since it describes the control, or else the field's own entry's, and is left out where nothing declares it.
+`uncheckedIsFalse` and `uncheckedIsEmpty` are the widget's when the field renders one, since they describe the control, or else the field's own entry's, and are left out where nothing declares them.
 A label the component draws takes the `labelPlacement` of the declaration that settled it on `'self'`: the widget's when the field leaves its label to one, or else the field's. It is left out where nothing declares it or the template draws the label.
 A part nothing declares is drawn by the template. A widget `getWidget()` rejects, such as a name that is neither registered nor an alias, gets whatever is declared for it.
 
@@ -1629,7 +1630,7 @@ A part nothing declares is drawn by the template. A widget `getWidget()` rejects
 
 #### Returns
 
-- ResolvedPresentationDeclaration: The owner, `'template'` or `'self'`, of each part, `labelledBy`, how a label the template draws reaches the control, `uncheckedIsFalse` where the control holds `false` left alone, and `labelPlacement` where a label the component draws is declared to sit
+- ResolvedPresentationDeclaration: The owner, `'template'` or `'self'`, of each part, `labelledBy`, how a label the template draws reaches the control, `uncheckedIsFalse` where the control holds `false` left alone, `uncheckedIsEmpty` where it holds an empty array, and `labelPlacement` where a label the component draws is declared to sit
 
 ### getPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2703,7 +2704,7 @@ A part declared `undefined` is left to the layers beneath it, and a part no laye
 A layer's `default` is layered beneath that layer's own entry for every widget key any layer declares, and the layered `default`s are what a widget no layer declares draws.
 So a theme's or the `Form` props' `default` overrides the parts it declares in the layers beneath it, even under a key one of them declares, while parts it doesn't declare keep theirs.
 The layers' `fieldDefault`s are layered over one another only, since the field default sits beneath the merged field entries.
-Neither a `default` nor a `fieldDefault` keeps an `uncheckedIsFalse` its layer gives it anyway, as a theme written in JavaScript can, since it describes one control and is declared under the key of the widget, or of a field drawing the control itself.
+Neither a `default` nor a `fieldDefault` keeps an `uncheckedIsFalse` or `uncheckedIsEmpty` its layer gives it anyway, as a theme written in JavaScript can, since each describes one control and is declared under the key of the widget, or of a field drawing the control itself.
 The top layer that declares a `selectedOptionDescription` gives it, and it is left out where none does.
 
 #### Parameters

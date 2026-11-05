@@ -77,6 +77,8 @@ export const TranslatableString = {
   SelectPlaceholder: 'Select ...',
   /** Accessible name of a radio group no label names, such as an untitled field's, given by getGroupAttributes() */
   RadioGroupName: 'Choose an option',
+  /** Follows the name of a group of checkboxes that has to have one checked, in the name a screen reader announces */
+  RequiredGroupCue: 'required',
   /** Done button label, used by the daisyUI date pickers */
   DoneLabel: 'Done',
   /** Time input label, used by the daisyUI DateTimeWidget */
