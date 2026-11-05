@@ -29,7 +29,7 @@ describe('RatingWidget', () => {
   test.each([
     ['a `stars` option', {}, { stars: 2.5 }, 2],
     ['a schema `maximum`', { maximum: 2.5 }, {}, 3],
-  ])('rounds down %s that is not a whole number, rather than crashing the form', (_, schema, options, count) => {
+  ])('rounds down %s that is not a whole number', (_, schema, options, count) => {
     const { getAllByRole } = render(
       <RatingWidget {...makeWidgetMockProps({ schema: { type: 'number', ...schema }, options })} />,
     );

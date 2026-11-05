@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../src/index.ts';
-import { numericWidgetStoresString, ratingStarCount, toNumericValue } from '../src/index.ts';
+import { numericWidgetStoresString, ratingStarValues, toNumericValue } from '../src/index.ts';
 
 describe('toNumericValue()', () => {
   it.each([
@@ -53,7 +53,7 @@ describe('numericWidgetStoresString()', () => {
   });
 });
 
-describe('ratingStarCount()', () => {
+describe('ratingStarValues()', () => {
   it.each<{ schema: RJSFSchema; stars: unknown; expected: number }>([
     { schema: {}, stars: 3, expected: 3 },
     { schema: {}, stars: '3', expected: 3 },
@@ -73,7 +73,7 @@ describe('ratingStarCount()', () => {
     { schema: { minimum: 1.3, maximum: 2.3 }, stars: 5, expected: 2 },
     { schema: { minimum: 2 }, stars: 4, expected: 4 },
   ])('$schema with stars $stars', ({ schema, stars, expected }) => {
-    expect(ratingStarCount(schema, stars)).toBe(expected);
+    expect(ratingStarValues(schema, stars)).toHaveLength(expected);
   });
   it.each([
     ['a string that is not a number', '{"maximum": "abc"}'],
@@ -81,10 +81,17 @@ describe('ratingStarCount()', () => {
     ['null', '{"maximum": null}'],
   ])('falls back to the `stars` option for a JSON schema `maximum` of %s', (_, json) => {
     const schema: RJSFSchema = JSON.parse(json);
-    expect(ratingStarCount(schema, 3)).toBe(3);
+    expect(ratingStarValues(schema, 3)).toHaveLength(3);
   });
   it('reads a numeric string `minimum` and `maximum` from a JSON schema as their numbers', () => {
     const schema: RJSFSchema = JSON.parse('{"minimum": "1", "maximum": "3"}');
-    expect(ratingStarCount(schema, 5)).toBe(3);
+    expect(ratingStarValues(schema, 5)).toEqual([1, 2, 3]);
+  });
+  it.each<{ schema: RJSFSchema; expected: number[] }>([
+    { schema: {}, expected: [0, 1, 2] },
+    { schema: { minimum: 1.3, maximum: 3.3 }, expected: [1.3, 2.3, 3.3] },
+    { schema: { minimum: 0.57 }, expected: [0.57, 1.57, 2.57] },
+  ])('gives each star of $schema its value', ({ schema, expected }) => {
+    expect(ratingStarValues(schema, 3)).toEqual(expected);
   });
 });

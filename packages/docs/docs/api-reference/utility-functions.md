@@ -3038,9 +3038,9 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 
 - RangeSpecType: A range specification from the schema
 
-### ratingStarCount&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### ratingStarValues&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the number of stars a rating widget draws: one for each whole number from the schema's `minimum` (0 if it has none) up to its `maximum`, but no more than the `stars` option, or the default 5 for a `stars` that isn't a number, and within 1-5. A numeric string counts as its number.
+Returns the values of the stars a rating widget draws: one for each whole number from the schema's `minimum` (0 if it has none) up to its `maximum`, but no more than the `stars` option, or the default 5 for a `stars` that isn't a number, and within 1-5. A numeric string counts as its number.
 
 #### Parameters
 
@@ -3049,7 +3049,7 @@ Returns the number of stars a rating widget draws: one for each whole number fro
 
 #### Returns
 
-- number: The number of stars to draw
+- number[]: The value of each star to draw, in order
 
 ### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

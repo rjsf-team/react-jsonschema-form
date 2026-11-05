@@ -312,12 +312,9 @@ describe('RatingWidget numeric strings', () => {
   it.each([
     ['a `stars` option', { type: 'number' }, { stars: 2.5 }, 2],
     ['a schema `maximum`', { type: 'number', maximum: 2.5 }, {}, 3],
-  ] as const)(
-    'rounds down %s that is not a whole number, rather than crashing the form',
-    (_, schema, options, count) => {
-      createFormComponent({ schema, uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': options } });
+  ] as const)('rounds down %s that is not a whole number', (_, schema, options, count) => {
+    createFormComponent({ schema, uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': options } });
 
-      expect(screen.getAllByRole('radio')).toHaveLength(count);
-    },
-  );
+    expect(screen.getAllByRole('radio')).toHaveLength(count);
+  });
 });
