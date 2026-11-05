@@ -219,67 +219,6 @@ describe('omitExtraData and live omit onBlur', () => {
 });
 
 describe('Form omitExtraData and liveOmit', () => {
-  it('should call omitExtraData when the omitExtraData prop is true and liveOmit is true', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'string',
-        },
-      },
-    };
-    const formData = {
-      foo: 'bar',
-    };
-    const omitExtraData = true;
-    const liveOmit = true;
-    const ref = createRef<Form>();
-
-    const { node } = createFormComponent({
-      ref,
-      schema,
-      formData,
-      omitExtraData,
-      liveOmit,
-    });
-
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
-
-    await user.clear(node.querySelector('[type=text]')!);
-    await user.type(node.querySelector('[type=text]')!, 'new');
-
-    expect(theSpy).toHaveBeenCalled();
-  });
-
-  it('should not call omitExtraData when the omitExtraData prop is true and liveOmit is unspecified', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'string',
-        },
-      },
-    };
-    const formData = {
-      foo: 'bar',
-    };
-    const omitExtraData = true;
-    const ref = createRef<Form>();
-    const { node } = createFormComponent({
-      ref,
-      schema,
-      formData,
-      omitExtraData,
-    });
-
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
-
-    await user.clear(node.querySelector('[type=text]')!);
-    await user.type(node.querySelector('[type=text]')!, 'new');
-
-    expect(theSpy).not.toHaveBeenCalled();
-  });
-
   it('should not omit data on change with omitExtraData=false and liveOmit=false', async () => {
     const omitExtraData = false;
     const liveOmit = false;
@@ -298,6 +237,28 @@ describe('Form omitExtraData and liveOmit', () => {
       omitExtraData,
       liveOmit,
     });
+
+    await user.clear(node.querySelector('#root_foo')!);
+    await user.type(node.querySelector('#root_foo')!, 'foobar');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        formData: { foo: 'foobar', baz: 'baz' },
+      }),
+      'root_foo',
+    );
+  });
+
+  it('should not omit data on change with omitExtraData=true and liveOmit unset', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+        bar: { type: 'string' },
+      },
+    };
+    const formData = { foo: 'foo', baz: 'baz' };
+    const { node, onChange } = createFormComponent({ schema, formData, omitExtraData: true });
 
     await user.clear(node.querySelector('#root_foo')!);
     await user.type(node.querySelector('#root_foo')!, 'foobar');
@@ -595,76 +556,29 @@ describe('Form omitExtraData and liveOmit', () => {
 });
 
 describe('omitExtraData on submit', () => {
-  it('should call omitExtraData when the omitExtraData prop is true', async () => {
+  it.each([
+    ['keeps', false, { foo: 'bar', baz: 'baz' }],
+    ['omits', true, { foo: 'bar' }],
+  ])('%s the extra data it validates and submits when omitExtraData is %s', async (_, omitExtraData, submitted) => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
-        foo: {
-          type: 'string',
-        },
+        foo: { type: 'string' },
       },
     };
-    const formData = {
-      foo: '',
-    };
-    const omitExtraData = true;
-    const ref = createRef<Form>();
-    const { node } = createFormComponent({
-      ref,
+    const customValidate = vi.fn((_formData, errors) => errors);
+    const { node, onSubmit } = createFormComponent({
       schema,
-      formData,
+      formData: { foo: 'bar', baz: 'baz' },
       omitExtraData,
+      customValidate,
     });
 
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
-
     await submitForm(node, user);
 
-    expect(theSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it('Should call validateFormWithFormData with the current formData if omitExtraData is false', async () => {
-    const omitExtraData = false;
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: { type: 'string' },
-      },
-    };
-    const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
-    const props: NoValFormProps = {
-      ref: formRef,
-      schema,
-      formData,
-      omitExtraData,
-    };
-    const { node } = createFormComponent(props);
-    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
-    await submitForm(node, user);
-    expect(theSpy).toHaveBeenCalledWith(formData);
-  });
-
-  it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', async () => {
-    const omitExtraData = true;
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: { type: 'string' },
-      },
-    };
-    const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
-    const props: NoValFormProps = {
-      ref: formRef,
-      schema,
-      formData,
-      omitExtraData,
-    };
-    const { node } = createFormComponent(props);
-    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
-    await submitForm(node, user);
-    expect(theSpy).toHaveBeenCalledWith({ foo: 'bar' });
+    expect(customValidate.mock.lastCall![0]).toEqual(submitted);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onSubmit.mock.lastCall![0].formData).toEqual(submitted);
   });
 });
 
@@ -2315,9 +2229,8 @@ describe('extraErrors set after submit (#4965)', () => {
 describe('extraErrors not duplicated when sibling array field mutated (#5041)', () => {
   it('should not accumulate duplicate extraErrors after array item is added', async () => {
     // Reproduces https://github.com/rjsf-team/react-jsonschema-form/issues/5041
-    // processPendingChange() used originalErrorSchema (which already contains merged
-    // extraErrors) as the base for re-merging extraErrors, causing __errors to be
-    // appended again on every array mutation.
+    // A change must re-merge extraErrors onto the AJV-only error schema, not onto one that
+    // already contains them, or __errors are appended again on every array mutation.
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
