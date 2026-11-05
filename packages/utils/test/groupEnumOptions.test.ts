@@ -39,19 +39,13 @@ describe('groupEnumOptions', () => {
       expect(isEnumOptionsGroup(group) && group.options.map((o) => [o.value, o.disabled])).toEqual([[1, true]]);
       expect(!isEnumOptionsGroup(ungrouped) && [ungrouped.value, ungrouped.disabled]).toEqual(['1', false]);
     });
-    it('matches object enumDisabled values only by reference', () => {
-      const two = { id: 2 };
+    it('matches object enumDisabled values by deep equality', () => {
       const objectOptions: EnumOptionsType[] = [
         { value: { id: 1 }, label: 'One' },
-        { value: two, label: 'Two' },
+        { value: { id: 2 }, label: 'Two' },
       ];
-      const result = groupEnumOptions(
-        objectOptions,
-        undefined,
-        // @ts-expect-error: TS2322, object enum values, which `EnumValue` doesn't cover, are what this case checks
-        [{ id: 1 }, two],
-      );
-      expect(result.map((o) => (isEnumOptionsGroup(o) ? undefined : o.disabled))).toEqual([false, true]);
+      const result = groupEnumOptions(objectOptions, undefined, [{ id: 1 }]);
+      expect(result.map((o) => (isEnumOptionsGroup(o) ? undefined : o.disabled))).toEqual([true, false]);
     });
   });
 
@@ -181,23 +175,38 @@ describe('groupEnumOptions', () => {
         throw new Error('expected a group');
       }
     });
-    it('matches object enum values only by reference', () => {
-      const two = { id: 2 };
+    it('matches object and array enum values by deep equality', () => {
       const objectOptions: EnumOptionsType[] = [
         { value: { id: 1 }, label: 'One' },
-        { value: two, label: 'Two' },
+        { value: [2], label: 'Two' },
+        { value: { id: 3 }, label: 'Three' },
       ];
-      const result = groupEnumOptions(objectOptions, {
-        // @ts-expect-error: TS2322, object enum values, which `EnumValue` doesn't cover, are what this case checks
-        Group: [{ id: 1 }, two],
-      });
+      const result = groupEnumOptions(objectOptions, { Group: [[2], { id: 1 }] });
       const group = result[0];
       if (isEnumOptionsGroup(group)) {
-        expect(group.options.map((o) => o.label)).toEqual(['Two']);
+        expect(group.options.map((o) => o.label)).toEqual(['Two', 'One']);
       } else {
         throw new Error('expected a group');
       }
       expect(result).toHaveLength(2);
+    });
+    it('claims the very same object first, then the next option deeply equal to it', () => {
+      const same = { id: 1 };
+      const objectOptions: EnumOptionsType[] = [
+        { value: { id: 1 }, label: 'First' },
+        { value: same, label: 'Second' },
+      ];
+      const result = groupEnumOptions(objectOptions, { A: [same], B: [{ id: 1 }], C: [{ id: 1 }] });
+      expect(
+        result.map((o) => (isEnumOptionsGroup(o) ? [o.label, o.options.map(({ label }) => label)] : o.label)),
+      ).toEqual([
+        ['A', ['Second']],
+        ['B', ['First']],
+      ]);
+    });
+    it('groups a null enum value', () => {
+      const result = groupEnumOptions([{ value: null, label: 'None' }], { Group: [null] });
+      expect(result.map((o) => (isEnumOptionsGroup(o) ? o.label : o.value))).toEqual(['Group']);
     });
     it('does not string-match an object enum value against a primitive group value', () => {
       const objectOptions: EnumOptionsType[] = [{ value: { id: 1 }, label: 'One' }];

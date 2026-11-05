@@ -1915,8 +1915,8 @@ export interface UISchemaSubmitButtonOptions {
 /** The submit button options `getSubmitButtonOptions()` returns, whose `props` are always present */
 export type SubmitButtonOptions = UISchemaSubmitButtonOptions & Required<Pick<UISchemaSubmitButtonOptions, 'props'>>;
 
-/** Represents a primitive JSON Schema enum value */
-export type EnumValue = string | number | boolean;
+/** Represents a JSON Schema enum value */
+export type EnumValue = string | number | boolean | null | GenericObjectType | unknown[];
 
 /** This type represents an element used to render an enum option */
 export interface EnumOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
@@ -2035,7 +2035,7 @@ type UIOptionsDeclaredType<
      * following the same pattern as `ui:order` for object properties. Supports a `'*'` wildcard to represent all
      * remaining values in their original schema order.
      */
-    enumOrder?: (EnumValue | null)[];
+    enumOrder?: EnumValue[];
     /** Groups enum options into labeled `<optgroup>`-like sections. Keys are group labels, values are arrays of enum
      * values belonging to that group. Enum values not listed in any group are rendered ungrouped after the groups.
      */

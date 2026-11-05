@@ -595,7 +595,7 @@ Gets the index of the option a `RadioWidget` or `CheckboxesWidget` focuses under
 ### enumOptionsIsDisabled()
 
 Determines whether the option with the given `value` is one the `ui:enumDisabled` list disables.
-The values match strictly, and an `enumDisabled` that isn't a list disables nothing.
+Primitive values match strictly, an object or array value by deep equality, and an `enumDisabled` that isn't a list disables nothing.
 
 #### Parameters
 
@@ -2049,7 +2049,7 @@ The following cases are handled rather than being allowed to break a render:
 - A group value matching no remaining option is skipped, and a group left with no options is omitted entirely, so no group renders as an empty heading
 - A group whose value is not an array at all is ignored the same way
 - When several options share a `value`, each reference to that value claims the next not-yet-claimed option with it, by index, rather than collapsing them into one
-- A group value that is not an exact match for an option's `value` also matches a primitive one by its string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since a uiSchema authored as JSON often stringifies them. Object and array enum values only match the very same object, so a JSON-authored uiSchema cannot group them.
+- A group value that is not an exact match for an option's `value` also matches one deeply equal to it when it is an object or array, and a primitive one by its string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since a uiSchema authored as JSON can't hold the schema's own objects and often stringifies primitives
 
 Note that JavaScript orders integer-like keys (e.g. `'2024'`) ahead of all other keys, in ascending numeric order, regardless of the order they were written in, so those groups come first.
 

@@ -4261,6 +4261,32 @@ describe('dependencies/oneOf constraint violation produces validation errors on 
   });
 });
 
+describe('object enum values a JSON uiSchema lists (#5392)', () => {
+  it('orders, groups and disables them', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', enum: [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }] },
+      uiSchema: {
+        'ui:options': {
+          enumNames: ['One', 'Two', 'Three', 'Four'],
+          enumOrder: [{ a: 4 }, { a: 2 }, { a: 1 }],
+          optgroups: { Group: [{ a: 2 }] },
+          enumDisabled: [{ a: 4 }],
+        },
+      },
+    });
+
+    const options = (root: Element) => [...root.querySelectorAll('option')].filter((option) => option.value !== '');
+    expect(options(node).map((option) => [option.textContent, option.disabled])).toEqual([
+      ['Two', false],
+      ['Four', true],
+      ['One', false],
+    ]);
+    expect(options(node.querySelector('optgroup[label="Group"]')!).map((option) => option.textContent)).toEqual([
+      'Two',
+    ]);
+  });
+});
+
 describe('a dependency oneOf none of whose options declares the dependency key (#5407)', () => {
   it("starts a select over object constants on the option's const", () => {
     const schema: RJSFSchema = {

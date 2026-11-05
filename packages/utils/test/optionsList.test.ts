@@ -743,7 +743,7 @@ describe('optionsList()', () => {
   });
   it('should reorder object and array enum values by deep equality', () => {
     const schema: RJSFSchema = { enum: [{ tier: 1 }, { tier: 2 }, [1, 2], [3], 'free'] };
-    const uiSchema = { 'ui:enumOrder': [{ tier: 2 }, [3], '*'] } as unknown as UiSchema;
+    const uiSchema: UiSchema = { 'ui:enumOrder': [{ tier: 2 }, [3], '*'] };
     expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([
       { tier: 2 },
       [3],
@@ -754,13 +754,28 @@ describe('optionsList()', () => {
   });
   it('should reorder an enum value by the entry equal to it before one that only shares its string', () => {
     const schema: RJSFSchema = { enum: [1, '1', { tier: 1 }] };
-    const uiSchema = { 'ui:enumOrder': [1, { tier: 2 }, '*'] } as unknown as UiSchema;
+    const uiSchema: UiSchema = { 'ui:enumOrder': [1, { tier: 2 }, '*'] };
     expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([1, '1', { tier: 1 }]);
+  });
+  it('should give each ui:enumOrder entry the next option it finds, as optgroups does', () => {
+    const schema: RJSFSchema = { enum: [1, '1', 2] };
+    const uiSchema: UiSchema = { 'ui:enumOrder': ['1', '1'] };
+    expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual(['1', 1]);
   });
   it('should list an enum value several ui:enumOrder entries find only once', () => {
     const schema: RJSFSchema = { enum: [1, 2, { tier: 1 }] };
-    const uiSchema = { 'ui:enumOrder': ['2', 2, { tier: 1 }, { tier: 1 }, '*'] } as unknown as UiSchema;
+    const uiSchema: UiSchema = { 'ui:enumOrder': ['2', 2, { tier: 1 }, { tier: 1 }, '*'] };
     expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([2, { tier: 1 }, 1]);
+  });
+  it("should list the remaining values only at the first of several '*' entries", () => {
+    const schema: RJSFSchema = { enum: ['a', 'b', 'c'] };
+    const uiSchema: UiSchema = { 'ui:enumOrder': ['*', 'b', '*'] };
+    expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual(['a', 'c', 'b']);
+  });
+  it('should ignore a ui:enumOrder that is not a list', () => {
+    const schema: RJSFSchema = { enum: ['a', 'b'] };
+    const uiSchema = { 'ui:enumOrder': 'b' } as unknown as UiSchema;
+    expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual(['a', 'b']);
   });
   describe('anyOf and oneOf together', () => {
     it('should read anyOf, the list isSelect() reads, when both are constants', () => {
@@ -875,7 +890,7 @@ describe('optionsList()', () => {
           { const: { kind: 'dog' }, title: 'Dog' },
         ],
       };
-      const uiSchema = { 'ui:enumOrder': [{ kind: 'dog' }, '*'] } as unknown as UiSchema;
+      const uiSchema: UiSchema = { 'ui:enumOrder': [{ kind: 'dog' }, '*'] };
       expect(optionsList(schema, uiSchema)?.map(({ label }) => label)).toEqual(['Dog', 'Cat']);
     });
     it('should find a null option by a typed null entry', () => {
