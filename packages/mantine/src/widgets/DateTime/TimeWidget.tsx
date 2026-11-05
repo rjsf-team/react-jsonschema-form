@@ -4,7 +4,13 @@ import { TimeInput } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue, useTimeWidgetProps, widgetDrawsLabel } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../../utils.tsx';
+import {
+  cleanupOptions,
+  getDescriptionProps,
+  getWidgetError,
+  useInputAriaProps,
+  getRequiredProps,
+} from '../../utils.tsx';
 
 /** The `TimeWidget` component uses the `TimeInput` component from `@mantine/dates` for rendering.
  *
@@ -22,20 +28,7 @@ export default function TimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    htmlName,
-    placeholder,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    label,
-    options,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
+  const { id, htmlName, placeholder, disabled, readonly, autofocus, label, options, onChange, onBlur, onFocus } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { localValue: displayValue, computeTimeValue } = useTimeWidgetProps(props);
@@ -81,7 +74,7 @@ export default function TimeWidget<
       name={htmlName || id}
       value={displayValue || ''}
       placeholder={placeholder || undefined}
-      required={required}
+      {...getRequiredProps<T, S, F>(props)}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       label={labelValue(label || undefined, hideLabel, false)}

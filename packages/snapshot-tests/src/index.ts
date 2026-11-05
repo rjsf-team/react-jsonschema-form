@@ -23,6 +23,8 @@ export { controlNameTests } from './controlNameTests.tsx';
 
 export { renamedKeyTests } from './renamedKeyTests.tsx';
 
+export { requiredCueTests } from './requiredCueTests.tsx';
+
 export { selectedOptionDescriptionTests } from './selectedOptionDescriptionTests.tsx';
 
 export { submitPendingTests } from './submitPendingTests.tsx';

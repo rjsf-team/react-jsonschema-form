@@ -1767,7 +1767,7 @@ Mixed types can't share a typed field (`NumberField` would cast a string option 
 
 Derives the plan of the selector an `anyOf`/`oneOf` field renders to pick its option from the field's own plan.
 The selector draws the parts the field's plan has the field draw itself, as a theme whose template draws no label declares, and the parts drawn elsewhere are `'above'` it. It is derived from the plan of the field rendering the options, which `SchemaField` hands none of the parts a component rendered beside the options draws itself, such as a custom field's label or an object's heading.
-It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, or by the `aria-label` the field's control takes where `ui:label: false` hides its label, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it picks an option index rather than form data and holds one unless its widget offers an empty choice, which clears the field's data with it.
+It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, or by the `aria-label` the field's control takes where `ui:label: false` hides its label, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it picks an option index rather than form data and holds one unless its widget offers an empty choice, which clears the field's data with it. A label it draws for the field carries the field's required marker.
 `MultiSchemaField` passes it to the selector as `presentation`.
 
 #### Parameters
@@ -3441,15 +3441,15 @@ That label names the control through its own `presentation.label.id` instead.
 
 ### templateMarksRequired&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#templatemarksrequired}
 
-Whether a `FieldTemplate` marks the label it draws as required: where the field's plan says so, which leaves the marker off a control declared `uncheckedIsFalse` whose schema doesn't demand `true` ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388)), or, for a template rendered without a plan, where the field is `required`.
+Whether a `FieldTemplate`, or a widget drawing its own label, marks that label as required: where the field's plan says so, which leaves the marker off a control declared `uncheckedIsFalse` whose schema doesn't demand `true` ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388)) and off a level whose field above already draws it, and puts it on the label an `anyOf`/`oneOf` selector draws for its field ([#5573](https://github.com/rjsf-team/react-jsonschema-form/issues/5573)), or, for one rendered without a plan, where the field is `required`. A widget keeps its control's own `required` apart from this.
 
 #### Parameters
 
-- props: Pick&lt;FieldTemplateProps&lt;T, S, F>, 'required' | 'presentation'> - The template's `required` and `presentation`
+- props: Pick&lt;FieldTemplateProps&lt;T, S, F>, 'required' | 'presentation'> - The component's `required` and `presentation`
 
 #### Returns
 
-- boolean: True when the template's label carries the required marker
+- boolean: True when the label carries the required marker
 
 ### titleDrawsOptionalDataControl&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#titledrawsoptionaldatacontrol}
 

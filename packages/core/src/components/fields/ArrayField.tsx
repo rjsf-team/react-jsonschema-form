@@ -32,6 +32,7 @@ import {
   fieldPathToId,
   fieldPathToName,
   TranslatableString,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
@@ -1009,7 +1010,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     onAddClick,
     readonly,
     hideError,
-    required,
+    required: templateMarksRequired<T[], S, F>({ required, presentation }),
     schema,
     title: getContainerHeading<T[], S, F>(presentation, schema, uiOptions, uiOptions.title || fieldTitle),
     formData,
@@ -1152,7 +1153,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     onAddClick,
     readonly,
     hideError,
-    required,
+    required: templateMarksRequired<T[], S, F>({ required, presentation }),
     registry,
     schema,
     uiSchema,

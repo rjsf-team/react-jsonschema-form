@@ -12,6 +12,7 @@ import {
   labelValue,
   optionId,
   useOptionFocusHandlers,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
@@ -23,8 +24,7 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, disabled, options, value, readonly, required, autofocus, onChange, onBlur, onFocus, label } =
-    props;
+  const { id, htmlName, disabled, options, value, readonly, autofocus, onChange, onBlur, onFocus, label } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -66,7 +66,7 @@ export default function CheckboxesWidget<
           data-disabled={disabled || readonly ? '' : undefined}
         >
           {labelValue(label)}
-          {required && <RequiredMarker ms={1} />}
+          {templateMarksRequired<T, S, F>(props) && <RequiredMarker ms={1} />}
         </chakra.div>
       )}
       <CheckboxGroup

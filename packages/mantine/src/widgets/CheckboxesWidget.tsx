@@ -12,7 +12,14 @@ import {
   useOptionFocusHandlers,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, GroupOptions, groupExcludedKeys, useGroupAriaProps } from '../utils.tsx';
+import {
+  cleanupOptions,
+  getDescriptionProps,
+  GroupOptions,
+  groupExcludedKeys,
+  useGroupAriaProps,
+  getRequiredProps,
+} from '../utils.tsx';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -24,7 +31,7 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, value, required, disabled, readonly, autofocus, options, onChange, onBlur, onFocus } = props;
+  const { id, htmlName, value, disabled, readonly, autofocus, options, onChange, onBlur, onFocus } = props;
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -56,7 +63,7 @@ export default function CheckboxesWidget<
       id={id}
       value={selectedValues}
       onChange={handleChange}
-      required={required}
+      {...getRequiredProps<T, S, F>(props)}
       readOnly={fieldDisabled}
       {...themeProps}
       {...groupProps}

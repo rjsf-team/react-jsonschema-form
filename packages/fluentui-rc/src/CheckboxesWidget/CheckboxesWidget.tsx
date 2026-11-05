@@ -13,6 +13,7 @@ import {
   getOptionValueFormat,
   optionId,
   useOptionFocusHandlers,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
@@ -25,8 +26,7 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { label, id, htmlName, disabled, options, value, autofocus, readonly, required, onChange, onBlur, onFocus } =
-    props;
+  const { label, id, htmlName, disabled, options, value, autofocus, readonly, onChange, onBlur, onFocus } = props;
   const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -54,7 +54,7 @@ export default function CheckboxesWidget<
   return (
     <>
       {drawsLabel && (
-        <Label id={labelId} required={required}>
+        <Label id={labelId} required={templateMarksRequired<T, S, F>(props)}>
           {label}
         </Label>
       )}

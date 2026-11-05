@@ -200,6 +200,39 @@ describe('resolveFieldPresentation()', () => {
       expect(container.control).toBeUndefined();
     });
 
+    it('leaves the heading of a required level unmarked beneath a marked label above, as its one marker', () => {
+      const plan = resolve({
+        inherited: resolve({ required: true }),
+        declaration: WIDGET_LABEL,
+        label: 'Dog',
+        hasControl: false,
+        required: true,
+      });
+      expect(plan.label).toMatchObject({ text: 'Dog', by: 'self', requiredMarker: false });
+    });
+
+    it('leaves the label of a required level unmarked beneath a marked label a field above draws itself', () => {
+      const plan = resolve({
+        inherited: resolve({ declaration: WIDGET_LABEL, required: true }),
+        declaration: WIDGET_LABEL,
+        label: 'Dog',
+        required: true,
+      });
+      expect(plan.label).toMatchObject({ text: 'Dog', by: 'self', requiredMarker: false });
+      expect(plan.control?.attributes.required).toBe(true);
+    });
+
+    it('marks a required level beneath an unmarked or undrawn label above', () => {
+      const required = { declaration: WIDGET_LABEL, label: 'Dog', required: true };
+      expect(resolve({ ...required, inherited: resolve({ declaration: WIDGET_LABEL }) }).label.requiredMarker).toBe(
+        true,
+      );
+      expect(
+        resolve({ ...required, inherited: resolve({ declaration: WIDGET_LABEL, label: '', required: true }) }).label
+          .requiredMarker,
+      ).toBe(true);
+    });
+
     it("doesn't draw again, with no control, the text of the template label above", () => {
       expect(resolve({ inherited: above, declaration: WIDGET_LABEL, hasControl: false }).label).toEqual({
         text: 'Foo',

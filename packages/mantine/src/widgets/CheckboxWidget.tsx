@@ -9,6 +9,7 @@ import {
   labelValue,
   schemaRequiresTrueValue,
   widgetDrawsLabel,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { getDescriptionProps, renderErrors } from '../utils.tsx';
@@ -80,7 +81,7 @@ export default function CheckboxWidget<
           !hideLabel && label ? (
             <>
               {label}
-              {trueValueRequired && <span className='required'>*</span>}
+              {trueValueRequired && templateMarksRequired<T, S, F>(props) && <span className='required'>*</span>}
             </>
           ) : (
             labelValue(label || undefined, hideLabel, false)

@@ -11,6 +11,7 @@ import {
   getGroupLabelling,
   getOptionValueFormat,
   optionId,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
@@ -50,7 +51,7 @@ export default function RadioWidget<
   return (
     <>
       {drawsLabel && (
-        <Label id={labelId} required={required}>
+        <Label id={labelId} required={templateMarksRequired<T, S, F>(props)}>
           {label}
         </Label>
       )}

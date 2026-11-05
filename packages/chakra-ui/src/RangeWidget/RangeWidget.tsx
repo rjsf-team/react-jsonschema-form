@@ -11,6 +11,7 @@ import {
   rangeSpec,
   toNumericValue,
   widgetDrawsLabelText,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -109,6 +110,7 @@ export default function RangeWidget<
       mb={1}
       disabled={disabled || readonly}
       required={required}
+      requiredMarker={templateMarksRequired<T, S, F>(props)}
       readOnly={readonly}
       invalid={hasWidgetErrors<T, S, F>(props)}
       label={labelValue(label, !drawsLabel)}

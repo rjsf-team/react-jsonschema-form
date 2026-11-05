@@ -17,6 +17,7 @@ import {
   widgetAriaProps,
   widgetDrawsLabel,
   widgetDrawsLabelText,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { fieldLabelSlot } from '../utils.ts';
@@ -104,7 +105,11 @@ function SelectWidget<
 
   return (
     <Field
-      label={drawsLabel ? fieldLabelSlot(label, id, labelId) : undefined}
+      label={
+        drawsLabel
+          ? { ...fieldLabelSlot(label, id, labelId), required: templateMarksRequired<T, S, F>(props) }
+          : undefined
+      }
       validationState={hasWidgetErrors<T, S, F>(props) ? 'error' : undefined}
       required={required}
     >

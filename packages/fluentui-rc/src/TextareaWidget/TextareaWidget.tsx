@@ -1,7 +1,13 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Label, Textarea, makeStyles } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, labelValue, toInputValue, widgetDrawsLabelText } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  labelValue,
+  toInputValue,
+  widgetDrawsLabelText,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 const useStyles = makeStyles({
   label: {
@@ -58,7 +64,12 @@ export default function TextareaWidget<
   return (
     <>
       {labelValue(
-        <Label htmlFor={id} required={required} disabled={disabled} className={classes.label}>
+        <Label
+          htmlFor={id}
+          required={templateMarksRequired<T, S, F>(props)}
+          disabled={disabled}
+          className={classes.label}
+        >
           {label}
         </Label>,
         hideLabel,

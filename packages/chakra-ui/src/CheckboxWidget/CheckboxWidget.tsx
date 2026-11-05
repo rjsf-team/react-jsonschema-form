@@ -10,6 +10,7 @@ import {
   hasWidgetErrors,
   schemaRequiresTrueValue,
   widgetDrawsLabelText,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
@@ -85,7 +86,7 @@ export default function CheckboxWidget<
         {drawsLabel ? (
           <Text>
             {label}
-            {trueValueRequired && <ChakraField.RequiredIndicator />}
+            {trueValueRequired && templateMarksRequired<T, S, F>(props) && <ChakraField.RequiredIndicator />}
           </Text>
         ) : undefined}
       </Checkbox>

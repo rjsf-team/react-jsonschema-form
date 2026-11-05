@@ -1561,7 +1561,9 @@ export type ContainerFieldTemplateProps<
   id: string;
   /** A boolean value stating if the array is read-only */
   readonly?: boolean;
-  /** A boolean value stating if the array is required */
+  /** A boolean value stating if the array's heading carries the required marker: where the array is required, unless a
+   * field above rendering the same id draws the marked label, as an `anyOf`/`oneOf` field does for its option
+   */
   required?: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
@@ -1649,7 +1651,9 @@ export type ObjectFieldTemplateProps<
   onAddProperty: () => void;
   /** A boolean value stating if the object is read-only */
   readonly?: boolean;
-  /** A boolean value stating if the object is required */
+  /** A boolean value stating if the object's heading carries the required marker: where the object is required, unless
+   * a field above rendering the same id draws the marked label, as an `anyOf`/`oneOf` field does for its option
+   */
   required?: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;

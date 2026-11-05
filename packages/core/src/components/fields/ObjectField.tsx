@@ -53,6 +53,7 @@ import {
   isObject,
   TranslatableString,
   uiBooleanOption,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
@@ -1049,7 +1050,7 @@ export default function ObjectField<
     }),
     readonly,
     disabled,
-    required,
+    required: templateMarksRequired<T, S, F>({ required, presentation }),
     hideError,
     ...getContainerErrorProps<T, S, F>(rawErrors, hideError),
     id,

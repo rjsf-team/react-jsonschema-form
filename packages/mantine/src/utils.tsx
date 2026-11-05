@@ -52,6 +52,7 @@ import {
   RESERVED_UI_OPTION_NAMES,
   titleId,
   widgetDrawsLabel,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import type { MantineGlobalUiOptionsKeys } from './globalUiOptions.ts';
@@ -128,6 +129,23 @@ export function errorLines(errors: readonly ReactNode[]): ReactNode {
         </Fragment>
       ))
     : undefined;
+}
+
+/** Gets the `required` a Mantine input takes, and the `withAsterisk` that keeps its label's marker apart from it where
+ * they differ, as for an `anyOf`/`oneOf` selector, which is marked but not required, and the option beneath it, which is
+ * required but not marked. Left out where they agree, so `withAsterisk` in a form's theme still applies
+ *
+ * @param props - The widget's `required` and `presentation`
+ * @returns - The props to spread on the input or its wrapper
+ */
+export function getRequiredProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: Pick<WidgetProps<T, S, F>, 'required' | 'presentation'>) {
+  const { required } = props;
+  const marked = templateMarksRequired<T, S, F>(props);
+  return { required, ...(marked !== Boolean(required) && { withAsterisk: marked }) };
 }
 
 /** The `*` a title template marks a required object's or array's heading with, styled as Mantine marks a required
@@ -804,7 +822,7 @@ export function useFieldWrapperProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(widgetProps: WidgetProps<T, S, F>, inputComponent: 'Slider' | 'Select', containerOnInputs = false) {
-  const { id, label, required, options } = widgetProps;
+  const { id, label, options } = widgetProps;
   const hideLabel = !widgetDrawsLabel<T, S, F>(widgetProps);
   const { description } = getDescriptionProps(widgetProps);
   const pickedOptions = pickOptions(options, fieldWrapperPickedKeys);
@@ -848,7 +866,7 @@ export function useFieldWrapperProps<
       inputWrapperOrder: Array.isArray(wrapperProps.inputWrapperOrder) ? wrapperProps.inputWrapperOrder : undefined,
       label: labelValue(label || undefined, hideLabel, false),
       labelProps: { ...asObject(resolved.labelProps), id: titleId(id), htmlFor: undefined },
-      required,
+      ...getRequiredProps<T, S, F>(widgetProps),
       description,
       descriptionProps: withDescriptionDiv(resolved.descriptionProps, id),
       error,

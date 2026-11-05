@@ -10,6 +10,7 @@ import {
   labelValue,
   schemaRequiresTrueValue,
   widgetDrawsLabel,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { getMuiProps, withInputSlot } from '../util.ts';
@@ -81,13 +82,12 @@ export default function CheckboxWidget<
       <FormControlLabel
         {...otherMuiProps}
         {...muiSlotProps?.formControlLabel}
-        required={trueValueRequired}
+        required={trueValueRequired && templateMarksRequired<T, S, F>(props)}
         control={
           <Checkbox
             id={id}
             name={htmlName || id}
             checked={typeof value === 'undefined' ? false : Boolean(value)}
-            required={trueValueRequired}
             disabled={disabled || readonly}
             autoFocus={autofocus}
             onChange={handleChange}
@@ -95,8 +95,12 @@ export default function CheckboxWidget<
             onFocus={handleFocus}
             {...muiSlotProps?.checkbox}
             // The `<input>` carrying the field's id takes its plan, rather than the `<span>` around it
+            // `FormControlLabel` hands the control the `required` it marks its label by, so the `<input>` takes its own
             slotProps={withInputSlot(
-              getControlAttributes<T, S, F>({ id, presentation }),
+              {
+                required: muiSlotProps?.checkbox?.required ?? trueValueRequired,
+                ...getControlAttributes<T, S, F>({ id, presentation }),
+              },
               muiSlotProps?.checkbox?.slotProps,
             )}
           />

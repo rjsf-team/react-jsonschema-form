@@ -18,6 +18,7 @@ import {
   getOptionValueFormat,
   optionId,
   useOptionFocusHandlers,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { getMuiProps, withInputSlot } from '../util.ts';
@@ -45,8 +46,7 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { label, id, htmlName, disabled, options, value, autofocus, readonly, required, onChange, onBlur, onFocus } =
-    props;
+  const { label, id, htmlName, disabled, options, value, autofocus, readonly, onChange, onBlur, onFocus } = props;
   const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -82,7 +82,7 @@ export default function CheckboxesWidget<
     <>
       {/* No `for`, which can't name the group's wrapper: the group points its `aria-labelledby` at the label instead */}
       {drawsLabel && (
-        <FormLabel id={labelId} required={required}>
+        <FormLabel id={labelId} required={templateMarksRequired<T, S, F>(props)}>
           {label}
         </FormLabel>
       )}

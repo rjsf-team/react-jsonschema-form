@@ -5,9 +5,9 @@ import {
   getControlAttributes,
   getTemplates,
   getWidgetDescription,
-  labelValue,
   schemaRequiresTrueValue,
   widgetDrawsLabelText,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
@@ -60,7 +60,12 @@ export default function CheckboxWidget<
       <Checkbox
         id={id}
         name={htmlName || id}
-        label={labelValue(label, hideLabel)}
+        // Fluent marks the label by the checkbox's `required` unless the label's slot says otherwise
+        label={
+          hideLabel
+            ? undefined
+            : { children: label, required: trueValueRequired && templateMarksRequired<T, S, F>(props) }
+        }
         checked={typeof value === 'undefined' ? false : Boolean(value)}
         required={trueValueRequired}
         disabled={disabled || readonly}

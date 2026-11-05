@@ -114,8 +114,8 @@ describe('oneOf', () => {
   });
 
   // The selector picks an option index, which isn't form data, and holds one unless its widget offers an empty choice,
-  // as core's doesn't, so it's neither required nor marked so (#5527); the field's own label carries the marker,
-  // and the selected option's control stays required
+  // as core's doesn't, so it isn't required (#5527); the field's own label carries the marker, and the selected option's
+  // control stays required
   it("leaves a required field's option selector unrequired, marking only the field's label for a scalar option", () => {
     const { node } = createFormComponent({
       schema: {
@@ -138,12 +138,11 @@ describe('oneOf', () => {
     expect(node.querySelector('label[for="root_pet"] span.rjsf-required')).toBeInTheDocument();
   });
 
-  // An option drawing a heading of its own is required with its field, so its heading is marked beside the field's label
-  // (#5527)
+  // The field's label is its one marker, so an option's own heading beneath it stays unmarked (#5573)
   it.each([
     ['object', { title: 'A', type: 'object', properties: { x: { type: 'string' } } }],
     ['array', { title: 'A', type: 'array', items: { type: 'string' } }],
-  ] as const)("marks a required field's titled %s option's heading too", (_, option) => {
+  ] as const)("leaves a required field's titled %s option's heading unmarked", (_, option) => {
     const { node } = createFormComponent({
       schema: {
         type: 'object',
@@ -153,9 +152,10 @@ describe('oneOf', () => {
     });
 
     expect(screen.getByRole('combobox', { name: 'pet' })).not.toBeRequired();
-    expect(node.querySelectorAll('span.rjsf-required')).toHaveLength(2);
+    expect(node.querySelectorAll('span.rjsf-required')).toHaveLength(1);
     expect(node.querySelector('#root_pet__label + span.rjsf-required')).toBeInTheDocument();
-    expect(node.querySelector('#root_pet__title + span.rjsf-required')).toBeInTheDocument();
+    expect(node.querySelector('#root_pet__title')).toBeInTheDocument();
+    expect(node.querySelector('#root_pet__title + span.rjsf-required')).not.toBeInTheDocument();
   });
 
   it('should assign a default value and set defaults on option change', async () => {

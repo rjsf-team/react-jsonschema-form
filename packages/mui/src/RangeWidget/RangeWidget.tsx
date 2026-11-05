@@ -15,6 +15,7 @@ import {
   toNumericValue,
   widgetDrawsLabel,
   widgetDrawsLabelText,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { getMuiProps, withInputSlot } from '../util.ts';
@@ -131,7 +132,7 @@ export default function RangeWidget<
   return (
     <>
       {labelValue(
-        <FormLabel required={required} {...labelProps}>
+        <FormLabel required={templateMarksRequired<T, S, F>(props)} {...labelProps}>
           {label || undefined}
         </FormLabel>,
         hideLabel,

@@ -13,6 +13,7 @@ import {
   hasWidgetErrors,
   labelValue,
   optionId,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -65,6 +66,7 @@ export default function RadioWidget<
       mb={1}
       disabled={disabled || readonly}
       required={required}
+      requiredMarker={templateMarksRequired<T, S, F>(props)}
       readOnly={readonly}
       label={labelValue(label, !drawsLabel)}
       ids={{ label: labelId }}

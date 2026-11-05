@@ -22,6 +22,7 @@ import {
   getWidgetError,
   numberInputOwnKeys,
   useInputAriaProps,
+  getRequiredProps,
 } from '../utils.tsx';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
@@ -41,7 +42,6 @@ export default function BaseInputTemplate<
     schema,
     value,
     placeholder,
-    required,
     disabled,
     readonly,
     autofocus,
@@ -125,7 +125,7 @@ export default function BaseInputTemplate<
     id,
     name: htmlName || id,
     label: labelValue(label || undefined, hideLabel, false),
-    required,
+    ...getRequiredProps<T, S, F>(props),
     autoFocus: autofocus,
     disabled: disabled || readonly,
     onBlur: !readonly ? handleBlur : undefined,
