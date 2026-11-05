@@ -425,7 +425,8 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
   const onTextBlur = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onBlur(id, val);
   const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
 
-  const inputProps = { ...rest, ...getBaseInputProps(props) };
+  const { title, ...baseInputProps } = getBaseInputProps(props);
+  const inputProps = { ...rest, ...baseInputProps };
   // The field's plan leaves out the errors `ui:hideError` hides, and `hasWidgetErrors()` reads the `aria-invalid` it
   // gives the control, falling back to `rawErrors` with `hideError` for a widget rendered without a plan. The messages
   // are drawn here only where the plan has the widget draw them, under the id the control's `aria-describedby` names,
@@ -448,6 +449,7 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
         onChange={onChangeOverride || onTextChange}
         onBlur={onTextBlur}
         onFocus={onTextFocus}
+        title={title}
         {...inputProps}
         {...getControlAttributes({ id, presentation })}
       />
@@ -497,9 +499,9 @@ The following props are passed to the `BaseInputTemplate`:
 - `readonly`: A boolean value stating if the widget is read-only;
 - `autofocus`: A boolean value stating if the widget should autofocus;
 - `label`: The computed label for this widget, as a string
-- `multiple`: A boolean value stating if the widget can accept multiple values;
+- `multiple`: A boolean value stating if the widget can accept multiple values. `ArrayField` passes it to the widget of any multi-select, so [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it only on a `file` input;
 - `type`: The `type` of the input, which the widgets rendering a `BaseInputTemplate` set, such as `'number'` or `'date'`;
-- `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it, `inputMode` and `accept` over the input props `getInputProps()` derives and adds `multiple` to a `file` input, and [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns those four on their own. A `pattern` counts even when it is undefined, which turns the derived one off;
+- `pattern`: A `pattern` a widget passes for the input, which replaces the one the schema derives. [`getBaseInputProps()`](../api-reference/utility-functions.md#getbaseinputprops) puts it, `inputMode` and `accept` over the input props `getInputProps()` derives and adds `multiple` to a `file` input, and [`callerInputProps()`](../api-reference/utility-functions.md#callerinputprops) returns those three on their own. A `pattern` counts even when it is undefined, which turns the derived one off;
 - `inputMode`: An `inputMode` a widget passes for the input, which replaces the one the schema derives, and which `callerInputProps()` returns the way it returns `pattern`;
 - `accept`: The file types a widget passes for the input, which replace `ui:options.accept`, and which `callerInputProps()` returns too;
 - `onChange`: The value change event handler; call it with the new value every time it changes;

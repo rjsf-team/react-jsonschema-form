@@ -33,6 +33,22 @@ describe('BaseInputTemplate', () => {
     expect(container.querySelector('input')).toHaveAttribute('accept', '.png');
   });
 
+  test('puts a multiple extraProps carries on a file input and on no other', () => {
+    const { container } = render(
+      <>
+        <BaseInputTemplate
+          {...makeWidgetMockProps({ id: 'file', value: '' })}
+          type='file'
+          extraProps={{ multiple: true }}
+        />
+        <BaseInputTemplate {...makeWidgetMockProps({ id: 'email' })} type='email' extraProps={{ multiple: true }} />
+      </>,
+    );
+
+    expect(container.querySelector('#file')).toHaveAttribute('multiple');
+    expect(container.querySelector('#email')).not.toHaveAttribute('multiple');
+  });
+
   test('shows nothing for an object value', () => {
     const { container } = render(
       <BaseInputTemplate {...makeWidgetMockProps({ schema: { type: 'string' }, value: { a: 1 } })} />,

@@ -490,6 +490,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `NumberField` to stop taking a string `value` prop, such as `'3.'`, as the pending text of a custom field that renders it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `BaseInputTemplate` replacing an `accept` a widget passes it as a prop with `ui:options.accept` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root, and the key input enabled in a disabled or read-only form, where editing it renamed the key ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- **BREAKING CHANGE:** Change `BaseInputTemplate` to put a `multiple` it is passed on a file input only, as `ArrayField` passes one to the widget of every multi-select, so an `email` input no longer takes several addresses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/daisyui
 
@@ -618,6 +619,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked, focuses it and is written back as a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `BaseInputTemplate` replacing an `accept` a widget passes it as a prop with `ui:options.accept` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- **BREAKING CHANGE:** Change `BaseInputTemplate` to put a `multiple` it is passed on a file input only, as `ArrayField` passes one to the widget of every multi-select, so an `email` input no longer takes several addresses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/fluentui-rc
 
@@ -762,7 +764,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `PasswordWidget` to show a value of `0` or `false`, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix the number input writing an empty string when cleared, which ignored `ui:emptyValue` and let a required string field with `ui:inputType: 'number'` pass empty: it now writes `ui:emptyValue`, as the text input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `DateWidget` and `DateTimeWidget` to use their default `valueFormat` and `displayFormat` for an option that isn't a string ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop, and a `number` field a widget passes an `inputMode` or `onChangeOverride` getting a native number input that blocked a decimal rather than the text input the other themes render ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop, a `number` field a widget passes an `inputMode` getting a native number input that blocked a decimal, and `NumberInput` options such as `hideControls` landing on the text input of one passed an `onChangeOverride` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/mui
@@ -876,6 +878,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it as a prop, so the file input of an array took one file at a time ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `BaseInputTemplate` to put an `accept` a widget passes in `extraProps` on the input over `ui:options.accept`, which replaced it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- **BREAKING CHANGE:** Change `BaseInputTemplate` to put a `multiple` it is passed, in `extraProps` too, on a file input only, as `ArrayField` passes one to the widget of every multi-select, so an `email` input no longer takes several addresses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/shadcn
 
@@ -965,6 +968,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it as a prop, so the file input of an array took one file at a time ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `BaseInputTemplate` to put an `accept` a widget passes in `extraProps` on the input over `ui:options.accept`, which replaced it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- **BREAKING CHANGE:** Change `BaseInputTemplate` to put a `multiple` it is passed, in `extraProps` too, on a file input only, as `ArrayField` passes one to the widget of every multi-select, so an `email` input no longer takes several addresses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 
 ## @rjsf/snapshot-tests
 
@@ -1311,7 +1315,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add the `OpenProps` type, the open part of `GridTemplateProps` and `ui:submitButtonOptions.props`, `SubmitButtonOptions`, what `getSubmitButtonOptions()` returns, and `AnyUiOptionsCheck`, the constraint of `StrictUiSchema`'s `Checks` ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
 - **BREAKING CHANGE:** Remove the open index signature from `FieldProps`, `WidgetProps` and `BaseInputTemplateProps`, which now declare the props RJSF passes, so a field or widget declares any prop of its own. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - **BREAKING CHANGE:** Make `onKeyRename`, `onKeyRenameBlur` and `onRemoveProperty` optional in `FieldTemplateProps` and `WrapIfAdditionalTemplateProps`, as they are undefined for a field `ObjectField` doesn't render, such as the root or an array item. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Add `callerInputProps()`, the `pattern`, `inputMode`, `accept` and `multiple` a widget passes `BaseInputTemplate` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Add `callerInputProps()`, the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `AdditionalPropertyKeySelect` to take an optional `onKeyRename` and render disabled without one ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Add `isAdditionalKeyDisabled()`, whether a `WrapIfAdditionalTemplate` disables its free-text key input: for a disabled or read-only field, and one handed no `onKeyRenameBlur` ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Add `getBaseInputProps()`, the props a `BaseInputTemplate` puts on its input: those `getInputProps()` derives, the ones `callerInputProps()` picks over them, the numeric `title` unless the widget replaces the derived `pattern`, and the widget's `multiple` on a file input only ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))

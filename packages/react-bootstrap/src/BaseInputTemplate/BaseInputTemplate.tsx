@@ -55,7 +55,11 @@ export default function BaseInputTemplate<
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
   // The `pattern`, `inputMode`, `accept` and `multiple` in `extraProps` count as the widget's own, over its props
-  const { title, ...baseInputProps } = getBaseInputProps<T, S, F>({ ...props, ...callerInputProps({ ...extraProps }) });
+  const { title, ...baseInputProps } = getBaseInputProps<T, S, F>({
+    ...props,
+    ...callerInputProps({ ...extraProps }),
+    multiple: extraProps?.multiple ?? props.multiple,
+  });
   const inputProps = { ...extraProps, ...baseInputProps };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);

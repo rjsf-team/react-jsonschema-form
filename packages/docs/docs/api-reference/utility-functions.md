@@ -238,15 +238,15 @@ Return a consistent `id` for the `btn` button element
 
 ### callerInputProps()
 
-Returns the `pattern`, `inputMode`, `accept` and `multiple` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` or `inputMode` the caller names counts even when it is undefined, which is how a caller turns the derived one off. [`getBaseInputProps()`](#getbaseinputprops) merges them for you.
+Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTemplate`, to spread after the input props `getInputProps()` derives. A `pattern` or `inputMode` the caller names counts even when it is undefined, which is how a caller turns the derived one off. [`getBaseInputProps()`](#getbaseinputprops) merges them for you.
 
 #### Parameters
 
-- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'multiple' | 'pattern'> - The props of the `BaseInputTemplate`
+- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'multiple' | 'pattern'>: The `pattern`, `inputMode`, `accept` and `multiple` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'>: The `pattern`, `inputMode` and `accept` to spread after the derived input props
 
 ### callWithDeferredThrow()
 
@@ -998,7 +998,7 @@ An array rendered without a plan draws its `ui:description` or schema `descripti
 
 ### getBaseInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getbaseinputprops}
 
-Returns the props a `BaseInputTemplate` puts on its input: the ones `getInputProps()` derives from the schema and options, overridden by those [`callerInputProps()`](#callerinputprops) picks from the widget's props, and the `title` from [`getNumericInputTitle()`](#getnumericinputtitle) that names the derived numeric `pattern`, which is left out when the widget replaces that pattern. The widget's `multiple` is kept only for a `file` input, as `ArrayField` passes it to whatever widget renders a multi-select.
+Returns the props a `BaseInputTemplate` puts on its input: the ones `getInputProps()` derives from the schema and options, overridden by those [`callerInputProps()`](#callerinputprops) picks from the widget's props, and the `title` from [`getNumericInputTitle()`](#getnumericinputtitle) that names the derived numeric `pattern`, which is left out when the widget replaces that pattern. The widget's `multiple` is kept only for a `file` input and is undefined for any other, so it also overrides one spread from the template's other props: `ArrayField` passes it to whatever widget renders a multi-select, and the template can't tell that one from a `multiple` a widget means for an `email` input.
 
 #### Parameters
 

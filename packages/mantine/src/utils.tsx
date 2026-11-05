@@ -10,8 +10,10 @@ import type {
   InputWrapperFactory,
   InputWrapperProps,
   MantineStyleProps,
+  NumberInputProps,
   RadioGroupProps,
   StylesApiProps,
+  TextInputProps,
 } from '@mantine/core';
 import {
   Box,
@@ -631,6 +633,41 @@ const groupExcludedKeyRecord: Record<GroupExcludedKey, true> = {
 };
 /** The options `cleanupOptions()` leaves out for `CheckboxesWidget` and `RadioWidget`, besides rjsf's own */
 export const groupExcludedKeys: ReadonlySet<string> = new Set(Object.keys(groupExcludedKeyRecord));
+
+// A record, not a list, so that a prop a later Mantine release adds fails typecheck until it is listed here. React types
+// `prefix` as an RDFa attribute of every element, so `TextInputProps` has it too, though only `NumberInput` reads it
+const numberInputOwnKeyRecord: Record<
+  Exclude<OwnKeys<NumberInputProps, TextInputProps>, `__${string}`> | 'prefix',
+  true
+> = {
+  allowDecimal: true,
+  allowLeadingZeros: true,
+  allowNegative: true,
+  allowedDecimalSeparators: true,
+  clampBehavior: true,
+  decimalScale: true,
+  decimalSeparator: true,
+  fixedDecimalScale: true,
+  handlersRef: true,
+  hideControls: true,
+  isAllowed: true,
+  onMaxReached: true,
+  onMinReached: true,
+  onValueChange: true,
+  prefix: true,
+  selectAllOnFocus: true,
+  startValue: true,
+  stepHoldDelay: true,
+  stepHoldInterval: true,
+  suffix: true,
+  thousandSeparator: true,
+  thousandsGroupStyle: true,
+  trimLeadingZeroesOnBlur: true,
+  valueIsNumericString: true,
+  withKeyboardEvents: true,
+};
+/** The options `cleanupOptions()` leaves out for the text input a numeric field renders in place of `NumberInput` */
+export const numberInputOwnKeys: ReadonlySet<string> = new Set(Object.keys(numberInputOwnKeyRecord));
 
 /** The `InputWrapper` options a widget's options can set; rjsf renders the title, description and errors itself */
 export type FieldWrapperOptionKey = Exclude<

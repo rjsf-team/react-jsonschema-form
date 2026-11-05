@@ -154,6 +154,36 @@ describe('mantine BaseInputTemplate', () => {
     expect(container.querySelector('input')).toHaveAttribute('title', 'Enter a number');
   });
 
+  test('drops the numeric title of the text input a passed `inputMode` gets a `number` field under a `ui:options.pattern`', () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      inputMode: 'decimal',
+      options: { pattern: '[a-z]+' },
+    });
+
+    const input = container.querySelector('input');
+    expect(input).toHaveAttribute('pattern', '[a-z]+');
+    expect(input).not.toHaveAttribute('title');
+  });
+
+  test("leaves `NumberInput`'s own options off the text input a passed `inputMode` gets a `number` field", () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      inputMode: 'decimal',
+      options: { hideControls: true, thousandSeparator: ',' },
+    });
+
+    const input = container.querySelector('input');
+    expect(input).not.toHaveAttribute('thousandseparator');
+    expect(input).not.toHaveAttribute('hidecontrols');
+  });
+
   test('renders the text input with no inputMode for a `number` field passed an `inputMode` named as undefined', () => {
     const numberSchema: RJSFSchema = { type: 'number' };
 
