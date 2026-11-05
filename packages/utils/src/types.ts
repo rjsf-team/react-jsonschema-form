@@ -1550,7 +1550,10 @@ export interface ObjectFieldTemplatePropertyType<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > {
-  /** The html for the property's content */
+  /** The html for the property's content. Its React `key` stays the same when an `additionalProperties` key is renamed,
+   * so a template keys anything it wraps the content in by `content.key` rather than `name`. A custom field building
+   * `properties` itself has to give each `content` a key, or every such wrapper gets `key={null}`
+   */
   content: ReactElement<Pick<FieldProps<T, S, F>, 'schema' | 'uiSchema'>>;
   /** A string representing the property name */
   name: string;
