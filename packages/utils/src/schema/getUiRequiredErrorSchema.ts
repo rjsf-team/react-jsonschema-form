@@ -243,7 +243,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (
     path.length > 0 &&
     !isFormDataAvailable(formData) &&
-    !(schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] &&
+    !hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) &&
     // An object node also renders its own ObjectField beside the option (see `getFieldComponent()` in `SchemaField`),
     // showing the properties it shares with the option unless the node is a control that hides them as well, and only
     // such a node's branch carries the option

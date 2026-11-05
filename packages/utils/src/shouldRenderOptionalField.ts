@@ -5,6 +5,7 @@ import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getUiOptions from './getUiOptions.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
+import hasSchemaMarker from './hasSchemaMarker.ts';
 import isFormDataAvailable from './isFormDataAvailable.ts';
 import { isSchemaObject } from './isObject.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
@@ -14,7 +15,6 @@ import type {
   FormContextType,
   GlobalUISchemaOptions,
   Registry,
-  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -130,7 +130,7 @@ export function isCollapsedByOptionalDataControls<
     formData: unknown;
   },
 ): boolean {
-  if (isFormDataAvailable(formData) || (rawSchema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]) {
+  if (isFormDataAvailable(formData) || hasSchemaMarker(rawSchema, ADDITIONAL_PROPERTY_FLAG)) {
     return false;
   }
   const fieldUiSchema = uiSchemaDefinitions
@@ -168,7 +168,7 @@ export default function shouldRenderOptionalField<
   return (
     fieldPath !== ROOT_FIELD_PATH &&
     !required &&
-    !(schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] &&
+    !hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) &&
     isOptionalDataControlsType<T, S, F>(schema, uiSchema, registry.globalUiOptions, registry.rootSchema)
   );
 }
