@@ -383,7 +383,7 @@ export function useDatePicker<V>({
       if (e === handledPress) {
         return;
       }
-      // oxlint-disable-next-line react/immutability -- `handledPress` is local to this effect, not render state
+      // oxlint-disable-next-line react/immutability -- `handledPress` is local to this effect, not render state (https://github.com/oxc-project/oxc/issues/28401)
       handledPress = e;
       // The node pressed rather than `e.target`, which a listener on the document sees as the shadow host of a form
       // rendered in a shadow root, and so as a press outside the popup wherever in that form it lands

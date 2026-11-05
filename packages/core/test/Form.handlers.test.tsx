@@ -1477,6 +1477,7 @@ describe('Form change handler under a parent', () => {
     function BurstWidget({ onChange, value }: WidgetProps) {
       const [, setCopy] = useState(value);
       useLayoutEffect(() => {
+        // The commit-phase update is what the burst must survive
         setCopy(value);
       }, [value]);
       return (
