@@ -61,17 +61,31 @@ describe('CFWorkerValidator', () => {
     expect(result.errorSchema.extra?.__errors).toHaveLength(1);
   });
 
-  it('keys an error by the property name the data holds, not as the engine percent-encodes it', () => {
+  it('keys an error by the property name the data holds, not as the engine escapes and percent-encodes it', () => {
+    const validator = customizeValidator();
+    const keys = ['a#b', 'c d', 'é%', 'a/b', 'a~b', '~1'];
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: Object.fromEntries(keys.map((key) => [key, { type: 'number' }])),
+    };
+    const result = validator.validateFormData(Object.fromEntries(keys.map((key) => [key, 's'])), schema);
+    expect(result.errors.map((error) => error.property)).toEqual(expect.arrayContaining(keys.map((key) => `.${key}`)));
+    for (const key of keys) {
+      expect(result.errorSchema[key]?.__errors).toHaveLength(1);
+    }
+  });
+
+  it('titles a missing property by the uiSchema of an array item under a key the engine percent-encodes', () => {
     const validator = customizeValidator();
     const schema: RJSFSchema = {
       type: 'object',
-      properties: { 'a#b': { type: 'number' }, 'c d': { type: 'number' }, 'é%': { type: 'number' } },
+      properties: {
+        'my list': { type: 'array', items: { type: 'object', required: ['x'], properties: { x: { type: 'string' } } } },
+      },
     };
-    const result = validator.validateFormData({ 'a#b': 's', 'c d': 's', 'é%': 's' }, schema);
-    expect(result.errors.map((error) => error.property)).toEqual(expect.arrayContaining(['.a#b', '.c d', '.é%']));
-    expect(result.errorSchema['a#b']?.__errors).toHaveLength(1);
-    expect(result.errorSchema['c d']?.__errors).toHaveLength(1);
-    expect(result.errorSchema['é%']?.__errors).toHaveLength(1);
+    const uiSchema = { 'my list': { items: { x: { 'ui:title': 'Ex' } } } };
+    const result = validator.validateFormData({ 'my list': [{}] }, schema, undefined, undefined, uiSchema);
+    expect(result.errors).toContainEqual(expect.objectContaining({ property: '.my list.0.x', title: 'Ex' }));
   });
 
   it('honors the draft and shortCircuit options', () => {

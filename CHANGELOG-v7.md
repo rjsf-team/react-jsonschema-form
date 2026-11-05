@@ -1474,7 +1474,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `isValid(rootSchema, data, rootSchema)` returning `false` for a root whose `$id` ends in an empty fragment ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536))
 - Fix `isValid()` and `validateFormData()` reporting an unresolved `$ref` for one that escapes a `#` in a name as `%23`, such as `{ $ref: '#/definitions/a%23b' }` ([#5536](https://github.com/rjsf-team/react-jsonschema-form/pull/5536))
 - **BREAKING CHANGE:** Remove the `Result` type argument from `rawValidation()`, which now returns `CFWorkerValidationError`s. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5678](https://github.com/rjsf-team/react-jsonschema-form/pull/5678))
-- Fix `validateFormData()` filing an error on a property whose name holds a `#`, a space or a non-ASCII character under its percent-encoded name, so it didn't show on its field; `@cfworker/json-schema` is now `^4.1.6` ([#5749](https://github.com/rjsf-team/react-jsonschema-form/pull/5749))
+- Fix `validateFormData()` filing an error on a property whose name holds a `/`, a `~`, a `#`, a space or a non-ASCII character under its escaped or percent-encoded name, so it didn't show on its field, and missing the `ui:title` of a required property in an array item below such a key; `@cfworker/json-schema` is now `^4.1.6` ([#5749](https://github.com/rjsf-team/react-jsonschema-form/pull/5749))
 
 ## All packages
 
