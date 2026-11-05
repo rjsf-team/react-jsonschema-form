@@ -3346,13 +3346,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(result).toEqual({ x: { a: 9 } });
         });
 
-        test('writes an ajv $data const as no data', () => {
+        test('writes an object const holding $data as literal data', () => {
           const s: RJSFSchema = {
             type: 'object',
             properties: { y: { type: 'string', default: 'hi' }, x: { type: 'object', const: { $data: '1/y' } } },
           };
-          expect(run(s)).toEqual({ y: 'hi', x: {} });
-          expect(run({ type: 'object', const: { $data: '0' } })).toEqual({});
+          expect(run(s)).toEqual({ y: 'hi', x: { $data: '1/y' } });
+          expect(run({ type: 'object', const: { $data: '0' } })).toEqual({ $data: '0' });
         });
 
         test('does not add back a const key the user removed', () => {
@@ -3362,6 +3362,37 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { schema: s, formData: { a: 2 }, initialDefaultsGenerated: true },
           );
           expect(result).toEqual({ a: 2 });
+        });
+
+        test('takes the undeclared const keys when initialDefaultsGenerated and additionalProperties is not set', () => {
+          const result = getDefaultFormState(
+            { validator: testValidator },
+            {
+              schema: { type: 'object', properties: { k: { type: 'object', const: { c: 1 } } } },
+              initialDefaultsGenerated: true,
+            },
+          );
+          expect(result).toEqual({ k: { c: 1 } });
+        });
+
+        test('takes every key of the ui:initialValue, not just the const keys', () => {
+          const result = getDefaultFormState(
+            { validator: testValidator },
+            {
+              schema: { type: 'object', properties: { x: { type: 'object', const: { a: 2 } } } },
+              uiSchema: { x: { 'ui:initialValue': { a: 9, z: 1 } } },
+            },
+          );
+          expect(result).toEqual({ x: { a: 9, z: 1 } });
+        });
+
+        test('keeps a seeded const key instead of the additionalProperties defaults', () => {
+          const s: RJSFSchema = {
+            type: 'object',
+            additionalProperties: { type: 'object', properties: { m: { type: 'number', default: 7 } } },
+            const: { a: { z: 1 } },
+          };
+          expect(run(s)).toEqual({ a: { z: 1 } });
         });
 
         test('ignores the const keys when constAsDefaults is never and a default is set', () => {
