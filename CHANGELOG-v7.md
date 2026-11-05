@@ -606,7 +606,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `ToggleWidget` to add no size class for a `size` option that isn't a string or is blank, where a number gave `toggle-5` and `''` gave `toggle-`, and to trim the space around one, where `' lg'` gave `toggle- lg` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Fix `RatingWidget` for an Ajv `$data` reference: a `maximum` rendered no stars, and a `minimum` wrote values such as `'[object Object]0'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 - Fix `RatingWidget` for a numeric-string `minimum`, which wrote values such as `'10'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
-- Fix `RatingWidget` writing a star numbered from a fractional `minimum` as a whole number, so the first star of `minimum: 1.5` wrote `1` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/fluentui-rc
 
