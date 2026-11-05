@@ -1,11 +1,6 @@
 import toNumericValue from './toNumericValue.ts';
 import type { DateObject } from './types.ts';
 
-/** The widest `yearsRange` read. A year select offers one option per year, built during render, so a span such as
- * `[1, 1e9]` would hang the page; ten thousand years keeps that render fast
- */
-const MAX_YEARS_SPAN = 10000;
-
 /** Available options for re-ordering date input element */
 export type DateElementFormat = 'DMY' | 'MDY' | 'YMD';
 
@@ -22,8 +17,8 @@ export function isDateElementFormat(value: unknown): value is DateElementFormat 
 /** The `[first, last]` years for a `yearsRange` option, which a JSON uiSchema can hold as anything. A year held as a
  * numeric string counts as its number, and a fractional year is rounded down. Only its first two entries are read. A
  * range whose first two entries aren't years, that mixes a relative and an absolute year, which `dateRangeOptions()`
- * throws for, that spans more than ten thousand years, or whose years are too large to count one by one, beyond
- * `Number.MAX_SAFE_INTEGER`, gives `undefined`, for the default years
+ * throws for, or that reaches a year before 100 or after 9999, which a date string can't hold, gives `undefined`, for
+ * the default years
  *
  * @param yearsRange - The `yearsRange` option
  * @returns - The range to pass `getDateElementProps()`, or `undefined` for the default years
@@ -35,15 +30,9 @@ export function normalizeYearsRange(yearsRange: unknown): [number, number] | und
   }
   const firstYear = Math.floor(first);
   const lastYear = Math.floor(last);
-  if (
-    !Number.isSafeInteger(firstYear) ||
-    !Number.isSafeInteger(lastYear) ||
-    Math.sign(firstYear) * Math.sign(lastYear) < 0 ||
-    Math.abs(lastYear - firstYear) > MAX_YEARS_SPAN
-  ) {
-    return undefined;
-  }
-  return [firstYear, lastYear];
+  const offset = firstYear <= 0 && lastYear <= 0 ? new Date().getFullYear() : 0;
+  const inRange = (year: number) => year + offset >= 100 && year + offset <= 9999;
+  return inRange(firstYear) && inRange(lastYear) ? [firstYear, lastYear] : undefined;
 }
 
 /** Type describing format of DateElement prop */
@@ -68,7 +57,8 @@ export function elementValue(part?: number) {
  *
  * @param date - Object containing date with optional time information
  * @param time - Determines whether to include time or not
- * @param [yearRange=[1900, new Date().getFullYear() + 2]] - Controls the list of years to be displayed
+ * @param [yearRange=[1900, new Date().getFullYear() + 2]] - Controls the list of years to be displayed. A range
+ *        `normalizeYearsRange()` can't read gives the default
  * @param [format='YMD'] - Controls the order in which day, month and year input element will be displayed
  * @returns Array of props for DateElement
  */
@@ -76,14 +66,18 @@ export function elementValue(part?: number) {
 export default function getDateElementProps(
   date: DateObject,
   time: boolean,
-  yearRange: readonly [number, number] = [1900, new Date().getFullYear() + 2],
+  yearRange?: readonly [number, number],
   format: DateElementFormat = 'YMD',
 ) {
   const { day, month, year, hour, minute, second } = date;
 
   const dayObj: DateElementProp = { type: 'day', range: [1, 31], value: elementValue(day) };
   const monthObj: DateElementProp = { type: 'month', range: [1, 12], value: elementValue(month) };
-  const yearObj: DateElementProp = { type: 'year', range: yearRange, value: elementValue(year) };
+  const yearObj: DateElementProp = {
+    type: 'year',
+    range: normalizeYearsRange(yearRange) ?? [1900, new Date().getFullYear() + 2],
+    value: elementValue(year),
+  };
 
   const dateElementProp: DateElementProp[] = [];
   switch (format) {

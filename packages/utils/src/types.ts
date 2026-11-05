@@ -2074,7 +2074,7 @@ type UIOptionsDeclaredType<
     /** The first and last years an alt-date widget's year select offers: absolute years when either is above 0, or both
      * at most 0 to count back from the current year. A fractional year is rounded down, and a year held as a numeric
      * string, as a JSON uiSchema can, counts as its number. A range the widget can't read, one mixing a negative and a
-     * positive year, or one spanning more than 10,000 years shows the default years: 1900 to two years from now
+     * positive year, or one reaching a year before 100 or after 9999 shows the default years: 1900 to two years from now
      */
     yearsRange?: readonly [number, number];
   };

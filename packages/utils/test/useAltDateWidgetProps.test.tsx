@@ -139,12 +139,6 @@ describe('useAltDateWidgetProps()', () => {
 
     expect(result.current.elements.find(({ type }) => type === 'year')?.range).toEqual([800, 2030]);
   });
-  test('keeps a `yearsRange` running from 0, which reads as absolute years', () => {
-    const jsonOptions: Record<string, unknown> = { yearsRange: [0, 2] };
-    const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: jsonOptions }));
-
-    expect(result.current.elements.find(({ type }) => type === 'year')?.range).toEqual([0, 2]);
-  });
   test.each([
     ['one entry', [1990]],
     ['null', [null, 2030]],
@@ -161,6 +155,8 @@ describe('useAltDateWidgetProps()', () => {
     ['years too large to count one by one', [1e16, 1e16]],
     ['years too large to count one by one as numeric strings', ['10000000000000000', '10000000000000000']],
     ['a relative span of a billion years', [-1e9, 0]],
+    ['absolute years from 0, which the date string would write as 19xx', [0, 2]],
+    ['a year past 9999, which the date string cannot hold', [2000, 300000]],
   ])('falls back to the default years for a `yearsRange` holding %s', (_, yearsRange) => {
     const jsonOptions: Record<string, unknown> = { yearsRange };
     const { result } = renderHook(() => useAltDateWidgetProps({ ...PROPS, options: jsonOptions }));

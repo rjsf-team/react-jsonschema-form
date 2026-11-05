@@ -1238,7 +1238,7 @@ Given date & time information with optional yearRange & format, returns props fo
 
 - date: DateObject - Object containing date with optional time information
 - time: boolean - Determines whether to include time or not
-- [yearRange=[1900, new Date().getFullYear() + 2]]: readonly [number, number] - Controls the list of years to be displayed
+- [yearRange=[1900, new Date().getFullYear() + 2]]: readonly [number, number] - Controls the list of years to be displayed. A range `normalizeYearsRange()` can't read gives the default
 - [format='YMD']: DateElementFormat - Controls the order in which day, month and year input element will be displayed
 
 #### Returns
@@ -2714,7 +2714,7 @@ A validator package that has to tell which resource of the root a `$ref` names u
 
 ### normalizeYearsRange()
 
-Returns the `[first, last]` years to pass `getDateElementProps()` for a `yearsRange` option, which a JSON uiSchema can hold as anything. A year held as a numeric string counts as its number, and a fractional year is rounded down. Only its first two entries are read. A range whose first two entries aren't years, that mixes a relative and an absolute year, which `dateRangeOptions()` throws for, that spans more than ten thousand years, or whose years are too large to count one by one, beyond `Number.MAX_SAFE_INTEGER`, gives `undefined`, for the default years
+Returns the `[first, last]` years to pass `getDateElementProps()` for a `yearsRange` option, which a JSON uiSchema can hold as anything. A year held as a numeric string counts as its number, and a fractional year is rounded down. Only its first two entries are read. A range whose first two entries aren't years, that mixes a relative and an absolute year, which `dateRangeOptions()` throws for, or that reaches a year before 100 or after 9999, which a date string can't hold, gives `undefined`, for the default years
 
 #### Parameters
 
