@@ -20,7 +20,7 @@ describe('customizeValidator()', () => {
     expect(AJV8Validator).toHaveBeenCalledWith({}, undefined);
   });
   describe('passing options to customizeValidator', () => {
-    let custom: any;
+    let custom: unknown;
     beforeAll(() => {
       vi.mocked(AJV8Validator).mockClear();
       custom = customizeValidator(CUSTOM_OPTIONS);
@@ -33,7 +33,7 @@ describe('customizeValidator()', () => {
     });
   });
   describe('passing localizer to customizeValidator', () => {
-    let custom: any;
+    let custom: unknown;
     let localizer: Localizer;
     beforeAll(() => {
       localizer = vi.fn();

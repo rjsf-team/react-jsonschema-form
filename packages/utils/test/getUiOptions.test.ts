@@ -82,7 +82,12 @@ describe('getUiOptions()', () => {
     expect(getUiOptions(undefined, globalOptions)).toEqual(globalOptions);
   });
   it('returns globalOptions when uiSchema is null', () => {
-    expect(getUiOptions(null as any, globalOptions)).toEqual(globalOptions);
+    const options = getUiOptions(
+      // @ts-expect-error: TS2345, a null uiSchema is what this case checks
+      null,
+      globalOptions,
+    );
+    expect(options).toEqual(globalOptions);
   });
   it('returns array object as options', () => {
     expect(getUiOptions(uiSchemaCase('arrayObject'), globalOptions)).toEqual(results.arrayObject);

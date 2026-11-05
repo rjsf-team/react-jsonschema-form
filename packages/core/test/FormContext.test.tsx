@@ -1,4 +1,4 @@
-import type { ArrayFieldTemplateProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, FieldTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 
 import { createFormComponent } from './testUtils.tsx';
 
@@ -8,8 +8,7 @@ const formContext = { foo: 'bar' };
 
 const fooId = `#${formContext.foo}`;
 
-// Use `props: any` to support the variety of uses (widgets, fields, templates)
-function CustomComponent(props: any) {
+function CustomComponent(props: Pick<WidgetProps<unknown, RJSFSchema, { foo?: string }>, 'registry'>) {
   const { registry } = props;
   const { formContext } = registry;
   return <div id={formContext.foo} />;

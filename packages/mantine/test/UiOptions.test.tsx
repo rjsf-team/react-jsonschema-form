@@ -3,6 +3,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
 import { setupConsoleErrorSuppression } from '../../../testing/consoleSuppression.ts';
+import type { UiSchema as MantineUiSchema } from '../src/index.ts';
 import Form from './WrappedForm.tsx';
 
 function PlainMarkdown({ children }: MarkdownTemplateProps) {
@@ -31,7 +32,13 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
     render(
       <Form
         schema={{ type: 'object', properties: { agree: { type: 'boolean', title: 'Agree' } } }}
-        uiSchema={{ 'ui:globalOptions': { required: true }, agree: { 'ui:widget': 'select' } }}
+        uiSchema={{
+          'ui:globalOptions': {
+            // @ts-expect-error: TS2353, a global `required`, which rjsf ignores, is what this case checks
+            required: true,
+          },
+          agree: { 'ui:widget': 'select' },
+        }}
         validator={validator}
       />,
     );
@@ -106,13 +113,14 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   });
 
   it("does not pass ObjectFieldTemplate's grid options on from the global options", () => {
+    const uiSchema: MantineUiSchema = {
+      'ui:globalOptions': { gridCols: 2, gridSpacing: 'md', gridVerticalSpacing: 'lg' },
+      agree: { 'ui:widget': 'select' },
+    };
     const { container } = render(
       <Form
         schema={{ type: 'object', properties: { agree: { type: 'boolean', title: 'Agree' } } }}
-        uiSchema={{
-          'ui:globalOptions': { gridCols: 2, gridSpacing: 'md', gridVerticalSpacing: 'lg' },
-          agree: { 'ui:widget': 'select' },
-        }}
+        uiSchema={uiSchema}
         validator={validator}
       />,
     );
@@ -124,13 +132,17 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   });
 
   it('does not pass on an extension key the form declares, which is meant for its own components', () => {
+    const uiSchema: MantineUiSchema<{ rowDensity?: number }> = {
+      'ui:globalOptions': { rowDensity: 2 },
+      agree: { 'ui:widget': 'select' },
+    };
     const { container } = render(
       <Form
         schema={{
           type: 'object',
           properties: { name: { type: 'string' }, agree: { type: 'boolean', title: 'Agree' } },
         }}
-        uiSchema={{ 'ui:globalOptions': { rowDensity: 2 }, agree: { 'ui:widget': 'select' } }}
+        uiSchema={uiSchema}
         globalUiOptionsKeys={['rowDensity']}
         validator={validator}
       />,
@@ -142,10 +154,14 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   });
 
   it("passes on a field's own Mantine prop that a declared extension key shares its name with", () => {
+    const uiSchema: MantineUiSchema<{ variant?: string }> = {
+      'ui:globalOptions': { variant: 'compact' },
+      name: { 'ui:options': { variant: 'filled' } },
+    };
     render(
       <Form
         schema={{ type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } }}
-        uiSchema={{ 'ui:globalOptions': { variant: 'compact' }, name: { 'ui:options': { variant: 'filled' } } }}
+        uiSchema={uiSchema}
         globalUiOptionsKeys={['variant']}
         validator={validator}
       />,
@@ -173,6 +189,10 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   });
 
   it("passes an anyOf field's own Mantine prop on to its option selector beside a declared global of the same name", () => {
+    const uiSchema: MantineUiSchema<{ variant?: string }> = {
+      'ui:globalOptions': { variant: 'compact' },
+      'ui:options': { variant: 'filled' },
+    };
     const { container } = render(
       <Form
         schema={{
@@ -181,7 +201,7 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
             { title: 'Second', type: 'number' },
           ],
         }}
-        uiSchema={{ 'ui:globalOptions': { variant: 'compact' }, 'ui:options': { variant: 'filled' } }}
+        uiSchema={uiSchema}
         globalUiOptionsKeys={['variant']}
         validator={validator}
       />,

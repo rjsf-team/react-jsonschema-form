@@ -1,3 +1,4 @@
+import type { HTMLAttributes } from 'react';
 import { createRef, useRef, useState } from 'react';
 import type { ArrayFieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
@@ -411,7 +412,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     });
 
     it('should render the component using a ComponentType', () => {
-      const Component = (props: any) => <div {...props} id='test' />;
+      const Component = (props: HTMLAttributes<HTMLDivElement>) => <div {...props} id='test' />;
       const { node } = createFormComponent({ schema: {}, tagName: Component });
       expect(node.id).toEqual('test');
     });

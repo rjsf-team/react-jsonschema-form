@@ -4705,7 +4705,7 @@ describe('ArrayField', () => {
       const consoleErrorStub = vi.spyOn(console, 'error').mockImplementation(noop);
 
       const uiSchema: UiSchema = {
-        items: (_: any, index) => {
+        items: (_, index) => {
           if (index === 1) {
             throw new Error('Test error');
           }
@@ -4751,7 +4751,7 @@ describe('ArrayField', () => {
       const consoleErrorStub = vi.spyOn(console, 'error').mockImplementation(noop);
 
       const uiSchema: UiSchema = {
-        items: (_: any, index) => {
+        items: (_, index) => {
           if (index === 1) {
             throw new Error('Test error in fixed array');
           }
@@ -4794,8 +4794,8 @@ describe('ArrayField', () => {
         },
       };
 
-      const uiSchema: UiSchema = {
-        items: (itemData: any) => {
+      const uiSchema: UiSchema<{ name?: string; visible?: boolean }[]> = {
+        items: (itemData) => {
           // Return empty uiSchema for items where visible is false
           if (!itemData.visible) {
             return {};
@@ -4848,7 +4848,7 @@ describe('ArrayField', () => {
         items: dynamicUiSchemaFunction,
       };
 
-      const formData: any[] = [];
+      const formData: unknown[] = [];
 
       const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
@@ -4873,7 +4873,7 @@ describe('ArrayField', () => {
 
       let callCount = 0;
       const uiSchema: UiSchema = {
-        items: (_: any, index) => {
+        items: (_, index) => {
           callCount += 1;
           return {
             name: {
@@ -4921,7 +4921,7 @@ describe('ArrayField', () => {
       };
 
       const uiSchema: UiSchema = {
-        items: (_: any, index) => ({
+        items: (_, index) => ({
           title: {
             'ui:widget': index === 0 ? 'textarea' : 'text',
           },

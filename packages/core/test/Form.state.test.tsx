@@ -15,6 +15,7 @@ import {
   expectToHaveBeenCalledWithFormData,
   handleOf,
   renderNode,
+  setupConsoleWarnSuppression,
   submitForm,
 } from './testUtils.tsx';
 
@@ -233,41 +234,6 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         expectToHaveBeenCalledWithFormData(onChangeProp, 'the new default');
       });
     });
-
-    describe('when the onChange prop sets formData to a falsey value', () => {
-      function TestForm(props: { falseyValue: any }) {
-        const [formData, setFormData] = useState<any>({});
-
-        const onChange = useCallback(() => {
-          setFormData(props.falseyValue);
-        }, [props]);
-        const schema: RJSFSchema = {
-          type: 'object',
-          properties: {
-            value: {
-              type: 'string',
-            },
-          },
-        };
-        // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
-        return <Form onChange={onChange} schema={schema} formData={formData} validator={validator} />;
-      }
-
-      const falseyValues = [0, false, null, undefined, NaN];
-
-      falseyValues.forEach((falseyValue) => {
-        it("Should not crash due to 'Maximum call stack size exceeded...'", () => {
-          // It is expected that this will throw an error due to non-matching propTypes,
-          // so the error message needs to be inspected
-          try {
-            renderNode(TestForm, { falseyValue });
-          } catch (e) {
-            const { message } = e as Error;
-            expect(message).not.toEqual('Maximum call stack size exceeded');
-          }
-        });
-      });
-    });
   });
 
   describe('External formData updates', () => {
@@ -458,6 +424,60 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         },
         'root_participants_0_name',
       );
+    });
+  });
+});
+
+describe('Form: a parent passing back a falsey formData from onChange', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  function TestForm(props: { falseyValue: unknown; onChange: () => void }) {
+    const { falseyValue, onChange } = props;
+    const [formData, setFormData] = useState<unknown>({});
+
+    const handleChange = useCallback(() => {
+      onChange();
+      setFormData(falseyValue);
+    }, [falseyValue, onChange]);
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        value: {
+          type: 'string',
+        },
+      },
+    };
+    // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
+    return <Form onChange={handleChange} schema={schema} formData={formData} validator={validator} />;
+  }
+
+  const cases = [
+    { falseyValue: 0, warns: true },
+    { falseyValue: false, warns: true },
+    { falseyValue: null, warns: true },
+    { falseyValue: undefined, warns: false },
+    { falseyValue: NaN, warns: true },
+  ];
+
+  cases.forEach(({ falseyValue, warns }) => {
+    it(`keeps the edit and reports it once when the parent passes back ${String(falseyValue)}`, async () => {
+      const onChange = vi.fn();
+      const { node } = renderNode(TestForm, { falseyValue, onChange });
+      const input = node?.querySelector('#root_value');
+      if (!(input instanceof HTMLInputElement)) {
+        throw new Error('expected the value input');
+      }
+
+      await user.type(input, 'a');
+
+      expect(input).toHaveValue('a');
+      expect(onChange).toHaveBeenCalledTimes(1);
+      if (warns) {
+        expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
+        expect(warnings.consoleSpy.mock.lastCall?.[0]).toMatch(/`formData` changed after the form mounted/);
+      } else {
+        expect(warnings.consoleSpy).not.toHaveBeenCalled();
+      }
     });
   });
 });

@@ -53,22 +53,27 @@ function toFileList(list: File[]) {
   return dataTransfer.files;
 }
 
+const FN_RESULT = { target: { result: 'data:text/plain;base64,' } };
+
+/** A `FileReader` constructor whose reader fires `onload` with `event` as soon as it is set */
+function fileReaderFiring(event: unknown) {
+  // A function expression, not an arrow: the hook calls `new FileReader()`
+  return function windowFileReaderSpy() {
+    return {
+      set onload(fn: (loadEvent: unknown) => void) {
+        fn(event);
+      },
+      readAsDataUrl: vi.fn(),
+    } as unknown as FileReader;
+  };
+}
+
 describe('useFileWidgetProps()', () => {
   let onChange: Mock;
   let windowFileReaderSpy: MockInstance<typeof window.FileReader>;
-  let FN_RESULT: any;
   beforeAll(() => {
     onChange = vi.fn();
-    FN_RESULT = { target: { result: 'data:text/plain;base64,' } };
-    // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
-    windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(function windowFileReaderSpy() {
-      return {
-        set onload(fn: (event: any) => void) {
-          fn(FN_RESULT);
-        },
-        readAsDataUrl: vi.fn(),
-      } as unknown as FileReader;
-    });
+    windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(fileReaderFiring(FN_RESULT));
   });
   afterEach(() => {
     onChange.mockClear();
@@ -210,7 +215,7 @@ describe('useFileWidgetProps()', () => {
     expect(onChange).toHaveBeenCalledWith([]);
   });
   test('null, single, handleChange, NO dataURL', async () => {
-    FN_RESULT = { target: null };
+    windowFileReaderSpy.mockImplementationOnce(fileReaderFiring({ target: null }));
     const { result } = renderHook(() => useFileWidgetProps(null, onChange));
     const { filesInfo, handleChange, handleRemove } = result.current;
     expect(filesInfo).toEqual([]);
