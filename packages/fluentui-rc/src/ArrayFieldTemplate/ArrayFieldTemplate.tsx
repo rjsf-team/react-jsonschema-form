@@ -61,7 +61,7 @@ export default function ArrayFieldTemplate<
         registry={registry}
         presentation={presentation}
       />
-      <Flex column key={`array-item-list-${id}`} className={classes.arrayItemList}>
+      <Flex column className={classes.arrayItemList}>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {items}
         {canAdd && (

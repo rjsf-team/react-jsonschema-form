@@ -82,7 +82,7 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <div key={element.name} className={id === 'root' && element.name === 'tasks' ? 'mt-2' : ''}>
+            <div key={element.content.key} className={id === 'root' && element.name === 'tasks' ? 'mt-2' : ''}>
               {element.content}
             </div>
           ),

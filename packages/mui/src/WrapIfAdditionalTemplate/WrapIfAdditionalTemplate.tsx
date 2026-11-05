@@ -95,7 +95,6 @@ export default function WrapIfAdditionalTemplate<
   return (
     <Grid
       container
-      key={keyId}
       spacing={2}
       className={classNames}
       style={style}

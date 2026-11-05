@@ -133,16 +133,19 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
 
 /** Focuses what an error leads to where neither the element carrying its field's id nor a form control named after the
  * field takes focus: the first element that takes focus inside a widget's wrapper carrying the id, such as a slider's
- * root around its thumb, but none inside a container's `<fieldset>`, since an object's or an array's own error is about
- * none of the controls in it; and where no element carries the id, the first native input or button standing in for
- * one whose id is a part of the field's, as radio buttons' and checkboxes' are. A part's id, unlike any id that merely
- * starts with the field's, can't be a sibling field's, such as `root_when_year` beside `root_when`
+ * root around its thumb, but none inside a container's `<fieldset>` unless `entersContainer` says to, since an object's
+ * or an array's own error is about none of the controls in it; and where no element carries the id, the first native
+ * input or button standing in for one whose id is a part of the field's, as radio buttons' and checkboxes' are. A
+ * part's id, unlike any id that merely starts with the field's, can't be a sibling field's, such as `root_when_year`
+ * beside `root_when`
  *
  * @param formElement - The form searched
  * @param exact - The element carrying the field's id, if any
  * @param elementId - The field's id
  * @param tried - The elements already tried, which aren't tried again
  * @param view - The window of the form
+ * @param entersContainer - Whether a container's `<fieldset>` is searched too, for focus on its way into the field
+ *   rather than an error about the container itself
  */
 function focusForId(
   formElement: Element,
@@ -150,8 +153,9 @@ function focusForId(
   elementId: string,
   tried: ReadonlySet<Node | null | undefined>,
   view: Window & typeof globalThis,
+  entersContainer: boolean,
 ): void {
-  if (exact instanceof view.HTMLFieldSetElement) {
+  if (exact instanceof view.HTMLFieldSetElement && !entersContainer) {
     return;
   }
   if (exact) {
@@ -357,17 +361,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    */
   const formWindow = () => formElement?.ownerDocument.defaultView;
 
-  /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
-   * field, then converts that path into the id the field renders under, as `fieldPathToId()` does for every field. Then
-   * the input element with that id is attempted to be found in the form element. If it is located, then it is focused.
+  /** Attempts to focus on the field at `fieldPath`. Converts that path into the id the field renders under, as
+   * `fieldPathToId()` does for every field. Then the input element with that id is attempted to be found in the form
+   * element. If it is located, then it is focused.
    *
-   * @param error - The error on which to focus
+   * @param fieldPath - The `FieldPath` of the field on which to focus
+   * @param [entersContainer=false] - Whether a container's controls are focused as well, see `focusForId()`
    */
-  const focusOnError = (error: RJSFValidationError) => {
-    const elementId = fieldPathToId(
-      fieldPathFromList(propertyToPath(error.property)),
-      current().registry.globalFormOptions,
-    );
+  const focusField = (fieldPath: FieldPath, entersContainer = false) => {
+    const elementId = fieldPathToId(fieldPath, current().registry.globalFormOptions);
     const view = formWindow();
     if (!formElement || !view) {
       return;
@@ -389,8 +391,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const namedControls = named instanceof view.RadioNodeList ? Array.from(named) : [named];
     const candidates = new Set([exact, ...namedControls]);
     if (![...candidates].some((element) => takesFocus(element, view))) {
-      focusForId(formElement, exact, elementId, candidates, view);
+      focusForId(formElement, exact, elementId, candidates, view, entersContainer);
     }
+  };
+
+  /** Attempts to focus on the field associated with the `error`, using the `property` field to compute its path.
+   *
+   * @param error - The error on which to focus
+   */
+  const focusOnError = (error: RJSFValidationError) => {
+    focusField(fieldPathFromList(propertyToPath(error.property)));
   };
 
   /** Validates the data `readFormData` returns for a submission or a programmatic validation, committing the errors it
@@ -847,6 +857,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     setFormElement: (element: HTMLElement | null) => {
       formElement = element;
     },
+    focusField,
     /** Calls `send` with `fieldPath` as the path of the blur it sends and `touches` as what it touches, unless a field
      * this one holds has named the same blur already, see `FormDataAccess.sendBlur()`
      */

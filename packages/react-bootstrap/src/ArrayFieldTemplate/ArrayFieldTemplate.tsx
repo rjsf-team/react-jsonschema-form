@@ -51,7 +51,7 @@ export default function ArrayFieldTemplate<
             registry={registry}
             presentation={presentation}
           />
-          <Container fluid key={`array-item-list-${id}`} className='p-0 m-0'>
+          <Container fluid className='p-0 m-0'>
             {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
             {items}
             {canAdd && (

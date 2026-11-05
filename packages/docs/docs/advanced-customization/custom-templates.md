@@ -1044,7 +1044,9 @@ function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
       {props.title}
       {props.description}
       {props.properties.map((element) => (
-        <div className='property-wrapper'>{element.content}</div>
+        <div className='property-wrapper' key={element.content.key}>
+          {element.content}
+        </div>
       ))}
     </div>
   );
@@ -1102,7 +1104,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 
 The following props are part of each element in `properties`:
 
-- `content`: The html for the property's content.
+- `content`: The html for the property's content. Key anything you wrap it in by `content.key` rather than `name`, which an `additionalProperties` key's rename changes, remounting the field and losing what its widget holds.
 - `name`: A string representing the property name.
 - `disabled`: A boolean value stating if the object property is disabled.
 - `readonly`: A boolean value stating if the property is read-only.

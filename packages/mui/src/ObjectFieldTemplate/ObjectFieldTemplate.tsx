@@ -110,7 +110,7 @@ export default function ObjectFieldTemplate<
           ) : (
             <Grid
               size={{ xs: 12 }}
-              key={element.name}
+              key={element.content.key}
               {...objectGridItem}
               sx={computeSxProps<GridProps>({ mb: 1.25 }, objectGridItem)}
             >

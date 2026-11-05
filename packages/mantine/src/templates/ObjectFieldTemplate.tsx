@@ -91,7 +91,7 @@ export default function ObjectFieldTemplate<
         {properties
           .filter((e) => !e.hidden)
           .map((element: ObjectFieldTemplatePropertyType<T, S, F>) => (
-            <Box key={element.name}>{element.content}</Box>
+            <Box key={element.content.key}>{element.content}</Box>
           ))}
       </SimpleGrid>
       {schemaUtils.canExpand(schema, uiSchema, formData) && (

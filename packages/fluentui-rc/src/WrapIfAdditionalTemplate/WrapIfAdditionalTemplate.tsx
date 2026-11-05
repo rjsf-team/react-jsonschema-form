@@ -108,7 +108,7 @@ export default function WrapIfAdditionalTemplate<
   }
 
   return (
-    <Flex gap='gap.medium' vAlign='start' key={keyId} className={classNames} style={style}>
+    <Flex gap='gap.medium' vAlign='start' className={classNames} style={style}>
       <div className={classes.halfWidth}>
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>

@@ -63,7 +63,11 @@ export default function ObjectFieldTemplate<
       <Container fluid className='p-0'>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties.map((element) => (
-          <Row key={element.name} style={{ marginBottom: '10px' }} className={element.hidden ? 'd-none' : undefined}>
+          <Row
+            key={element.content.key}
+            style={{ marginBottom: '10px' }}
+            className={element.hidden ? 'd-none' : undefined}
+          >
             <Col xs={12}> {element.content}</Col>
           </Row>
         ))}

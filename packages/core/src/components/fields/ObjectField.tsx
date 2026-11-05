@@ -57,6 +57,7 @@ import useReadFieldData from '../../hooks/useReadFieldData.ts';
 import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { additionalPropertyRemoval, EMPTY_UI_SCHEMA } from '../constants.ts';
+import FormDataContext from '../FormDataContext.ts';
 import RichDescription from '../RichDescription.tsx';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import {
@@ -218,6 +219,30 @@ function copyObjectData(formData: unknown) {
   return isObject(formData) ? { ...formData } : {};
 }
 
+/** The React key of a property: the one it took with it through its renames, else its name, or a variant of its name
+ * where a renamed property among `properties` holds that name as its key. One not among them holds nothing, since a
+ * parent field that stores a rename later still renders the property under its old name, which must keep its key.
+ *
+ * shortcut: a property whose own name ends in the NUL the variant appends can still collide, a counter per property if
+ * anyone has such names
+ */
+function stableKeyOf(renamedKeys: ReadonlyMap<string, string>, property: string, properties: object) {
+  // Checked first since most objects have no renamed property and this runs for every property on every keystroke
+  if (renamedKeys.size === 0) {
+    return property;
+  }
+  const renamedKey = renamedKeys.get(property);
+  if (renamedKey !== undefined) {
+    return renamedKey;
+  }
+  const heldKeys = [...renamedKeys].filter(([name]) => Object.hasOwn(properties, name)).map(([, held]) => held);
+  let key = property;
+  while (heldKeys.includes(key)) {
+    key += '\0';
+  }
+  return key;
+}
+
 /** Props for the `ObjectFieldProperty` component */
 interface ObjectFieldPropertyProps<
   T = unknown,
@@ -244,8 +269,10 @@ interface ObjectFieldPropertyProps<
   propertyName: string;
   /** Flag indicating whether this property was added by the additionalProperties UI */
   addedByAdditionalProperties: boolean;
-  /** Callback that handles the rename of an additionalProperties-based property key */
-  handleKeyRename: (oldKey: string, newKey: string) => void;
+  /** Callback that handles the rename of an additionalProperties-based property key, given the control focus is on its
+   * way to when the rename comes from a blur
+   */
+  handleKeyRename: (oldKey: string, newKey: string, focusHeadedTo?: Element | null) => void;
   /** Callback that handles the removal of an additionalProperties-based property with key */
   handleRemoveProperty: (keyName: string) => void;
   /** The key names this property may be renamed to, when the parent schema's `propertyNames` constrains them */
@@ -282,7 +309,6 @@ function ObjectFieldPropertyFn<
     propertyNamesEnum,
     keyNotAllowed,
   } = props;
-  const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields, translateString } = registry;
   // Memoized so the row's error schema keeps its identity across renders and `SchemaField` below isn't re-rendered
   const shownErrorSchema = useMemo<ErrorSchema<T> | undefined>(
@@ -326,9 +352,6 @@ function ObjectFieldPropertyFn<
    */
   const onKeyRename = useCallback(
     (value: string) => {
-      if (propertyName !== value) {
-        setWasPropertyKeyModified(true);
-      }
       handleKeyRename(propertyName, value);
     },
     [propertyName, handleKeyRename],
@@ -341,10 +364,11 @@ function ObjectFieldPropertyFn<
     (event: FocusEvent<HTMLInputElement>) => {
       const {
         target: { value },
+        relatedTarget,
       } = event;
-      onKeyRename(value);
+      handleKeyRename(propertyName, value, relatedTarget);
     },
-    [onKeyRename],
+    [propertyName, handleKeyRename],
   );
 
   /** The property drop/removal event handler; Called when a field is removed in an additionalProperty context
@@ -364,7 +388,6 @@ function ObjectFieldPropertyFn<
         fieldPath={fieldPath}
         id={innerFieldId}
         formData={formData}
-        wasPropertyKeyModified={wasPropertyKeyModified}
         onKeyRename={onKeyRename}
         onKeyRenameBlur={onKeyRenameBlur}
         onRemoveProperty={onRemoveProperty}
@@ -384,8 +407,8 @@ function ObjectFieldPropertyFn<
 
 const ObjectFieldProperty = memo(ObjectFieldPropertyFn) as typeof ObjectFieldPropertyFn;
 
-/** The `ObjectField` component is used to render a field in the schema that is of type `object`. It tracks whether an
- * additional property key was modified and what it was modified to
+/** The `ObjectField` component is used to render a field in the schema that is of type `object`. It tracks which
+ * additional property keys were modified and what they were modified to
  *
  * @param props - The `FieldProps` for this template
  */
@@ -446,8 +469,17 @@ export default function ObjectField<
   }, [schema, shownOption]);
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
-  const [lastRenamedProperty, setLastRenamedProperty] = useState<{ previousKey: string; currentKey?: string }>({
-    previousKey: '',
+  const [renamedKeys, setRenamedKeys] = useState<ReadonlyMap<string, string>>(() => new Map());
+  const formAccess = use(FormDataContext);
+  // A rename can remount the field, as one onto a declared property or under a template that keys its rows by name does,
+  // or hand it to the option that declares the name, so focus on its way to a control the rename's commit removed would
+  // otherwise end up on the page. Kept here since the property's own instance may not survive that commit
+  const renameFocus = useRef<{ headedTo: Element; fieldPath: FieldPath } | undefined>(undefined);
+  useLayoutEffect(() => {
+    if (renameFocus.current?.headedTo.isConnected === false) {
+      formAccess?.focusField(renameFocus.current.fieldPath, true);
+    }
+    renameFocus.current = undefined;
   });
   /** The seed the add button wrote for each property it added here and nothing has written to since, which are the only
    * ones a rename re-seeds. Held in a ref rather than state: it is read and written by the add and rename handlers,
@@ -787,13 +819,8 @@ export default function ObjectField<
 
     sentFormData.current = newFormData;
     const outcome = sendMove({ value: newFormData }, () => onChange(newFormData, fieldPath));
-    // A refused add leaves the order as it was, and the React key the last rename gave a property with that property
+    // A refused add leaves the order as it was
     if (outcome?.kind !== 'refused') {
-      setLastRenamedProperty((previous) =>
-        previous.previousKey === newKey
-          ? { currentKey: newKey, previousKey: getAvailableKey(newKey, newFormData) }
-          : previous,
-      );
       setAdditionalPropertyOrder((order) => [...order, newKey]);
     }
     forgetChangedSeeds(newKey);
@@ -815,10 +842,11 @@ export default function ObjectField<
    *
    * @param oldKey - The old key for the field
    * @param newKey - The new key for the field
+   * @param [focusHeadedTo] - The control focus is on its way to, when the rename comes from a blur
    * @returns - The key change callback function
    */
   const handleKeyRename = useCallback(
-    (oldKey: string, newKey: string) => {
+    (oldKey: string, newKey: string, focusHeadedTo?: Element | null) => {
       if (oldKey !== newKey) {
         const currentFormData = readData();
         const actualNewKey = getAvailableKey(newKey, currentFormData);
@@ -854,15 +882,19 @@ export default function ObjectField<
         const rewrittenKeys =
           outcome?.kind === 'rewritten' ? Object.keys(isObject(outcome.kept) ? outcome.kept : {}) : undefined;
         // Recorded once the rename is taken: a refused one leaves the property its name, its place among the others
-        // and the React key the last rename gave another property, so that property keeps its instance
+        // and its React key
         if (
           outcome?.kind !== 'refused' &&
           (!rewrittenKeys || (rewrittenKeys.includes(actualNewKey) && !rewrittenKeys.includes(oldKey)))
         ) {
-          setLastRenamedProperty((previous) => ({
-            previousKey: oldKey !== previous.currentKey ? oldKey : previous.previousKey,
-            currentKey: actualNewKey,
-          }));
+          if (focusHeadedTo) {
+            renameFocus.current = { headedTo: focusHeadedTo, fieldPath: toFieldPath(actualNewKey, fieldPath) };
+          }
+          const properties = schemaRef.current.properties ?? {};
+          setRenamedKeys((previous) => {
+            const key = stableKeyOf(previous, oldKey, properties);
+            return new Map([...previous].filter(([, held]) => held !== key)).set(actualNewKey, key);
+          });
         }
         if (rewrittenKeys) {
           setAdditionalPropertyOrder(rewrittenKeys);
@@ -891,25 +923,25 @@ export default function ObjectField<
       const outcome = sendMove({ fieldPath: removedPath, value: removal }, () => onChange(removal, removedPath));
       if (outcome?.kind !== 'refused' && (outcome?.kind !== 'rewritten' || outcome.kept === undefined)) {
         setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
+        const properties = schemaRef.current.properties ?? {};
+        // The key it held goes free, but a property that took a variant of it while it was held keeps that variant
+        setRenamedKeys((previous) => {
+          if (!previous.has(key)) {
+            return previous;
+          }
+          const next = new Map([...previous].filter(([property]) => property !== key));
+          for (const property of Object.keys(properties)) {
+            const shown = stableKeyOf(previous, property, properties);
+            if (property !== key && shown !== stableKeyOf(next, property, properties)) {
+              next.set(property, shown);
+            }
+          }
+          return next;
+        });
       }
       forgetChangedSeeds(key);
     },
     [sendMove, onChange, fieldPath, forgetChangedSeeds],
-  );
-
-  /** Returns the stable React key for a property. For the most recently renamed
-   * additional property, returns the previous key so that React reuses the
-   * existing component instance instead of unmounting/remounting it. This
-   * preserves DOM focus naturally without manual focus management.
-   */
-  const getStableKey = useCallback(
-    (property: string) => {
-      if (lastRenamedProperty.currentKey === property) {
-        return lastRenamedProperty.previousKey;
-      }
-      return property;
-    },
-    [lastRenamedProperty],
   );
 
   if (!renderOptionalField || hasFormData) {
@@ -977,7 +1009,9 @@ export default function ObjectField<
       const propertyFieldPath = toFieldPath(propertyName, fieldPath);
       const content = (
         <ObjectFieldProperty<T, S, F>
-          key={getStableKey(propertyName)}
+          // A renamed property keeps its key so that React reuses its instance instead of remounting it, which preserves
+          // DOM focus and what its widget holds
+          key={stableKeyOf(renamedKeys, propertyName, schemaProperties)}
           propertyName={propertyName}
           required={isRequired<S>(schema, propertyName)}
           schema={propertySchema}

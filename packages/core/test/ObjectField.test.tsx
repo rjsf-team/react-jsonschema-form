@@ -17,7 +17,7 @@ import type {
 } from '@rjsf/utils';
 import { fieldLabelId, isObject, isPlainObject, noop, ROOT_FIELD_PATH, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
@@ -1348,9 +1348,9 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { newFirst: 1, first: undefined }, 'root');
     });
 
-    // Renamed onto a declared property, the entry is no longer an additional property, so the rename alone is what
-    // labels it by its key rather than by that property's title
-    it("should label a renamed key's field and its widget's parts by the new key", async () => {
+    // The data can't say a declared property's value came from a rename, so the label can't depend on one: it would
+    // differ after a remount of the same data
+    it("should label a key renamed onto a declared property, and its widget's parts, by that property's title", async () => {
       const { node } = createFormComponent({
         schema: {
           type: 'object',
@@ -1358,16 +1358,305 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'string', format: 'date', title: 'Date' },
         },
         uiSchema: { end: { 'ui:widget': 'alt-date' }, additionalProperties: { 'ui:widget': 'alt-date' } },
-        initialFormData: { start: '2020-05-03' },
+        initialFormData: { start: '2020-05-03', other: '2021-06-04' },
       });
 
-      const textNode = elementOf(node, '#root_start__key');
-      await user.clear(textNode);
-      await user.type(textNode, 'end');
-      await user.tab();
+      const expectLabelledByTitle = () => {
+        expect(node.querySelector(`#${fieldLabelId('root_end')}`)?.textContent).toBe('End date');
+        expect(screen.getByRole('combobox', { name: 'End date, year' })).toBeInTheDocument();
+      };
 
-      expect(node.querySelector(`#${fieldLabelId('root_end')}`)?.textContent).toBe('end');
-      expect(screen.getByRole('combobox', { name: 'end, year' })).toBeInTheDocument();
+      await renameKey(node, 'start', 'end');
+      expectLabelledByTitle();
+
+      await renameKey(node, 'other', 'other2');
+      expectLabelledByTitle();
+    });
+
+    function RowsKeyedByName({ properties }: ObjectFieldTemplateProps) {
+      return (
+        <div>
+          {properties.map((property) => (
+            <div key={property.name}>{property.content}</div>
+          ))}
+        </div>
+      );
+    }
+
+    it('should move focus to a renamed field a template remounts by keying its rows by name', async () => {
+      const { node } = createFormComponent({
+        schema,
+        templates: { ObjectFieldTemplate: RowsKeyedByName },
+        initialFormData: { a: 'one' },
+      });
+
+      await renameKey(node, 'a', 'b');
+
+      expect(elementOf(node, '#root_b')).toHaveFocus();
+    });
+
+    const dateSchema: RJSFSchema = {
+      type: 'object',
+      properties: { end: { type: 'string', format: 'date', title: 'End date' }, note: { type: 'string' } },
+      additionalProperties: { type: 'string', format: 'date' },
+    };
+    const altDateUiSchema: UiSchema = {
+      end: { 'ui:widget': 'alt-date' },
+      additionalProperties: { 'ui:widget': 'alt-date' },
+    };
+
+    describe('when a key is renamed onto a declared property', () => {
+      async function typeKey(node: ParentNode) {
+        const keyInput = elementOf(node, '#root_start__key');
+        await user.clear(keyInput);
+        await user.type(keyInput, 'end');
+      }
+
+      it('should move focus heading for its value input to the declared field', async () => {
+        const { node } = createFormComponent({ schema: dateSchema, initialFormData: { start: '2020-05-03' } });
+
+        await renameKey(node, 'start', 'end');
+
+        expect(elementOf(node, '#root_end')).toHaveFocus();
+      });
+
+      it("should move focus to the first part of a declared field that isn't one control", async () => {
+        const { node } = createFormComponent({
+          schema: dateSchema,
+          uiSchema: altDateUiSchema,
+          initialFormData: { start: '2020-05-03' },
+        });
+
+        await renameKey(node, 'start', 'end');
+
+        expect(screen.getByRole('combobox', { name: 'End date, year' })).toHaveFocus();
+      });
+
+      it.each<[string, RJSFSchema, unknown, string]>([
+        ['object', { type: 'object', properties: { inner: { type: 'string' } } }, { inner: 'one' }, '#root_end_inner'],
+        ['array', { type: 'array', items: { type: 'string' } }, ['one'], '#root_end_0'],
+      ])('should move focus to the first control of a declared %s field', async (_, value, data, firstControl) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { end: value }, additionalProperties: value },
+          initialFormData: { start: data },
+        });
+
+        await renameKey(node, 'start', 'end');
+
+        expect(elementOf(node, firstControl)).toHaveFocus();
+      });
+
+      it('should move focus to a declared field a template remounts by keying its rows by name', async () => {
+        const { node } = createFormComponent({
+          schema: dateSchema,
+          templates: { ObjectFieldTemplate: RowsKeyedByName },
+          initialFormData: { start: '2020-05-03' },
+        });
+
+        await renameKey(node, 'start', 'end');
+
+        expect(elementOf(node, '#root_end')).toHaveFocus();
+      });
+
+      it('should move focus to a field the anyOf option declaring the name renders', async () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            additionalProperties: { type: 'string' },
+            anyOf: [{ properties: { declared: { type: 'string' } } }],
+          },
+          initialFormData: { start: 'one' },
+        });
+
+        await renameKey(node, 'start', 'declared');
+
+        expect(elementOf(node, '#root_declared')).toHaveFocus();
+      });
+
+      it('should leave focus on the control the user moved it to', async () => {
+        const { node } = createFormComponent({ schema: dateSchema, initialFormData: { start: '2020-05-03' } });
+
+        await typeKey(node);
+        await user.click(elementOf(node, '#root_note'));
+
+        expect(elementOf(node, '#root_note')).toHaveFocus();
+      });
+
+      it('should not take focus when the user clicked away from every control', async () => {
+        const { node } = createFormComponent({ schema: dateSchema, initialFormData: { start: '2020-05-03' } });
+
+        await typeKey(node);
+        await user.click(document.body);
+
+        expect(node.querySelector('#root_end')).not.toBeNull();
+        expect(document.body).toHaveFocus();
+      });
+    });
+
+    describe('when a key was renamed before another one', () => {
+      // An alt-date holds a part it can't yet make a date of itself, so only an instance that survives still has it
+      it.each([
+        ['an additional property', 'renamed', 'renamed, year'],
+        ['a declared property', 'end', 'End date, year'],
+      ])('should keep the instance of %s', async (_, target, yearName) => {
+        const { node } = createFormComponent({
+          schema: dateSchema,
+          uiSchema: altDateUiSchema,
+          initialFormData: { start: '', other: '' },
+        });
+        await renameKey(node, 'start', target);
+        const year = screen.getByRole<HTMLSelectElement>('combobox', { name: yearName });
+        await user.selectOptions(year, year.options[1]);
+        const pickedYear = year.value;
+
+        await renameKey(node, 'other', 'other2');
+
+        expect(screen.getByRole('combobox', { name: yearName })).toBe(year);
+        expect(year).toHaveValue(pickedYear);
+      });
+
+      it('should keep each instance when properties swap names', async () => {
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: { a: 'one', b: 'two' },
+        });
+        const one = elementOf(node, '#root_a');
+        const two = elementOf(node, '#root_b');
+
+        await renameKey(node, 'a', 'temporary');
+        await renameKey(node, 'b', 'a');
+        await renameKey(node, 'temporary', 'b');
+
+        expect(elementOf(node, '#root_b')).toBe(one);
+        expect(elementOf(node, '#root_a')).toBe(two);
+      });
+
+      it('should not collide React keys when properties keep taking a name a renamed property left', async () => {
+        const consoleError = vi.spyOn(console, 'error');
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: { a: 'one', b: 'two', c: 'three' },
+        });
+        const one = elementOf(node, '#root_a');
+        const two = elementOf(node, '#root_b');
+        const three = elementOf(node, '#root_c');
+
+        await renameKey(node, 'a', 'first');
+        await renameKey(node, 'b', 'a');
+        await renameKey(node, 'a', 'second');
+        await renameKey(node, 'c', 'a');
+
+        expect(elementOf(node, '#root_first')).toBe(one);
+        expect(elementOf(node, '#root_second')).toBe(two);
+        expect(elementOf(node, '#root_a')).toBe(three);
+        expect(consoleError).not.toHaveBeenCalled();
+        consoleError.mockRestore();
+      });
+
+      it('should keep the instance of a property added under a name a removed property took its key from', async () => {
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: { newKey: 'one' },
+        });
+        await renameKey(node, 'newKey', 'renamed');
+        await user.click(elementOf(node, '.rjsf-object-property-expand'));
+        const added = elementOf(node, '#root_newKey');
+
+        await user.click(node.querySelectorAll('.rjsf-object-property-remove')[0]);
+
+        expect(node.querySelector('#root_renamed')).toBeNull();
+        expect(elementOf(node, '#root_newKey')).toBe(added);
+      });
+
+      it('should keep the instance of a property holding a variant of the key a removed property held', async () => {
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: { newKey: 'one' },
+        });
+        await renameKey(node, 'newKey', 'first');
+        await user.click(elementOf(node, '.rjsf-object-property-expand'));
+        await renameKey(node, 'newKey', 'second');
+        await user.click(elementOf(node, '.rjsf-object-property-expand'));
+        const added = elementOf(node, '#root_newKey');
+
+        await user.click(node.querySelectorAll('.rjsf-object-property-remove')[1]);
+
+        expect(node.querySelector('#root_second')).toBeNull();
+        expect(elementOf(node, '#root_newKey')).toBe(added);
+      });
+
+      it('should keep the instance of a property when a rename takes the name of a removed one', async () => {
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: { newKey: 'one' },
+        });
+        await renameKey(node, 'newKey', 'renamed');
+        await user.click(elementOf(node, '.rjsf-object-property-expand'));
+        const added = elementOf(node, '#root_newKey');
+        await user.click(node.querySelectorAll('.rjsf-object-property-remove')[0]);
+        await user.click(elementOf(node, '.rjsf-object-property-expand'));
+
+        await renameKey(node, 'newKey-1', 'renamed');
+
+        expect(elementOf(node, '#root_newKey')).toBe(added);
+      });
+    });
+
+    it('should keep the instance of a renamed property under a parent field that stores the rename later', async () => {
+      function DeferringField(props: FieldProps) {
+        const { ObjectField: Field } = props.registry.fields;
+        return (
+          <Field
+            {...props}
+            onChange={(...change: Parameters<FieldProps['onChange']>) => {
+              setTimeout(() => props.onChange(...change));
+            }}
+          />
+        );
+      }
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:field': DeferringField },
+        initialFormData: { a: 'one' },
+      });
+      const value = elementOf(node, '#root_a');
+
+      await renameKey(node, 'a', 'b');
+
+      await waitFor(() => expect(node.querySelector('#root_b')).toBe(value));
+      expect(value).toHaveFocus();
+    });
+
+    it('should not move focus for a key blurred unrenamed when a later move changes its path', async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: { type: 'object', additionalProperties: { type: 'string' } } },
+        initialFormData: [{ a: 'one', b: 'two' }, { c: 'three' }],
+      });
+      await user.click(elementOf(node, '#root_0_a__key'));
+      await user.click(node.querySelectorAll('.rjsf-object-property-remove')[1]);
+
+      const moveDown = elementOf(node, '.rjsf-array-item-move-down');
+      await user.click(moveDown);
+
+      expect(elementOf(node, '#root_1_a')).not.toHaveFocus();
+    });
+
+    it('should not move focus for a refused rename when a later move changes its path', async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: { type: 'object', additionalProperties: { type: 'string' } } },
+        initialFormData: [{ a: 'one', b: 'two' }, { c: 'three' }],
+        transformChange: (next, previous) =>
+          Array.isArray(next) && next.some((item) => isPlainObject(item) && 'refused' in item) ? previous : next,
+      });
+      const keyInput = elementOf(node, '#root_0_a__key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'refused');
+      await user.click(node.querySelectorAll('.rjsf-object-property-remove')[1]);
+
+      const moveDown = elementOf(node, '.rjsf-array-item-move-down');
+      await user.click(moveDown);
+
+      expect(elementOf(node, '#root_1_a')).not.toHaveFocus();
     });
 
     // A `JSON.parse()`d `__proto__` key is a property like any other, which a rename must neither drop nor turn into
