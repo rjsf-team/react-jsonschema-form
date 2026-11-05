@@ -4,7 +4,6 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   getGroupAttributes,
   numericWidgetStoresString,
-  rangeSpec,
   ratingStarCount,
   toInputValue,
   toNumericValue,
@@ -59,7 +58,7 @@ export default function RatingWidget<
     'radiogroup',
   );
 
-  const { min = 0 } = rangeSpec<S>(schema);
+  const min = toNumericValue(schema.minimum) ?? 0;
   const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
   const numStars = ratingStarCount<S>(schema, stars);

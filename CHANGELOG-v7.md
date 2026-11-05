@@ -496,8 +496,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root, and the key input enabled in a disabled or read-only form, where editing it renamed the key ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars, and for a schema `maximum` that isn't a number, which now uses `stars` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `FileWidget` to leave out of `accept` whatever in the `accept` option isn't a string or is blank, where it stringified anything truthy, so `true` gave `accept="true"` and `' '` gave `accept=" "` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
-- Fix `RatingWidget` for an Ajv `$data` reference: a `maximum` rendered no stars, and a `minimum` wrote values such as `'[object Object]0'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
-- Fix `RatingWidget` for a numeric-string `minimum`, which wrote values such as `'10'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 - Fix `TimeWidget` hiding a value's zero seconds for a numeric-string `multipleOf` below 60, such as `'30'`, which a numeric one keeps ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 - Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
@@ -632,8 +630,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `RatingWidget` to use the default size and color for a `size` or `color` option that isn't a string or is blank, and to trim the space around one ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `RatingWidget` to draw the color gradient only for a `colorGradient` of `true`, where any truthy value, such as `'false'`, drew it ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `ToggleWidget` to add no size class for a `size` option that isn't a string or is blank, where a number gave `toggle-5` and `''` gave `toggle-`, and to trim the space around one, where `' lg'` gave `toggle- lg` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
-- Fix `RatingWidget` for an Ajv `$data` reference: a `maximum` rendered no stars, and a `minimum` wrote values such as `'[object Object]0'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
-- Fix `RatingWidget` for a numeric-string `minimum`, which wrote values such as `'10'` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/fluentui-rc
 
