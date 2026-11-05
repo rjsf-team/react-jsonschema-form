@@ -266,7 +266,6 @@ export type {
 };
 
 export {
-  callerInputProps,
   additionalKeyId,
   AdditionalPropertyKeySelect,
   allowAdditionalItems,
@@ -275,6 +274,7 @@ export {
   asNumber,
   besideOptionsId,
   buttonId,
+  callerInputProps,
   callWithDeferredThrow,
   canExpand,
   createErrorHandler,

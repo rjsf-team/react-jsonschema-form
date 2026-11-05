@@ -71,8 +71,8 @@ export function callerInputPropsTests(Form: ComponentType<FormProps>) {
     );
     const input = container.querySelector<HTMLInputElement>('input#root');
     expect(input).toHaveAttribute('inputmode', 'decimal');
-    // Written through the DOM rather than typed with user-event, which isn't among this package's peer dependencies:
-    // the browser checks only a value the user has edited against the input's `step` and `pattern`
+    // An empty input is always valid, so a value is written for the browser to check against `step` and `pattern`;
+    // through the DOM because user-event isn't among this package's peer dependencies
     if (input) {
       input.value = '1.5';
     }
