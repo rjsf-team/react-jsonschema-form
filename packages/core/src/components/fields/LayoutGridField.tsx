@@ -552,12 +552,13 @@ function LayoutGridFieldChildren<
   const { registry, schema: rawSchema, formData } = layoutGridFieldProps;
   const { schemaUtils } = registry;
   const schema = schemaUtils.retrieveSchema(rawSchema, formData);
-  // A `null` cell, one a layout leaves empty, is keyed by its index, since every `null` cell hashes alike. It renders
-  // nothing, so a conditional cell ahead of it shifting its index remounts nothing, while any other cell keeps its key
+  // A falsy cell, such as an empty `null` or `''` one, is keyed by its index, since those hash alike, wrapped in an array
+  // so it can't hash as a number cell does. An empty cell renders nothing, so a conditional cell ahead of it shifting its
+  // index remounts nothing, while any other cell keeps its key
   return childrenLayoutGridSchemaId.map((layoutGridSchema, i) => (
     <LayoutGridField<T, S, F>
       {...layoutGridFieldProps}
-      key={`layoutGrid-${hashObject(layoutGridSchema ?? i)}`}
+      key={`layoutGrid-${hashObject(layoutGridSchema || [i])}`}
       schema={schema}
       layoutGridSchema={layoutGridSchema}
     />
@@ -689,7 +690,7 @@ function LayoutGridColumns<
     <GridTemplate
       column
       fieldId={columnFieldId<T, S, F>([child], layoutGridFieldProps)}
-      key={`column-${hashObject(child ?? i)}`}
+      key={`column-${hashObject(child || [i])}`}
       data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
       {...gridProps}
     >

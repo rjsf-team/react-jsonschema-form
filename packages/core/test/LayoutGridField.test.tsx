@@ -2294,7 +2294,15 @@ describe('a layout read from JSON', () => {
   test.each([
     ['ui:columns', { 'ui:columns': { children: ['a', null, 5, null] } }, ['root_a', 'root_5']],
     ['ui:row', { 'ui:row': { children: ['a', null, null] } }, ['root_a']],
-  ])('renders the null cells of a %s, which share a key, without a key collision', (_, layoutGrid, ids) => {
+    ['ui:row of empty strings', { 'ui:row': { children: ['a', '', ''] } }, ['root_a']],
+    ['ui:columns of empty strings', { 'ui:columns': { children: ['a', '', ''] } }, ['root_a']],
+    ['ui:row with a number cell', { 'ui:row': { children: [5, 'a', null, null, null, null] } }, ['root_5', 'root_a']],
+    [
+      'ui:columns with a number cell',
+      { 'ui:columns': { children: [5, 'a', null, null, null, null] } },
+      ['root_5', 'root_a'],
+    ],
+  ])('renders the empty cells of a %s without a key collision', (_, layoutGrid, ids) => {
     expect(renderedIds(layoutGrid)).toEqual(ids);
     expect(consoleErrorSuppression.consoleSpy).not.toHaveBeenCalled();
   });

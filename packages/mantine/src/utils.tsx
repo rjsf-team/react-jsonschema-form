@@ -368,7 +368,7 @@ function fitsOption(key: string, value: unknown): boolean {
  * @param value - The `wrapperProps` the options and the theme resolve to
  * @returns - The `wrapperProps` to resolve and spread, or `undefined`
  */
-function wrapperPropsOption(value: unknown): GenericObjectType | undefined {
+export function wrapperPropsOption(value: unknown): GenericObjectType | undefined {
   const wrapperProps = asObject(value);
   return wrapperProps && Object.fromEntries(Object.entries(wrapperProps).filter(([key, v]) => fitsOption(key, v)));
 }

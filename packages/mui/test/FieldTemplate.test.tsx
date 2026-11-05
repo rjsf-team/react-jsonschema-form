@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getTestRegistry } from '@rjsf/core/testing';
 import { toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -90,5 +91,16 @@ describe('FieldTemplate', () => {
     );
 
     expect(container.querySelector('.slot')).toHaveStyle({ marginTop: '8px', marginBottom: '16px' });
+  });
+
+  it("keeps the theme's default FormControl className when neither option sets one", () => {
+    const theme = createTheme({ components: { MuiFormControl: { defaultProps: { className: 'themed' } } } });
+    const { container } = render(
+      <ThemeProvider theme={theme}>
+        <Form schema={{ type: 'string' }} validator={validator} />
+      </ThemeProvider>,
+    );
+
+    expect(container.querySelector('.MuiFormControl-root.themed')).toBeInTheDocument();
   });
 });

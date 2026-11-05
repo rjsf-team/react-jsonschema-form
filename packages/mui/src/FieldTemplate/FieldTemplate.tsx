@@ -114,7 +114,7 @@ export default function FieldTemplate<
         required={required}
         {...slotProps}
         sx={slotSx === undefined ? otherMuiProps.sx : computeSxProps<FormControlProps>(slotSx, otherMuiProps)}
-        className={joinClassNames(slotClassName, otherMuiProps.className)}
+        className={joinClassNames(slotClassName, otherMuiProps.className) || undefined}
       >
         {drawsLabel && (
           <FormLabel

@@ -285,6 +285,19 @@ describe('aria-describedby', () => {
       },
     );
 
+    test("set in ui:options still renders on each alt-date part when wrapperProps.inputContainer isn't a function", () => {
+      renderThemed(
+        {},
+        { type: 'string' },
+        {
+          'ui:widget': 'alt-date',
+          'ui:options': { inputContainer, wrapperProps: { inputContainer: 'nope' } },
+        },
+      );
+
+      expect(screen.getAllByTestId('theme-container')).toHaveLength(3);
+    });
+
     test('set on CheckboxGroup still renders inside the group aria override', () => {
       renderThemed(
         { CheckboxGroup: { defaultProps: { inputContainer } } },

@@ -17,12 +17,17 @@ import {
   dateElementLabel,
   dateRangeOptions,
   getControlDescribedBy,
-  isObject,
   TranslatableString,
   useAltDateWidgetProps,
 } from '@rjsf/utils';
 
-import { getOwnLabel, useAriaDescribedByProps, useFieldWrapperProps, useShownSuccessId } from '../../utils.tsx';
+import {
+  getOwnLabel,
+  useAriaDescribedByProps,
+  useFieldWrapperProps,
+  useShownSuccessId,
+  wrapperPropsOption,
+} from '../../utils.tsx';
 
 interface AltDatePartProps {
   id: string;
@@ -159,14 +164,13 @@ export default function AltDateWidget<
   // resolved as for any input. The field's own wrapper applies the rest of its `wrapperProps`, so only their
   // `inputContainer` reaches the parts, over the theme's `Select` `wrapperProps` without replacing them. The field's
   // wrapper also renders the one success message, which each part is described by.
-  const wrapperOverrides = useMemo(
-    () => ({
+  const wrapperOverrides = useMemo(() => {
+    const ownWrapperProps = wrapperPropsOption(fieldWrapperProps);
+    return {
       success: null,
-      ...(isObject(fieldWrapperProps) &&
-        'inputContainer' in fieldWrapperProps && { inputContainer: fieldWrapperProps.inputContainer }),
-    }),
-    [fieldWrapperProps],
-  );
+      ...(ownWrapperProps && 'inputContainer' in ownWrapperProps && { inputContainer: ownWrapperProps.inputContainer }),
+    };
+  }, [fieldWrapperProps]);
   return (
     <>
       <Input.Wrapper {...wrapperProps}>
