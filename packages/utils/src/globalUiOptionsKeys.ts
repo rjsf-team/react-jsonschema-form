@@ -71,6 +71,4 @@ export const RESERVED_UI_OPTION_NAMES = Object.keys({
   shape: true,
   stars: true,
   yearsRange: true,
-  props: true,
-  value: true,
 } satisfies Record<ReservedUiOptionName, true>) as readonly ReservedUiOptionName[];

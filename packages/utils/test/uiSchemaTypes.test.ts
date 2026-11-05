@@ -94,10 +94,6 @@ describe('UiSchema type', () => {
       'ui:stars': '3',
       // @ts-expect-error: TS2322, `yearsRange` is a first and a last year
       'ui:yearsRange': [2000],
-      // @ts-expect-error: TS2322, `props` is not an option
-      'ui:props': { value: 1 },
-      // @ts-expect-error: TS2322, `value` is not an option
-      'ui:value': 1,
     };
     const wrongOptions: UiSchema = {
       'ui:options': {
@@ -117,10 +113,6 @@ describe('UiSchema type', () => {
         stars: '3',
         // @ts-expect-error: TS2322, `yearsRange` is a first and a last year
         yearsRange: [2000],
-        // @ts-expect-error: TS2322, `props` is not an option
-        props: { value: 1 },
-        // @ts-expect-error: TS2322, `value` is not an option
-        value: 1,
       },
     };
 

@@ -3,11 +3,27 @@ import { useEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { getControlAttributes, hasWidgetErrors, rangeSpec } from '@rjsf/utils';
 
+import type { SliderProps } from '../components/ui/slider.tsx';
 import { Slider } from '../components/ui/slider.tsx';
 import { cn } from '../lib/utils.ts';
 
 // The keys Radix moves a thumb by
 const SLIDER_KEYS = new Set(['Home', 'End', 'PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
+
+// The form owns the range's value, so `value` and `defaultValue` aren't among these
+const allowedProps = [
+  'name',
+  'min',
+  'max',
+  'step',
+  'orientation',
+  'disabled',
+  'onValueChange',
+  'className',
+  'dir',
+  'inverted',
+  'minStepsBetweenThumbs',
+];
 
 /**
  * A range widget component that renders a slider for number input. The slider's thumb, the element a user focuses,
@@ -16,6 +32,7 @@ const SLIDER_KEYS = new Set(['Home', 'End', 'PageUp', 'PageDown', 'ArrowUp', 'Ar
  * @param {number} props.value - The current value of the range
  * @param {boolean} props.readonly - Whether the widget is read-only
  * @param {boolean} props.disabled - Whether the widget is disabled
+ * @param {object} props.options - Additional options for the widget
  * @param props.schema - The JSON schema for this field
  * @param {(value: any) => void} props.onChange - Callback for when the value changes
  * @param props.onBlur - Callback for when the thumb loses focus
@@ -28,7 +45,20 @@ export default function RangeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { value, readonly, disabled, autofocus, schema, onChange, onBlur, onFocus, id, htmlName, presentation } = props;
+  const {
+    value,
+    readonly,
+    disabled,
+    autofocus,
+    options,
+    schema,
+    onChange,
+    onBlur,
+    onFocus,
+    id,
+    htmlName,
+    presentation,
+  } = props;
   const thumbRef = useRef<HTMLSpanElement>(null);
   // React focuses a form control or button marked `autoFocus` as it mounts, but not the thumb, which is a <span>. Radix
   // draws the thumb `display: none` until a render after it mounts, which this effect runs before, and a browser focuses
@@ -48,8 +78,19 @@ export default function RangeWidget<
       cancelled = true;
     };
   }, []);
-  const sliderDisabled = disabled || readonly;
-  const { min = 0, max, step } = rangeSpec<S>(schema);
+  const optionProps = new Map(Object.entries(options.props ?? {}));
+  // The empty-range handling below decides the slider's name, disabled state and value changes, so those that
+  // `ui:options.props` gives are folded into it rather than spread over it
+  const sliderOptionProps: Partial<SliderProps> = Object.fromEntries(
+    allowedProps.filter((key) => optionProps.has(key)).map((key) => [key, optionProps.get(key)]),
+  );
+  const { name: uiName, disabled: uiDisabled, onValueChange: uiOnValueChange, ...uiProps } = sliderOptionProps;
+  const sliderDisabled = uiDisabled ?? (disabled || readonly);
+  const formName = uiName ?? (htmlName || id);
+  const spec = rangeSpec<S>(schema);
+  // A `min` from `ui:options.props` replaces the schema's on the slider, so an empty range's thumb is drawn there
+  const min: number = typeof uiProps.min === 'number' ? uiProps.min : (spec.min ?? 0);
+  const { max, step } = spec;
   const isEmpty = value === undefined || value === null;
   // Radix reports only a value that changes, and an empty range draws its thumb at its minimum, so a press or a key
   // that leaves the thumb there commits the minimum itself, as moving a native range's thumb to its minimum would.
@@ -76,6 +117,7 @@ export default function RangeWidget<
   }, []);
   const handleChange = (newValue: number[]) => {
     pendingRef.current = false;
+    uiOnValueChange?.(newValue);
     if (resettingRef.current) {
       resettingRef.current = false;
       onChange(undefined);
@@ -118,12 +160,13 @@ export default function RangeWidget<
         // Radix hides the thumb of a slider with no value, which leaves the field nothing to focus, so an empty range
         // draws its thumb at its minimum. Its hidden input would submit that minimum under the field's name, so an
         // empty range names none
-        name={isEmpty ? undefined : htmlName || id}
+        name={isEmpty ? undefined : formName}
         disabled={sliderDisabled}
         min={min}
         max={max}
         step={step}
         value={[isEmpty ? min : (value as number)]}
+        {...uiProps}
         onValueChange={handleChange}
         onPointerDown={startInteraction}
         onPointerUp={commitMinimum}

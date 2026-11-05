@@ -11,9 +11,10 @@ import {
 import type { ArrayFieldItemTemplateProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { elementOf } from '../../../testing/elementOf.ts';
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import CheckboxWidget from '../src/widgets/CheckboxWidget.tsx';
 import WrappedForm from './WrappedForm.tsx';
@@ -535,6 +536,289 @@ describe('mantine keeps a field on its form data', () => {
     );
 
     expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '3');
+  });
+
+  test('RangeWidget ignores ui:options.defaultValue on an empty field', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'integer' }}
+        uiSchema={{ 'ui:widget': 'range', 'ui:options': { defaultValue: 7 } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '0');
+  });
+
+  test('RadioWidget ignores ui:options.defaultValue on an empty field', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'string', enum: ['a', 'b'] }}
+        uiSchema={{ 'ui:widget': 'radio', 'ui:options': { defaultValue: '1' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radio', { name: 'b' })).not.toBeChecked();
+  });
+
+  const ownedOptions = () => ({
+    id: 'other',
+    name: 'other',
+    onChange: vi.fn(),
+    onBlur: vi.fn(),
+    onFocus: vi.fn(),
+  });
+
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ['BaseInputTemplate', { type: 'string' }, {}],
+    ['BaseInputTemplate, numeric', { type: 'number' }, {}],
+    ['TextareaWidget', { type: 'string' }, { 'ui:widget': 'textarea' }],
+    ['PasswordWidget', { type: 'string' }, { 'ui:widget': 'password' }],
+    ['ColorWidget', { type: 'string' }, { 'ui:widget': 'color' }],
+    ['FileWidget', { type: 'string', format: 'data-url' }, {}],
+    ['TimeWidget', { type: 'string', format: 'time' }, {}],
+    ['DateWidget', { type: 'string', format: 'date' }, {}],
+    ['RangeWidget', { type: 'integer' }, { 'ui:widget': 'range' }],
+    ['SelectWidget', { type: 'string', enum: ['a', 'b'] }, {}],
+    ['RadioWidget', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }],
+    [
+      'CheckboxesWidget',
+      { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+    ],
+  ])("%s keeps the field's id and name when ui:options gives them", (_, schema, uiSchema) => {
+    const { container } = render(
+      <WrappedForm schema={schema} uiSchema={{ ...uiSchema, 'ui:options': ownedOptions() }} validator={validator} />,
+    );
+
+    expect(container.querySelector('#other')).not.toBeInTheDocument();
+    expect(container.querySelector('#root')).toBeInTheDocument();
+    expect(container.querySelector('[name="other"]')).not.toBeInTheDocument();
+    expect(container.querySelector('[name="root"]')).toBeInTheDocument();
+  });
+
+  test.each<[string, RJSFSchema, UiSchema, unknown]>([
+    ['BaseInputTemplate', { type: 'string' }, {}, 'abc'],
+    ['BaseInputTemplate, numeric', { type: 'number' }, {}, 12],
+    ['TextareaWidget', { type: 'string' }, { 'ui:widget': 'textarea' }, 'abc'],
+    ['ColorWidget', { type: 'string' }, { 'ui:widget': 'color' }, '#abc'],
+  ])("%s keeps the form's handlers when ui:options gives its own", async (_, schema, uiSchema, expected) => {
+    const options = ownedOptions();
+    const onChange = vi.fn();
+    const onBlur = vi.fn();
+    const onFocus = vi.fn();
+    render(
+      <WrappedForm
+        schema={schema}
+        uiSchema={{ ...uiSchema, 'ui:options': options }}
+        onChange={onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        validator={validator}
+      />,
+    );
+
+    await user.click(screen.getByRole('textbox'));
+    await user.keyboard(String(expected));
+    await user.tab();
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual(expected);
+    expect(onFocus).toHaveBeenCalled();
+    expect(onBlur).toHaveBeenCalled();
+    expect(options.onChange).not.toHaveBeenCalled();
+    expect(options.onFocus).not.toHaveBeenCalled();
+    expect(options.onBlur).not.toHaveBeenCalled();
+  });
+
+  test("PasswordWidget keeps the form's handlers when ui:options gives its own", async () => {
+    const options = ownedOptions();
+    const onChange = vi.fn();
+    const onBlur = vi.fn();
+    const onFocus = vi.fn();
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'string' }}
+        uiSchema={{ 'ui:widget': 'password', 'ui:options': options }}
+        onChange={onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        validator={validator}
+      />,
+    );
+
+    await user.click(elementOf(container, 'input[type="password"]'));
+    await user.keyboard('abc');
+    await user.tab();
+
+    expect(onChange.mock.lastCall?.[0].formData).toBe('abc');
+    expect(onFocus).toHaveBeenCalled();
+    expect(onBlur).toHaveBeenCalled();
+    expect(options.onChange).not.toHaveBeenCalled();
+  });
+
+  test("RangeWidget keeps the form's handlers when ui:options gives its own", async () => {
+    const options = ownedOptions();
+    const onChange = vi.fn();
+    const onBlur = vi.fn();
+    const onFocus = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'integer' }}
+        uiSchema={{ 'ui:widget': 'range', 'ui:options': options }}
+        initialFormData={3}
+        onChange={onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        validator={validator}
+      />,
+    );
+
+    await user.tab();
+    await user.keyboard('{ArrowRight}');
+    await user.tab();
+
+    expect(onChange.mock.lastCall?.[0].formData).toBe(4);
+    expect(onFocus).toHaveBeenCalled();
+    expect(onBlur).toHaveBeenCalled();
+    expect(options.onChange).not.toHaveBeenCalled();
+  });
+
+  test.each<[string, RJSFSchema, UiSchema, string, unknown]>([
+    ['RadioWidget', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radio', 'b'],
+    [
+      'CheckboxesWidget',
+      { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+      'checkbox',
+      ['b'],
+    ],
+  ])("%s keeps the form's onChange when ui:options gives its own", async (_, schema, uiSchema, role, expected) => {
+    const options = ownedOptions();
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={schema}
+        uiSchema={{ ...uiSchema, 'ui:options': options }}
+        onChange={onChange}
+        validator={validator}
+      />,
+    );
+
+    await user.click(screen.getAllByRole(role)[1]);
+    await user.tab();
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual(expected);
+    expect(options.onChange).not.toHaveBeenCalled();
+    expect(options.onFocus).not.toHaveBeenCalled();
+    expect(options.onBlur).not.toHaveBeenCalled();
+  });
+
+  test("FileWidget keeps the form's onChange when ui:options gives its own", async () => {
+    const options = ownedOptions();
+    const onChange = vi.fn();
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'string', format: 'data-url' }}
+        uiSchema={{ 'ui:options': options }}
+        onChange={onChange}
+        validator={validator}
+      />,
+    );
+
+    await user.upload(
+      elementOf(container, 'input[type="file"]', HTMLInputElement),
+      new File(['x'], 'a.txt', { type: 'text/plain' }),
+    );
+
+    await waitFor(() => expect(onChange).toHaveBeenCalled());
+    expect(options.onChange).not.toHaveBeenCalled();
+  });
+
+  test("TimeWidget keeps the form's onChange when ui:options gives its own", async () => {
+    const options = ownedOptions();
+    const onChange = vi.fn();
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'string', format: 'time' }}
+        uiSchema={{ 'ui:options': options }}
+        onChange={onChange}
+        validator={validator}
+      />,
+    );
+
+    await user.click(elementOf(container, 'input[type="time"]'));
+    await user.paste('10:30');
+
+    expect(onChange).toHaveBeenCalled();
+    expect(options.onChange).not.toHaveBeenCalled();
+  });
+
+  test("DateWidget keeps the form's onChange when ui:options gives its own", async () => {
+    const options = ownedOptions();
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'string', format: 'date' }}
+        uiSchema={{ 'ui:options': options }}
+        onChange={onChange}
+        validator={validator}
+      />,
+    );
+
+    await user.click(screen.getByRole('textbox'));
+    await user.paste('2024-01-02');
+
+    expect(onChange.mock.lastCall?.[0].formData).toBe('2024-01-02');
+    expect(options.onChange).not.toHaveBeenCalled();
+  });
+
+  test("SelectWidget keeps the form's onChange when ui:options gives its own", () => {
+    const options = ownedOptions();
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'string', enum: ['a', 'b'] }}
+        uiSchema={{ 'ui:options': options }}
+        onChange={onChange}
+        validator={validator}
+      />,
+    );
+
+    // fireEvent, as Mantine's dropdown hides its options once an `await` lets floating-ui measure jsdom's zero-size layout
+    fireEvent.click(screen.getByRole('combobox'));
+    fireEvent.click(screen.getByRole('option', { name: 'b' }));
+
+    expect(onChange.mock.lastCall?.[0].formData).toBe('b');
+    expect(options.onChange).not.toHaveBeenCalled();
+  });
+
+  test.each<[string, RJSFSchema]>([
+    ['DateWidget', { type: 'string', format: 'date' }],
+    ['SelectWidget', { type: 'string', enum: ['a', 'b'] }],
+    ['TimeWidget', { type: 'string', format: 'time' }],
+    ['FileWidget', { type: 'string', format: 'data-url' }],
+  ])("%s keeps the form's onFocus and onBlur when ui:options gives its own", async (_, schema) => {
+    const options = ownedOptions();
+    const onBlur = vi.fn();
+    const onFocus = vi.fn();
+    render(
+      <WrappedForm
+        schema={schema}
+        uiSchema={{ 'ui:options': options }}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        validator={validator}
+      />,
+    );
+
+    await user.tab();
+    await user.tab();
+
+    expect(onFocus).toHaveBeenCalled();
+    expect(onBlur).toHaveBeenCalled();
+    expect(options.onFocus).not.toHaveBeenCalled();
+    expect(options.onBlur).not.toHaveBeenCalled();
   });
 });
 

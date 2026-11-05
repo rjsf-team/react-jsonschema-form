@@ -161,28 +161,13 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
     expect(thumbs[1]).toHaveAccessibleName('Volume');
   });
 
-  test('ignores ui:options.props on a range', async () => {
+  test('keeps a range on the form data when ui:options.props gives it a value or defaultValue', async () => {
     const onChange = vi.fn();
-    const onValueChange = vi.fn();
-    const { container } = render(
+    render(
       <Form
         schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
         uiSchema={{
-          volume: {
-            'ui:widget': 'range',
-            'ui:options': {
-              // @ts-expect-error: TS2322, the type rejects `props`, for a form that isn't type-checked
-              props: {
-                value: [2, 5],
-                defaultValue: [2, 5],
-                min: 1,
-                max: 9,
-                disabled: true,
-                name: 'level',
-                onValueChange,
-              },
-            },
-          },
+          volume: { 'ui:widget': 'range', 'ui:options': { props: { value: [2, 5], defaultValue: [2, 5] } } },
         }}
         initialFormData={{ volume: 3 }}
         validator={validator}
@@ -190,17 +175,31 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
       />,
     );
 
-    const thumb = screen.getByRole('slider');
-    expect(thumb).toHaveAttribute('aria-valuenow', '3');
-    expect(thumb).toHaveAttribute('aria-valuemin', '0');
-    expect(thumb).toHaveAttribute('aria-valuemax', '100');
-    expect(container.querySelector('input[name="level"]')).not.toBeInTheDocument();
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '3');
     await user.tab();
     await user.keyboard('{ArrowRight}');
 
-    expect(onValueChange).not.toHaveBeenCalled();
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ volume: 4 });
     expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '4');
+  });
+
+  test('still applies the other ui:options.props to a range', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
+        uiSchema={{
+          volume: {
+            'ui:widget': 'range',
+            'ui:options': { props: { orientation: 'vertical', className: 'custom-slider' } },
+          },
+        }}
+        initialFormData={{ volume: 3 }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-orientation', 'vertical');
+    expect(elementOf(container, '[data-slot="slider"]')).toHaveClass('custom-slider');
   });
 
   test("draws an empty range's thumb at its minimum without giving the form that value", async () => {
@@ -326,12 +325,12 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
       expect(onChange).not.toHaveBeenCalled();
     });
 
-    test('commits nothing for a press on a disabled empty range', async () => {
+    test('commits nothing for a press on an empty range that ui:options.props disables', async () => {
       const onChange = vi.fn();
       render(
         <Form
           schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume', minimum: 2 } } }}
-          uiSchema={{ volume: { 'ui:widget': 'range', 'ui:disabled': true } }}
+          uiSchema={{ volume: { 'ui:widget': 'range', 'ui:options': { props: { disabled: true } } } }}
           onChange={onChange}
           validator={validator}
         />,
@@ -363,6 +362,38 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
     await user.keyboard('{/Home}');
 
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  test('gives an empty range no form value under a name ui:options.props sets', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume', minimum: 2 } } }}
+        uiSchema={{ volume: { 'ui:widget': 'range', 'ui:options': { props: { name: 'level' } } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input[name="level"]')).not.toBeInTheDocument();
+  });
+
+  test('calls an onValueChange ui:options.props gives a range, and still commits only the value a key moves it to', async () => {
+    const onChange = vi.fn();
+    const onValueChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume', minimum: 2 } } }}
+        uiSchema={{ volume: { 'ui:widget': 'range', 'ui:options': { props: { onValueChange } } } }}
+        onChange={onChange}
+        validator={validator}
+      />,
+    );
+
+    await user.tab();
+    await user.keyboard('{ArrowRight}');
+
+    expect(onValueChange).toHaveBeenCalledWith([3]);
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ volume: 3 });
   });
 
   test('leaves a range that started empty empty when its form is reset', async () => {
@@ -410,6 +441,25 @@ describe("shadcn widgets carry their field's plan on the element a user focuses"
     });
 
     expect(screen.getByRole('slider')).not.toHaveFocus();
+  });
+
+  test("draws an empty range's thumb at the minimum ui:options gives its slider, and commits that", async () => {
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { volume: { type: 'integer', title: 'Volume' } } }}
+        uiSchema={{ volume: { 'ui:widget': 'range', 'ui:options': { props: { min: 5 } } } }}
+        onChange={onChange}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '5');
+    await user.tab();
+    await user.keyboard('{Home}');
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ volume: 5 });
   });
 
   test("commits only the value a key moves an empty range's thumb to", async () => {

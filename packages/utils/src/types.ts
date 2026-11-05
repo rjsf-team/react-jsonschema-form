@@ -727,7 +727,7 @@ type OverridableTemplateName = Exclude<
   'ButtonTemplates'
 >;
 
-/** Every option name RJSF reads or rejects for a field, which an extension of `GlobalUISchemaOptions` may not reuse: the
+/** Every option name RJSF reads for a field, which an extension of `GlobalUISchemaOptions` may not reuse: the
  * registry hands an extension's keys to every field along with RJSF's own, so one of these names would act as the
  * option RJSF reads per field. `ui:fieldReplacesAnyOrOneOf` is among them, since `getUiOptions()` returns it as an
  * option too, and so is `enumOptions`, which a field computes and hands its widget beside the options, and every
@@ -1993,10 +1993,6 @@ type UIOptionsDeclaredType<
      * from the current year: a negative beside a positive throws
      */
     yearsRange?: readonly [number, number];
-    /** Not an option: a field's data comes from the form, not from props spread onto its component */
-    props?: never;
-    /** Not an option: a field's data comes from the form, not from `ui:options` */
-    value?: never;
   };
 
 /** This type represents all the known supported options in the `ui:options` property, kept separate in order to

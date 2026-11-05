@@ -28,6 +28,8 @@ export default function FileWidget<
     options,
     multiple,
     onChange,
+    onBlur,
+    onFocus,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { filesInfo, handleChange, handleRemove } = useFileWidgetProps(value, onChange, multiple);
@@ -60,6 +62,18 @@ export default function FileWidget<
     return null;
   }, [handleRemove, filesInfo]);
 
+  const handleBlur = useCallback(() => {
+    if (onBlur) {
+      onBlur(id, value);
+    }
+  }, [onBlur, id, value]);
+
+  const handleFocus = useCallback(() => {
+    if (onFocus) {
+      onFocus(id, value);
+    }
+  }, [onFocus, id, value]);
+
   const ariaDescribedByProps = useInputAriaProps('FileInput', props);
   const error = getWidgetError<T, S, F>(props);
 
@@ -77,6 +91,8 @@ export default function FileWidget<
       multiple={!!multiple}
       valueComponent={ValueComponent}
       onChange={handleOnChange}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
       error={error}
       {...themeProps}
       {...ariaDescribedByProps}

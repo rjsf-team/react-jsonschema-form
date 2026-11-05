@@ -33,6 +33,13 @@ describe('cleanupOptions()', () => {
     'shape',
     'stars',
     'yearsRange',
+    'id',
+    'name',
+    'value',
+    'defaultValue',
+    'onChange',
+    'onBlur',
+    'onFocus',
   ])('removes the %s option', (name) => {
     expect(cleanupOptions({ [name]: 'value', radius: 'md' }, noGlobals)).toEqual({ radius: 'md' });
   });
