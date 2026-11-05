@@ -3910,7 +3910,7 @@ Options with no discriminator aren't told apart by that value alone, since a use
 - schema: S - The schema element in which to search for the selected anyOf/oneOf option
 - fallbackField: string - The field to use as a backup selector field if the schema does not have a required field
 - xxx: 'anyOf' | 'oneOf' - Either `anyOf` or `oneOf`, defines which value is being sought
-- [formData=\{}]: T - The form data that is used to determine which anyOf/oneOf option to descend
+- [formData]: T - The form data that is used to determine which anyOf/oneOf option to descend
 
 #### Returns
 

@@ -768,6 +768,19 @@ describe('a cell in options with no discriminator', () => {
     expect(screen.getByLabelText('A')).toHaveValue('typed');
   });
 
+  it('renders the field a named render cell finds, rather than the render', () => {
+    createFormComponent({
+      schema: optionsSchema,
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': [{ name: 'thing.a', render: CustomField }] }] },
+      },
+    });
+
+    expect(screen.getByLabelText('A')).toBeInTheDocument();
+    expect(screen.queryByTestId('custom-field')).not.toBeInTheDocument();
+  });
+
   it('shows a render with no name in place of the field its name would find', () => {
     createFormComponent({
       schema: optionsSchema,

@@ -366,7 +366,7 @@ function schemaHolding<T, S extends StrictRJSFSchema, F extends FormContextType>
     return schema;
   }
   const selected = schemaUtils.findSelectedOptionInXxxOf(schema, key, xxx, data);
-  const isStubOnly = Object.hasOwn(properties, key) && getByPath(selected?.[PROPERTIES_KEY], key) === undefined;
+  const isStubOnly = Object.hasOwn(properties, key) && getByPath(selected?.[PROPERTIES_KEY], key) == null;
   return isStubOnly ? schema : selected && getRenderedOptionSchema<S>(schema, selected);
 }
 

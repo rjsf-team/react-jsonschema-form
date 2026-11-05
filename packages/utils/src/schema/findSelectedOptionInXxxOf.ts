@@ -21,7 +21,7 @@ import retrieveSchema from './retrieveSchema.ts';
  * @param schema - The schema element in which to search for the selected anyOf/oneOf option
  * @param fallbackField - The field to use as a backup selector field if the schema does not have a required field
  * @param xxx - Either `anyOf` or `oneOf`, defines which value is being sought
- * @param [formData={}] - The form data that is used to determine which anyOf/oneOf option to descend
+ * @param [formData] - The form data that is used to determine which anyOf/oneOf option to descend
  * @returns - The anyOf/oneOf option that matches the selector field in the schema, else the closest to the data for options
  *        with no discriminator, or undefined if a discriminated list selects nothing
  */
@@ -35,7 +35,7 @@ export default function findSelectedOptionInXxxOf<
   schema: S,
   fallbackField: string,
   xxx: 'anyOf' | 'oneOf',
-  formData: T = {} as T,
+  formData?: T,
 ): S | undefined {
   if (Array.isArray(schema[xxx])) {
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);

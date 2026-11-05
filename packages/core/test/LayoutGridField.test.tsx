@@ -1158,6 +1158,14 @@ describe('LayoutGridField', () => {
       } as unknown as RJSFSchema;
       expect(details(leftEmpty, 'thing.a', { a: 'x' }).schema?.title).toBe('A');
     });
+    test('reads a property left empty in the option from the stub of the extra key', () => {
+      const leftEmptyInOption = {
+        type: 'object',
+        additionalProperties: { type: 'string', title: 'Extra' },
+        anyOf: [{ type: 'object', properties: { a: null, b: { type: 'number' } } }],
+      } as unknown as RJSFSchema;
+      expect(details(leftEmptyInOption, 'thing.a', { a: 'x' }).schema?.title).toBe('Extra');
+    });
     test.each([
       ['cleared', {}],
       ['edited', { a: 'typed' }],

@@ -102,6 +102,11 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
         testValidator.setReturnValues({ isValid: [false, false] });
         expect(schemaUtils.findSelectedOptionInXxxOf(schema, 'a', ANY_OF_KEY)).toEqual(first);
       });
+      test('returns the first option with no data, even where a later one matches an empty object', () => {
+        const laterMatchesEmpty: RJSFSchema = { type: 'object', anyOf: [first, { type: 'object', title: 'Empty' }] };
+        testValidator.setReturnValues({ isValid: [false, true] });
+        expect(schemaUtils.findSelectedOptionInXxxOf(laterMatchesEmpty, 'a', ANY_OF_KEY)).toEqual(first);
+      });
       test('reads a value only some options hold as no selector, since it cannot tell them apart', () => {
         const someHold: RJSFSchema = {
           type: 'object',
