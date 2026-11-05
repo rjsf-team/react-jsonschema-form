@@ -778,6 +778,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop, and a `number` field a widget passes an `inputMode` or `onChangeOverride` getting a native number input that blocked a decimal rather than the text input the other themes render ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `FileWidget` to leave out of `accept` whatever in the `accept` option isn't a string or is blank, where it stringified anything truthy, so `true` gave `accept="true"` and `' '` gave `accept=" "` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
+- Fix `ColorWidget` rewriting its value as hex when its `colorFormat` option changes to a format `ColorInput` doesn't take, such as `'RGB'` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/mui
@@ -892,6 +893,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it as a prop, so the file input of an array took one file at a time ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `BaseInputTemplate` to put an `accept` a widget passes in `extraProps` on the input over `ui:options.accept`, which replaced it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- **BREAKING CHANGE:** Change `BaseInputTemplate` to put a `multiple` it is passed, in `extraProps` too, on a file input only, as `ArrayField` passes one to the widget of every multi-select, so an `email` input no longer takes several addresses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/shadcn
@@ -982,6 +984,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it as a prop, so the file input of an array took one file at a time ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `BaseInputTemplate` to put an `accept` a widget passes in `extraProps` on the input over `ui:options.accept`, which replaced it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- **BREAKING CHANGE:** Change `BaseInputTemplate` to put a `multiple` it is passed, in `extraProps` too, on a file input only, as `ArrayField` passes one to the widget of every multi-select, so an `email` input no longer takes several addresses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/snapshot-tests
