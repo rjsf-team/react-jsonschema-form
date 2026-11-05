@@ -1,12 +1,13 @@
 import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
-import type { UiSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
 /** Pins that a field's own `ui:field` naming `FallbackField` or nothing leaves the fallback UI's description where the
  * theme draws it with no `ui:field` at all, rather than moving it between the template above the type selector and the
- * value field below it (#5389).
+ * value field below it (#5389), and that naming a boolean's checkbox leaves its label and description where they are
+ * with no `ui:widget` at all, and a radio's where a text input's are (#5581).
  *
  * @param Form - The theme's `Form` component
  * @param descriptionAbove - Whether the theme draws the description above the type selector rather than below it
@@ -65,6 +66,43 @@ export function fallbackDescriptionTests(Form: ComponentType<FormProps>, descrip
         owner = owner.parentElement;
       }
       expect(owner).toContainElement(typeSelector);
+    });
+  });
+
+  describe("the fallback UI's label and description of a boolean (#5581)", () => {
+    function renderedLayout(valUiSchema: UiSchema, type: RJSFSchema['type'] = ['boolean', 'string']) {
+      const { unmount } = render(
+        <Form
+          schema={{ type: 'object', properties: { val: { type, title: 'Val', description: 'Desc' } } }}
+          uiSchema={{ val: valUiSchema }}
+          validator={validator}
+          useFallbackUiForUnsupportedType
+        />,
+      );
+      const typeSelector = screen.getByRole('combobox', { name: 'Type' });
+      // `@rjsf/mui` repeats a text input's label in its outline's notch, hidden from everyone but this query
+      const isAbove = (text: string) =>
+        screen
+          .getByText(text, { ignore: 'script, style, fieldset[aria-hidden] span' })
+          .compareDocumentPosition(typeSelector) === Node.DOCUMENT_POSITION_FOLLOWING;
+      const layout = { label: isAbove('Val'), description: isAbove('Desc') };
+      unmount();
+      return layout;
+    }
+
+    test.each<[string, UiSchema]>([
+      ["ui:widget: 'checkbox'", { 'ui:widget': 'checkbox' }],
+      ["ui:widget: 'CheckboxWidget'", { 'ui:widget': 'CheckboxWidget' }],
+      ["ui:options.widget: 'checkbox'", { 'ui:options': { widget: 'checkbox' } }],
+    ])('are drawn once, where they are with no ui:widget, under %s', (_, valUiSchema) => {
+      expect(renderedLayout(valUiSchema)).toEqual(renderedLayout({}));
+    });
+
+    test.each<[string, RJSFSchema['type']]>([
+      ['boolean first', ['boolean', 'string']],
+      ['string first', ['string', 'boolean']],
+    ])("are drawn once, where a text input's are, for a radio on a list naming %s", (_, type) => {
+      expect(renderedLayout({ 'ui:widget': 'radio' }, type)).toEqual(renderedLayout({}, ['string', 'boolean']));
     });
   });
 }

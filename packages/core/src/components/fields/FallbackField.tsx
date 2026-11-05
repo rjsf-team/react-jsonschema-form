@@ -20,7 +20,6 @@ import {
   getXxxOfKey,
   GUESSED_TYPE_FLAG,
   guessType,
-  hasWidget,
   JSON_SCHEMA_TYPES,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
@@ -36,7 +35,7 @@ import type { JSONSchema7TypeName } from 'json-schema';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
-import { isAdditionalPropertySchema, withoutUiWidget } from './fieldWidgetUtils.ts';
+import { fallbackValueKeepsWidget, isAdditionalPropertySchema, withoutUiWidget } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 
@@ -359,11 +358,8 @@ function FallbackUiField<
   );
   // What `getUiOptions(uiSchema, globalUiOptions)` returns for the label, without reading the `uiSchema` a second time
   const { label } = { ...globalUiOptions, ...uiOptions };
-  // Whether the value field keeps its widget on a given type. Checked against the schema with its type pinned, which is
-  // all of the value schema `getWidget()` reads
   const keepsWidget = useCallback(
-    (aType: JSONSchema7TypeName) =>
-      !uiOptions.widget || hasWidget<T, S, F>({ ...schema, type: aType }, uiOptions.widget, widgets),
+    (aType: JSONSchema7TypeName) => fallbackValueKeepsWidget<T, S, F>(schema, aType, uiOptions.widget, widgets),
     [uiOptions.widget, schema, widgets],
   );
   const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() =>

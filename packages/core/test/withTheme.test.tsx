@@ -338,6 +338,7 @@ describe('withTheme', () => {
         description: 'self',
         errors: 'self',
         uncheckedIsFalse: true,
+        labelPlacement: 'beside',
       });
       expect(registry?.presentation.fields.StringField).toEqual(WIDGET_FIELD_PRESENTATION);
       expect(registry?.presentation.default).toEqual({ label: 'self', errors: 'self' });

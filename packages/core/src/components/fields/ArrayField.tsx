@@ -718,6 +718,7 @@ function ArrayFieldItemInner<
     ownUiOptions,
     disabled: itemDisabled,
     readonly: itemReadonly,
+    hidden: itemHidden,
   } = useSchemaFieldPlan<T[], S, F>(itemFieldProps);
   const typeSelectorFirst =
     fieldToRender?.FieldComponent === registry.fields.FallbackField &&
@@ -725,7 +726,7 @@ function ArrayFieldItemInner<
     rendersTypeSelector<S>(plannedSchema);
   const labelBy = presentation?.control && presentation.label.by;
   const displayLabel = typeSelectorFirst
-    ? Boolean(presentation?.control) && presentation?.showLabel === true
+    ? !itemHidden && presentation?.showLabel === true
     : labelBy === 'template' || (labelBy === 'self' && labelPlacement === 'above');
   const hasDescription = !!ownUiOptions.description || !!itemSchema.description;
   // The buttons change the array, so its lock holds them whatever an item's own `ui:disabled: false` unlocks. The
