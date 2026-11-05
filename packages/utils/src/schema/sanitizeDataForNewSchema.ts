@@ -353,7 +353,16 @@ export default function sanitizeDataForNewSchema<
               const newItemSchema = sameRawItemsSchema
                 ? oldItemSchema
                 : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
-              itemValue = sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newItemSchema, oldItemSchema, aValue);
+              // An object item schema without `properties` has nothing to prune, so keep the element as it is
+              if (newItemSchema[PROPERTIES_KEY]) {
+                itemValue = sanitizeDataForNewSchema<T, S, F>(
+                  context,
+                  rootSchema,
+                  newItemSchema,
+                  oldItemSchema,
+                  aValue,
+                );
+              }
             }
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);

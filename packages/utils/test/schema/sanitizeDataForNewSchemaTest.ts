@@ -1376,6 +1376,33 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, 'qwerty')).toEqual({});
     });
+    it('keeps the items of an array whose items schema is an object without properties', () => {
+      const schema: RJSFSchema = { type: 'array', items: { type: 'object' } };
+      const formData = [{ k: 1 }, { k: 2 }];
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, formData)).toEqual(formData);
+    });
+    it('keeps free-form object items nested inside a row with a conditional', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          rows: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                tags: { type: 'array', items: { type: 'object' } },
+              },
+              if: { properties: { name: { const: 'x' } } },
+              then: {},
+            },
+          },
+        },
+      };
+      const formData = { rows: [{ name: 'a', tags: [{ k: 1 }] }] };
+      const retrieved = schemaUtils.retrieveSchema(schema, formData);
+      expect(schemaUtils.sanitizeDataForNewSchema(retrieved, retrieved, formData)).toEqual(formData);
+    });
     it('returns empty object when the old schema is of type array and the new contains "property" field', () => {
       const oldSchema: RJSFSchema = {
         type: 'array',
