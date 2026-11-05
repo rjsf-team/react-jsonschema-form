@@ -166,8 +166,8 @@ class SchemaUtils<
    * @param fallbackField - The field to use as a backup selector field if the schema does not have a required field
    * @param xxx - Either `oneOf` or `anyOf`, defines which value is being sought
    * @param [formData={}] - The form data that is used to determine which oneOf option
-   * @returns - The anyOf/oneOf option that matches the selector field in the schema, or the closest to the data for
-   *            options with no selector, or undefined if nothing is selected
+   * @returns - The anyOf/oneOf option that matches the selector field in the schema, else the closest to the data for
+   *            options with no discriminator, or undefined if a discriminated list selects nothing
    */
   findSelectedOptionInXxxOf(schema: S, fallbackField: string, xxx: 'anyOf' | `oneOf`, formData: T): S | undefined {
     return findSelectedOptionInXxxOf(this.context, this.rootSchema, schema, fallbackField, xxx, formData);

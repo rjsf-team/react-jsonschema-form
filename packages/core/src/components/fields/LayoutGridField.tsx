@@ -339,9 +339,10 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
 }
 
 /** Returns the schema to read `key` from: `schema` where it declares `key` or an array item at it beside any oneOf/anyOf,
- * else the option selected for `data`. A property YAML leaves empty declares nothing. A stub `retrieveSchema()` made for
- * an extra key says only what the data holds, so what the option declares comes first, and the stub stands for a key the
- * option leaves undeclared.
+ * else the option selected for `data`, as it is rendered, with the `required` and `type` of the schema offering it. A
+ * property YAML leaves empty or code leaves `undefined` declares nothing. A stub `retrieveSchema()` made for an extra key
+ * says only what the data holds, so what the option declares comes first, and the stub stands for a key the option leaves
+ * undeclared.
  *
  * @param schemaUtils - The `SchemaUtilsType` used to find the selected option
  * @param schema - The schema, retrieved for `data`
@@ -359,14 +360,14 @@ function schemaHolding<T, S extends StrictRJSFSchema, F extends FormContextType>
   const properties: NonNullable<S['properties']> = schema[PROPERTIES_KEY] ?? {};
   if (
     !xxx ||
-    (declaresProperty<S>(properties, key) && getByPath(properties, key) !== null) ||
+    (declaresProperty<S>(properties, key) && getByPath(properties, key) != null) ||
     computeArraySchemasIfPresent<S>(schema, key).rawSchema
   ) {
     return schema;
   }
   const selected = schemaUtils.findSelectedOptionInXxxOf(schema, key, xxx, data);
   const isStubOnly = Object.hasOwn(properties, key) && getByPath(selected?.[PROPERTIES_KEY], key) === undefined;
-  return isStubOnly ? schema : selected;
+  return isStubOnly ? schema : selected && getRenderedOptionSchema<S>(schema, selected);
 }
 
 /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
@@ -411,20 +412,12 @@ export function getSchemaDetailsForField<
 
   // For all the remaining path parts
   parts.forEach((part) => {
-    // dive into the properties of the current schema (when it exists) and get the schema for the next part
-    let segment: string | number = part;
-    const schemaProperties = schema?.[PROPERTIES_KEY];
-    // When the schema represents a oneOf/anyOf that doesn't declare the part beside its options, the part is the selected
-    // schema's
+    // dive into the current schema, or the option holding the part, and get the schema for the next part
     const holder = schema && schemaHolding<T, S, F>(schemaUtils, schema, part, innerData);
-    if (holder !== schema || schemaProperties) {
-      rawSchema = getPropertySchema<S>(holder, part);
-    } else {
-      const result = computeArraySchemasIfPresent<S>(schema, part);
-      rawSchema = result.rawSchema ?? ({} as S);
-      segment = result.index ?? part;
-    }
-    fieldPath = toFieldPath(segment, fieldPath);
+    isReadonly = getNonNullishValue(holder?.readOnly, isReadonly);
+    const result = computeArraySchemasIfPresent<S>(holder, part);
+    rawSchema = result.rawSchema ?? getPropertySchema<S>(holder, part);
+    fieldPath = toFieldPath(result.index ?? part, fieldPath);
     // Now drill into the innerData for the part, returning an empty object by default if it doesn't exist
     innerData = getByPath<T>(innerData, part, {} as T);
     // Resolve any `$ref`s for the current rawSchema
@@ -440,11 +433,9 @@ export function getSchemaDetailsForField<
   }
   if (schema && leafPath) {
     // When we have both a schema and a leafPath...
-    const holder = schemaHolding<T, S, F>(schemaUtils, schema, leafPath, innerData);
-    // An option's field is required as the option is rendered, with the `required` of the schema offering it too
-    const rendered = holder && holder !== schema ? getRenderedOptionSchema<S>(schema, holder) : holder;
-    isRequired = Array.isArray(rendered?.required) && rendered.required.includes(leafPath);
-    schema = holder;
+    schema = schemaHolding<T, S, F>(schemaUtils, schema, leafPath, innerData);
+    isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
+    isRequired = Array.isArray(schema?.required) && schema.required.includes(leafPath);
     const result = computeArraySchemasIfPresent<S>(schema, leafPath);
     fieldPath = toFieldPath(result.index ?? leafPath, fieldPath);
     if (result.rawSchema) {

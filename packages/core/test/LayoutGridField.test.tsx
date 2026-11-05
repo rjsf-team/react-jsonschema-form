@@ -1103,6 +1103,53 @@ describe('LayoutGridField', () => {
       };
       expect(details(besideItems, 'thing.0', ['x']).schema?.title).toBe('Item');
     });
+    test('reads a property code leaves undefined beside the options from the option', () => {
+      const leftUndefined = {
+        type: 'object',
+        properties: { a: undefined },
+        anyOf: [{ type: 'object', properties: { a: { type: 'string', title: 'A' } } }],
+      } as unknown as RJSFSchema;
+      expect(details(leftUndefined, 'thing.a', { a: 'x' }).schema?.title).toBe('A');
+    });
+    describe('an array whose options hold its items', () => {
+      const itemsInOptions: RJSFSchema = {
+        type: 'array',
+        anyOf: [{ items: { type: 'object', title: 'Item', properties: { name: { type: 'string', title: 'Name' } } } }],
+      };
+      const thing = (name: string) => {
+        const schema: RJSFSchema = { type: 'object', properties: { thing: itemsInOptions } };
+        const data = { thing: [{ name: 'x' }] };
+        return getSchemaDetailsForField(getTestRegistry(schema), name, schema, data, FIELD_PATH);
+      };
+
+      test('reads the item of an option naming no type at the leaf', () => {
+        const { schema, fieldPath } = thing('thing.0');
+        expect(schema?.title).toBe('Item');
+        expect(fieldPath).toBe(toFieldPath(0, toFieldPath('thing', FIELD_PATH)));
+      });
+      test('walks through the item to a part of it', () => {
+        const { schema, fieldPath } = thing('thing.0.name');
+        expect(schema?.title).toBe('Name');
+        expect(fieldPath).toBe(toFieldPath('name', toFieldPath(0, toFieldPath('thing', FIELD_PATH))));
+      });
+    });
+    test('reads the readOnly of the selected option, at the leaf and for a part below it', () => {
+      const readOnlyOption: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          {
+            type: 'object',
+            readOnly: true,
+            properties: {
+              a: { type: 'string' },
+              inner: { type: 'object', properties: { leaf: { type: 'string' } } },
+            },
+          },
+        ],
+      };
+      expect(details(readOnlyOption, 'thing.a', { a: 'x' }).isReadonly).toBe(true);
+      expect(details(readOnlyOption, 'thing.inner.leaf', { inner: { leaf: 'x' } }).isReadonly).toBe(true);
+    });
     test('reads a property left empty beside the options from the option', () => {
       const leftEmpty = {
         type: 'object',
@@ -1110,6 +1157,19 @@ describe('LayoutGridField', () => {
         anyOf: [{ type: 'object', properties: { a: { type: 'string', title: 'A' } } }],
       } as unknown as RJSFSchema;
       expect(details(leftEmpty, 'thing.a', { a: 'x' }).schema?.title).toBe('A');
+    });
+    test.each([
+      ['cleared', {}],
+      ['edited', { a: 'typed' }],
+    ])('keeps finding a property every option gives an ordinary default, as it is %s', (_, formData) => {
+      const allDefault: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          { type: 'object', properties: { a: { type: 'string', title: 'A', default: 'x' } } },
+          { type: 'object', properties: { a: { type: 'string', title: 'A', default: 'y' } } },
+        ],
+      };
+      expect(details(allDefault, 'thing.a', formData).schema?.title).toBe('A');
     });
     test('finds a property one option gives an ordinary default, in the option the data matches', () => {
       const someDefault: RJSFSchema = {

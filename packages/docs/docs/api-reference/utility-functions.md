@@ -3901,7 +3901,7 @@ Finds the field at the given path within the root or a nested `schema` node, fol
 
 Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or `properties[selectorField].const` that matches the `formData[selectorField]` value.
 For the purposes of this function, `selectorField` is either `schema.discriminator.propertyName` or `fallbackField`.
-Options with no discriminator have a selector to match only where every one of them holds a `default` or `const` in `fallbackField`, since a value only some hold can't tell them apart. Otherwise the option is the one [`getClosestMatchingOption()`](#getclosestmatchingoptiont--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) picks for the data, as `MultiSchemaField` picks it. A tie goes to the first option, since the one a user picked isn't visible from the schema.
+Options with no discriminator aren't told apart by that value alone, since a user can clear or edit a property that is only given a `default`, so where none holds the value the option is the one [`getClosestMatchingOption()`](#getclosestmatchingoptiont--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) picks for the data, as `MultiSchemaField` picks it. A tie goes to the first option, since the one a user picked isn't visible from the schema. A discriminated list with no matching value has nothing selected.
 
 #### Parameters
 
@@ -3914,7 +3914,7 @@ Options with no discriminator have a selector to match only where every one of t
 
 #### Returns
 
-- S | undefined: The anyOf/oneOf option that matches the selector field in the schema, or the closest to the data for options with no selector, or undefined if nothing is selected
+- S | undefined: The anyOf/oneOf option that matches the selector field in the schema, else the closest to the data for options with no discriminator, or undefined if a discriminated list selects nothing
 
 ### getDefaultFormState&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
