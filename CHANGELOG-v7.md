@@ -68,7 +68,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RangeWidget` drawing a numeric string, and posting it, at its minimum ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RangeWidget` and `InputNumber` writing a number into a string field, which then failed validation and, for `InputNumber`, lost the digits past a number's precision: they now write a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change the number input to show nothing, and offer no clear button, for a boolean or object value ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change `RatingWidget`'s hidden input to submit `0` for a rating of `0`, where it submitted an empty string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `PasswordWidget` to show a value of `0` or `false`, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/bootstrap3
@@ -464,7 +463,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked, focuses it and is written back as a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a number field's text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty, and a text input holding `false` to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change `RatingWidget`'s hidden input to submit `0` for a rating of `0`, where it submitted an empty string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/daisyui
 
