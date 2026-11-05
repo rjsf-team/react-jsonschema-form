@@ -550,6 +550,105 @@ describe('mantine keeps a field on its form data', () => {
     expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '0');
   });
 
+  test('BaseInputTemplate ignores ui:options.readOnly', async () => {
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'string' }}
+        uiSchema={{ 'ui:options': { readOnly: true } }}
+        onChange={onChange}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('textbox');
+
+    expect(input).not.toHaveAttribute('readonly');
+    await user.type(input, 'a');
+
+    expect(onChange.mock.lastCall?.[0].formData).toBe('a');
+  });
+
+  test('BaseInputTemplate keeps ui:autofocus when ui:options gives autoFocus: false', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'string' }}
+        uiSchema={{ 'ui:autofocus': true, 'ui:options': { autoFocus: false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveFocus();
+  });
+
+  test('BaseInputTemplate ignores ui:options.autoFocus without ui:autofocus', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'string' }}
+        uiSchema={{ 'ui:options': { autoFocus: true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).not.toHaveFocus();
+  });
+
+  test("SelectWidget keeps the schema's options when ui:options gives data", () => {
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'string', enum: ['a', 'b'] }}
+        uiSchema={{ 'ui:options': { data: ['x', 'y'] } }}
+        onChange={onChange}
+        validator={validator}
+      />,
+    );
+
+    // fireEvent, as Mantine's dropdown hides its options once an `await` lets floating-ui measure jsdom's zero-size layout
+    fireEvent.click(screen.getByRole('combobox'));
+    expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual(['a', 'b']);
+    fireEvent.click(screen.getByRole('option', { name: 'b' }));
+
+    expect(onChange.mock.lastCall?.[0].formData).toBe('b');
+  });
+
+  test('FileWidget ignores ui:options.multiple on a single file', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'string', format: 'data-url' }}
+        uiSchema={{ 'ui:options': { multiple: true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(elementOf(container, 'input[type="file"]')).not.toHaveAttribute('multiple');
+  });
+
+  test('BaseInputTemplate keeps a field invalid when ui:options gives error: false', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'string' }}
+        uiSchema={{ 'ui:options': { error: false } }}
+        extraErrors={{ __errors: ['bad'] }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  test('BaseInputTemplate keeps a field valid when ui:options gives an error', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'string' }}
+        uiSchema={{ 'ui:options': { error: 'not from the form' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-invalid');
+    expect(screen.queryByText('not from the form')).not.toBeInTheDocument();
+  });
+
   test('RadioWidget ignores ui:options.defaultValue on an empty field', () => {
     render(
       <WrappedForm

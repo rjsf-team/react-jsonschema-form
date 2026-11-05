@@ -66,8 +66,9 @@ type DeclaredKeys<T> = keyof { [K in keyof T as string extends K ? never : K]: T
  * are the theme's own global options and `colorFormat`, which `ColorWidget` hands `ColorInput` as its `format`, a name
  * `ui:options` declares for the alt-date widgets' order of date parts, and which no Mantine component takes as a prop.
  * `FileWidget` passes `accept` on itself, since Mantine's `FileInput` takes an option of that name.
- * `id`, `name`, `value`, `defaultValue`, `onChange`, `onBlur` and `onFocus` are the form's to set, so they aren't valid
- * options, and each would replace or sit beside what the widget passes.
+ * `id`, `name`, `value`, `defaultValue`, `readOnly`, `autoFocus`, `data`, `multiple`, `error`, `onChange`, `onBlur` and
+ * `onFocus` are the form's to set, so they aren't valid options, and each would replace or sit beside what the widget
+ * passes.
  */
 type StrippedOptionName =
   | ReservedUiOptionName
@@ -77,6 +78,11 @@ type StrippedOptionName =
   | 'name'
   | 'value'
   | 'defaultValue'
+  | 'readOnly'
+  | 'autoFocus'
+  | 'data'
+  | 'multiple'
+  | 'error'
   | 'onChange'
   | 'onBlur'
   | 'onFocus'
@@ -90,6 +96,11 @@ const strippedOptionNames = new Set<string>([
   'name',
   'value',
   'defaultValue',
+  'readOnly',
+  'autoFocus',
+  'data',
+  'multiple',
+  'error',
   'onChange',
   'onBlur',
   'onFocus',
