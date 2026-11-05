@@ -136,6 +136,8 @@ Years from 1900-2002 will be shown. You can also specify the dates with the high
 
 Years from 2030-1980 and 2002-1900, respectively will be shown.
 
+A `yearsRange` mixing a negative and a positive year, or reaching a year before 100 or after 9999, which a date string can't hold, shows the default years instead, as one the widget can't read does: 1900 to two years from now.
+
 ## For `number` and `integer` fields
 
 - `updown`: an `input[type=number]` updown selector;
@@ -238,7 +240,7 @@ This allows you to programmatically trigger the browser's file selector, which c
 
 ### `accept` option
 
-You can use the accept attribute to specify a filter for what file types the user can upload:
+You can use the accept attribute to specify a filter for what file types the user can upload, as a comma-separated string such as `'.png,.jpg'`. `UiSchema` types it as a string; an array of them is joined with commas too, but only from a uiSchema that isn't typed, such as one loaded as JSON:
 
 ```ts
 import { RJSFSchema, UiSchema } from '@rjsf/utils';

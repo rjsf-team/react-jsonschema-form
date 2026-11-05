@@ -1,14 +1,9 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { numericWidgetStoresString, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
+import { numericWidgetStoresString, ratingStarValues, toNumericValue, widgetDrawsLabel } from '@rjsf/utils';
 
-import { getGroupAndOptionProps } from '../../utils.ts';
-
-/** Drops binary floating point's noise: `2.3 - 1.3` falls just short of 1, which would lose the last star, and
- * `0.57 + 1` misses 1.57, so a stored 1.57 would check no star
- */
-const withoutFloatNoise = (number: number) => Number(number.toFixed(9));
+import { classNameOption, getGroupAndOptionProps } from '../../utils.ts';
 
 /** The `RatingWidget` component renders a star or heart rating input with DaisyUI styling
  *
@@ -47,21 +42,19 @@ export default function RatingWidget<
     options,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
-  const { stars = 5, shape = 'star', color = 'orange', size = 'md', colorGradient = false } = options;
+  const { stars, shape = 'star', colorGradient } = options;
+  const size = classNameOption(options.size);
+  const color = classNameOption(options.color) ?? 'orange';
 
-  const min = schema.minimum ?? 0;
   const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
-  const numStars = Math.floor(
-    Math.max(Math.min(withoutFloatNoise((schema.maximum ?? Infinity) - min + 1), stars, 5), 1),
-  );
-  const starValues = Array.from({ length: numStars }, (_, index) => withoutFloatNoise(min + index));
+  const starValues = ratingStarValues<S>(schema, stars);
 
   // Generate shape class
   const maskClass = shape === 'heart' ? 'mask-heart' : 'mask-star-2';
 
   // Generate size class
-  const sizeClass = size === 'md' ? '' : `rating-${size}`;
+  const sizeClass = size === undefined || size === 'md' ? '' : `rating-${size}`;
 
   /** Handles change events from radio inputs */
   const handleChange = useCallback(
@@ -100,7 +93,7 @@ export default function RatingWidget<
    * @returns The appropriate color class
    */
   const getColorClass = (index: number): string => {
-    if (!colorGradient) {
+    if (colorGradient !== true) {
       return `bg-${color}-400`;
     }
 

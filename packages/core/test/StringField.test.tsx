@@ -2854,6 +2854,39 @@ describe('StringField', () => {
       expect(node.querySelector('[type=file]')).toHaveAttribute('accept', '.pdf');
     });
 
+    it('should join an accept list given as an array', () => {
+      const jsonOptions: Record<string, unknown> = { accept: ['.png', '.jpg'] };
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'data-url',
+        },
+        uiSchema: {
+          'ui:options': jsonOptions,
+        },
+      });
+
+      expect(node.querySelector('[type=file]')).toHaveAttribute('accept', '.png,.jpg');
+    });
+
+    it.each([
+      ['true', true],
+      ['an object', {}],
+    ])('should render no accept attribute for an accept option holding %s', (_, accept) => {
+      const jsonOptions: Record<string, unknown> = { accept };
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'data-url',
+        },
+        uiSchema: {
+          'ui:options': jsonOptions,
+        },
+      });
+
+      expect(node.querySelector('[type=file]')).not.toHaveAttribute('accept');
+    });
+
     it('should render the widget with the expected id', () => {
       const { node } = createFormComponent({
         schema: {

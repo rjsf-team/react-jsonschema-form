@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { FileInput, Pill } from '@mantine/core';
 import type { FormContextType, RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue, useFileWidgetProps, widgetDrawsLabel } from '@rjsf/utils';
+import { acceptAttribute, labelValue, useFileWidgetProps, widgetDrawsLabel } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
 
@@ -90,7 +90,7 @@ export default function FileWidget<
       name={htmlName || id}
       value={multiple ? selectedFiles : (selectedFiles[0] ?? null)}
       placeholder={placeholder || undefined}
-      accept={options.accept || undefined}
+      accept={acceptAttribute(options.accept)}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}

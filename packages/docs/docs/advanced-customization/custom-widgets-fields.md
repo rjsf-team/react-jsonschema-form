@@ -269,7 +269,9 @@ const schema: RJSFSchema = {
 
 function MyCustomWidget(props: WidgetProps) {
   const { options } = props;
-  const { color = 'red', backgroundColor } = options;
+  // An option RJSF doesn't declare is `unknown`, so check its type before use
+  const color = typeof options.color === 'string' ? options.color : 'red';
+  const backgroundColor = typeof options.backgroundColor === 'string' ? options.backgroundColor : undefined;
   return <input style={{ color, backgroundColor }} />;
 }
 

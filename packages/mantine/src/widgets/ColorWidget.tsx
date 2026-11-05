@@ -1,10 +1,20 @@
 import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
+import type { ColorInputProps } from '@mantine/core';
 import { ColorInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue, toInputValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
+
+const COLOR_FORMATS = ['hex', 'hexa', 'rgb', 'rgba', 'hsl', 'hsla'] as const satisfies readonly NonNullable<
+  ColorInputProps['format']
+>[];
+
+/** Whether `value` is a format `ColorInput` takes, since `colorFormat` is an option `ui:options` doesn't declare */
+function isColorFormat(value: unknown): value is (typeof COLOR_FORMATS)[number] {
+  return COLOR_FORMATS.some((format) => format === value);
+}
 
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
  *
@@ -68,7 +78,7 @@ export default function ColorWidget<
       name={htmlName || id}
       value={String(toInputValue(value))}
       placeholder={placeholder || undefined}
-      format={options.colorFormat}
+      format={isColorFormat(options.colorFormat) ? options.colorFormat : undefined}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}

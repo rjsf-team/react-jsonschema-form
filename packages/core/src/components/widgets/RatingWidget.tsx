@@ -1,7 +1,13 @@
 import type { FocusEvent, KeyboardEvent } from 'react';
 import { useCallback, useLayoutEffect, useRef } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getGroupAttributes, numericWidgetStoresString, toInputValue, toNumericValue } from '@rjsf/utils';
+import {
+  getGroupAttributes,
+  numericWidgetStoresString,
+  ratingStarValues,
+  toInputValue,
+  toNumericValue,
+} from '@rjsf/utils';
 
 /** How far each key moves from the focused star, choosing the star it lands on */
 const STAR_KEY_STEPS: Partial<Record<string, number>> = {
@@ -12,11 +18,6 @@ const STAR_KEY_STEPS: Partial<Record<string, number>> = {
   ArrowLeft: -1,
   ArrowUp: -1,
 };
-
-/** Drops binary floating point's noise: `2.3 - 1.3` falls just short of 1, which would lose the last star, and
- * `0.57 + 1` misses 1.57, so a stored 1.57 would check no star
- */
-const withoutFloatNoise = (number: number) => Number(number.toFixed(9));
 
 /** The `RatingWidget` component renders a star or heart rating input
  *
@@ -51,19 +52,15 @@ export default function RatingWidget<
   htmlName,
   presentation,
 }: WidgetProps<T, S, F>) {
-  const { stars = 5, shape = 'star' } = options;
+  const { stars, shape = 'star' } = options;
   const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
     { id, presentation },
     'radiogroup',
   );
 
-  const min = schema.minimum ?? 0;
   const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
-  const numStars = Math.floor(
-    Math.max(Math.min(withoutFloatNoise((schema.maximum ?? Infinity) - min + 1), stars, 5), 1),
-  );
-  const starValues = Array.from({ length: numStars }, (_, index) => withoutFloatNoise(min + index));
+  const starValues = ratingStarValues<S>(schema, stars);
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
   const tabStopIndex = Math.max(
     starValues.findIndex((starValue) => starValue === rating),
@@ -98,7 +95,7 @@ export default function RatingWidget<
       return;
     }
     event.preventDefault();
-    const nextIndex = (index + step + numStars) % numStars;
+    const nextIndex = (index + step + starValues.length) % starValues.length;
     handleStarClick(starValues[nextIndex]);
     event.currentTarget.parentElement?.querySelectorAll<HTMLElement>('[role="radio"]')[nextIndex].focus();
   };

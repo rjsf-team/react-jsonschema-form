@@ -45,7 +45,7 @@ In other words, the following `uiSchema`s are equivalent:
 ```
 
 For a full list of what is supported in the `uiSchema` see the `UiSchema` type in [@rjsf/utils/types.ts](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/types.ts).
-Be sure to pay attention to the hierarchical intersection to these other types: `UIOptionsBaseType` and `TemplatesType`.
+Be sure to pay attention to the hierarchical intersection to these other types: `UIOptionsType` and `TemplatesType`.
 
 ## Exceptions to the equivalence
 
@@ -77,7 +77,8 @@ const globalOptions: GlobalUISchemaOptions<{ density?: 'compact' | 'comfortable'
 const uiSchema: UiSchema = { 'ui:globalOptions': globalOptions };
 
 function DensityWidget({ options }: WidgetProps) {
-  const { density } = options;
+  // `options` doesn't carry the extension's types, so check the option's value before use
+  const density = options.density === 'compact' ? 'compact' : 'comfortable';
   // ...
 }
 

@@ -123,6 +123,18 @@ Without its field's plan, `hideLabel` turns it off as well, and it renders under
 
 ## Non-Validator utility functions
 
+### acceptAttribute()
+
+Returns the value of a file input's `accept` attribute for an `accept` option: a string, or an array of them joined with commas. Whatever isn't a string, or is a blank one, is left out.
+
+#### Parameters
+
+- accept: unknown - The `accept` option
+
+#### Returns
+
+- string | undefined: The attribute's value, or undefined when the option names no file types
+
 ### additionalKeyId()
 
 Return a consistent `id` for the input a `WrapIfAdditionalTemplate` renders to edit an additional property's key
@@ -1226,7 +1238,7 @@ Given date & time information with optional yearRange & format, returns props fo
 
 - date: DateObject - Object containing date with optional time information
 - time: boolean - Determines whether to include time or not
-- [yearRange=[1900, new Date().getFullYear() + 2]]: readonly [number, number] - Controls the list of years to be displayed
+- [yearRange=[1900, new Date().getFullYear() + 2]]: readonly [number, number] - Controls the list of years to be displayed. A range `normalizeYearsRange()` can't read gives the default
 - [format='YMD']: DateElementFormat - Controls the order in which day, month and year input element will be displayed
 
 #### Returns
@@ -2320,6 +2332,18 @@ Checks to see if the `uiSchema` names a `widget` and that the widget is not `hid
 
 - boolean: True if the `uiSchema` describes a custom widget, false otherwise
 
+### isDateElementFormat()
+
+Reports whether a `format` option is a `DateElementFormat`, the order of an `AltDateWidget`'s date elements, which a JSON uiSchema can hold as anything
+
+#### Parameters
+
+- value: unknown - The value of the `format` option
+
+#### Returns
+
+- boolean: Whether `value` is `'DMY'`, `'MDY'` or `'YMD'`
+
 ### isEnumOptionsGroup&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 A type guard that determines whether an element of the list returned by `groupEnumOptions()` is a group of options rather than a standalone option.
@@ -2688,6 +2712,18 @@ A validator package that has to tell which resource of the root a `$ref` names u
 
 - string: The URI in the form two spellings of the same URI share
 
+### normalizeYearsRange()
+
+Returns the `[first, last]` years to pass `getDateElementProps()` for a `yearsRange` option, which a JSON uiSchema can hold as anything. A year held as a numeric string counts as its number, and a fractional year is rounded down. Only its first two entries are read. A range whose first two entries aren't years, that mixes a relative and an absolute year, which `dateRangeOptions()` throws for, or that reaches a year before 100 or after 9999, which a date string can't hold, gives `undefined`, for the default years
+
+#### Parameters
+
+- yearsRange: unknown - The `yearsRange` option
+
+#### Returns
+
+- [number, number] | undefined: The range, or `undefined` for the default years
+
 ### numericWidgetStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The schema's type decides, and a type that allows a number too writes one. A schema with no type has only the value to go by, so it writes a number until it holds a string, even for an `enum` of strings.
@@ -3001,6 +3037,19 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 #### Returns
 
 - RangeSpecType: A range specification from the schema
+
+### ratingStarValues&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the values of the stars a rating widget draws: one for each whole number from the schema's `minimum` (0 if it has none) up to its `maximum`, but no more than the `stars` option, or the default 5 for a `stars` that isn't a number, and within 1-5. A numeric string counts as its number.
+
+#### Parameters
+
+- schema: S - The schema of the field
+- stars: unknown - The `stars` option
+
+#### Returns
+
+- number[]: The value of each star to draw, in order
 
 ### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
 

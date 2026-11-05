@@ -1,3 +1,4 @@
+import acceptAttribute from './acceptAttribute.ts';
 import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
@@ -54,7 +55,7 @@ import getControlAttributes from './getControlAttributes.ts';
 import getControlDescribedBy from './getControlDescribedBy.ts';
 import getControlFallbackName from './getControlFallbackName.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
-import getDateElementProps from './getDateElementProps.ts';
+import getDateElementProps, { isDateElementFormat, normalizeYearsRange } from './getDateElementProps.ts';
 import type { DateTimeLocalValueResult } from './getDateTimeLocalValue.ts';
 import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
@@ -182,6 +183,7 @@ import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } 
 import type { ObjectPath } from './pathUtils.ts';
 import pickGlobalUiOptions from './pickGlobalUiOptions.ts';
 import rangeSpec from './rangeSpec.ts';
+import ratingStarValues from './ratingStarValues.ts';
 import rendersOwnFieldBesideOption, { hasOwnContentBesideOptions } from './rendersOwnFieldBesideOption.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
@@ -268,6 +270,7 @@ export type {
 export {
   additionalKeyId,
   AdditionalPropertyKeySelect,
+  acceptAttribute,
   allowAdditionalItems,
   allowsAdditionalProperties,
   ariaDescribedByIds,
@@ -324,6 +327,8 @@ export {
   getControlDescribedBy,
   getControlFallbackName,
   getDateElementProps,
+  isDateElementFormat,
+  normalizeYearsRange,
   getDateTimeLocalValue,
   getDecimalSeparator,
   getDeprecatedHandling,
@@ -463,6 +468,7 @@ export {
   toErrorList,
   toErrorSchema,
   numericWidgetStoresString,
+  ratingStarValues,
   toInputValue,
   offersClearButton,
   toNumericValue,

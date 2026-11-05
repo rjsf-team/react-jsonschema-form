@@ -9,6 +9,82 @@ import { makeWidgetMockProps } from './helpers/createMocks.ts';
 const user = userEvent.setup();
 
 describe('RatingWidget', () => {
+  test('reads a numeric-string `stars` option as its number', () => {
+    const jsonOptions: Record<string, unknown> = { stars: '3' };
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getAllByRole('radio')).toHaveLength(3);
+  });
+
+  test.each(['five', null, true, '', [4]])(
+    'shows the default 5 stars for a `stars` option of %j, as a JSON uiSchema can hold',
+    (stars) => {
+      const jsonOptions: Record<string, unknown> = { stars };
+      const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+      expect(getAllByRole('radio')).toHaveLength(5);
+    },
+  );
+
+  test.each([
+    ['a `stars` option', {}, { stars: 2.5 }, 2],
+    ['a schema `maximum`', { maximum: 2.5 }, {}, 3],
+  ])('rounds down %s that is not a whole number', (_, schema, options, count) => {
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ schema: { type: 'number', ...schema }, options })} />,
+    );
+
+    expect(getAllByRole('radio')).toHaveLength(count);
+  });
+
+  test('autofocuses the first star for a value beyond the stars left by rounding down', () => {
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ autofocus: true, value: 2, options: { stars: 2.5 } })} />,
+    );
+
+    expect(getAllByRole('radio')[0]).toHaveFocus();
+  });
+
+  test('uses the default size and color for a `size` or `color` option that is not a string', () => {
+    const jsonOptions: Record<string, unknown> = { size: 5, color: true };
+    const { getAllByRole, getByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getByRole('radiogroup')).toHaveClass('rating gap-1', { exact: true });
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-orange-400');
+  });
+
+  test.each(['', ' '])('uses the default size and color for a `size` and `color` option of %j', (option) => {
+    const jsonOptions: Record<string, unknown> = { size: option, color: option };
+    const { getAllByRole, getByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getByRole('radiogroup')).toHaveClass('rating gap-1', { exact: true });
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-orange-400');
+  });
+
+  test('trims the space around a `size` and `color` option', () => {
+    const { getAllByRole, getByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ options: { size: ' lg', color: ' red ' } })} />,
+    );
+
+    expect(getByRole('radiogroup')).toHaveClass('rating gap-1 rating-lg', { exact: true });
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-red-400');
+  });
+
+  test.each([['false'], [1], [{}]])('draws no gradient for a `colorGradient` option of %j', (colorGradient) => {
+    const jsonOptions: Record<string, unknown> = { colorGradient };
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getAllByRole('radio').map(({ className }) => className.match(/bg-\w+-400/)?.[0])).toEqual(
+      Array(5).fill('bg-orange-400'),
+    );
+  });
+
+  test('draws the gradient for a `colorGradient` option of true', () => {
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ options: { colorGradient: true } })} />);
+
+    expect(getAllByRole('radio')[0]).toHaveClass('bg-red-400');
+  });
+
   test('renders with default props (value=0)', () => {
     const { asFragment } = render(
       <RatingWidget

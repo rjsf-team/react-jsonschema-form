@@ -7,6 +7,26 @@ import { makeWidgetMockProps } from './helpers/createMocks.ts';
 const user = userEvent.setup();
 
 describe('ToggleWidget', () => {
+  test('uses the default size for a `size` option that is not a string', () => {
+    const jsonOptions: Record<string, unknown> = { size: 5 };
+    const { getByRole } = render(<ToggleWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getByRole('checkbox').className).not.toContain('toggle-');
+  });
+
+  test.each(['', ' '])('adds no size class for a `size` option of %j', (size) => {
+    const jsonOptions: Record<string, unknown> = { size };
+    const { getByRole } = render(<ToggleWidget {...makeWidgetMockProps({ options: jsonOptions })} />);
+
+    expect(getByRole('checkbox').className).not.toContain('toggle-');
+  });
+
+  test('trims the space around a `size` option', () => {
+    const { getByRole } = render(<ToggleWidget {...makeWidgetMockProps({ options: { size: ' lg' } })} />);
+
+    expect(getByRole('checkbox')).toHaveClass('toggle-lg');
+  });
+
   test('renders correctly', () => {
     const { asFragment } = render(<ToggleWidget {...makeWidgetMockProps()} />);
     expect(asFragment()).toMatchSnapshot();

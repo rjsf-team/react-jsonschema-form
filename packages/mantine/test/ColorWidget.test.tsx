@@ -94,6 +94,11 @@ describe('ColorWidget', () => {
       expect(container.querySelector('[colorformat]')).toBeNull();
     });
 
+    test('is left off ColorInput when it is no format ColorInput takes', () => {
+      // A format ColorInput doesn't know converts to hex, so this rgba color stays as it is only if none reached it
+      expect(renderWithOptions('rgba(255, 0, 0, 1)', { colorFormat: 'RGB' })).not.toHaveBeenCalled();
+    });
+
     test("leaves the alt-date widgets' format off ColorInput", () => {
       // A format ColorInput doesn't know converts to hex, so this rgba color stays as it is only if none reached it
       expect(renderWithOptions('rgba(255, 0, 0, 1)', { format: 'MDY' })).not.toHaveBeenCalled();

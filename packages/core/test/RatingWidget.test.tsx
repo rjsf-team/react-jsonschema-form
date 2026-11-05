@@ -278,4 +278,43 @@ describe('RatingWidget numeric strings', () => {
     expect(screen.getAllByRole('radio').map((star) => star.textContent)).toEqual(['★', '★', '★', '★', '☆']);
     expect(screen.getByRole('radio', { name: '3 stars' })).toBeChecked();
   });
+
+  it('reads a numeric-string `stars` option as its number', () => {
+    const jsonOptions: Record<string, unknown> = { stars: '3' };
+    createFormComponent({
+      schema: { type: 'number' },
+      uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': jsonOptions },
+    });
+
+    expect(screen.getAllByRole('radio')).toHaveLength(3);
+  });
+
+  it('shows the default 5 stars for a `stars` option that is not a number, as a JSON uiSchema can hold', () => {
+    const jsonOptions: Record<string, unknown> = { stars: 'five' };
+    createFormComponent({
+      schema: { type: 'number' },
+      uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': jsonOptions },
+    });
+
+    expect(screen.getAllByRole('radio')).toHaveLength(5);
+  });
+
+  it.each([null, true, false, '', ' ', [4]])('shows the default 5 stars for a `stars` option of %j', (stars) => {
+    const jsonOptions: Record<string, unknown> = { stars };
+    createFormComponent({
+      schema: { type: 'number' },
+      uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': jsonOptions },
+    });
+
+    expect(screen.getAllByRole('radio')).toHaveLength(5);
+  });
+
+  it.each([
+    ['a `stars` option', { type: 'number' }, { stars: 2.5 }, 2],
+    ['a schema `maximum`', { type: 'number', maximum: 2.5 }, {}, 3],
+  ] as const)('rounds down %s that is not a whole number', (_, schema, options, count) => {
+    createFormComponent({ schema, uiSchema: { 'ui:widget': 'RatingWidget', 'ui:options': options } });
+
+    expect(screen.getAllByRole('radio')).toHaveLength(count);
+  });
 });
