@@ -82,7 +82,7 @@ describe('ratingStarValues()', () => {
     { maximum: 'three', stars: 2, expected: 2 },
   ])('a string maximum of $maximum with stars $stars', ({ maximum, stars, expected }) => {
     // @ts-expect-error `maximum` is a number, but a schema that skips Ajv's meta-schema can hold a string
-    expect(ratingStarCount({ maximum }, stars)).toBe(expected);
+    expect(ratingStarValues({ maximum }, stars)).toHaveLength(expected);
   });
 
   it.each([
