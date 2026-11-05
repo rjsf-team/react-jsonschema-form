@@ -68,7 +68,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RangeWidget` drawing a numeric string, and posting it, at its minimum ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it as a prop, so the file input of an array took one file at a time, and a `number` field a widget passes an `onChangeOverride` getting a native number input that blocked a decimal rather than the text input the other themes render ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix `RangeWidget` and `InputNumber` writing a number into a string field, which then failed validation and, for `InputNumber`, lost the digits past a number's precision: they now write a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/bootstrap3
 
@@ -150,7 +150,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change an empty `RangeWidget` to leave its name out of a native form submit, and to commit its minimum when a press or a key leaves the thumb there ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it as a prop, so the file input of an array took one file at a time ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix `RangeWidget` writing a number into a string field, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/core
 
@@ -466,6 +466,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars, and for a schema `maximum` that isn't a number, which now uses `stars` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Fix `RatingWidget` crashing the form for a `stars` option or schema `maximum` that isn't a whole number, which now rounds down, and draw one star for a nonzero `maximum` below 1 ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `FileWidget` to leave out of `accept` whatever in the `accept` option isn't a string or is blank, where it stringified anything truthy, so `true` gave `accept="true"` and `' '` gave `accept=" "` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
+- Fix an `additionalProperties` key renamed onto a declared property reading the key as its label until another key was renamed or the form remounted; it now reads that property's title straight away ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
+- Fix renaming an `additionalProperties` key remounting the field of the key renamed before it, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
+- Fix tabbing out of an `additionalProperties` key input after renaming it losing keyboard focus when the rename remounted the field, as one onto a declared property's name does; it moves to that field ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/daisyui
 
@@ -596,6 +599,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `RatingWidget` to use the default size and color for a `size` or `color` option that isn't a string or is blank, and to trim the space around one ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `RatingWidget` to draw the color gradient only for a `colorGradient` of `true`, where any truthy value, such as `'false'`, drew it ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `ToggleWidget` to add no size class for a `size` option that isn't a string or is blank, where a number gave `toggle-5` and `''` gave `toggle-`, and to trim the space around one, where `' lg'` gave `toggle- lg` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
+- Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/fluentui-rc
 
@@ -649,9 +653,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it as a prop, so the file input of an array took one file at a time ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Fix a layout grid `ui:row` whose `columns` is a track count written as `'1e1'` or `'0xa'` getting an invalid column template: it now gets `repeat(10, 1fr)` ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
-- Change a text input or textarea holding `false` to show that value, where they were empty, and the text input to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Fix `RangeWidget` writing a number into a string field, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/mantine
 
@@ -736,6 +738,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop, and a `number` field a widget passes an `inputMode` or `onChangeOverride` getting a native number input that blocked a decimal rather than the text input the other themes render ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `FileWidget` to leave out of `accept` whatever in the `accept` option isn't a string or is blank, where it stringified anything truthy, so `true` gave `accept="true"` and `' '` gave `accept=" "` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
+- Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/mui
 
@@ -792,8 +795,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `MuiBaseInputTemplateProps`, the props mui's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes mui's own props to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `BaseInputTemplate` putting a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it on the `TextField` root, where they did nothing, instead of on the `<input>`, so the file input of an array took one file at a time; a caller's `pattern` drops the numeric title ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
-- Change a text input or textarea holding `false` to show that value and offer the clear button for it, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Fix `RangeWidget` writing a number into a string field, or into each item of a range of several values whose items are strings, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/react-bootstrap
 
@@ -846,6 +848,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change a text input holding `false` to show that value and offer the clear button for it, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `BaseInputTemplate` to put an `accept` a widget passes in `extraProps` on the input over `ui:options.accept`, which replaced it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/shadcn
 
@@ -933,6 +936,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RangeWidget` writing a number into a string field, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix the multiple `SelectWidget` throwing on a value that isn't an array: it now reads a lone value as one selected item, as core does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change `BaseInputTemplate` to put an `accept` a widget passes in `extraProps` on the input over `ui:options.accept`, which replaced it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix renaming an `additionalProperties` key remounting the buttons of its value's `RadioWidget` or `CheckboxesWidget` ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/snapshot-tests
 
@@ -954,6 +958,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `renderGridColumn()`, which renders a one-column layout grid with the given `ui:col` and `ui:row` props, for a theme's tests of how its `GridTemplate` reads them ([#5707](https://github.com/rjsf-team/react-jsonschema-form/pull/5707), [#5651](https://github.com/rjsf-team/react-jsonschema-form/issues/5651))
 - Add `controlNameTests()`, checking that a `SelectWidget` or a `RadioWidget`'s `radiogroup` no label names is named by its `ui:placeholder`, else the translated prompt, and that one its label names takes no `aria-label` ([#5713](https://github.com/rjsf-team/react-jsonschema-form/pull/5713), [#5711](https://github.com/rjsf-team/react-jsonschema-form/issues/5711), [#5586](https://github.com/rjsf-team/react-jsonschema-form/issues/5586))
 - Add `clearButtonTests()`, which checks that a theme's `allowClearTextInputs` clear button shows for a value, `false` in a text input among them, renders nothing beside the input for `0`, and isn't offered for `false` in a number input or a string that isn't a date in a date input, which show nothing ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Add `callerInputPropsTests()`, checking that a theme's `BaseInputTemplate` puts the `pattern`, `accept` and `inputMode` a widget passes on the input over the derived ones, drops the numeric title with a replaced `pattern`, accepts a decimal on the input of a `number` field a widget passes an `inputMode` or `onChangeOverride`, and puts `multiple` on the file input of an array and on no other input, and `wrapIfAdditionalCallbackTests()`, checking that a theme's `WrapIfAdditionalTemplate` disables the key input and the remove button of a property it is handed no rename or remove callback for, or of a disabled or read-only form ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Add `renamedKeyTests()`, checking that renaming an `additionalProperties` key keeps its field and sends focus on to it ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/utils
 
