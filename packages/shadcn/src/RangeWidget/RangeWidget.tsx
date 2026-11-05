@@ -10,15 +10,12 @@ import { cn } from '../lib/utils.ts';
 // The keys Radix moves a thumb by
 const SLIDER_KEYS = new Set(['Home', 'End', 'PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
 
+// The form owns the range's value, name and disabled state, so the props that set them aren't among these
 const allowedProps = [
-  'name',
   'min',
   'max',
   'step',
   'orientation',
-  'disabled',
-  'defaultValue',
-  'value',
   'onValueChange',
   'className',
   'dir',
@@ -80,14 +77,13 @@ export default function RangeWidget<
     };
   }, []);
   const optionProps = new Map(Object.entries(options.props ?? {}));
-  // The empty-range handling below decides the slider's name, disabled state and value changes, so those that
-  // `ui:options.props` gives are folded into it rather than spread over it
+  // The empty-range handling below decides the slider's value changes, so an `onValueChange` that `ui:options.props`
+  // gives is folded into it rather than spread over it
   const sliderOptionProps: Partial<SliderProps> = Object.fromEntries(
     allowedProps.filter((key) => optionProps.has(key)).map((key) => [key, optionProps.get(key)]),
   );
-  const { name: uiName, disabled: uiDisabled, onValueChange: uiOnValueChange, ...uiProps } = sliderOptionProps;
-  const sliderDisabled = uiDisabled ?? (disabled || readonly);
-  const formName = uiName ?? (htmlName || id);
+  const { onValueChange: uiOnValueChange, ...uiProps } = sliderOptionProps;
+  const sliderDisabled = disabled || readonly;
   const spec = rangeSpec<S>(schema);
   // A `min` from `ui:options.props` replaces the schema's on the slider, so an empty range's thumb is drawn there
   const min: number = typeof uiProps.min === 'number' ? uiProps.min : (spec.min ?? 0);
@@ -161,7 +157,7 @@ export default function RangeWidget<
         // Radix hides the thumb of a slider with no value, which leaves the field nothing to focus, so an empty range
         // draws its thumb at its minimum. Its hidden input would submit that minimum under the field's name, so an
         // empty range names none
-        name={isEmpty ? undefined : formName}
+        name={isEmpty ? undefined : htmlName || id}
         disabled={sliderDisabled}
         min={min}
         max={max}
