@@ -337,8 +337,10 @@ interface ComputeDefaultsProps<
  * @param renderedOption - The selected option as it is rendered
  * @returns - The rendered option with the parent's `default` merged into its own
  */
-function withDefaultOf(parent: GenericObjectType, renderedOption: GenericObjectType): GenericObjectType {
-  return DEFAULT_KEY in parent ? mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) : renderedOption;
+function withDefaultOf<S extends StrictRJSFSchema>(parent: S, renderedOption: S): S {
+  return DEFAULT_KEY in parent
+    ? (mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) as S)
+    : renderedOption;
 }
 
 /** What the `null` fills of one `getDefaultFormState()` call share as they reach every level */
@@ -1412,7 +1414,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const offered = isSchemaObject<S>(listed) ? offeredOption<S>(view, key, index, listed) : undefined;
     const declared = offered?.graph.node(offered.node);
     const rendered = rendersOwnField
-      ? mergeSchemas(remaining, option)
+      ? (mergeSchemas(remaining, option) as S)
       : withDefaultOf(
           remaining,
           renderOption<S>(
@@ -2591,6 +2593,7 @@ export default function getDefaultFormState<
   }: GetDefaultFormStateProps<T, S, F>,
 ): T | T[] | null | undefined {
   if (!isObject(theSchema)) {
+    // oxlint-disable-next-line typescript/no-base-to-string -- `JSON.stringify()` would throw for a circular array or a BigInt
     throw new Error(`Invalid schema: ${String(theSchema)}`);
   }
   const root = rootSchema ?? theSchema;

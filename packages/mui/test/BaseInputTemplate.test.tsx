@@ -2,10 +2,13 @@ import { getTestRegistry } from '@rjsf/core/testing';
 import { callerInputPropsTests } from '@rjsf/snapshot-tests';
 import { render, screen } from '@testing-library/react';
 
+import { setupConsoleErrorSuppression } from '../../../testing/consoleSuppression.ts';
 import BaseInputTemplate from '../src/BaseInputTemplate/index.ts';
 import Form from '../src/index.ts';
 
 describe('BaseInputTemplate', () => {
+  const consoleErrors = setupConsoleErrorSuppression();
+
   test('puts a pattern and an accept passed as props on the input, not the root', () => {
     const { container } = render(
       <BaseInputTemplate
@@ -31,6 +34,29 @@ describe('BaseInputTemplate', () => {
     expect(input).toHaveAttribute('pattern', '[0-9]+');
     expect(input).toHaveAttribute('accept', '.png');
     expect(container.querySelector('.MuiTextField-root')).not.toHaveAttribute('pattern');
+  });
+
+  test('keeps an rjsfSlotProps option off the TextField, whose DOM would warn about it', () => {
+    const { container } = render(
+      <BaseInputTemplate
+        id='root'
+        name='root'
+        value=''
+        readonly={false}
+        disabled={false}
+        required={false}
+        label='Label'
+        schema={{ type: 'string' }}
+        options={{ mui: { rjsfSlotProps: { fieldFormControl: { className: 'slot' } } } }}
+        onChange={() => {}}
+        onBlur={() => {}}
+        onFocus={() => {}}
+        registry={getTestRegistry({})}
+      />,
+    );
+
+    expect(container.querySelector('[rjsfslotprops]')).toBeNull();
+    expect(consoleErrors.consoleSpy).not.toHaveBeenCalled();
   });
 
   test('shows nothing for an object value', () => {

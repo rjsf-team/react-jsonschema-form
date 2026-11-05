@@ -217,6 +217,139 @@ describe('mantine FieldTemplate', () => {
     expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
   });
 
+  test("leaves out a range's thumbProps that isn't an object and thumbLabel that isn't a string", () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'number', title: 'X' } } }}
+        uiSchema={{ x: { 'ui:widget': 'range', 'ui:options': { thumbProps: 'nope', thumbLabel: 5 } } }}
+        presentation={{ widgets: { RangeWidget: { label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).not.toHaveAttribute('0');
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', 'root_x__label');
+    expect(screen.getByRole('slider')).toHaveAccessibleName('X');
+  });
+
+  test("leaves out a thumbLabel in a range's thumbProps that isn't a string", () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'number', title: 'X' } } }}
+        uiSchema={{ x: { 'ui:widget': 'range', 'ui:options': { thumbProps: { thumbLabel: 5 } } } }}
+        presentation={{ widgets: { RangeWidget: { label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).not.toHaveAttribute('aria-label', '5');
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-labelledby', 'root_x__label');
+    expect(screen.getByRole('slider')).toHaveAccessibleName('X');
+  });
+
+  test("leaves out an inputContainer that isn't a function", () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'number', title: 'X' } } }}
+        uiSchema={{ x: { 'ui:widget': 'range', 'ui:options': { inputContainer: 'nope' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toBeInTheDocument();
+  });
+
+  test.each([
+    ['range', 'a string', 'label'],
+    ['range', 'a number', 5],
+    ['alt-date', 'a string', 'label'],
+    ['alt-date', 'a number', 5],
+  ])("leaves out the %s widget's inputWrapperOrder that is %s rather than an array", (widget, _, inputWrapperOrder) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: widget === 'range' ? 'number' : 'string', title: 'X' } } }}
+        uiSchema={{ x: { 'ui:widget': widget, 'ui:options': { inputWrapperOrder } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByText('X')).toBeInTheDocument();
+  });
+
+  test.each([
+    ['text', { type: 'string' }],
+    ['textarea', { type: 'string' }],
+    ['password', { type: 'string' }],
+    ['color', { type: 'string' }],
+    ['date', { type: 'string' }],
+    ['select', { type: 'string', enum: ['a', 'b'] }],
+    ['radio', { type: 'string', enum: ['a', 'b'] }],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }],
+  ] satisfies [string, RJSFSchema][])(
+    "leaves out the %s widget's inputWrapperOrder that isn't an array and inputContainer that isn't a function",
+    (widget, fieldSchema) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { x: { ...fieldSchema, title: 'X' } } }}
+          uiSchema={{
+            x: { 'ui:widget': widget, 'ui:options': { inputWrapperOrder: 'label', inputContainer: 'nope' } },
+          }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getAllByText('X').length).toBeGreaterThan(0);
+    },
+  );
+
+  test.each([
+    ['text', { type: 'string' }],
+    ['textarea', { type: 'string' }],
+    ['select', { type: 'string', enum: ['a', 'b'] }],
+    ['radio', { type: 'string', enum: ['a', 'b'] }],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }],
+    ['range', { type: 'number' }],
+    ['alt-date', { type: 'string' }],
+  ] satisfies [string, RJSFSchema][])(
+    "leaves out the %s widget's wrapperProps.inputWrapperOrder that isn't an array",
+    (widget, fieldSchema) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { x: { ...fieldSchema, title: 'X' } } }}
+          uiSchema={{ x: { 'ui:widget': widget, 'ui:options': { wrapperProps: { inputWrapperOrder: 5 } } } }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getAllByText('X').length).toBeGreaterThan(0);
+    },
+  );
+
+  test.each([
+    ['text', { type: 'string' }, 'textbox'],
+    ['range', { type: 'number' }, 'slider'],
+  ] satisfies [string, RJSFSchema, string][])(
+    "keeps the %s widget's inputWrapperOrder where its wrapperProps.inputWrapperOrder isn't an array",
+    (widget, fieldSchema, role) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { x: { ...fieldSchema, title: 'X' } } }}
+          uiSchema={{
+            x: {
+              'ui:widget': widget,
+              'ui:options': { inputWrapperOrder: ['input', 'label'], wrapperProps: { inputWrapperOrder: 5 } },
+            },
+          }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole(role).compareDocumentPosition(screen.getByText('X'))).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+    },
+  );
+
   test.each([
     ['alt-date', 'AltDateWidget'],
     ['alt-datetime', 'AltDateTimeWidget'],

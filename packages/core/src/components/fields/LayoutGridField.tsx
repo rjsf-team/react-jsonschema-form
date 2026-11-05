@@ -1,4 +1,4 @@
-import type { ComponentType, JSXElementConstructor, ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import { use, useCallback, useMemo } from 'react';
 import type {
   FieldProps,
@@ -288,7 +288,9 @@ export function findChildrenAndProps<
   if (!Array.isArray(children)) {
     throw new TypeError(`Expected array for "${schemaKey}" in ${JSON.stringify(layoutGridSchema)}`);
   }
-  return { children, gridProps };
+  // An `undefined` or `false` cell, such as a conditional one a layout built in code leaves out, is no cell: handed on,
+  // an `undefined` one would read as a grid handed no layout and render the grid's own layout inside itself
+  return { children: children.filter((child) => child !== undefined && child !== false), gridProps };
 }
 
 /** Computes the `rawSchema` and array `index` for a `schema` and a `potentialIndex`. If the `schema` is of type
@@ -369,9 +371,10 @@ export function getSchemaDetailsForField<
   let fieldPath = initialFieldPath;
   const parts: string[] = dottedPath.split('.');
   const leafPath: string | undefined = parts.pop(); // pop off the last element in the list as the leaf
-  let schema: S | undefined = schemaUtils.retrieveSchema(rawSchema, formData); // always returns an object
+  // An empty path names no field, so it finds no schema rather than the parent's, which a cell would render inside itself
+  let schema: S | undefined = dottedPath ? schemaUtils.retrieveSchema(rawSchema, formData) : undefined;
   let innerData = formData;
-  let isReadonly: boolean | undefined = schema.readOnly;
+  let isReadonly: boolean | undefined = schema?.readOnly;
 
   // For all the remaining path parts
   parts.forEach((part) => {
@@ -453,7 +456,7 @@ export function getCustomRenderComponent<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(render: string | JSXElementConstructor<never>, registry: Registry<T, S, F>): RenderComponent | null {
+>(render: unknown, registry: Registry<T, S, F>): RenderComponent | null {
   const customRenderer = lookUpRender<T, S, F>(render, registry);
   return isComponentType<unknown>(customRenderer) ? customRenderer : null;
 }
@@ -473,6 +476,17 @@ function lookUpRender<
   return typeof render === 'string' ? lookupFromFormContext<T, S, F>(registry, render) : render;
 }
 
+/** Gets the name of the field a layout cell renders: the cell itself, or the `name` of a cell object. A JSON layout can
+ * name a field by a number, which names the same property as its string; any other value names no field.
+ *
+ * @param cell - A cell of a layout grid's `children`
+ * @returns - The name of the field the cell renders, or `''` when it names none
+ */
+function cellFieldName(cell: unknown): string {
+  const name = isObject(cell) ? cell.name : cell;
+  return typeof name === 'string' || typeof name === 'number' ? String(name) : '';
+}
+
 /** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
  * see if can be resolved to a UIComponent. If `name` does not exist and there is an optional `render` UIComponent, we
  * set the `rendered` component with only specified props for that component in the object.
@@ -486,15 +500,12 @@ export function computeUIComponentPropsFromGridSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(registry: Registry<T, S, F>, gridSchema?: string | GenericObjectType): UIComponentPropsType {
-  let name: string;
+  const name = cellFieldName(gridSchema);
   let UIComponent: RenderComponent | null = null;
   let uiProps: GenericObjectType = {};
   let rendered: ReactNode | undefined;
-  if (typeof gridSchema === 'string' || gridSchema === undefined) {
-    name = gridSchema ?? '';
-  } else {
-    const { name: innerName = '', render, ...innerProps } = gridSchema;
-    name = innerName;
+  if (isObject(gridSchema)) {
+    const { name: _name, render, ...innerProps } = gridSchema;
     uiProps = innerProps;
     // Transform any `$lookup=` in the uiProps props with the appropriate value
     Object.entries(uiProps).forEach(([key, prop]) => {
@@ -507,7 +518,7 @@ export function computeUIComponentPropsFromGridSchema<
       }
     });
     UIComponent = getCustomRenderComponent<T, S, F>(render, registry);
-    if (!innerName && UIComponent) {
+    if (!name && UIComponent) {
       rendered = <UIComponent {...innerProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent} />;
     }
   }
@@ -542,10 +553,13 @@ function LayoutGridFieldChildren<
   const { registry, schema: rawSchema, formData } = layoutGridFieldProps;
   const { schemaUtils } = registry;
   const schema = schemaUtils.retrieveSchema(rawSchema, formData);
-  return childrenLayoutGridSchemaId.map((layoutGridSchema) => (
+  // A falsy cell, such as an empty `null` or `''` one, is keyed by its index, since those hash alike, wrapped in an array
+  // so it can't hash as a number cell does. An empty cell renders nothing, so a conditional cell ahead of it shifting its
+  // index remounts nothing, while any other cell keeps its key
+  return childrenLayoutGridSchemaId.map((layoutGridSchema, i) => (
     <LayoutGridField<T, S, F>
       {...layoutGridFieldProps}
-      key={`layoutGrid-${hashObject(layoutGridSchema)}`}
+      key={`layoutGrid-${hashObject(layoutGridSchema || [i])}`}
       schema={schema}
       layoutGridSchema={layoutGridSchema}
     />
@@ -579,10 +593,19 @@ function LayoutGridCondition<
   F extends FormContextType = FormContextType,
 >(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
-  const { formData, registry } = layoutGridFieldProps;
+  const { formData, registry, id, fieldPath } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.CONDITION, registry);
-  const { operator, field = '', value } = gridProps;
-  const fieldData = getByPath(formData, toPath(field), null);
+  const { operator, field, value } = gridProps;
+  // A JSON layout can hold any value here, though `GridProps` types it as a string
+  const fieldName: unknown = field;
+  if (fieldName === '' || (typeof fieldName !== 'string' && typeof fieldName !== 'number')) {
+    logOnce(
+      `${LAYOUT_GRID_OPTION} ${GridType.CONDITION} in ${fieldLabelForLog(id, fieldPath)} names no field, so it renders ` +
+        'nothing.',
+    );
+    return null;
+  }
+  const fieldData = getByPath(formData, toPath(String(fieldName)), null);
   if (conditionMatches(operator, fieldData, value)) {
     return <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />;
   }
@@ -604,13 +627,10 @@ function columnFieldId<
 >(children: LayoutGridSchemaType[], props: LayoutGridFieldProps<T, S, F>) {
   const { registry, schema, formData, fieldPath, id } = props;
   for (const child of children) {
-    const name: unknown = typeof child === 'string' ? child : (child as GenericObjectType).name;
-    if (typeof name === 'string' && name !== '') {
-      // A name the schema doesn't hold, such as a `render` cell's, renders no field
-      const details = getSchemaDetailsForField<T, S, F>(registry, name, schema, formData, fieldPath);
-      if (details.schema) {
-        return fieldPathToId(details.fieldPath, registry.globalFormOptions);
-      }
+    // A name the schema doesn't hold, such as a `render` cell's, renders no field
+    const details = getSchemaDetailsForField<T, S, F>(registry, cellFieldName(child), schema, formData, fieldPath);
+    if (details.schema) {
+      return fieldPathToId(details.fieldPath, registry.globalFormOptions);
     }
   }
   return id;
@@ -663,11 +683,12 @@ function LayoutGridColumns<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
-  return children.map((child) => (
+  // Keyed as `LayoutGridFieldChildren` keys a cell
+  return children.map((child, i) => (
     <GridTemplate
       column
       fieldId={columnFieldId<T, S, F>([child], layoutGridFieldProps)}
-      key={`column-${hashObject(child)}`}
+      key={`column-${hashObject(child || [i])}`}
       data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
       {...gridProps}
     >
@@ -931,6 +952,12 @@ function LayoutGridFieldComponent<
       `${LAYOUT_GRID_OPTION} render for ${cellName} in ${fieldLabelForLog(id, parentFieldPath)} ${description}, so it ` +
         'is ignored.',
     );
+  } else if (!name && gridSchema != null) {
+    // A `null` cell is the one a layout leaves empty on purpose, and an `undefined` one is a grid handed no layout, which
+    // has been warned about
+    logOnce(
+      `${LAYOUT_GRID_OPTION} cell in ${fieldLabelForLog(id, parentFieldPath)} names no field, so it renders nothing.`,
+    );
   }
   return null;
 }
@@ -1168,11 +1195,20 @@ export default function LayoutGridField<
    * match one of the `GridType`s. If so, call the appropriate render function for the type. Otherwise, just call the
    * generic `renderField()` function with the `layoutGridSchema`.
    */
-  const { uiSchema } = props;
+  const { uiSchema, id, fieldPath } = props;
   let { layoutGridSchema } = props;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  if (!layoutGridSchema && LAYOUT_GRID_UI_OPTION in uiOptions && isObject(uiOptions[LAYOUT_GRID_UI_OPTION])) {
-    layoutGridSchema = uiOptions[LAYOUT_GRID_UI_OPTION];
+  // Only a grid handed no layout reads its uiSchema's: a cell is handed its own, and a `null` or `''` one reading the
+  // grid's layout again would render it inside itself without end
+  if (layoutGridSchema === undefined) {
+    const uiLayoutGrid = getUiOptions<T, S, F>(uiSchema)[LAYOUT_GRID_UI_OPTION];
+    if (isObject(uiLayoutGrid)) {
+      layoutGridSchema = uiLayoutGrid;
+    } else {
+      logOnce(
+        `${LAYOUT_GRID_OPTION} in ${fieldLabelForLog(id, fieldPath)} is not an object, so the LayoutGridField renders ` +
+          'nothing.',
+      );
+    }
   }
 
   if (isObject(layoutGridSchema)) {

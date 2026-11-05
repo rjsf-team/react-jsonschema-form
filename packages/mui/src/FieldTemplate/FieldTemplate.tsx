@@ -7,6 +7,7 @@ import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema
 import {
   getTemplates,
   getUiOptions,
+  joinClassNames,
   templateDrawsDescription,
   templateDrawsLabel,
   templateDrawsPlannedLabel,
@@ -14,7 +15,7 @@ import {
   templateMarksRequired,
 } from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import { computeSxProps, getMuiProps } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the FieldTemplate. */
 export interface FieldTemplateMuiProps extends GenericObjectType {
@@ -25,6 +26,10 @@ export interface FieldTemplateMuiProps extends GenericObjectType {
     /** Props applied to the MUI `Typography` element used for description. */
     fieldTypography?: TypographyProps;
   };
+  /** The `sx` of the MUI `FormControl` wrapping the field */
+  sx?: FormControlProps['sx'];
+  /** The class name of the MUI `FormControl` wrapping the field */
+  className?: string;
 }
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
@@ -77,6 +82,7 @@ export default function FieldTemplate<
   const drawsLabel = templateDrawsPlannedLabel<T, S, F>(props);
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, FieldTemplateMuiProps>(uiOptions);
+  const { sx: slotSx, className: slotClassName, ...slotProps } = muiSlotProps?.fieldFormControl ?? {};
 
   return (
     <WrapIfAdditionalTemplate
@@ -106,9 +112,9 @@ export default function FieldTemplate<
         fullWidth
         error={hasError}
         required={required}
-        {...muiSlotProps?.fieldFormControl}
-        sx={otherMuiProps.sx}
-        className={otherMuiProps.className}
+        {...slotProps}
+        sx={slotSx === undefined ? otherMuiProps.sx : computeSxProps<FormControlProps>(slotSx, otherMuiProps)}
+        className={joinClassNames(slotClassName, otherMuiProps.className) || undefined}
       >
         {drawsLabel && (
           <FormLabel

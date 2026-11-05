@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type {
   BoxProps,
+  FormControlProps,
   FormHelperTextProps,
   GridProps,
   PaperProps,
@@ -19,7 +20,7 @@ import type {
   UiSchema,
   GenericObjectType,
 } from '@rjsf/utils';
-import { partId } from '@rjsf/utils';
+import { isObject, partId } from '@rjsf/utils';
 
 type SxArray = Extract<SxProps<Theme>, readonly unknown[]>;
 
@@ -74,11 +75,11 @@ export function getMuiProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-  P extends GenericObjectType = GenericObjectType,
+  P extends object = GenericObjectType,
 >(options: UIOptionsType<T, S, F>, propsToFilter?: string[], rjsfSlotPropsOnly?: boolean): P {
-  const muiProps = (options?.mui as P) || ({} as P);
+  const muiProps = isObject(options?.mui) ? (options.mui as P) : ({} as P);
   if (rjsfSlotPropsOnly) {
-    const { rjsfSlotProps } = muiProps;
+    const { rjsfSlotProps }: { rjsfSlotProps?: unknown } = muiProps;
     return { rjsfSlotProps } as unknown as P;
   }
   if (propsToFilter) {
@@ -110,12 +111,11 @@ export function computeSxProps<MuiProps extends GridProps>(
   sxProps: SxProps<Theme>,
   muiProps: MuiProps & { sx: SxArray },
 ): MuiProps['sx'] | MuiProps['sx'][];
-export function computeSxProps<MuiProps extends BoxProps | FormHelperTextProps | PaperProps | TypographyProps>(
-  sxProps: SxProps<Theme>,
-  muiProps?: MuiProps,
-): MuiProps['sx'];
 export function computeSxProps<
-  MuiProps extends BoxProps | FormHelperTextProps | GridProps | PaperProps | TypographyProps,
+  MuiProps extends BoxProps | FormControlProps | FormHelperTextProps | PaperProps | TypographyProps,
+>(sxProps: SxProps<Theme>, muiProps?: MuiProps): MuiProps['sx'];
+export function computeSxProps<
+  MuiProps extends BoxProps | FormControlProps | FormHelperTextProps | GridProps | PaperProps | TypographyProps,
 >(sxProps: SxProps<Theme>, muiProps?: MuiProps): MuiProps['sx'] | MuiProps['sx'][] {
   const sx: SxProps<Theme> | undefined = muiProps?.sx;
   if (sx === undefined) {

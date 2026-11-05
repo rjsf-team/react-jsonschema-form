@@ -25,6 +25,13 @@ describe('getRenderedOptionSchema()', () => {
         minItems: 1,
       });
     });
+    test('takes a boolean option, which declares no keyword, for the parent as it is', () => {
+      const option = true as unknown as RJSFSchema;
+      expect(getRenderedOptionSchema({ type: 'string', minLength: 1, anyOf: [] }, option)).toEqual({
+        type: 'string',
+        minLength: 1,
+      });
+    });
     test("passes on a string's format", () => {
       expect(getRenderedOptionSchema({ type: 'string', format: 'date', anyOf: [] }, { minLength: 1 })).toEqual({
         type: 'string',

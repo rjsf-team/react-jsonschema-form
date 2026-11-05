@@ -965,18 +965,15 @@ export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchem
  * registered under an `$id` is for the schema that carries it, and routing every sibling property to such a field for a
  * type the schema never named would be the form's doing, not the schema's.
  *
- * The copy is spread rather than rebuilt key by key so that the symbol markers a resolved schema carries survive,
- * `RJSF_REF_KEY` above all: `resolveUiSchema()` reads that marker off the stub to apply the `ui:definitions` entry of
- * the `$ref` the property was described through, which `Object.entries()` would cost the property by not enumerating
- * it.
+ * The copy has to keep the symbol markers a resolved schema carries, `RJSF_REF_KEY` above all: `resolveUiSchema()`
+ * reads that marker off the stub to apply the `ui:definitions` entry of the `$ref` the property was described through.
+ * `withoutKeys()` keeps them.
  *
  * @param subSchema - The schema describing the additional property
  * @returns - The copy to build the stub from
  */
 function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): S {
-  const schema: GenericObjectType = { ...subSchema };
-  UNSTUBBABLE_KEYWORDS.forEach((keyword) => delete schema[keyword]);
-  return schema as S;
+  return withoutKeys<S>(subSchema, ...UNSTUBBABLE_KEYWORDS);
 }
 
 /** Builds the stub schema for an additional property whose own schema names no type, keeping what that schema says
@@ -998,7 +995,8 @@ function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S):
  */
 function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: unknown, subSchema: S = {} as S): S {
   const type = guessType(formData);
-  const schema: GenericObjectType = { ...subSchema };
+  // The copy reads as a record of keywords while some are dropped and the type is set, which leaves a schema
+  const schema = { ...subSchema } as GenericObjectType;
   let isConstrained = false;
   Object.entries(subSchema).forEach(([key, value]) => {
     if (constrainsValue(key)) {
@@ -1089,7 +1087,8 @@ export function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(sch
  * @returns - The schema with the option's extra-key keywords joined to its own
  */
 export function joinOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option: S): S {
-  const joined: GenericObjectType = { ...schema };
+  // The copy reads as a record of keywords while the option's are joined in
+  const joined = { ...schema } as GenericObjectType;
   const optionEvaluatesRest = additionalPropertiesKeyword<S>(option) !== undefined;
   for (const keyword of [ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY]) {
     const own: unknown =
@@ -1212,7 +1211,7 @@ export function stubExistingAdditionalProperties<
       // and `SchemaField` resolves the stub again to render it
       const described =
         REF_KEY in keySchema || Array.isArray(keySchema[ALL_OF_KEY])
-          ? retrieveSchema<T, S, F>(context, keySchema, rootSchema, formData[key])
+          ? retrieveSchema<unknown, S, F>(context, keySchema, rootSchema, formData[key])
           : keySchema;
       stub = stubSchemaForSubSchema<S>(described, formData[key], typeOf);
     } else {

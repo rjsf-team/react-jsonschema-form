@@ -222,6 +222,12 @@ type CleanedOptions<T> = {
 
 const noExtraKeys: ReadonlySet<string> = new Set();
 
+// The options Mantine calls or maps over without checking them, so one of another shape would throw
+const checkedOptions = new Map<string, (value: unknown) => boolean>([
+  ['inputContainer', (value) => typeof value === 'function'],
+  ['inputWrapperOrder', Array.isArray],
+]);
+
 /** Leaves out of a widget's `options` the ones rjsf reads, so that the rest, Mantine's own props, can be spread onto
  * its Mantine component. A key of the registry's `globalUiOptions` is left out too unless the field sets it itself:
  * every field hands its widget the extension keys a form declares, which are meant for the user's own components
@@ -231,7 +237,8 @@ const noExtraKeys: ReadonlySet<string> = new Set();
  * @param source - The widget's `registry`, whose `globalUiOptions` are left out, and its `uiSchema`, whose own options
  *   are kept
  * @param [extraKeys] - Further keys to leave out, as a `Set` or an array
- * @returns - The options that aren't rjsf's, a global one the field doesn't set or in `extraKeys`
+ * @returns - The options that aren't rjsf's, a global one the field doesn't set or in `extraKeys`, or an
+ *   `inputContainer` that isn't a function or an `inputWrapperOrder` that isn't an array
  */
 export function cleanupOptions<
   O extends object,
@@ -252,6 +259,7 @@ export function cleanupOptions<
     if (
       !strippedOptionNames.has(key) &&
       !extraKeySet.has(key) &&
+      (checkedOptions.get(key)?.(options[key]) ?? true) &&
       !(
         globalUiOptions &&
         Object.hasOwn(globalUiOptions, key) &&
@@ -261,7 +269,8 @@ export function cleanupOptions<
       result[key] = options[key];
     }
   }
-  return result;
+  // The single deliberate cast here: `result` holds the keys of `options` that `CleanedOptions` keeps, with their values
+  return result as CleanedOptions<O>;
 }
 
 /**
@@ -312,8 +321,6 @@ function withLabelId(labelProps: unknown, id: string) {
   return { ...ownProps, id: ownIdOr(ownProps, partId(id, 'wrapperLabel')) };
 }
 
-type InputContainer = (children: ReactNode) => ReactNode;
-
 const inputBaseThemeNames = ['InputBase', 'Input', 'InputWrapper'];
 const wrapperThemeNames = ['Input', 'InputWrapper'];
 
@@ -336,8 +343,45 @@ const themeComponentNames = {
 
 export type AriaInputComponentName = keyof typeof themeComponentNames;
 
-function asObject(value: unknown): GenericObjectType | undefined {
+/** Returns `value` when it is an object, else `undefined`
+ *
+ * @param value - The value an option or the theme gives
+ * @returns - The object, or `undefined`
+ */
+export function asObject(value: unknown): GenericObjectType | undefined {
   return isObject(value) ? value : undefined;
+}
+
+/** Whether an option's `value` is `undefined` or of the shape Mantine expects of it
+ *
+ * @param key - The option's name
+ * @param value - The option's value
+ * @returns - False for an `inputContainer` that isn't a function or an `inputWrapperOrder` that isn't an array
+ */
+function fitsOption(key: string, value: unknown): boolean {
+  return value === undefined || (checkedOptions.get(key)?.(value) ?? true);
+}
+
+/** Returns the `wrapperProps` option when it is an object, without an `inputContainer` or `inputWrapperOrder` in it
+ * of a shape Mantine would throw on
+ *
+ * @param value - The `wrapperProps` the options and the theme resolve to
+ * @returns - The `wrapperProps` to resolve and spread, the same object when every key fits, or `undefined`
+ */
+export function wrapperPropsOption(value: unknown): GenericObjectType | undefined {
+  const wrapperProps = asObject(value);
+  if (!wrapperProps) {
+    return undefined;
+  }
+  const entries = Object.entries(wrapperProps);
+  const fitting = entries.filter(([key, v]) => fitsOption(key, v));
+  // Keeping the uiSchema's own object keeps the memos keyed on it stable across renders
+  return fitting.length === entries.length ? wrapperProps : Object.fromEntries(fitting);
+}
+
+/** Whether `value` is an `inputContainer`, the function Mantine calls with an input to render the element around it */
+function isInputContainer(value: unknown): value is NonNullable<InputWrapperProps['inputContainer']> {
+  return typeof value === 'function';
 }
 
 /** The id `ownProps` give an element, or `fallback` where they give none */
@@ -467,7 +511,7 @@ function useAriaContainerProps({
         successOnOptions={successOnOptions}
       >
         {before}
-        {typeof ownContainer === 'function' ? (ownContainer as InputContainer)(children) : children}
+        {isInputContainer(ownContainer) ? ownContainer(children) : children}
         {after}
       </InputWrapperAriaProvider>
     ),
@@ -506,8 +550,23 @@ function useAriaContainerProps({
   ]);
 }
 
+/** Picks the `names` options of the shape Mantine expects, so that one of another shape falls back to the theme's, as
+ * it does when `cleanupOptions()` leaves it out
+ *
+ * @param options - The widget's options
+ * @param names - The names of the options to pick
+ * @returns - The picked options, `undefined` where one is of another shape
+ */
 function pickOptions(options: GenericObjectType, names: readonly string[]) {
-  return Object.fromEntries(names.map((name) => [name, options[name]]));
+  return Object.fromEntries(
+    names.map((name) => {
+      const value = options[name];
+      if (name === 'wrapperProps') {
+        return [name, wrapperPropsOption(value)];
+      }
+      return [name, fitsOption(name, value) ? value : undefined];
+    }),
+  );
 }
 
 const rootSlotKeys = ['classNames', 'styles', 'attributes'];
@@ -528,7 +587,7 @@ function withoutRootSlot(value: unknown): unknown {
  * a string.
  */
 function noStyle(name: string) {
-  const type = (STYLE_PROPS_DATA as GenericObjectType)[name]?.type;
+  const type = asObject(Reflect.get(STYLE_PROPS_DATA, name))?.type;
   return type === 'color' || type === 'textColor' ? '' : null;
 }
 
@@ -768,7 +827,7 @@ export function useFieldWrapperProps<
   );
   // `Input.Wrapper` would size its title, description and errors by the `size` in `__stylesApiProps`, the top-level
   // props, rather than by its own, which a `wrapperProps.size` may have replaced
-  const { __stylesApiProps: _stylesApiProps, id: _id, ...mantineWrapperProps } = inputWrapperProps as GenericObjectType;
+  const { __stylesApiProps: _stylesApiProps, id: _id, ...mantineWrapperProps } = inputWrapperProps;
   // Resolved as `Input.Wrapper` resolves them, since some are read or replaced here. `useInputProps` leaves
   // `labelElement` with the input, while this wrapper takes it.
   const wrapperDefaults = useProps<GenericObjectType>('InputWrapper', {}, {});
@@ -780,10 +839,12 @@ export function useFieldWrapperProps<
   const error = getWidgetError<T, S, F>(widgetProps);
   const ownSuccessProps = asObject(resolved.successProps);
   const successId = ownIdOr(ownSuccessProps, partId(id, 'success'));
+  const ownInputContainer = isInputContainer(wrapperProps.inputContainer) ? wrapperProps.inputContainer : undefined;
   return {
     wrapperProps: {
       ...wrapperProps,
-      inputContainer: containerOnInputs ? renderChildren : wrapperProps.inputContainer,
+      inputContainer: containerOnInputs ? renderChildren : ownInputContainer,
+      inputWrapperOrder: Array.isArray(wrapperProps.inputWrapperOrder) ? wrapperProps.inputWrapperOrder : undefined,
       label: labelValue(label || undefined, hideLabel, false),
       labelProps: { ...asObject(resolved.labelProps), id: titleId(id), htmlFor: undefined },
       required,
@@ -793,7 +854,7 @@ export function useFieldWrapperProps<
       errorProps: { ...asObject(resolved.errorProps), id: errorId(id) },
       successProps: { ...ownSuccessProps, id: successId },
     },
-    inputWrapperOrder: resolved.inputWrapperOrder as unknown,
+    inputWrapperOrder: resolved.inputWrapperOrder,
     size: (ownSize ?? inputThemeSize ?? wrapperProps.size) as InputWrapperProps['size'],
     invalid: !!error,
     successId,
@@ -840,10 +901,10 @@ export function useAriaDescribedByProps(
   },
 ) {
   const props = useProps<GenericObjectType>(themeComponentNames[component], {}, pickOptions(options, inputPickedKeys));
-  const wrapperObject = useMemo(
-    () => (wrapperOverrides ? { ...asObject(props.wrapperProps), ...wrapperOverrides } : asObject(props.wrapperProps)),
-    [props.wrapperProps, wrapperOverrides],
-  );
+  const wrapperObject = useMemo(() => {
+    const ownWrapperProps = wrapperPropsOption(props.wrapperProps);
+    return wrapperOverrides ? { ...ownWrapperProps, ...wrapperOverrides } : ownWrapperProps;
+  }, [props.wrapperProps, wrapperOverrides]);
   // As in Mantine's `useInputProps`, a key present in `wrapperProps` wins even when `undefined`, which `Input.Wrapper`
   // then resolves from `InputWrapper`'s theme `defaultProps`
   const fromWrapper = (name: string): unknown =>
@@ -951,7 +1012,7 @@ export function useGroupAriaProps<
   const hideLabel = !widgetDrawsLabel<T, S, F>(widgetProps);
   const label = getOwnLabel<T, S, F>(widgetProps);
   const props = useProps<GenericObjectType>(component, {}, pickOptions(options, inputPickedKeys));
-  const wrapperObject = asObject(props.wrapperProps);
+  const wrapperObject = wrapperPropsOption(props.wrapperProps);
   // A group spreads its own props after `wrapperProps`, the reverse of an input, then `Input.Wrapper` falls back to
   // `InputWrapper`'s theme `defaultProps`
   const resolved = useProps<GenericObjectType>(

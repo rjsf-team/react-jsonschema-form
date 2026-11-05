@@ -11,7 +11,7 @@ import type { GenericObjectType } from './types.ts';
  * @param key - The key to write, a path segment's array index included
  * @param value - The value to store at `key`
  */
-export default function setOwn(obj: GenericObjectType, key: string | number, value: unknown) {
+export default function setOwn(obj: object, key: string | number, value: unknown) {
   if (key === '__proto__') {
     Object.defineProperty(obj, key, {
       value,
@@ -20,7 +20,9 @@ export default function setOwn(obj: GenericObjectType, key: string | number, val
       configurable: true,
     });
   } else {
+    // The one deliberate cast here: `obj` is the plain object or array the caller holds. `Reflect.set()` needs no cast,
+    // but costs several times an assignment on this hot path and reports a frozen `obj` by returning `false`
     // oxlint-disable-next-line no-param-reassign
-    obj[key] = value;
+    (obj as GenericObjectType)[key] = value;
   }
 }

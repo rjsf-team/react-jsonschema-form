@@ -1378,7 +1378,7 @@ describe('Form change handler under a parent', () => {
       <StrictMode>
         <Form
           schema={schema}
-          validator={customizeValidator<GenericObjectType>()}
+          validator={customizeValidator()}
           liveValidate='onChange'
           showErrorList={false}
           initialFormData={{ foo: '' }}
@@ -1426,7 +1426,7 @@ describe('Form change handler under a parent', () => {
       <Form
         schema={schema}
         uiSchema={{ foo: { 'ui:widget': ReplaceWidget }, baz: { 'ui:widget': RaiseWidget } }}
-        validator={customizeValidator<GenericObjectType>()}
+        validator={customizeValidator()}
         initialFormData={initialFormData}
         onChange={onChange}
       />,
@@ -1453,7 +1453,7 @@ describe('Form change handler under a parent', () => {
     const props = {
       schema,
       uiSchema: { foo: { 'ui:widget': RaiseWidget } },
-      validator: customizeValidator<GenericObjectType>(),
+      validator: customizeValidator(),
       onChange,
     };
     // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what the custom errors must survive
@@ -1497,7 +1497,7 @@ describe('Form change handler under a parent', () => {
       <Form
         schema={schema}
         uiSchema={{ foo: { 'ui:widget': BurstWidget } }}
-        validator={customizeValidator<GenericObjectType>()}
+        validator={customizeValidator()}
         liveValidate='onChange'
         onChange={(e) => reported.push(e.formData)}
       />,
@@ -1523,7 +1523,7 @@ describe('Form change handler under a parent', () => {
       <Form
         schema={schema}
         uiSchema={{ foo: { 'ui:widget': SendWidget } }}
-        validator={customizeValidator<GenericObjectType>()}
+        validator={customizeValidator()}
         liveValidate='onChange'
         onChange={onChange}
       />,
@@ -1551,7 +1551,7 @@ describe('Form change handler under a parent', () => {
         type: 'object',
         properties: { list: { type: 'array', items: { type: 'string', minLength: 3 } } },
       };
-      const validator = customizeValidator<GenericObjectType>();
+      const validator = customizeValidator();
       const extraErrors = { list: { [errorIndex]: { __errors: ['server'] } } } as unknown as ErrorSchema;
       const props = { schema, validator, initialFormData: { list } };
       const { container, rerender } = render(<Form {...props} extraErrors={extraErrors} />);
@@ -1571,7 +1571,7 @@ describe('Form change handler under a parent', () => {
       const { container } = render(
         <Form
           schema={schema}
-          validator={customizeValidator<GenericObjectType>()}
+          validator={customizeValidator()}
           initialFormData={{ foo: 'a' }}
           liveValidate='onChange'
           customValidate={throwOnBoom}
@@ -1604,7 +1604,7 @@ describe('Form change handler under a parent', () => {
       <Form
         ref={ref}
         schema={schema}
-        validator={customizeValidator<GenericObjectType>()}
+        validator={customizeValidator()}
         liveValidate='onChange'
         customValidate={throwOnBoom}
         onChange={onChange}
@@ -1648,7 +1648,7 @@ describe('Form change handler under a parent', () => {
     const { container } = render(
       <Form
         schema={schema}
-        validator={customizeValidator<GenericObjectType>()}
+        validator={customizeValidator()}
         uiSchema={{ foo: { 'ui:widget': PickWidget } }}
         {...props}
       />,
@@ -1684,7 +1684,7 @@ describe('Form change handler under a parent', () => {
         <Form
           schema={schema}
           uiSchema={{ foo: { 'ui:widget': PickWidget } }}
-          validator={customizeValidator<GenericObjectType>()}
+          validator={customizeValidator()}
           initialFormData={{ foo: 'abcd', extra: 'dropped' }}
           liveValidate='onChange'
           omitExtraData
@@ -1705,13 +1705,13 @@ describe('Form change handler under a parent', () => {
   });
   it('should live validate a blur once under StrictMode, reporting the committed data', async () => {
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
-    const customValidate = vi.fn<CustomValidator<GenericObjectType>>((_formData, errors) => errors);
+    const customValidate = vi.fn<CustomValidator<{ foo: string; extra: string }>>((_formData, errors) => errors);
     const onChange = vi.fn<NonNullable<FormProps['onChange']>>();
     const { container } = render(
       <StrictMode>
         <Form
           schema={schema}
-          validator={customizeValidator<GenericObjectType>()}
+          validator={customizeValidator()}
           initialFormData={{ foo: 'a', extra: 'dropped' }}
           liveValidate='onBlur'
           omitExtraData
@@ -1756,7 +1756,7 @@ describe('Form change handler under a parent', () => {
       const props = {
         schema,
         uiSchema: { foo: { 'ui:widget': RaiseWidget } },
-        validator: customizeValidator<GenericObjectType>(),
+        validator: customizeValidator(),
         extraErrors: extraErrors as ErrorSchema | undefined,
         onChange,
       };
@@ -1799,7 +1799,7 @@ describe('Form change handler under a parent', () => {
       <Form
         ref={ref}
         schema={schema}
-        validator={customizeValidator<GenericObjectType>({ AjvClass: Ajv2020 })}
+        validator={customizeValidator({ AjvClass: Ajv2020 })}
         initialFormData={{ kind: 'a', x: 'hello' }}
         onChange={onChange}
       />,
@@ -1830,7 +1830,7 @@ describe('Form change handler under a parent', () => {
           <Form
             ref={ref}
             schema={schema}
-            validator={customizeValidator<GenericObjectType>()}
+            validator={customizeValidator()}
             liveValidate='onChange'
             extraErrors={{ bar: { __errors: ['server'] } }}
           />
@@ -1863,7 +1863,7 @@ describe('Form change handler under a parent', () => {
         <Form
           schema={schema}
           uiSchema={{ foo: { 'ui:help': help } }}
-          validator={customizeValidator<GenericObjectType>()}
+          validator={customizeValidator()}
           liveValidate={liveValidate}
           // oxlint-disable-next-line typescript/no-deprecated
           noValidate={noValidate}
@@ -1933,7 +1933,7 @@ describe('Form change handler under a parent', () => {
             ref={ref}
             schema={schema}
             uiSchema={{ foo: { 'ui:help': help } }}
-            validator={customizeValidator<GenericObjectType>()}
+            validator={customizeValidator()}
             liveValidate='onChange'
             initialFormData={{ foo: 'a' }}
           />
@@ -1976,7 +1976,7 @@ describe('Form change handler under a parent', () => {
         <Boundary>
           <Form
             schema={schema}
-            validator={customizeValidator<GenericObjectType>()}
+            validator={customizeValidator()}
             initialFormData={{ foo: 'a' }}
             noHtml5Validate
             focusOnFirstError={() => {
@@ -2002,7 +2002,7 @@ describe('Form change handler under a parent', () => {
       const { container } = render(
         <Form
           schema={schema}
-          validator={customizeValidator<GenericObjectType>()}
+          validator={customizeValidator()}
           liveValidate='onBlur'
           customValidate={() => {
             throw new Error('customValidate failed');
@@ -2023,7 +2023,7 @@ describe('Form change handler under a parent', () => {
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
     const ref = createFormRef();
     const { container } = render(
-      <Form ref={ref} schema={schema} validator={customizeValidator<GenericObjectType>()} liveValidate='onChange' />,
+      <Form ref={ref} schema={schema} validator={customizeValidator()} liveValidate='onChange' />,
     );
 
     await act(async () => {
@@ -2052,7 +2052,7 @@ describe('Form change handler under a parent', () => {
       <Form
         schema={schema}
         uiSchema={{ foo: { 'ui:widget': RaiseWidget } }}
-        validator={customizeValidator<GenericObjectType>()}
+        validator={customizeValidator()}
         extraErrors={{ foo: { __errors: ['Name taken'] } }}
         onChange={onChange}
       />,
@@ -2091,7 +2091,7 @@ describe('Form change handler under a parent', () => {
           <Form
             ref={ref}
             schema={schema}
-            validator={customizeValidator<GenericObjectType>()}
+            validator={customizeValidator()}
             initialFormData={{ foo: 'x', extra: 'dropped' }}
             omitExtraData
             liveValidate={liveValidate}
@@ -2150,7 +2150,7 @@ describe('Form change handler under a parent', () => {
           <Form
             schema={schema}
             uiSchema={{ foo: { 'ui:widget': TypeWidget } }}
-            validator={customizeValidator<GenericObjectType>()}
+            validator={customizeValidator()}
             formContext={{ changeSchema: () => setSchema(newSchema) }}
             initialFormData={{ foo: 'a', bar: 'x' }}
             onChange={onChange}

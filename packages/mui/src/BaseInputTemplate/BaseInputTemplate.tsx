@@ -128,7 +128,8 @@ export default function BaseInputTemplate<
   >(props);
 
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
-  const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
+  // `rjsfSlotProps` holds other elements' props, which would reach the input's DOM through the `TextField`
+  const { slotProps: muiSlotProps, rjsfSlotProps: _otherSlots, ...otherMuiProps } = muiProps;
 
   const inputValue = toInputValue(value);
   const exampleSuggestions = getExampleSuggestions<S>(schema);

@@ -240,6 +240,10 @@ interface Part<S extends StrictRJSFSchema> {
   chains: readonly Keywords<S>[];
 }
 
+/** Copies `schema` without `keys`. The copy is spread rather than rebuilt key by key so that it keeps the symbol
+ * markers a resolved schema carries, such as the `RJSF_REF_KEY` `stubbableSchema()` relies on, which
+ * `Object.entries()` would drop by not enumerating them.
+ */
 export function withoutKeys<S extends StrictRJSFSchema>(schema: S, ...keys: (string | symbol)[]): S {
   const copy = { ...schema };
   for (const key of keys) {

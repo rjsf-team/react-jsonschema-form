@@ -12,17 +12,21 @@ import type { GenericObjectType } from './types.ts';
  * @returns - A new object that is the merge of the two given objects
  */
 export default function mergeObjects(
-  obj1: GenericObjectType,
-  obj2: GenericObjectType,
+  obj1: object,
+  obj2: object,
   concatArrays: boolean | 'preventDuplicates' = false,
-) {
+): GenericObjectType {
+  // These two are read by key for each key of each merge, where `Reflect.get()` would cost more and throw on a primitive
+  // a JS caller passes
+  const first = obj1 as GenericObjectType;
+  const second = obj2 as GenericObjectType;
   return Object.keys(obj2).reduce(
     (acc, key) => {
       // Only an own member of `obj1` takes part: a JSON-sourced `__proto__` or `constructor` key would otherwise
       // read the inherited member and merge into a copy of `Object.prototype`
       const hasLeft = Object.hasOwn(obj1, key);
-      const left: unknown = hasLeft ? obj1[key] : undefined,
-        right: unknown = obj2[key];
+      const left = hasLeft ? first[key] : undefined,
+        right = second[key];
       let merged = right;
       if (hasLeft && isObject(right)) {
         merged = mergeObjects(isObject(left) ? left : {}, right, concatArrays);

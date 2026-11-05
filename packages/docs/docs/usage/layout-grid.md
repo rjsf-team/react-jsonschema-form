@@ -416,6 +416,10 @@ manner similar `ui:row` and `ui:col` where the array is implicitly assumed to be
 `ui:columns` syntax also supports `children` in the form of objects with `"name": "<field id>"` as the minimum required
 property, passing along any additional properties to the underlying `Widget` as `ui:options`.
 
+A `null` child renders nothing, so `{ "ui:columns": ["person.first", null, "person.last"] }` leaves its middle column
+empty. A `false` or `undefined` child, such as one a layout built in code leaves out with `showMiddle && "person.middle"`,
+is no child at all and takes no column.
+
 ## GridTemplate
 
 The concept of a theme's grid system has been mentioned several times in the documentation so far. Remember that each

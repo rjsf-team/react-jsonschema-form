@@ -189,7 +189,7 @@ function markPath(marks: unknown, data: unknown, path: FieldPathList): unknown {
   if (Array.isArray(data) ? !hasByPath(data, key) : data !== undefined && !isPlainObject(data)) {
     return undefined;
   }
-  let container: GenericObjectType = isPlainObject(marks) ? marks : {};
+  let container: object = isPlainObject(marks) ? marks : {};
   if (Array.isArray(data)) {
     container = Array.isArray(marks) ? marks : Array.from({ length: data.length });
   }
@@ -813,7 +813,8 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
         context.registry,
         fieldPath,
         fieldSchema,
-        fieldUiSchema,
+        // `FormFieldState` carries no `T` or `F`, and hands back the `UiSchema<T, S, F>` `getUiRequiredErrorSchema()` gave it
+        fieldUiSchema as UiSchema<T, S, F>,
         asFieldValue<T>(data),
       ),
     (fieldPath, fieldSchema, fieldUiSchema, data) =>
@@ -821,7 +822,8 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
         context.registry,
         fieldPath,
         fieldSchema,
-        fieldUiSchema,
+        // As above, `FormFieldState` hands back the `UiSchema<T, S, F>` `getUiRequiredErrorSchema()` gave it
+        fieldUiSchema as UiSchema<T, S, F>,
         asFieldValue<T>(data),
       ),
   );

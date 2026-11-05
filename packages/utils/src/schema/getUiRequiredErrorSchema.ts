@@ -313,14 +313,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * The function form of `uiSchema.items` can't be inspected statically — it may return a fragment containing
  * `ui:required` for some item — so it's treated as though it might, rather than silently skipping the walk.
  */
-function hasUiRequiredOption<T, S extends StrictRJSFSchema, F extends FormContextType>(node: unknown): boolean {
+function hasUiRequiredOption<S extends StrictRJSFSchema, F extends FormContextType>(node: unknown): boolean {
   if (typeof node === 'function') {
     return true;
   }
   if (!isObject(node)) {
     return false;
   }
-  if (getUiOptions<T, S, F>(node).required !== undefined) {
+  if (getUiOptions<unknown, S, F>(node).required !== undefined) {
     return true;
   }
   return Object.entries(node).some(([key, value]) => {
@@ -328,9 +328,9 @@ function hasUiRequiredOption<T, S extends StrictRJSFSchema, F extends FormContex
       return false;
     }
     if (Array.isArray(value)) {
-      return value.some((entry) => hasUiRequiredOption<T, S, F>(entry));
+      return value.some((entry) => hasUiRequiredOption<S, F>(entry));
     }
-    return hasUiRequiredOption<T, S, F>(value);
+    return hasUiRequiredOption<S, F>(value);
   });
 }
 
@@ -357,9 +357,9 @@ function computeMightHaveUiRequired<T, S extends StrictRJSFSchema, F extends For
   uiSchemaDefinitions: UiSchemaDefinitions<S, F> | undefined,
 ): boolean {
   const scan = () =>
-    hasUiRequiredOption<T, S, F>(uiSchema) ||
+    hasUiRequiredOption<S, F>(uiSchema) ||
     (uiSchemaDefinitions !== undefined &&
-      Object.values(uiSchemaDefinitions).some((fragment) => hasUiRequiredOption<T, S, F>(fragment)));
+      Object.values(uiSchemaDefinitions).some((fragment) => hasUiRequiredOption<S, F>(fragment)));
   if (!isObject(uiSchema)) {
     return scan();
   }

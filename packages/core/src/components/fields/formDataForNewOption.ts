@@ -356,7 +356,9 @@ function fieldWithOnlyOption<T, S extends StrictRJSFSchema, F extends FormContex
   if (!parentSchema || !xxxOfKey) {
     return undefined;
   }
-  const ownUiSchema: GenericObjectType | undefined = optionUiSchema && { [xxxOfKey]: [optionUiSchema] };
+  // A uiSchema holding the option's own under the field's `anyOf`/`oneOf`, which TypeScript can't relate to the
+  // `UiSchema<T>` of a generic `T`
+  const ownUiSchema = optionUiSchema && ({ [xxxOfKey]: [optionUiSchema] } as UiSchema<T, S, F>);
   return {
     schema: { ...parentSchema, [xxxOfKey]: [option] },
     uiSchema: withGlobalUiOptions<T, S, F>(ownUiSchema, globalUiOptions),
