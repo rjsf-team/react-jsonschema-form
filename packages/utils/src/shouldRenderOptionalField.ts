@@ -1,3 +1,4 @@
+import { ADDITIONAL_PROPERTY_FLAG } from './constants.ts';
 import { ROOT_FIELD_PATH } from './fieldPath.ts';
 import getRenderedOptionSchema from './getRenderedOptionSchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
@@ -13,6 +14,7 @@ import type {
   FormContextType,
   GlobalUISchemaOptions,
   Registry,
+  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -95,7 +97,8 @@ export function isOptionalDataControlsType<
 /** Determines whether the Optional Data Controls render the property of an object collapsed, showing only its Add
  * button: it holds no data, it is not required, read from its own `ui:required` before the object's `required`, as
  * `SchemaField` reads it, and `enableOptionalDataFieldForType` turns the controls on for its type. Its uiSchema is the
- * one its field renders with, the `ui:definitions` entry of a definition it references merged in.
+ * one its field renders with, the `ui:definitions` entry of a definition it references merged in. An
+ * `additionalProperties` entry `retrieveSchema()` stubbed never is, since its key being there makes it present.
  *
  * @param schema - The property's schema, retrieved, or a function retrieving it, called only once the uiSchema turns the
  *        Optional Data Controls UI on for some type
@@ -127,7 +130,7 @@ export function isCollapsedByOptionalDataControls<
     formData: unknown;
   },
 ): boolean {
-  if (isFormDataAvailable(formData)) {
+  if (isFormDataAvailable(formData) || (rawSchema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]) {
     return false;
   }
   const fieldUiSchema = uiSchemaDefinitions
@@ -142,7 +145,7 @@ export function isCollapsedByOptionalDataControls<
 /** Determines whether the field information from the combination of `schema` and `required` along with the
  * `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
  * should be rendered with the Optional Data Controls UI. The root field never is: it is the form itself, which has no
- * parent to leave it out of.
+ * parent to leave it out of. Nor is an `additionalProperties` entry `retrieveSchema()` stubbed: its key makes it present.
  *
  * @param registry - The `registry` object
  * @param schema - The schema for the field
@@ -165,6 +168,7 @@ export default function shouldRenderOptionalField<
   return (
     fieldPath !== ROOT_FIELD_PATH &&
     !required &&
+    !(schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] &&
     isOptionalDataControlsType<T, S, F>(schema, uiSchema, registry.globalUiOptions, registry.rootSchema)
   );
 }

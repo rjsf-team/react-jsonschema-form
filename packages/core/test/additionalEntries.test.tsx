@@ -1,8 +1,9 @@
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
+import { fieldPathToId, getByPath, toFieldPath } from '@rjsf/utils';
 import { cleanup, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { createFormComponent, submitForm } from './testUtils.tsx';
+import { createFormComponent, fieldErrorsById, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -220,6 +221,79 @@ it.each<[string, unknown]>([
   });
 
   expect(node.querySelector('input#root_extra')).toHaveValue('x');
+});
+
+describe('a plain entry holding null with the Optional Data Controls turned on', () => {
+  const schema = entries({ type: ['object', 'null'], properties: { a: { type: 'string', title: 'A' } } });
+
+  it('blocks submit on a ui:required field it renders', async () => {
+    const { node, onSubmit } = createFormComponent({
+      schema,
+      initialFormData: { extra: null },
+      noHtml5Validate: true,
+      uiSchema: {
+        'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] },
+        additionalProperties: { a: { 'ui:required': true } },
+      },
+    });
+
+    expect(screen.getByRole('textbox', { name: /^A/ })).toBeRequired();
+    await submitForm(node, user);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(fieldErrorsById(node)).toHaveProperty('root_extra_a');
+  });
+});
+
+describe('an entry holding null in a custom container field, which provides no context', () => {
+  function CustomContainerField(props: FieldProps) {
+    const { registry, schema, uiSchema, formData, fieldPath } = props;
+    const { SchemaField } = registry.fields;
+    const { properties = {} } = registry.schemaUtils.retrieveSchema(schema, formData);
+    return Object.entries(properties).map(([key, property]) => {
+      const childPath = toFieldPath(key, fieldPath);
+      return (
+        <SchemaField
+          {...props}
+          key={key}
+          name={key}
+          required={false}
+          schema={property as RJSFSchema}
+          uiSchema={uiSchema?.additionalProperties}
+          formData={getByPath(formData, key)}
+          errorSchema={getByPath(props.errorSchema, key)}
+          fieldPath={childPath}
+          id={fieldPathToId(childPath, registry.globalFormOptions)}
+        />
+      );
+    });
+  }
+
+  const object: RJSFSchema = { type: ['object', 'null'], properties: { a: { type: 'string', title: 'A' } } };
+
+  it.each<[string, RJSFSchema, UiSchema]>([
+    ['its own field', object, { a: { 'ui:required': true } }],
+    ['a field of the option it shows', { anyOf: [object] }, { anyOf: [{ a: { 'ui:required': true } }] }],
+  ])('shows %s with no Add button and blocks submit on it', async (_name, entry, entryUiSchema) => {
+    const { node, onSubmit } = createFormComponent({
+      schema: entries(entry),
+      initialFormData: { extra: null },
+      noHtml5Validate: true,
+      fields: { CustomContainerField },
+      uiSchema: {
+        'ui:field': 'CustomContainerField',
+        'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] },
+        additionalProperties: entryUiSchema,
+      },
+    });
+
+    expect(screen.getByRole('textbox', { name: /^A/ })).toBeRequired();
+    expect(node.querySelector('[id$="__optionalAdd"]')).toBeNull();
+    await submitForm(node, user);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(fieldErrorsById(node)).toHaveProperty('root_extra_a');
+  });
 });
 
 describe('a declared field', () => {

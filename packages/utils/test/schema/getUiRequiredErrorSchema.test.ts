@@ -959,6 +959,45 @@ describe('getUiRequiredErrorSchema()', () => {
   describe('Optional Data Controls', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
 
+    describe('an additionalProperties entry holding null, which renders its fields with no control', () => {
+      const object: RJSFSchema = { type: ['object', 'null'], properties: { a: { type: 'string' } } };
+      const errorsFor = (additionalProperties: RJSFSchema, entryUiSchema: UiSchema, formData: unknown) =>
+        toErrorList(
+          getUiRequiredErrorSchema(
+            { validator: testValidator },
+            { type: 'object', additionalProperties },
+            { additionalProperties: entryUiSchema },
+            formData,
+            undefined,
+            globalUiOptions,
+          ),
+        ).map(({ property }) => property);
+
+      it('fires for its own field', () => {
+        expect(errorsFor(object, { a: { 'ui:required': true } }, { extra: null })).toEqual(['.extra.a']);
+      });
+
+      it('fires for a field of the option it shows', () => {
+        expect(
+          errorsFor(
+            { anyOf: [object] },
+            { anyOf: [{ 'ui:enableOptionalDataFieldForType': ['object'], a: { 'ui:required': true } }] },
+            { extra: null },
+          ),
+        ).toEqual(['.extra.a']);
+      });
+
+      it('does not fire below an object declared inside it, which keeps its control', () => {
+        expect(
+          errorsFor(
+            { type: 'object', properties: { inner: object } },
+            { inner: { a: { 'ui:required': true } } },
+            { extra: { inner: null } },
+          ),
+        ).toEqual([]);
+      });
+    });
+
     it('does not fire for a field inside an unselected anyOf branch configured as an Optional Data Control', () => {
       const schema: RJSFSchema = {
         type: 'object',

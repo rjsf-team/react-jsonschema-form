@@ -29,6 +29,7 @@ import {
   displaysLabel,
   getWidgetErrorProps,
   getWidgetLabelProps,
+  isAdditionalPropertySchema,
   optionsKeywordOf,
   withoutOptionalControls,
 } from './fieldWidgetUtils.ts';
@@ -164,7 +165,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       );
     }
   }
-  const isEntryPath = use(AdditionalEntryContext) === fieldPath;
+  // A custom container field renders an entry with no context, which leaves its flag
+  const isEntryPath = use(AdditionalEntryContext) === fieldPath || isAdditionalPropertySchema(schema);
   // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed. An option's own uiSchema
   // or `ui:definitions` entry doesn't inherit the entry's Optional Data Controls being off, so it is turned off here too
   const optionFieldUiSchema = useMemo(() => {
