@@ -1566,7 +1566,7 @@ Returns the type of the field that the Optional Data Controls UI is rendered for
 Returns the schema of the selector property of an `anyOf`/`oneOf` option, the one the options are told apart by, as it is read for the value, title and type that tell them apart.
 An option hands its properties out as written, so a selector written as a `$ref` is retrieved by `retrieve`; one written in place is read as it stands.
 Only an own property counts, so a selector named `__proto__` that the option doesn't declare gives `undefined` rather than `Object.prototype`.
-`findSelectedOptionInXxxOf()` and `LayoutMultiSchemaField` both read a selector this way, so the option one selects is the one the other lists.
+`findSelectedOptionInXxxOf()` reads a discriminator this way, and `LayoutMultiSchemaField` its selector, so the option one selects is the one the other lists.
 
 #### Parameters
 
@@ -3891,7 +3891,7 @@ Finds the field at the given path within the root or a nested `schema` node, fol
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 - schema: S - The node within the JSON schema in which to search
 - path: SchemaFieldPath - Dotted path or segment list to the desired field; see [`SchemaFieldPath`](#types)
-- [formData=\{}]: T - The form data that is used to determine which anyOf/oneOf option to descend
+- [formData]: T - The form data that is used to determine which anyOf/oneOf option to descend
 
 #### Returns
 
@@ -3899,22 +3899,22 @@ Finds the field at the given path within the root or a nested `schema` node, fol
 
 ### findSelectedOptionInXxxOf&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or `properties[selectorField].const` that matches the `formData[selectorField]` value.
-For the purposes of this function, `selectorField` is either `schema.discriminator.propertyName` or `fallbackField`.
-Options with no discriminator aren't told apart by that value alone, since a user can clear or edit a property that is only given a `default`, so where none holds the value the option is the one [`getClosestMatchingOption()`](#getclosestmatchingoptiont--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) picks for the data, as `MultiSchemaField` picks it. A tie goes to the first option, since the one a user picked isn't visible from the schema. A discriminated list with no matching value has nothing selected.
+Finds the option of `schema['any/oneOf']` a field renders for `formData`.
+With a discriminator, it is the option whose `properties[discriminator].default` or `.const` matches the `formData[discriminator]` value, and no matching value has nothing selected.
+With none, it is the option [`getClosestMatchingOption()`](#getclosestmatchingoptiont--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) picks for the data, as `MultiSchemaField` picks it, since no one property's value can tell the options apart. A tie goes to the first option, since the one a user picked isn't visible from the schema.
 
 #### Parameters
 
 - context: SchemaContext&lt;S, F> - The `SchemaContext` that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 - schema: S - The schema element in which to search for the selected anyOf/oneOf option
-- fallbackField: string - The field to use as a backup selector field if the schema does not have a required field
+- fallbackField: string - Not read, since options with no discriminator aren't told apart by any one property
 - xxx: 'anyOf' | 'oneOf' - Either `anyOf` or `oneOf`, defines which value is being sought
 - [formData]: T - The form data that is used to determine which anyOf/oneOf option to descend
 
 #### Returns
 
-- S | undefined: The anyOf/oneOf option that matches the selector field in the schema, else the closest to the data for options with no discriminator, or undefined if a discriminated list selects nothing
+- S | undefined: The anyOf/oneOf option that matches the discriminator, or the closest to the data for options with no discriminator, or undefined if a discriminated list selects nothing
 
 ### getDefaultFormState&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

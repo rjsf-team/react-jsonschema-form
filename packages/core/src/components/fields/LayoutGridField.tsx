@@ -418,8 +418,8 @@ export function getSchemaDetailsForField<
     const result = computeArraySchemasIfPresent<S>(holder, part);
     rawSchema = result.rawSchema ?? getPropertySchema<S>(holder, part);
     fieldPath = toFieldPath(result.index ?? part, fieldPath);
-    // Now drill into the innerData for the part, returning an empty object by default if it doesn't exist
-    innerData = getByPath<T>(innerData, part, {} as T);
+    // Now drill into the innerData for the part
+    innerData = getByPath<T>(innerData, part);
     // Resolve any `$ref`s for the current rawSchema
     schema = schemaUtils.retrieveSchema(rawSchema, innerData);
     isReadonly = getNonNullishValue(schema.readOnly, isReadonly);

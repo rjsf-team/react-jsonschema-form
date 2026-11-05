@@ -54,7 +54,7 @@ function findKey<T, S extends StrictRJSFSchema, F extends FormContextType>(
   rootSchema: S,
   parent: S | undefined,
   key: string,
-  data: T,
+  data: T | undefined,
 ): FoundFieldType<S> {
   // A boolean subschema has no keys to find, and an empty segment, as the `a.` path leaves, names none
   if (!isSchemaObject<S>(parent) || key === '') {
@@ -91,7 +91,7 @@ function findKey<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param schema - The node within the JSON schema in which to search
  * @param path - The keys in the path to the desired field
- * @param [formData={}] - The form data that is used to determine which anyOf/oneOf option to descend
+ * @param [formData] - The form data that is used to determine which anyOf/oneOf option to descend
  * @returns - An object that contains the field and its required state. If no field can be found then
  *            `{ field: undefined, isRequired: undefined }` is returned.
  */
@@ -99,13 +99,7 @@ export default function findFieldInSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  context: SchemaContext<S, F>,
-  rootSchema: S,
-  schema: S,
-  path: SchemaFieldPath,
-  formData: T = {} as T,
-): FoundFieldType<S> {
+>(context: SchemaContext<S, F>, rootSchema: S, schema: S, path: SchemaFieldPath, formData?: T): FoundFieldType<S> {
   // Only the keys below it are read with their `$ref`s resolved, and `schema` may be a `$ref` itself
   let parent: S | undefined = getFromSchema<T, S, F>(context, rootSchema, schema, [], schema);
   let found: FoundFieldType<S> = NOT_FOUND;
@@ -113,7 +107,7 @@ export default function findFieldInSchema<
   for (const key of (Array.isArray(path) ? path : path.split('.')).map(String)) {
     found = findKey<T, S, F>(context, rootSchema, parent, key, data);
     parent = found.field;
-    data = getByPath<T>(data, key, {} as T);
+    data = getByPath<T>(data, key);
   }
   // A copy, since the caller owns its result and `NOT_FOUND` is shared
   return { ...found };

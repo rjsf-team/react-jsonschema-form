@@ -6,8 +6,8 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 /** Returns the schema of the selector property of an `anyOf`/`oneOf` option, the one the options are told apart by, as
  * it is read for the value, title and type that tell them apart. An option hands its properties out as written, so a
  * selector written as a `$ref` is retrieved by `retrieve`, for the data the selector holds; one written in place is read
- * as it stands, so it keeps its identity across changes of the data. `findSelectedOptionInXxxOf()` and
- * `LayoutMultiSchemaField` both read a selector this way, so the option one selects is the one the other lists.
+ * as it stands, so it keeps its identity across changes of the data. `findSelectedOptionInXxxOf()` reads a discriminator
+ * this way, and `LayoutMultiSchemaField` its selector, so the option one selects is the one the other lists.
  *
  * @param option - The option, retrieved for the field's data
  * @param selectorField - The name of the selector property

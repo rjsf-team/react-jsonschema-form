@@ -158,18 +158,18 @@ class SchemaUtils<
     return findFieldInSchema(this.context, this.rootSchema, schema, path, formData);
   }
 
-  /** Finds the oneOf option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` that
-   * matches the `formData[selectorField]` value. For the purposes of this function, `selectorField` is either
-   * `schema.discriminator.propertyName` or `fallbackField`.
+  /** Finds the option of `schema['any/oneOf']` a field renders for `formData`: with a discriminator, the option whose
+   * `properties[discriminator].default` or `.const` matches the `formData[discriminator]` value, and with none, the option
+   * `getClosestMatchingOption()` picks for the data.
    *
    * @param schema - The schema element in which to search for the selected oneOf option
-   * @param fallbackField - The field to use as a backup selector field if the schema does not have a required field
+   * @param fallbackField - Not read, since options with no discriminator aren't told apart by any one property
    * @param xxx - Either `oneOf` or `anyOf`, defines which value is being sought
-   * @param [formData={}] - The form data that is used to determine which oneOf option
-   * @returns - The anyOf/oneOf option that matches the selector field in the schema, else the closest to the data for
-   *            options with no discriminator, or undefined if a discriminated list selects nothing
+   * @param [formData] - The form data that is used to determine which oneOf option
+   * @returns - The anyOf/oneOf option that matches the discriminator, or the closest to the data for options with no
+   *            discriminator, or undefined if a discriminated list selects nothing
    */
-  findSelectedOptionInXxxOf(schema: S, fallbackField: string, xxx: 'anyOf' | `oneOf`, formData: T): S | undefined {
+  findSelectedOptionInXxxOf(schema: S, fallbackField: string, xxx: 'anyOf' | `oneOf`, formData?: T): S | undefined {
     return findSelectedOptionInXxxOf(this.context, this.rootSchema, schema, fallbackField, xxx, formData);
   }
 

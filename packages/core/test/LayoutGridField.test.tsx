@@ -1179,6 +1179,35 @@ describe('LayoutGridField', () => {
       };
       expect(details(allDefault, 'thing.a', formData).schema?.title).toBe('A');
     });
+    test('reads the option the form shows, where several options hold the value of the property', () => {
+      const sharedDefault: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          {
+            type: 'object',
+            properties: { kind: { const: 'a' }, shared: { type: 'string', title: 'Shared A', default: 'x' } },
+          },
+          {
+            type: 'object',
+            properties: { kind: { const: 'b' }, shared: { type: 'string', title: 'Shared B', default: 'x' } },
+          },
+        ],
+      };
+      expect(details(sharedDefault, 'thing.shared', { kind: 'b', shared: 'x' }).schema?.title).toBe('Shared B');
+    });
+    test('reads the first option where a part of the path holds no data, as a field renders it', () => {
+      const thing: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          { type: 'object', properties: { a: { type: 'string', title: 'A' } } },
+          { type: 'object', title: 'Matches an empty object' },
+        ],
+      };
+      const schema: RJSFSchema = { type: 'object', properties: { thing } };
+      expect(getSchemaDetailsForField(getTestRegistry(schema), 'thing.a', schema, {}, FIELD_PATH).schema?.title).toBe(
+        'A',
+      );
+    });
     test('finds a property one option gives an ordinary default, in the option the data matches', () => {
       const someDefault: RJSFSchema = {
         type: 'object',

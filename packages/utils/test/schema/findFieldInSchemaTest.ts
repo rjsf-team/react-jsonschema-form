@@ -205,6 +205,23 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
         expect(schemaUtils.findFieldInSchema(schema, 'a', { b: 1 })).toEqual(NOT_FOUND);
       });
     });
+    describe('options a later of which matches an empty object', () => {
+      const laterMatchesEmpty: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          { type: 'object', properties: { a: { type: 'string' } } },
+          { type: 'object', title: 'Matches an empty object' },
+        ],
+      };
+
+      it('finds a property in the first option with no data, the one a field renders', () => {
+        expect(schemaUtils.findFieldInSchema(laterMatchesEmpty, 'a').field).toEqual({ type: 'string' });
+      });
+      it('finds a property in the first option where a part of the path holds no data', () => {
+        const nested: RJSFSchema = { type: 'object', properties: { thing: laterMatchesEmpty } };
+        expect(schemaUtils.findFieldInSchema(nested, 'thing.a', {}).field).toEqual({ type: 'string' });
+      });
+    });
     describe('a key no property declares', () => {
       it('finds the schema of the pattern it matches', () => {
         const schema: RJSFSchema = {

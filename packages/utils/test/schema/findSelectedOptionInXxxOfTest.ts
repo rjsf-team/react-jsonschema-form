@@ -20,10 +20,10 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
     test('returns undefined when schema has no anyOfs', () => {
       expect(schemaUtils.findSelectedOptionInXxxOf({}, 'foo', ANY_OF_KEY)).toBeUndefined();
     });
-    test('returns the first oneOf when formData has no value via the fallbackField, the one a field renders', () => {
+    test('returns the first oneOf with no discriminator and no data, the one a field renders', () => {
       expect(schemaUtils.findSelectedOptionInXxxOf(testOneOfSchema, 'answer', ONE_OF_KEY)).toEqual(CHOICES[0]);
     });
-    test('returns the first anyOf when formData has no value via the fallbackField, the one a field renders', () => {
+    test('returns the first anyOf with no discriminator and no data, the one a field renders', () => {
       expect(schemaUtils.findSelectedOptionInXxxOf(testAnyOfSchema, 'answer', ANY_OF_KEY)).toEqual(CHOICES[0]);
     });
     test('returns undefined when formData has no oneOf value via the discriminator', () => {
@@ -32,13 +32,13 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
     test('returns undefined when formData has no oneOf value via the discriminator', () => {
       expect(schemaUtils.findSelectedOptionInXxxOf(testAnyOfDiscriminatorSchema, 'name', ANY_OF_KEY)).toBeUndefined();
     });
-    test('returns oneOf when formData has value via the fallbackField', () => {
+    test('returns the closest oneOf with no discriminator', () => {
       const expectedResult = CHOICES[0];
       expect(schemaUtils.findSelectedOptionInXxxOf(testOneOfSchema, 'answer', ONE_OF_KEY, ANSWER_1)).toEqual(
         expectedResult,
       );
     });
-    test('returns anyOf when formData has value via the fallbackField', () => {
+    test('returns the closest anyOf with no discriminator', () => {
       const expectedResult = CHOICES[0];
       expect(schemaUtils.findSelectedOptionInXxxOf(testAnyOfSchema, 'answer', ANY_OF_KEY, ANSWER_1)).toEqual(
         expectedResult,
@@ -85,6 +85,16 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
       const selected = utils.findSelectedOptionInXxxOf(rootSchema, 'kind', ONE_OF_KEY, { kind: 'dog' });
       expect(Object.keys(selected?.properties ?? {})).toEqual(['kind', 'bark']);
     });
+    test('passes over an option that does not declare the discriminator', () => {
+      const undeclared: RJSFSchema = { type: 'object', properties: { other: { type: 'string' } } };
+      const declared: RJSFSchema = { type: 'object', properties: { kind: { const: 'x' } } };
+      const schema: RJSFSchema = {
+        type: 'object',
+        discriminator: { propertyName: 'kind' },
+        oneOf: [undeclared, declared],
+      };
+      expect(schemaUtils.findSelectedOptionInXxxOf(schema, 'kind', ONE_OF_KEY, { kind: 'x' })).toEqual(declared);
+    });
     describe('options with no selector', () => {
       const first: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
       const second: RJSFSchema = { type: 'object', properties: { b: { type: 'number' } } };
@@ -115,6 +125,19 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
         testValidator.setReturnValues({ isValid: [false, true] });
         expect(schemaUtils.findSelectedOptionInXxxOf(someHold, 'kind', ANY_OF_KEY, { b: 1 })).toEqual(second);
       });
+      test('returns the closest option over an earlier one holding the value of fallbackField', () => {
+        const sharedDefault: RJSFSchema = {
+          type: 'object',
+          anyOf: [
+            { type: 'object', properties: { kind: { const: 'a' }, shared: { default: 'x' } } },
+            { type: 'object', properties: { kind: { const: 'b' }, shared: { default: 'x' } } },
+          ],
+        };
+        testValidator.setReturnValues({ isValid: [false, true] });
+        expect(
+          schemaUtils.findSelectedOptionInXxxOf(sharedDefault, 'shared', ANY_OF_KEY, { kind: 'b', shared: 'x' }),
+        ).toEqual(sharedDefault.anyOf?.[1]);
+      });
       test('returns the option the data matches closest for a value no option holds', () => {
         const allHold: RJSFSchema = {
           type: 'object',
@@ -126,16 +149,6 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
         testValidator.setReturnValues({ isValid: [false, true] });
         expect(schemaUtils.findSelectedOptionInXxxOf(allHold, 'a', ANY_OF_KEY, { a: 'typed', b: 1 })).toEqual(
           allHold.anyOf?.[1],
-        );
-      });
-      test('prefers the option holding the value over the closest, where only some options hold one', () => {
-        const someHold: RJSFSchema = {
-          type: 'object',
-          anyOf: [second, { type: 'object', properties: { kind: { const: 'x' } } }],
-        };
-        testValidator.setReturnValues({ isValid: [true, false] });
-        expect(schemaUtils.findSelectedOptionInXxxOf(someHold, 'kind', ANY_OF_KEY, { kind: 'x' })).toEqual(
-          someHold.anyOf?.[1],
         );
       });
     });
