@@ -59,10 +59,11 @@ export default function RatingWidget<
     'radiogroup',
   );
 
-  const numStars = ratingStarCount<S>(schema, stars);
   const { min = 0 } = rangeSpec<S>(schema);
   const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
+  const numStars = ratingStarCount<S>(schema, stars);
+  const starValues = Array.from({ length: numStars }, (_, index) => withoutFloatNoise(min + index));
   // The checked star, as `RadioWidget` gives it its checked radio, else the first
   const tabStopIndex = Math.max(
     starValues.findIndex((starValue) => starValue === rating),

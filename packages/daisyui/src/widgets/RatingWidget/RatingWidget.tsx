@@ -46,10 +46,11 @@ export default function RatingWidget<
   const size = classNameOption(options.size);
   const color = classNameOption(options.color) ?? 'orange';
 
-  const numStars = ratingStarCount<S>(schema, stars);
   const { min = 0 } = rangeSpec<S>(schema);
   const storesString = numericWidgetStoresString<S>(schema, value);
   const rating = toNumericValue(value);
+  const numStars = ratingStarCount<S>(schema, stars);
+  const starValues = Array.from({ length: numStars }, (_, index) => withoutFloatNoise(min + index));
 
   // Generate shape class
   const maskClass = shape === 'heart' ? 'mask-heart' : 'mask-star-2';
@@ -113,35 +114,30 @@ export default function RatingWidget<
   });
 
   // The checked star, where Tab into the group lands, as `RadioWidget` gives it its checked radio, else the first
-  const autofocusIndex = Math.max(
-    Array.from({ length: numStars }, (_, index) => min + index).findIndex((starValue) => starValue === rating),
-    0,
-  );
+  const autofocusValue = rating !== undefined && starValues.includes(rating) ? rating : starValues[0];
 
   return (
     <div className='form-control w-full'>
       <div className={`rating gap-1 ${sizeClass}`} {...groupProps}>
-        {Array.from({ length: numStars }, (_, index) => {
-          const starValue = min + index;
-          return (
-            <input
-              key={index}
-              type='radio'
-              name={htmlName || id}
-              value={starValue}
-              checked={rating === starValue}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              className={`mask ${maskClass} ${getColorClass(index)}`}
-              disabled={disabled || readonly}
-              required={required}
-              autoFocus={autofocus && index === autofocusIndex}
-              aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
-              {...optionAttributes}
-            />
-          );
-        })}
+        {starValues.map((starValue, index) => (
+          <input
+            // oxlint-disable-next-line react/no-array-index-key
+            key={index}
+            type='radio'
+            name={htmlName || id}
+            value={starValue}
+            checked={rating === starValue}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            className={`mask ${maskClass} ${getColorClass(index)}`}
+            disabled={disabled || readonly}
+            required={required}
+            autoFocus={autofocus && starValue === autofocusValue}
+            aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
+            {...optionAttributes}
+          />
+        ))}
       </div>
     </div>
   );
