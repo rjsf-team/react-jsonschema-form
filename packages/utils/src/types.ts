@@ -666,7 +666,7 @@ export type DeclaredTemplatesType<
 /** A custom entry of `TemplatesType`, a template or a named group of them, whose props only its lookup knows */
 export type CustomTemplateEntries = Record<
   string,
-  SlotComponent<never> | Record<string, SlotComponent<never>> | undefined
+  SlotComponent<never> | Record<string, SlotComponent<never> | undefined> | undefined
 >;
 
 /** The set of RJSF templates that can be overridden by themes or users */

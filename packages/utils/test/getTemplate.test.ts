@@ -391,7 +391,7 @@ describe('a custom entry in TemplatesType', () => {
     const fromGetTemplate = getTemplate('FunctionTemplate', customRegistry);
     const fromGetTemplates = getTemplates(customRegistry).FunctionTemplate;
     expectTypeOf(fromGetTemplate).toEqualTypeOf<
-      SlotComponent<never> | Record<string, SlotComponent<never>> | undefined
+      SlotComponent<never> | Record<string, SlotComponent<never> | undefined> | undefined
     >();
     if (typeof fromGetTemplate === 'function') {
       // @ts-expect-error a custom entry's props type is `never`

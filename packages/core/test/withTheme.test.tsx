@@ -199,6 +199,13 @@ describe('withTheme', () => {
       expectTypeOf<DeclaredTemplatesType>().toExtend<NonNullable<FormProps['templates']>>();
     });
 
+    it('takes a template or a button that may be undefined', () => {
+      expectTypeOf<{
+        FieldTemplate: DeclaredTemplatesType['FieldTemplate'] | undefined;
+        ButtonTemplates: { SubmitButton: DeclaredTemplatesType['ButtonTemplates']['SubmitButton'] | undefined };
+      }>().toExtend<NonNullable<FormProps['templates']>>();
+    });
+
     it('checks a declared template against its own props, beside the open custom entries', () => {
       const unrelatedTemplate = ({ unrelated }: { unrelated: string }) => (
         <div className='unrelated-template'>{unrelated}</div>
