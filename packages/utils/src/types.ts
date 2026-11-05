@@ -936,8 +936,6 @@ export interface FieldProps<
    * `propertyNames` lists them
    */
   propertyNamesEnum?: string[];
-  /** For a property `ObjectField` renders, whether the user renamed its key, which keeps its label the key */
-  wasPropertyKeyModified?: boolean;
   /** For an array item, its index in the array, which `ArrayField` hands the item's field */
   index?: number;
   /** For a `oneOf`/`anyOf` field, the option schemas `SchemaField` retrieved for its data, which it hands the
