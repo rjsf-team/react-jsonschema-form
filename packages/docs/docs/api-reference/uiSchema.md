@@ -196,7 +196,7 @@ Specify either the name of a field that is used to look up an implementation fro
 
 See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md#custom-field-components) for more information about how to use this property.
 
-A field named by `ui:field` isn't handed the select `SchemaField` infers for a boolean with labelled `oneOf`/`anyOf` options, so one that renders `BooleanField` sets `ui:widget: 'select'` itself to keep it.
+A custom field named by `ui:field` isn't handed the select `SchemaField` infers for a boolean with labelled `oneOf`/`anyOf` options, so one that renders `BooleanField` sets `ui:widget: 'select'` itself to keep it.
 
 A field's own `ui:field` comes first, then a field registered under the schema's [`$id`](../advanced-customization/custom-widgets-fields.md#custom-field-by-id).
 The field they name is applied once per data path: a `SchemaField` the named field renders for its own data, and the selected `anyOf`/`oneOf` option, render as though no field were named, the option's own `ui:field` or `$id` included.
