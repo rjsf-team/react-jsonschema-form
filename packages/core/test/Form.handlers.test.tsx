@@ -377,7 +377,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
         const SendWidget = ({ onChange, value }: WidgetProps) => (
           <>
-            <output>{value}</output>
+            <output>{typeof value === 'string' ? value : null}</output>
             <button type='button' onClick={() => ['value 1', 'value 2', 'boom'].forEach((v) => onChange(v))}>
               send
             </button>
