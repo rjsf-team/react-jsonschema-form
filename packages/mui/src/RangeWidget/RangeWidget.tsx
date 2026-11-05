@@ -138,12 +138,13 @@ export default function RangeWidget<
         hideLabel,
       )}
       <Slider
+        valueLabelDisplay='auto'
+        {...authorSlider}
+        // After the author's props, so they can't take the form's data, focus or disabled state
         disabled={disabled || readonly}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        valueLabelDisplay='auto'
-        {...authorSlider}
         {...sliderProps}
         {...rootProps}
         // After the author's props, where a `getAriaLabel: undefined` would leave the thumbs no name. A translation left

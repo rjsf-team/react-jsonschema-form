@@ -380,6 +380,31 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     expect(new FormData(elementOf(container, 'form', HTMLFormElement)).get('root')).toBe('5');
   });
 
+  test('reports its value to onFocus and onBlur, once each, as a user tabs through it', async () => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { r: { type: 'number', title: 'R', minimum: 0, maximum: 10 } } }}
+        uiSchema={{ r: { 'ui:widget': 'range' } }}
+        validator={validator}
+        initialFormData={{ r: 4 }}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />,
+    );
+
+    await user.tab();
+    expect(screen.getByRole('slider')).toHaveFocus();
+    // Zag focuses the thumb again a frame after it takes focus, which a Tab within that frame would race
+    await new Promise(requestAnimationFrame);
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Submit' })).toHaveFocus();
+
+    expect(onFocus.mock.calls).toEqual([['root_r', 4]]);
+    expect(onBlur.mock.calls).toEqual([['root_r', 4]]);
+  });
+
   test('draws a numeric string at its number', () => {
     render(
       <WrappedForm

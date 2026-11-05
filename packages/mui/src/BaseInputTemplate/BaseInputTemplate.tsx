@@ -28,7 +28,15 @@ import {
 } from '@rjsf/utils';
 
 import type { MuiSlotProps } from '../util.ts';
-import { describeByHelperText, getMuiProps, helperTextSlot, inputLabelId, resolveSlotProps } from '../util.ts';
+import {
+  describeByHelperText,
+  getMuiProps,
+  helperTextSlot,
+  inputLabelId,
+  omitFormOwnedProps,
+  resolveSlotProps,
+  withoutDisabled,
+} from '../util.ts';
 
 type HtmlInputAttributes = React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
 
@@ -149,7 +157,7 @@ export default function BaseInputTemplate<
   const htmlInputProps = (ownerState: TextFieldOwnerState) => {
     const callerHtmlInput = {
       ...resolveSlotProps<HtmlInputAttributes, TextFieldOwnerState>(slotProps?.htmlInput, ownerState),
-      ...resolveSlotProps(muiSlotProps?.htmlInput, ownerState),
+      ...resolveSlotProps(withoutDisabled(muiSlotProps?.htmlInput), ownerState),
     };
     return {
       title: 'pattern' in callerHtmlInput ? undefined : title,
@@ -183,7 +191,7 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
-  const inputProps = { ...InputProps, ...slotProps?.input, ...muiSlotProps?.input };
+  const inputProps = { ...InputProps, ...slotProps?.input, ...omitFormOwnedProps(muiSlotProps?.input ?? {}) };
   if (options.allowClearTextInputs && offersClearButton(inputValue, rest.type) && !readonly && !disabled) {
     const clearAdornment = (
       <InputAdornment position='end'>
@@ -209,7 +217,6 @@ export default function BaseInputTemplate<
         label={labelValue(label || undefined, hideLabel, undefined)}
         autoFocus={autofocus}
         required={templateMarksRequired<T, S, F>(props)}
-        disabled={disabled || readonly}
         slotProps={{
           ...slotProps,
           ...muiSlotProps,
@@ -225,10 +232,12 @@ export default function BaseInputTemplate<
         {...rest}
         value={inputValue}
         error={hasWidgetErrors<T, S, F>(props)}
+        {...textFieldOverrides}
+        // After the author's props, so they can't take the form's data, focus or disabled state
+        disabled={disabled || readonly}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        {...textFieldOverrides}
       />
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>

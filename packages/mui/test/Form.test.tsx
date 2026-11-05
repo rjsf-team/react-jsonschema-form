@@ -200,6 +200,34 @@ describe('the fallback UI', () => {
   });
 });
 
+describe('a description', () => {
+  const schema: RJSFSchema = {
+    title: 'Pick',
+    description: 'Field description',
+    oneOf: [{ const: 'a', title: 'A', description: 'Option description' }],
+  };
+
+  test('draws as a plain block, not a heading, beside a selected option description', () => {
+    const { container } = render(<Form schema={schema} initialFormData='a' validator={validator} />);
+
+    expect(screen.queryByRole('heading')).toBeNull();
+    expect(elementOf(container, '#root__description').tagName).toBe('DIV');
+    expect(elementOf(container, '#root__selectedOptionDescription').tagName).toBe('DIV');
+  });
+
+  test("draws as the element ui:options.mui's descTypography names", () => {
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ 'ui:options': { mui: { rjsfSlotProps: { descTypography: { component: 'p' } } } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(elementOf(container, '#root__description').tagName).toBe('P');
+  });
+});
+
 describe('a checkbox whose presentation gives its description to the template', () => {
   test('draws the description once, from the template', () => {
     const { container } = render(
@@ -410,6 +438,152 @@ describe("mui widgets are named by their label and carry the field's id on the e
     );
 
     expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+  });
+
+  const text: RJSFSchema = { type: 'string', title: 'X' };
+  const range: RJSFSchema = { type: 'number', title: 'X', minimum: 0, maximum: 10 };
+  const bool: RJSFSchema = { type: 'boolean', title: 'X' };
+  const several: RJSFSchema = { type: 'array', title: 'X', items: letters, uniqueItems: true };
+  /** Nests `props` in `ui:options.mui` at `path` */
+  const at =
+    (...path: string[]) =>
+    (props: object) =>
+      path.reduceRight<object>((inner, key) => ({ [key]: inner }), props);
+  const pickB = async () => {
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: 'b' }));
+  };
+  const press = (keys: string) => () => user.keyboard(keys);
+
+  type HandlerRow = [string, RJSFSchema, UiSchema, (props: object) => object, unknown, () => Promise<void>, unknown];
+  const checkboxInput = at('rjsfSlotProps', 'checkbox', 'slotProps', 'input');
+  const radioInput = at('rjsfSlotProps', 'radio', 'slotProps', 'input');
+  const sliderInput = at('rjsfSlotProps', 'slider', 'slotProps', 'input');
+  const right = press('{ArrowRight}');
+
+  /** Renders a field whose `ui:options.mui` gives author handlers at `mui`, acts on it, and checks the form still saw
+   * the change, the focus and the blur
+   *
+   * @returns - The author's handlers
+   */
+  async function expectFormHandlersRun(...[, schema, uiSchema, mui, initialFormData, act, expected]: HandlerRow) {
+    const author = { onChange: vi.fn(), onFocus: vi.fn(), onBlur: vi.fn() };
+    const onChange = vi.fn();
+    const onFocus = vi.fn<(id: string, value: unknown) => void>();
+    const onBlur = vi.fn<(id: string, value: unknown) => void>();
+    render(
+      <Form
+        schema={schema}
+        uiSchema={{ ...uiSchema, 'ui:options': { mui: mui(author) } }}
+        validator={validator}
+        initialFormData={initialFormData}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />,
+    );
+
+    await user.tab();
+    await act();
+    await user.tab();
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: expected }), 'root');
+    expect(onFocus.mock.calls.map(([id]) => id)).toContain('root');
+    expect(onBlur.mock.calls.map(([id]) => id)).toContain('root');
+    return author;
+  }
+
+  // MUI gives these handlers to the control in place of the form's
+  test.each<HandlerRow>([
+    ['a text field', text, {}, at(), undefined, press('a'), 'a'],
+    ["a text field's input slot", text, {}, at('slotProps', 'input'), undefined, press('a'), 'a'],
+    ['a select', letters, {}, at(), 'a', pickB, 'b'],
+    ["a select's select slot", letters, {}, at('rjsfSlotProps', 'select'), 'a', pickB, 'b'],
+    ['a checkbox', bool, {}, at('rjsfSlotProps', 'checkbox'), false, press(' '), true],
+    ['a slider', range, { 'ui:widget': 'range' }, at(), 4, right, 5],
+    ["a slider's target", range, { 'ui:widget': 'range' }, at('rjsfSlotProps', 'slider'), 4, right, 5],
+  ])("keeps %s's form data and focus reports over handlers ui:options.mui gives it", async (...row) => {
+    const author = await expectFormHandlersRun(...row);
+    expect(author.onChange).not.toHaveBeenCalled();
+  });
+
+  // MUI calls these handlers alongside the form's
+  test.each<HandlerRow>([
+    ["a text field's htmlInput slot", text, {}, at('slotProps', 'htmlInput'), undefined, press('a'), 'a'],
+    ["a select's htmlInput slot", letters, {}, at('rjsfSlotProps', 'htmlInput'), 'a', pickB, 'b'],
+    ["a checkbox's input slot", bool, {}, checkboxInput, false, press(' '), true],
+    ["a checkboxes option's input slot", several, { 'ui:widget': 'checkboxes' }, checkboxInput, [], press(' '), ['a']],
+    ["a radio's input slot", letters, { 'ui:widget': 'radio' }, radioInput, undefined, press(' '), 'a'],
+  ])("runs the handlers ui:options.mui gives %s beside the form's", async (...row) => {
+    const author = await expectFormHandlersRun(...row);
+    expect(author.onChange).toHaveBeenCalled();
+    expect(author.onFocus).toHaveBeenCalled();
+    expect(author.onBlur).toHaveBeenCalled();
+  });
+
+  test("runs the onFocus and onBlur ui:options.mui gives a slider's input slot beside the form's", async () => {
+    // An arrow key moves MUI's slider through its key handler, which fires no change on the input
+    const author = await expectFormHandlersRun('', range, { 'ui:widget': 'range' }, sliderInput, 4, right, 5);
+    expect(author.onFocus).toHaveBeenCalled();
+    expect(author.onBlur).toHaveBeenCalled();
+  });
+
+  test.each<[string, RJSFSchema, UiSchema, (props: object) => object, string]>([
+    ['a text field', text, {}, at(), 'textbox'],
+    ["a text field's input slot", text, {}, at('slotProps', 'input'), 'textbox'],
+    ["a text field's htmlInput slot", text, {}, at('slotProps', 'htmlInput'), 'textbox'],
+    ["a slider through ui:inputType: 'range'", range, { 'ui:inputType': 'range' }, at(), 'slider'],
+    ['a select', letters, {}, at(), 'combobox'],
+    ["a select's select slot", letters, {}, at('rjsfSlotProps', 'select'), 'combobox'],
+    ["a select's htmlInput slot", letters, {}, at('rjsfSlotProps', 'htmlInput'), 'combobox'],
+    ['a checkbox', bool, {}, at('rjsfSlotProps', 'checkbox'), 'checkbox'],
+    ['a checkbox through its label', bool, {}, at(), 'checkbox'],
+    ["a checkbox's label slot", bool, {}, at('rjsfSlotProps', 'formControlLabel'), 'checkbox'],
+    ["a checkbox's input slot", bool, {}, at('rjsfSlotProps', 'checkbox', 'slotProps', 'input'), 'checkbox'],
+    [
+      "a checkboxes option's label slot",
+      several,
+      { 'ui:widget': 'checkboxes' },
+      at('rjsfSlotProps', 'formControlLabel'),
+      'checkbox',
+    ],
+    [
+      "a checkboxes option's input slot",
+      several,
+      { 'ui:widget': 'checkboxes' },
+      at('rjsfSlotProps', 'checkbox', 'slotProps', 'input'),
+      'checkbox',
+    ],
+    ["a radio's label slot", letters, { 'ui:widget': 'radio' }, at('rjsfSlotProps', 'formControlLabel'), 'radio'],
+    [
+      "a radio's input slot",
+      letters,
+      { 'ui:widget': 'radio' },
+      at('rjsfSlotProps', 'radio', 'slotProps', 'input'),
+      'radio',
+    ],
+    ['a slider', range, { 'ui:widget': 'range' }, at(), 'slider'],
+    ["a slider's target", range, { 'ui:widget': 'range' }, at('rjsfSlotProps', 'slider'), 'slider'],
+    [
+      "a slider's input slot",
+      range,
+      { 'ui:widget': 'range' },
+      at('rjsfSlotProps', 'slider', 'slotProps', 'input'),
+      'slider',
+    ],
+  ])('keeps %s read-only over a disabled: false in ui:options.mui', (_, schema, uiSchema, mui, role) => {
+    render(
+      <Form
+        schema={schema}
+        uiSchema={{ ...uiSchema, 'ui:readonly': true, 'ui:options': { mui: mui({ disabled: false }) } }}
+        validator={validator}
+      />,
+    );
+
+    for (const control of screen.getAllByRole(role)) {
+      // MUI's select is a `<div>` combobox, which marks itself disabled through ARIA
+      expect(control.matches(':disabled') || control.getAttribute('aria-disabled') === 'true').toBe(true);
+    }
   });
 
   // A required field asks for one checkbox, not each, while a radio is required, as core's are

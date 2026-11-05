@@ -40,6 +40,8 @@ export default function DescriptionField<
       <Typography
         id={id}
         variant='subtitle2'
+        // `subtitle2` maps to an `<h6>`, which would list every description among the form's headings
+        component='div'
         {...descTypography}
         sx={computeSxProps<TypographyProps>({ mt: 0.625 }, descTypography)}
       >

@@ -30,7 +30,15 @@ import {
   templateMarksRequired,
 } from '@rjsf/utils';
 
-import { describeByHelperText, getMuiProps, helperTextSlot, inputLabelId, withSlotProps } from '../util.ts';
+import {
+  describeByHelperText,
+  getMuiProps,
+  helperTextSlot,
+  inputLabelId,
+  omitFormOwnedProps,
+  withoutDisabled,
+  withSlotProps,
+} from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the SelectWidget. */
 export interface SelectWidgetMuiProps extends GenericObjectType {
@@ -143,16 +151,16 @@ export default function SelectWidget<
         label={ownLabel}
         value={selectedValue}
         required={templateMarksRequired<T, S, F>(props)}
-        disabled={disabled || readonly}
         autoFocus={autofocus}
         autoComplete={autocomplete}
         placeholder={placeholder}
         error={hasWidgetErrors<T, S, F>(props)}
+        {...textFieldOverrides}
+        select // Apply this and the following props after the potential overrides defined in textFieldProps
+        disabled={disabled || readonly}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        {...textFieldOverrides}
-        select // Apply this and the following props after the potential overrides defined in textFieldProps
         slotProps={{
           ...muiSlotProps,
           inputLabel: {
@@ -166,13 +174,13 @@ export default function SelectWidget<
             ...((ariaProps['aria-labelledby'] || textFieldLabel) && {
               labelId: ariaProps['aria-labelledby'] ?? labelId,
             }),
-            ...muiSlotProps?.select,
+            ...omitFormOwnedProps(muiSlotProps?.select ?? {}),
             multiple,
           },
           // The `TextField`'s `required` is its marker, which the outline's notch has to fit, so the combobox takes its own
           htmlInput: withSlotProps(
             { ...ariaProps, required: textFieldOverrides.required ?? required },
-            muiSlotProps?.htmlInput,
+            withoutDisabled(muiSlotProps?.htmlInput),
           ),
           formHelperText: helperTextSlot(textFieldId, muiSlotProps?.formHelperText),
         }}
