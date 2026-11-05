@@ -466,9 +466,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RatingWidget` crashing the form for a `stars` option that isn't a number, which now shows the default 5 stars, and for a schema `maximum` that isn't a number, which now uses `stars` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Fix `RatingWidget` crashing the form for a `stars` option or schema `maximum` that isn't a whole number, which now rounds down, and draw one star for a nonzero `maximum` below 1 ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `FileWidget` to leave out of `accept` whatever in the `accept` option isn't a string or is blank, where it stringified anything truthy, so `true` gave `accept="true"` and `' '` gave `accept=" "` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
-- Fix an `additionalProperties` key renamed onto a declared property reading the key as its label until another key was renamed or the form remounted; it now reads that property's title straight away ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
-- Fix renaming an `additionalProperties` key remounting the field of the key renamed before it, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
-- Fix tabbing out of an `additionalProperties` key input after renaming it losing keyboard focus when the rename remounted the field, as one onto a declared property's name does; it moves to that field ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/daisyui
 
@@ -599,7 +596,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `RatingWidget` to use the default size and color for a `size` or `color` option that isn't a string or is blank, and to trim the space around one ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `RatingWidget` to draw the color gradient only for a `colorGradient` of `true`, where any truthy value, such as `'false'`, drew it ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `ToggleWidget` to add no size class for a `size` option that isn't a string or is blank, where a number gave `toggle-5` and `''` gave `toggle-`, and to trim the space around one, where `' lg'` gave `toggle- lg` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
-- Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/fluentui-rc
 
@@ -738,7 +734,6 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode` or `accept` a widget passes it as a prop, and a `number` field a widget passes an `inputMode` or `onChangeOverride` getting a native number input that blocked a decimal rather than the text input the other themes render ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Change `FileWidget` to leave out of `accept` whatever in the `accept` option isn't a string or is blank, where it stringified anything truthy, so `true` gave `accept="true"` and `' '` gave `accept=" "` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
-- Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 
 ## @rjsf/mui
 
