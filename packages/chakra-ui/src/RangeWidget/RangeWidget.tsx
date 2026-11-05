@@ -1,4 +1,3 @@
-import type { FocusEvent } from 'react';
 import { useEffect, useRef } from 'react';
 import type { SliderValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
@@ -96,8 +95,6 @@ export default function RangeWidget<
     }
     changedRef.current = false;
   };
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
   const spec = rangeSpec<S>(schema);
   const chakraProps = getChakra(options);
@@ -133,8 +130,9 @@ export default function RangeWidget<
         value={[numericValue ?? spec.min ?? 0]}
         onValueChange={handleChange}
         onValueChangeEnd={handleChangeEnd}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
+        // The thumb a user focuses is a `<div>`, which has no value to read
+        onBlur={() => onBlur(id, value)}
+        onFocus={() => onFocus(id, value)}
         thumbProps={{
           ref: thumbRef,
           ...controlAttributes,

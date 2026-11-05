@@ -87,5 +87,21 @@ export function clearButtonTests(Form: ComponentType<FormProps>, clearButtonName
       );
       expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
     });
+
+    test.each<[string, UiSchema]>([
+      ['ui:options', { 'ui:inputType': 'range', 'ui:allowClearTextInputs': true }],
+      ['ui:globalOptions', { 'ui:globalOptions': { allowClearTextInputs: true }, 'ui:inputType': 'range' }],
+    ])('offers no clear button for a range input, with allowClearTextInputs from %s', (_, rangeUiSchema) => {
+      render(
+        <Form
+          schema={{ type: 'number', title: 'Amount', minimum: 0, maximum: 10 }}
+          uiSchema={rangeUiSchema}
+          validator={validator}
+          initialFormData={4}
+        />,
+      );
+      expect(screen.getByRole('slider')).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
+    });
   });
 }

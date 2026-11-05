@@ -16971,12 +16971,12 @@ exports[`single fields > Cyclic schema 1`] = `
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
           />
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
         >
           A simple form example.
-        </h6>
+        </div>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         >
@@ -17005,12 +17005,12 @@ exports[`single fields > Cyclic schema 1`] = `
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
                   />
                 </div>
-                <h6
+                <div
                   class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                   id="root_child__description"
                 >
                   A simple form example.
-                </h6>
+                </div>
                 <div
                   class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
                 >
@@ -17675,12 +17675,12 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
       >
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-1"
           id="root__description"
         >
           This is a checkbox description
-        </h6>
+        </div>
         <label
           class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-2"
         >
@@ -18350,12 +18350,12 @@ exports[`single fields > checkbox field with label and description 1`] = `
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
       >
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-1"
           id="root__description"
         >
           test description
-        </h6>
+        </div>
         <label
           class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-2"
         >
@@ -18696,7 +18696,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
       >
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-1"
           id="root__description"
         >
@@ -18709,7 +18709,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
               description
             </strong>
           </span>
-        </h6>
+        </div>
         <label
           class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-2"
         >
@@ -19717,12 +19717,12 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
         <span
           class="MuiTypography-root MuiTypography-caption emotion-18"
         >
-          <h6
+          <div
             class="MuiTypography-root MuiTypography-subtitle2 emotion-19"
             id="root__description"
           >
             A group of checkboxes
-          </h6>
+          </div>
         </span>
         <div
           class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-20"
@@ -20200,12 +20200,12 @@ exports[`single fields > checkboxes widget with required field 1`] = `
         <span
           class="MuiTypography-root MuiTypography-caption emotion-18"
         >
-          <h6
+          <div
             class="MuiTypography-root MuiTypography-subtitle2 emotion-19"
             id="root__description"
           >
             At least one option must be selected
-          </h6>
+          </div>
         </span>
       </div>
     </div>
@@ -20738,12 +20738,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-10"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-11"
                     id="root_my-field__description"
                   >
                     some description
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -21280,12 +21280,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-10"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-11"
                     id="root_my-field__description"
                   >
                     some other description
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -21822,7 +21822,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-10"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-11"
                     id="root_my-field__description"
                   >
@@ -21833,7 +21833,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                       </strong>
                        description
                     </span>
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -22370,12 +22370,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-10"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-11"
                     id="root_my-field__description"
                   >
                     some other description
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -37421,12 +37421,12 @@ exports[`single fields > radio widget with description in schema and FieldTempla
         <span
           class="MuiTypography-root MuiTypography-caption emotion-17"
         >
-          <h6
+          <div
             class="MuiTypography-root MuiTypography-subtitle2 emotion-18"
             id="root__description"
           >
             This is a radio description
-          </h6>
+          </div>
         </span>
       </div>
     </div>
@@ -46075,12 +46075,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         <span
           class="MuiTypography-root MuiTypography-caption emotion-9"
         >
-          <h6
+          <div
             class="MuiTypography-root MuiTypography-subtitle2 emotion-10"
             id="root__description"
           >
             This is a select description
-          </h6>
+          </div>
         </span>
       </div>
     </div>
@@ -46602,12 +46602,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             </fieldset>
           </div>
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-8"
           id="root__selectedOptionDescription"
         >
           Foo description
-        </h6>
+        </div>
       </div>
     </div>
     <div
@@ -47647,21 +47647,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             </fieldset>
           </div>
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-8"
           id="root__selectedOptionDescription"
         >
           Foo description
-        </h6>
+        </div>
         <span
           class="MuiTypography-root MuiTypography-caption emotion-9"
         >
-          <h6
+          <div
             class="MuiTypography-root MuiTypography-subtitle2 emotion-8"
             id="root__description"
           >
             Pick a plan
-          </h6>
+          </div>
         </span>
       </div>
     </div>
@@ -48587,7 +48587,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         <span
           class="MuiTypography-root MuiTypography-caption emotion-7"
         >
-          <h6
+          <div
             class="MuiTypography-root MuiTypography-subtitle2 emotion-8"
             id="root__description"
           >
@@ -48601,7 +48601,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
                 markdown
               </strong>
             </span>
-          </h6>
+          </div>
         </span>
         <div
           class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
@@ -49117,12 +49117,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         <span
           class="MuiTypography-root MuiTypography-caption emotion-7"
         >
-          <h6
+          <div
             class="MuiTypography-root MuiTypography-subtitle2 emotion-8"
             id="root__description"
           >
             A field with markdown help text
-          </h6>
+          </div>
         </span>
         <div
           class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
@@ -49638,12 +49638,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         <span
           class="MuiTypography-root MuiTypography-caption emotion-7"
         >
-          <h6
+          <div
             class="MuiTypography-root MuiTypography-subtitle2 emotion-8"
             id="root__description"
           >
             A field with raw help text
-          </h6>
+          </div>
         </span>
         <div
           class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"
@@ -51690,12 +51690,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         <span
           class="MuiTypography-root MuiTypography-caption emotion-7"
         >
-          <h6
+          <div
             class="MuiTypography-root MuiTypography-subtitle2 emotion-8"
             id="root__description"
           >
             A required field with markdown help
-          </h6>
+          </div>
         </span>
         <div
           class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-9"

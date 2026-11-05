@@ -59,6 +59,10 @@ describe('offersClearButton()', () => {
     expect(offersClearButton(value, type)).toBe(false);
   });
 
+  it.each([[5], ['5'], ['abc']])('a range input given %j offers none', (value) => {
+    expect(offersClearButton(value, 'range')).toBe(false);
+  });
+
   it.each([['text'], ['constructor'], [undefined]])(
     'a %s input offers it for anything but an empty string or 0',
     (type) => {

@@ -100,7 +100,6 @@ export default function CheckboxesWidget<
                 name={htmlName || id}
                 checked={checked}
                 value={domValues[index]}
-                disabled={disabled || itemDisabled || readonly}
                 autoFocus={checkboxProps.autoFocus ?? index === autofocusIndex}
                 onChange={handleChange(index)}
                 onBlur={blurHandlers[index]}
@@ -111,6 +110,8 @@ export default function CheckboxesWidget<
             return (
               <FormControlLabel
                 {...muiSlotProps?.formControlLabel}
+                // `FormControlLabel` gives its own `disabled` to the control in place of the control's, so the form's goes here
+                disabled={disabled || itemDisabled || readonly}
                 control={checkbox}
                 // oxlint-disable-next-line react/no-array-index-key
                 key={index}

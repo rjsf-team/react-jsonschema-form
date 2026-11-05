@@ -8770,12 +8770,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                   <span
                     class="MuiTypography-root MuiTypography-caption emotion-21"
                   >
-                    <h6
+                    <div
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-22"
                       id="root_foo__description"
                     >
                       A description
-                    </h6>
+                    </div>
                   </span>
                 </div>
               </div>
@@ -10782,12 +10782,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   <span
                     class="MuiTypography-root MuiTypography-caption emotion-19"
                   >
-                    <h6
+                    <div
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-20"
                       id="root_foo__description"
                     >
                       item description
-                    </h6>
+                    </div>
                   </span>
                 </div>
               </div>
@@ -19814,12 +19814,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
           />
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
         >
           a test description
-        </h6>
+        </div>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         >
@@ -20487,12 +20487,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
           />
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
         >
           a test description
-        </h6>
+        </div>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         >
@@ -20546,12 +20546,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-14"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_a__description"
                   >
                     A description
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -20609,12 +20609,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-14"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_b__description"
                   >
                     B description
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -21517,12 +21517,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
           />
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
         >
           a test description
-        </h6>
+        </div>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         >
@@ -22568,12 +22568,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
           />
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
         >
           a fancier description
-        </h6>
+        </div>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         >
@@ -23241,12 +23241,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
           />
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
         >
           a fancier description
-        </h6>
+        </div>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         >
@@ -23300,12 +23300,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-14"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_a__description"
                   >
                     a fancier item A description
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -23363,12 +23363,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-14"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_b__description"
                   >
                     a fancier item B description
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -24271,12 +24271,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
           />
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
         >
           a fancier description
-        </h6>
+        </div>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         >
@@ -24944,12 +24944,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
           />
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
         >
           a fancier description
-        </h6>
+        </div>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         >
@@ -25003,12 +25003,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-14"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_a__description"
                   >
                     a fancier item A description
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -25066,12 +25066,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-14"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
                     id="root_b__description"
                   >
                     a fancier item B description
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -25974,12 +25974,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
           />
         </div>
-        <h6
+        <div
           class="MuiTypography-root MuiTypography-subtitle2 emotion-4"
           id="root__description"
         >
           a fancier description
-        </h6>
+        </div>
         <div
           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         >
