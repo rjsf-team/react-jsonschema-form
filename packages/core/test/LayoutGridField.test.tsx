@@ -1083,7 +1083,7 @@ describe('LayoutGridField', () => {
     });
     test('returns no schema or options when name is empty string', () => {
       expect(getSchemaDetailsForField(registry, '', {}, {}, FIELD_PATH)).toEqual(NO_SCHEMA_OR_OPTIONS);
-      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
+      expect(retrieveSchemaSpy).not.toHaveBeenCalled();
     });
     test('returns no schema or options when schema is empty', () => {
       expect(getSchemaDetailsForField(registry, 'name', {}, {}, FIELD_PATH)).toEqual(NO_SCHEMA_OR_OPTIONS);
@@ -1113,6 +1113,12 @@ describe('LayoutGridField', () => {
         fieldPath,
       });
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
+    });
+    test('returns no schema, rather than the parent schema, when the path is empty', () => {
+      expect(getSchemaDetailsForField(sampleSchemaRegistry, '', SAMPLE_SCHEMA, {}, FIELD_PATH)).toEqual(
+        NO_SCHEMA_OR_OPTIONS,
+      );
+      expect(retrieveSchemaSpy).not.toHaveBeenCalled();
     });
     test('returns no schema or options when leaf field is not found in the schema', () => {
       const fieldPath = toFieldPath('ignored', FIELD_PATH);

@@ -371,9 +371,10 @@ export function getSchemaDetailsForField<
   let fieldPath = initialFieldPath;
   const parts: string[] = dottedPath.split('.');
   const leafPath: string | undefined = parts.pop(); // pop off the last element in the list as the leaf
-  let schema: S | undefined = schemaUtils.retrieveSchema(rawSchema, formData); // always returns an object
+  // An empty path names no field, so it finds no schema rather than the parent's, which a cell would render inside itself
+  let schema: S | undefined = dottedPath ? schemaUtils.retrieveSchema(rawSchema, formData) : undefined;
   let innerData = formData;
-  let isReadonly: boolean | undefined = schema.readOnly;
+  let isReadonly: boolean | undefined = schema?.readOnly;
 
   // For all the remaining path parts
   parts.forEach((part) => {
@@ -626,13 +627,10 @@ function columnFieldId<
 >(children: LayoutGridSchemaType[], props: LayoutGridFieldProps<T, S, F>) {
   const { registry, schema, formData, fieldPath, id } = props;
   for (const child of children) {
-    const name = cellFieldName(child);
-    if (name) {
-      // A name the schema doesn't hold, such as a `render` cell's, renders no field
-      const details = getSchemaDetailsForField<T, S, F>(registry, name, schema, formData, fieldPath);
-      if (details.schema) {
-        return fieldPathToId(details.fieldPath, registry.globalFormOptions);
-      }
+    // A name the schema doesn't hold, such as a `render` cell's, renders no field
+    const details = getSchemaDetailsForField<T, S, F>(registry, cellFieldName(child), schema, formData, fieldPath);
+    if (details.schema) {
+      return fieldPathToId(details.fieldPath, registry.globalFormOptions);
     }
   }
   return id;
@@ -865,8 +863,7 @@ function LayoutGridFieldComponent<
     return uiComponentProps.rendered;
   }
 
-  // A cell naming no field would otherwise get its parent's schema and render the whole parent again
-  if (schema && name) {
+  if (schema) {
     if (namesIgnoredField) {
       logOnce(
         `ui:field for cell '${name}' in ${fieldLabelForLog(id, parentFieldPath)} is ignored, since a cell with ` +
