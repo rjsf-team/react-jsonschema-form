@@ -165,7 +165,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -495,7 +495,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-95:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-95:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -899,7 +899,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-492:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-492 :where(svg) {
@@ -2064,7 +2064,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       data-scope="select"
                                       dir="ltr"
                                       id="select:root_person_address_state:positioner"
-                                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
                                     >
                                       <div
                                         aria-labelledby="root_person_address_state__label"
@@ -4572,7 +4572,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="select"
                                 dir="ltr"
                                 id="select:root_employment_location_state:positioner"
-                                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
                               >
                                 <div
                                   aria-labelledby="root_employment_location_state__label"
@@ -6463,7 +6463,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -6793,7 +6793,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-95:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-95:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -7197,7 +7197,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-498:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-498 :where(svg) {
@@ -8362,7 +8362,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       data-scope="select"
                                       dir="ltr"
                                       id="select:root_person_address_state:positioner"
-                                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
                                     >
                                       <div
                                         aria-labelledby="root_person_address_state__label"
@@ -10916,7 +10916,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="select"
                                 dir="ltr"
                                 id="select:root_employment_location_state:positioner"
-                                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
                               >
                                 <div
                                   aria-labelledby="root_employment_location_state__label"
@@ -12807,7 +12807,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -13137,7 +13137,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-95:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-95:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -13507,7 +13507,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-295:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-295:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -13586,7 +13586,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-297:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-297 :where(svg) {
@@ -14751,7 +14751,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       data-scope="select"
                                       dir="ltr"
                                       id="select:root_person_address_state:positioner"
-                                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
                                     >
                                       <div
                                         aria-labelledby="root_person_address_state__label"
@@ -16951,7 +16951,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -17281,7 +17281,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-95:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-95:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -17685,7 +17685,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
 
   .emotion-492:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-492 :where(svg) {
@@ -18850,7 +18850,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       data-scope="select"
                                       dir="ltr"
                                       id="select:root_person_address_state:positioner"
-                                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                                      style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
                                     >
                                       <div
                                         aria-labelledby="root_person_address_state__label"
@@ -21358,7 +21358,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 data-scope="select"
                                 dir="ltr"
                                 id="select:root_employment_location_state:positioner"
-                                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                                style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
                               >
                                 <div
                                   aria-labelledby="root_employment_location_state__label"
@@ -23245,7 +23245,7 @@ exports[`Three even column grid > renders person and address in three columns, n
 
   .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -23573,7 +23573,7 @@ exports[`Three even column grid > renders person and address in three columns, n
 
   .emotion-94:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-94:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -23862,7 +23862,7 @@ exports[`Three even column grid > renders person and address in three columns, n
 
   .emotion-271:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-271 :where(svg) {
@@ -25006,7 +25006,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           data-scope="select"
                           dir="ltr"
                           id="select:root_person_address_state:positioner"
-                          style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                          style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
                         >
                           <div
                             aria-labelledby="root_person_address_state__label"
@@ -26893,7 +26893,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
 
   .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -27213,7 +27213,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
 
   .emotion-94:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-94:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
@@ -27502,7 +27502,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
 
   .emotion-271:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-271 :where(svg) {
@@ -28646,7 +28646,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           data-scope="select"
                           dir="ltr"
                           id="select:root_person_address_state:positioner"
-                          style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
+                          style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0);"
                         >
                           <div
                             aria-labelledby="root_person_address_state__label"

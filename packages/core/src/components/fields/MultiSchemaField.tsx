@@ -241,6 +241,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         formData,
         newFormData,
         (sent) => {
+          // oxlint-disable-next-line react/immutability -- `sentData` is local to this handler, not render state
           sentData = sent;
           onChange(sent, fieldPath, undefined, fieldId);
         },

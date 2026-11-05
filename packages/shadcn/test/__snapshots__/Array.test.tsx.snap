@@ -631,7 +631,7 @@ exports[`array fields > has errors 1`] = `
     >
       <svg
         aria-hidden="true"
-        class="lucide lucide-circle-alert lucide-alert-circle h-4 w-4"
+        class="lucide lucide-circle-exclamation-point lucide-alert-circle lucide-circle-alert h-4 w-4"
         fill="none"
         height="24"
         stroke="currentColor"

@@ -37,8 +37,14 @@ export default function stubViewport() {
       .mockImplementation((condition) => condition === 'selector(:popover-open)');
     const showPopover = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'showPopover');
     Object.defineProperty(HTMLElement.prototype, 'showPopover', { value: vi.fn(), configurable: true });
+    // Shown as the stubbed `showPopover()` can't show it: jsdom's own stylesheet hides a popover not `:popover-open`,
+    // which it never matches, and nothing inside an element it doesn't display can take the focus
+    const shown = document.head.appendChild(document.createElement('style'));
+    // Important, as jsdom ranks its own rule's more specific selector above it, where a browser ranks any page rule higher
+    shown.textContent = '[popover] { display: block !important; }';
     measureClientRectsFrom(0, 0);
     return () => {
+      shown.remove();
       width.mockRestore();
       height.mockRestore();
       supports.mockRestore();

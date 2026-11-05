@@ -26,6 +26,10 @@ import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
 
+// zag refocuses a focused slider thumb a frame later, which throws once the cleanup has unmounted it, and the throw
+// drops the frame callbacks queued behind it in a later test
+afterEach(() => new Promise(requestAnimationFrame));
+
 /** Checks that every id a `for`, an `aria-labelledby` or an `aria-describedby` in `container` names belongs to an element
  * there
  */
@@ -558,6 +562,8 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     }
     render(<Toggled />);
     expect(screen.getByRole('slider')).toHaveFocus();
+    // Past the frame in which zag refocuses the autofocused thumb, sooner than any click could come
+    await new Promise(requestAnimationFrame);
 
     const toggle = screen.getByRole('button', { name: 'Toggle' });
     await user.click(toggle);

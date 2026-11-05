@@ -56,6 +56,7 @@ const sliderExcludedKeyRecord: Record<SliderExcludedKey, true> = {
   leftSectionPointerEvents: true,
   leftSectionProps: true,
   leftSectionWidth: true,
+  loaderProps: true,
   loading: true,
   loadingPosition: true,
   multiline: true,

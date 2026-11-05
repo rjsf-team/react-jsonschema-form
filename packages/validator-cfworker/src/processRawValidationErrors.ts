@@ -34,7 +34,8 @@ function instanceLocationToProperty(instanceLocation: string): string {
   if (!instanceLocation || instanceLocation === '#') {
     return '';
   }
-  return instanceLocation.replace(/^#?/, '').replace(/\//g, '.');
+  // The engine percent-encodes each key as a URI fragment does (`a#b` as `a%23b`), where the form keys its data plainly
+  return decodeURIComponent(instanceLocation.replace(/^#?/, '').replace(/\//g, '.'));
 }
 
 /** Extracts the missing property name from a cfworker `required` error.

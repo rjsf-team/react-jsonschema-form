@@ -377,7 +377,7 @@ describe('DateTimeWidget', () => {
       return heightSpy;
     }
 
-    // Taken to be hidden, as jsdom's own stylesheet hides a popover that the stubbed `showPopover()` doesn't show
+    // Found hidden too, as it is while its trigger is out of sight
     const popup = () => screen.getByRole('dialog', { hidden: true });
 
     test('below its trigger, inside the right edge of the viewport by its own width', async () => {
@@ -605,7 +605,7 @@ describe('DateTimeWidget', () => {
     test('giving the focus to its trigger when it hides with nothing holding it, as Safari leaves it after a press on a day', async () => {
       const trigger = renderAt({ top: 30, left: 10 });
       await user.click(trigger);
-      const day = within(popup()).getByRole('button', { name: /12th, 2016/, hidden: true });
+      const day = within(popup()).getByRole('button', { name: /12th, 2016/ });
       await user.click(day);
       // Safari focuses no button it presses, where user-event focuses the day
       act(() => day.blur());
@@ -626,7 +626,7 @@ describe('DateTimeWidget', () => {
       const onBlur = vi.fn();
       const trigger = renderAt({ top: 30, left: 10 }, undefined, { onChange, onBlur });
       await user.click(trigger);
-      await user.click(within(popup()).getByRole('button', { name: /12th, 2016/, hidden: true }));
+      await user.click(within(popup()).getByRole('button', { name: /12th, 2016/ }));
       act(() => intersectionObserver.leaveNode(trigger));
 
       await leave();
@@ -639,7 +639,16 @@ describe('DateTimeWidget', () => {
 
     // Tab past Done leaves it showing, until scrolling to the field the focus moved to clips the trigger
     test.each([
-      ['', () => undefined, () => user.tab()],
+      [
+        '',
+        () => undefined,
+        // Past the popup's time input and Done
+        async () => {
+          await user.tab();
+          await user.tab();
+          await user.tab();
+        },
+      ],
       [
         // Whose own `activeElement` is null once the focus is outside it. user-event's Tab doesn't step out of one
         ' of a form rendered in a shadow root',
@@ -660,7 +669,7 @@ describe('DateTimeWidget', () => {
         const next = document.body.appendChild(document.createElement('input'));
         onTestFinished(() => next.remove());
         await user.click(trigger);
-        await user.click(within(into ?? document.body).getByRole('button', { name: /12th, 2016/, hidden: true }));
+        await user.click(within(into ?? document.body).getByRole('button', { name: /12th, 2016/ }));
         await leave(next);
         expect(next).toHaveFocus();
         expect(trigger).toHaveAttribute('aria-expanded', 'true');
@@ -683,7 +692,7 @@ describe('DateTimeWidget', () => {
       const onChange = vi.fn();
       const trigger = renderAt({ top: 30, left: 10 }, undefined, { onChange });
       await user.click(trigger);
-      await user.click(within(popup()).getByRole('button', { name: /12th, 2016/, hidden: true }));
+      await user.click(within(popup()).getByRole('button', { name: /12th, 2016/ }));
       act(() => intersectionObserver.leaveNode(trigger));
       act(() => intersectionObserver.enterNode(trigger));
 
@@ -701,9 +710,7 @@ describe('DateTimeWidget', () => {
       await user.click(trigger);
       await user.keyboard('{ArrowDown}');
       // Where the document's `activeElement` is the shadow host, which the popup doesn't contain
-      expect(within(container).getByRole('dialog', { hidden: true })).toContainElement(
-        shadowRoot.activeElement as HTMLElement,
-      );
+      expect(within(container).getByRole('dialog')).toContainElement(shadowRoot.activeElement as HTMLElement);
 
       act(() => intersectionObserver.leaveNode(trigger));
 

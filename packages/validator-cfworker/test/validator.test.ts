@@ -61,6 +61,19 @@ describe('CFWorkerValidator', () => {
     expect(result.errorSchema.extra?.__errors).toHaveLength(1);
   });
 
+  it('keys an error by the property name the data holds, not as the engine percent-encodes it', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { 'a#b': { type: 'number' }, 'c d': { type: 'number' }, 'é%': { type: 'number' } },
+    };
+    const result = validator.validateFormData({ 'a#b': 's', 'c d': 's', 'é%': 's' }, schema);
+    expect(result.errors.map((error) => error.property)).toEqual(expect.arrayContaining(['.a#b', '.c d', '.é%']));
+    expect(result.errorSchema['a#b']?.__errors).toHaveLength(1);
+    expect(result.errorSchema['c d']?.__errors).toHaveLength(1);
+    expect(result.errorSchema['é%']?.__errors).toHaveLength(1);
+  });
+
   it('honors the draft and shortCircuit options', () => {
     const validator = customizeValidator({ draft: '2019-09', shortCircuit: true });
     expect(validator.options).toEqual(expect.objectContaining({ draft: '2019-09', shortCircuit: true }));

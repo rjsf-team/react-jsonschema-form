@@ -1477,7 +1477,6 @@ describe('Form change handler under a parent', () => {
     function BurstWidget({ onChange, value }: WidgetProps) {
       const [, setCopy] = useState(value);
       useLayoutEffect(() => {
-        // oxlint-disable-next-line react/set-state-in-effect -- the commit-phase update is what the burst must survive
         setCopy(value);
       }, [value]);
       return (

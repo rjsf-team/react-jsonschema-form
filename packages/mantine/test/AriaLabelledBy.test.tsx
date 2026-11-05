@@ -383,6 +383,7 @@ describe('aria-labelledby', () => {
       leftSectionPointerEvents: 'none',
       leftSectionProps: {},
       leftSectionWidth: 10,
+      loaderProps: {},
       loadingPosition: 'left',
       rightSection: 'Right',
       rightSectionPointerEvents: 'none',

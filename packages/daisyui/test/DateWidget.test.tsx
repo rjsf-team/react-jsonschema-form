@@ -705,8 +705,7 @@ describe('DateWidget', () => {
         .spyOn(trigger, 'getBoundingClientRect')
         .mockImplementation(() => rectAt(bottom - 20, 10, 90, 20));
       await user.click(trigger);
-      // Taken to be hidden, as jsdom's own stylesheet hides a popover that the stubbed `showPopover()` doesn't show
-      const popup = screen.getByRole('dialog', { hidden: true });
+      const popup = screen.getByRole('dialog');
       expect(popup).toHaveStyle({ top: '55px' });
       measure.mockClear();
 

@@ -676,6 +676,7 @@ const groupExcludedKeyRecord: Record<GroupExcludedKey, true> = {
   leftSectionPointerEvents: true,
   leftSectionProps: true,
   leftSectionWidth: true,
+  loaderProps: true,
   loading: true,
   loadingPosition: true,
   multiline: true,
