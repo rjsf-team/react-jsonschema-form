@@ -3883,7 +3883,7 @@ const defaults = getDefaultFormState(context, { schema, formData, rootSchema });
 
 ### findFieldInSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Finds the field at the given path within the root or a nested `schema` node, following `oneOf` / `anyOf` using `formData` where needed. If nothing matches the path, `{ field: undefined, isRequired: undefined }` is returned. When a leaf is found, the result includes whether that leaf is required under its parent.
+Finds the field at the given path within the root or a nested `schema` node, following `oneOf` / `anyOf` using `formData` where needed. At each key of the path, a property declared beside a `oneOf` / `anyOf` is found before its options are, and a key no property declares is found through a `patternProperties` or `additionalProperties` subschema. An `additionalProperties: true` describes no field, so it finds nothing. If nothing matches the path, `{ field: undefined, isRequired: undefined }` is returned. When a leaf is found, the result includes whether that leaf is required under its parent.
 
 #### Parameters
 
@@ -3901,6 +3901,7 @@ Finds the field at the given path within the root or a nested `schema` node, fol
 
 Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or `properties[selectorField].const` that matches the `formData[selectorField]` value.
 For the purposes of this function, `selectorField` is either `schema.discriminator.propertyName` or `fallbackField`.
+Options with no discriminator have a selector to match only where every one of them holds a `default` or `const` in `fallbackField`, since a value only some hold can't tell them apart. Otherwise the option is the one [`getClosestMatchingOption()`](#getclosestmatchingoptiont--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) picks for the data, as `MultiSchemaField` picks it. A tie goes to the first option, since the one a user picked isn't visible from the schema.
 
 #### Parameters
 
@@ -3913,7 +3914,7 @@ For the purposes of this function, `selectorField` is either `schema.discriminat
 
 #### Returns
 
-- S | undefined: The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
+- S | undefined: The anyOf/oneOf option that matches the selector field in the schema, or the closest to the data for options with no selector, or undefined if nothing is selected
 
 ### getDefaultFormState&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

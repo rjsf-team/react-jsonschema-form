@@ -2599,7 +2599,8 @@ export interface SchemaUtilsType<
    * @param fallbackField - The field to use as a backup selector field if the schema does not have a required field
    * @param xxx - Either `oneOf` or `anyOf`, defines which value is being sought
    * @param [formData] - The form data that is used to determine which oneOf option
-   * @returns - The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
+   * @returns - The anyOf/oneOf option that matches the selector field in the schema, or the closest to the data for
+   *            options with no selector, or undefined if nothing is selected
    */
   findSelectedOptionInXxxOf(schema: S, fallbackField: string, xxx: 'anyOf' | `oneOf`, formData?: T): S | undefined;
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have

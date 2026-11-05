@@ -18,7 +18,7 @@ function getFromSchemaInternal<
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, rootSchema: S, schema: S, path: SchemaFieldPath): T | S | undefined {
   let fieldSchema = schema;
-  // hasByPath instead of `in` because `schema` can be undefined at runtime when drilling past a non-matching xxxOf
+  // hasByPath instead of `in` because `schema` can be a boolean subschema at runtime, which `in` throws on
   if (hasByPath(schema, REF_KEY)) {
     fieldSchema = retrieveSchema<T, S, F>(context, schema, rootSchema);
   }

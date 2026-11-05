@@ -7,6 +7,7 @@ import type {
   GenericObjectType,
   RJSFSchema,
   Registry,
+  SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
 } from '@rjsf/utils';
@@ -20,6 +21,7 @@ import {
   getTemplates,
   getTestIds,
   getPropertySchema,
+  getRenderedOptionSchema,
   getUiOptions,
   getXxxOfKey,
   hashObject,
@@ -45,7 +47,7 @@ import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
-import { storedValue, withoutAdditionalFlag, withoutOptionalControls } from './fieldWidgetUtils.ts';
+import { declaresProperty, storedValue, withoutAdditionalFlag, withoutOptionalControls } from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
@@ -336,6 +338,37 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
   return { rawSchema, index, isAdditionalItem };
 }
 
+/** Returns the schema to read `key` from: `schema` where it declares `key` or an array item at it beside any oneOf/anyOf,
+ * else the option selected for `data`. A property YAML leaves empty declares nothing. A stub `retrieveSchema()` made for
+ * an extra key says only what the data holds, so what the option declares comes first, and the stub stands for a key the
+ * option leaves undeclared.
+ *
+ * @param schemaUtils - The `SchemaUtilsType` used to find the selected option
+ * @param schema - The schema, retrieved for `data`
+ * @param key - The key to read
+ * @param data - The data of `schema`
+ * @returns - The schema to read `key` from, or undefined where no option is selected
+ */
+function schemaHolding<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  schema: S,
+  key: string,
+  data: T | undefined,
+): S | undefined {
+  const xxx = getXxxOfKey<S>(schema);
+  const properties: NonNullable<S['properties']> = schema[PROPERTIES_KEY] ?? {};
+  if (
+    !xxx ||
+    (declaresProperty<S>(properties, key) && getByPath(properties, key) !== null) ||
+    computeArraySchemasIfPresent<S>(schema, key).rawSchema
+  ) {
+    return schema;
+  }
+  const selected = schemaUtils.findSelectedOptionInXxxOf(schema, key, xxx, data);
+  const isStubOnly = Object.hasOwn(properties, key) && getByPath(selected?.[PROPERTIES_KEY], key) === undefined;
+  return isStubOnly ? schema : selected;
+}
+
 /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
  * the leaf path is found and returned (along with whether that leaf path `isRequired`) OR no schema exists for an
  * element in the path. If the leaf schema element happens to be a oneOf/anyOf then also return whether it has a
@@ -381,13 +414,11 @@ export function getSchemaDetailsForField<
     // dive into the properties of the current schema (when it exists) and get the schema for the next part
     let segment: string | number = part;
     const schemaProperties = schema?.[PROPERTIES_KEY];
-    const xxx = schema && getXxxOfKey<S>(schema);
-    if (schemaProperties) {
-      rawSchema = getPropertySchema<S>(schema, part);
-    } else if (schema && xxx) {
-      // When the schema represents a oneOf/anyOf, find the selected schema for it and grab the inner part
-      const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
-      rawSchema = getPropertySchema<S>(selectedSchema, part);
+    // When the schema represents a oneOf/anyOf that doesn't declare the part beside its options, the part is the selected
+    // schema's
+    const holder = schema && schemaHolding<T, S, F>(schemaUtils, schema, part, innerData);
+    if (holder !== schema || schemaProperties) {
+      rawSchema = getPropertySchema<S>(holder, part);
     } else {
       const result = computeArraySchemasIfPresent<S>(schema, part);
       rawSchema = result.rawSchema ?? ({} as S);
@@ -409,12 +440,11 @@ export function getSchemaDetailsForField<
   }
   if (schema && leafPath) {
     // When we have both a schema and a leafPath...
-    const xxx = getXxxOfKey<S>(schema);
-    if (xxx) {
-      // Grab the selected schema for the oneOf/anyOf value for the leafPath using the innerData
-      schema = schemaUtils.findSelectedOptionInXxxOf(schema, leafPath, xxx, innerData);
-    }
-    isRequired = schema !== undefined && Array.isArray(schema.required) && schema.required.includes(leafPath);
+    const holder = schemaHolding<T, S, F>(schemaUtils, schema, leafPath, innerData);
+    // An option's field is required as the option is rendered, with the `required` of the schema offering it too
+    const rendered = holder && holder !== schema ? getRenderedOptionSchema<S>(schema, holder) : holder;
+    isRequired = Array.isArray(rendered?.required) && rendered.required.includes(leafPath);
+    schema = holder;
     const result = computeArraySchemasIfPresent<S>(schema, leafPath);
     fieldPath = toFieldPath(result.index ?? leafPath, fieldPath);
     if (result.rawSchema) {
