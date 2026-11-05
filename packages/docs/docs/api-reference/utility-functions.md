@@ -254,11 +254,11 @@ Returns the `pattern`, `inputMode` and `accept` a widget passes `BaseInputTempla
 
 #### Parameters
 
-- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'multiple' | 'pattern'> - The props of the `BaseInputTemplate`
+- props: Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'> - The props of the `BaseInputTemplate`
 
 #### Returns
 
-- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'multiple' | 'pattern'>: The `pattern`, `inputMode`, `accept` and `multiple` to spread after the derived input props
+- Pick&lt;BaseInputTemplateProps, 'accept' | 'inputMode' | 'pattern'>: The `pattern`, `inputMode` and `accept` to spread after the derived input props
 
 ### callWithDeferredThrow()
 
@@ -2726,7 +2726,7 @@ Returns the `[first, last]` years to pass `getDateElementProps()` for a `yearsRa
 
 ### numericWidgetStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The schema's type decides, and a type that allows a number too writes one. The value only speaks for a schema with no type.
+Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The schema's type decides, and a type that allows a number too writes one. A schema with no type has only the value to go by, so it writes a number until it holds a string, even for an `enum` of strings.
 
 #### Parameters
 
