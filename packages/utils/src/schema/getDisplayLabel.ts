@@ -46,7 +46,7 @@ export default function getDisplayLabel<
     // The label follows the field `SchemaField` renders: a `CheckboxWidget` on a `['number', 'boolean']` is a boolean's.
     // Only the field's own `ui:widget` picks that field, so a `widget` in `globalOptions` is left out
     const { widget } = getUiOptions<T, S, F>(uiSchema);
-    const schemaType = getFieldTypeForWidget<S>(schema, widget);
+    const schemaType = getFieldTypeForWidget<S>(schema, widget, context.widgets);
     const addedByAdditionalProperty = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
     // A schema handed in as written holds a select's constants as `$ref`s, so they are read resolved
     const isWholeValue = () =>

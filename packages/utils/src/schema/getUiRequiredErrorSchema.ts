@@ -18,6 +18,7 @@ import getUiOptions from '../getUiOptions.ts';
 import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
+import guessType from '../guessType.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';

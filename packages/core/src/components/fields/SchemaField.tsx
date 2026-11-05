@@ -42,6 +42,7 @@ import {
   GUESSED_TYPE_FLAG,
   hasOwnContentBesideOptions,
   hasSchemaMarker,
+  hasWidget,
   isComponentType,
   isConstant,
   isConstantOptionList,

@@ -1,6 +1,7 @@
 import { use, useCallback, useMemo } from 'react';
 import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
@@ -9,6 +10,7 @@ import {
   getTemplates,
   getUiOptions,
   getValidationTarget,
+  hasSchemaMarker,
   hasWidget,
   isFormDataAvailable,
   logOnce,
@@ -29,7 +31,6 @@ import {
   displaysLabel,
   getWidgetErrorProps,
   getWidgetLabelProps,
-  isAdditionalPropertySchema,
   optionsKeywordOf,
   withoutOptionalControls,
 } from './fieldWidgetUtils.ts';
@@ -164,7 +165,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     }
   }
   // A custom container field renders an entry with no context, which leaves its flag
-  const isEntryPath = use(AdditionalEntryContext) === fieldPath || isAdditionalPropertySchema(schema);
+  const isEntryPath = use(AdditionalEntryContext) === fieldPath || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
   // Memoized, since the option's `SchemaField` keys its own memos on the uiSchema it is handed. An option's own uiSchema
   // or `ui:definitions` entry doesn't inherit the entry's Optional Data Controls being off, so it is turned off here too
   const optionFieldUiSchema = useMemo(() => {

@@ -27,6 +27,7 @@ import {
   getXxxOfKey,
   guessType,
   hasSchemaMarker,
+  hasWidget,
   isConstantOptionList,
   isConstantSelect,
   isCustomWidget,

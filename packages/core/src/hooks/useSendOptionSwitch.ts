@@ -7,11 +7,13 @@ import {
   getRenderedOptionSchema,
   getXxxOfKey,
   hasSchemaMarker,
+  isConstant,
   isPlainObject,
   isWholeValueSelect,
   toConstant,
 } from '@rjsf/utils';
 
+import AdditionalEntryContext from '../components/fields/AdditionalEntryContext.ts';
 import { declaresProperty, storedValue } from '../components/fields/fieldWidgetUtils.ts';
 import useSendMove from './useSendMove.ts';
 
@@ -121,7 +123,16 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       const isKept = (key: string) => isKeptProperty(key) || (/^\d+$/.test(key) && isKeptItem(Number(key)));
       const held = typeof formData === 'object' && formData !== null ? Object.keys(formData) : [];
       const gone = new Set([...Object.keys(declaredByOld), ...held].filter((key) => !isKept(key)));
-      const value = storedValue(newFormData, fieldPath, hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG));
+      const isEntry = isEntryPath || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
+      // An entry's `null` option holds `null` rather than the `''` of a cleared value, which no such option takes and
+      // which would reload as another option. Elsewhere it holds nothing, see `formDataForNewOption()`
+      const isNullOption =
+        newOption !== undefined &&
+        (newOption.type === 'null' || (isConstant<S>(newOption) && toConstant<S>(newOption) === null));
+      const value =
+        isEntry && newFormData === undefined && isNullOption
+          ? (null as V)
+          : storedValue(newFormData, fieldPath, isEntry);
       return sendMove(
         {
           value,

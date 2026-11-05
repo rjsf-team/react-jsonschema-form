@@ -43,8 +43,9 @@ import {
 
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
+import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
-import { storedValue, withoutAdditionalFlag } from './fieldWidgetUtils.ts';
+import { storedValue, withoutAdditionalFlag, withoutOptionalControls } from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values

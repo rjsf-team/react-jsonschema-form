@@ -37,10 +37,9 @@ export default function getFieldLabel<
   translateString: Registry<T, S, F>['translateString'],
   { name = '', title, unresolvedSchema }: FieldLabelSources<S> = {},
 ): string {
-  const label =
-    wasPropertyKeyModified || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG)
-      ? name
-      : uiOptions.title || unresolvedSchema?.title || schema.title || title || name;
+  const label = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG)
+    ? name
+    : uiOptions.title || unresolvedSchema?.title || schema.title || title || name;
   return label && getDeprecatedHandling<T, S, F>(schema, uiOptions) === 'label'
     ? translateString(TranslatableString.DeprecatedLabel, [label])
     : label;

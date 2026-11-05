@@ -20,7 +20,6 @@ import {
   GUESSED_TYPE_FLAG,
   guessType,
   hasSchemaMarker,
-  hasWidget,
   JSON_SCHEMA_TYPES,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
@@ -36,7 +35,7 @@ import type { JSONSchema7TypeName } from 'json-schema';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
-import { fallbackValueKeepsWidget, isAdditionalPropertySchema, withoutUiWidget } from './fieldWidgetUtils.ts';
+import { fallbackValueKeepsWidget, withoutUiWidget } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 
@@ -386,8 +385,8 @@ function FallbackUiField<
   // the value would take the key it is stored under with it. That is the cleared state of whichever type the selector
   // is on, not evidence of a `string`, so a selection the user just made must survive it: reading it as data of
   // another type would put the selector back on `string` and leave the other types out of reach from a cleared value
-  const isClearedProperty =
-    emptiesToNothing && hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) && (formData as unknown) === '';
+  const isAdditionalEntry = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) || isEntryPath;
+  const isClearedProperty = emptiesToNothing && isAdditionalEntry && (formData as unknown) === '';
   const isEmptyValue = formData === undefined || isClearedProperty;
   const isSelectionUsable =
     types.includes(selectedType) &&
