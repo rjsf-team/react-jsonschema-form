@@ -12,6 +12,7 @@ import pointerValidationTests, {
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
+import type { CustomValidatorOptionsType } from '../src/index.ts';
 import { createPrecompiledValidator, customizeValidator } from '../src/index.ts';
 import loadModule from './harness/loadModule.ts';
 
@@ -344,7 +345,7 @@ describe('compileSchemaValidatorsCode', () => {
       ]) {
         const runtime = customizeValidator(options);
         expect(runtime.isValid(form, { x: 'ab' }, form)).toBe(true);
-        expect(runtime.isValid(sub, 'ab' as any, form)).toBe(true);
+        expect(runtime.isValid(sub, 'ab', form)).toBe(true);
       }
       expect(compileSchemaValidatorsCode(schema, { additionalMetaSchemas: [frag] })).toBe(
         compileSchemaValidatorsCode(schema),
@@ -356,14 +357,24 @@ describe('compileSchemaValidatorsCode', () => {
 
     test('leaves out a list entry that is not an object, with a warning', () => {
       // ata cannot give a boolean an $id in a list, so the runtime validator rejects it too.
-      const options = { additionalMetaSchemas: [false], ataOptionsOverrides: { schemas: [true] } } as any;
+      // Entries the options type rules out, which callers can still pass
+      const options = {
+        additionalMetaSchemas: [false],
+        ataOptionsOverrides: { schemas: [true] },
+      } as unknown as CustomValidatorOptionsType;
       expect(compileSchemaValidatorsCode(schema, options)).toBe(compileSchemaValidatorsCode(schema));
       expect(warn.mock.calls.flat().join('\n')).toMatch(/entries without an \$id are left out/);
     });
 
     // The runtime validator for the root, the runtime validator for a sub-schema of it, and the
     // module: all three answer the same.
-    const threeWay = (form: RJSFSchema, sub: RJSFSchema, formData: unknown, subData: unknown, options: any) => {
+    const threeWay = (
+      form: RJSFSchema,
+      sub: RJSFSchema,
+      formData: unknown,
+      subData: unknown,
+      options: CustomValidatorOptionsType,
+    ) => {
       const runtime = customizeValidator(options);
       const root = runtime.isValid(form, formData, form);
       const subAnswer = customizeValidator(options).isValid(sub, subData, form);
@@ -377,7 +388,13 @@ describe('compileSchemaValidatorsCode', () => {
 
     // Where a reference is registered nowhere, the runtime validators agree with each other and the
     // module declines to answer for that schema rather than give an answer of its own.
-    const unresolved = (form: RJSFSchema, sub: RJSFSchema, formData: unknown, subData: unknown, options: any) => {
+    const unresolved = (
+      form: RJSFSchema,
+      sub: RJSFSchema,
+      formData: unknown,
+      subData: unknown,
+      options: CustomValidatorOptionsType,
+    ) => {
       const root = customizeValidator(options).isValid(form, formData, form);
       expect(customizeValidator(options).isValid(sub, subData, form)).toBe(root);
       const fns = loadModule(compileSchemaValidatorsCode(form, options));
@@ -419,7 +436,10 @@ describe('compileSchemaValidatorsCode', () => {
     });
 
     test('leaves out a record entry that is not a schema', () => {
-      const options = { ataOptionsOverrides: { schemas: { k: null, 'urn:m': { maxLength: 2 } } } } as any;
+      // Entries the options type rules out, which callers can still pass
+      const options = {
+        ataOptionsOverrides: { schemas: { k: null, 'urn:m': { maxLength: 2 } } },
+      } as unknown as CustomValidatorOptionsType;
       expect(() => compileSchemaValidatorsCode(schema, options)).not.toThrow();
       threeWay(formWith('f4', 'urn:m'), notRef('urn:m'), { x: 'abc' }, 'abc', options);
     });
@@ -462,7 +482,10 @@ describe('compileSchemaValidatorsCode', () => {
 
     test('keeps a boolean record entry what it is', () => {
       // rjsf's types take only objects in `schemas`; ata takes boolean schemas too.
-      const options = { ataOptionsOverrides: { schemas: { 'urn:never': false, 'urn:any': true } } } as any;
+      // Entries the options type rules out, which callers can still pass
+      const options = {
+        ataOptionsOverrides: { schemas: { 'urn:never': false, 'urn:any': true } },
+      } as unknown as CustomValidatorOptionsType;
       expect(agree(refersTo('urn:never'), { x: 'a' }, options)).toBe(true);
       expect(agree(refersTo('urn:any'), { x: 'a' }, options)).toBe(false);
     });
