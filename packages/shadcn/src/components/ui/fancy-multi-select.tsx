@@ -185,8 +185,8 @@ export function FancyMultiSelect({
   };
 
   function renderItem(item: FancySelectItem) {
-    // Keyed and identified by index, since cmdk takes `value` for an option's identity and options such as `1` and `'1'`
-    // or any two objects would share one as text, and a highlight it holds is lost as that text changes
+    // Keyed and identified by index, since cmdk takes `value` for an option's identity, where `1` and `'1'` would share
+    // one as text and `''` would have none, and a highlight it holds is lost as that text changes
     return (
       <CommandItem
         disabled={item.disabled}
