@@ -76,6 +76,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - **BREAKING CHANGE:** Change `AltDateWidget` to show the default years for a `yearsRange` reaching before 100, such as `[50, 2030]`, where it offered that range and wrote a year before 100 as 19xx. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#altdatewidget-uses-the-default-years-for-a-yearsrange-reaching-before-100-breaking-change) ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Fix `AltDateWidget` spacing its date parts by a `NaN` gutter when `formContext.rowGutter` is a pair, a responsive object or a CSS length: they now take half of each side of a pair, and half of a single gutter both ways, as they did of a number, though `Row` applies a single gutter horizontally only. A numeric string such as `'16'`, which `Row` turns into invalid CSS, now gives no spacing, as `Row` draws none for it, where it gave half its number ([#5686](https://github.com/rjsf-team/react-jsonschema-form/pull/5686))
 - Add the `AntdFormContext` type, the `formContext` options the antd theme reads ([#5686](https://github.com/rjsf-team/react-jsonschema-form/pull/5686))
+- Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/bootstrap3
 
@@ -161,6 +162,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it as a prop, so the file input of an array took one file at a time ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - **BREAKING CHANGE:** Change `AltDateWidget` to show the default years for a `yearsRange` reaching before 100, such as `[50, 2030]`, where it offered that range and wrote a year before 100 as 19xx. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#altdatewidget-uses-the-default-years-for-a-yearsrange-reaching-before-100-breaking-change) ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
+- Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/core
 
@@ -504,6 +506,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RatingWidget` showing no stars for a `stars` option that isn't a number, which now shows the default 5 stars, and for a schema `maximum` that isn't a number, which now uses `stars` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Change `FileWidget` to leave out of `accept` whatever in the `accept` option isn't a string or is blank, where it stringified anything truthy, so `true` gave `accept="true"` and `' '` gave `accept=" "` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - **BREAKING CHANGE:** Change `AltDateWidget` to show the default years for a `yearsRange` reaching before 100, such as `[50, 2030]`, where it offered that range and wrote a year before 100 as 19xx. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#altdatewidget-uses-the-default-years-for-a-yearsrange-reaching-before-100-breaking-change) ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
+- Fix `TimeWidget` hiding a value's zero seconds for a numeric-string `multipleOf` below 60, such as `'30'`, which a numeric one keeps ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/daisyui
 
@@ -697,6 +701,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix a layout grid `ui:row` whose `columns` is a track count written as `'1e1'` or `'0xa'` getting an invalid column template: it now gets `repeat(10, 1fr)` ([#5683](https://github.com/rjsf-team/react-jsonschema-form/pull/5683))
 - Fix `BaseInputTemplate` dropping a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it as a prop, so the file input of an array took one file at a time ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/mantine
 
@@ -790,6 +795,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `FileWidget` to leave out of `accept` whatever in the `accept` option isn't a string or is blank, where it stringified anything truthy, so `true` gave `accept="true"` and `' '` gave `accept=" "` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - Fix `ColorWidget` rewriting its value as hex when its `colorFormat` option changes to a format `ColorInput` doesn't take, such as `'RGB'` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - **BREAKING CHANGE:** Change `AltDateWidget` to show the default years for a `yearsRange` reaching before 100, such as `[50, 2030]`, where it offered that range and wrote a year before 100 as 19xx. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#altdatewidget-uses-the-default-years-for-a-yearsrange-reaching-before-100-breaking-change) ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
+- Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/mui
 
@@ -851,6 +857,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `MuiBaseInputTemplateProps`, the props mui's `BaseInputTemplate` takes, to type the registry's `BaseInputTemplate` a widget passes mui's own props to ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `BaseInputTemplate` putting a `pattern`, `inputMode`, `accept` or `multiple` a widget passes it on the `TextField` root, where they did nothing, instead of on the `<input>`, so the file input of an array took one file at a time; a caller's `pattern` drops the numeric title ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `WrapIfAdditionalTemplate` leaving the key input and the remove button enabled for a property it is handed no rename or remove callback for, such as the root ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/react-bootstrap
 
@@ -909,6 +916,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `BaseInputTemplate` to put an `accept` a widget passes in `extraProps` on the input over `ui:options.accept`, which replaced it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - **BREAKING CHANGE:** Change `BaseInputTemplate` to put a `multiple` it is passed, in `extraProps` too, on a file input only, as `ArrayField` passes one to the widget of every multi-select, so an `email` input no longer takes several addresses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `BaseInputTemplate` putting `Form.Control`'s own props in `extraProps`, such as `isValid` or `htmlSize`, on the `<input>` of a range ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/shadcn
 
@@ -1006,6 +1014,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `BaseInputTemplate` to put an `accept` a widget passes in `extraProps` on the input over `ui:options.accept`, which replaced it ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - **BREAKING CHANGE:** Change `BaseInputTemplate` to put a `multiple` it is passed, in `extraProps` too, on a file input only, as `ArrayField` passes one to the widget of every multi-select, so an `email` input no longer takes several addresses. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#baseinputtemplate-puts-multiple-only-on-a-file-input-breaking-change) ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
 - Fix `BaseInputTemplate` replacing its `className` and error border with a `className` in `extraProps`: it now keeps all three ([#5684](https://github.com/rjsf-team/react-jsonschema-form/pull/5684))
+- Fix `RangeWidget` for an Ajv `$data` reference in `minimum`, `maximum` or `multipleOf`, which set the range's bound or step to the object and now leaves it at its default, and read a numeric-string bound such as `minimum: '5'` as its number ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/snapshot-tests
 
@@ -1366,6 +1375,10 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `isDateElementFormat()` and `normalizeYearsRange()`, which read the `format` and `yearsRange` options a theme's `AltDateWidget` hands `getDateElementProps()` ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - **BREAKING CHANGE:** Change `useAltDateWidgetProps()` and `getDateElementProps()` to use the default years for a `yearsRange` reaching before 100, such as `[50, 2030]`, where they offered that range and wrote a year before 100 as 19xx. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#altdatewidget-uses-the-default-years-for-a-yearsrange-reaching-before-100-breaking-change) ([#5685](https://github.com/rjsf-team/react-jsonschema-form/pull/5685))
 - **BREAKING CHANGE:** Change `FormContextType` from `Record<string, any>` to `object`, so a component reading an untyped `formContext` names the keys it reads. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5686](https://github.com/rjsf-team/react-jsonschema-form/pull/5686))
+- **BREAKING CHANGE:** Change `RJSFSchema` from `JSONSchema7 & Record<string, any>` to `JSONSchema7`, which `@rjsf/utils` now augments, globally, with the later-draft, OpenAPI and Ajv keywords RJSF or its validators read, so a schema with keywords of its own declares them by augmenting `JSONSchema7` too. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Fix `getInputProps()` and `rangeSpec()` setting `min`, `max` or `step` to `[object Object]` when `formatMinimum`, `formatMaximum`, `minimum`, `maximum` or `multipleOf` is an Ajv `$data` reference ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Change `getInputProps()` and `rangeSpec()` to read a numeric-string bound such as `minimum: '5'` as its number, which they passed on as a string, and to leave out a string bound that is no number, which `getInputProps()` still passes on as the `min` or `max` of a date or time input ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
+- Fix `RJSFSchema` checking nothing where a package manager doesn't hoist `@types/json-schema`, which is now a dependency of `@rjsf/utils` ([#5688](https://github.com/rjsf-team/react-jsonschema-form/pull/5688))
 
 ## @rjsf/validator-ajv8
 

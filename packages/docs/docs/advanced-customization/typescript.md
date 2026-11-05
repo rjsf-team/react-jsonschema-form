@@ -50,7 +50,7 @@ The generic `T` is used to represent the type of the `formData` property passed 
 If you are working with a simple, unchanging JSON Schema and you have defined a type for the `formData` you are working with, you can override this generic as follows:
 
 ```tsx
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Form from '@rjsf/core';
 
@@ -77,11 +77,11 @@ render(<Form<FormData> schema={schema} validator={validator} initialFormData={fo
 ### S
 
 The generic `S` is used to represent the type of the `schema` property passed into `Form`.
-If you are using something like the [Ajv utility types for schemas](https://ajv.js.org/guide/typescript.html#utility-types-for-schemas) typing system, you can override this generic as follows:
+It has to extend `StrictRJSFSchema`, the `JSONSchema7` of `@types/json-schema`, and defaults to `RJSFSchema`, which is the same type.
+A type of your own that extends it can declare a keyword on the root schema, and you can override this generic with it as follows:
 
 ```tsx
-import { JSONSchemaType } from 'ajv';
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Form from '@rjsf/core';
 
@@ -90,10 +90,11 @@ interface FormData {
   bar?: number;
 }
 
-type MySchema = JSONSchemaType<FormData>;
+type MySchema = RJSFSchema & { 'x-version'?: number };
 
 const schema: MySchema = {
   type: 'object',
+  'x-version': 2,
   properties: {
     foo: { type: 'string' },
     bar: { type: 'number' },
@@ -102,15 +103,50 @@ const schema: MySchema = {
 
 const validator = customizeValidator<MySchema>();
 
-render(<Form<any, MySchema> schema={schema} validator={validator} />, document.getElementById('app'));
-
-// Alternatively since you have the type, you could also use this
-// render((
-//  <Form<FormData, MySchema> schema={schema} validator={validator} />
-//), document.getElementById("app"));
+render(<Form<FormData, MySchema> schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-> NOTE: using this `Ajv typing system` has not been tested extensively with RJSF, so use carefully
+A subschema is still a `JSONSchema7Definition`, so a keyword declared this way type-checks on the root alone; to declare one at every depth, see [Keywords of your own](#keywords-of-your-own).
+
+The [Ajv utility types for schemas](https://ajv.js.org/guide/typescript.html#utility-types-for-schemas) don't fit `S`: `JSONSchemaType<FormData>` holds `readonly` arrays, such as its `anyOf`, where `JSONSchema7` takes mutable ones, so `Form<FormData, JSONSchemaType<FormData>>` fails with TS2344.
+Type the schema as `RJSFSchema` and the data with `T` instead.
+
+#### Keywords of your own
+
+`RJSFSchema` is the `JSONSchema7` of `@types/json-schema`, which `@rjsf/utils` augments with the later-draft, OpenAPI and Ajv keywords RJSF or its validators read.
+Declare a keyword RJSF doesn't read the same way, so that it type-checks at every depth of a schema:
+
+```ts
+import type { RJSFSchema } from '@rjsf/utils';
+
+declare module 'json-schema' {
+  interface JSONSchema7 {
+    'x-group'?: string;
+  }
+}
+
+const schema: RJSFSchema = { type: 'object', properties: { phone: { type: 'string', 'x-group': 'contact' } } };
+```
+
+The module has to resolve from your own code, to the copy `@rjsf/utils` uses.
+A package manager that doesn't hoist `@types/json-schema`, as pnpm doesn't by default, reports TS2664 (`Invalid module name in augmentation`) until your project lists it among its own dependencies. List a version `@rjsf/utils` accepts (`^7.0.15`), so that both resolve to one copy: the augmentation doesn't reach a second copy nested under `@rjsf/utils`.
+
+The file also has to be a module, with an `import` or an `export`, as the example is.
+In a file with neither, such as a `.d.ts` of its own, `declare module` replaces `json-schema` instead of adding to it, and TypeScript reports TS2353 on `type` and every other keyword until you add `export {};`.
+
+An augmentation adds keywords but can't change the type of one `JSONSchema7` already declares (TS2717).
+So Ajv's `$data` reference, which `formatMinimum` and its siblings take, doesn't type-check in `minimum`, `maximum`, `multipleOf` or another keyword typed as a number, even though a validator built with `customizeValidator({ ajvOptionsOverrides: { $data: true } })` validates it.
+The built-in widgets pass over a `$data` reference in `minimum`, `maximum` and `multipleOf` only; one in another keyword, such as `maxItems`, isn't handled yet, so an array with `maxItems: { $data: '1/limit' }` shows no Add button.
+Convert such a schema through `unknown`, since a direct `as RJSFSchema` fails with TS2352:
+
+```ts
+import type { RJSFSchema } from '@rjsf/utils';
+
+const schema = {
+  type: 'object',
+  properties: { low: { type: 'number' }, high: { type: 'number', minimum: { $data: '1/low' } } },
+} as unknown as RJSFSchema;
+```
 
 ### F
 
@@ -118,7 +154,7 @@ The generic `F` is used to represent the type of the `formContext` property pass
 If you have a type for this data, you can override this generic as follows:
 
 ```tsx
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Form from '@rjsf/core';
 
@@ -154,7 +190,7 @@ As shown in previous examples, overriding the default `Form` from `@rjsf/core` i
 Using the `withTheme()` function is just as easy:
 
 ```tsx
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { withTheme, type ThemeProps } from '@rjsf/core';
 
@@ -163,7 +199,7 @@ interface FormData {
   bar?: number;
 }
 
-type MySchema = JSONSchemaType<FormData>;
+type MySchema = RJSFSchema;
 
 const schema: MySchema = {
   type: 'object',
@@ -200,7 +236,7 @@ If you are doing something like the following to create a new theme based on `@r
 
 ```tsx
 import React from 'react';
-import { SlotComponent, WidgetProps } from '@rjsf/utils';
+import type { SlotComponent, WidgetProps } from '@rjsf/utils';
 import { type ThemeProps, withTheme } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 import { type MuiBaseInputTemplateProps, Templates, Theme } from '@rjsf/mui';
@@ -230,7 +266,7 @@ Then you would use the new `generateTheme()` and `generateForm()` functions as f
 
 ```tsx
 import React from 'react';
-import { SlotComponent, WidgetProps } from '@rjsf/utils';
+import type { RJSFSchema, SlotComponent, WidgetProps } from '@rjsf/utils';
 import { type ThemeProps, withTheme } from '@rjsf/core';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { type MuiBaseInputTemplateProps, Templates, generateTheme } from '@rjsf/mui';
@@ -240,7 +276,7 @@ interface FormData {
   bar?: number;
 }
 
-type MySchema = JSONSchemaType<FormData>;
+type MySchema = RJSFSchema;
 
 const schema: MySchema = {
   type: 'object',

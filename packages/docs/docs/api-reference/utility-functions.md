@@ -3028,7 +3028,7 @@ propertyToPath('.'); // []
 
 ### rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.
+Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`. A numeric string counts as its number, and anything else an input can't show, such as an Ajv `$data` reference, sets nothing.
 
 #### Parameters
 

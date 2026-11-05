@@ -573,6 +573,8 @@ const schema: RJSFSchema = {
 return <Form schema={schema} validator={validator} />;
 ```
 
+A draft-04 keyword that `RJSFSchema` doesn't declare, such as `id`, needs declaring before a schema typed `RJSFSchema` can hold it; see [Keywords of your own](../advanced-customization/typescript.md#keywords-of-your-own).
+
 ### customFormats
 
 [Pre-defined semantic formats](https://json-schema.org/draft/2019-09/json-schema-validation.html#rfc.section.7) are limited.
@@ -693,6 +695,8 @@ ajvKeywords(validator.ajv, ['your-keyword']);
 
 // use your update validator with a `Form`
 ```
+
+A schema typed `RJSFSchema` can hold the added keywords, such as `transform`, once they are declared; see [Keywords of your own](../advanced-customization/typescript.md#keywords-of-your-own).
 
 A keyword that writes into the data, such as `transform`, needs `isValid()` to validate a copy; see [ajvOptionsOverrides](#ajvoptionsoverrides).
 

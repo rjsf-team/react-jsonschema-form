@@ -408,6 +408,45 @@ describe('getInputProps', () => {
       vi.resetModules();
     });
   });
+  it('reads a numeric-string bound as its number', () => {
+    const stringBounds = { minimum: '5', maximum: '9' };
+    expect(getInputProps(stringBounds as unknown as RJSFSchema)).toMatchObject({ min: 5, max: 9 });
+  });
+  it("sets no min or max from an Ajv `$data` reference, which names another value's bound", () => {
+    const schema: RJSFSchema = { formatMinimum: { $data: '1/start' }, formatMaximum: { $data: '1/end' } };
+    expect(getInputProps(schema, 'date')).toEqual({ type: 'date' });
+  });
+  it('keeps a date or time held in `minimum` and `maximum` as the bounds of a date or time input', () => {
+    const dateBounds: RJSFSchema = {
+      type: 'string',
+      format: 'date',
+      // @ts-expect-error `minimum` is a number, but a schema that skips Ajv's meta-schema can hold a string
+      minimum: '2020-01-01',
+      // @ts-expect-error `maximum` is a number, but a schema that skips Ajv's meta-schema can hold a string
+      maximum: '2030-12-31',
+    };
+    expect(getInputProps(dateBounds, 'date')).toEqual({ type: 'date', min: '2020-01-01', max: '2030-12-31' });
+    const timeBounds: RJSFSchema = {
+      type: 'string',
+      format: 'time',
+      // @ts-expect-error `minimum` is a number, but a schema that skips Ajv's meta-schema can hold a string
+      minimum: '09:00',
+      formatMaximum: '17:00',
+      // @ts-expect-error `maximum` is a number, but a schema that skips Ajv's meta-schema can hold a string
+      maximum: '18:00',
+    };
+    expect(getInputProps(timeBounds, 'time')).toEqual({ type: 'time', min: '09:00', max: '17:00' });
+  });
+  it('sets no bound from an empty `minimum` or `maximum` on a date or time input', () => {
+    // @ts-expect-error these keywords are numbers, but a schema that skips Ajv's meta-schema can hold strings
+    const emptyBounds: RJSFSchema = { type: 'string', format: 'date', minimum: '', maximum: '' };
+    expect(getInputProps(emptyBounds, 'date')).toEqual({ type: 'date' });
+  });
+  it('sets no bound from a string `minimum` or `maximum` on an input that is no date or time', () => {
+    // @ts-expect-error these keywords are numbers, but a schema that skips Ajv's meta-schema can hold strings
+    const textBounds: RJSFSchema = { type: 'string', minimum: 'a', maximum: 'z' };
+    expect(getInputProps(textBounds)).toEqual({ type: 'text' });
+  });
   it('returns min from formatMinimum when defaultType is date', () => {
     const schema: RJSFSchema = { formatMinimum: '2020-01-01' };
     expect(getInputProps(schema, 'date')).toEqual({ type: 'date', min: '2020-01-01' });

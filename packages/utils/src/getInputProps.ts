@@ -121,13 +121,17 @@ export default function getInputProps<
     inputProps.step = 'any';
   }
 
-  // For date/time input types, propagate formatMinimum/formatMaximum to min/max
+  // For date/time input types, propagate formatMinimum/formatMaximum to min/max, else a date or time that a schema
+  // skipping Ajv's meta-schema holds in `minimum`/`maximum`, which `rangeSpec()` passes over as no number
   if (['date', 'datetime-local', 'time', 'week', 'month'].includes(inputProps.type)) {
-    if (schema.formatMinimum !== undefined) {
-      inputProps.min = schema.formatMinimum as string;
+    // A `$data` reference names another value, which the input can't show as its bound
+    const min = typeof schema.formatMinimum === 'string' ? schema.formatMinimum : schema.minimum;
+    const max = typeof schema.formatMaximum === 'string' ? schema.formatMaximum : schema.maximum;
+    if (typeof min === 'string' && min !== '') {
+      inputProps.min = min;
     }
-    if (schema.formatMaximum !== undefined) {
-      inputProps.max = schema.formatMaximum as string;
+    if (typeof max === 'string' && max !== '') {
+      inputProps.max = max;
     }
   }
 

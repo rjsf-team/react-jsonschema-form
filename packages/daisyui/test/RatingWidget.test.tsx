@@ -37,12 +37,55 @@ describe('RatingWidget', () => {
     expect(getAllByRole('radio')).toHaveLength(count);
   });
 
+  test('reads numeric-string bounds as their numbers, as it does a `stars` option', async () => {
+    const stringBounds = { type: 'integer', minimum: '1', maximum: '3' };
+    const schema = stringBounds as unknown as RJSFSchema;
+    const onChange = vi.fn();
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ schema, onChange })} />);
+
+    const stars = getAllByRole('radio');
+    expect(stars).toHaveLength(3);
+
+    await user.click(stars[0]);
+
+    expect(onChange).toHaveBeenCalledWith(1);
+  });
+
+  test('writes the fractional value of a star numbered from a fractional `minimum`', async () => {
+    const onChange = vi.fn();
+    const { getAllByRole } = render(
+      <RatingWidget {...makeWidgetMockProps({ schema: { type: 'number', minimum: 1.5 }, onChange })} />,
+    );
+
+    await user.click(getAllByRole('radio')[0]);
+
+    expect(onChange).toHaveBeenCalledWith(1.5);
+  });
+
+  test('falls back to the `stars` option for Ajv `$data` bounds', () => {
+    const dataBounds = { type: 'integer', maximum: { $data: '1/limit' }, minimum: { $data: '1/floor' } };
+    const schema = dataBounds as unknown as RJSFSchema;
+    const { getAllByRole } = render(<RatingWidget {...makeWidgetMockProps({ schema, options: { stars: 3 } })} />);
+
+    expect(getAllByRole('radio')).toHaveLength(3);
+  });
+
   test('autofocuses the first star for a value beyond the stars left by rounding down', () => {
     const { getAllByRole } = render(
       <RatingWidget {...makeWidgetMockProps({ autofocus: true, value: 2, options: { stars: 2.5 } })} />,
     );
 
     expect(getAllByRole('radio')[0]).toHaveFocus();
+  });
+
+  test('autofocuses the checked star numbered from a fractional `minimum`', () => {
+    const { getAllByRole } = render(
+      <RatingWidget
+        {...makeWidgetMockProps({ autofocus: true, value: 1.4, schema: { type: 'number', minimum: 0.4 } })}
+      />,
+    );
+
+    expect(getAllByRole('radio')[1]).toHaveFocus();
   });
 
   test('uses the default size and color for a `size` or `color` option that is not a string', () => {

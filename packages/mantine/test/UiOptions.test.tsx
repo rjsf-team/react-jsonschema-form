@@ -1,4 +1,4 @@
-import type { MarkdownTemplateProps } from '@rjsf/utils';
+import type { MarkdownTemplateProps, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
@@ -156,10 +156,10 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
     expect(other).not.toHaveAttribute('data-variant', 'compact');
   });
 
-  it.each([
+  it.each<[string, RJSFSchema]>([
     ['checkboxes', { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true }],
     ['radio', { type: 'string', enum: ['a', 'b'] }],
-  ] as const)("does not pass the text inputs' Mantine props on to the %s group", (widget, schema) => {
+  ])("does not pass the text inputs' Mantine props on to the %s group", (widget, schema) => {
     const { container } = render(
       <Form
         schema={schema}

@@ -222,6 +222,21 @@ describe('declaredPropertyTarget()', () => {
     });
     expect(validationTargets(graph)).toContainEqual(target);
   });
+  it('lists no declaration for a `propertyName` the discriminator inherits, which the form does not read either', () => {
+    class InheritedPropertyName {
+      declare readonly propertyName: string;
+    }
+    Object.defineProperty(InheritedPropertyName.prototype, 'propertyName', { value: 'kind' });
+    const root: RJSFSchema = {
+      definitions: { Base: { properties: { kind: { type: 'string' } } } },
+      discriminator: new InheritedPropertyName(),
+      oneOf: [{ allOf: [{ $ref: '#/definitions/Base' }, { properties: { kind: { const: 'a' } } }] }],
+    };
+    const graph = parseSchemaGraph(root);
+    expect(validationTargets(graph)).not.toContainEqual(
+      declaredPropertyTarget(graph, nodeAt(graph, '/oneOf/0'), 'kind'),
+    );
+  });
   it('checks the value against each place of a declaration the scope holds twice, as against two copies of it', () => {
     const kind: RJSFSchema = { properties: { kind: { type: 'string' } } };
     const root: RJSFSchema = { discriminator: { propertyName: 'kind' }, oneOf: [{ allOf: [kind, kind] }] };

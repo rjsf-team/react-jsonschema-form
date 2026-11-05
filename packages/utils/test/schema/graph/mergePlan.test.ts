@@ -8,7 +8,7 @@ import {
   resetLogOnce,
   RJSF_REF_KEY,
 } from '../../../src/index.ts';
-import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
+import type { RJSFMarkedSchema, RJSFSchema, SchemaContext } from '../../../src/index.ts';
 import buildPlan, {
   childSeeds,
   conjunctionOf,
@@ -231,7 +231,7 @@ describe('buildPlan()', () => {
       warn.mockRestore();
     });
     it("re-applies the symbols the merge drops, the field's own before its entries'", () => {
-      const flagged: RJSFSchema = { title: 'flagged', [ADDITIONAL_PROPERTY_FLAG]: true };
+      const flagged: RJSFMarkedSchema = { title: 'flagged', [ADDITIONAL_PROPERTY_FLAG]: true };
       const plan = planOf({
         definitions: { A: { allOf: [flagged, { $ref: D('B') }] }, B: { type: 'string' } },
         $ref: D('A'),
@@ -637,6 +637,19 @@ describe('buildPlan()', () => {
       ]);
       expect(selectOption).toHaveBeenCalledWith(expect.objectContaining({ keyword: 'anyOf', data, graph: plan.graph }));
       expect(plan.choices.map(({ selected }) => selected)).toEqual([1, 0]);
+    });
+    it('passes selectOption an own `discriminator.propertyName`, and not one the discriminator inherits', () => {
+      class InheritedPropertyName {
+        declare readonly propertyName: string;
+      }
+      Object.defineProperty(InheritedPropertyName.prototype, 'propertyName', { value: 'kind' });
+      const discriminatorOf = (discriminator: { propertyName: string }) => {
+        const selectOption = vi.fn((_: { discriminator?: string }) => 0);
+        planOf({ discriminator, oneOf: [{}] }, { policy: { allOf: true, selectOption } });
+        return selectOption.mock.calls.map(([request]) => request.discriminator);
+      };
+      expect(discriminatorOf({ propertyName: 'kind' })).toEqual(['kind']);
+      expect(discriminatorOf(new InheritedPropertyName())).toEqual([undefined]);
     });
     it('merges none for a choice out of range', () => {
       const plan = planOf(schema, { policy: { allOf: true, selectOption: () => 5 } });

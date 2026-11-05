@@ -6,6 +6,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  DISCRIMINATOR_PATH,
   ELSE_KEY,
   IF_KEY,
   ITEMS_KEY,
@@ -23,7 +24,6 @@ import { getByPath } from '../../pathUtils.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
-import { stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
 import { declaredProperties, dependencyCondition, targetOf } from './validationTargets.ts';
@@ -198,6 +198,7 @@ const conditionMemo = new KeyedMemo<boolean>();
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
  * object each time, as an object field's is on every edit, reuse its plan
  */
+// oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
 const plans = new KeyedMemo<MergePlan<StrictRJSFSchema>>();
 
 /** Merges an `allOf` schema into a single flat schema, delegating to the context's `customMergeAllOf` when it has one
@@ -999,12 +1000,13 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       dependencies,
     };
     this.readsData ||= this.policy.selectOption !== undefined;
+    const propertyName = getByPath(provider.node.raw, DISCRIMINATOR_PATH);
     const chosen = this.policy.selectOption?.({
       ...request,
       graph: this.graph,
       data: this.data,
       depData: this.depData,
-      discriminator: stringKeyword(Reflect.get(provider.node.raw, 'discriminator'), 'propertyName'),
+      discriminator: typeof propertyName === 'string' ? propertyName : undefined,
     });
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
     this.choices.push({ ...request, selected });
@@ -1053,6 +1055,7 @@ export function ownChains<S extends StrictRJSFSchema = RJSFSchema>(
 
 /** Whether a plan read back from the memo, which holds the plans of every schema type, is one of `graph` */
 function isPlanOf<S extends StrictRJSFSchema>(
+  // oxlint-disable-next-line typescript/no-unnecessary-type-arguments -- the widest schema type, which `RJSFSchema` equals only while it stays an alias
   value: MergePlan<StrictRJSFSchema> | undefined,
   graph: SchemaGraph<S>,
 ): value is MergePlan<S> {
