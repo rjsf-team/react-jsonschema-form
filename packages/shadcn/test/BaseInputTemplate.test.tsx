@@ -65,6 +65,20 @@ describe('BaseInputTemplate', () => {
     expect(container.querySelector('input')).toHaveAttribute('title', 'Enter a whole number');
   });
 
+  test('puts a data attribute extraProps carries on the input', () => {
+    const { container } = render(<BaseInputTemplate {...makeWidgetMockProps()} extraProps={{ 'data-testid': 'x' }} />);
+
+    expect(container.querySelector('input')).toHaveAttribute('data-testid', 'x');
+  });
+
+  test('keeps a className extraProps carries beside the className prop', () => {
+    const { container } = render(
+      <BaseInputTemplate {...makeWidgetMockProps()} className='a' extraProps={{ className: 'w-1/2' }} />,
+    );
+
+    expect(container.querySelector('input')).toHaveClass('a', 'w-1/2');
+  });
+
   test("keeps Input's focus ring on an invalid input, so it still shows when it takes keyboard focus", () => {
     const { container } = render(
       // oxlint-disable-next-line typescript/no-deprecated -- a template rendered without a plan reads the deprecated prop

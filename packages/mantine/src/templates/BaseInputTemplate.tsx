@@ -62,8 +62,9 @@ export default function BaseInputTemplate<
   // input every other theme renders for a numeric field.
   const plainInput = Boolean(onChangeOverride) || 'inputMode' in props;
   const inputProps = getBaseInputProps<T, S, F>(props, plainInput);
-  // `NumberInput`'s own options would land on the plain input as unknown attributes
-  const optionProps = cleanupOptions(options, props, plainInput ? numberInputOwnKeys : undefined);
+  const isNumeric = !plainInput && (inputProps.type === 'number' || inputProps.type === 'integer');
+  // `NumberInput`'s own options would land on a `TextInput` as unknown attributes
+  const optionProps = cleanupOptions(options, props, isNumeric ? undefined : numberInputOwnKeys);
   // `ui:options` spreads onto the input as Mantine props, so the props a widget passes go after it to win. A `pattern`
   // there replaces the derived one, so it drops the title that names it, as a passed `pattern` does
   const themeProps = {
@@ -135,8 +136,6 @@ export default function BaseInputTemplate<
   };
 
   const { min, max, ...restInputProps } = inputProps;
-
-  const isNumeric = !plainInput && (inputProps.type === 'number' || inputProps.type === 'integer');
 
   const ariaDescribedByProps = useInputAriaProps<T, S, F>(
     isNumeric ? 'NumberInput' : 'TextInput',

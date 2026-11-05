@@ -184,6 +184,37 @@ describe('mantine BaseInputTemplate', () => {
     expect(input).not.toHaveAttribute('hidecontrols');
   });
 
+  test("leaves `NumberInput`'s own options off the text input a `tel` inputType gets a `number` field", () => {
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      options: { inputType: 'tel', hideControls: true, thousandSeparator: ',' },
+    });
+
+    const input = container.querySelector('input');
+    expect(input).toHaveAttribute('type', 'tel');
+    expect(input).not.toHaveAttribute('thousandseparator');
+    expect(input).not.toHaveAttribute('hidecontrols');
+  });
+
+  test("leaves `NumberInput`'s own options off the text input a `number` field gets in a comma-decimal locale", () => {
+    const languages = vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['pl']);
+    onTestFinished(() => languages.mockRestore());
+    const numberSchema: RJSFSchema = { type: 'number' };
+
+    const { container } = renderTemplate({
+      schema: numberSchema,
+      registry: getTestRegistry(numberSchema),
+      options: { hideControls: true, thousandSeparator: ',' },
+    });
+
+    const input = container.querySelector('input');
+    expect(input).not.toHaveAttribute('thousandseparator');
+    expect(input).not.toHaveAttribute('hidecontrols');
+  });
+
   test('renders the text input with no inputMode for a `number` field passed an `inputMode` named as undefined', () => {
     const numberSchema: RJSFSchema = { type: 'number' };
 

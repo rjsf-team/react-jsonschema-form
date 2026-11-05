@@ -27,7 +27,7 @@ export type ShadcnBaseInputTemplateProps<
   /** Props to spread on the input along with the ones the schema derives. Its `pattern`, `inputMode` and `accept` win
    * over the derived ones
    */
-  extraProps?: InputHTMLAttributes<HTMLInputElement>;
+  extraProps?: InputHTMLAttributes<HTMLInputElement> & Record<`data-${string}`, unknown>;
 };
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
@@ -96,10 +96,10 @@ export default function BaseInputTemplate<
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className)}
         list={hasExamples ? examplesId(id) : undefined}
         title={title}
         {...inputProps}
+        className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className, extraProps?.className)}
         value={inputValue}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}

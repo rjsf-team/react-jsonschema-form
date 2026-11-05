@@ -65,6 +65,12 @@ describe('BaseInputTemplate', () => {
     expect(container.querySelector('input')).toHaveAttribute('title', 'Enter a whole number');
   });
 
+  test('puts a data attribute extraProps carries on the input', () => {
+    const { container } = render(<BaseInputTemplate {...makeWidgetMockProps()} extraProps={{ 'data-testid': 'x' }} />);
+
+    expect(container.querySelector('input')).toHaveAttribute('data-testid', 'x');
+  });
+
   test('keeps a className extraProps carries beside the invalid style', () => {
     const { container } = render(
       <BaseInputTemplate

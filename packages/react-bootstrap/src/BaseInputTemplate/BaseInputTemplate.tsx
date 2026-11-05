@@ -27,7 +27,7 @@ export type BootstrapBaseInputTemplateProps<
    * `size`, `htmlSize`, `plaintext`, `isValid` and `isInvalid`, on the `Form.Range` of a `range` input. Its `pattern`,
    * `inputMode` and `accept` win over the derived ones
    */
-  extraProps?: FormControlProps;
+  extraProps?: FormControlProps & Record<`data-${string}`, unknown>;
 };
 
 export default function BaseInputTemplate<
