@@ -7,6 +7,7 @@ import type {
   UiSchema,
 } from '../src/index.ts';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   createSchemaUtils,
   englishStringTranslator,
   mergeThemePresentation,
@@ -245,6 +246,17 @@ describe('isCollapsedByOptionalDataControls()', () => {
   test('one holding data, even {}, is not', () => {
     expect(isCollapsed(undefined, false, {})).toBe(false);
   });
+  test('an additionalProperties entry holding no data is not', () => {
+    const entry = { ...objectSchema, [ADDITIONAL_PROPERTY_FLAG]: true } as RJSFSchema;
+    expect(
+      isCollapsedByOptionalDataControls(entry, entry, undefined, {
+        globalUiOptions,
+        rootSchema: objectSchema,
+        required: false,
+        formData: null,
+      }),
+    ).toBe(false);
+  });
   test("its own ui:required is read before the object's required", () => {
     expect(isCollapsed({ 'ui:required': true }, false, undefined)).toBe(false);
     expect(isCollapsed({ 'ui:required': false }, true, undefined)).toBe(true);
@@ -293,6 +305,11 @@ describe('shouldRenderOptionalField()', () => {
       typeof options === 'object' && nestedFieldRenders({ ...registry, rootSchema, globalUiOptions }, options),
     ).toBe(true);
     expect(typeof options === 'object' && getOptionalDataControlsType(options, rootSchema)).toBe('object');
+  });
+  test('an additionalProperties entry returns false, whatever its uiSchema says', () => {
+    const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+    const entry = { type: 'object', [ADDITIONAL_PROPERTY_FLAG]: true } as RJSFSchema;
+    expect(nestedFieldRenders({ ...registry, globalUiOptions }, entry)).toBe(false);
   });
   test('a nested field whose schema is the root schema returns true', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };

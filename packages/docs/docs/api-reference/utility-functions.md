@@ -2180,6 +2180,7 @@ Return a consistent `id` for the field help element.
 
 Determines whether the Optional Data Controls render the property of an object collapsed, showing only its Add button: it holds no data, it is not required, read from its own `ui:required` before the object's `required`, and [`isOptionalDataControlsType()`](#isoptionaldatacontrolstype) is true for it.
 Its uiSchema is the one its field renders with, the `ui:definitions` entry of a definition it references merged in.
+An `additionalProperties` entry `retrieveSchema()` stubbed never is, since its key being there makes it present.
 
 #### Parameters
 
@@ -3213,7 +3214,7 @@ setOwn(data, '__proto__', { x: 1 }); // data has an own __proto__ key, and its p
 
 Determines whether the field information from the combination of `schema` and `required` along with the
 `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
-should be rendered with the Optional Data Controls UI. The root field never is.
+should be rendered with the Optional Data Controls UI. The root field never is, nor is an `additionalProperties` entry `retrieveSchema()` stubbed.
 
 #### Parameters
 

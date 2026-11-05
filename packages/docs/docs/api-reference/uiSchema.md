@@ -544,6 +544,8 @@ Instead the object/array container's field title will have an "Add optional data
 
 When enabled for either (or both) the `array` or `object` types, any optional object or array field which has an "defined" value in `formData` will render all of the container's UI elements as normal AND the object/array container's field title will have a "Remove optional data" icon button that, when clicked will set the data for field in the `formData` to "undefined".
 
+An `additionalProperties` entry never shows the controls, whatever this directive says: it is present while its key is, and is taken away by its own remove button, or not at all where a layout grid names its key.
+
 Here is an example of what the UI will look like when enabled using the following `Form` configuration:
 
 ```tsx

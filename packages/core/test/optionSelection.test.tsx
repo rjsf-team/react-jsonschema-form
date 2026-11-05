@@ -589,6 +589,50 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#root_extra')).toHaveValue('from-root');
   });
 
+  describe("restores the field's own default switching to an object option from an empty string", () => {
+    const entry: RJSFSchema = {
+      default: { shared: 'x' },
+      oneOf: [
+        { title: 'Text', type: 'string' },
+        {
+          title: 'Obj',
+          type: 'object',
+          properties: { a: { type: 'string', default: 'A' }, shared: { type: 'string' } },
+        },
+        { title: 'None', type: 'null' },
+      ],
+    };
+
+    it('held by a declared field', async () => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'object', properties: { p: entry } },
+        initialFormData: { p: '' },
+      });
+
+      await user.selectOptions(selectOf(node, 'root_p__oneof_select'), 'Obj');
+
+      expect(getFormData()).toEqual({ p: { a: 'A', shared: 'x' } });
+    });
+
+    it.each<[string, UiSchema]>([
+      ['a plain entry', {}],
+      ['a layout grid cell', { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['p'] }] } }],
+    ])('left by clearing the text option of %s', async (_title, uiSchema) => {
+      const { node, getFormData } = createFormComponent({
+        schema: { type: 'object', additionalProperties: entry },
+        initialFormData: { p: 'abc' },
+        uiSchema,
+      });
+
+      // A plain entry's key input is a textbox too
+      await user.clear(node.querySelector('input[id="root_p"]')!);
+      expect(getFormData()).toEqual({ p: '' });
+      await user.selectOptions(selectOf(node, 'root_p__oneof_select'), 'Obj');
+
+      expect(getFormData()).toEqual({ p: { a: 'A', shared: 'x' } });
+    });
+  });
+
   it.each([
     ['a null option', null],
     ['another object option', {}],

@@ -614,7 +614,9 @@ export default function formDataForNewOption<
     ) {
       newFormData = undefined;
     }
-    const heldNothing = formData === undefined || formData === null;
+    // `''` is what a cleared `additionalProperties` entry holds for nothing, see `storedValue()`, and a declared field
+    // holding it is read the same
+    const heldNothing = formData === undefined || formData === null || (formData as unknown) === '';
     const fieldDefaults = heldNothing ? fieldDefaultsForNewOption(newFormData) : undefined;
     if (fieldDefaults !== undefined) {
       return fieldDefaults;

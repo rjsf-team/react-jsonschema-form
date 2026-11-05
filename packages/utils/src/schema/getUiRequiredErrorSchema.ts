@@ -220,7 +220,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // visible for the user to fill in or correct either. ObjectField and ArrayField render the control, and hide their
   // fields whenever `!isFormDataAvailable(formData)`, which is also true for `null`. MultiSchemaField renders
   // no control of its own: it renders the selected option as a field of its own, with the option's uiSchema, so that
-  // field is gated.
+  // field is gated. An `additionalProperties` entry and the option it shows have no control, whatever the uiSchema
+  // says.
   const xxxOf = getXxxOfOptions<S>(resolvedSchema);
   const {
     schema: retrieved,
@@ -243,6 +244,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (
     path.length > 0 &&
     !isFormDataAvailable(formData) &&
+    !(schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] &&
     // An object node also renders its own ObjectField beside the option (see `getFieldComponent()` in `SchemaField`),
     // showing the properties it shares with the option unless the node is a control that hides them as well, and only
     // such a node's branch carries the option

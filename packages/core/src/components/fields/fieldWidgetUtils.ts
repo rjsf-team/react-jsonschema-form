@@ -31,6 +31,7 @@ import {
   isConstantSelect,
   isCustomWidget,
   isFixedItems,
+  isObject,
   ITEMS_KEY,
   ONE_OF_KEY,
   resolveDefaultWidget,
@@ -376,6 +377,25 @@ export function withoutAdditionalFlag<S extends StrictRJSFSchema = RJSFSchema>(s
   const unflagged = { ...schema };
   Reflect.deleteProperty(unflagged, ADDITIONAL_PROPERTY_FLAG);
   return unflagged;
+}
+
+/** Returns the uiSchema of an `additionalProperties` entry, which has no Optional Data Controls: they say optional data
+ * is absent, while an entry whose key is there is present and is taken away by its key, so their Remove could only leave
+ * the empty value its key is kept with. Set in both spellings, since `getUiOptions()` reads the two in key order
+ *
+ * @param [rawUiSchema] - The uiSchema of the entry, as the caller supplied it, since `resolveUiSchema()` hasn't normalized
+ *        it yet, so it can be any value
+ * @returns - A copy of `uiSchema` turning the Optional Data Controls off for the entry
+ */
+export function withoutOptionalControls<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  rawUiSchema?: UiSchema<T, S, F>,
+): UiSchema<T, S, F> {
+  const uiSchema: UiSchema<T, S, F> = isObject(rawUiSchema) ? rawUiSchema : {};
+  const options: UIOptionsType<T, S, F> = {
+    ...(isObject(uiSchema[UI_OPTIONS_KEY]) ? uiSchema[UI_OPTIONS_KEY] : {}),
+    enableOptionalDataFieldForType: [],
+  };
+  return { ...uiSchema, 'ui:enableOptionalDataFieldForType': [], [UI_OPTIONS_KEY]: options };
 }
 
 /** The value a container field stores for what its child at `fieldPath` sends. A cleared child sends `undefined`,
