@@ -326,6 +326,31 @@ describe('mantine FieldTemplate', () => {
   );
 
   test.each([
+    ['text', { type: 'string' }, 'textbox'],
+    ['range', { type: 'number' }, 'slider'],
+  ] satisfies [string, RJSFSchema, string][])(
+    "keeps the %s widget's inputWrapperOrder where its wrapperProps.inputWrapperOrder isn't an array",
+    (widget, fieldSchema, role) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { x: { ...fieldSchema, title: 'X' } } }}
+          uiSchema={{
+            x: {
+              'ui:widget': widget,
+              'ui:options': { inputWrapperOrder: ['input', 'label'], wrapperProps: { inputWrapperOrder: 5 } },
+            },
+          }}
+          validator={validator}
+        />,
+      );
+
+      expect(screen.getByRole(role).compareDocumentPosition(screen.getByText('X'))).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+    },
+  );
+
+  test.each([
     ['alt-date', 'AltDateWidget'],
     ['alt-datetime', 'AltDateTimeWidget'],
   ])("draws the template's label of an %s with no for, since no element carries the field's id", (widget, key) => {

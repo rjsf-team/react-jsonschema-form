@@ -53,7 +53,7 @@ import LayoutGridField, {
 } from '../src/components/fields/LayoutGridField.tsx';
 import { getTestRegistry } from '../src/testing.ts';
 import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData.ts';
-import { createFormComponent, setupConsoleWarnSuppression } from './testUtils.tsx';
+import { createFormComponent, setupConsoleErrorSuppression, setupConsoleWarnSuppression } from './testUtils.tsx';
 
 const ColumnWidth3 = 'col-xs-3';
 const ColumnWidth4 = 'col-xs-4';
@@ -2215,6 +2215,7 @@ describe("a column's fieldId", () => {
 
 describe('a layout read from JSON', () => {
   const consoleWarnSuppression = setupConsoleWarnSuppression();
+  const consoleErrorSuppression = setupConsoleErrorSuppression();
   const schema: RJSFSchema = {
     type: 'object',
     properties: { a: { type: 'string' }, 5: { type: 'string' }, flag: { type: 'number' } },
@@ -2267,13 +2268,16 @@ describe('a layout read from JSON', () => {
       },
     };
     expect(renderedIds(layoutGrid, { flag: 1 })).toEqual([]);
+    expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+      'ui:layoutGrid ui:condition in "root" names no field, so it renders nothing.',
+    );
   });
   test.each([
     ['missing', undefined],
     ['not an object', 'ui:row'],
   ])('warns, and renders nothing, for a ui:layoutGrid that is %s', (_, layoutGrid) => {
     expect(renderedIds(layoutGrid)).toEqual([]);
-    expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledWith(
+    expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
       'ui:layoutGrid in "root" is not an object, so the LayoutGridField renders nothing.',
     );
   });
@@ -2287,6 +2291,41 @@ describe('a layout read from JSON', () => {
       'ui:layoutGrid cell in "root" names no field, so it renders nothing.',
     );
   });
+  test.each([
+    ['ui:columns', { 'ui:columns': { children: ['a', null, 5, null] } }, ['root_a', 'root_5']],
+    ['ui:row', { 'ui:row': { children: ['a', null, null] } }, ['root_a']],
+  ])('renders the null cells of a %s, which share a key, without a key collision', (_, layoutGrid, ids) => {
+    expect(renderedIds(layoutGrid)).toEqual(ids);
+    expect(consoleErrorSuppression.consoleSpy).not.toHaveBeenCalled();
+  });
+  test.each(['ui:row', 'ui:columns'])(
+    'keeps the cells of a %s mounted when a conditional cell ahead of them comes in',
+    (gridType) => {
+      const uiSchema = (cell: unknown) => ({
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { [gridType]: { children: [cell, 'a'] } },
+      });
+      const { node, rerender } = createFormComponent({ schema, uiSchema: uiSchema(undefined) });
+      const input = node.querySelector('#root_a');
+      rerender({ schema, uiSchema: uiSchema(5) });
+      expect(node.querySelector('#root_5')).toBeInTheDocument();
+      expect(node.querySelector('#root_a')).toBe(input);
+    },
+  );
+  test.each(['ui:row', 'ui:col', 'ui:columns'])(
+    'leaves out a false cell of a %s, such as a `cond && cell` one, as it does an undefined one',
+    (gridType) => {
+      const render = (cell: unknown) => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { [gridType]: { children: ['a', cell] } } },
+        });
+        return node.innerHTML;
+      };
+      expect(render(false)).toBe(render(undefined));
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+    },
+  );
   test('does not warn for a null cell, which renders nothing', () => {
     expect(renderedIds({ 'ui:row': { children: ['a', null] } })).toEqual(['root_a']);
     expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();

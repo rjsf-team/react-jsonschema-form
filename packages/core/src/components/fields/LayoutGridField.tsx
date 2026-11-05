@@ -288,9 +288,9 @@ export function findChildrenAndProps<
   if (!Array.isArray(children)) {
     throw new TypeError(`Expected array for "${schemaKey}" in ${JSON.stringify(layoutGridSchema)}`);
   }
-  // An `undefined` cell, such as a conditional one a layout built in code leaves out, is no cell: handed on, it would
-  // read as a grid handed no layout and render the grid's own layout inside itself
-  return { children: children.filter((child) => child !== undefined), gridProps };
+  // An `undefined` or `false` cell, such as a conditional one a layout built in code leaves out, is no cell: handed on,
+  // an `undefined` one would read as a grid handed no layout and render the grid's own layout inside itself
+  return { children: children.filter((child) => child !== undefined && child !== false), gridProps };
 }
 
 /** Computes the `rawSchema` and array `index` for a `schema` and a `potentialIndex`. If the `schema` is of type
@@ -552,10 +552,12 @@ function LayoutGridFieldChildren<
   const { registry, schema: rawSchema, formData } = layoutGridFieldProps;
   const { schemaUtils } = registry;
   const schema = schemaUtils.retrieveSchema(rawSchema, formData);
-  return childrenLayoutGridSchemaId.map((layoutGridSchema) => (
+  // A `null` cell, one a layout leaves empty, is keyed by its index, since every `null` cell hashes alike. It renders
+  // nothing, so a conditional cell ahead of it shifting its index remounts nothing, while any other cell keeps its key
+  return childrenLayoutGridSchemaId.map((layoutGridSchema, i) => (
     <LayoutGridField<T, S, F>
       {...layoutGridFieldProps}
-      key={`layoutGrid-${hashObject(layoutGridSchema)}`}
+      key={`layoutGrid-${hashObject(layoutGridSchema ?? i)}`}
       schema={schema}
       layoutGridSchema={layoutGridSchema}
     />
@@ -589,12 +591,16 @@ function LayoutGridCondition<
   F extends FormContextType = FormContextType,
 >(props: LayoutFieldProps<T, S, F>) {
   const { layoutGridSchema, ...layoutGridFieldProps } = props;
-  const { formData, registry } = layoutGridFieldProps;
+  const { formData, registry, id, fieldPath } = layoutGridFieldProps;
   const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.CONDITION, registry);
   const { operator, field = '', value } = gridProps;
   // A JSON layout can hold any value here, though `GridProps` types it as a string
   const fieldName: unknown = field;
   if (typeof fieldName !== 'string' && typeof fieldName !== 'number') {
+    logOnce(
+      `${LAYOUT_GRID_OPTION} ${GridType.CONDITION} in ${fieldLabelForLog(id, fieldPath)} names no field, so it renders ` +
+        'nothing.',
+    );
     return null;
   }
   const fieldData = getByPath(formData, toPath(String(fieldName)), null);
@@ -678,11 +684,12 @@ function LayoutGridColumns<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { GridTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
-  return children.map((child) => (
+  // Keyed as `LayoutGridFieldChildren` keys a cell
+  return children.map((child, i) => (
     <GridTemplate
       column
       fieldId={columnFieldId<T, S, F>([child], layoutGridFieldProps)}
-      key={`column-${hashObject(child)}`}
+      key={`column-${hashObject(child ?? i)}`}
       data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
       {...gridProps}
     >
@@ -947,8 +954,9 @@ function LayoutGridFieldComponent<
       `${LAYOUT_GRID_OPTION} render for ${cellName} in ${fieldLabelForLog(id, parentFieldPath)} ${description}, so it ` +
         'is ignored.',
     );
-  } else if (!name && gridSchema !== null) {
-    // A `null` cell is the one a layout leaves empty on purpose
+  } else if (!name && gridSchema != null) {
+    // A `null` cell is the one a layout leaves empty on purpose, and an `undefined` one is a grid handed no layout, which
+    // has been warned about
     logOnce(
       `${LAYOUT_GRID_OPTION} cell in ${fieldLabelForLog(id, parentFieldPath)} names no field, so it renders nothing.`,
     );

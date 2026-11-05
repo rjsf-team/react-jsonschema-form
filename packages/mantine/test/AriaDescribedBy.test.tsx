@@ -270,6 +270,21 @@ describe('aria-describedby', () => {
       expect(describedByValues(container)).toEqual([descriptionId('root')]);
     });
 
+    test.each<[string, RJSFSchema, UiSchema]>([
+      ['a text input', { type: 'string' }, {}],
+      ['a range', { type: 'number' }, { 'ui:widget': 'range' }],
+    ])(
+      "set in ui:options still renders on %s whose wrapperProps.inputContainer isn't a function",
+      (_, schema, uiSchema) => {
+        renderThemed({}, schema, {
+          ...uiSchema,
+          'ui:options': { inputContainer, wrapperProps: { inputContainer: 'nope' } },
+        });
+
+        expect(screen.getByTestId('theme-container')).toBeInTheDocument();
+      },
+    );
+
     test('set on CheckboxGroup still renders inside the group aria override', () => {
       renderThemed(
         { CheckboxGroup: { defaultProps: { inputContainer } } },
@@ -753,6 +768,25 @@ describe('aria-describedby', () => {
     expect(screen.getByText('An error')).toBeVisible();
     expect(screen.getByRole('textbox')).toHaveAccessibleDescription('An error');
   });
+
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ['a text input', { type: 'string' }, {}],
+    ['a range', { type: 'number' }, { 'ui:widget': 'range' }],
+  ])(
+    "shows the errors of %s once where an inputWrapperOrder option that isn't an array leaves the theme's in effect",
+    (_, schema, uiSchema) => {
+      const { container } = renderThemed(
+        { InputWrapper: { defaultProps: { inputWrapperOrder: ['input', 'label'] } } },
+        schema,
+        { ...uiSchema, 'ui:options': { inputWrapperOrder: 'label' } },
+        extraErrors,
+      );
+
+      expect(shownWithText('An error')).toHaveLength(1);
+      expect(container.querySelector(`[aria-describedby~="${errorId('root')}"]`)).toBeInTheDocument();
+      expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('An error');
+    },
+  );
 
   // Each widget hands on the errors its wrapper leaves out its own way: an input through `useInputAriaProps()`, a group
   // through `useGroupAriaProps()`, and a range or alt-date beside its wrapper through `useFieldWrapperProps()`

@@ -352,19 +352,25 @@ export function asObject(value: unknown): GenericObjectType | undefined {
   return isObject(value) ? value : undefined;
 }
 
-/** Returns the `wrapperProps` option when it is an object, without an `inputWrapperOrder` in it that isn't an array,
- * which Mantine would map over
+/** Whether an option's `value` is `undefined` or of the shape Mantine expects of it
+ *
+ * @param key - The option's name
+ * @param value - The option's value
+ * @returns - False for an `inputContainer` that isn't a function or an `inputWrapperOrder` that isn't an array
+ */
+function fitsOption(key: string, value: unknown): boolean {
+  return value === undefined || (checkedOptions.get(key)?.(value) ?? true);
+}
+
+/** Returns the `wrapperProps` option when it is an object, without an `inputContainer` or `inputWrapperOrder` in it
+ * of a shape Mantine would throw on
  *
  * @param value - The `wrapperProps` the options and the theme resolve to
  * @returns - The `wrapperProps` to resolve and spread, or `undefined`
  */
 function wrapperPropsOption(value: unknown): GenericObjectType | undefined {
   const wrapperProps = asObject(value);
-  if (wrapperProps?.inputWrapperOrder !== undefined && !Array.isArray(wrapperProps.inputWrapperOrder)) {
-    const { inputWrapperOrder: _notArray, ...otherWrapperProps } = wrapperProps;
-    return otherWrapperProps;
-  }
-  return wrapperProps;
+  return wrapperProps && Object.fromEntries(Object.entries(wrapperProps).filter(([key, v]) => fitsOption(key, v)));
 }
 
 /** Whether `value` is an `inputContainer`, the function Mantine calls with an input to render the element around it */
@@ -538,8 +544,23 @@ function useAriaContainerProps({
   ]);
 }
 
+/** Picks the `names` options of the shape Mantine expects, so that one of another shape falls back to the theme's, as
+ * it does when `cleanupOptions()` leaves it out
+ *
+ * @param options - The widget's options
+ * @param names - The names of the options to pick
+ * @returns - The picked options, `undefined` where one is of another shape
+ */
 function pickOptions(options: GenericObjectType, names: readonly string[]) {
-  return Object.fromEntries(names.map((name) => [name, options[name]]));
+  return Object.fromEntries(
+    names.map((name) => {
+      const value = options[name];
+      if (name === 'wrapperProps') {
+        return [name, wrapperPropsOption(value)];
+      }
+      return [name, fitsOption(name, value) ? value : undefined];
+    }),
+  );
 }
 
 const rootSlotKeys = ['classNames', 'styles', 'attributes'];
