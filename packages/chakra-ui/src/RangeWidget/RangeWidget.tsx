@@ -54,7 +54,32 @@ export default function RangeWidget<
   const changedRef = useRef(false);
   const storesString = numericWidgetStoresString<S>(schema, value);
   const write = (nextValue: number) => onChange(storesString ? String(nextValue) : nextValue);
+  const numericValue = toNumericValue(value);
+  // Zag restores the value the slider first rendered on its form's reset, which for a range that started empty is the
+  // minimum its thumb is drawn at, so that restore empties the range instead
+  const startedEmpty = useRef(numericValue === undefined);
+  const resettingRef = useRef(false);
+  useEffect(() => {
+    const thumb = thumbRef.current;
+    const ownerDocument = startedEmpty.current ? thumb?.ownerDocument : undefined;
+    // Zag listens for the reset on the form itself, so it is caught here on its way down, before Zag restores
+    const handleReset = ({ target }: Event) => {
+      if (target instanceof HTMLFormElement && target.contains(thumb)) {
+        resettingRef.current = true;
+        setTimeout(() => {
+          resettingRef.current = false;
+        });
+      }
+    };
+    ownerDocument?.addEventListener('reset', handleReset, true);
+    return () => ownerDocument?.removeEventListener('reset', handleReset, true);
+  }, []);
   const handleChange = ({ value: newValue }: SliderValueChangeDetails) => {
+    if (resettingRef.current) {
+      resettingRef.current = false;
+      onChange(options.emptyValue);
+      return;
+    }
     changedRef.current = true;
     if (newValue === undefined) {
       onChange(options.emptyValue);
@@ -62,7 +87,6 @@ export default function RangeWidget<
       write(newValue[0]);
     }
   };
-  const numericValue = toNumericValue(value);
   // Zag reports only a value that changes, so a press or a key that leaves an empty range's thumb at its minimum commits
   // the minimum itself, as moving a native range's thumb there would
   const handleChangeEnd = ({ value: newValue }: SliderValueChangeDetails) => {

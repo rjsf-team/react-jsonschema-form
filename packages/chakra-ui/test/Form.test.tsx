@@ -408,6 +408,32 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
   });
 
+  test('leaves a range that started empty empty when its form is reset, and commits the minimum after', async () => {
+    const onChange = vi.fn();
+    render(
+      <WrappedForm
+        schema={{ type: 'number', minimum: 2, maximum: 9 }}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+        onChange={onChange}
+      >
+        <button type='reset'>Reset</button>
+      </WrappedForm>,
+    );
+
+    screen.getByRole('slider').focus();
+    await user.keyboard('{ArrowRight}{ArrowRight}');
+    await new Promise(requestAnimationFrame);
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 4 }), 'root');
+    await user.click(screen.getByRole('button', { name: 'Reset' }));
+    expect(onChange.mock.lastCall?.[0].formData).toBeUndefined();
+
+    screen.getByRole('slider').focus();
+    await user.keyboard('{Home}');
+    await new Promise(requestAnimationFrame);
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 2 }), 'root');
+  });
+
   test('keeps the key that moved an empty range when its onChange is deferred', async () => {
     const { RangeWidget } = generateWidgets();
     function DeferringRangeWidget(props: WidgetProps) {

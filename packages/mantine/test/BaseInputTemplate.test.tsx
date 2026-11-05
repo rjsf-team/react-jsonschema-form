@@ -114,6 +114,23 @@ describe('mantine BaseInputTemplate', () => {
     expect(onChange).toHaveBeenCalledWith(42);
   });
 
+  test.each(['5.', '-'])(
+    "offers the clear button for the partial number %s, which a number field's input shows",
+    async (text) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'number', title: 'Amount' }}
+          uiSchema={{ 'ui:allowClearTextInputs': true }}
+          validator={validator}
+        />,
+      );
+      await user.type(screen.getByRole('textbox'), text);
+
+      expect(screen.getByRole('textbox')).toHaveValue(text);
+      expect(screen.getByRole('button', { name: /clear input/i })).toBeInTheDocument();
+    },
+  );
+
   test('sends `options.emptyValue` through `onChange` when the input is cleared', async () => {
     const onChange = vi.fn();
 

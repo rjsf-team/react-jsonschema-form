@@ -2641,7 +2641,7 @@ A validator package that has to tell which resource of the root a `$ref` names u
 
 ### numericWidgetStoresString&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The schema's type decides, and a type that allows a number too writes one. The value only speaks for a schema with no type.
+Reports whether a widget that draws a number, such as a rating or a slider, writes its value as a string. The schema's type decides, and a type that allows a number too writes one. A schema with no type has only the value to go by, so it writes a number until it holds a string, even for an `enum` of strings.
 
 #### Parameters
 

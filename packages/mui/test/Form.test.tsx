@@ -575,6 +575,34 @@ describe("mui widgets are named by their label and carry the field's id on the e
     );
   });
 
+  test.each([
+    ['no data', undefined, 1, [0, 1]],
+    ['an unset part', [null, 5], 0, [1, 5]],
+  ])(
+    'keeps a thumb for each part of a range of several values with %s, drawing an unset one at the minimum',
+    async (_, r, moved, written) => {
+      const { RangeWidget } = generateWidgets();
+      const onChange = vi.fn();
+      render(
+        <Form
+          schema={{ type: 'object', properties: { r: { type: 'array', minItems: 2, items: { type: 'number' } } } }}
+          uiSchema={{ r: { 'ui:widget': RangeWidget } }}
+          initialFormData={r === undefined ? undefined : { r }}
+          validator={validator}
+          onChange={onChange}
+        />,
+      );
+
+      const thumbs = screen.getAllByRole('slider');
+      expect(thumbs).toHaveLength(2);
+      expect(thumbs[0]).toHaveAttribute('aria-valuenow', '0');
+      await user.keyboard('{Tab}'.repeat(moved + 1));
+      expect(thumbs[moved]).toHaveFocus();
+      await user.keyboard('{ArrowRight}');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { r: written } }), 'root_r');
+    },
+  );
+
   test("keeps the field's id on the slider's root for a range of several values, whose every thumb takes its input slot", () => {
     const { RangeWidget } = generateWidgets();
     const { container } = render(

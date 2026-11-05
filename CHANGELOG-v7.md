@@ -608,6 +608,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `RatingWidget` reporting a star with a fractional value, under a fractional `minimum`, as the whole number below it ([#5731](https://github.com/rjsf-team/react-jsonschema-form/pull/5731), [#5598](https://github.com/rjsf-team/react-jsonschema-form/issues/5598))
 - Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 - Fix `RatingWidget` for a rating stored as a numeric string, which now marks its star checked, focuses it and is written back as a string ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change a number field's text input holding `false`, and a textarea holding `0` or `false`, to show that value, where they were empty, and a text input holding `false` to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/fluentui-rc
 
@@ -744,9 +746,9 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `FileWidget` never calling the `Form`'s `onBlur` and `onFocus` ([#5737](https://github.com/rjsf-team/react-jsonschema-form/pull/5737))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a textarea holding `0` or `false` to show that value, where it was empty, and a text input holding `false`, which it shows, to offer the clear button for it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change `FileWidget` to show the clear button for a stored file, including one that can't be read ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- **BREAKING CHANGE:** Change `FileWidget` to hand a `ui:options.valueComponent` an empty `File` for each stored file, where it handed the stored data URLs, so a custom one no longer gets the files' names or contents. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RangeWidget`, and the number input of a string field with `ui:inputType: 'number'`, writing a number into a string field, which then failed validation and, for the number input, lost the digits past a number's precision when focus left it: they now write a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
-- Change `PasswordWidget` to show a value of `0` or `false`, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Change `PasswordWidget` and `ColorWidget` to show a value of `0` or `false`, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix the number input writing an empty string when cleared, which ignored `ui:emptyValue` and let a required string field with `ui:inputType: 'number'` pass empty: it now writes `ui:emptyValue`, as the text input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/mui
@@ -804,6 +806,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 - Change a text input or textarea holding `false` to show that value and offer the clear button for it, where they were empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Fix `RangeWidget` writing a number into a string field, or into each item of a range of several values whose items are strings, which then failed validation: it now writes a numeric string, as core's range input does ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix the multiple `SelectWidget` throwing on a `null` value ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/react-bootstrap
 
@@ -853,6 +856,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix renaming an `additionalProperties` key remounting its field, which lost what its widget held, such as an `alt-date`'s partly picked date ([#5733](https://github.com/rjsf-team/react-jsonschema-form/pull/5733), [#5595](https://github.com/rjsf-team/react-jsonschema-form/issues/5595))
 - Fix the text input rendering a stray `0` beside it when its value is `0` and `allowClearTextInputs` is set ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Change a text input holding `false` to show that value and offer the clear button for it, where it was empty ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `TextareaWidget` keeping its text when its value is cleared, such as by resetting the form to empty data ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/shadcn
 

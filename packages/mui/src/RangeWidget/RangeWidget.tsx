@@ -66,9 +66,12 @@ export default function RangeWidget<
       rootRef.current?.querySelector('input')?.focus();
     }
   }, []);
-  const rangeParts = isRangeOfValues ? value.map((part) => toNumericValue(part)) : undefined;
-  const sliderValue = rangeParts?.every((part) => part !== undefined) ? rangeParts : toNumericValue(value);
-  const sliderProps = { value: sliderValue, name: htmlName || id, ...rangeSpec<S>(schema) };
+  const spec = rangeSpec<S>(schema);
+  // An unset part is drawn at the minimum, as an empty one-value range is, so the range keeps a thumb for each part
+  const sliderValue = isRangeOfValues
+    ? value.map((part) => toNumericValue(part) ?? spec.min ?? 0)
+    : toNumericValue(value);
+  const sliderProps = { value: sliderValue, name: htmlName || id, ...spec };
 
   const storesString = numericWidgetStoresString<S>(schema, value);
   const { items } = schema;

@@ -155,10 +155,15 @@ export default function BaseInputTemplate<
     />
   );
 
+  // `NumberInput` is a text input that shows a partial number such as `5.` or `-`, which a native number input blanks
+  const showsValue = isNumeric
+    ? (typeof value === 'number' || typeof value === 'string') && Boolean(inputValue)
+    : offersClearButton(inputValue, inputProps.type);
+
   return (
     <>
       {input}
-      {options.allowClearTextInputs && !readonly && !disabled && offersClearButton(inputValue, inputProps.type) && (
+      {options.allowClearTextInputs && !readonly && !disabled && showsValue && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}
