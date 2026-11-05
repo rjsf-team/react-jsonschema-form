@@ -86,7 +86,7 @@ interface FancySelectInterface {
  * @returns - Its index, as text
  */
 function cmdkValue(item: FancySelectItem<string>) {
-  return item.value.trim();
+  return String(item.index);
 }
 
 /** The option cmdk renders for a value it holds, found by the `data-value` it gives the option, since it keeps the
@@ -225,7 +225,7 @@ export function FancySelect({
         disabled={item.disabled}
         ref={item.value === selected ? selectedRef : undefined}
         key={item.value}
-        value={item.value}
+        value={cmdkValue(item)}
         onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();
