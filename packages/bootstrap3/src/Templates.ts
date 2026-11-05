@@ -24,7 +24,7 @@ export function generateTemplates<
   return {
     ArrayFieldItemTemplate,
     // `buildRegistry()` would fill in core's `SubmitButton` anyway; it is listed so `ButtonTemplates` is complete, as
-    // `Partial<TemplatesType>` requires, and `ThemeProps['templates']` can't type a partial one's entries for JSX
+    // `Partial<TemplatesType>` requires
     ButtonTemplates: { AddButton, ClearButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, SubmitButton },
     CyclicSchemaExpandTemplate,
     GridTemplate,

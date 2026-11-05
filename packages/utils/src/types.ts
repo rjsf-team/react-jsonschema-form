@@ -2,7 +2,6 @@ import type {
   ButtonHTMLAttributes,
   ChangeEvent,
   Component,
-  ComponentType,
   CSSProperties,
   FocusEvent,
   HTMLAttributes,
@@ -590,8 +589,12 @@ export type MarkdownTemplateProps<
   children: string;
 };
 
-/** The set of RJSF templates that can be overridden by themes or users */
-export type TemplatesType<
+/** The templates RJSF declares. Separate from `TemplatesType` because `Omit` with literal keys on a type with a string
+ * index signature collapses to that signature, so `Omit<TemplatesType, 'ButtonTemplates'>` would leave every template
+ * unchecked
+ */
+// oxlint-disable-next-line typescript/consistent-type-definitions -- an interface gets no implicit index signature, so it wouldn't fit `CustomTemplateEntries`
+export type DeclaredTemplatesType<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
@@ -658,7 +661,31 @@ export type TemplatesType<
     /** The template to use for the Clear button used for input fields */
     ClearButton: SlotComponent<IconButtonProps<T, S, F>>;
   };
-} & Record<string, ComponentType<any> | Record<string, ComponentType<any>> | undefined>;
+};
+
+/** A custom entry of `TemplatesType`, a template or a named group of them, whose props only its lookup knows */
+export type CustomTemplateEntries = Record<
+  string,
+  SlotComponent<never> | Record<string, SlotComponent<never> | undefined> | undefined
+>;
+
+/** The set of RJSF templates that can be overridden by themes or users */
+export type TemplatesType<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = DeclaredTemplatesType<T, S, F> & CustomTemplateEntries;
+
+/** Any subset of the templates, as the `templates` prop of `Form` and a theme's `templates` take: each declared template,
+ * each button of `ButtonTemplates` on its own, and custom entries
+ */
+export type PartialTemplatesType<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = Partial<Omit<DeclaredTemplatesType<T, S, F>, 'ButtonTemplates'>> & {
+  ButtonTemplates?: Partial<DeclaredTemplatesType<T, S, F>['ButtonTemplates']>;
+} & CustomTemplateEntries;
 
 /** The options RJSF reads from `ui:globalOptions`, as fallbacks for a field that sets none of its own. These are the
  * only ones it reads there: any other option is set per field, and a key outside this list belongs to an extension.
@@ -719,14 +746,11 @@ export interface GlobalUISchemaOptionsKeys {
   deprecatedHandling?: 'hide' | 'disable' | 'label';
 }
 
-/** The templates `getTemplate()` reads from a field's options: every one `TemplatesType` declares but `ButtonTemplates`.
- * Derived rather than listed, so that a template a later release declares fails typecheck until
- * `RESERVED_UI_OPTION_NAMES` lists it. `TemplatesType`'s index signature is filtered out, or `keyof` would be `string`
+/** The templates `getTemplate()` reads from a field's options: every one `DeclaredTemplatesType` declares but
+ * `ButtonTemplates`. Derived rather than listed, so that a template a later release declares fails typecheck until
+ * `RESERVED_UI_OPTION_NAMES` lists it
  */
-type OverridableTemplateName = Exclude<
-  keyof { [K in keyof TemplatesType as string extends K ? never : K]: unknown },
-  'ButtonTemplates'
->;
+type OverridableTemplateName = Exclude<keyof DeclaredTemplatesType, 'ButtonTemplates'>;
 
 /** Every option name RJSF reads for a field, which an extension of `GlobalUISchemaOptions` may not reuse: the
  * registry hands an extension's keys to every field along with RJSF's own, so one of these names would act as the

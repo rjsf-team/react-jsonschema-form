@@ -1,3 +1,6 @@
+import { createElement } from 'react';
+import type { PartialTemplatesType, SubmitButtonProps } from '@rjsf/utils';
+
 import { getTestRegistry } from '../src/testing.ts';
 
 describe('getTestRegistry()', () => {
@@ -40,5 +43,16 @@ describe('getTestRegistry()', () => {
     expect(registry.classMap.input).toBe('theme-input');
     expect(registry.classMap.select).toBe(' wide');
     expect(Object.isFrozen(registry.classMap)).toBe(true);
+  });
+
+  it("takes any subset of templates, as a Form's templates prop does, and fills in the rest", () => {
+    const SubmitButton = (_props: SubmitButtonProps) => createElement('button', { type: 'submit' });
+    const templates: PartialTemplatesType = { ButtonTemplates: { SubmitButton } };
+    const core = getTestRegistry().templates.ButtonTemplates;
+
+    const { ButtonTemplates } = getTestRegistry({}, {}, templates).templates;
+
+    expect(ButtonTemplates.SubmitButton).toBe(SubmitButton);
+    expect(ButtonTemplates.AddButton).toBe(core.AddButton);
   });
 });

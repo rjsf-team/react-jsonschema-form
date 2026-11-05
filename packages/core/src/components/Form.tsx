@@ -30,6 +30,7 @@ import type {
   DefaultFormStateBehavior,
   CustomMergeAllOf,
   NameGeneratorFunction,
+  PartialTemplatesType,
 } from '@rjsf/utils';
 import {
   getTemplates,
@@ -117,10 +118,8 @@ export interface FormProps<
   // Form registry
   /** The dictionary of registered fields in the form */
   fields?: RegistryFieldsType<Uninferred<T>, S, F>;
-  /** The dictionary of registered templates in the form; Partial allows a subset to be provided beyond the defaults */
-  templates?: Partial<Omit<TemplatesType<Uninferred<T>, S, F>, 'ButtonTemplates'>> & {
-    ButtonTemplates?: Partial<TemplatesType<Uninferred<T>, S, F>['ButtonTemplates']>;
-  };
+  /** The dictionary of registered templates in the form; any subset of them may be provided beyond the defaults */
+  templates?: PartialTemplatesType<Uninferred<T>, S, F>;
   /** The dictionary of registered widgets in the form */
   widgets?: RegistryWidgetsType<Uninferred<T>, S, F>;
   /** Which parts of a field the registered fields and widgets draw themselves, layered over the theme's declarations,

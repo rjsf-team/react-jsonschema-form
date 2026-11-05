@@ -1,5 +1,12 @@
 import { Component } from 'react';
-import type { FieldProps, GenericObjectType, Registry, RJSFSchema, ThemePresentation } from '@rjsf/utils';
+import type {
+  DeclaredTemplatesType,
+  FieldProps,
+  GenericObjectType,
+  Registry,
+  RJSFSchema,
+  ThemePresentation,
+} from '@rjsf/utils';
 import { WIDGET_FIELD_PRESENTATION } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
@@ -188,6 +195,98 @@ describe('withTheme', () => {
   });
 
   describe('With templates', () => {
+    it('takes a whole set of declared templates', () => {
+      expectTypeOf<DeclaredTemplatesType>().toExtend<NonNullable<FormProps['templates']>>();
+    });
+
+    it('takes a template or a button that may be undefined', () => {
+      expectTypeOf<{
+        FieldTemplate: DeclaredTemplatesType['FieldTemplate'] | undefined;
+        ButtonTemplates: { SubmitButton: DeclaredTemplatesType['ButtonTemplates']['SubmitButton'] | undefined };
+      }>().toExtend<NonNullable<FormProps['templates']>>();
+    });
+
+    it('checks a declared template against its own props, beside the open custom entries', () => {
+      const unrelatedTemplate = ({ unrelated }: { unrelated: string }) => (
+        <div className='unrelated-template'>{unrelated}</div>
+      );
+      const formTemplates: FormProps['templates'] = {
+        // @ts-expect-error `FieldTemplate` takes `FieldTemplateProps`, which hold no `unrelated`
+        FieldTemplate: unrelatedTemplate,
+        MyCustomTemplate: () => <div />,
+      };
+      const theme: ThemeProps = {
+        templates: {
+          // @ts-expect-error `withTheme()` checks a theme's `FieldTemplate` as `Form` does
+          FieldTemplate: unrelatedTemplate,
+          MyCustomTemplate: () => <div />,
+        },
+      };
+
+      const fromForm = createComponent(WrapperClassComponent({}), {
+        schema: { type: 'string' },
+        validator,
+        templates: formTemplates,
+      });
+      const fromTheme = createComponent(withTheme(theme), { schema: { type: 'string' }, validator });
+
+      expect(fromForm.node.querySelectorAll('.unrelated-template')).toHaveLength(1);
+      expect(fromTheme.node.querySelectorAll('.unrelated-template')).toHaveLength(1);
+    });
+
+    it('checks each button of `ButtonTemplates` against its own props', () => {
+      const UnrelatedButton = ({ unrelated }: { unrelated: string }) => (
+        <button type='button' className='unrelated-button'>
+          {unrelated}
+        </button>
+      );
+      const formTemplates: FormProps['templates'] = {
+        // @ts-expect-error `SubmitButton` takes `SubmitButtonProps`, which hold no `unrelated`
+        ButtonTemplates: { SubmitButton: UnrelatedButton },
+      };
+      const theme: ThemeProps = {
+        // @ts-expect-error `withTheme()` checks a theme's `SubmitButton` as `Form` does
+        templates: { ButtonTemplates: { SubmitButton: UnrelatedButton } },
+      };
+
+      const fromForm = createComponent(WrapperClassComponent({}), {
+        schema: { type: 'string' },
+        validator,
+        templates: formTemplates,
+      });
+      const fromTheme = createComponent(withTheme(theme), { schema: { type: 'string' }, validator });
+
+      expect(fromForm.node.querySelectorAll('.unrelated-button')).toHaveLength(1);
+      expect(fromTheme.node.querySelectorAll('.unrelated-button')).toHaveLength(1);
+    });
+
+    it('gives a declared template written inline with no type on its props the props it declares', () => {
+      const ThemedForm = withTheme({
+        templates: {
+          FieldTemplate: (props) => {
+            expectTypeOf(props.id).toEqualTypeOf<string>();
+            return <div className='theme-field-template'>{props.id}</div>;
+          },
+        },
+      });
+      const { container } = render(<ThemedForm schema={{ type: 'string' }} validator={validator} />);
+      const { container: fromForm } = render(
+        <ThemedForm
+          schema={{ type: 'string' }}
+          validator={validator}
+          templates={{
+            FieldTemplate: (props) => {
+              expectTypeOf(props.id).toEqualTypeOf<string>();
+              return <div className='form-field-template'>{props.id}</div>;
+            },
+          }}
+        />,
+      );
+
+      expect(container.querySelector('.theme-field-template')).toHaveTextContent('root');
+      expect(fromForm.querySelector('.form-field-template')).toHaveTextContent('root');
+    });
+
     it('should use the withTheme template', () => {
       const themeTemplates = {
         FieldTemplate() {

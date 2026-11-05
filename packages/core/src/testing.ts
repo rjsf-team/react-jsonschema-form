@@ -1,4 +1,4 @@
-import type { FormClassMap, Registry, ThemePresentation } from '@rjsf/utils';
+import type { FormClassMap, PartialTemplatesType, Registry, ThemePresentation } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
@@ -10,7 +10,7 @@ import { buildRegistry } from './Theme.ts';
 export function getTestRegistry(
   rootSchema: Registry['rootSchema'] = {},
   fields: Registry['fields'] = {},
-  templates: Partial<Registry['templates']> = {},
+  templates: PartialTemplatesType = {},
   widgets: Registry['widgets'] = {},
   formContext: Registry['formContext'] = {},
   globalFormOptions: Registry['globalFormOptions'] = {
