@@ -11,6 +11,8 @@ import {
   normalizeUri,
   REF_KEY,
   resolveUri,
+  rootSchemaIdOf,
+  ROOT_SCHEMA_PREFIX,
   SCHEMA_KEY,
   getValidationSchemas,
 } from '@rjsf/utils';
@@ -108,11 +110,16 @@ function resourceAt(value: unknown, base: string, laterDialect: boolean): Resour
 }
 
 /** Returns the resource `rootSchema` is and every resource of it, by `documentKey()` of its base URI, the first found
- * where two share one
+ * where two share one. The root is also found under the id the runtime validator registers it under, as
+ * `rootSchemaIdOf()` returns it, `__rjsf_rootSchema` for a root without an `$id`
  */
-function resourcesOf(rootSchema: unknown, laterDialect: boolean): { root: Resource; resources: Map<string, Resource> } {
+function resourcesOf(
+  rootSchema: unknown,
+  laterDialect: boolean,
+): { id: string; root: Resource; resources: Map<string, Resource> } {
+  const id = rootSchemaIdOf(rootSchema as RJSFSchema);
   const root: Resource = resourceAt(rootSchema, '', laterDialect) ?? { schema: rootSchema, base: '' };
-  const resources = new Map<string, Resource>([[documentKey(root.base), root]]);
+  const resources = new Map<string, Resource>([[documentKey(id), root]]);
   const visit = (node: unknown, base: string) => {
     if (!isObject(node)) {
       return;
@@ -124,7 +131,7 @@ function resourcesOf(rootSchema: unknown, laterDialect: boolean): { root: Resour
     subschemasOf(node).forEach((subschema) => visit(subschema, resource?.base ?? base));
   };
   visit(rootSchema, root.base);
-  return { root, resources };
+  return { id, root, resources };
 }
 
 /** Returns the resource of the root `ref` names and the fragment it names in it, `#` for the resource itself, reading
@@ -135,10 +142,14 @@ function resourcesOf(rootSchema: unknown, laterDialect: boolean): { root: Resour
 function referenced(
   ref: string,
   around: Resource,
-  resources: ReadonlyMap<string, Resource>,
+  { id, resources }: Pick<RootReading, 'id' | 'resources'>,
 ): [Resource, string] | undefined {
   const [document, ...fragment] = ref.split('#');
-  const resource = document === '' ? around : resources.get(documentKey(resolveUri(around.base, document)));
+  const found = (base: string) => resources.get(documentKey(resolveUri(base, document)));
+  // Where the resolved URI names nothing, ata falls back to the `$ref` as written, which reaches the root only under
+  // `__rjsf_rootSchema`, the id of a root without an `$id` of its own
+  const asWritten = id === ROOT_SCHEMA_PREFIX && document === id;
+  const resource = document === '' ? around : (found(around.base) ?? (asWritten ? found('') : undefined));
   return resource === undefined ? undefined : [resource, `#${fragment.join('#')}`];
 }
 
@@ -234,6 +245,8 @@ interface RootReading {
   dialect: unknown;
   draft07: boolean;
   laterDialect: boolean;
+  /** The id the runtime validator registers the root under, as `rootSchemaIdOf()` returns it */
+  id: string;
   root: Resource;
   resources: ReadonlyMap<string, Resource>;
 }
@@ -260,24 +273,27 @@ function readRoot(rootSchema: object): RootReading {
  * carried in a single container of the document under a generated name the `$ref` is renamed to. A `$ref` is read
  * against the innermost resource around it, an option with an `$id` of its own included, as the schema graph reads the
  * root's resources: its document part is resolved against that resource's base URI and names whichever resource of the
- * root has that URI, however it is spelled. One that names nothing there, or one into another document, is left as it
- * is, which leaves ata nothing to compile and the module reporting it when the schema is first validated against. No
- * subschema of the document keeps an `$id` or a container, which only the renamed `$ref`s could need. Only the keywords
- * holding subschemas are rewritten, never the data a `const` or a `default` holds.
+ * root has that URI, however it is spelled. One into another document is left as it is, for ata to resolve against the
+ * extra schemas compiled into the module beside it. One that names nothing there or in them leaves ata nothing to
+ * compile and the module reporting it when the schema is first validated against. No subschema of the document keeps
+ * an `$id` or a container, which only the renamed `$ref`s could need. Only the keywords holding subschemas are
+ * rewritten, never the data a `const` or a `default` holds.
  *
- * @param schema - A schema `getValidationSchemas()` lists
+ * @param schema - A schema `getValidationSchemas()` lists, or a subschema of the root
  * @param reading - The `RootReading` of the root it was listed for
+ * @param [start=reading.root] - The resource of the root the `$ref`s of `schema` are read against
  * @returns - The document
  */
 function standalone(
-  schema: GenericObjectType,
-  { container, dialect, draft07, laterDialect, root, resources }: RootReading,
+  schema: unknown,
+  { container, dialect, draft07, laterDialect, id, root, resources }: RootReading,
+  start: Resource = root,
 ): GenericObjectType {
   const names = new Map<unknown, Map<string, string>>();
   const pending: [string, unknown, Resource][] = [];
   let count = 0;
   const renamed = (ref: string, around: Resource): string => {
-    const target = referenced(ref, around, resources);
+    const target = referenced(ref, around, { id, resources });
     if (target === undefined) {
       return ref;
     }
@@ -326,7 +342,7 @@ function standalone(
     const allOf: unknown = siblings[ALL_OF_KEY];
     return { ...siblings, [ALL_OF_KEY]: [...(Array.isArray(allOf) ? allOf : []), reference] };
   };
-  const document = compilable(rewrite(schema, root));
+  const document = compilable(rewrite(schema, start));
   const carried: GenericObjectType = {};
   for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
     const [name, value, base] = next;
@@ -334,6 +350,63 @@ function standalone(
   }
   const declared = typeof dialect === 'string' ? { [SCHEMA_KEY]: dialect, ...document } : document;
   return count === 0 ? declared : { ...declared, [container]: carried };
+}
+
+/** Returns the extra schema `extra`, registered under `id`, with every `$ref` it holds into the form's document or into
+ * a resource of the root renamed to the `$id` of a document of its own compiled by `standalone()` from the subschema it
+ * names. The module compiles no copy of the root a pointer into it could reach, so without this such a `$ref` names
+ * nothing there and holds for any data. Each document is added to `targets` under the subschema it is compiled from, so
+ * a subschema several `$ref`s name is compiled once.
+ */
+function linkedToForm(
+  extra: object,
+  id: string,
+  reading: RootReading,
+  targets: Map<unknown, GenericObjectType>,
+): object {
+  const targetOf = (ref: string, base: string): string => {
+    const [document] = ref.split('#', 1);
+    const named = document === '' ? undefined : referenced(ref, { schema: extra, base }, reading);
+    if (named === undefined) {
+      return ref;
+    }
+    const [subschema, around] = locate(...named, reading.laterDialect);
+    if (subschema === undefined) {
+      return ref;
+    }
+    const target = targets.get(subschema) ?? {
+      ...standalone(subschema, reading, around),
+      [ID_KEY]: `urn:rjsf:form-target:${targets.size}`,
+    };
+    targets.set(subschema, target);
+    return target[ID_KEY] as string;
+  };
+  const link = (value: unknown, base: string): unknown => {
+    if (!isObject(value)) {
+      return value;
+    }
+    const inner = value === extra ? base : (resourceAt(value, base, reading.laterDialect)?.base ?? base);
+    const copy = Object.fromEntries(
+      Object.entries(value).map(([key, child]) => [key, mapKeyword(key, child, (sub) => link(sub, inner))]),
+    );
+    const ref: unknown = value[REF_KEY];
+    return typeof ref === 'string' ? { ...copy, [REF_KEY]: targetOf(ref, inner) } : copy;
+  };
+  return link(extra, id) as object;
+}
+
+/** The size of each extra schema a warning has given, kept so compiling on every request serializes it once */
+const SIZES = new WeakMap<object, string>();
+
+/** Returns the size of the JSON of `extra`, for a warning */
+function sizeOf(extra: object): string {
+  let size = SIZES.get(extra);
+  if (size === undefined) {
+    const bytes = new TextEncoder().encode(JSON.stringify(extra)).length;
+    size = bytes < 1024 ? `${bytes} bytes` : `about ${Math.round(bytes / 1024)} KB`;
+    SIZES.set(extra, size);
+  }
+  return size;
 }
 
 /** Compiles a schema into a precompiled validator module. ata's
@@ -387,13 +460,14 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   } = ataOptionsOverrides;
   // Extra schemas go into the bundle after the form's own schemas, so a custom meta-schema or a
   // `$ref` between them resolves there too. They get no entry in the exported map. Every document
-  // the runtime validator ends up with goes in, so the two resolve the same documents by
-  // construction: `ataOptionsOverrides.schemas`, as the list the runtime validators get (see
-  // `schemaList`), and then `additionalMetaSchemas` (through `addSchema`, which needs a plain
-  // `$id`), each under the `$id` a `$ref` reaches it by, a later one replacing an earlier one with
-  // the same `$id`. One with the `$id` of one of the form's own schemas is left out: at runtime the
-  // form's schema wins. A record entry under the empty key is left out, as at runtime.
-  const formIds = new Set(schemas.map((s) => (s as { $id?: unknown }).$id).filter((id) => typeof id === 'string'));
+  // the runtime validator ends up with goes in: `ataOptionsOverrides.schemas`, as the list the
+  // runtime validators get (see `schemaList`), and then `additionalMetaSchemas` (through
+  // `addSchema`, which needs a plain `$id`), each under the `$id` a `$ref` reaches it by, a later
+  // one replacing an earlier one with the same `$id`. One with the `$id` of one of the form's own
+  // schemas, or the one the runtime validator registers the root under, is left out: at runtime the
+  // form's schema wins. A record entry under the empty key is left out, as at runtime. A `$ref` an
+  // extra holds into the form's document is read against the root, see `linkedToForm()`.
+  const formIds = new Set([...keys, reading.id]);
   const extras = [...schemaList(extraSchemas, isDraft04(schema, false)), ...additionalMetaSchemas].map(
     (extra) => [extra !== null && typeof extra === 'object' ? ownId(extra) : undefined, extra] as const,
   );
@@ -403,13 +477,12 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
       winners.set(id, extra);
     }
   }
-  const bundled = [...winners.values()];
+  const targets = new Map<unknown, GenericObjectType>();
+  const bundled = [...winners].map(([id, extra]) => linkedToForm(extra, id, reading, targets));
   for (const [id, extra] of winners) {
     if (/^https?:\/\/json-schema\.org\//.test(id)) {
-      const bytes = new TextEncoder().encode(JSON.stringify(extra)).length;
-      const size = bytes < 1024 ? `${bytes} bytes` : `about ${Math.round(bytes / 1024)} KB`;
       logOnce(
-        `@rjsf/validator-ata: ${id} is compiled into the precompiled module (${size} of JSON). ata ships its own copies of the draft-04, draft-06, draft-07, 2019-09 and 2020-12 meta-schemas, so an unchanged copy of one of those does not need to be passed`,
+        `@rjsf/validator-ata: ${id} is compiled into the precompiled module (${sizeOf(extra)} of JSON). ata ships its own copies of the draft-04, draft-06, draft-07, 2019-09 and 2020-12 meta-schemas, so an unchanged copy of one of those does not need to be passed`,
       );
     }
   }
@@ -473,7 +546,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     formats[name] = new Function('value', `return ${re.toString()}.test(value)`) as (value: string) => boolean;
   }
 
-  const bundle = Validator.bundleStandalone([...schemas, ...bundled], {
+  const bundle = Validator.bundleStandalone([...schemas, ...bundled, ...targets.values()], {
     ...ATA_CONFIG,
     ...carried,
     format: 'cjs',
