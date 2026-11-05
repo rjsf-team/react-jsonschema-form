@@ -1295,6 +1295,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `useFileWidgetProps()` appending the next selection after a lone value of a multiple field that isn't a data URL, which the field doesn't show: the selection now replaces it ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - **BREAKING CHANGE:** Change `useAltDateWidgetProps()` to read only a string value, so a number or `Date` value, which the widget can't write back, renders every alt-date widget's selects blank, where it showed that date. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#any-members-of-the-public-types-are-specific-types-breaking-change) ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 - Add `offersClearButton()`, which reports whether an input with `allowClearTextInputs` offers its clear button for the value it's given, as a number, date, date-time, month, time or week input blanks a value outside its type's syntax ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
+- Fix `useAltDateWidgetProps()` throwing during render for a string it can't parse as a date, such as `'not-a-date'`, which unmounted the form; the widget now shows every part unset ([#5682](https://github.com/rjsf-team/react-jsonschema-form/pull/5682))
 
 ## @rjsf/validator-ajv8
 
