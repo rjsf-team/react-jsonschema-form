@@ -284,7 +284,7 @@ Things to know:
 - The generated file never fills in `default` values. The runtime validator does (`useDefaults` is on by default in ata), so for a required field that is missing but has a `default`, the runtime validator fills it in and accepts, while the generated file rejects. The form fills in defaults itself (`getDefaultFormState`), so this shows only for data that does not come from the form.
 - If your `Form` is given a `customMergeAllOf`, pass it to both the compile step and `createPrecompiledValidator()`, as with `@rjsf/validator-ajv8`.
 - Pass `suppressDuplicateFiltering` to `createPrecompiledValidator()`. Passing it to the compile step has no effect and logs a warning.
-- The generated file imports nothing, so `ata-validator` is not in your bundle, as long as the app imports only `createPrecompiledValidator` (and types). Importing the default export, `customizeValidator` or `ATAValidator` brings the runtime validator back.
+- The generated file imports nothing, so `ata-validator` is not in your bundle, as long as the app imports only `createPrecompiledValidator`, `ATAPrecompiledValidator` (which `createPrecompiledValidator()` returns) and types. Importing the default export, `customizeValidator` or `ATAValidator` brings the runtime validator back.
 - The generated file is CommonJS with no type declarations, like the one from `@rjsf/validator-ajv8`, so the bundler and TypeScript notes under [Using the precompiled validator](#using-the-precompiled-validator) apply to it too, except that where it is not converted the page throws `module is not defined` instead. With TypeScript, also cast it to `ValidatorFunctions` as above.
 - Run the compile step again when the schema changes.
 - To get the code as a string instead of a file, use `compileSchemaValidatorsCode(schema, options)` from `@rjsf/validator-ata/compileSchemaValidators`. The code imports nothing, so unlike the ajv8 example above it needs no runtime dependencies replaced.
@@ -965,7 +965,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 NOTES:
 
-- If you provided your own function, modify the list in place.
+- If you provided your own function, set the `message` of each error in the list in place. The function is handed copies of the errors, and only the `message` it sets on each is kept.
 - You must process all the cases which you need by yourself. See the full list of possible cases [here](https://github.com/ajv-validator/ajv-i18n/blob/master/messages/index.js).
-- Each element in the `errors` list passed to the custom function represent a **raw** error object returned by ajv ([see doc](https://github.com/ajv-validator/ajv/blob/master/docs/api.md#error-objects)).
+- Each element in the `errors` list passed to the custom function is a copy of a raw error object returned by ajv ([see doc](https://github.com/ajv-validator/ajv/blob/master/docs/api.md#error-objects)), except that the property names in its `missingProperty`, `property` and `deps` params are quoted, such as `'foo'`, so that RJSF can replace them in your messages with the property's `title` or `ui:title`. Strip the quotes before looking a param up, such as in a map of labels. A property with no title keeps its quoted key in the message.
 - [HTML 5 Validation](#html5-validation) will cause the browser to display a "popup" message, the text of which is entirely under control of the browser. If you are seeing messages which aren't translated "popping up", then add `noHtml5Validate` to your form.

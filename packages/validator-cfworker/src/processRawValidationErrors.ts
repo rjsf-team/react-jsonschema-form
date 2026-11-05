@@ -2,6 +2,7 @@ import type {
   CustomValidator,
   ErrorTransformer,
   FormContextType,
+  RawValidationResult,
   RJSFSchema,
   RJSFValidationError,
   SchemaContext,
@@ -23,15 +24,6 @@ import {
 } from '@rjsf/utils';
 
 import type { CFWorkerValidationError, SuppressDuplicateFilteringType } from './types.ts';
-
-/** The raw validation results produced by the underlying engine, before conversion into RJSF's error formats. */
-export interface RawValidationErrorsType<Result = any> {
-  /** The raw errors returned by the engine's validation run, when any. */
-  errors?: Result[];
-
-  /** The error thrown when the engine could not run validation, such as on an invalid schema. */
-  validationError?: Error;
-}
 
 /** Converts a cfworker instance location into RJSF's dot-separated property path.
  *
@@ -200,7 +192,7 @@ export default function processRawValidationErrors<
   F extends FormContextType = FormContextType,
 >(
   context: SchemaContext<S, F>,
-  rawErrors: RawValidationErrorsType<CFWorkerValidationError>,
+  rawErrors: RawValidationResult<CFWorkerValidationError>,
   formData: T | undefined,
   schema: S,
   customValidate?: CustomValidator<T, S, F>,

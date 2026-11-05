@@ -18,7 +18,7 @@ import {
   noop,
   retrieveSchema,
 } from '@rjsf/utils';
-import type { Ajv } from 'ajv';
+import type { Ajv, ErrorObject, SchemaValidateFunction } from 'ajv';
 import ajvI18n from 'ajv-i18n';
 import { Ajv2019 } from 'ajv/dist/2019.js';
 import { Ajv2020 } from 'ajv/dist/2020.js';
@@ -37,6 +37,7 @@ import pointerValidationTests, {
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
+import * as pkg from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
 
@@ -3692,4 +3693,50 @@ describe('AJV8Validator', () => {
   nestedResourceTests(validatorFor);
   mergedResourceViewTests(validatorFor);
   handedResourceTests(validatorFor);
+});
+
+describe('AJV8Validator localizing the errors of a custom keyword', () => {
+  function validatorReporting(params: ErrorObject['params'][], localizer: Localizer) {
+    const reported: Partial<ErrorObject>[] = params.map((param) => ({ keyword: 'custom', params: param }));
+    const validate: SchemaValidateFunction = () => {
+      validate.errors = reported;
+      return false;
+    };
+    const validator = new AJV8Validator(
+      { ajvOptionsOverrides: { keywords: [{ keyword: 'custom', errors: true, validate }] } },
+      localizer,
+    );
+    return { reported, validator };
+  }
+
+  it('hands back the params that are not strings untouched', () => {
+    const { validator } = validatorReporting([{ property: 5 }, { property: ['a', 'b'] }], noop);
+    const schema: RJSFSchema = { $id: 'customNonString', custom: true };
+    expect(validator.rawValidation(schema, {}).errors?.map(({ params }) => params)).toEqual([
+      { property: 5 },
+      { property: ['a', 'b'] },
+    ]);
+  });
+
+  it('clears the errors and leaves their params unquoted when the localizer throws', () => {
+    const { reported, validator } = validatorReporting([{ missingProperty: 'foo' }], () => {
+      throw new Error('localizer failed');
+    });
+    const schema: RJSFSchema = { $id: 'customThrowing', custom: true };
+    expect(() => validator.rawValidation(schema, {})).toThrow('localizer failed');
+    expect(validator.ajv.getSchema('customThrowing')?.errors).toBeNull();
+    expect(reported.map(({ params }) => params)).toEqual([{ missingProperty: 'foo' }]);
+  });
+});
+
+describe('package surface', () => {
+  it('exports the validator classes as values', () => {
+    const schema: RJSFSchema = { $id: 'surface', type: 'string' };
+    expect(typeof pkg.AJV8Validator).toBe('function');
+    expect(typeof pkg.AJV8PrecompiledValidator).toBe('function');
+    expect(pkg.default).toBeInstanceOf(pkg.AJV8Validator);
+    expect(pkg.createPrecompiledValidator({ surface: () => true }, schema)).toBeInstanceOf(
+      pkg.AJV8PrecompiledValidator,
+    );
+  });
 });

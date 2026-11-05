@@ -1,10 +1,14 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import { ErrorSchemaBuilder, hashForSchema, mergeSchemas, noop, retrieveSchema } from '@rjsf/utils';
+import type { ErrorObject } from 'ajv';
+import ajvI18n from 'ajv-i18n';
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import type { Localizer, ValidatorFunctions } from '../src/index.ts';
 import AJV8PrecompiledValidator from '../src/precompiledValidator.ts';
+import type { CompiledValidateFunction } from '../src/types.ts';
+import AJV8Validator from '../src/validator.ts';
 import {
   SUPER_SCHEMA_OPTIONS,
   compileSuperSchema,
@@ -435,6 +439,77 @@ describe('AJV8PrecompiledValidator', () => {
       });
       expect(validator.suppressDuplicateFiltering).toBe('all');
     });
+  });
+});
+
+describe('AJV8PrecompiledValidator with a localizer that names properties', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      foo: { type: 'string', title: 'Foo title' },
+      bar: { type: 'string', title: 'Bar title' },
+      baz: { type: 'string' },
+    },
+    required: ['foo'],
+    dependencies: { baz: ['bar'] },
+  };
+  const validator = new AJV8PrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(schema)), schema, {
+    localizer: ajvI18n.es,
+  });
+
+  it('replaces the property names in the localized messages with their titles, as AJV8Validator does', () => {
+    const { errors } = validator.validateFormData({ baz: 'x' }, schema);
+    expect(errors.map(({ message }) => message)).toEqual([
+      "debe tener la propiedad requerida 'Foo title'",
+      "debe contener la propiedad 'Bar title' cuando la propiedad 'baz' se encuentra presente",
+    ]);
+    expect(errors).toEqual(new AJV8Validator({}, ajvI18n.es).validateFormData({ baz: 'x' }, schema).errors);
+  });
+
+  it('hands back the raw errors with their params unquoted', () => {
+    const { errors } = validator.rawValidation(schema, { baz: 'x' });
+    expect(errors?.map(({ params }) => params)).toEqual([
+      { missingProperty: 'foo' },
+      { property: 'baz', missingProperty: 'bar', depsCount: 1, deps: 'bar' },
+    ]);
+  });
+});
+
+describe('AJV8PrecompiledValidator localizing errors it reports itself', () => {
+  const schema: RJSFSchema = { $id: 'reportedErrors', type: 'object' };
+  function validatorReporting(params: ErrorObject['params'][], localizer: Localizer) {
+    const reported: ErrorObject[] = params.map((param) => ({
+      keyword: 'custom',
+      instancePath: '',
+      schemaPath: '#/custom',
+      params: param,
+    }));
+    const validate: CompiledValidateFunction = () => {
+      validate.errors = reported;
+      return false;
+    };
+    return {
+      validate,
+      reported,
+      validator: new AJV8PrecompiledValidator({ reportedErrors: validate }, schema, { localizer }),
+    };
+  }
+
+  it('hands back the params that are not strings untouched', () => {
+    const { validator } = validatorReporting([{ property: 5 }, { property: ['a', 'b'] }], noop);
+    expect(validator.rawValidation(schema, {}).errors?.map(({ params }) => params)).toEqual([
+      { property: 5 },
+      { property: ['a', 'b'] },
+    ]);
+  });
+
+  it('clears the errors and leaves their params unquoted when the localizer throws', () => {
+    const { validate, reported, validator } = validatorReporting([{ missingProperty: 'foo' }], () => {
+      throw new Error('localizer failed');
+    });
+    expect(() => validator.rawValidation(schema, {})).toThrow('localizer failed');
+    expect(validate.errors).toBeNull();
+    expect(reported.map(({ params }) => params)).toEqual([{ missingProperty: 'foo' }]);
   });
 });
 

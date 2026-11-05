@@ -2,6 +2,7 @@ import type {
   CustomValidator,
   ErrorTransformer,
   FormContextType,
+  RawValidationResult,
   RJSFSchema,
   RJSFValidationError,
   SchemaContext,
@@ -24,11 +25,6 @@ import {
 import type { ErrorObject } from 'ajv';
 
 import type { SuppressDuplicateFilteringType } from './types.ts';
-
-export interface RawValidationErrorsType<Result = any> {
-  errors?: Result[];
-  validationError?: Error;
-}
 
 /** Filters duplicate errors from `anyOf`/`oneOf` schema paths according to the `suppressDuplicateFiltering` flag.
  *
@@ -211,7 +207,7 @@ export default function processRawValidationErrors<
   F extends FormContextType = FormContextType,
 >(
   context: SchemaContext<S, F>,
-  rawErrors: RawValidationErrorsType<ErrorObject>,
+  rawErrors: RawValidationResult<ErrorObject>,
   formData: T | undefined,
   schema: S,
   customValidate?: CustomValidator<T, S, F>,

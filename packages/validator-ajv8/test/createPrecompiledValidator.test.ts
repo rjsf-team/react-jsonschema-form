@@ -1,3 +1,5 @@
+import type { ErrorObject } from 'ajv';
+
 import createPrecompiledValidator from '../src/createPrecompiledValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import AJV8PrecompiledValidator from '../src/precompiledValidator.ts';
@@ -10,6 +12,11 @@ const rootSchema = superSchema;
 const mockedValidator = vi.mocked(AJV8PrecompiledValidator);
 
 describe('createPrecompiledValidator()', () => {
+  it("types the errors of rawValidation() as the engine's", () => {
+    expectTypeOf<ReturnType<ReturnType<typeof createPrecompiledValidator>['rawValidation']>['errors']>().toEqualTypeOf<
+      ErrorObject[] | undefined
+    >();
+  });
   describe('passing validatorFns and rootSchema to createPrecompiledValidator', () => {
     let custom: any;
     beforeAll(() => {

@@ -2,6 +2,8 @@ import type { Bivariant, CustomMergeAllOf, RJSFSchema, StrictRJSFSchema } from '
 import type { Options, ErrorObject, Ajv } from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
 
+export type { ErrorObject } from 'ajv';
+
 /** The type describing the value for the `suppressDuplicateFiltering` option */
 export type SuppressDuplicateFilteringType = 'anyOf' | 'oneOf' | 'all' | 'none';
 

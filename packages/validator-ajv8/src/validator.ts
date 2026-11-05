@@ -7,6 +7,7 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
 import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
@@ -14,7 +15,7 @@ import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 import ajvRootSchemaId from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
 import { changesData, copyForValidation } from './dataForValidation.ts';
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
+import localizeErrors from './localizeErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
 
@@ -141,7 +142,7 @@ export default class AJV8Validator<
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<ErrorObject> {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
     try {
@@ -174,55 +175,19 @@ export default class AJV8Validator<
 
     let errors;
     if (compiledValidator) {
-      if (typeof this.localizer === 'function') {
-        // Properties need to be enclosed with quotes so that
-        // `AJV8Validator#transformRJSFValidationErrors` replaces property names
-        // with `title` or `ui:title`. See #4348, #4349, #4387, and #4402.
-        (compiledValidator.errors ?? []).forEach((error) => {
-          ['missingProperty', 'property'].forEach((key) => {
-            if (error.params?.[key]) {
-              // oxlint-disable-next-line no-param-reassign
-              error.params[key] = `'${error.params[key]}'`;
-            }
-          });
-          if (typeof error.params?.deps === 'string') {
-            // As `error.params.deps` is the comma+space separated list of missing dependencies, enclose each dependency separately.
-            // For example, `A, B` is converted into `'A', 'B'`.
-            // oxlint-disable-next-line no-param-reassign
-            error.params.deps = error.params.deps
-              .split(', ')
-              .map((v) => `'${v}'`)
-              .join(', ');
-          }
-        });
-        this.localizer(compiledValidator.errors);
-        // Revert to originals
-        (compiledValidator.errors ?? []).forEach((error) => {
-          ['missingProperty', 'property'].forEach((key) => {
-            const quoted: unknown = error.params?.[key];
-            if (typeof quoted === 'string') {
-              // oxlint-disable-next-line no-param-reassign
-              error.params[key] = quoted.slice(1, -1);
-            }
-          });
-          if (typeof error.params?.deps === 'string') {
-            // Remove surrounding quotes from each missing dependency. For example, `'A', 'B'` is reverted to `A, B`.
-            // oxlint-disable-next-line no-param-reassign
-            error.params.deps = error.params.deps
-              .split(', ')
-              .map((v) => v.slice(1, -1))
-              .join(', ');
-          }
-        });
-      }
       errors = compiledValidator.errors ?? undefined;
-
-      // Clear errors to prevent persistent errors, see #1104
-      compiledValidator.errors = null;
+      try {
+        if (typeof this.localizer === 'function') {
+          localizeErrors(this.localizer, compiledValidator.errors);
+        }
+      } finally {
+        // Clear errors to prevent persistent errors, see #1104
+        compiledValidator.errors = null;
+      }
     }
 
     return {
-      errors: errors as unknown as Result[],
+      errors,
       validationError: compilationError,
     };
   }
@@ -248,7 +213,7 @@ export default class AJV8Validator<
     uiSchema?: UiSchema<T, S, F>,
     getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
+    const rawErrors = this.rawValidation(schema, formData);
     return processRawValidationErrors(
       { validator: this },
       rawErrors,

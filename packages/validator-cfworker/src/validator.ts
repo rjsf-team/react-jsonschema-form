@@ -8,11 +8,11 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
 import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type { CFWorkerValidationError, CustomValidatorOptionsType } from './types.ts';
 
@@ -154,7 +154,7 @@ export default class CFWorkerValidator<
    * @param [formData] - The form data to validate
    * @returns - The raw cfworker errors and any engine exception
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<CFWorkerValidationError> {
     let validationError: Error | undefined;
     let errors: OutputUnit[] | undefined;
     try {
@@ -165,7 +165,7 @@ export default class CFWorkerValidator<
     } catch (error) {
       validationError = error as Error;
     }
-    return { errors: errors as Result[] | undefined, validationError };
+    return { errors, validationError };
   }
 
   /** Validates form data and applies RJSF error transformation and custom validation.
@@ -187,7 +187,7 @@ export default class CFWorkerValidator<
     uiSchema?: UiSchema<T, S, F>,
     getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<CFWorkerValidationError>(schema, formData);
+    const rawErrors = this.rawValidation(schema, formData);
     return processRawValidationErrors(
       { validator: this },
       rawErrors,

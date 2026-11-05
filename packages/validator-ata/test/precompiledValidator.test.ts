@@ -9,11 +9,13 @@ import {
   noop,
   retrieveSchema,
 } from '@rjsf/utils';
+import type { ValidationError } from 'ata-validator';
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import type { Localizer, ValidatorFunctions } from '../src/index.ts';
 import ATAPrecompiledValidator from '../src/precompiledValidator.ts';
+import type { CompiledValidateFunction } from '../src/types.ts';
 import loadModule from './harness/loadModule.ts';
 import superSchemaObj from './harness/superSchema.json' with { type: 'json' };
 
@@ -411,6 +413,69 @@ describe('ATAPrecompiledValidator', () => {
       });
       expect(validator.suppressDuplicateFiltering).toBe('all');
     });
+  });
+});
+
+describe('ATAPrecompiledValidator with a localizer that names properties', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { foo: { type: 'string', title: 'Foo title' } },
+    required: ['foo'],
+  };
+  const localizer: Localizer = (errors) => {
+    for (const error of errors ?? []) {
+      error.message = `falta ${String(error.params.missingProperty)}`;
+    }
+  };
+  const validator = new ATAPrecompiledValidator(loadModule(compileSchemaValidatorsCode(schema)), schema, { localizer });
+
+  it('replaces the property names in the localized messages with their titles', () => {
+    expect(validator.validateFormData({}, schema).errors.map(({ message }) => message)).toEqual(["falta 'Foo title'"]);
+  });
+
+  it('hands back the raw errors with their params unquoted', () => {
+    expect(validator.rawValidation(schema, {}).errors?.map(({ params }) => params)).toEqual([
+      { missingProperty: 'foo' },
+    ]);
+  });
+});
+
+describe('ATAPrecompiledValidator localizing errors it reports itself', () => {
+  const schema: RJSFSchema = { $id: 'reportedErrors', type: 'object' };
+  function validatorReporting(params: ValidationError['params'][], localizer: Localizer) {
+    const reported: ValidationError[] = params.map((param) => ({
+      keyword: 'custom',
+      instancePath: '',
+      schemaPath: '#/custom',
+      params: param,
+      message: 'custom failed',
+    }));
+    const validate: CompiledValidateFunction = () => {
+      validate.errors = reported;
+      return false;
+    };
+    return {
+      validate,
+      reported,
+      validator: new ATAPrecompiledValidator({ reportedErrors: validate }, schema, { localizer }),
+    };
+  }
+
+  it('hands back the params that are not strings untouched', () => {
+    const { validator } = validatorReporting([{ property: 5 }, { property: ['a', 'b'] }], noop);
+    expect(validator.rawValidation(schema, {}).errors?.map(({ params }) => params)).toEqual([
+      { property: 5 },
+      { property: ['a', 'b'] },
+    ]);
+  });
+
+  it('clears the errors and leaves their params unquoted when the localizer throws', () => {
+    const { validate, reported, validator } = validatorReporting([{ missingProperty: 'foo' }], () => {
+      throw new Error('localizer failed');
+    });
+    expect(() => validator.rawValidation(schema, {})).toThrow('localizer failed');
+    expect(validate.errors).toBeNull();
+    expect(reported.map(({ params }) => params)).toEqual([{ missingProperty: 'foo' }]);
   });
 });
 

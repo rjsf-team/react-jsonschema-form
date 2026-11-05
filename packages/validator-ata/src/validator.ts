@@ -7,12 +7,13 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
 import { deepEquals, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
 import createAtaInstance from './createAtaInstance.ts';
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
+import localizeErrors from './localizeErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import { isDraft04, schemaList } from './schemaList.ts';
 import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringType } from './types.ts';
@@ -174,7 +175,7 @@ export default class ATAValidator<
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<ValidationError> {
     let compilationError: Error | undefined;
     let errors: ValidationError[] | undefined;
 
@@ -185,18 +186,14 @@ export default class ATAValidator<
       errors = result.valid ? undefined : result.errors;
 
       if (errors && typeof this.localizer === 'function') {
-        // ata freezes `error.params`, so the AJV-validator's pre-quote dance
-        // (used to coax `ajv-i18n` into producing quoted property names)
-        // can't be applied verbatim. The hook is invoked with the raw
-        // ata errors; localizers that mutate `message` in place still work.
-        this.localizer(errors);
+        localizeErrors(this.localizer, errors);
       }
     } catch (err) {
       compilationError = err as Error;
     }
 
     return {
-      errors: errors as unknown as Result[] | undefined,
+      errors,
       validationError: compilationError,
     };
   }
@@ -221,7 +218,7 @@ export default class ATAValidator<
     uiSchema?: UiSchema<T, S, F>,
     getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ValidationError>(schema, formData);
+    const rawErrors = this.rawValidation(schema, formData);
     return processRawValidationErrors(
       { validator: this },
       rawErrors,

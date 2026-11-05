@@ -8,11 +8,12 @@ import type {
   UiSchema,
   ValidationData,
   ValidatorType,
+  RawValidationResult,
 } from '@rjsf/utils';
 import { createRootSchemaGuard, ID_KEY, REF_KEY, schemaKey } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
-import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
+import localizeErrors from './localizeErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
 import type {
   CompiledValidateFunction,
@@ -148,19 +149,21 @@ export default class ATAPrecompiledValidator<
    * @param [formData] - The form data to validate, if any
    * @throws - Error when the schema provided does not match the base schema of the precompiled validator
    */
-  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
+  rawValidation(schema: S, formData?: unknown): RawValidationResult<ValidationError> {
     this.ensureSameRootSchema(schema, formData);
     this.mainValidator(formData);
 
-    if (typeof this.localizer === 'function') {
-      this.localizer(this.mainValidator.errors);
-    }
     const errors = this.mainValidator.errors ?? undefined;
+    try {
+      if (typeof this.localizer === 'function') {
+        localizeErrors(this.localizer, this.mainValidator.errors);
+      }
+    } finally {
+      // Clear errors to prevent persistent errors, see #1104
+      this.mainValidator.errors = null;
+    }
 
-    // Clear errors to prevent persistent errors, see #1104
-    this.mainValidator.errors = null;
-
-    return { errors: errors as unknown as Result[] };
+    return { errors };
   }
 
   /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives
@@ -184,7 +187,7 @@ export default class ATAPrecompiledValidator<
     uiSchema?: UiSchema<T, S, F>,
     getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ValidationError>(schema, formData);
+    const rawErrors = this.rawValidation(schema, formData);
     return processRawValidationErrors(
       this.schemaContext,
       rawErrors,

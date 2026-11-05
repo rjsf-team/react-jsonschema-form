@@ -387,11 +387,39 @@ describe('ATAValidator', () => {
   });
 });
 
+describe('ATAValidator with a localizer that names properties', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { foo: { type: 'string', title: 'Foo title' } },
+    required: ['foo'],
+  };
+  const validator = customizeValidator({}, (errors) => {
+    for (const error of errors ?? []) {
+      error.message = `falta ${String(error.params.missingProperty)}`;
+    }
+  });
+
+  it('replaces the property names in the localized messages with their titles', () => {
+    expect(validator.validateFormData({}, schema).errors.map(({ message }) => message)).toEqual(["falta 'Foo title'"]);
+  });
+
+  it('hands back the raw errors with their params unquoted', () => {
+    expect(validator.rawValidation(schema, {}).errors?.map(({ params }) => params)).toEqual([
+      { missingProperty: 'foo' },
+    ]);
+  });
+});
+
 describe('package surface', () => {
   it('re-exports customizeValidator and ATAValidator from index.ts', () => {
     expect(typeof pkg.customizeValidator).toBe('function');
     expect(typeof pkg.ATAValidator).toBe('function');
     expect(pkg.default).toBeInstanceOf(pkg.ATAValidator);
+  });
+  it('exports ATAPrecompiledValidator as a value', () => {
+    const schema: RJSFSchema = { $id: 'surface', type: 'string' };
+    expect(typeof pkg.ATAPrecompiledValidator).toBe('function');
+    expect(pkg.createPrecompiledValidator({ surface: () => true }, schema)).toBeInstanceOf(pkg.ATAPrecompiledValidator);
   });
 });
 
