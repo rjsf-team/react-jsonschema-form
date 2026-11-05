@@ -215,12 +215,12 @@ describe('useAltDateWidgetProps()', () => {
     expect(result.current.elements).toEqual(getDateElementProps(parseDateString(), false, PROPS.options.yearsRange));
   });
   test.each([
-    ['a date', PROPS],
-    ['a date and time', TIME_PROPS],
-  ])('a stored string that is no %s renders every part unset', (_name, props) => {
+    ['a date', PROPS, false],
+    ['a date and time', TIME_PROPS, true],
+  ])('a stored string that is no %s renders every part unset', (_name, props, time) => {
     const { result } = renderHook(() => useAltDateWidgetProps({ ...props, value: 'not-a-date' }));
     expect(result.current.elements).toEqual(
-      getDateElementProps(parseDateString(undefined, props.time), props.time, PROPS.options.yearsRange),
+      getDateElementProps(parseDateString(undefined, time), time, PROPS.options.yearsRange),
     );
   });
   describe('with a parent that stores what it is sent', () => {

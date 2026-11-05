@@ -2216,18 +2216,19 @@ describe('StringField', () => {
       expect(onError).not.toHaveBeenCalled();
     });
 
-    it('should throw on invalid date', () => {
-      expect(() =>
-        createFormComponent({
-          schema: {
-            type: 'string',
-            format: 'date',
-          },
-          uiSchema,
-          liveValidate: 'onChange',
-          initialFormData: '2012-1212',
-        }),
-      ).toThrow('Unable to parse date 2012-1212');
+    it('renders every part unset for a date it cannot parse', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'date',
+        },
+        uiSchema,
+        liveValidate: 'onChange',
+        initialFormData: '2012-1212',
+      });
+
+      const values = [].map.call(node.querySelectorAll('select'), (select: HTMLSelectElement) => select.value);
+      expect(values).toEqual(['', '', '']);
     });
 
     describe('AltDateWidget with format option', () => {
