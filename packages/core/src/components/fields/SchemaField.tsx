@@ -12,7 +12,6 @@ import type {
   GlobalFormOptions,
   GlobalUISchemaOptions,
   Registry,
-  RJSFMarkedSchema,
   RJSFSchema,
   SchemaUtilsType,
   StrictRJSFSchema,
@@ -42,6 +41,7 @@ import {
   getXxxOfKey,
   GUESSED_TYPE_FLAG,
   hasOwnContentBesideOptions,
+  hasSchemaMarker,
   hasWidget,
   isComponentType,
   isConstant,
@@ -516,7 +516,7 @@ export function createIsSchemaFieldHidden<
     fieldPath: FieldPath,
     registry: Registry<T, S, F>,
   ): boolean => {
-    const isRefCycle = Boolean((schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+    const isRefCycle = hasSchemaMarker(schema, RJSF_REF_CYCLE_KEY);
     const ownUiSchema = isRefCycle
       ? resolveCycleUiSchema(schema, uiSchema, registry)
       : resolveOwnUiSchema(schema, uiSchema, registry);
@@ -644,7 +644,7 @@ function getFieldComponent<
   // one type, which is the choice the selector is there to make, so `getValueUiSchema()` carries it down instead.
   // A schema with a guessed type still gets the selector whatever the widget is: it lists no types for such a control
   // to handle, so the widget renders within it for the chosen one
-  const hasGuessedType = GUESSED_TYPE_FLAG in schema;
+  const hasGuessedType = hasSchemaMarker(schema, GUESSED_TYPE_FLAG);
   const isNamedWidget = !widget || typeof widget === 'string';
   const mayDivert = globalFormOptions.useFallbackUiForUnsupportedType && !isSelectSchema;
   const optionsTakeOverSelector =
@@ -866,7 +866,7 @@ function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormC
       return null;
     }
     const input = optionInput(schema, uiSchema, xxxOfKey, option, index, registry);
-    const isRefCycle = Boolean((input.schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+    const isRefCycle = hasSchemaMarker(input.schema, RJSF_REF_CYCLE_KEY);
     const resolved = resolve(input.schema, input.uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove);
     const { selectSchemaInfo, uiField, uiSchema: optionUiSchema, ownUiOptions, hidden } = resolved;
     // `AnyOfField` renders no `null` option, whatever field it names, and `SchemaField` nothing for an empty schema
@@ -1132,7 +1132,7 @@ export function useSchemaFieldPlan<
   // result is memoized as well because the React Compiler (`react/preserve-manual-memoization`) takes what a call
   // returns for a value that may still be mutated, and so refuses the memos below that depend on it
   const resolveFieldWidget = useMemo(() => createFieldWidgetResolver<T, S, F>().resolve, []);
-  const isRefCycle = Boolean((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]);
+  const isRefCycle = hasSchemaMarker(_schema, RJSF_REF_CYCLE_KEY);
   const { selectSchemaInfo, uiField, uiSchema, ownUiOptions, uiOptions, deprecatedHandling, hidden } = useMemo(
     () => resolveFieldWidget(_schema, _uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove),
     [resolveFieldWidget, _schema, _uiSchema, formData, fieldPath, registry, isRefCycle, namedAbove],

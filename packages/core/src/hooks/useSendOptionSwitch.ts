@@ -1,10 +1,12 @@
 import { use, useCallback } from 'react';
 import type { FieldPath, FormContextType, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
   deepEqualsUndefinedAsMissing,
   getRenderedOptionSchema,
   getXxxOfKey,
+  hasSchemaMarker,
   isConstant,
   isPlainObject,
   isWholeValueSelect,
@@ -12,7 +14,7 @@ import {
 } from '@rjsf/utils';
 
 import AdditionalEntryContext from '../components/fields/AdditionalEntryContext.ts';
-import { declaresProperty, isAdditionalPropertySchema, storedValue } from '../components/fields/fieldWidgetUtils.ts';
+import { declaresProperty, storedValue } from '../components/fields/fieldWidgetUtils.ts';
 import useSendMove from './useSendMove.ts';
 
 /** The options of an `anyOf`/`oneOf` field a switch leaves and selects, each with the uiSchema its field renders with */
@@ -121,7 +123,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       const isKept = (key: string) => isKeptProperty(key) || (/^\d+$/.test(key) && isKeptItem(Number(key)));
       const held = typeof formData === 'object' && formData !== null ? Object.keys(formData) : [];
       const gone = new Set([...Object.keys(declaredByOld), ...held].filter((key) => !isKept(key)));
-      const isEntry = isEntryPath || isAdditionalPropertySchema(schema);
+      const isEntry = isEntryPath || hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
       // An entry's `null` option holds `null` rather than the `''` of a cleared value, which no such option takes and
       // which would reload as another option. Elsewhere it holds nothing, see `formDataForNewOption()`
       const isNullOption =

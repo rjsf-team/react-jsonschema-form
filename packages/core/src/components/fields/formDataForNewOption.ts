@@ -10,6 +10,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTIES_KEY,
+  ADDITIONAL_PROPERTY_FLAG,
   CONST_KEY,
   deepEquals,
   DEFAULT_KEY,
@@ -18,6 +19,7 @@ import {
   getRenderedOptionSchema,
   getStaticItemsUiSchema,
   getXxxOfKey,
+  hasSchemaMarker,
   isCollapsedByOptionalDataControls,
   isPlainObject,
   isSchemaObject,
@@ -28,7 +30,7 @@ import {
 import keepClears from '../keepClears.ts';
 import { hasSameConstraints } from '../sanitizeFieldTree.ts';
 import { asFieldValue } from '../uiState.ts';
-import { declaresProperty, isAdditionalPropertySchema, withGlobalUiOptions } from './fieldWidgetUtils.ts';
+import { declaresProperty, withGlobalUiOptions } from './fieldWidgetUtils.ts';
 
 /** Returns `option` carrying the `required` that `parentSchema` declares, which is what decides whether the form
  * populates a key at all under a `defaultFormStateBehavior` keyed off `required`. A schema's defaults
@@ -296,7 +298,7 @@ function withoutAddedOptionalObjects<
     // An extra key `retrieveSchema()` stubbed reads `uiSchema.additionalProperties`, as its field does
     const propertyUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
       uiSchema,
-      isAdditionalPropertySchema(rawPropertySchema) ? ADDITIONAL_PROPERTIES_KEY : key,
+      hasSchemaMarker(rawPropertySchema, ADDITIONAL_PROPERTY_FLAG) ? ADDITIONAL_PROPERTIES_KEY : key,
     );
     let keptValue: unknown = value;
     if (isPlainObject(value) && Object.keys(value).length === 0) {

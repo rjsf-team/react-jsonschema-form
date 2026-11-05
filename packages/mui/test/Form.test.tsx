@@ -10,6 +10,7 @@ import {
   themeTests,
   wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
+  wrapIfAdditionalFlagTests,
 } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { TranslatableString, englishStringTranslator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
@@ -1218,6 +1219,7 @@ optionErrorStateTests(Form, () =>
 );
 
 wrapIfAdditionalErrorStateTests(Form);
+wrapIfAdditionalFlagTests(Form);
 
 wrapIfAdditionalCallbackTests(Form);
 

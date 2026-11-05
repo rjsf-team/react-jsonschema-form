@@ -2,7 +2,6 @@ import { use, useCallback, useMemo, useState } from 'react';
 import type {
   FallbackFieldProps,
   FormContextType,
-  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UIOptionsType,
@@ -20,6 +19,7 @@ import {
   getXxxOfKey,
   GUESSED_TYPE_FLAG,
   guessType,
+  hasSchemaMarker,
   JSON_SCHEMA_TYPES,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
@@ -35,7 +35,7 @@ import type { JSONSchema7TypeName } from 'json-schema';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
-import { fallbackValueKeepsWidget, isAdditionalPropertySchema, withoutUiWidget } from './fieldWidgetUtils.ts';
+import { fallbackValueKeepsWidget, withoutUiWidget } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import SelectorsAboveContext, { useSelectorsAbove } from './SelectorsAboveContext.ts';
 
@@ -181,10 +181,10 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
   title: string,
   isLabelled: boolean,
 ): S {
-  const valueSchema = { ...schema, type } as RJSFMarkedSchema;
-  delete valueSchema[GUESSED_TYPE_FLAG];
-  delete valueSchema[ADDITIONAL_PROPERTY_FLAG];
-  delete valueSchema[RJSF_REF_KEY];
+  const valueSchema: S = { ...schema, type };
+  Reflect.deleteProperty(valueSchema, GUESSED_TYPE_FLAG);
+  Reflect.deleteProperty(valueSchema, ADDITIONAL_PROPERTY_FLAG);
+  Reflect.deleteProperty(valueSchema, RJSF_REF_KEY);
   delete valueSchema.$id;
   // A field around the value that renders the schema's title and description leaves the value field naming nothing but
   // its own role, which the plan it inherits then has it render nothing of. One that renders neither — an `object` or
@@ -216,7 +216,7 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
   if (type === 'object' && !describesMembers) {
     valueSchema[ADDITIONAL_PROPERTIES_KEY] = true;
   }
-  return valueSchema as S;
+  return valueSchema;
 }
 
 /** The `uiSchema` entry for the help text, in both the spellings a caller can write it in. `FieldTemplate` renders help
@@ -385,7 +385,7 @@ function FallbackUiField<
   // the value would take the key it is stored under with it. That is the cleared state of whichever type the selector
   // is on, not evidence of a `string`, so a selection the user just made must survive it: reading it as data of
   // another type would put the selector back on `string` and leave the other types out of reach from a cleared value
-  const isAdditionalEntry = isAdditionalPropertySchema(schema) || isEntryPath;
+  const isAdditionalEntry = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) || isEntryPath;
   const isClearedProperty = emptiesToNothing && isAdditionalEntry && (formData as unknown) === '';
   const isEmptyValue = formData === undefined || isClearedProperty;
   const isSelectionUsable =

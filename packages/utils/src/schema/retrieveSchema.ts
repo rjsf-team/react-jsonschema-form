@@ -29,6 +29,7 @@ import {
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import rendersOwnFieldBesideOption, { rendersOwnFieldBesideOwnOptions } from '../rendersOwnFieldBesideOption.ts';
@@ -38,7 +39,6 @@ import type {
   CustomMergeAllOf,
   FormContextType,
   GenericObjectType,
-  RJSFMarkedSchema,
   RJSFSchema,
   SchemaContext,
   StrictRJSFSchema,
@@ -769,7 +769,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   // A subschema already handed out was decided where it was handed out, and a stub for an extra key is a field of its
   // own
   const isDecided = (value: object) =>
-    readProvenance(value, root) !== undefined || Boolean(Reflect.get(value, ADDITIONAL_PROPERTY_FLAG));
+    readProvenance(value, root) !== undefined || hasSchemaMarker(value, ADDITIONAL_PROPERTY_FLAG);
   const { properties } = merged;
   if (PROPERTIES_KEY in merged && !isObject(properties)) {
     // `properties` that holds no subschemas declares none
@@ -1011,7 +1011,7 @@ function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: un
   });
   schema.type = type;
   if (!isConstrained) {
-    (schema as RJSFMarkedSchema)[GUESSED_TYPE_FLAG] = true;
+    Reflect.set(schema, GUESSED_TYPE_FLAG, true);
   }
   return schema as S;
 }
@@ -1075,7 +1075,7 @@ export function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(sch
     // The option's own field takes the extra keys of the two, joined as `getRenderedOptionSchema()` renders it, so they
     // render once, in the field that knows which of its own options is selected
     const left = withoutKeys<S>(schema, ...EXTRA_KEY_KEYWORDS);
-    (left as RJSFMarkedSchema)[EXTRA_KEYS_ELSEWHERE_FLAG] = true;
+    Reflect.set(left, EXTRA_KEYS_ELSEWHERE_FLAG, true);
     return left;
   }
   return joinOptionExtraKeys<S>(schema, option);
@@ -1219,7 +1219,7 @@ export function stubExistingAdditionalProperties<
       // A `true`: anything goes, so the property gets a field for the data it holds
       stub = guessedTypeSchema<S>(formData[key]);
     }
-    (stub as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG] = true;
+    Reflect.set(stub, ADDITIONAL_PROPERTY_FLAG, true);
     setOwn(schema.properties, key, stub);
   }
   return schema;

@@ -1,9 +1,8 @@
 import { use, useMemo } from 'react';
-import { fieldPathToList } from '@rjsf/utils';
+import { ADDITIONAL_PROPERTY_FLAG, fieldPathToList, hasSchemaMarker } from '@rjsf/utils';
 import type { FieldPath } from '@rjsf/utils';
 
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
-import { isAdditionalPropertySchema } from './fieldWidgetUtils.ts';
 
 /** The indexes of this field's path segments that are an additional property's key: the context's own, plus this
  * field's last segment where its schema is an additional property's stub, for a template-override warning to
@@ -17,7 +16,7 @@ import { isAdditionalPropertySchema } from './fieldWidgetUtils.ts';
  */
 export default function useAdditionalDepths(schema: unknown, fieldPath: FieldPath): readonly number[] | undefined {
   const additionalDepthsAbove = use(AdditionalPropertyDepthsContext);
-  const isAdditional = isAdditionalPropertySchema(schema);
+  const isAdditional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
   return useMemo(() => {
     const ownDepth = fieldPathToList(fieldPath).length - 1;
     return isAdditional ? [...(additionalDepthsAbove ?? []), ownDepth] : additionalDepthsAbove;

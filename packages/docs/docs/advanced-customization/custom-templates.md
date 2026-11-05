@@ -1299,6 +1299,7 @@ Core's lays the key, the value and the remove button out on shared grid rows, so
 import {
   ADDITIONAL_PROPERTY_FLAG,
   additionalKeyId,
+  hasSchemaMarker,
   isAdditionalKeyDisabled,
   isAdditionalRemoveDisabled,
   RJSFSchema,
@@ -1325,7 +1326,7 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
     style,
   } = props;
   const { RemoveButton } = registry.templates.ButtonTemplates;
-  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const additional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
 
   if (!additional) {
     return <div>{children}</div>;

@@ -7,6 +7,7 @@ import {
   themeTests,
   wrapIfAdditionalCallbackTests,
   wrapIfAdditionalErrorStateTests,
+  wrapIfAdditionalFlagTests,
 } from '@rjsf/snapshot-tests';
 import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
@@ -701,6 +702,7 @@ checkboxLabelTests(Form, { generateTemplates, generateWidgets, descriptionBy: 's
 fallbackDescriptionTests(Form, false);
 
 wrapIfAdditionalErrorStateTests(Form);
+wrapIfAdditionalFlagTests(Form);
 
 wrapIfAdditionalCallbackTests(Form);
 

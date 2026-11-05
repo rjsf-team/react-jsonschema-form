@@ -4,6 +4,7 @@ import { GUESSED_TYPE_FLAG, JSON_SCHEMA_TYPES } from './constants.ts';
 import getSchemaType from './getSchemaType.ts';
 import { getKnownTypes } from './getUnionTypes.ts';
 import guessType from './guessType.ts';
+import hasSchemaMarker from './hasSchemaMarker.ts';
 import isConstant from './isConstant.ts';
 import toConstant from './toConstant.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
@@ -33,7 +34,7 @@ export default function getSchemaOwnTypes<S extends StrictRJSFSchema = RJSFSchem
   if (listedTypes.length > 0) {
     return listedTypes;
   }
-  if (GUESSED_TYPE_FLAG in schema) {
+  if (hasSchemaMarker(schema, GUESSED_TYPE_FLAG)) {
     return undefined;
   }
   const { type, enum: enumValues } = schema;

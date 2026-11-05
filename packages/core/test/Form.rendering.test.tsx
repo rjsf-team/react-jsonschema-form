@@ -1,7 +1,16 @@
 import { createRef } from 'react';
-import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType, WidgetProps } from '@rjsf/utils';
+import type {
+  FieldTemplateProps,
+  RJSFMarkedSchema,
+  RJSFSchema,
+  UiSchema,
+  ValidatorType,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   englishStringTranslator,
+  GUESSED_TYPE_FLAG,
   JSON_SCHEMA_TYPES,
   templateDrawsLabel,
   toInputValue,
@@ -109,6 +118,15 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       await user.selectOptions(screen.getByRole('combobox'), 'object');
 
       expect(node.querySelector('.rjsf-object-property-expand')).toBeInTheDocument();
+    });
+
+    it.each([undefined, false])('renders a schema whose guessed-type flag is %s as a plain field', (flag) => {
+      const extra: RJSFMarkedSchema = { type: 'string', [GUESSED_TYPE_FLAG]: flag };
+      const schema: RJSFSchema = { type: 'object', properties: { extra } };
+      const { node } = createFormComponent({ useFallbackUiForUnsupportedType: true, schema });
+
+      expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
+      expect(screen.getByRole('textbox')).toBeInTheDocument();
     });
 
     it('will render fallback ui when useFallbackUiForUnsupportedType is true', async () => {
@@ -1240,6 +1258,23 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       // Only an additional property stores a cleared value as the empty string; anywhere else it is a `string` like
       // any other, so the selector must follow it rather than leave the array UI standing over string data
+      const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
+      expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
+    });
+
+    it('gives way to an empty string in a field whose additional-property flag is false', () => {
+      const val: RJSFMarkedSchema = { type: ['boolean', 'string'], [ADDITIONAL_PROPERTY_FLAG]: false };
+      const schema: RJSFSchema = { type: 'object', properties: { val } };
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
+        schema,
+        useFallbackUiForUnsupportedType: true,
+        initialFormData: { val: true },
+      });
+
+      act(() => handleOf(ref).setFieldValue('', { val: '' }));
+
       const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
     });

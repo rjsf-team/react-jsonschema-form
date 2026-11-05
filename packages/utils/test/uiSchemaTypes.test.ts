@@ -203,6 +203,30 @@ describe('UiSchema type', () => {
     expect(ui.loose?.nested).toEqual({ 'ui:title': 'Nested' });
   });
 
+  it('leaves the entries open for data whose index signature holds unknown values', () => {
+    interface OpenData {
+      // oxlint-disable-next-line typescript/consistent-indexed-object-style -- an interface's index signature is the case
+      [key: string]: unknown;
+    }
+    const record: UiSchema<Record<string, unknown>> = { 'ui:widget': 'custom', foo: { 'ui:title': 'Foo' } };
+    const open: UiSchema<OpenData> = { 'ui:widget': 'custom' };
+
+    expectTypeOf(record.foo).toBeUnknown();
+    expect(record.foo).toEqual({ 'ui:title': 'Foo' });
+    expectTypeOf(open.foo).toBeUnknown();
+    expect(open['ui:widget']).toBe('custom');
+  });
+
+  it('leaves a key declared beside an index signature of unknown values as open as the rest', () => {
+    const ui: UiSchema<{ name: string; [key: string]: unknown }> = {
+      name: { 'ui:wigdet': 'typo' },
+      'ui:wigdet': 'typo',
+    };
+
+    expectTypeOf(ui.name).toBeUnknown();
+    expect(ui.name).toEqual({ 'ui:wigdet': 'typo' });
+  });
+
   it('reads a field typed `any` back as `unknown`', () => {
     expectTypeOf<UiSchema<{ meta: any }>['meta']>().toBeUnknown();
   });
@@ -370,6 +394,18 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
     expect(bad).toBeDefined();
   });
 
+  it('leaves the entries open, and the named options closed, for data whose index signature holds unknown values', () => {
+    type Checked = StrictUiSchema<ExampleChecks, Record<string, unknown>>;
+
+    const ui: Checked = { 'ui:title': 'Open', 'ui:undeclared': true, foo: { 'ui:title': 'Foo' } };
+    // @ts-expect-error a name no Checks member declares is still rejected
+    const bad: Checked = { 'ui:widget': 'NotAWidget' };
+
+    expectTypeOf(ui.foo).toBeUnknown();
+    expect(ui.foo).toEqual({ 'ui:title': 'Foo' });
+    expect(bad).toBeDefined();
+  });
+
   it('rejects form data passed where Checks goes', () => {
     // @ts-expect-error TS2344, Data is not a UiOptionsCheck; Checks comes before the form data
     type Swapped = StrictUiSchema<Data>;
@@ -419,6 +455,22 @@ describe('StrictUiSchema (vocabulary narrowing)', () => {
 
     expect(ui.firstName?.['ui:autofocus']).toBe(true);
     expect(bad).toBeDefined();
+  });
+
+  it("checks a key declared beside a wider index signature against the index signature's value type", () => {
+    type Checked = StrictUiSchema<ExampleChecks, { name: string; [key: string]: string | number }>;
+
+    const wide: Checked = { name: { 'ui:widget': 'ExampleRangeWidget' } };
+    const typo: Checked = {
+      // @ts-expect-error TS2353, an undeclared ui: key is still rejected
+      name: { 'ui:wigdet': 'ExampleTextWidget' },
+    };
+
+    expectTypeOf<UiSchema<{ name: string; [key: string]: string | number }>['name']>().toEqualTypeOf<
+      UiSchema<string | number> | undefined
+    >();
+    expect(wide.name?.['ui:widget']).toBe('ExampleRangeWidget');
+    expect(typo).toBeDefined();
   });
 
   it('lets a theme/consumer extend the widget and option vocabulary via a Checks union', () => {

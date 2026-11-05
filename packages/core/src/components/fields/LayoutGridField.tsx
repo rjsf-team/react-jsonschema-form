@@ -11,7 +11,9 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   getByPath,
+  hasSchemaMarker,
   toPath,
   deepEquals,
   getDiscriminatorFieldFromSchema,
@@ -43,12 +45,7 @@ import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
-import {
-  isAdditionalPropertySchema,
-  storedValue,
-  withoutAdditionalFlag,
-  withoutOptionalControls,
-} from './fieldWidgetUtils.ts';
+import { storedValue, withoutAdditionalFlag, withoutOptionalControls } from './fieldWidgetUtils.ts';
 import { lookUpUiField } from './namedField.ts';
 
 /** The enumeration of the three different Layout GridTemplate type values
@@ -781,7 +778,7 @@ function LayoutGridFieldComponent<
     () => getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, parentFieldPath),
     [registry, name, initialSchema, formData, parentFieldPath],
   );
-  const isAdditionalProperty = isAdditionalPropertySchema(flaggedSchema);
+  const isAdditionalProperty = hasSchemaMarker(flaggedSchema, ADDITIONAL_PROPERTY_FLAG);
   // A cell the layout names by an `additionalProperties` key keeps that key, since renaming or removing it would take
   // the cell out of the layout, so its template draws no key input or remove button
   const schema = useMemo(() => flaggedSchema && withoutAdditionalFlag<S>(flaggedSchema), [flaggedSchema]);

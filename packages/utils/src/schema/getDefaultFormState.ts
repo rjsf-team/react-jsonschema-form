@@ -28,6 +28,7 @@ import getUiOptions from '../getUiOptions.ts';
 import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isConstantSelect from '../isConstantSelect.ts';
@@ -1578,11 +1579,6 @@ function itemField<S extends StrictRJSFSchema>(
   return defaultsChild(view, seeds, edge, fallback);
 }
 
-/** Whether `propertySchema` is the stub `stubExistingAdditionalProperties()` made for an additional property */
-function isStubbed(propertySchema: unknown): boolean {
-  return isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
-}
-
 /** Computes the default value for objects.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -1665,7 +1661,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     return { value, holdsNull };
   };
   const propertyKeys = Object.keys(schema.properties ?? {}).filter(
-    (key) => isPinned(key) || !isStubbed(getPropertySchema<S>(schema, key)),
+    (key) => isPinned(key) || !hasSchemaMarker(getPropertySchema<S>(schema, key), ADDITIONAL_PROPERTY_FLAG),
   );
   for (const key of propertyKeys) {
     const propertySchema = getPropertySchema<S>(schema, key);
@@ -1685,7 +1681,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // A property stubbed by `stubExistingAdditionalProperties()` from `additionalProperties`/`patternProperties`
     // (flagged here, same as ObjectField's own rendering) shares `uiSchema.additionalProperties` with every other such
     // property, rather than a dynamically-named entry.
-    const addedByAdditionalProperty = isStubbed(propertySchema);
+    const addedByAdditionalProperty = hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG);
     const child = defaultsChild(view, seeds, edge, propertySchema);
     const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
@@ -1928,7 +1924,7 @@ function branchNullFills<T, S extends StrictRJSFSchema, F extends FormContextTyp
       // As the properties the object names read theirs, an additional property the retrieve stubbed sharing one entry
       const propertyUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
         uiSchema,
-        isStubbed(propertySchema) ? ADDITIONAL_PROPERTIES_KEY : key,
+        hasSchemaMarker(propertySchema, ADDITIONAL_PROPERTY_FLAG) ? ADDITIONAL_PROPERTIES_KEY : key,
       );
       const { value, holdsNull } = foldReporting(nullsOnly, `branch:${key}`, child, {
         rawFormData: propertyFormData,

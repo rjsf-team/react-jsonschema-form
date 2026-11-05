@@ -13,9 +13,11 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   enumOptionsIsDisabled,
   getByPath,
   hasByPath,
+  hasSchemaMarker,
   setByPath,
   setOwn,
   ADDITIONAL_PROPERTIES_KEY,
@@ -64,7 +66,6 @@ import {
   declaresProperty,
   getContainerErrorProps,
   getContainerHeading,
-  isAdditionalPropertySchema,
   storedValue,
   withGlobalUiOptions,
   withoutOptionalControls,
@@ -157,7 +158,9 @@ function enteredRefs<S extends StrictRJSFSchema = RJSFSchema>(schema: unknown): 
 function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
   schemaProperties: NonNullable<S['properties']>,
 ) {
-  return Object.keys(schemaProperties).filter((property) => isAdditionalPropertySchema(schemaProperties[property]));
+  return Object.keys(schemaProperties).filter((property) =>
+    hasSchemaMarker(schemaProperties[property], ADDITIONAL_PROPERTY_FLAG),
+  );
 }
 
 /** Picks the name a new additional property should prefer out of the `freeNames` the schema still allows. A name one

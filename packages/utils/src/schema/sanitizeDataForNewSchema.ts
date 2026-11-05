@@ -4,6 +4,7 @@ import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
@@ -201,7 +202,8 @@ export default function sanitizeDataForNewSchema<
       // it is treated as no type at all: the data changing type is a change of data, not a change of schema. That only
       // holds while both sides are free to hold anything — once the new schema names a type of its own, it is that
       // type the data has to satisfy, so data of the type the old side merely happened to hold is still cleared
-      const isUnconstrainedOnBothSides = GUESSED_TYPE_FLAG in oldKeyedSchema && GUESSED_TYPE_FLAG in newKeyedSchema;
+      const isUnconstrainedOnBothSides =
+        hasSchemaMarker(oldKeyedSchema, GUESSED_TYPE_FLAG) && hasSchemaMarker(newKeyedSchema, GUESSED_TYPE_FLAG);
       const oldSchemaTypeForKey = isUnconstrainedOnBothSides ? undefined : oldKeyedSchema.type;
       const newSchemaTypeForKey = newKeyedSchema.type;
       // Check if the old option has the same key with the same type

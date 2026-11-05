@@ -6,6 +6,7 @@ import {
   buttonId,
   getAdditionalKeyAttributes,
   hasAdditionalKeyLabel,
+  hasSchemaMarker,
   isAdditionalKeyDisabled,
   isAdditionalRemoveDisabled,
   TranslatableString,
@@ -43,7 +44,7 @@ export default function WrapIfAdditionalTemplate<
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
-  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const additional = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG);
   const descPadding = rawDescription ? 1 : 0;
   const descMargin = rawDescription ? -24 : 0;
 
