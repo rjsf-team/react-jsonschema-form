@@ -103,6 +103,39 @@ export function requiredCueTests(
       expect(requiredIds(container)).toEqual([]);
     });
 
+    it("shows one marker where the option's `ui:required` asks for it", () => {
+      const container = renderForm(withOption({ title: 'A', type: 'string' }, []), {
+        pet: { oneOf: [{ 'ui:required': true }, {}] },
+      });
+      expect(countMarkers(container)).toBe(1);
+      expect(requiredIds(container)).toEqual(['root_pet']);
+    });
+
+    it("shows no marker where the option's `ui:required` asks for a value it has no control for", () => {
+      const container = renderForm(withOption({ title: 'Anything' }, []), {
+        pet: { oneOf: [{ 'ui:required': true }, {}] },
+      });
+      expect(countMarkers(container)).toBe(0);
+    });
+
+    it('shows no marker on a checkbox whose `false` the schema accepts', () => {
+      expect(countMarkers(renderForm(withOption({ title: 'A', type: 'boolean' })))).toBe(0);
+    });
+
+    it("shows one marker on a checkbox with the option's `ui:required`, which nothing seeds a value for", () => {
+      const container = renderForm(withOption({ title: 'A', type: 'boolean' }, []), {
+        pet: { oneOf: [{ 'ui:required': true }, {}] },
+      });
+      expect(countMarkers(container)).toBe(1);
+    });
+
+    it("shows no marker where the option's `ui:required` turns it off", () => {
+      const container = renderForm(withOption({ title: 'A', type: 'string' }), {
+        pet: { oneOf: [{ 'ui:required': false }, {}] },
+      });
+      expect(countMarkers(container)).toBe(0);
+    });
+
     it('shows no marker where the field is not required', () => {
       const container = renderForm(withOption({ title: 'A', type: 'string' }, []));
       expect(countMarkers(container)).toBe(0);
@@ -157,11 +190,49 @@ export function requiredCueTests(
       expect(countMarkers(container)).toBe(0);
     });
 
-    it('says so where `ui:required` asks for it, which nothing seeds a value for', () => {
-      const container = renderColors(colors({}, []), { 'ui:required': true });
+    it.each<[string, string[]]>([
+      ['a field the schema leaves optional', []],
+      ['a field the schema requires too', ['c']],
+    ])('says so where `ui:required` asks for it, on %s', (_, required) => {
+      const container = renderColors(colors({}, required), { 'ui:required': true });
       expect(screen.getByRole('group', { name: 'Colors required' })).toBeInTheDocument();
       expect(countMarkers(container)).toBe(1);
       expect(requiredIds(container)).toEqual([]);
+    });
+
+    describe('shown by an option', () => {
+      const asOption = (option: RJSFSchema, required: string[]): RJSFSchema => ({
+        type: 'object',
+        required,
+        properties: {
+          c: {
+            title: 'Colors',
+            oneOf: [
+              { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true, ...option },
+              OTHER_OPTION,
+            ],
+          },
+        },
+      });
+      const renderOption = (schema: RJSFSchema, uiOptions: UiSchema = {}) =>
+        render(
+          <Form
+            schema={schema}
+            uiSchema={{ c: { oneOf: [{ 'ui:widget': 'checkboxes', ...uiOptions }, {}] } }}
+            validator={validator}
+          />,
+        ).container;
+
+      it('shows no marker where `required` alone leaves an empty array valid', () => {
+        expect(countMarkers(renderOption(asOption({}, ['c'])))).toBe(0);
+      });
+
+      it.each<[string, RJSFSchema, UiSchema]>([
+        ['a `minItems` on a required field', asOption({ minItems: 1 }, ['c']), {}],
+        ['`ui:required` on an optional field', asOption({}, []), { 'ui:required': true }],
+      ])('shows one marker with %s', (_, schema, uiOptions) => {
+        expect(countMarkers(renderOption(schema, uiOptions))).toBe(1);
+      });
     });
 
     it('says so in the name a group takes where `ui:label: false` hides its label', () => {

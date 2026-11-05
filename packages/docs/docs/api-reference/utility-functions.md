@@ -4025,7 +4025,7 @@ The property is read from every declaration of it that applies whatever the data
 
 ### getUiRequiredErrorSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Walks the `rootSchema`, resolved node by node against `formData` exactly as `SchemaField` does while rendering, and the `uiSchema`, resolved through `ui:definitions` the same way, returning an `ErrorSchema` carrying a required error for every field marked [`ui:required`](./uiSchema.md#required) whose value is missing.
+Walks the `rootSchema`, resolved node by node against `formData` exactly as `SchemaField` does while rendering, and the `uiSchema`, resolved through `ui:definitions` the same way, returning an `ErrorSchema` carrying a required error for every field marked [`ui:required`](./uiSchema.md#required) whose value is missing, which for a group of checkboxes includes `[]`.
 The schema handed to the validator is left untouched, so this behaves identically on the submit and live-validation paths and with a precompiled validator, which cannot be given a schema the compile step never saw.
 `registry.schemaUtils.getUiRequiredErrorSchema(uiSchema, formData, uiSchemaDefinitions, globalUiOptions, formContext, fieldState)` passes the form's own `context` and `rootSchema`, and its `formData` is optional.
 

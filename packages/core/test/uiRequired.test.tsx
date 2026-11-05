@@ -4,7 +4,7 @@ import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
 import { useOptionSelection } from '../src/index.ts';
-import { createFormComponent, elementOf, submitForm } from './testUtils.tsx';
+import { createFormComponent, elementOf, errorListMessages, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -242,6 +242,141 @@ describe('ui:required enforcement', () => {
       expect(onError).toHaveBeenCalled();
       const errors = onError.mock.calls[0][0];
       expect(errors[0].property).toBe('.nick');
+    });
+  });
+
+  describe('a group of checkboxes (#5573)', () => {
+    const colors = (extra: RJSFSchema = {}, required: string[] = []): RJSFSchema => ({
+      type: 'object',
+      required,
+      properties: {
+        c: { type: 'array', title: 'Colors', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true, ...extra },
+      },
+    });
+    const uiSchema: UiSchema = { c: { 'ui:widget': 'checkboxes', 'ui:required': true } };
+
+    it.each<[string, RJSFSchema, unknown]>([
+      ['with no value', colors(), undefined],
+      ['the schema requires too, which seeds `[]`', colors({}, ['c']), undefined],
+      ['holding an initial `[]`', colors(), { c: [] }],
+      ['with a `default` of `[]`', colors({ default: [] }), undefined],
+    ])('blocks a submit with no box checked, %s', async (_, schema, formData) => {
+      await expectSubmitBlocked(schema, uiSchema, formData);
+    });
+
+    it('blocks a submit with no box checked, naming the widget by its registered name', async () => {
+      await expectSubmitBlocked(colors({}, ['c']), { c: { 'ui:widget': 'CheckboxesWidget', 'ui:required': true } });
+    });
+
+    it('blocks a submit with no box checked, on a group an option renders', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['c'],
+        properties: {
+          c: {
+            oneOf: [
+              { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+              { type: 'string' },
+            ],
+          },
+        },
+      };
+      await expectSubmitBlocked(schema, { c: { oneOf: [uiSchema.c as UiSchema, {}] } }, { c: [] });
+    });
+
+    it('submits under an untyped option whose `ui:required` it has no control to answer', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { c: { oneOf: [{ title: 'Anything' }, { title: 'Number', type: 'number' }] } },
+        },
+        uiSchema: { c: { oneOf: [{ 'ui:required': true }, {}] } },
+      });
+      await submitForm(node, user);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+
+    it('blocks a submit with no value, on an option of an optional field', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          c: {
+            oneOf: [
+              { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+              { type: 'number' },
+            ],
+          },
+        },
+      };
+      await expectSubmitBlocked(schema, { c: { oneOf: [uiSchema.c as UiSchema, {}] } });
+    });
+
+    it('lets a submit through once another option is shown', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          c: {
+            oneOf: [
+              { title: 'Colors', type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+              { title: 'Number', type: 'number' },
+            ],
+          },
+        },
+      };
+      const { node, onSubmit } = createFormComponent({
+        schema,
+        uiSchema: { c: { oneOf: [uiSchema.c as UiSchema, {}] } },
+        initialFormData: { c: 1 },
+      });
+      await submitForm(node, user);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+
+    it('blocks a submit once the last box is unchecked', async () => {
+      const { node, onSubmit, onError } = createFormComponent({ schema: colors(), uiSchema });
+      const box = elementOf(node, 'input[type=checkbox]');
+      await user.click(box);
+      await user.click(box);
+      await submitForm(node, user);
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalled();
+    });
+
+    it('reports one error where `minItems` already rejects `[]`', async () => {
+      const { node, onSubmit } = createFormComponent({ schema: colors({ minItems: 1 }, ['c']), uiSchema });
+      await submitForm(node, user);
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(errorListMessages(node)).toEqual(["'Colors' must NOT have fewer than 1 items"]);
+    });
+
+    it('submits with a box checked', async () => {
+      const { node, onSubmit } = createFormComponent({ schema: colors({}, ['c']), uiSchema });
+      await user.click(elementOf(node, 'input[type=checkbox]'));
+      await submitForm(node, user);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+  });
+
+  describe('a checkbox an option renders (#5573)', () => {
+    it('shows the marker on a field just switched to it, which holds nothing and blocks the submit', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        required: ['c'],
+        properties: {
+          c: {
+            title: 'C',
+            oneOf: [
+              { title: 'Text', type: 'string' },
+              { title: 'Box', type: 'boolean' },
+            ],
+          },
+        },
+      };
+      const { node, onSubmit } = createFormComponent({ schema, noHtml5Validate: true });
+      await user.selectOptions(elementOf(node, 'select'), 'Box');
+      expect(node.textContent.split('*')).toHaveLength(2);
+      await submitForm(node, user);
+      expect(onSubmit).not.toHaveBeenCalled();
     });
   });
 

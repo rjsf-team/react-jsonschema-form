@@ -984,6 +984,10 @@ const uiSchema: UiSchema = {
 };
 ```
 
+On a group of checkboxes (`ui:widget: 'checkboxes'` or `'CheckboxesWidget'`), `ui:required: true` also rejects an empty array, so one box has to be checked. On any other field, only a missing value is rejected, and an empty array counts as a value. That includes a group widget of your own, given as a component or registered under another key: give it `minItems: 1` to have the form demand a box.
+
+On an `anyOf`/`oneOf` field, `ui:required: true` in the entry of `uiSchema.oneOf` or `uiSchema.anyOf` for the option shown requires the field while that option is shown, and shows the indicator on the field's label. A `null` option, or one with no `type` that renders the unsupported-field template, has no control to answer with, so its own `ui:required` doesn't require the field.
+
 `ui:required` must be set per field, as it isn't one of the options read from [`ui:globalOptions`](#uiglobaloptions).
 
 `ui:required` is enforced by walking the form the same way it's rendered — resolving each node's schema (`$ref`, `allOf`, `dependencies`, `if`/`then`/`else`, the selected `oneOf`/`anyOf` branch) and uiSchema (including a [`ui:definitions`](#ui-definitions) fragment) against the current `formData`, exactly as `SchemaField` does. Because of that, it's enforced everywhere a field can appear — nested objects, array items, a `ui:definitions` fragment, a field only reachable through `dependencies`/`$ref`/`allOf`, and inside the currently-selected `oneOf`/`anyOf` branch — on both the submit and `liveValidate` paths, and by precompiled validators (which never see the schema mutated, since it isn't). Under `liveValidate`, a change to `uiSchema` or `formContext` alone doesn't re-validate: if `ui:required` depends on state outside the form, the error appears on the next data change, blur or submit.
