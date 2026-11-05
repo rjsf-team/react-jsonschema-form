@@ -94,8 +94,8 @@ export interface FormProps<
   /** You can provide a `formContext` object to the form, which is passed down to all fields and widgets. Useful for
    * implementing context aware fields and widgets.
    *
-   * NOTE: Setting `{readonlyAsDisabled: false}` on the formContext will make the antd theme treat readOnly fields as
-   * disabled.
+   * NOTE: The antd theme treats readOnly fields as disabled. Setting `{readonlyAsDisabled: false}` on the formContext
+   * turns that off.
    */
   formContext?: F;
   /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;

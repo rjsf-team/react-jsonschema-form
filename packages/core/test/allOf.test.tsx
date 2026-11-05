@@ -1,4 +1,4 @@
-import type { RJSFSchema, FieldProps, GenericObjectType } from '@rjsf/utils';
+import type { RJSFSchema, FieldProps } from '@rjsf/utils';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import { createFormComponent, setupConsoleWarnSuppression } from './testUtils.tsx';
@@ -48,8 +48,8 @@ describe('allOf', () => {
         },
       },
     };
-    const formContext: GenericObjectType = { root: 'root-id', root_foo: 'foo-id' };
-    function CustomSchemaField(props: FieldProps) {
+    const formContext: Record<string, string> = { root: 'root-id', root_foo: 'foo-id' };
+    function CustomSchemaField(props: FieldProps<unknown, RJSFSchema, Record<string, string>>) {
       const {
         registry: { formContext },
         id,

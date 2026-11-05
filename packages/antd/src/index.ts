@@ -51,6 +51,7 @@ const Theme = createTheme();
 const Form = generateForm();
 
 export { Form, Templates, Theme, Widgets, generateTemplates, generateWidgets };
+export type { AntdFormContext } from './formContext.ts';
 export type {
   AntdGlobalUiOptionsKeys,
   AntdGlobalUISchemaOptions,

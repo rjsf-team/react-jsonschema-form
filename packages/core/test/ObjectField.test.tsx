@@ -515,12 +515,12 @@ describe('ObjectField', () => {
     });
 
     it('should pass form context to schema field', () => {
-      const formContext: GenericObjectType = {
+      const formContext: Record<string, string> = {
         root: 'root-id',
         root_foo: 'foo-id',
         root_bar: 'bar-id',
       };
-      function CustomSchemaField(props: FieldProps) {
+      function CustomSchemaField(props: FieldProps<unknown, RJSFSchema, Record<string, string>>) {
         const {
           registry: { formContext },
           id,

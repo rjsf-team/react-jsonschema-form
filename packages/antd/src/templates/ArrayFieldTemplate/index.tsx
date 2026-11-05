@@ -1,14 +1,11 @@
 import { useContext } from 'react';
-import type {
-  ArrayFieldTemplateProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
+
+import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
+import type { AntdFormContext } from '../../formContext.ts';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -42,7 +39,7 @@ export default function ArrayFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { labelAlign = 'right', rowGutter = 24 } = formContext as GenericObjectType;
+  const { labelAlign = 'right', rowGutter = DEFAULT_ROW_GUTTER }: AntdFormContext = formContext;
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('form');
