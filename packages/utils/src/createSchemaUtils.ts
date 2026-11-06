@@ -146,7 +146,9 @@ class SchemaUtils<
 
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
-   * field is in the `required` list for its parent and if so, it is marked as required on return.
+   * field is in the `required` list for its parent and if so, it is marked as required on return. At each key of the
+   * `path`, a property declared beside an `anyOf` or `oneOf` is found before its options are, and a key no property
+   * declares is found through `patternProperties` or `additionalProperties`.
    *
    * @param schema - The current node within the JSON schema
    * @param path - The remaining keys in the path to the desired field
@@ -158,17 +160,18 @@ class SchemaUtils<
     return findFieldInSchema(this.context, this.rootSchema, schema, path, formData);
   }
 
-  /** Finds the oneOf option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` that
-   * matches the `formData[selectorField]` value. For the purposes of this function, `selectorField` is either
-   * `schema.discriminator.propertyName` or `fallbackField`.
+  /** Finds the option of `schema['any/oneOf']` a field renders for `formData`: with a discriminator, the option whose
+   * `properties[discriminator].default` or `.const` matches the `formData[discriminator]` value, and with none, the option
+   * `getClosestMatchingOption()` picks for the data.
    *
    * @param schema - The schema element in which to search for the selected oneOf option
-   * @param fallbackField - The field to use as a backup selector field if the schema does not have a required field
+   * @param fallbackField - Not read, since options with no discriminator aren't told apart by any one property
    * @param xxx - Either `oneOf` or `anyOf`, defines which value is being sought
-   * @param [formData={}] - The form data that is used to determine which oneOf option
-   * @returns - The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
+   * @param [formData] - The form data that is used to determine which oneOf option
+   * @returns - The anyOf/oneOf option that matches the discriminator, or the closest to the data for options with no
+   *            discriminator, or undefined if a discriminated list selects nothing
    */
-  findSelectedOptionInXxxOf(schema: S, fallbackField: string, xxx: 'anyOf' | `oneOf`, formData: T): S | undefined {
+  findSelectedOptionInXxxOf(schema: S, fallbackField: string, xxx: 'anyOf' | `oneOf`, formData?: T): S | undefined {
     return findSelectedOptionInXxxOf(this.context, this.rootSchema, schema, fallbackField, xxx, formData);
   }
 

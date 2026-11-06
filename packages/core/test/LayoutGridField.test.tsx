@@ -1033,6 +1033,229 @@ describe('LayoutGridField', () => {
       expect(details.isReadonly).toBe(true);
     });
   });
+  describe('getSchemaDetailsForField(), a cell beside or in options', () => {
+    const discriminated: RJSFSchema = {
+      type: 'object',
+      discriminator: { propertyName: 'kind' },
+      properties: { own: { type: 'string', title: 'Own' } },
+      required: ['own'],
+      oneOf: [
+        {
+          type: 'object',
+          properties: {
+            kind: { type: 'string', const: 'a' },
+            inner: { type: 'object', properties: { leaf: { type: 'number', title: 'Leaf' } } },
+          },
+        },
+        { type: 'object', properties: { kind: { type: 'string', const: 'b' } } },
+      ],
+    };
+    const selectorLess: RJSFSchema = {
+      type: 'object',
+      anyOf: [
+        { type: 'object', properties: { a: { type: 'string', title: 'A' } }, required: ['a'] },
+        { type: 'object', properties: { b: { type: 'number', title: 'B' } } },
+      ],
+    };
+    const details = (thing: RJSFSchema, name: string, formData: object) => {
+      const schema: RJSFSchema = { type: 'object', properties: { thing } };
+      return getSchemaDetailsForField(getTestRegistry(schema), name, schema, { thing: formData }, FIELD_PATH);
+    };
+
+    test('finds a property declared beside the options, and whether the schema requires it', () => {
+      const { schema, isRequired } = details(discriminated, 'thing.own', { kind: 'a' });
+      expect(schema?.title).toBe('Own');
+      expect(isRequired).toBe(true);
+    });
+    test('applies the required of the schema to a property of its selected option', () => {
+      const required: RJSFSchema = { ...selectorLess, required: ['b'] };
+      expect(details(required, 'thing.b', { b: 1 }).isRequired).toBe(true);
+    });
+    test('walks through the selected option to a part beside which the schema declares properties', () => {
+      expect(details(discriminated, 'thing.inner.leaf', { kind: 'a' }).schema?.title).toBe('Leaf');
+    });
+    test('finds nothing in an option the discriminator did not select', () => {
+      expect(details(discriminated, 'thing.inner.leaf', { kind: 'b' }).schema).toBeUndefined();
+    });
+    test('reads a property only the option declares from the option, not the stub the data gives it beside them', () => {
+      const besideExtraKeys: RJSFSchema = {
+        type: 'object',
+        additionalProperties: true,
+        oneOf: [{ type: 'object', properties: { b: { type: 'number', title: 'B' } }, required: ['b'] }],
+      };
+      const { schema, isRequired } = details(besideExtraKeys, 'thing.b', { b: 1 });
+      expect(schema?.title).toBe('B');
+      expect(isRequired).toBe(true);
+    });
+    test('still reads an extra key the option leaves undeclared from the stub', () => {
+      const besideExtraKeys: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string', title: 'Extra' },
+        oneOf: [{ type: 'object', properties: { b: { type: 'number' } } }],
+      };
+      expect(details(besideExtraKeys, 'thing.other', { other: 'x' }).schema?.title).toBe('Extra');
+    });
+    test('reads an array item from the items beside the options', () => {
+      const besideItems: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', title: 'Item' },
+        anyOf: [{ minItems: 1 }, { maxItems: 0 }],
+      };
+      expect(details(besideItems, 'thing.0', ['x']).schema?.title).toBe('Item');
+    });
+    test('reads the items beside the options of an array as its option renders them, with what the option adds', () => {
+      const optionAddsToItems: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { a: { type: 'string', title: 'A' } } },
+        anyOf: [{ items: { required: ['b'], properties: { b: { type: 'number', title: 'B' } } } }],
+      };
+      const data = [{ a: 'x', b: 1 }];
+      expect(details(optionAddsToItems, 'thing.0.a', data).schema?.title).toBe('A');
+      const { schema, isRequired } = details(optionAddsToItems, 'thing.0.b', data);
+      expect(schema?.title).toBe('B');
+      expect(isRequired).toBe(true);
+    });
+    // shortcut: an option's own options aren't walked, as in `findFieldInSchema()`; walk the rendered option again,
+    // guarded against `$ref` cycles, if grids need cells there
+    test("finds nothing for a property of an option's own options", () => {
+      const nestedOptions: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          {
+            properties: { x: { title: 'X' } },
+            anyOf: [{ properties: { p: { title: 'P' } } }, { properties: { q: { type: 'number' } } }],
+          },
+          { properties: { y: {} } },
+        ],
+      };
+      const data = { x: 'v', p: 'w' };
+      expect(details(nestedOptions, 'thing.x', data).schema?.title).toBe('X');
+      expect(details(nestedOptions, 'thing.p', data).schema).toBeUndefined();
+    });
+    test('reads a property code leaves undefined beside the options from the option', () => {
+      const leftUndefined = {
+        type: 'object',
+        properties: { a: undefined },
+        anyOf: [{ type: 'object', properties: { a: { type: 'string', title: 'A' } } }],
+      } as unknown as RJSFSchema;
+      expect(details(leftUndefined, 'thing.a', { a: 'x' }).schema?.title).toBe('A');
+    });
+    describe('an array whose options hold its items', () => {
+      const itemsInOptions: RJSFSchema = {
+        type: 'array',
+        anyOf: [{ items: { type: 'object', title: 'Item', properties: { name: { type: 'string', title: 'Name' } } } }],
+      };
+      const thing = (name: string) => {
+        const schema: RJSFSchema = { type: 'object', properties: { thing: itemsInOptions } };
+        const data = { thing: [{ name: 'x' }] };
+        return getSchemaDetailsForField(getTestRegistry(schema), name, schema, data, FIELD_PATH);
+      };
+
+      test('reads the item of an option naming no type at the leaf', () => {
+        const { schema, fieldPath } = thing('thing.0');
+        expect(schema?.title).toBe('Item');
+        expect(fieldPath).toBe(toFieldPath(0, toFieldPath('thing', FIELD_PATH)));
+      });
+      test('walks through the item to a part of it', () => {
+        const { schema, fieldPath } = thing('thing.0.name');
+        expect(schema?.title).toBe('Name');
+        expect(fieldPath).toBe(toFieldPath('name', toFieldPath(0, toFieldPath('thing', FIELD_PATH))));
+      });
+    });
+    test('reads the readOnly of the selected option, at the leaf and for a part below it', () => {
+      const readOnlyOption: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          {
+            type: 'object',
+            readOnly: true,
+            properties: {
+              a: { type: 'string' },
+              inner: { type: 'object', properties: { leaf: { type: 'string' } } },
+            },
+          },
+        ],
+      };
+      expect(details(readOnlyOption, 'thing.a', { a: 'x' }).isReadonly).toBe(true);
+      expect(details(readOnlyOption, 'thing.inner.leaf', { inner: { leaf: 'x' } }).isReadonly).toBe(true);
+    });
+    test('reads a property left empty beside the options from the option', () => {
+      const leftEmpty = {
+        type: 'object',
+        properties: { a: null },
+        anyOf: [{ type: 'object', properties: { a: { type: 'string', title: 'A' } } }],
+      } as unknown as RJSFSchema;
+      expect(details(leftEmpty, 'thing.a', { a: 'x' }).schema?.title).toBe('A');
+    });
+    test('reads a property left empty in the option from the stub of the extra key', () => {
+      const leftEmptyInOption = {
+        type: 'object',
+        additionalProperties: { type: 'string', title: 'Extra' },
+        anyOf: [{ type: 'object', properties: { a: null, b: { type: 'number' } } }],
+      } as unknown as RJSFSchema;
+      expect(details(leftEmptyInOption, 'thing.a', { a: 'x' }).schema?.title).toBe('Extra');
+    });
+    test.each([
+      ['cleared', {}],
+      ['edited', { a: 'typed' }],
+    ])('keeps finding a property every option gives an ordinary default, as it is %s', (_, formData) => {
+      const allDefault: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          { type: 'object', properties: { a: { type: 'string', title: 'A', default: 'x' } } },
+          { type: 'object', properties: { a: { type: 'string', title: 'A', default: 'y' } } },
+        ],
+      };
+      expect(details(allDefault, 'thing.a', formData).schema?.title).toBe('A');
+    });
+    test('reads the option the form shows, where several options hold the value of the property', () => {
+      const sharedDefault: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          {
+            type: 'object',
+            properties: { kind: { const: 'a' }, shared: { type: 'string', title: 'Shared A', default: 'x' } },
+          },
+          {
+            type: 'object',
+            properties: { kind: { const: 'b' }, shared: { type: 'string', title: 'Shared B', default: 'x' } },
+          },
+        ],
+      };
+      expect(details(sharedDefault, 'thing.shared', { kind: 'b', shared: 'x' }).schema?.title).toBe('Shared B');
+    });
+    test('reads the first option where a part of the path holds no data, as a field renders it', () => {
+      const thing: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          { type: 'object', properties: { a: { type: 'string', title: 'A' } } },
+          { type: 'object', title: 'Matches an empty object' },
+        ],
+      };
+      const schema: RJSFSchema = { type: 'object', properties: { thing } };
+      expect(getSchemaDetailsForField(getTestRegistry(schema), 'thing.a', schema, {}, FIELD_PATH).schema?.title).toBe(
+        'A',
+      );
+    });
+    test('finds a property one option gives an ordinary default, in the option the data matches', () => {
+      const someDefault: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          { type: 'object', properties: { a: { type: 'string', title: 'First', default: 'd' } } },
+          { type: 'object', properties: { a: { type: 'string', title: 'Second' }, b: { type: 'number' } } },
+        ],
+      };
+      expect(details(someDefault, 'thing.a', { b: 1 }).schema?.title).toBe('Second');
+    });
+    test.each([
+      ['the first with no data', 'thing.a', {}, 'A', true],
+      ['the one the data matches', 'thing.b', { b: 1 }, 'B', false],
+    ])('finds a property of options with no selector in %s', (_, name, formData, title, required) => {
+      const { schema, isRequired } = details(selectorLess, name, formData);
+      expect(schema?.title).toBe(title);
+      expect(isRequired).toBe(required);
+    });
+  });
   describe('getSchemaDetailsForField(), a tuple', () => {
     const schema: RJSFSchema = {
       type: 'object',

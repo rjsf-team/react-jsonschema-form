@@ -740,3 +740,56 @@ describe('a discriminated cell of a layout grid', () => {
     screen.getAllByRole('radio').forEach((radio) => expect(radio).not.toHaveFocus());
   });
 });
+
+describe('a cell in options with no discriminator', () => {
+  const optionsSchema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      thing: {
+        type: 'object',
+        anyOf: [
+          { type: 'object', properties: { a: { type: 'string', title: 'A', default: 'x' } } },
+          { type: 'object', properties: { a: { type: 'string', title: 'A', default: 'y' } } },
+        ],
+      },
+    },
+  };
+
+  it('stays on screen as a user clears and edits a property every option only gives a default', async () => {
+    createFormComponent({
+      schema: optionsSchema,
+      uiSchema: { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing.a'] }] } },
+    });
+
+    await user.clear(screen.getByLabelText('A'));
+    expect(screen.getByLabelText('A')).toHaveValue('');
+
+    await user.type(screen.getByLabelText('A'), 'typed');
+    expect(screen.getByLabelText('A')).toHaveValue('typed');
+  });
+
+  it('renders the field a named render cell finds, rather than the render', () => {
+    createFormComponent({
+      schema: optionsSchema,
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': [{ name: 'thing.a', render: CustomField }] }] },
+      },
+    });
+
+    expect(screen.getByLabelText('A')).toBeInTheDocument();
+    expect(screen.queryByTestId('custom-field')).not.toBeInTheDocument();
+  });
+
+  it('shows a render with no name in place of the field its name would find', () => {
+    createFormComponent({
+      schema: optionsSchema,
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': [{ name: '', render: CustomField }] }] },
+      },
+    });
+
+    expect(screen.getByTestId('custom-field')).toBeInTheDocument();
+  });
+});
