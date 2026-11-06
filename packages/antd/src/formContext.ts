@@ -16,7 +16,7 @@ export interface AntdFormContext {
   colSpan?: number | Record<string, number>;
   /** Where a field's description is shown */
   descriptionLocation?: 'below' | 'tooltip';
-  /** The alignment of the labels of objects and arrays */
+  /** The alignment of the headings of objects and arrays. Unset, they start their column when a field's label does, under the default `labelCol` or one 24 columns wide, and end it under any other `labelCol` */
   labelAlign?: FormProps['labelAlign'];
   /** The `Col` props of a field's label */
   labelCol?: ColProps;
