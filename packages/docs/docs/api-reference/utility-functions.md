@@ -3269,7 +3269,7 @@ It returns the same list, which changed with the rename, so code calling it stil
 
 - SchemaMap&lt;S>: The schemas, keyed by `schemaKey()`
 
-### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>() {#schemarequirestruevalue}
 
 Check to see if a `schema` specifies that a value must be true. This happens when:
 
@@ -3442,7 +3442,7 @@ That label names the control through its own `presentation.label.id` instead.
 
 ### templateMarksRequired&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#templatemarksrequired}
 
-Whether a `FieldTemplate`, or a widget drawing its own label, marks that label as required: where the field's plan says so, which leaves the marker off a control declared `uncheckedIsFalse` whose schema doesn't demand `true` ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388)) and off a level whose field above already draws it, and puts it on the label an `anyOf`/`oneOf` selector draws for its field ([#5573](https://github.com/rjsf-team/react-jsonschema-form/issues/5573)), or, for one rendered without a plan, where the field is `required`. A widget keeps its control's own `required` apart from this.
+Whether a `FieldTemplate`, or a widget drawing its own label, marks that label as required: where the field's plan says so, which leaves the marker off a control declared `uncheckedIsFalse` whose schema doesn't demand `true`, unless `ui:required: true` asks for it while it holds no value ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388)), and off a level whose field above already draws it, and puts it on the label an `anyOf`/`oneOf` selector draws for its field ([#5573](https://github.com/rjsf-team/react-jsonschema-form/issues/5573)), or, for one rendered without a plan, where the field is `required`. A widget keeps its control's own `required` apart from this.
 
 #### Parameters
 

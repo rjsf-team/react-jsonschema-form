@@ -986,6 +986,8 @@ const uiSchema: UiSchema = {
 
 On a group of checkboxes (`ui:widget: 'checkboxes'` or `'CheckboxesWidget'`), `ui:required: true` also rejects an empty array, so one box has to be checked. On any other field, only a missing value is rejected, and an empty array counts as a value. That includes a group widget of your own, given as a component or registered under another key: give it `minItems: 1` to have the form demand a box.
 
+On a checkbox, `ui:required: true` shows the indicator while the box holds no value yet, since nothing seeds the `false` a schema-required `boolean` gets and the form blocks that submit; once it holds `false`, that counts as an answer. A `CheckboxWidget` of your own marks its label where both the `required` it is handed and [`templateMarksRequired()`](./utility-functions.md#templatemarksrequired) hold (see [Custom Widgets](../advanced-customization/custom-widgets-fields.md)).
+
 On an `anyOf`/`oneOf` field, `ui:required: true` in the entry of `uiSchema.oneOf` or `uiSchema.anyOf` for the option shown requires the field while that option is shown, and shows the indicator on the field's label. An entry that leaves `ui:required` unset takes the field's own, so `ui:required: true` beside `oneOf` also has a group of checkboxes an option shows reject an empty array. An option that renders options of its own doesn't hand it on to them. A `null` option, or one with no `type` that renders the unsupported-field template, has no control to answer with, so its own `ui:required` doesn't require the field.
 
 `ui:required` must be set per field, as it isn't one of the options read from [`ui:globalOptions`](#uiglobaloptions).
