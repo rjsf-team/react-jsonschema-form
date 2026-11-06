@@ -12,8 +12,9 @@ const ROOT_ONLY_NAMES: ReadonlySet<string> = new Set(['definitions', 'globalOpti
  * `GLOBAL_UI_OPTIONS_KEYS` lists, and the extension keys the form's theme and the `Form` itself declare. Every other key
  * is left out, so a global option RJSF reads only per field, such as `widget` or `placeholder`, reaches no field. Such
  * an option is warned about once, since a form that set one, such as a global `readonly`, would otherwise change with
- * no sign of why. An extension key that is one of those per-field names, which `RESERVED_UI_OPTION_NAMES` lists, is
- * left out too, with a warning of its own: every field would otherwise read it as its own option.
+ * no sign of why. An extension key that `RESERVED_UI_OPTION_NAMES` lists is left out too, with a warning of its own: one
+ * of those per-field names, which every field would otherwise read as its own option, or `definitions` or
+ * `globalOptions`, which only the root uiSchema's `ui:` keys set.
  *
  * @param [globalOptions] - The root uiSchema's `ui:globalOptions`
  * @param [extensionKeys=[]] - The extension keys the form's theme and the `Form` declare

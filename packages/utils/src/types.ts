@@ -763,13 +763,14 @@ export interface GlobalUISchemaOptionsKeys {
  */
 type OverridableTemplateName = Exclude<keyof DeclaredTemplatesType, 'ButtonTemplates'>;
 
-/** Every option name RJSF reads for a field, which an extension of `GlobalUISchemaOptions` may not reuse: the
- * registry hands an extension's keys to every field along with RJSF's own, so one of these names would act as the
- * option RJSF reads per field. `ui:fieldReplacesAnyOrOneOf` is among them, since `getUiOptions()` returns it as an
- * option too, as are `definitions` and `globalOptions`, which no field could override since `ui:options` doesn't take
- * them, and so is `enumOptions`, which a field computes and hands its widget beside the options, and every
- * template `getTemplates()` reads from a field's options, the ones `ui:options` doesn't declare included. A theme whose
- * widgets read more lists them in the `Reserved` its `<Theme>GlobalUISchemaOptions` checks a user's extension against.
+/** The names an extension of `GlobalUISchemaOptions` may not reuse: every option name RJSF reads for a field, and
+ * `definitions` and `globalOptions`, which only the root uiSchema's `ui:` keys set. The registry hands an extension's
+ * keys to every field along with RJSF's own, so a per-field name would act as the option RJSF reads per field, and no
+ * field could override the other two, since `ui:options` doesn't take them. `fieldReplacesAnyOrOneOf` is a per-field
+ * name, since `getUiOptions()` returns `ui:fieldReplacesAnyOrOneOf` as an option too, and so are `enumOptions`, which a
+ * field computes and hands its widget beside the options, and every template `getTemplates()` reads from a field's
+ * options, the ones `ui:options` doesn't declare included. A theme whose widgets read more lists them in the `Reserved`
+ * its `<Theme>GlobalUISchemaOptions` checks a user's extension against.
  */
 export type ReservedUiOptionName =
   | keyof UIOptionsDeclaredType

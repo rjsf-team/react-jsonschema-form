@@ -565,7 +565,7 @@ Only `undefined` means "not passed". `null` seeds the schema's defaults the way 
 
 The keys of the extensions to [`ui:globalOptions`](uiSchema.md#uiglobaloptions) that your own widgets, fields and templates read, beyond the ones RJSF reads there.
 They are added to the ones the theme declares, and the registry's `globalUiOptions` hold only those and RJSF's own, so every field hands them to its widget in its `options`, beneath the field's own, and a template reads them with `getUiOptions(uiSchema, registry.globalUiOptions)`.
-A key that is an option name RJSF reads per field, such as `widget` or `placeholder`, is not read from `ui:globalOptions`, and a warning says so.
+A key that is an option name RJSF reads per field, such as `widget` or `placeholder`, or `definitions` or `globalOptions`, which only the root uiSchema's `ui:` keys set, is not read from `ui:globalOptions`, and a warning says so.
 
 ```tsx
 import { Form } from '@rjsf/core';

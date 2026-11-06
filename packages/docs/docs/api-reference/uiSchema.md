@@ -67,7 +67,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-The `GlobalUISchemaOptions` type takes a `UserExtensions` parameter for options your own widgets, fields and templates read, whose keys may not reuse an option name RJSF reads for a field.
+The `GlobalUISchemaOptions` type takes a `UserExtensions` parameter for options your own widgets, fields and templates read, whose keys may not reuse an option name RJSF reads for a field, or `definitions` or `globalOptions`, which only the root uiSchema's `ui:` keys set.
 Declare the options against it, then hand them to the uiSchema, and name their keys in the `Form`'s [`globalUiOptionsKeys`](form-props.md#globaluioptionskeys) prop, so every field hands them to its widget in its `options`, beneath the field's own, and a template reads them with `getUiOptions(uiSchema, registry.globalUiOptions)`:
 
 ```tsx
