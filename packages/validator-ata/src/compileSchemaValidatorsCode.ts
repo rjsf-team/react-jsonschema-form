@@ -352,33 +352,58 @@ function standalone(
   return count === 0 ? declared : { ...declared, [container]: carried };
 }
 
+/** Returns the `$id` of `schema` and of every subschema in it */
+function idsIn(schema: unknown): unknown[] {
+  return isObject(schema) ? [schema[ID_KEY], ...subschemasOf(schema).flatMap(idsIn)] : [];
+}
+
+/** The extras found to hold no `$ref` into each root, kept so compiling on every request walks each of them once. An
+ * extra or root changed in place after a compile keeps the answer it had then
+ */
+const UNLINKED = new WeakMap<object, WeakSet<object>>();
+
 /** Returns the extra schema `extra`, registered under `id`, with every `$ref` it holds into the form's document or into
  * a resource of the root renamed to the `$id` of a document of its own compiled by `standalone()` from the subschema it
- * names. The module compiles no copy of the root a pointer into it could reach, so without this such a `$ref` names
- * nothing there and holds for any data. Each document is added to `targets` under the subschema it is compiled from, so
- * a subschema several `$ref`s name is compiled once.
+ * names, under an `$id` `targetId()` returns. The module compiles no copy of the root a pointer into it could reach, so
+ * without this such a `$ref` names nothing there and holds for any data. Each document is added to `targets` under the
+ * subschema it is compiled from, so a subschema several `$ref`s name is compiled once. A `$ref` to the whole root is
+ * renamed to the `$id` the module compiles the root under instead, where the root's own `$id` is that.
  */
 function linkedToForm(
   extra: object,
   id: string,
   reading: RootReading,
   targets: Map<unknown, GenericObjectType>,
+  targetId: () => string,
 ): object {
+  const root = reading.root.schema as object;
+  const unlinked = UNLINKED.get(root) ?? new WeakSet<object>();
+  UNLINKED.set(root, unlinked);
+  if (unlinked.has(extra)) {
+    return extra;
+  }
+  let isLinked = false;
   const targetOf = (ref: string, base: string): string => {
     const [document] = ref.split('#', 1);
     const named = document === '' ? undefined : referenced(ref, { schema: extra, base }, reading);
     if (named === undefined) {
       return ref;
     }
-    const [subschema, around] = locate(...named, reading.laterDialect);
+    const [resource, fragment] = named;
+    if (resource === reading.root && fragment === '#' && getByPath(resource.schema, [ID_KEY]) === reading.id) {
+      isLinked = true;
+      return reading.id;
+    }
+    const [subschema, around] = locate(resource, fragment, reading.laterDialect);
     if (subschema === undefined) {
       return ref;
     }
     const target = targets.get(subschema) ?? {
       ...standalone(subschema, reading, around),
-      [ID_KEY]: `urn:rjsf:form-target:${targets.size}`,
+      [ID_KEY]: targetId(),
     };
     targets.set(subschema, target);
+    isLinked = true;
     return target[ID_KEY] as string;
   };
   // ata reads the `$id`s of an extra that declares a `$schema` by that dialect, not by the form's
@@ -396,7 +421,11 @@ function linkedToForm(
     const ref: unknown = value[REF_KEY];
     return typeof ref === 'string' ? { ...copy, [REF_KEY]: targetOf(ref, inner) } : copy;
   };
-  return link(extra, id) as object;
+  const linked = link(extra, id) as object;
+  if (!isLinked) {
+    unlinked.add(extra);
+  }
+  return linked;
 }
 
 /** The size of each extra schema a warning has given, kept so compiling on every request serializes it once */
@@ -482,7 +511,19 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     }
   }
   const targets = new Map<unknown, GenericObjectType>();
-  const bundled = [...winners].map(([id, extra]) => linkedToForm(extra, id, reading, targets));
+  let targetCount = 0;
+  // An extra's nested `$id`s are registered in the module too; read only once a target is needed
+  let taken: Set<unknown> | undefined;
+  const targetId = (): string => {
+    taken ??= new Set([...formIds, ...[...winners.values()].flatMap(idsIn)]);
+    let id: string;
+    do {
+      id = `urn:rjsf:form-target:${targetCount}`;
+      targetCount += 1;
+    } while (taken.has(id));
+    return id;
+  };
+  const bundled = [...winners].map(([id, extra]) => linkedToForm(extra, id, reading, targets, targetId));
   for (const [id, extra] of winners) {
     if (/^https?:\/\/json-schema\.org\//.test(id)) {
       logOnce(
