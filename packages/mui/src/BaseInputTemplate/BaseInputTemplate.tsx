@@ -33,7 +33,7 @@ import {
   getMuiProps,
   helperTextSlot,
   inputLabelId,
-  omitFormOwnedProps,
+  omitFormOwnedInputProps,
   resolveSlotProps,
   withoutDisabled,
 } from '../util.ts';
@@ -191,7 +191,7 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
-  const inputProps = { ...InputProps, ...slotProps?.input, ...omitFormOwnedProps(muiSlotProps?.input ?? {}) };
+  const inputProps = { ...InputProps, ...slotProps?.input, ...omitFormOwnedInputProps(muiSlotProps?.input ?? {}) };
   if (options.allowClearTextInputs && offersClearButton(inputValue, rest.type) && !readonly && !disabled) {
     const clearAdornment = (
       <InputAdornment position='end'>

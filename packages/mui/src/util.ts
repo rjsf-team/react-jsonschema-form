@@ -188,6 +188,25 @@ export function withoutDisabled<P extends object, O>(slotProps?: MuiSlotProps<P,
   return slotProps && omitDisabled(slotProps);
 }
 
+/** Drops `disabled`, `onChange`, `onBlur` and `onFocus` from the props a form author gives a `TextField`'s `input` or
+ * `select` slot, which MUI spreads over the `TextField`'s own, and `disabled` from the `<input>` props nested in it,
+ * which MUI's `InputBase` spreads over its own
+ *
+ * @param props - The props the form author gives the slot
+ * @returns - The props without those
+ */
+export function omitFormOwnedInputProps<P extends object>(props: P): P {
+  const rest = omitFormOwnedProps(props) as P & {
+    inputProps?: object;
+    slotProps?: { input?: MuiSlotProps<object, never> };
+  };
+  return {
+    ...rest,
+    ...(rest.inputProps && { inputProps: omitDisabled(rest.inputProps) }),
+    ...(rest.slotProps && { slotProps: { ...rest.slotProps, input: withoutDisabled(rest.slotProps.input) } }),
+  };
+}
+
 /** Gives the `input` slot of a MUI control's `slotProps` the `props` a widget puts on the element a user focuses,
  * beneath the form author's own `input` slot, less its `disabled`, and keeps the author's other slots as they are
  *

@@ -1,7 +1,13 @@
 import type { Theme } from '@mui/material';
 import type { RJSFSchema } from '@rjsf/utils';
 
-import { computeSxProps, getMuiProps, omitFormOwnedProps, withoutDisabled } from '../src/util.ts';
+import {
+  computeSxProps,
+  getMuiProps,
+  omitFormOwnedInputProps,
+  omitFormOwnedProps,
+  withoutDisabled,
+} from '../src/util.ts';
 
 describe('getMuiProps', () => {
   it('returns no props for a `mui` option that is not an object', () => {
@@ -100,6 +106,23 @@ describe('omitFormOwnedProps', () => {
   it('drops the props the form sets, and keeps the rest', () => {
     const formOwned = { disabled: false, onChange: () => {}, onBlur: () => {}, onFocus: () => {} };
     expect(omitFormOwnedProps({ ...formOwned, title: 'T' })).toEqual({ title: 'T' });
+  });
+});
+
+describe('omitFormOwnedInputProps', () => {
+  const onChange = () => {};
+
+  it('drops the props the form sets, and disabled from the <input> props nested in the slot', () => {
+    const slot = omitFormOwnedInputProps({
+      disabled: false,
+      onChange,
+      inputProps: { disabled: false, onChange },
+      slotProps: { input: { disabled: false, onChange }, root: { title: 'R' } },
+    });
+    expect(slot).toEqual({ inputProps: { onChange }, slotProps: { input: { onChange }, root: { title: 'R' } } });
+  });
+  it('adds no nested props the slot lacks', () => {
+    expect(omitFormOwnedInputProps({ title: 'T' })).toEqual({ title: 'T' });
   });
 });
 
