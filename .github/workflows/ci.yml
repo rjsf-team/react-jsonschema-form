@@ -69,13 +69,39 @@ jobs:
         with:
           name: docs
           path: packages/docs/build
-      - run: pnpm test
+
+  # Tests resolve `@rjsf/*` to source, so they need no build and run beside the build job. They are split across two
+  # runners because nx's `--parallel` can't add CPU: each vitest run already starts a worker per core, so more tasks on
+  # one runner only slow each test, which is how a test hits its timeout. The themes, which take most of the time, run
+  # on one runner and everything else, any new package included, on the other.
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x, 24.x, 26.x]
+        shard: [themes, others]
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test ${{ matrix.shard == 'themes' && '--projects' || '--exclude' }}="$THEMES"
+        env:
+          THEMES: '@rjsf/antd,@rjsf/bootstrap3,@rjsf/chakra-ui,@rjsf/daisyui,@rjsf/fluentui-rc,@rjsf/mantine,@rjsf/mui,@rjsf/react-bootstrap,@rjsf/shadcn'
 
   deploy_playground_and_docs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     name: Deploy playground and docs to GitHub Pages
-    needs: [build, checks]
+    needs: [build, test, checks]
     steps:
       - name: Download built playground
         uses: actions/download-artifact@v8

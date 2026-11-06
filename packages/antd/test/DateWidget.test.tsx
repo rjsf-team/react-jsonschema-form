@@ -30,6 +30,7 @@ function makeProps(overrides: Partial<WidgetProps> = {}): WidgetProps {
 }
 
 describe('DateWidget with schema.format = iso-date-time', () => {
+  // Typing into antd's picker takes about 5s on a loaded Node 22 CI runner, just past the 5s default
   test('formats a picked date-time as a naive local string without a timezone offset', async () => {
     const onChange = vi.fn();
     const { container } = render(<DateWidget {...makeProps({ onChange })} showTime />);
@@ -38,7 +39,7 @@ describe('DateWidget with schema.format = iso-date-time', () => {
     await user.type(input, '2016-04-05 14:01:30{Enter}');
 
     expect(onChange).toHaveBeenCalledWith('2016-04-05T14:01:30');
-  });
+  }, 6000);
 });
 
 describe('DateWidget with schema.format = date-time', () => {
