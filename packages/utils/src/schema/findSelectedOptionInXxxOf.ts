@@ -38,8 +38,9 @@ export default function findSelectedOptionInXxxOf<
     const xxxOfs = schema[xxx].map((xxxOf) => retrieveSchema<T, S, F>(context, xxxOf as S, rootSchema, formData));
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     if (!discriminator) {
-      // shortcut: a tie goes to the first option, and each read picks afresh, where `MultiSchemaField` keeps the option a
-      // user picked in its own state, which schemas alone can't see; pass the form's selection in once a caller has it
+      // shortcut: a tie goes to the first option the data matches (the first option when it matches none), and each read
+      // picks afresh, where `MultiSchemaField` keeps the option a user picked in its own state, which schemas alone can't
+      // see; pass the form's selection in once a caller has it
       return xxxOfs[getClosestMatchingOption<T, S, F>(context, rootSchema, formData, xxxOfs)];
     }
     const data = getByPath(formData, discriminator);

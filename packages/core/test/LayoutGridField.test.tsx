@@ -1103,6 +1103,35 @@ describe('LayoutGridField', () => {
       };
       expect(details(besideItems, 'thing.0', ['x']).schema?.title).toBe('Item');
     });
+    test('reads the items beside the options of an array as its option renders them, with what the option adds', () => {
+      const optionAddsToItems: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', properties: { a: { type: 'string', title: 'A' } } },
+        anyOf: [{ items: { required: ['b'], properties: { b: { type: 'number', title: 'B' } } } }],
+      };
+      const data = [{ a: 'x', b: 1 }];
+      expect(details(optionAddsToItems, 'thing.0.a', data).schema?.title).toBe('A');
+      const { schema, isRequired } = details(optionAddsToItems, 'thing.0.b', data);
+      expect(schema?.title).toBe('B');
+      expect(isRequired).toBe(true);
+    });
+    // shortcut: an option's own options aren't walked, as in `findFieldInSchema()`; walk the rendered option again,
+    // guarded against `$ref` cycles, if grids need cells there
+    test("finds nothing for a property of an option's own options", () => {
+      const nestedOptions: RJSFSchema = {
+        type: 'object',
+        anyOf: [
+          {
+            properties: { x: { title: 'X' } },
+            anyOf: [{ properties: { p: { title: 'P' } } }, { properties: { q: { type: 'number' } } }],
+          },
+          { properties: { y: {} } },
+        ],
+      };
+      const data = { x: 'v', p: 'w' };
+      expect(details(nestedOptions, 'thing.x', data).schema?.title).toBe('X');
+      expect(details(nestedOptions, 'thing.p', data).schema).toBeUndefined();
+    });
     test('reads a property code leaves undefined beside the options from the option', () => {
       const leftUndefined = {
         type: 'object',

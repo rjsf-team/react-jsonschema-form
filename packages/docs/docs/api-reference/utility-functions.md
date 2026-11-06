@@ -3901,7 +3901,7 @@ Finds the field at the given path within the root or a nested `schema` node, fol
 
 Finds the option of `schema['any/oneOf']` a field renders for `formData`.
 With a discriminator, it is the option whose `properties[discriminator].default` or `.const` matches the `formData[discriminator]` value, and no matching value has nothing selected.
-With none, it is the option [`getClosestMatchingOption()`](#getclosestmatchingoptiont--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) picks for the data, as `MultiSchemaField` picks it, since no one property's value can tell the options apart. A tie goes to the first option, since the one a user picked isn't visible from the schema.
+With none, it is the option [`getClosestMatchingOption()`](#getclosestmatchingoptiont--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) picks for the data, as `MultiSchemaField` picks it, since no one property's value can tell the options apart. A tie goes to the first option the data matches, or to the first option when the data matches none, since the one a user picked isn't visible from the schema.
 
 #### Parameters
 

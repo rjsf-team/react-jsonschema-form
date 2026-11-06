@@ -22,6 +22,7 @@ import {
   getTestIds,
   getPropertySchema,
   getRenderedOptionSchema,
+  rendersOwnFieldBesideOption,
   getUiOptions,
   getXxxOfKey,
   hashObject,
@@ -338,8 +339,10 @@ export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSc
   return { rawSchema, index, isAdditionalItem };
 }
 
-/** Returns the schema to read `key` from: `schema` where it declares `key` or an array item at it beside any oneOf/anyOf,
- * else the option selected for `data`, as it is rendered, with the `required` and `type` of the schema offering it. A
+/** Returns the schema to read `key` from: `schema` where it has no oneOf/anyOf, or where its field renders beside the
+ * option (see `rendersOwnFieldBesideOption()`) and it declares `key`, else the option selected for `data`, as it is
+ * rendered, with the `required` and `type` of the schema offering it. Any other field, such as an array's, renders only
+ * the option, merged with the schema, so even what the schema declares, such as its `items`, is read from there. A
  * property YAML leaves empty or code leaves `undefined` declares nothing. A stub `retrieveSchema()` made for an extra key
  * says only what the data holds, so what the option declares comes first, and the stub stands for a key the option leaves
  * undeclared.
@@ -360,8 +363,9 @@ function schemaHolding<T, S extends StrictRJSFSchema, F extends FormContextType>
   const properties: NonNullable<S['properties']> = schema[PROPERTIES_KEY] ?? {};
   if (
     !xxx ||
-    (declaresProperty<S>(properties, key) && getByPath(properties, key) != null) ||
-    computeArraySchemasIfPresent<S>(schema, key).rawSchema
+    (rendersOwnFieldBesideOption<S>(schema) &&
+      declaresProperty<S>(properties, key) &&
+      getByPath(properties, key) != null)
   ) {
     return schema;
   }
