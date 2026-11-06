@@ -1,6 +1,6 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, ErrorSchema } from '@rjsf/utils';
-import { DEFAULT_BOOLEAN_WIDGET, fieldPathToName, getUiOptions, resolveWidget } from '@rjsf/utils';
+import { fieldPathToName, getPresentationDeclaration, getUiOptions, resolveWidget } from '@rjsf/utils';
 
 import {
   displaysLabel,
@@ -46,8 +46,15 @@ function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     displaysLabel(registry, schema, uiSchema),
   );
   const { Widget } = resolveWidget<T, S, F>(schema, widget, widgets);
-  // Matched by the component, so a widget the form registers under the `checkbox` key is handed the string
-  const confirmsConst = typeof schema.const === 'string' && Widget === widgets[DEFAULT_BOOLEAN_WIDGET];
+  // Read from the widget's declaration, so a theme's switch confirms the `const` too, while a widget the form registers
+  // under the `checkbox` key, which declares nothing, is handed the string
+  const confirmsConst = useMemo(
+    () =>
+      typeof schema.const === 'string' &&
+      !!getPresentationDeclaration<T, S, F>(registry, { schema, field: StringField, fieldKey: 'StringField', widget })
+        .uncheckedIsFalse,
+    [registry, schema, widget],
+  );
   const toFormValue = useCallback(
     (value: unknown) => {
       if (!confirmsConst) {

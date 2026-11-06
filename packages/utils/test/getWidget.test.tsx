@@ -341,6 +341,10 @@ describe('getWidgetType()', () => {
     ['updown', { type: ['object', 'number'] }, 'number'],
     ['radio', { type: ['object', 'string'] }, 'object'],
     ['checkboxes', { type: ['array', 'string'], items: { type: 'string' } }, 'array'],
+    ['checkbox', { type: ['string', 'boolean'], const: 'foo' }, 'string'],
+    ['checkbox', { type: ['number', 'string'], const: 'foo' }, 'string'],
+    // A boolean the list resolves to has a checkbox of its own
+    ['checkbox', { type: ['boolean', 'string'], const: 'foo' }, 'boolean'],
   ])('should give the %s on %j the type whose field renders it', (widget, schema, expected) => {
     expect(getWidgetType(schema, widget)).toBe(expected);
   });

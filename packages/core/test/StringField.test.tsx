@@ -1082,6 +1082,21 @@ describe('StringField', () => {
       expect(onBlur).toHaveBeenLastCalledWith('root_confirm', 'foo');
     });
 
+    it('should write the const for a checkbox on a `type` list naming the string after a number', async () => {
+      const { onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { confirm: { title: 'Confirmation', type: ['number', 'string'], const: 'foo' } },
+        },
+        uiSchema: constUiSchema,
+        defaultFormStateBehavior: neverConst,
+      });
+
+      await user.click(screen.getByRole('checkbox', { name: 'Confirmation' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { confirm: 'foo' }, 'root_confirm');
+    });
+
     it('should hand a widget the form registers under `checkbox` the string itself', async () => {
       function StringCheckbox({ id, value, onChange }: WidgetProps) {
         return <input id={id} type='checkbox' checked={value === 'foo'} onChange={() => onChange('bar')} />;

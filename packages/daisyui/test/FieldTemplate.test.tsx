@@ -704,7 +704,7 @@ describe('FieldTemplate', () => {
 });
 
 describe('FieldTemplate rendered without a plan, as outside SchemaField', () => {
-  function renderTemplate(displayLabel: boolean) {
+  function renderTemplate(displayLabel: boolean, schema: RJSFSchema = { type: 'string' }, uiSchema: UiSchema = {}) {
     const registry = getTestRegistry({}, {}, generateTemplates());
     return render(
       <DaisyFieldTemplate
@@ -716,7 +716,8 @@ describe('FieldTemplate rendered without a plan, as outside SchemaField', () => 
         rawDescription='About foo'
         // oxlint-disable-next-line typescript/no-deprecated -- a template rendered without a plan reads the deprecated prop
         displayLabel={displayLabel}
-        schema={{ type: 'string' }}
+        schema={schema}
+        uiSchema={uiSchema}
         registry={registry}
         readonly={false}
         disabled={false}
@@ -740,5 +741,10 @@ describe('FieldTemplate rendered without a plan, as outside SchemaField', () => 
   it('draws no description where displayLabel turns the label off', () => {
     const { container } = renderTemplate(false);
     expect(container.querySelector('#root_foo__description')).toBeNull();
+  });
+
+  it('leaves the label to the checkbox on a string with a string const', () => {
+    const { container } = renderTemplate(true, { type: 'string', const: 'yes' }, { 'ui:widget': 'checkbox' });
+    expect(fieldLabel(container, 'root_foo')).toBeNull();
   });
 });

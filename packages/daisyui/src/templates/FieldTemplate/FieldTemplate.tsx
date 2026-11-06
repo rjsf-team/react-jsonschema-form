@@ -33,14 +33,14 @@ const CHECKBOX_ALIAS: WidgetAliasFor<'boolean'> = 'checkbox';
  *
  * A registry key and a component both answer without the schema's type. Registry keys are looked up as own
  * properties, as `getWidget()` does, so a name inherited from `Object.prototype` such as `toString` is an alias like
- * any other. Of the aliases, only `checkbox` is recognized, by name, where `getWidgetType()` types it as `boolean`,
- * which includes a `type` list such as `['number', 'boolean']`, and it is read from the registry under the key
- * `getWidget()` maps it to. That is the one alias that reaches the checkbox in the default registry, so a field that
- * names another boolean alias, such as `radio`, whose key holds the checkbox or the toggle gets the template's label
- * and description as well as the widget's own. Naming that key itself, `RadioWidget`, resolves through the registry
- * and gets only the widget's. `getWidget()` itself is not called, since it reports a name it
- * cannot resolve by throwing an error built from a `JSON.stringify()` of the whole schema, which a `ui:widget` that a
- * custom `ui:field` consumes itself would otherwise pay for on every render just to be told no.
+ * any other. Of the aliases, only `checkbox` is recognized, by name, wherever `getWidgetType()` gives it a type: a
+ * boolean, which includes a `type` list such as `['number', 'boolean']`, or a string with a string `const`, and it is
+ * read from the registry under the key `getWidget()` maps it to. That is the one alias that reaches the checkbox in
+ * the default registry, so a field that names another boolean alias, such as `radio`, whose key holds the checkbox or
+ * the toggle gets the template's label and description as well as the widget's own. Naming that key itself,
+ * `RadioWidget`, resolves through the registry and gets only the widget's. `getWidget()` itself is not called, since
+ * it reports a name it cannot resolve by throwing an error built from a `JSON.stringify()` of the whole schema, which
+ * a `ui:widget` that a custom `ui:field` consumes itself would otherwise pay for on every render just to be told no.
  *
  * @param schema - The schema for the field
  * @param widget - The widget named by the field's ui options, if any
@@ -57,7 +57,7 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
     resolved = widget;
   } else if (Object.hasOwn(registeredWidgets, widget)) {
     resolved = registeredWidgets[widget];
-  } else if (widget === CHECKBOX_ALIAS && getWidgetType<S>(schema, widget) === 'boolean') {
+  } else if (widget === CHECKBOX_ALIAS && getWidgetType<S>(schema, widget) !== undefined) {
     return !!registeredWidgets[DEFAULT_BOOLEAN_WIDGET];
   }
   return (
