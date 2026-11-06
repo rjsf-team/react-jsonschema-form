@@ -1,6 +1,7 @@
 import { TranslatableString } from './enums.ts';
 import getControlAttributes from './getControlAttributes.ts';
 import getControlFallbackName from './getControlFallbackName.ts';
+import { partId } from './idGenerators.ts';
 import type { ControlAttributes, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
 /** The role of the element wrapping a group of controls: `radiogroup` for radios, `group` for anything else */
@@ -24,11 +25,18 @@ export type GroupRole = 'radiogroup' | 'group';
  * by its `label`, its `placeholder` or `TranslatableString.RadioGroupName`, where its caller hands it the `registry` to
  * translate with. A group of stars, such as `RatingWidget`'s, hands it none, since its stars name the choices alone.
  *
- * @param props - The widget's `id` and `presentation`, and for a group of radios its `label`, `placeholder` and
- *   `registry`
+ * A required `group` whose caller hands it the `registry`, as a group of checkboxes does, says so in its name, as
+ * `TranslatableString.RequiredGroupCue`, since `group` takes no `aria-required` and a checkbox's would say every box has
+ * to be checked. A group a label names adds `requiredCue` to that reference, for the widget to render as a `<span>`,
+ * whatever draws the label and its marker; one named by `aria-label` takes the text there. A group of an alt-date's parts
+ * hands it none, as its parts are required themselves.
+ *
+ * @param props - The widget's `id` and `presentation`, for a group of radios its `label` and `placeholder`, and for one
+ *   of radios or checkboxes its `registry`
  * @param role - The role of the group's wrapper
  * @param [drawnLabelId] - The id of the label the widget draws for the group itself, where it draws one
- * @returns - `group`, the `role` and attributes for the group's wrapper, and `option`, those for each control in it
+ * @returns - `group`, the `role` and attributes for the group's wrapper, `option`, those for each control in it, and
+ *   `requiredCue`, the props of the hidden `<span>` the group's name points at, where it does
  */
 export default function getGroupAttributes<
   T = unknown,
@@ -42,6 +50,7 @@ export default function getGroupAttributes<
 ): {
   group: Pick<ControlAttributes, 'aria-labelledby' | 'aria-label' | 'aria-invalid'> & { role: GroupRole };
   option: Omit<ControlAttributes, 'aria-labelledby' | 'aria-label' | 'required'>;
+  requiredCue?: { id: string; hidden: true; children: string };
 } {
   const {
     'aria-labelledby': plannedLabelledBy,
@@ -57,15 +66,23 @@ export default function getGroupAttributes<
     (!labelledBy && role === 'radiogroup' && registry
       ? getControlFallbackName<T, S, F>({ label, placeholder, registry }, TranslatableString.RadioGroupName)
       : undefined);
+  const cue =
+    role === 'group' && registry && presentation?.control?.attributes.required
+      ? registry.translateString(TranslatableString.RequiredGroupCue)
+      : '';
+  const requiredCue =
+    cue && labelledBy ? { id: partId(props.id, 'required'), hidden: true as const, children: cue } : undefined;
+  const groupName = labelledBy ? name : [name, cue].filter(Boolean).join(' ');
   const invalidAttribute = invalid && { 'aria-invalid': invalid };
   const groupTakesInvalid = role === 'radiogroup';
   return {
     group: {
       role,
-      ...(labelledBy && { 'aria-labelledby': labelledBy }),
-      ...(name && { 'aria-label': name }),
+      ...(labelledBy && { 'aria-labelledby': requiredCue ? `${labelledBy} ${requiredCue.id}` : labelledBy }),
+      ...(groupName && { 'aria-label': groupName }),
       ...(groupTakesInvalid && invalidAttribute),
     },
     option: { ...described, ...(!groupTakesInvalid && invalidAttribute) },
+    ...(requiredCue && { requiredCue }),
   };
 }

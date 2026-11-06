@@ -153,9 +153,9 @@ describe("a titled anyOf field's option selector", () => {
 });
 
 describe('an anyOf/oneOf field', () => {
-  // The selector draws the field's label but, picking an option index, which isn't form data, is neither required nor
-  // marked so; the selected option's control is required and its own label carries the field's only marker (#5527)
-  test("marks a required field on its selected option's label rather than its selector's", () => {
+  // The selector draws the field's label, which carries the field's one marker, but, picking an option index, which isn't
+  // form data, isn't required; the selected option's control is required and its own label stays unmarked (#5573)
+  test("marks a required field on the label its selector draws rather than its selected option's", () => {
     const { container } = render(
       <Form
         validator={validator}
@@ -177,7 +177,10 @@ describe('an anyOf/oneOf field', () => {
     expect(screen.getByRole('combobox', { name: 'pet' })).not.toBeRequired();
     expect(screen.getByRole('textbox', { name: 'Cat' })).toBeRequired();
     expect(container.querySelectorAll('.MuiFormLabel-asterisk')).toHaveLength(1);
-    expect(container.querySelector('label[for="root_pet"] .MuiFormLabel-asterisk')).toBeInTheDocument();
+    expect(screen.getByText('pet')).toContainElement(container.querySelector('.MuiFormLabel-asterisk'));
+    // The outline is notched to fit its label, marker included, so the `*` doesn't sit on the border
+    const notches = [...container.querySelectorAll('fieldset[aria-hidden] legend')].map((legend) => legend.textContent);
+    expect(notches).toEqual(['pet\u2009*', 'Cat']);
   });
 });
 
@@ -411,7 +414,7 @@ describe("mui widgets are named by their label and carry the field's id on the e
 
   // A required field asks for one checkbox, not each, while a radio is required, as core's are
   test.each([
-    ['checkboxes', { type: 'array', title: 'X', items: letters, uniqueItems: true }, 'checkbox', false],
+    ['checkboxes', { type: 'array', title: 'X', items: letters, uniqueItems: true, minItems: 1 }, 'checkbox', false],
     ['radio', letters, 'radio', true],
   ] as const)('requires each option of a required %s group only where core does', (widget, x, item, required) => {
     render(

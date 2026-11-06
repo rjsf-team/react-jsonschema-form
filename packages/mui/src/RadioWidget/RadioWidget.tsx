@@ -16,6 +16,7 @@ import {
   getGroupLabelling,
   getOptionValueFormat,
   optionId,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { getMuiProps, withInputSlot } from '../util.ts';
@@ -80,7 +81,7 @@ export default function RadioWidget<
     <>
       {/* No `for`, which can't name the group's wrapper: the group points its `aria-labelledby` at the label instead */}
       {drawsLabel && (
-        <FormLabel id={labelId} required={required}>
+        <FormLabel id={labelId} required={templateMarksRequired<T, S, F>(props)}>
           {label}
         </FormLabel>
       )}

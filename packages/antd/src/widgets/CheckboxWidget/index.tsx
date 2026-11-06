@@ -35,6 +35,10 @@ export default function CheckboxWidget<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { token } = theme.useToken();
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
   const control = useControlState<T, S, F>({ disabled, readonly, required: trueValueRequired, registry });
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = ({ target }) => onChange(target.checked);
@@ -57,6 +61,7 @@ export default function CheckboxWidget<
       id={id}
       name={htmlName || id}
       required={control.toggleRequired}
+      aria-required={(marksRequired && !trueValueRequired) || undefined}
       aria-readonly={control.ariaReadonly}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
@@ -65,7 +70,7 @@ export default function CheckboxWidget<
       {!hideLabel && label ? (
         <>
           {label}
-          {trueValueRequired && (
+          {marksRequired && (
             <span aria-hidden='true' style={{ color: token.colorError, marginLeft: 2 }}>
               *
             </span>

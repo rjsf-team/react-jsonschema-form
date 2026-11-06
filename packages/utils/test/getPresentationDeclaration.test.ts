@@ -391,6 +391,26 @@ describe('getPresentationDeclaration()', () => {
     });
   });
 
+  describe('uncheckedIsEmpty', () => {
+    const flagged = {
+      ...source,
+      presentation: {
+        ...presentation,
+        widgets: { ...presentation.widgets, CheckboxesWidget: { uncheckedIsEmpty: true } },
+      },
+    };
+
+    it("takes it from the widget the field renders, and not from another's", () => {
+      const subject = { schema: { type: 'array' }, field: StringField, fieldKey: 'ArrayField' } as const;
+      expect(getPresentationDeclaration(flagged, { ...subject, widget: 'checkboxes' })).toMatchObject({
+        uncheckedIsEmpty: true,
+      });
+      expect(getPresentationDeclaration(flagged, { ...subject, widget: 'select' })).not.toHaveProperty(
+        'uncheckedIsEmpty',
+      );
+    });
+  });
+
   describe('uncheckedIsFalse', () => {
     const widgets = { ...presentation.widgets, CheckboxWidget: { label: 'self', uncheckedIsFalse: true } } as const;
     const fields = { Toggle: { uncheckedIsFalse: true } } as const;

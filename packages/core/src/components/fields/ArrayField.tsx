@@ -32,6 +32,7 @@ import {
   fieldPathToId,
   fieldPathToName,
   TranslatableString,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import useReadFieldData from '../../hooks/useReadFieldData.ts';
@@ -1009,7 +1010,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     onAddClick,
     readonly,
     hideError,
-    required,
+    required: templateMarksRequired<T[], S, F>({ required, presentation }),
     schema,
     title: getContainerHeading<T[], S, F>(presentation, schema, uiOptions, uiOptions.title || fieldTitle),
     formData,
@@ -1152,7 +1153,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     onAddClick,
     readonly,
     hideError,
-    required,
+    required: templateMarksRequired<T[], S, F>({ required, presentation }),
     registry,
     schema,
     uiSchema,
@@ -1507,6 +1508,9 @@ export default function ArrayField<
     fieldPath,
     onSelectChange,
     htmlName: fieldPathToName(fieldPath, globalFormOptions, true),
+    // The plan's, which a group of checkboxes the schema lets be empty is not, so a widget written for any theme reads it
+    // as `BooleanField`'s checkbox does (#5573)
+    required: props.presentation?.control ? props.presentation.control.attributes.required === true : props.required,
   };
   const arrayProps: InternalArrayFieldProps<T, S, F> = {
     ...props,

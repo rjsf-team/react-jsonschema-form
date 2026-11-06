@@ -1,7 +1,14 @@
 import type { FocusEvent } from 'react';
 import type { NumberInputValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, hasWidgetErrors, labelValue, toInputValue, widgetDrawsLabelText } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  hasWidgetErrors,
+  labelValue,
+  toInputValue,
+  widgetDrawsLabelText,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { NumberInputRoot } from '../components/ui/number-input.tsx';
@@ -41,6 +48,7 @@ export default function UpDownWidget<
       mb={1}
       disabled={disabled || readonly}
       required={required}
+      requiredMarker={templateMarksRequired<T, S, F>(props)}
       readOnly={readonly}
       invalid={hasWidgetErrors<T, S, F>(props)}
       label={labelValue(label, !drawsLabel)}

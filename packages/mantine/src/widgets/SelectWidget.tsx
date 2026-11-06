@@ -17,7 +17,7 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps, getRequiredProps } from '../utils.tsx';
 
 /** Mantine's default filter keeps a group in the dropdown even when the search matched none of its options, which
  * leaves a bare heading behind, so the groups it emptied are dropped here.
@@ -109,7 +109,7 @@ export default function SelectWidget<
     autoFocus: autofocus,
     placeholder,
     disabled: disabled || readonly,
-    required,
+    ...getRequiredProps<T, S, F>(props),
     error: getWidgetError<T, S, F>(props),
     searchable: true,
     filter: optionsFilter,

@@ -1001,19 +1001,28 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
    * itself, and the blanket `default` and `fieldDefault` of a `ThemePresentation` take none
    */
   uncheckedIsFalse?: boolean;
+  /** Whether the control, left alone, already holds an empty array, as a group of checkboxes does, which
+   * `getDefaultFormState()` seeds a required one with and unchecking every box leaves. `required` then asks nothing of
+   * the user, so `@rjsf/core` plans the control as required, by its marker and its screen-reader cue alike, only where
+   * the schema's `minItems` demands a checked box or `ui:required: true` asks for it (#5573). A fact about one control, declared as `uncheckedIsFalse` is
+   */
+  uncheckedIsEmpty?: boolean;
 }
 
 /** A widget's `PresentationDeclaration`, which has no widget beneath it to leave a part to */
 export type WidgetPresentationDeclaration = PresentationDeclaration<Exclude<PartOwner, 'widget'>>;
 
+/** A declaration every component takes, so it leaves out what describes one control */
+type BlanketPresentationDeclaration = Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'uncheckedIsEmpty'>;
+
 /** A `PresentationDeclaration` with every part settled on the template or the component, as
- * `getPresentationDeclaration()` returns it, with `uncheckedIsFalse` left out where nothing declares it, and
- * `labelPlacement` where nothing declares it or the template draws the label
+ * `getPresentationDeclaration()` returns it, with `uncheckedIsFalse` and `uncheckedIsEmpty` left out where nothing
+ * declares them, and `labelPlacement` where nothing declares it or the template draws the label
  */
 export type ResolvedPresentationDeclaration = Required<
-  Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'labelPlacement'>
+  Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'uncheckedIsEmpty' | 'labelPlacement'>
 > &
-  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'labelPlacement'>;
+  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'uncheckedIsEmpty' | 'labelPlacement'>;
 
 /** The declarations a theme registers for the components it provides, keyed by the registry key each is registered
  * under, so a component replacing another under the same key draws what that key declares. A component given
@@ -1027,7 +1036,7 @@ export interface ThemePresentation {
    * layer's own entry for every key, so it overrides the parts it declares in the layers beneath it, even under a key
    * one of them declares
    */
-  default?: Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'>;
+  default?: BlanketPresentationDeclaration;
   /** Declarations for widgets, by the key they are registered under */
   widgets?: Readonly<Record<string, WidgetPresentationDeclaration>>;
   /** Declarations for fields, by the key they are registered under */
@@ -1039,7 +1048,7 @@ export interface ThemePresentation {
    * key, such as a field leaving its parts to its widget. Its `labelledBy` reaches only fields that keep their label or
    * render no widget to leave it to, since one leaving it to a widget it renders takes the widget's
    */
-  fieldDefault?: Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'>;
+  fieldDefault?: BlanketPresentationDeclaration;
   /** Where the theme's `SelectWidget` draws the selected option's description among the field's description and help,
    * so `widgetAriaProps()` announces them in the order they are drawn, `'afterDescription'` where no layer declares it.
    * A form whose `SelectWidget` or `FieldTemplate` draws them elsewhere than its theme's declares its own
@@ -1561,7 +1570,9 @@ export type ContainerFieldTemplateProps<
   id: string;
   /** A boolean value stating if the array is read-only */
   readonly?: boolean;
-  /** A boolean value stating if the array is required */
+  /** A boolean value stating if the array's heading carries the required marker: where the array is required, unless a
+   * field above rendering the same id draws the marked label, as an `anyOf`/`oneOf` field does for its option
+   */
   required?: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
@@ -1649,7 +1660,9 @@ export type ObjectFieldTemplateProps<
   onAddProperty: () => void;
   /** A boolean value stating if the object is read-only */
   readonly?: boolean;
-  /** A boolean value stating if the object is required */
+  /** A boolean value stating if the object's heading carries the required marker: where the object is required, unless
+   * a field above rendering the same id draws the marked label, as an `anyOf`/`oneOf` field does for its option
+   */
   required?: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;

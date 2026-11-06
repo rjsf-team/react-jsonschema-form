@@ -83,7 +83,9 @@ export interface SchemaFieldPresentationInputs<
    * under its id. Undefined where it renders none, or the option is a `$ref` cycle, which names no field
    */
   shownOptionField?: ShownOptionField<T, S, F> | null;
-  /** The field's form data, which says the type of the value a type selector below a field above is on */
+  /** The field's form data, which says the type of the value a type selector below a field above is on, and whether the
+   * option shown holds a value
+   */
   formData?: unknown;
 }
 
@@ -204,6 +206,39 @@ function rendersControl<
   return !CONTROLLESS_FIELD_KEYS.some((key) => fields[key] === field);
 }
 
+/** Whether a required control left alone fails the form, and so says it is required. A control holding `false` left alone,
+ * as an unchecked checkbox does, would fail the browser's own check of a native `required` for a value the schema
+ * accepts, so it is required, by its attribute and its marker alike, only where the schema demands `true` (#5388). It
+ * holds that `false` only where `getDefaultFormState()` seeds it, which it does by the type the field renders: rendered as
+ * another type, as a `type` list's string field renders one, an unchecked box answers nothing. A group of checkboxes left
+ * alone holds an empty array likewise, which only `minItems` or `ui:required` turns down (#5573)
+ *
+ * @param declaration - The declaration of the control
+ * @param schema - The schema it renders
+ * @param uiSchema - The uiSchema it renders
+ * @param registry - The registry, whose `widgets` are read
+ * @returns - False where the form accepts the value the control holds left alone
+ */
+function demandsAnswer<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  declaration: ResolvedPresentationDeclaration | undefined,
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  registry: Registry<T, S, F>,
+) {
+  return (
+    (!declaration?.uncheckedIsFalse ||
+      getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, registry.widgets) !== 'boolean' ||
+      schemaRequiresTrueValue<S>(schema)) &&
+    (!declaration?.uncheckedIsEmpty ||
+      (schema.minItems ?? 0) >= 1 ||
+      uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) === true)
+  );
+}
+
 /** Builds the plan of a field `SchemaField` renders, memoised on what it reads, so a render that changes none of it
  * hands every template and widget the same plan (#5490 decision 19)
  *
@@ -311,19 +346,51 @@ export default function useSchemaFieldPresentation<
     rendersUnsupportedTemplate,
     optionLabelledBy,
   ]);
-  // A control holding `false` left alone, as an unchecked checkbox does, would fail the browser's own check of a native
-  // `required` for a value the schema accepts, so it is required, by its attribute and its marker alike, only where the
-  // schema demands `true` (#5388). It holds that `false` only where `getDefaultFormState()` seeds it, which it does by
-  // the type the field renders: rendered as another type, as a `type` list's string field renders one, an unchecked
-  // box answers nothing
-  const controlRequired = useMemo(
-    () =>
-      required &&
-      (!declaration?.uncheckedIsFalse ||
-        getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, registry.widgets) !== 'boolean' ||
-        schemaRequiresTrueValue<S>(schema)),
-    [required, declaration, schema, uiSchema, registry.widgets],
-  );
+  // A field rendering its options is required as the option shown is, since that option's control holds its value. An
+  // option holding nothing fails the form whatever its control accepts left alone, as a checkbox just switched to does,
+  // which nothing seeds a `false` for, and so does a field its own `ui:required` asks of, whether or not its parent is
+  // there, which the schema's `required` only demands where it is
+  const holdsNoValue = formData === undefined;
+  const controlRequired = useMemo(() => {
+    // An option drawing the unsupported-field template has no control to answer its own `ui:required` with, and the field
+    // above marks the label where the field is required
+    if (!shownOptionField) {
+      return (
+        required &&
+        !(rendersUnsupportedTemplate && inherited !== undefined) &&
+        ((holdsNoValue && uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) === true) ||
+          demandsAnswer<T, S, F>(declaration, schema, uiSchema, registry))
+      );
+    }
+    const { field: optionField, schema: optionSchema, uiSchema: optionUiSchema } = shownOptionField;
+    // An option's own `ui:required` asks nothing of a `null`, or of a schema with no type that renders the
+    // unsupported-field template, since neither has a control to answer it with
+    const rendersAnswer =
+      optionField !== registry.fields.NullField &&
+      (optionField !== registry.fields.FallbackField ||
+        Boolean(registry.globalFormOptions.useFallbackUiForUnsupportedType));
+    return (
+      (uiBooleanOption(getUiOptions<T, S, F>(optionUiSchema).required) ?? required) &&
+      (required || rendersAnswer) &&
+      (holdsNoValue ||
+        demandsAnswer<T, S, F>(
+          getPresentationDeclaration<T, S, F>(registry, shownOptionField),
+          optionSchema,
+          optionUiSchema,
+          registry,
+        ))
+    );
+  }, [
+    required,
+    rendersUnsupportedTemplate,
+    inherited,
+    declaration,
+    schema,
+    uiSchema,
+    registry,
+    shownOptionField,
+    holdsNoValue,
+  ]);
   const presentation = useMemo(() => {
     if (!declaration) {
       return undefined;

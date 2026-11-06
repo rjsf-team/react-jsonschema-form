@@ -27,6 +27,7 @@ import {
   useSelectFocusHandlers,
   widgetAriaProps,
   widgetDrawsLabel,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { describeByHelperText, getMuiProps, helperTextSlot, inputLabelId, withSlotProps } from '../util.ts';
@@ -141,7 +142,7 @@ export default function SelectWidget<
         name={htmlName || id}
         label={ownLabel}
         value={selectedValue}
-        required={required}
+        required={templateMarksRequired<T, S, F>(props)}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         autoComplete={autocomplete}
@@ -168,7 +169,11 @@ export default function SelectWidget<
             ...muiSlotProps?.select,
             multiple,
           },
-          htmlInput: withSlotProps(ariaProps, muiSlotProps?.htmlInput),
+          // The `TextField`'s `required` is its marker, which the outline's notch has to fit, so the combobox takes its own
+          htmlInput: withSlotProps(
+            { ...ariaProps, required: textFieldOverrides.required ?? required },
+            muiSlotProps?.htmlInput,
+          ),
           formHelperText: helperTextSlot(textFieldId, muiSlotProps?.formHelperText),
         }}
       >

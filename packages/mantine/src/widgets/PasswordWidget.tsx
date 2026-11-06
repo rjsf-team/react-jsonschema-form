@@ -4,7 +4,7 @@ import { PasswordInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue, toInputValue, widgetDrawsLabel } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps, getRequiredProps } from '../utils.tsx';
 
 /**
  * The `PasswordWidget` component renders a password input element.
@@ -16,21 +16,8 @@ export default function PasswordWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    htmlName,
-    value,
-    placeholder,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    label,
-    options,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
+  const { id, htmlName, value, placeholder, disabled, readonly, autofocus, label, options, onChange, onBlur, onFocus } =
+    props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { emptyValue } = options;
@@ -70,7 +57,7 @@ export default function PasswordWidget<
       name={htmlName || id}
       value={toInputValue(value)}
       placeholder={placeholder || undefined}
-      required={required}
+      {...getRequiredProps<T, S, F>(props)}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       label={labelValue(label || undefined, hideLabel, false)}

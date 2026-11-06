@@ -2,6 +2,7 @@ import type {
   FieldPresentation,
   FormContextType,
   GlobalUISchemaOptionsExtensions,
+  Registry,
   ReservedUiOptionName,
   RJSFSchema,
   StrictRJSFSchema,
@@ -93,6 +94,14 @@ interface GetGroupProps {
   role: GroupProps['role'];
 }
 
+interface GetGroupAndOptionProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> extends GetGroupProps {
+  registry?: Registry<T, S, F>;
+}
+
 /** Builds the props that name a widget rendering several controls, since no single control in a group can carry the
  * label `FieldTemplate` renders above it and a `label htmlFor` does not associate with the group's wrapper. The group
  * points at the label element rather than repeating its text, so its accessible name is whatever the label displays.
@@ -120,15 +129,29 @@ export function getGroupProps(props: GetGroupProps): GroupProps {
 }
 
 /** Builds the props `getGroupProps()` gives a group's wrapper together with the attributes each control in the group
- * takes, from one `getGroupAttributes()` call, for a widget that renders the controls itself
+ * takes, from one `getGroupAttributes()` call, for a widget that renders the controls itself. Handed the `registry`, a
+ * required `group`, as a group of checkboxes is, says so in its name through the `requiredCue` it returns, as
+ * `getGroupAttributes()` does, for the widget to render as a `<span>` inside the group
  *
- * @param props - The props `getGroupProps()` takes
- * @returns - The wrapper's props as `group`, and as `option` each control's `aria-describedby` and, for a `group` rather
- *        than a `radiogroup`, its `aria-invalid`
+ * @param props - The props `getGroupProps()` takes, and the widget's `registry`
+ * @returns - The wrapper's props as `group`, as `option` each control's `aria-describedby` and, for a `group` rather
+ *        than a `radiogroup`, its `aria-invalid`, and `requiredCue` where the group's name points at one
  */
-export function getGroupAndOptionProps({ id, label, hideLabel, presentation, role }: GetGroupProps): {
+export function getGroupAndOptionProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
+  id,
+  label,
+  hideLabel,
+  presentation,
+  role,
+  registry,
+}: GetGroupAndOptionProps<T, S, F>): {
   group: GroupProps;
   option: ReturnType<typeof getGroupAttributes>['option'];
+  requiredCue?: ReturnType<typeof getGroupAttributes>['requiredCue'];
 } {
   // The plan already points a group declared as labelled by reference at the label that names it, and marks a
   // `radiogroup` rather than its radios invalid. Without one, `getGroupAttributes()` takes the label id it is handed as
@@ -139,6 +162,6 @@ export function getGroupAndOptionProps({ id, label, hideLabel, presentation, rol
     isNamedByTemplateLabel({ label: label ?? '', hideLabel })
       ? fieldLabelId(id)
       : undefined;
-  const { group, option } = getGroupAttributes({ id, presentation }, role, labelId);
-  return { group: { id, ...group }, option };
+  const { group, option, requiredCue } = getGroupAttributes<T, S, F>({ id, presentation, registry }, role, labelId);
+  return { group: { id, ...group }, option, ...(requiredCue && { requiredCue }) };
 }

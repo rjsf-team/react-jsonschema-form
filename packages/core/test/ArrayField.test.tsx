@@ -1661,6 +1661,52 @@ describe('ArrayField', () => {
         expect(node.querySelectorAll('[type=checkbox]')).toHaveLength(3);
       });
 
+      const requiredColors = (minItems?: number): RJSFSchema => ({
+        type: 'object',
+        required: ['c'],
+        properties: {
+          c: {
+            type: 'array',
+            title: 'Colors',
+            items: { type: 'string', enum: ['a', 'b'] },
+            uniqueItems: true,
+            ...(minItems !== undefined && { minItems }),
+          },
+        },
+      });
+
+      // A required group left alone holds `[]`, so only `minItems` demands a checked box, and the cue says what the form
+      // demands. No box takes `required`, which would demand every box be checked (#5573)
+      it.each([
+        [undefined, 'Colors', false],
+        [1, 'Colors required', true],
+      ] as const)('given minItems %s, names the group "%s" and submits accordingly', async (minItems, name, blocks) => {
+        const { node, onSubmit, onError } = createFormComponent({
+          schema: requiredColors(minItems),
+          uiSchema: { c: uiSchema },
+        });
+
+        expect(screen.getByRole('group', { name })).toBeInTheDocument();
+        expect(node.querySelectorAll('[type=checkbox][required]')).toHaveLength(0);
+        await submitForm(node, user);
+        expect(onSubmit).toHaveBeenCalledTimes(blocks ? 0 : 1);
+        expect(onError).toHaveBeenCalledTimes(blocks ? 1 : 0);
+      });
+
+      it.each([
+        [undefined, false],
+        [1, true],
+      ] as const)('given minItems %s, hands a widget of its own required %s', (minItems, required) => {
+        const CheckboxesWidget = vi.fn<(props: WidgetProps) => null>(() => null);
+        createFormComponent({
+          schema: requiredColors(minItems),
+          uiSchema: { c: uiSchema },
+          widgets: { CheckboxesWidget },
+        });
+
+        expect(CheckboxesWidget.mock.lastCall?.[0].required).toBe(required);
+      });
+
       it('should render the expected labels', () => {
         const { node } = createFormComponent({ schema, uiSchema });
 

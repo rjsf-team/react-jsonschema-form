@@ -12,7 +12,14 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, GroupOptions, groupExcludedKeys, useGroupAriaProps } from '../utils.tsx';
+import {
+  cleanupOptions,
+  getDescriptionProps,
+  GroupOptions,
+  groupExcludedKeys,
+  useGroupAriaProps,
+  getRequiredProps,
+} from '../utils.tsx';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -24,7 +31,7 @@ export default function RadioWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, value, required, disabled, readonly, autofocus, options, onChange, onBlur, onFocus } = props;
+  const { id, htmlName, value, disabled, readonly, autofocus, options, onChange, onBlur, onFocus } = props;
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -71,7 +78,7 @@ export default function RadioWidget<
       name={htmlName || id}
       value={selected}
       onChange={handleChange}
-      required={required}
+      {...getRequiredProps<T, S, F>(props)}
       readOnly={fieldDisabled}
       {...themeProps}
       {...groupProps}

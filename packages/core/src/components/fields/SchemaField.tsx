@@ -1534,16 +1534,20 @@ function SchemaFieldRender<
   // What the field below rendering this same id inherits: the option field, the fallback UI's value field, or the field
   // a custom field wrapping `SchemaField` renders
   const handsDownOwnParts = fieldToRender?.handsDownOwnParts;
-  const presentationBelow = useMemo(
-    () =>
-      presentation && {
-        id: fieldId,
-        plan: handsDownOwnParts ? getPresentationHandedDown(presentation) : presentation,
-        title,
-        schemaDescription,
-      },
-    [fieldId, presentation, handsDownOwnParts, title, schemaDescription],
-  );
+  // A theme declaring `FallbackField` drawing its own label has its value field draw it, so it draws none at this level
+  const valueDrawsLabel = renderedComponent === fields.FallbackField && presentation?.label.by === 'self';
+  const presentationBelow = useMemo(() => {
+    if (!presentation) {
+      return undefined;
+    }
+    const plan = handsDownOwnParts ? getPresentationHandedDown(presentation) : presentation;
+    return {
+      id: fieldId,
+      plan: valueDrawsLabel ? { ...plan, label: withoutOwnDrawing(plan.label) } : plan,
+      title,
+      schemaDescription,
+    };
+  }, [fieldId, presentation, handsDownOwnParts, valueDrawsLabel, title, schemaDescription]);
   const isContainer = renderedComponent === fields.ObjectField || renderedComponent === fields.ArrayField;
   // Keyed on whether the options render rather than on their array, which is retrieved afresh with every change of the
   // data, so a keystroke beside the options hands the selector the same plan

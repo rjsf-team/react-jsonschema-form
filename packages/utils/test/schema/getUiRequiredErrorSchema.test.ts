@@ -1417,4 +1417,164 @@ describe('getUiRequiredErrorSchema()', () => {
       consoleErrorStub.mockRestore();
     });
   });
+
+  describe('an empty group of checkboxes', () => {
+    const colors: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true };
+    const withColors = (extra: RJSFSchema = {}, required: string[] = []): RJSFSchema => ({
+      type: 'object',
+      required,
+      properties: { c: { ...colors, ...extra } },
+    });
+    const errorsFor = (schema: RJSFSchema, field: UiSchema, formData: unknown) =>
+      toErrorList(getUiRequiredErrorSchema({ validator: testValidator }, schema, { c: field }, formData)).map(
+        ({ stack }) => stack,
+      );
+    const missing = [".c must have required property 'c'"];
+    const checkboxes: UiSchema = { 'ui:widget': 'checkboxes', 'ui:required': true };
+
+    it.each<[string, RJSFSchema]>([
+      ['the schema leaves optional', withColors()],
+      ['the schema requires too', withColors({}, ['c'])],
+    ])('reports `[]` on a field %s', (_, schema) => {
+      expect(errorsFor(schema, checkboxes, { c: [] })).toEqual(missing);
+    });
+
+    it('reports `[]` on a field naming the widget by its registered name', () => {
+      const field: UiSchema = { 'ui:widget': 'CheckboxesWidget', 'ui:required': true };
+      expect(errorsFor(withColors(), field, { c: [] })).toEqual(missing);
+    });
+
+    it("reports `[]` on a group an option renders, from the option's uiSchema", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { c: { oneOf: [colors, { type: 'string' }] } } };
+      expect(errorsFor(schema, { oneOf: [checkboxes, {}] }, { c: [] })).toEqual(missing);
+    });
+
+    it("reports `[]` on a group an option renders, from the field's own `ui:required`", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { c: { oneOf: [colors, { type: 'string' }] } } };
+      const field: UiSchema = { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] };
+      expect(errorsFor(schema, field, { c: [] })).toEqual(missing);
+    });
+
+    it("lets `[]` through on an option rendering options of its own, which the field's `ui:required` doesn't reach", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [{ oneOf: [colors, { type: 'string' }] }, { type: 'number' }] } },
+      };
+      const field: UiSchema = { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] };
+      expect(errorsFor(schema, field, { c: [] })).toEqual([]);
+    });
+
+    it('leaves `[]` to the validator where the option shown has a `minItems`', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [{ ...colors, minItems: 1 }, { type: 'string' }] } },
+      };
+      expect(errorsFor(schema, checkboxes, { c: [] })).toEqual([]);
+    });
+
+    it('reports `[]` on a field resolved through a $ref', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: { colors },
+        properties: { c: { $ref: '#/definitions/colors' } },
+      };
+      expect(errorsFor(schema, checkboxes, { c: [] })).toEqual(missing);
+    });
+
+    it.each<[string, RJSFSchema, UiSchema, unknown]>([
+      ['a box checked', withColors(), checkboxes, { c: ['a'] }],
+      ['a `minItems` the validator reports', withColors({ minItems: 1 }), checkboxes, { c: [] }],
+      ['no `ui:required`', withColors(), { 'ui:widget': 'checkboxes' }, { c: [] }],
+      ['`ui:required: false`', withColors(), { 'ui:widget': 'checkboxes', 'ui:required': false }, { c: [] }],
+      ['another widget', withColors(), { 'ui:widget': 'select', 'ui:required': true }, { c: [] }],
+      ['no widget', withColors(), { 'ui:required': true }, { c: [] }],
+    ])('leaves `[]` alone with %s', (_, schema, field, formData) => {
+      expect(errorsFor(schema, field, formData)).toEqual([]);
+    });
+
+    it('does not check the root', () => {
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, colors, checkboxes, []);
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+  });
+
+  describe("an option's own ui:required", () => {
+    const errorsFor = (required: string[], formData: unknown, uiOption: UiSchema = { 'ui:required': true }) =>
+      toErrorList(
+        getUiRequiredErrorSchema(
+          { validator: testValidator },
+          { type: 'object', required, properties: { c: { oneOf: [{ type: 'string' }, { type: 'number' }] } } },
+          { c: { oneOf: [uiOption, {}] } },
+          formData,
+        ),
+      ).map(({ stack }) => stack);
+
+    it('reports a field with no value', () => {
+      expect(errorsFor([], {})).toEqual([".c must have required property 'c'"]);
+    });
+
+    it('leaves a field with a value alone', () => {
+      expect(errorsFor([], { c: 'x' })).toEqual([]);
+    });
+
+    it('leaves a schema-required field to the validator, which reports it', () => {
+      expect(errorsFor(['c'], {})).toEqual([]);
+    });
+
+    it('leaves an option that is not `ui:required` alone', () => {
+      expect(errorsFor([], {}, {})).toEqual([]);
+    });
+
+    it('reports one error where the field and its option both ask for it', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [{ type: 'string' }, { type: 'number' }] } },
+      };
+      const uiSchema: UiSchema = { c: { 'ui:required': true, oneOf: [{ 'ui:required': true }, {}] } };
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+      expect(toErrorList(errorSchema).map(({ stack }) => stack)).toEqual([".c must have required property 'c'"]);
+    });
+
+    it.each<[string, RJSFSchema]>([
+      ['`null`', { type: 'null' }],
+      ['an empty', {}],
+      ['a titled but untyped', { title: 'Anything' }],
+    ])('leaves %s option alone, which has no control to answer it with', (_, option) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [option, { type: 'number' }] } },
+      };
+      const uiSchema: UiSchema = { c: { oneOf: [{ 'ui:required': true }, {}] } };
+      expect(toErrorList(getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {}))).toEqual([]);
+    });
+
+    it.each<[string, RJSFSchema, UiSchema, FormFieldState | undefined]>([
+      ['an `enum`', { enum: ['a', 'b'] }, { 'ui:required': true }, undefined],
+      ['`properties`', { properties: { x: { type: 'string' } } }, { 'ui:required': true }, undefined],
+      ['a `ui:field`', { title: 'Anything' }, { 'ui:required': true, 'ui:field': 'MyField' }, undefined],
+      [
+        'the fallback UI',
+        { title: 'Anything' },
+        { 'ui:required': true },
+        { selectedOption: () => 0, isExpanded: () => false, rendersFallbackUi: () => true },
+      ],
+    ])('reports an untyped option rendered through %s', (_, option, uiOption, fieldState) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [option, { type: 'number' }] } },
+      };
+      const uiSchema: UiSchema = { c: { oneOf: [uiOption, {}] } };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        uiSchema,
+        {},
+        undefined,
+        undefined,
+        undefined,
+        fieldState,
+      );
+      expect(toErrorList(errorSchema).map(({ stack }) => stack)).toEqual([".c must have required property 'c'"]);
+    });
+  });
 });

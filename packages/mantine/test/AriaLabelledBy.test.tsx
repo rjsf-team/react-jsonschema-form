@@ -750,6 +750,22 @@ describe('aria-labelledby', () => {
     },
   );
 
+  it('keeps the required cue in the name a required group of checkboxes takes from the aria-label of its ui:options', () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          required: ['c'],
+          properties: { c: { ...checkboxesSchema, title: 'A title', minItems: 1 } },
+        }}
+        uiSchema={{ c: { 'ui:widget': 'checkboxes', 'ui:label': false, 'ui:options': { 'aria-label': 'Paint' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('group', { name: 'Paint required' })).toBeInTheDocument();
+  });
+
   test.each([
     ['text', 'TextInput', { type: 'string' }],
     ['select', 'Select', enumSchema],

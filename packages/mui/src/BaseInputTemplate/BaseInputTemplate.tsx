@@ -24,6 +24,7 @@ import {
   offersClearButton,
   toInputValue,
   widgetDrawsLabel,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import type { MuiSlotProps } from '../util.ts';
@@ -160,6 +161,8 @@ export default function BaseInputTemplate<
       pattern,
       autoCapitalize,
       multiple,
+      // The `TextField`'s `required` is its marker, which the outline's notch has to fit, so the `<input>` takes its own
+      required: textFieldOverrides.required ?? required,
       ...controlAttributes,
       ...callerHtmlInput,
       ...(hasExamples ? { list: examplesId(id) } : undefined),
@@ -205,7 +208,7 @@ export default function BaseInputTemplate<
         placeholder={placeholder}
         label={labelValue(label || undefined, hideLabel, undefined)}
         autoFocus={autofocus}
-        required={required}
+        required={templateMarksRequired<T, S, F>(props)}
         disabled={disabled || readonly}
         slotProps={{
           ...slotProps,

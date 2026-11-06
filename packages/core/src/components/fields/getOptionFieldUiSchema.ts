@@ -4,8 +4,10 @@ import {
   getSchemaType,
   getUiOptions,
   getUnionTypes,
+  getXxxOfOptions,
   hasWidget,
   isConstant,
+  uiBooleanOption,
   UI_OPTIONS_KEY,
 } from '@rjsf/utils';
 
@@ -77,6 +79,7 @@ function withImplementedWidget<T, S extends StrictRJSFSchema, F extends FormCont
 /** Returns the uiSchema the `SchemaField` of an `anyOf`/`oneOf` option renders with, which `AnyOfField` renders it with
  * and `SchemaField` plans the field's label by: the field's own, without its title and description or a `ui:widget` the
  * option has no implementation of, for an option declaring none of its own, or else the option's, with the field's say over the extra keys the option takes
+ * and over a `ui:required` the option leaves unset
  *
  * @param schema - The schema of the field rendering the options
  * @param option - The option shown, with its own `$ref` resolved, if one is
@@ -101,5 +104,20 @@ export default function getOptionFieldUiSchema<
   if (uiSchema && optionUiSchema === uiSchema) {
     return withImplementedWidget<T, S, F>(withoutFieldText<T, S, F>(uiSchema), renderedOption, registry);
   }
-  return option ? getRenderedOptionUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema) : optionUiSchema;
+  const rendered = option
+    ? getRenderedOptionUiSchema<T, S, F>(schema, option, uiSchema, optionUiSchema)
+    : optionUiSchema;
+  // An option leaving `ui:required` unset is required as its field asks, as the `ui:required` walk reads it, so the group
+  // of checkboxes it shows says so and turns down `[]` alike. The walk reads only the option shown, not the options
+  // that option renders in turn, so one rendering options of its own is handed nothing to pass further down
+  const fieldUiRequired = uiSchema ? uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) : undefined;
+  if (
+    fieldUiRequired === undefined ||
+    (rendered && getUiOptions<T, S, F>(rendered).required !== undefined) ||
+    (renderedOption && getXxxOfOptions<S>(renderedOption))
+  ) {
+    return rendered;
+  }
+  // A generic `UiSchema<T, S, F>` spread is a type the checker can't relate back to it
+  return { ...(rendered as UiSchema<T, S, F>), 'ui:required': fieldUiRequired };
 }

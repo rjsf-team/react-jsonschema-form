@@ -6,6 +6,7 @@ import {
   ONE_OF_KEY,
   RJSF_REF_CYCLE_KEY,
   UI_DEFINITIONS_KEY,
+  UI_FIELD_KEY,
 } from '../constants.ts';
 import ErrorSchemaBuilder from '../ErrorSchemaBuilder.ts';
 import { fieldPathFromList } from '../fieldPath.ts';
@@ -173,6 +174,23 @@ function shownFieldType<T, S extends StrictRJSFSchema, F extends FormContextType
     : getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, schemaContext.widgets, formData);
 }
 
+/** Whether the field renders something the user can answer it with: not a `null`, which has no control, nor a schema with
+ * no type, which renders the unsupported-field template unless a `ui:field` or the fallback UI renders it
+ */
+function rendersAnswer<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  { schemaContext, fieldState }: WalkContext<T, S, F>,
+  path: (string | number)[],
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+) {
+  const type = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, schemaContext.widgets);
+  return (
+    (type !== undefined && type !== 'null') ||
+    UI_FIELD_KEY in uiSchema ||
+    fieldState?.rendersFallbackUi?.(fieldPathFromList(path), schema, uiSchema, undefined) === true
+  );
+}
+
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: WalkContext<T, S, F>,
   schema: S,
@@ -232,7 +250,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     : { schema: resolvedSchema, uiSchema };
   // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
   // fields rather than an Add button
-  const branchRequired = uiBooleanOption(getUiOptions<T, S, F>(branchUiSchema).required) ?? effectiveRequired;
+  const { required: branchUiRequired, widget: branchWidget } = getUiOptions<T, S, F>(branchUiSchema);
+  const branchRequired = uiBooleanOption(branchUiRequired) ?? effectiveRequired;
   const isOptionControl = () =>
     !branchRequired &&
     isOptionalDataControlsType<T, S, F>(
@@ -259,6 +278,29 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       : isOptionControl())
   ) {
     return;
+  }
+  // The option's `ui:required` is read here and not above, which reads the field's, since an option is never walked as a
+  // node of its own; an option leaving it unset takes the field's, unless it renders options of its own, which
+  // `@rjsf/core` hands nothing on to. A group of checkboxes holds `[]` with no box checked,
+  // whether seeded or left by unchecking the last box, which the validator accepts unless a `minItems` has it report
+  // this itself. The group says it is required, so `[]` can't pass
+  // shortcut: a theme's declarations don't reach this walk, so only the built-in's names count, not a widget of your own
+  // declared `uncheckedIsEmpty` or given as a component; hand the walk the form's presentation if one is reported
+  const optionUiRequired =
+    uiBooleanOption(branchUiRequired) ?? (getXxxOfOptions<S>(retrieved) ? undefined : fieldUiRequired);
+  if (path.length > 0 && optionUiRequired === true) {
+    const isUnanswered =
+      formData === undefined
+        ? fieldUiRequired !== true &&
+          !(required && parentPresent) &&
+          rendersAnswer<T, S, F>(ctx, path, retrieved, branchUiSchema)
+        : Array.isArray(formData) &&
+          formData.length === 0 &&
+          (retrieved.minItems ?? 0) < 1 &&
+          (branchWidget === 'checkboxes' || branchWidget === 'CheckboxesWidget');
+    if (isUnanswered) {
+      builder.addErrors(`must have required property '${path[path.length - 1]}'`, path);
+    }
   }
   // Whatever the value, `ObjectField` renders its properties: a string under a `['null', 'object', 'string']` isn't an
   // object, yet the inputs for them are on screen unless the field for another type is
@@ -379,8 +421,9 @@ function computeMightHaveUiRequired<T, S extends StrictRJSFSchema, F extends For
 
 /** Walks the `schema` (resolved node by node against `formData`, exactly as `SchemaField` does while rendering) and
  * the `uiSchema` (resolved through `ui:definitions` the same way), returning an `ErrorSchema` holding a required
- * error for every field marked `ui:required: true` whose value is missing. The schema handed to the validator is left
- * untouched, so this works identically on the submit and live-validation paths and with precompiled validators.
+ * error for every field marked `ui:required: true` whose value is missing, which for a group of checkboxes includes
+ * `[]`. The schema handed to the validator is left untouched, so this works identically on the submit and
+ * live-validation paths and with precompiled validators.
  * Given the form's `fieldState`, the walk follows the option each field shows and descends into the `$ref` cycles
  * the user expanded, so the fields it walks are the ones on screen.
  */

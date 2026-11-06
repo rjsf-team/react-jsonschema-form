@@ -14,6 +14,10 @@ export interface FieldProps extends Omit<ComponentProps<typeof ChakraField.Root>
    * activates nothing, and a widget can move focus to its control here as a `for` would
    */
   onLabelClick?: MouseEventHandler<HTMLLabelElement>;
+  /** Whether the label carries the required marker, apart from the `required` the `Field` hands its control. Left out,
+   * it follows `required`
+   */
+  requiredMarker?: boolean;
 }
 
 /** A label drawn as Chakra's `Field.Label` draws one, with the `field` recipe's label class and the style it is handed,
@@ -69,6 +73,7 @@ function LabelWithoutFor({
  * @param [props.optionalText] - Text to indicate that the field is optional.
  * @param [props.labelNamesNoControl] - Whether the label is drawn with no `for`, for a control a `for` can't name.
  * @param [props.onLabelClick] - Called when the label is clicked.
+ * @param [props.requiredMarker] - Whether the label carries the required marker, where it differs from `required`.
  * @returns The rendered field component.
  */
 export const Field = ({
@@ -79,6 +84,7 @@ export const Field = ({
   optionalText,
   labelNamesNoControl,
   onLabelClick,
+  requiredMarker,
   ref,
   ...rest
 }: FieldProps) => {
@@ -88,7 +94,7 @@ export const Field = ({
       {label && (
         <Label onClick={onLabelClick}>
           {label}
-          <ChakraField.RequiredIndicator fallback={optionalText} />
+          {(requiredMarker ?? rest.required) ? <RequiredMarker /> : optionalText}
         </Label>
       )}
       {children}

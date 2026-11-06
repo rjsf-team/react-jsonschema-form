@@ -28,6 +28,57 @@ describe('getGroupAttributes()', () => {
     });
   });
 
+  describe('a required group handed the registry', () => {
+    const registry = { translateString: englishStringTranslator } as unknown as Registry;
+    const required = plan({ required: true });
+
+    it('adds the cue the widget renders to the label that names it', () => {
+      expect(getGroupAttributes({ id: ID, presentation: required, registry }, 'group')).toEqual({
+        group: { role: 'group', 'aria-labelledby': `${ID}__label ${ID}__required` },
+        option: {},
+        requiredCue: { id: `${ID}__required`, hidden: true, children: 'required' },
+      });
+    });
+
+    it('adds it to a label the widget draws itself', () => {
+      const presentation = plan({ declaration: { ...GROUP, label: 'self', labelledBy: 'for' }, required: true });
+      const { group, requiredCue } = getGroupAttributes({ id: ID, presentation, registry }, 'group', 'drawn');
+      expect(group['aria-labelledby']).toBe(`drawn ${ID}__required`);
+      expect(requiredCue?.id).toBe(`${ID}__required`);
+    });
+
+    it('takes the text in the aria-label naming a group whose label is hidden, with no cue to render', () => {
+      const presentation = plan({ showLabel: false, required: true });
+      const attributes = getGroupAttributes({ id: ID, presentation, registry }, 'group');
+      expect(attributes.group).toEqual({ role: 'group', 'aria-label': 'Foo required' });
+      expect(attributes).not.toHaveProperty('requiredCue');
+    });
+
+    it('takes the text alone as the name of a group nothing else names', () => {
+      const presentation = plan({ label: '', required: true });
+      expect(getGroupAttributes({ id: ID, presentation, registry }, 'group').group).toEqual({
+        role: 'group',
+        'aria-label': 'required',
+      });
+    });
+
+    it('says nothing where the group is not required, or the translation is empty', () => {
+      const optional = getGroupAttributes({ id: ID, presentation: plan(), registry }, 'group');
+      expect(optional.group).toEqual({ role: 'group', 'aria-labelledby': `${ID}__label` });
+      expect(optional).not.toHaveProperty('requiredCue');
+      const untranslated = { translateString: () => '' } as unknown as Registry;
+      const empty = getGroupAttributes({ id: ID, presentation: required, registry: untranslated }, 'group');
+      expect(empty.group).toEqual({ role: 'group', 'aria-labelledby': `${ID}__label` });
+      expect(empty).not.toHaveProperty('requiredCue');
+    });
+
+    it('leaves a radiogroup, which takes `required` on its radios, as it is', () => {
+      const attributes = getGroupAttributes({ id: ID, presentation: required, registry }, 'radiogroup');
+      expect(attributes.group['aria-labelledby']).toBe(`${ID}__label`);
+      expect(attributes).not.toHaveProperty('requiredCue');
+    });
+  });
+
   it('marks a radiogroup invalid rather than its radios, which ARIA gives no aria-invalid', () => {
     const presentation = plan({ description: 'Describes foo', errors: ['is required'] });
     expect(getGroupAttributes({ id: ID, presentation }, 'radiogroup')).toEqual({

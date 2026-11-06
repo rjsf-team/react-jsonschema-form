@@ -13,6 +13,7 @@ import {
   offersClearButton,
   toInputValue,
   widgetDrawsLabelText,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 const useStyles = makeStyles({
@@ -80,7 +81,12 @@ export default function BaseInputTemplate<
   return (
     <>
       {labelValue(
-        <Label htmlFor={id} required={required} disabled={disabled} className={classes.label}>
+        <Label
+          htmlFor={id}
+          required={templateMarksRequired<T, S, F>(props)}
+          disabled={disabled}
+          className={classes.label}
+        >
           {label}
         </Label>,
         hideLabel,

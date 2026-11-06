@@ -125,9 +125,10 @@ function placeText<Text>(
  *   numbered by how many fields above draw one. The control points `aria-labelledby` at a label its template draws, or
  *   one above, when its declaration says so, when the control above was pointed at that label too, since its template
  *   may then draw it with no `for`, or when its id isn't the one that label's `for` names. Its `requiredMarker` follows
- *   `required` whether or not there is a control, so a container's heading is marked too, and an `above` label carries
- *   the marker of the label drawn above, so the plan describes that one label as it is drawn; the control's own
- *   `required` stays this level's. A control whose label `showLabel` hides is named by the label's text through
+ *   `required` whether or not there is a control, so a container's heading is marked too, unless a field above rendering
+ *   the same id draws a marked label, which is the field's one marker, and an `above` label carries the marker of the
+ *   label drawn above, so the plan describes that one label as it is drawn; the control's own `required` stays this
+ *   level's. A control whose label `showLabel` hides is named by the label's text through
  *   `aria-label`, since hiding the label is a choice of layout, not of the control's name, or by the text of the
  *   nearest field above rendering the same id whose label is hidden too, as an option's control is named by its
  *   field's label while it shows.
@@ -192,7 +193,8 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
           plansAbove.map((plan) => plan.label),
         )
       : ownLabelId,
-    requiredMarker: required,
+    // One marker per field: a label a field above draws marked under this same id already carries this level's
+    requiredMarker: required && !plansAbove.some((plan) => rendersHere(plan.label.by) && plan.label.requiredMarker),
   };
   let labelBy: PartPlacement = declaration.label;
   if (labelAbove) {

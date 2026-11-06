@@ -53,10 +53,11 @@ export default function CheckboxesWidget<
   const extraProps = { id };
 
   const selectValue: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
-  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
-    { id, presentation },
-    'group',
-  );
+  const {
+    group: groupAttributes,
+    option: optionAttributes,
+    requiredCue,
+  } = getGroupAttributes<T, S, F>({ id, presentation, registry }, 'group');
 
   const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
@@ -89,6 +90,7 @@ export default function CheckboxesWidget<
             {!inline && <br />}
           </span>
         ))}
+      {requiredCue && <span {...requiredCue} />}
     </Checkbox.Group>
   ) : null;
 }

@@ -181,7 +181,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       Race
                     </span>
-                    *
                   </label>
                   <div
                     aria-labelledby="root_person_race__label"
@@ -1437,7 +1436,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       Race
                     </span>
-                    *
                   </label>
                   <div
                     aria-labelledby="root_person_race__label"
@@ -2721,7 +2719,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       Race
                     </span>
-                    *
                   </label>
                   <div
                     aria-labelledby="root_person_race__label"
@@ -3611,7 +3608,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       Race
                     </span>
-                    *
                   </label>
                   <div
                     aria-labelledby="root_person_race__label"
@@ -4856,7 +4852,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     Race
                   </span>
-                  *
                 </label>
                 <div
                   aria-labelledby="root_person_race__label"
@@ -5561,7 +5556,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     Race
                   </span>
-                  *
                 </label>
                 <div
                   aria-labelledby="root_person_race__label"

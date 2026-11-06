@@ -4,7 +4,7 @@ import { Textarea } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
 import { labelValue, toInputValue, widgetDrawsLabel } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps, getRequiredProps } from '../utils.tsx';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -15,21 +15,8 @@ export default function TextareaWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): ReactElement {
-  const {
-    id,
-    htmlName,
-    value,
-    placeholder,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    label,
-    options,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
+  const { id, htmlName, value, placeholder, disabled, readonly, autofocus, label, options, onChange, onBlur, onFocus } =
+    props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const themeProps = cleanupOptions(options, props);
@@ -70,7 +57,7 @@ export default function TextareaWidget<
       value={toInputValue(value)}
       placeholder={placeholder || undefined}
       rows={options.rows}
-      required={required}
+      {...getRequiredProps<T, S, F>(props)}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       label={labelValue(label || undefined, hideLabel, false)}

@@ -116,7 +116,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `items`: An array of React nodes representing the items in the array.
 - `onAddClick: (event?: SyntheticEvent<HTMLElement>) => void`: A function that adds a new item to the end of the array. It does nothing where the array's add button can't act, such as on a disabled array.
 - `readonly`: A boolean value stating if the array is read-only.
-- `required`: A boolean value stating if the array is required.
+- `required`: A boolean value stating if the array's heading carries the required marker: where the array is required, unless a field above rendering the same id draws the marked label, as an `anyOf`/`oneOf` field does for its option.
 - `hideError`: A boolean value stating if the field is hiding its errors.
 - `schema`: The schema object for this array.
 - `uiSchema`: The uiSchema object for this array field.
@@ -493,7 +493,7 @@ The following props are passed to the `BaseInputTemplate`:
 - `uiSchema`: The uiSchema for this widget;
 - `value`: The current value for this widget;
 - `placeholder`: The placeholder for the widget, if any;
-- `required`: The required status of this widget;
+- `required`: The required status of this widget's control. A label the widget draws is marked from [`templateMarksRequired()`](../api-reference/utility-functions.md#templatemarksrequired), since the selector of a required `anyOf`/`oneOf` field marks its label without being required, and the control of its selected option is required beneath an unmarked label;
 - `disabled`: A boolean value stating if the widget is disabled;
 - `hideError`: A boolean value stating if the widget is hiding its errors.
 - `readonly`: A boolean value stating if the widget is read-only;
@@ -1113,7 +1113,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `properties`: An array of object representing the properties in the object. Each of the properties represent a child with properties described below.
 - `onAddProperty: () => void`: Callback to use in order to add an new additionalProperty to the object field (to be used with additionalProperties and patternProperties)
 - `readonly`: A boolean value stating if the object is read-only.
-- `required`: A boolean value stating if the object is required.
+- `required`: A boolean value stating if the object's heading carries the required marker: where the object is required, unless a field above rendering the same id draws the marked label, as an `anyOf`/`oneOf` field does for its option.
 - `hideError`: A boolean value stating if the field is hiding its errors.
 - `schema`: The schema object for this object.
 - `uiSchema`: The uiSchema object for this object field.

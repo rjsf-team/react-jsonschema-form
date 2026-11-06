@@ -49,6 +49,10 @@ export default function CheckboxWidget<
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const hasErrors = fieldShowsOwnErrors<T, S, F>(props);
 
@@ -77,6 +81,8 @@ export default function CheckboxWidget<
           name={htmlName || id}
           checked={typeof value === 'undefined' ? false : Boolean(value)}
           required={trueValueRequired || undefined}
+          // Replaces the one Radix sets from `required`, so it is set wherever the box is natively required too
+          aria-required={marksRequired || undefined}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onCheckedChange={handleChange}
@@ -91,7 +97,7 @@ export default function CheckboxWidget<
           data-invalid={hasErrors || undefined}
         >
           {labelValue(label, hideLabel || !label)}
-          {!hideLabel && label && trueValueRequired && <span className='text-destructive ml-1'>*</span>}
+          {!hideLabel && label && marksRequired && <span className='text-destructive ml-1'>*</span>}
         </Label>
       </div>
     </div>

@@ -818,7 +818,13 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
     ['radio group', { type: 'string', title: 'Color', enum: ['red', 'blue'] }, { 'ui:widget': 'radio' }, 'radiogroup'],
     [
       'checkboxes group',
-      { type: 'array', title: 'Color', items: { type: 'string', enum: ['red', 'blue'] }, uniqueItems: true },
+      {
+        type: 'array',
+        title: 'Color',
+        items: { type: 'string', enum: ['red', 'blue'] },
+        uniqueItems: true,
+        minItems: 1,
+      },
       { 'ui:widget': 'checkboxes' },
       'group',
     ],
@@ -833,8 +839,9 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
       />,
     );
 
-    const control = screen.getByRole(role, { name: 'Color' });
-    const labelText = document.getElementById(control.getAttribute('aria-labelledby') ?? '');
+    // A required group of checkboxes follows its label's text with the cue that it is required
+    const control = screen.getByRole(role, { name: /^Color( required)?$/ });
+    const labelText = document.getElementById(control.getAttribute('aria-labelledby')?.split(' ')[0] ?? '');
     expect(labelText).toHaveTextContent('Color');
     expect(labelText).not.toHaveClass('ant-form-item-required');
     expect(labelText?.querySelector('.ant-form-item-required')).toBeNull();

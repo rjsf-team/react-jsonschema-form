@@ -9,6 +9,7 @@ import {
   rangeSpec,
   toNumericValue,
   widgetDrawsLabelText,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 const useStyles = makeStyles({
@@ -63,7 +64,7 @@ export default function RangeWidget<
   return (
     <>
       {labelValue(
-        <Label required={required} htmlFor={id}>
+        <Label required={templateMarksRequired<T, S, F>(props)} htmlFor={id}>
           {label}
         </Label>,
         hideLabel,

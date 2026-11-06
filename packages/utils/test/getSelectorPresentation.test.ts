@@ -22,7 +22,7 @@ describe('getSelectorPresentation()', () => {
       required: true,
     });
     const selector = getSelectorPresentation(field, SELECTOR);
-    expect(selector.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label`, requiredMarker: false });
+    expect(selector.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label`, requiredMarker: true });
     expect(selector.description.by).toBe('above');
     expect(selector.errors.by).toBe('above');
     expect(selector.inherited).toBe(field);
