@@ -147,14 +147,24 @@ describe('DateWidget', () => {
         expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
       });
 
-      // Java's `Instant.toString()` and Go's RFC 3339 layout both drop zero milliseconds, so a v6 value a backend wrote
-      // back loses them while still standing for the day the user picked
-      test('names the day a UTC instant that is a local midnight stands for once a backend drops its milliseconds', () => {
-        const rewritten = new Date(2020, 4, 3).toISOString().replace('.000Z', 'Z');
-        const { container } = render(<DateWidget {...makeWidgetMockProps({ value: rewritten, schema })} />);
+      // A backend writing a v6 value back keeps the instant but not always the spelling of its zero milliseconds, and
+      // the value still stands for the day the user picked
+      test.each([
+        // Java's `Instant.toString()` and Go's RFC 3339 layout
+        ['drops', 'Z'],
+        // A microsecond store, such as Elixir's `:utc_datetime_usec`
+        ['writes six digits for', '.000000Z'],
+        // .NET's round-trip `"o"` format
+        ['writes seven digits for', '.0000000Z'],
+      ])(
+        'names the day a UTC instant that is a local midnight stands for once a backend %s its milliseconds',
+        (_, fraction) => {
+          const rewritten = new Date(2020, 4, 3).toISOString().replace('.000Z', fraction);
+          const { container } = render(<DateWidget {...makeWidgetMockProps({ value: rewritten, schema })} />);
 
-        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
-      });
+          expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+        },
+      );
 
       // Read as an instant these would each name the previous day somewhere: a UTC midnight everywhere behind UTC,
       // and a noon one far enough east. The day each of them names is the one its own text spells
@@ -259,6 +269,15 @@ describe('DateWidget', () => {
       const trigger = container.querySelector('button[aria-haspopup]');
       expect(trigger).toHaveTextContent('When');
       expect(trigger).not.toHaveTextContent('Invalid');
+    });
+
+    // date-fns prints a year with no era, so year 0 would show as the year 1, and RFC 3339 has no room for it
+    test('falls back to the title for a day in year 0', () => {
+      const { container } = render(
+        <DateWidget {...makeWidgetMockProps({ value: '0000-05-03', label: 'When', placeholder: '', schema })} />,
+      );
+
+      expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent(/^When$/);
     });
 
     // RFC 3339 lets both the separator and the zone be lowercase, and neither an epoch number nor a `Date` is ISO text
@@ -792,6 +811,8 @@ describe('DateWidget', () => {
         ['iso-date-time', '2020-05-03T00:30:00+02:00', 'May 3, 2020'],
         // No time at all, which neither date-time format explains, so the day it names
         ['date-time', '2020-05-03', 'May 3, 2020'],
+        // `Date` rejects ISO text with whitespace around it, so the instant is read from the trimmed text
+        ['date-time', ' 2020-05-03T00:00:00.000Z ', 'May 2, 2020'],
       ])('reads a %s field holding %s as %s', (formatName, value, day) => {
         const { container } = render(
           <DateWidget {...makeWidgetMockProps({ value, schema: { type: 'string', format: formatName } })} />,

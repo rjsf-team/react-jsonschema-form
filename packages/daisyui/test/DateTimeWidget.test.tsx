@@ -192,22 +192,17 @@ describe('DateTimeWidget', () => {
       expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020 12:00 AM');
     });
 
-    // The offset that format strips would otherwise take the `-03` off the end of the day, leaving `2020-05`
-    test('displays the day it names in an iso-date-time field, at the start of that day', () => {
+    test.each([
+      // The offset that format strips would otherwise take the `-03` off the end of the day, leaving `2020-05`
+      ['iso-date-time', '2020-05-03'],
+      // Once that format strips its offset this is a bare day, which `Date` would read as UTC midnight
+      ['iso-date-time', '2020-05-03+02:00'],
+      // The field's own format decides the reading, as it does for `DateWidget`: a date-time in a `date` field names the
+      // day its text spells, where its instant is the evening before here
+      ['date', '2020-05-03T00:00:00.000Z'],
+    ])('displays the day a %s field holding %s names, at the start of that day', (formatName, value) => {
       const { container } = render(
-        <DateTimeWidget
-          {...makeWidgetMockProps({ value: '2020-05-03', schema: { type: 'string', format: 'iso-date-time' } })}
-        />,
-      );
-
-      expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020 12:00 AM');
-    });
-
-    // The field's own format decides the reading, as it does for `DateWidget`: a date-time in a `date` field names the
-    // day its text spells, where its instant is the evening before here
-    test('displays the day a date-time stored in the field names, at the start of that day', () => {
-      const { container } = render(
-        <DateTimeWidget {...makeWidgetMockProps({ value: '2020-05-03T00:00:00.000Z', schema: dateSchema })} />,
+        <DateTimeWidget {...makeWidgetMockProps({ value, schema: { type: 'string', format: formatName } })} />,
       );
 
       expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020 12:00 AM');
@@ -243,6 +238,27 @@ describe('DateTimeWidget', () => {
       );
 
       expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020 2:30 PM');
+    });
+
+    // date-fns prints a year with no era, so year 0 would show as the year 1, and RFC 3339 has no room for either
+    describe.each(['date', 'iso-date-time', 'date-time'])('in a %s field', (formatName) => {
+      test.each([
+        ['a Date in year 0', new Date('0000-05-03T00:00:00Z')],
+        ['an epoch number in year 10000', Date.UTC(10000, 4, 3)],
+      ])('shows no date for %s', (_, value) => {
+        const { container } = render(
+          <DateTimeWidget
+            {...makeWidgetMockProps({
+              value,
+              label: 'When',
+              placeholder: '',
+              schema: { type: 'string', format: formatName },
+            })}
+          />,
+        );
+
+        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent(/^When$/);
+      });
     });
   });
 

@@ -667,6 +667,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix a required `anyOf`/`oneOf` field showing two `*`s with a titled object or array option selected: only the field's label is marked now ([#5743](https://github.com/rjsf-team/react-jsonschema-form/pull/5743), [#5573](https://github.com/rjsf-team/react-jsonschema-form/issues/5573))
 - **BREAKING CHANGE:** Fix `CheckboxesWidget` giving a screen reader no cue that a checked box is required: a required group whose `minItems` is at least 1, or with `ui:required: true`, is now named with "required", and a required group with neither, which submits `[]`, no longer shows a `*`. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#a-fields-label-description-help-and-errors-are-drawn-where-its-plan-says-breaking-change) ([#5743](https://github.com/rjsf-team/react-jsonschema-form/pull/5743), [#5573](https://github.com/rjsf-team/react-jsonschema-form/issues/5573))
 - Change `FieldTemplate` rendered without a plan to leave the label to a `checkbox` on a string with a string `const`, which draws its own ([#5753](https://github.com/rjsf-team/react-jsonschema-form/pull/5753), [#3882](https://github.com/rjsf-team/react-jsonschema-form/issues/3882))
+- Change `DateWidget` and `DateTimeWidget` to show no date for a stored value outside the years 1 to 9999, where year 0 showed as the year 1 ([#5395](https://github.com/rjsf-team/react-jsonschema-form/issues/5395))
 
 ## @rjsf/fluentui-rc
 
