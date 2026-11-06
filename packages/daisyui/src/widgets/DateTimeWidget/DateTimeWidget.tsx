@@ -1,12 +1,12 @@
 import type { ChangeEvent } from 'react';
 import { memo, useCallback, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, isNamedByTemplateLabel, partId, TranslatableString } from '@rjsf/utils';
+import { isNamedByTemplateLabel, partId, TranslatableString } from '@rjsf/utils';
 import { format, isValid } from 'date-fns';
 
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
 import type { DatePickerCalendarProps } from '../DatePickerCalendar.tsx';
-import { readDateOnly, readInstant, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
+import { useDateFormatter, useDatePicker, useDateReader } from '../datePickerHooks.ts';
 import DatePickerTrigger, { DatePickerPopup, getDatePickerName } from '../DatePickerTrigger.tsx';
 
 /** Props for the DateTimePicker popup component, which is the calendar's own plus the time input's
@@ -81,18 +81,9 @@ export default function DateTimeWidget<
     props;
   const named = isNamedByTemplateLabel<T, S, F>(props);
   const pickerName = getDatePickerName<T, S, F>(props);
-  const { localValue } = getDateTimeLocalValue(schema, value);
   const formatDate = useDateFormatter<S>(schema, 'date-time');
-  // Initialize the local date from the parent's value. For `iso-date-time`, a stored value that happens to
-  // carry an offset is stripped first, so it's parsed as the naive wall-clock time it represents instead of
-  // being converted to the browser's local zone. An unparsable stored value (e.g. left over from a schema
-  // change) normalizes to `undefined` here, rather than becoming an `Invalid Date` that every downstream
-  // consumer (the calendar's month caption, the time input, the commit) would otherwise have to guard
-  // against individually.
-  //
-  // `getDateTimeLocalValue()` returns a string for text and for a finite epoch number or valid `Date`, and `undefined`
-  // for a value the picker cannot read. A `format: 'date'` value that is a UTC midnight comes back as the day it names.
-  const initialDate = useMemo(() => readDateOnly(localValue) ?? readInstant(localValue), [localValue]);
+  const readDate = useDateReader<S>(schema, 'date-time');
+  const initialDate = useMemo(() => readDate(value), [readDate, value]);
   const {
     isOpen,
     popupId,

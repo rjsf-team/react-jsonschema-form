@@ -1,8 +1,8 @@
 import type { SyntheticEvent } from 'react';
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { callWithDeferredThrow } from '@rjsf/utils';
-import { format, isSameMonth, isValid, parseISO } from 'date-fns';
+import { callWithDeferredThrow, offsetTimeToLocalTime } from '@rjsf/utils';
+import { format, isSameMonth, isValid, parseISO, startOfDay } from 'date-fns';
 
 /** The document the form is rendered into, which is a document away from the one this module runs in wherever that is
  * an iframe — as the playground's frame renders it. A press, a key and a viewport width all belong to that document
@@ -59,7 +59,7 @@ const KNOWN_FORMATS = ['date', 'date-time', 'iso-date-time'];
  * @param value - The stored value
  * @returns - That day at local midnight, or `undefined` where the value is not a day on its own
  */
-export function readDateOnly(value: unknown) {
+function readDateOnly(value: unknown) {
   if (typeof value !== 'string' || !DATE_ONLY.test(value)) {
     return undefined;
   }
@@ -78,12 +78,112 @@ export function readDateOnly(value: unknown) {
  *          become an `Invalid Date` that the calendar, its month caption and the trigger would each have to guard
  *          against
  */
-export function readInstant(value: unknown) {
+function readInstant(value: unknown) {
   if (typeof value !== 'string' && typeof value !== 'number' && !(value instanceof Date)) {
     return undefined;
   }
   const instant = new Date(value);
   return isValid(instant) ? instant : undefined;
+}
+
+/** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
+const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
+
+/** The calendar day a date-time's own text names, read as a day in its own right rather than as the instant the text
+ * names, whose local day differs from the text's for a reader far enough from the zone it was written in.
+ *
+ * @param text - A date-time beginning with a `YYYY-MM-DD` day, or nothing where the stored value is not text
+ * @returns - That day at local midnight, or `undefined` if the text does not begin with one
+ */
+function dayNamedBy(text?: string) {
+  return readDateOnly(text?.match(LEADING_DAY)?.[0]);
+}
+
+/** Reads the stored value of a `date` field as the calendar day it stands for.
+ *
+ * A value carrying a time is not a `date` at all, and the day it names is the one its own text spells: whatever wrote
+ * `2020-01-03T12:00:00Z` meant the third, and reading the instant where the calendar day differs would show the fourth
+ * to a reader far enough east.
+ *
+ * The exception is what v6's `DateWidget` stored in every field, a `date` one included: `toISOString()` of the midnight
+ * beginning the day the user picked, in the zone they picked it in, whose text names the day before to everyone ahead
+ * of UTC. The field's format cannot tell that apart from a value written elsewhere, so the value has to: it is read as
+ * its instant only where its text is what `toISOString()` writes for it, or that text with the zero milliseconds a
+ * Java or Go backend drops when it writes the value back, and that instant is a local midnight. A value spelled any
+ * other way, with an offset of its own or a lowercase `t`, came from somewhere else.
+ *
+ * Exactly twelve hours ahead of UTC, `toISOString()` of a local midnight is a midday UTC instant of the day before, so a
+ * backend's midday-UTC value spelled the same way is read there as the day after its text.
+ *
+ * @param raw - The stored value
+ * @param text - That value trimmed, where it is text
+ * @returns - The day it names, or `undefined` for a value that names none — an object or a boolean as much as an
+ *          unreadable text
+ */
+function readDay(raw: unknown, text: string | undefined) {
+  const dateOnly = readDateOnly(text);
+  if (dateOnly) {
+    return dateOnly;
+  }
+  const instant = readInstant(raw);
+  const dayInItsOwnText = dayNamedBy(text);
+  if (!instant) {
+    // Every dialect beyond ISO 8601 is optional for an engine to accept, so a text naming a day outright is read as
+    // that day rather than thrown away along with the instant no engine agreed on
+    return dayInItsOwnText;
+  }
+  const iso = instant.toISOString();
+  const writtenByV6 =
+    (text === undefined || text === iso || text === iso.replace('.000Z', 'Z')) &&
+    instant.getTime() === startOfDay(instant).getTime();
+  if (writtenByV6) {
+    return instant;
+  }
+  if (dayInItsOwnText) {
+    return dayInItsOwnText;
+  }
+  // Left with a value whose text names no day at all — a `YYYY-MM`, or an epoch number that is not text to begin with.
+  // A UTC midnight names the day `Date` resolved it to; anything else names only the day its instant lands on here
+  return (iso.endsWith('T00:00:00.000Z') ? dayNamedBy(iso) : undefined) ?? instant;
+}
+
+/** The format a field declares, where it is one either picker knows how to read and write
+ *
+ * @param schema - The schema for the field
+ * @returns - That format, or `undefined` where the widget's own fallback decides
+ */
+function declaredFormat<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
+  return typeof schema.format === 'string' && KNOWN_FORMATS.includes(schema.format) ? schema.format : undefined;
+}
+
+/** Builds the reader that turns a field's stored value into the date a picker holds, deciding the shape from the same
+ * format `useDateFormatter()` writes, so either picker reads a field the way it writes it: a `date` as the calendar
+ * day it stands for, a `date-time` as its instant, and an `iso-date-time` as the naive wall-clock time it spells.
+ *
+ * A bare day is read as that day at local midnight whatever the format, since no date-time format explains one.
+ *
+ * @param schema - The schema for the field, whose `format` names the shape it stores
+ * @param fallback - The shape to read where the schema declares no format either picker knows
+ * @returns - The reader for the field's stored value, which returns `undefined` for a value naming no date
+ */
+export function useDateReader<S extends StrictRJSFSchema = RJSFSchema>(schema: S, fallback: 'date' | 'date-time') {
+  const schemaFormat = declaredFormat(schema);
+  return useCallback(
+    (raw: unknown) => {
+      const text = typeof raw === 'string' ? raw.trim() : undefined;
+      switch (schemaFormat ?? fallback) {
+        case 'date':
+          return readDay(raw, text);
+        // That format's timezone is optional, so an offset is stripped rather than converted. The bare day goes first
+        // because the offset pattern also matches the `-DD` it ends in
+        case 'iso-date-time':
+          return readDateOnly(text) ?? readInstant(text === undefined ? raw : offsetTimeToLocalTime(text));
+        default:
+          return readDateOnly(text) ?? readInstant(raw);
+      }
+    },
+    [fallback, schemaFormat],
+  );
 }
 
 /** Builds the formatter that turns the date a picker is holding into the text the field stores. Either picker can be
@@ -100,8 +200,7 @@ export function readInstant(value: unknown) {
  * @returns - The formatter for the field's committed value
  */
 export function useDateFormatter<S extends StrictRJSFSchema = RJSFSchema>(schema: S, fallback: 'date' | 'date-time') {
-  const schemaFormat =
-    typeof schema.format === 'string' && KNOWN_FORMATS.includes(schema.format) ? schema.format : undefined;
+  const schemaFormat = declaredFormat(schema);
   return useCallback(
     (date: Date) => {
       switch (schemaFormat ?? fallback) {

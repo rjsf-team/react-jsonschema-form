@@ -192,6 +192,27 @@ describe('DateTimeWidget', () => {
       expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020 12:00 AM');
     });
 
+    // The offset that format strips would otherwise take the `-03` off the end of the day, leaving `2020-05`
+    test('displays the day it names in an iso-date-time field, at the start of that day', () => {
+      const { container } = render(
+        <DateTimeWidget
+          {...makeWidgetMockProps({ value: '2020-05-03', schema: { type: 'string', format: 'iso-date-time' } })}
+        />,
+      );
+
+      expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020 12:00 AM');
+    });
+
+    // The field's own format decides the reading, as it does for `DateWidget`: a date-time in a `date` field names the
+    // day its text spells, where its instant is the evening before here
+    test('displays the day a date-time stored in the field names, at the start of that day', () => {
+      const { container } = render(
+        <DateTimeWidget {...makeWidgetMockProps({ value: '2020-05-03T00:00:00.000Z', schema: dateSchema })} />,
+      );
+
+      expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020 12:00 AM');
+    });
+
     test('keeps that day when the user edits only the time', async () => {
       const onChange = vi.fn();
       const { container } = render(

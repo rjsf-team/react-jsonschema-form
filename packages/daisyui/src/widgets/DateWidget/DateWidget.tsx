@@ -4,74 +4,8 @@ import { isNamedByTemplateLabel } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
 
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
-import { readDateOnly, readInstant, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
+import { useDateFormatter, useDatePicker, useDateReader } from '../datePickerHooks.ts';
 import DatePickerTrigger, { DatePickerPopup, getDatePickerName } from '../DatePickerTrigger.tsx';
-
-/** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
-const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
-
-/** A zone offset spelled as hours from UTC, which `Z` is not. It has to follow a time to count, so a bare `YYYY-MM`
- * is not read as May with a five-hour offset
- */
-const NUMERIC_OFFSET = /\d{2}:\d{2}(:\d{2})?(\.\d+)?[+-]\d{2}(:?\d{2})?$/;
-
-/** The calendar day a date-time's own text names, read as a day in its own right rather than through the `Date`
- * constructor, which reads a year below 100 as a two-digit one and would turn a stored year 50 into 1950.
- *
- * @param text - A date-time beginning with a `YYYY-MM-DD` day, or nothing where the stored value is not text
- * @returns - That day at local midnight, or `undefined` if the text does not begin with one
- */
-function dayNamedBy(text?: string) {
-  return readDateOnly(text?.match(LEADING_DAY)?.[0]);
-}
-
-/** Reads the stored value of a date field as the calendar day it stands for.
- *
- * A value carrying a time is not a `date` at all, and the day it names is the one its own text spells: whatever wrote
- * `2020-01-03T12:00:00Z` meant the third, and reading the instant where the calendar day differs would show the fourth
- * to a reader far enough east.
- *
- * The exception is the shape this widget stores for a field declaring a date-time: `toISOString()` of the midnight
- * beginning the day the user picked, in the zone they picked it in, whose text names the day before to everyone ahead
- * of UTC. It is told apart by its zone — a value stamped with an offset of its own came from somewhere else, and is
- * read as its text reads however that offset resolves here.
- *
- * Exactly twelve hours ahead of UTC the two readings cannot be told apart at all: a day picked there is stored as the
- * midday UTC instant of the day before, which is the same instant, and all but the milliseconds `toISOString()` always
- * emits the same text, as a backend's own midday-UTC value for that earlier day. A midday value is read there as the
- * local day its instant begins, since reading the text first instead would move every day this widget itself stored in
- * a zone ahead of UTC. Deciding it from the format the field declares rather than from the value's shape is #5395.
- *
- * @param raw - The stored value
- * @returns - The day it names, or `undefined` for a value that names none — an object or a boolean as much as an
- *          unreadable text
- */
-function parseDateValue(raw: unknown) {
-  const text = typeof raw === 'string' ? raw.trim() : undefined;
-  const dateOnly = readDateOnly(text);
-  if (dateOnly) {
-    return dateOnly;
-  }
-  const instant = readInstant(raw);
-  const dayInItsOwnText = dayNamedBy(text);
-  if (!instant) {
-    // Every dialect beyond ISO 8601 is optional for an engine to accept, so a text naming a day outright is read as
-    // that day rather than thrown away along with the instant no engine agreed on
-    return dayInItsOwnText;
-  }
-  const writtenByThisWidget =
-    !(text && NUMERIC_OFFSET.test(text)) && instant.getTime() === startOfDay(instant).getTime();
-  if (writtenByThisWidget) {
-    return instant;
-  }
-  if (dayInItsOwnText) {
-    return dayInItsOwnText;
-  }
-  // Left with a value whose text names no day at all — a `YYYY-MM`, or an epoch number that is not text to begin with.
-  // A UTC midnight names the day `Date` resolved it to; anything else names only the day its instant lands on here
-  const iso = instant.toISOString();
-  return (iso.endsWith('T00:00:00.000Z') ? dayNamedBy(iso) : undefined) ?? instant;
-}
 
 /** The `DateWidget` component provides a date picker with DaisyUI styling.
  *
@@ -93,7 +27,8 @@ export default function DateWidget<
     props;
   const named = isNamedByTemplateLabel<T, S, F>(props);
   const pickerName = getDatePickerName<T, S, F>(props);
-  const initialDate = useMemo(() => parseDateValue(value), [value]);
+  const readDate = useDateReader<S>(schema, 'date');
+  const initialDate = useMemo(() => readDate(value), [readDate, value]);
   const formatDate = useDateFormatter<S>(schema, 'date');
   const {
     isOpen,
