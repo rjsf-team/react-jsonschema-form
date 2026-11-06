@@ -3,7 +3,7 @@ import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputL
 import ListSubheader from '@mui/material/ListSubheader';
 import MenuItem from '@mui/material/MenuItem';
 import type { SelectProps as MuiSelectProps } from '@mui/material/Select';
-import type { TextFieldProps } from '@mui/material/TextField';
+import type { TextFieldOwnerState, TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
 import type {
   FormContextType,
@@ -35,7 +35,9 @@ import {
   getMuiProps,
   helperTextSlot,
   inputLabelId,
+  omitFormOwnedInputProps,
   omitFormOwnedProps,
+  resolveSlotProps,
   withoutDisabled,
   withSlotProps,
 } from '../util.ts';
@@ -48,6 +50,8 @@ export interface SelectWidgetMuiProps extends GenericObjectType {
     inputLabel?: MuiInputLabelProps;
     /** Props applied to the `Select` element. */
     select?: MuiSelectProps;
+    /** Props applied to the select's outlined input, as an object or as MUI's `(ownerState) => props`. */
+    input?: NonNullable<TextFieldProps['slotProps']>['input'];
     /** Props applied to the element with the `combobox` role, as an object or as MUI's `(ownerState) => props`. */
     htmlInput?: NonNullable<TextFieldProps['slotProps']>['htmlInput'];
     /** Props applied to the helper text, as an object or as MUI's `(ownerState) => props`. */
@@ -132,6 +136,8 @@ export default function SelectWidget<
   const ownLabel = labelValue(label || undefined, hideLabel, undefined);
   const textFieldLabel = 'label' in textFieldOverrides ? textFieldOverrides.label : ownLabel;
   const labelId = muiSlotProps?.inputLabel?.id ?? inputLabelId(textFieldId);
+  // MUI's `Select` hands its own `inputProps` and `slotProps.input` to the `InputBase`, over its `disabled`
+  const authorSelect = omitFormOwnedInputProps(muiSlotProps?.select ?? {});
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
@@ -163,6 +169,9 @@ export default function SelectWidget<
         onFocus={handleFocus}
         slotProps={{
           ...muiSlotProps,
+          // MUI spreads this slot over the `TextField`'s own handlers and `disabled`
+          input: (ownerState: TextFieldOwnerState) =>
+            omitFormOwnedInputProps(resolveSlotProps(muiSlotProps?.input, ownerState) ?? {}),
           inputLabel: {
             ...muiSlotProps?.inputLabel,
             shrink: !isEmpty,
@@ -174,7 +183,11 @@ export default function SelectWidget<
             ...((ariaProps['aria-labelledby'] || textFieldLabel) && {
               labelId: ariaProps['aria-labelledby'] ?? labelId,
             }),
-            ...omitFormOwnedProps(muiSlotProps?.select ?? {}),
+            ...authorSelect,
+            // The combobox `div` takes these over the handlers that report its focus to the form
+            ...(authorSelect.SelectDisplayProps && {
+              SelectDisplayProps: omitFormOwnedProps(authorSelect.SelectDisplayProps),
+            }),
             multiple,
           },
           // The `TextField`'s `required` is its marker, which the outline's notch has to fit, so the combobox takes its own
