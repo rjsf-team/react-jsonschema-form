@@ -2834,6 +2834,73 @@ describe('optionalDataControls', () => {
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: { rows: [{ k: 'a' }] } });
   });
 
+  it('leaves out an optional object in an array item kept after a switch cuts a $ref array to its maxItems', async () => {
+    const row: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string' }, opt: { type: 'object', properties: { level: { type: 'string' } } } },
+    };
+    const schema: RJSFSchema = {
+      definitions: { shortRows: { type: 'array', items: row, maxItems: 1 } },
+      type: 'object',
+      properties: {
+        job: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { rows: { type: 'array', items: row } } },
+            { title: 'B', properties: { rows: { $ref: '#/definitions/shortRows' } } },
+          ],
+        },
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      uiSchema: objectOnUiSchema,
+      initialFormData: { job: { rows: [{ k: 'a' }, { k: 'b' }] } },
+    });
+
+    await user.selectOptions(elementOf(node, '#root_job__oneof_select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: { rows: [{ k: 'a' }] } });
+  });
+
+  it('leaves out an optional object in an array item kept after a switch cuts the array to a maxItems its items set', async () => {
+    const row: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string' }, opt: { type: 'object', properties: { level: { type: 'string' } } } },
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        job: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { rows: { type: 'array', items: row } } },
+            {
+              title: 'B',
+              properties: {
+                rows: {
+                  type: 'array',
+                  items: row,
+                  if: { contains: { properties: { k: { const: 'b' } }, required: ['k'] } },
+                  then: { maxItems: 1 },
+                },
+              },
+            },
+          ],
+        },
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      uiSchema: objectOnUiSchema,
+      initialFormData: { job: { rows: [{ k: 'a' }, { k: 'b' }] } },
+    });
+
+    await user.selectOptions(elementOf(node, '#root_job__oneof_select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: { rows: [{ k: 'a' }] } });
+  });
+
   it('keeps an optional object in an extra key both oneOf options share behind the Add button its additionalProperties uiSchema asks for after a switch', async () => {
     const map: RJSFSchema = {
       type: 'object',

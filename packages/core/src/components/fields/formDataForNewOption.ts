@@ -198,7 +198,7 @@ type WalkUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextType> = P
  * the empty objects it wrote for optional objects beneath it, see `withoutAddedOptionalObjects()`. Sanitize descends
  * only into what the old data held, so nothing else holds one. An array item's uiSchema is read as the form's defaults
  * read it, without a function-form `uiSchema.items`, which needs a `formContext` this has none of. An array whose length
- * sanitize changed other than by cutting it to its declared `maxItems` is returned as it is: an item it dropped shifts
+ * sanitize changed other than by cutting it to its `maxItems` is returned as it is: an item it dropped shifts
  * the ones after it off their old ones, where an object the user added would read as one sanitize wrote, and be
  * removed.
  *
@@ -220,14 +220,15 @@ function withoutAddedOptionalObjectsWithin<T, S extends StrictRJSFSchema, F exte
 ): unknown {
   const isObjectValue = isPlainObject(value) && isPlainObject(oldValue);
   // A value sanitize carried over as it was holds only what the old data held
+  if (value === oldValue || (!isObjectValue && !(Array.isArray(value) && Array.isArray(oldValue)))) {
+    return value;
+  }
+  // An array's schema is resolved against the old data, as sanitize resolved the one whose `maxItems` it cut to: a
+  // `$ref`, `allOf` or `if`/`then` can supply it, and a condition on the items reads differently after the cut
+  const schema = schemaUtils.retrieveSchema(rawSchema, asFieldValue<T>(isObjectValue ? value : oldValue));
   if (
-    value === oldValue ||
-    (!isObjectValue &&
-      !(
-        Array.isArray(value) &&
-        Array.isArray(oldValue) &&
-        value.length === Math.min(oldValue.length, rawSchema.maxItems ?? Infinity)
-      ))
+    !isObjectValue &&
+    (value as unknown[]).length !== Math.min((oldValue as unknown[]).length, schema.maxItems ?? Infinity)
   ) {
     return value;
   }
@@ -235,7 +236,6 @@ function withoutAddedOptionalObjectsWithin<T, S extends StrictRJSFSchema, F exte
   const fieldUiSchema = uiSchemaDefinitions
     ? resolveUiSchema<T, S, F>(rawSchema, uiSchema, { rootSchema: schemaUtils.getRootSchema(), uiSchemaDefinitions })
     : uiSchema;
-  const schema = schemaUtils.retrieveSchema(rawSchema, asFieldValue<T>(value));
   if (isObjectValue) {
     return withoutAddedOptionalObjects<GenericObjectType, T, S, F>(
       schemaUtils,
