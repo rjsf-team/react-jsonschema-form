@@ -1149,6 +1149,71 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         { id: 'a' },
       ]);
     });
+    it('keeps the object items of an items schema declaring no properties, dropping any that is not an object (#5736)', () => {
+      const schema: RJSFSchema = { type: 'array', items: { type: 'object' } };
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [{ k: 1 }, 'x'])).toEqual([{ k: 1 }]);
+    });
+    it('keeps a free-form object list inside items resolved through an if/then (#5736)', () => {
+      const rows: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: { name: { type: 'string' }, tags: { type: 'array', items: { type: 'object' } } },
+          if: { properties: { name: { const: 'x' } } },
+          then: {},
+        },
+      };
+      const schema: RJSFSchema = { type: 'object', properties: { rows } };
+      const formData = { rows: [{ name: 'a', tags: [{ k: 1 }] }] };
+      const retrieved = schemaUtils.retrieveSchema(schema, formData);
+      expect(schemaUtils.sanitizeDataForNewSchema(retrieved, retrieved, formData)).toEqual(formData);
+    });
+    it('filters out object items a multi-value enum option rejects, like scalar items (#5440)', () => {
+      const objectSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'object', oneOf: [{ enum: [{ id: 'a' }, { id: 'b' }] }] },
+      };
+      const stringSchema: RJSFSchema = { type: 'array', items: { type: 'string', oneOf: [{ enum: ['a', 'b'] }] } };
+      expect(schemaUtils.sanitizeDataForNewSchema(objectSchema, objectSchema, [{ id: 'a' }, { id: 'c' }])).toEqual([
+        { id: 'a' },
+      ]);
+      expect(schemaUtils.sanitizeDataForNewSchema(stringSchema, stringSchema, ['a', 'c'])).toEqual(['a']);
+    });
+    it('sanitizes the array items of an array per element, as it does an array property (#5440)', () => {
+      const items = (...keys: string[]): RJSFSchema => ({
+        type: 'array',
+        items: { type: 'object', properties: Object.fromEntries(keys.map((key) => [key, { type: 'string' }])) },
+      });
+      const oldSchema: RJSFSchema = { type: 'array', items: items('a', 'b') };
+      const newSchema: RJSFSchema = { type: 'array', items: items('a') };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [[{ a: '1', b: '2' }], 'x'])).toEqual([
+        [{ a: '1' }],
+        'x',
+      ]);
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          { type: 'object', properties: { list: items('a') } },
+          { type: 'object', properties: { list: items('a', 'b') } },
+          { list: [{ a: '1', b: '2' }] },
+        ),
+      ).toEqual({ list: [{ a: '1' }] });
+    });
+    it('filters out array items a multi-value enum option rejects, as it does object items (#5440)', () => {
+      const schema: RJSFSchema = { type: 'array', items: { type: 'array', oneOf: [{ enum: [['a'], ['b']] }] } };
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [['a'], ['c']])).toEqual([['a']]);
+    });
+    it('drops an array item whose items the new schema gives another type (#5440)', () => {
+      const oldSchema: RJSFSchema = { type: 'array', items: { type: 'array', items: { type: 'string' } } };
+      const newSchema: RJSFSchema = { type: 'array', items: { type: 'array', items: { type: 'number' } } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [['1']])).toEqual([]);
+    });
+    it('keeps the array items the new schema describes where the old items declare no type (#5440)', () => {
+      const newSchema: RJSFSchema = { type: 'array', items: { type: 'array', items: { type: 'string' } } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, { type: 'array', items: {} }, [['a'], ['b', 1]])).toEqual([
+        ['a'],
+        ['b', 1],
+      ]);
+    });
     it('sanitizes the object items of a type list naming object per property, keeping a null it allows', () => {
       const items = (extra: string): RJSFSchema => ({
         type: ['object', 'null'],

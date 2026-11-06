@@ -136,11 +136,17 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *   - If the old and new schema `items` are both a single schema rather than a tuple or a boolean:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
- *       - If the new items' type, read through `getSchemaType()`, is "object" and the items aren't a select over object
- *         constants (see `isWholeValueSelect()`), then:
- *         - For each element in the `data`, recursively sanitize it against the items schemas retrieved for that
- *           element, stopping at `maxItems` if specified. Under a type list, only an element that is an object is
- *           sanitized, and any other, such as a `null` the list allows, is kept as it is
+ *       - If the new items' type, read through `getSchemaType()`, is "object" or "array" and the items aren't a select
+ *         over object or array constants (see `isWholeValueSelect()`), then, for each element in the `data`, stopping
+ *         at `maxItems` if specified:
+ *         - Retrieve the items schemas for that element. An object element whose new items schema declares
+ *           `properties` is recursively sanitized against them
+ *         - Any other array or object element is dropped when it is none of the new items schema's `enum` or constant
+ *           options. Otherwise an array element is recursively sanitized, against the new items schema on both sides
+ *           when the old items declare no type, and dropped when that returns `undefined`, and an object element is
+ *           kept as it is
+ *         - For array items, an element that is not an array is kept as it is. Under a type list for object items, so
+ *           is an element that is not an object, such as a `null` the list allows
  *       - Otherwise, return the `data` without the items that are none of the new `enum` or constant options, removing
  *         any values after `maxItems` if it is set
  *   - Otherwise, if both schemas declare the same `items` and `prefixItems`, and the same `additionalItems` where
@@ -345,17 +351,35 @@ export default function sanitizeDataForNewSchema<
         const itemsType = newSchemaType === undefined ? undefined : getSchemaType<S>(newItemsSchema);
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
-        if (itemsType === 'object' && !isWholeValueSelect<S>(newItemsSchema)) {
+        if ((itemsType === 'object' || itemsType === 'array') && !isWholeValueSelect<S>(newItemsSchema)) {
           newFormData = data.reduce<unknown[]>((newValue, aValue: T) => {
             let itemValue: unknown = aValue;
-            if (newSchemaType === 'object' || isPlainObject(aValue)) {
+            const isContainerItem =
+              itemsType === 'array' ? Array.isArray(aValue) : newSchemaType === 'object' || isPlainObject(aValue);
+            if (isContainerItem) {
               // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
               // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
-              const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
-              const newItemSchema = sameRawItemsSchema
-                ? oldItemSchema
-                : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
-              itemValue = sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newItemSchema, oldItemSchema, aValue);
+              const newItemSchema = retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
+              // An item its options don't list is dropped, as a scalar item is, whatever the old schema listed
+              const isListed = () => replacementForInvalidEnumValue<S>(newItemSchema, aValue) === NO_VALUE;
+              if (itemsType === 'array' ? isListed() : newItemSchema[PROPERTIES_KEY]) {
+                // Old items declaring no type describe no array to sanitize against, so an array element is read
+                // against the new items schema alone, rather than dropped for an old side holding no array
+                const oldItemSchema =
+                  sameRawItemsSchema || (itemsType === 'array' && !oldSchemaType)
+                    ? newItemSchema
+                    : retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
+                itemValue = sanitizeDataForNewSchema<T, S, F>(
+                  context,
+                  rootSchema,
+                  newItemSchema,
+                  oldItemSchema,
+                  aValue,
+                );
+              } else {
+                // An object item declaring no `properties` has none to prune, so it is kept as it is when listed
+                itemValue = isPlainObject(aValue) && isListed() ? aValue : undefined;
+              }
             }
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);
