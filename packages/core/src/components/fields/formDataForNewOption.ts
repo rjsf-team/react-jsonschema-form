@@ -197,7 +197,10 @@ type WalkUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextType> = P
 /** Returns `value`, an object or array `sanitizeDataForNewSchema()` returned where the old data held one too, without
  * the empty objects it wrote for optional objects beneath it, see `withoutAddedOptionalObjects()`. Sanitize descends
  * only into what the old data held, so nothing else holds one. An array item's uiSchema is read as the form's defaults
- * read it, without a function-form `uiSchema.items`, which needs a `formContext` this has none of.
+ * read it, without a function-form `uiSchema.items`, which needs a `formContext` this has none of. An array whose length
+ * sanitize changed other than by cutting it to its declared `maxItems` is returned as it is: an item it dropped shifts
+ * the ones after it off their old ones, where an object the user added would read as one sanitize wrote, and be
+ * removed.
  *
  * @param schemaUtils - The `SchemaUtilsType` implementation to resolve each schema with
  * @param value - The sanitized value
@@ -217,7 +220,15 @@ function withoutAddedOptionalObjectsWithin<T, S extends StrictRJSFSchema, F exte
 ): unknown {
   const isObjectValue = isPlainObject(value) && isPlainObject(oldValue);
   // A value sanitize carried over as it was holds only what the old data held
-  if (value === oldValue || (!isObjectValue && !(Array.isArray(value) && Array.isArray(oldValue)))) {
+  if (
+    value === oldValue ||
+    (!isObjectValue &&
+      !(
+        Array.isArray(value) &&
+        Array.isArray(oldValue) &&
+        value.length === Math.min(oldValue.length, rawSchema.maxItems ?? Infinity)
+      ))
+  ) {
     return value;
   }
   const { uiSchemaDefinitions } = uiSchemas;

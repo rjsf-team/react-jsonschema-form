@@ -1481,6 +1481,48 @@ describe('oneOf', () => {
     expect($select).toHaveValue('0');
   });
 
+  it('keeps what is typed into a root option when another option holds a conditional (#5567)', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { title: 'A', type: 'object', properties: { animal: { type: 'string' } } },
+        {
+          title: 'B',
+          type: 'object',
+          properties: { animal: { type: 'string' } },
+          allOf: [
+            {
+              if: { properties: { animal: { const: 'Cat' } } },
+              then: { properties: { food: { type: 'string', default: 'meat' } } },
+            },
+          ],
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+    const input = elementOf(node, 'input#root_animal');
+
+    await user.type(input, 'Fi');
+
+    expect(input).toHaveValue('Fi');
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { animal: 'Fi' } }), 'root_animal');
+  });
+
+  it('keeps the free-form object items both options share when switching options (#5736)', async () => {
+    const tags: RJSFSchema = { type: 'array', items: { type: 'object' } };
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { tags, a: { type: 'string' } } },
+        { title: 'B', properties: { tags, b: { type: 'string' } } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { tags: [{ k: 1 }], a: 'x' } });
+
+    await user.selectOptions(elementOf(node, 'select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ tags: [{ k: 1 }] });
+  });
+
   describe('Arrays', () => {
     it('should correctly render mixed types for oneOf inside array items', async () => {
       const schema: RJSFSchema = {
