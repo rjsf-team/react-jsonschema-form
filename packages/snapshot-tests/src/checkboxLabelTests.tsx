@@ -9,7 +9,7 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 
 import type { ThemeGenerators } from './themeTests.ts';
 
@@ -46,8 +46,17 @@ export function checkboxLabelTests(
     descriptionBy: 'self' | 'template';
   },
 ) {
+  const FieldTemplate = generateTemplates().FieldTemplate!;
+  function recordPlans() {
+    const plans = new Map<string, FieldPresentation | undefined>();
+    function RecordingFieldTemplate(props: FieldTemplateProps) {
+      plans.set(props.id, props.presentation);
+      return <FieldTemplate {...props} />;
+    }
+    return { plans, RecordingFieldTemplate };
+  }
+
   describe('a checkbox named by any spelling of ui:widget (#5389)', () => {
-    const FieldTemplate = generateTemplates().FieldTemplate!;
     const { CheckboxWidget } = generateWidgets();
     const CheckboxWrapper = (props: WidgetProps) => <CheckboxWidget {...props} />;
 
@@ -64,11 +73,7 @@ export function checkboxLabelTests(
     ])(
       'draws the label and the description once, the checkbox drawing the label, named by %s',
       (_, agreeUiSchema, widgets) => {
-        const plans = new Map<string, FieldPresentation | undefined>();
-        function RecordingFieldTemplate(props: FieldTemplateProps) {
-          plans.set(props.id, props.presentation);
-          return <FieldTemplate {...props} />;
-        }
+        const { plans, RecordingFieldTemplate } = recordPlans();
         const { container } = render(
           <Form
             schema={schema}
@@ -91,6 +96,44 @@ export function checkboxLabelTests(
       );
 
       expectOneLabelAndDescription(container);
+    });
+  });
+
+  describe('a checkbox confirming a string const (#3882)', () => {
+    const constSchema: RJSFSchema = {
+      type: 'object',
+      properties: { agree: { type: 'string', const: 'yes', title: 'Agree', description: 'I accept the terms' } },
+    };
+
+    test('is drawn as a boolean checkbox is, and writes the const when checked and clears it when unchecked', async () => {
+      const { plans, RecordingFieldTemplate } = recordPlans();
+      const onChange = vi.fn();
+      const { container } = render(
+        <Form
+          schema={constSchema}
+          uiSchema={{ agree: { 'ui:widget': 'checkbox' } }}
+          templates={{ FieldTemplate: RecordingFieldTemplate }}
+          validator={validator}
+          onChange={onChange}
+          defaultFormStateBehavior={{ constAsDefaults: 'never' }}
+        />,
+      );
+      expectOneLabelAndDescription(container);
+      expect(plans.get('root_agree')?.label.by).toBe('self');
+      expect(plans.get('root_agree')?.description.by).toBe(descriptionBy);
+
+      // DOM clicks, as user-event isn't a peer dependency here, waited on since chakra-ui's checkbox reports them late
+      const checkbox = () => screen.getByRole('checkbox', { name: 'Agree' });
+      act(() => checkbox().click());
+      await waitFor(() => expect(checkbox()).toBeChecked());
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { agree: 'yes' } }), 'root_agree');
+
+      act(() => checkbox().click());
+      await waitFor(() => expect(checkbox()).not.toBeChecked());
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { agree: undefined } }),
+        'root_agree',
+      );
     });
   });
 }

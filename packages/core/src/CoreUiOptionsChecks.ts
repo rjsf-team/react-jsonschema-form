@@ -62,6 +62,9 @@ export type CoreUiOptionsChecks =
           | 'RadioWidget'
           | 'FileWidget'
           | 'HiddenWidget'
+          // For a string with a string `const`, which the checkbox confirms
+          | 'CheckboxWidget'
+          | 'checkbox'
           | WidgetAliasFor<'string'>;
         field?: 'StringField';
         placeholder?: string;

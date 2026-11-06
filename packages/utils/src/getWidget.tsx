@@ -93,6 +93,10 @@ const widgetMap = {
   },
 } as const;
 
+/** Only a string `const` takes a `checkbox`, whose checked state `StringField` writes as the `const`; any other string
+ * would get a boolean */
+const constStringWidgetMap = { ...widgetMap.string, checkbox: widgetMap.boolean.checkbox };
+
 /** The types whose field renders its value with a widget, and so the ones a `type` list can hand a widget to when the
  * type it resolves to has none by that name */
 const WIDGET_FIELD_TYPES = ['string', 'number', 'integer', 'boolean'];
@@ -128,10 +132,12 @@ function findWidgetType<S extends StrictRJSFSchema = RJSFSchema>(
   // over whole array constants likewise takes a whole-value select's aliases rather than a list's
   const holdsContainer =
     selectType === 'string' && getKnownTypes<S>(schema).some((aType) => aType === 'object' || aType === 'array');
-  const widgets =
-    holdsContainer || (fieldType === 'array' && isWholeValueSelect<S>(schema))
-      ? wholeValueSelectWidgetMap
-      : widgetMap[fieldType];
+  let widgets: Record<string, string> = widgetMap[fieldType];
+  if (holdsContainer || (fieldType === 'array' && isWholeValueSelect<S>(schema))) {
+    widgets = wholeValueSelectWidgetMap;
+  } else if (fieldType === 'string' && typeof schema.const === 'string') {
+    widgets = constStringWidgetMap;
+  }
   if (hasWidget(widgets)) {
     return { type: fieldType, widgets };
   }

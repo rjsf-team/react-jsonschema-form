@@ -1015,6 +1015,104 @@ describe('StringField', () => {
     });
   });
 
+  describe('CheckboxWidget confirming a const', () => {
+    const constSchema: RJSFSchema = {
+      type: 'object',
+      properties: { confirm: { title: 'Confirmation', type: 'string', const: 'foo' } },
+    };
+    const constUiSchema: UiSchema = { confirm: { 'ui:widget': 'checkbox' } };
+    const neverConst = { constAsDefaults: 'never' } as const;
+
+    it.each(['checkbox', 'CheckboxWidget'])(
+      'should write the const when %s is checked and clear the field when unchecked',
+      async (widget) => {
+        const { onChange } = createFormComponent({
+          schema: constSchema,
+          uiSchema: { confirm: { 'ui:widget': widget } },
+          defaultFormStateBehavior: neverConst,
+        });
+        const checkbox = screen.getByRole('checkbox', { name: 'Confirmation' });
+        expect(checkbox).not.toBeChecked();
+
+        await user.click(checkbox);
+        expectToHaveBeenCalledWithFormData(onChange, { confirm: 'foo' }, 'root_confirm');
+        expect(checkbox).toBeChecked();
+
+        await user.click(checkbox);
+        expectToHaveBeenCalledWithFormData(onChange, { confirm: undefined }, 'root_confirm');
+        expect(checkbox).not.toBeChecked();
+      },
+    );
+
+    it.each([
+      ['foo', true],
+      ['bar', false],
+    ])('should show %j as checked: %s', (confirm, checked) => {
+      createFormComponent({ schema: constSchema, uiSchema: constUiSchema, initialFormData: { confirm } });
+
+      expect(screen.getByRole('checkbox', { name: 'Confirmation' }).matches(':checked')).toBe(checked);
+    });
+
+    it('should start checked when the const is a default, and stay unchecked once cleared', async () => {
+      const { onChange } = createFormComponent({ schema: constSchema, uiSchema: constUiSchema });
+      const checkbox = screen.getByRole('checkbox', { name: 'Confirmation' });
+      expect(checkbox).toBeChecked();
+
+      await user.click(checkbox);
+
+      expectToHaveBeenCalledWithFormData(onChange, { confirm: undefined }, 'root_confirm');
+      expect(checkbox).not.toBeChecked();
+    });
+
+    it('should hand onFocus and onBlur the const', async () => {
+      const onBlur = vi.fn();
+      const onFocus = vi.fn();
+      createFormComponent({
+        schema: constSchema,
+        uiSchema: constUiSchema,
+        initialFormData: { confirm: 'foo' },
+        onBlur,
+        onFocus,
+      });
+
+      await user.tab();
+      await user.tab();
+
+      expect(onFocus).toHaveBeenLastCalledWith('root_confirm', 'foo');
+      expect(onBlur).toHaveBeenLastCalledWith('root_confirm', 'foo');
+    });
+
+    it('should hand a widget the form registers under `checkbox` the string itself', async () => {
+      function StringCheckbox({ id, value, onChange }: WidgetProps) {
+        return <input id={id} type='checkbox' checked={value === 'foo'} onChange={() => onChange('bar')} />;
+      }
+      const { onChange } = createFormComponent({
+        schema: constSchema,
+        uiSchema: constUiSchema,
+        widgets: { checkbox: StringCheckbox },
+        initialFormData: { confirm: 'foo' },
+      });
+
+      await user.click(screen.getByRole('checkbox'));
+
+      expectToHaveBeenCalledWithFormData(onChange, { confirm: 'bar' }, 'root_confirm');
+    });
+
+    it('should report a required const as missing until it is checked', async () => {
+      const { node, onError } = createFormComponent({
+        schema: { ...constSchema, required: ['confirm'] },
+        uiSchema: constUiSchema,
+        defaultFormStateBehavior: neverConst,
+        noHtml5Validate: true,
+      });
+      expect(screen.getByRole('checkbox', { name: /Confirmation/ })).toBeRequired();
+
+      await submitForm(node, user);
+
+      expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ name: 'required', property: 'confirm' })]);
+    });
+  });
+
   describe('TextareaWidget', () => {
     it('should handle an empty string change event', async () => {
       const { node, onChange } = createFormComponent({

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, ErrorSchema } from '@rjsf/utils';
-import { fieldPathToName, getUiOptions, resolveWidget } from '@rjsf/utils';
+import { DEFAULT_BOOLEAN_WIDGET, fieldPathToName, getUiOptions, resolveWidget } from '@rjsf/utils';
 
 import {
   displaysLabel,
@@ -46,9 +46,29 @@ function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     displaysLabel(registry, schema, uiSchema),
   );
   const { Widget } = resolveWidget<T, S, F>(schema, widget, widgets);
+  // Matched by the component, so a widget the form registers under the `checkbox` key is handed the string
+  const confirmsConst = typeof schema.const === 'string' && Widget === widgets[DEFAULT_BOOLEAN_WIDGET];
+  const toFormValue = useCallback(
+    (value: unknown) => {
+      if (!confirmsConst) {
+        return value;
+      }
+      return value ? schema.const : undefined;
+    },
+    [confirmsConst, schema.const],
+  );
   const onWidgetChange = useCallback(
-    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => onChange(value, fieldPath, errorSchema, id),
-    [onChange, fieldPath],
+    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) =>
+      onChange(toFormValue(value), fieldPath, errorSchema, id),
+    [onChange, fieldPath, toFormValue],
+  );
+  const onWidgetBlur = useCallback(
+    (id: string, value: unknown) => onBlur(id, toFormValue(value)),
+    [onBlur, toFormValue],
+  );
+  const onWidgetFocus = useCallback(
+    (id: string, value: unknown) => onFocus(id, toFormValue(value)),
+    [onFocus, toFormValue],
   );
   return (
     <Widget
@@ -59,10 +79,10 @@ function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       name={name}
       {...labelProps}
       hideError={hideError}
-      value={formData}
+      value={confirmsConst ? formData === schema.const : formData}
       onChange={onWidgetChange}
-      onBlur={onBlur}
-      onFocus={onFocus}
+      onBlur={onWidgetBlur}
+      onFocus={onWidgetFocus}
       required={required}
       disabled={disabled}
       readonly={readonly}

@@ -229,6 +229,20 @@ describe('getWidget()', () => {
     );
   });
 
+  it('should return `CheckboxWidget` for a checkbox on a string with a string const', () => {
+    const registry = { CheckboxWidget: TestWidget };
+    expect(getWidget({ type: 'string', const: 'foo' }, 'checkbox', registry)).toBe(TestWidget);
+  });
+
+  it.each<RJSFSchema>([{ type: 'string' }, { type: 'string', const: 1 }])(
+    'should fail for a checkbox on %j, which would write a boolean',
+    (stringSchema) => {
+      expect(() => getWidget(stringSchema, 'checkbox', { CheckboxWidget: TestWidget })).toThrow(
+        `No widget 'checkbox' for type 'string' in schema: ${JSON.stringify(stringSchema)}`,
+      );
+    },
+  );
+
   it('should fail if schema `type` has no widget property', () => {
     expect(() => getWidget(subschema, 'blabla')).toThrow(
       `No widget 'blabla' for type 'boolean' in schema: ${subschemaStr}`,
@@ -316,6 +330,7 @@ describe('getWidgetType()', () => {
     ['updown', ['string', 'number'], 'number'],
     ['checkbox', ['number', 'boolean'], 'boolean'],
     ['CheckboxWidget', ['integer', 'boolean'], 'boolean'],
+    ['checkbox', ['string', 'boolean'], 'boolean'],
   ])('should return the listed type that has the widget %s on %j', (widget, type, expected) => {
     expect(getWidgetType({ type }, widget)).toBe(expected);
   });
@@ -388,6 +403,7 @@ describe('getWidgetKey()', () => {
   it("should return the key an alias stands for on the schema's type", () => {
     expect(getWidgetKey({ type: 'string' }, 'textarea')).toBe('TextareaWidget');
     expect(getWidgetKey({ type: 'boolean' }, 'checkbox')).toBe('CheckboxWidget');
+    expect(getWidgetKey({ type: 'string', const: 'foo' }, 'checkbox')).toBe('CheckboxWidget');
     expect(getWidgetKey({ type: 'array', items: { type: 'string' } }, 'files')).toBe('FileWidget');
   });
 
