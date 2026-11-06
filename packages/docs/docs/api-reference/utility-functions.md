@@ -1566,7 +1566,7 @@ Returns the type of the field that the Optional Data Controls UI is rendered for
 Returns the schema of the selector property of an `anyOf`/`oneOf` option, the one the options are told apart by, as it is read for the value, title and type that tell them apart.
 An option hands its properties out as written, so a selector written as a `$ref` is retrieved by `retrieve`; one written in place is read as it stands.
 Only an own property counts, so a selector named `__proto__` that the option doesn't declare gives `undefined` rather than `Object.prototype`.
-`findSelectedOptionInXxxOf()` reads a discriminator this way, and `LayoutMultiSchemaField` its selector, so the option one selects is the one the other lists.
+`findSelectedOptionInXxxOf()` reads a discriminator this way, and `LayoutMultiSchemaField` its selector, so with a `discriminator`, the option one selects is the one the other lists.
 
 #### Parameters
 

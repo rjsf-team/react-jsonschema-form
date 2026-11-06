@@ -1,6 +1,7 @@
 import { getAdditionalPropertySchema } from '../additionalPropertiesUtils.ts';
 import { ADDITIONAL_PROPERTY_FLAG, PROPERTIES_KEY } from '../constants.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
+import hasSchemaMarker from '../hasSchemaMarker.ts';
 import { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type {
@@ -34,7 +35,7 @@ function declaredField<S extends StrictRJSFSchema, F extends FormContextType>(
 ): S | undefined {
   const field = getFromSchema<S | undefined, S, F>(context, rootSchema, holder, [PROPERTIES_KEY, key], undefined);
   // `??` since a property YAML leaves empty is `null`, which declares nothing
-  return isSchemaObject<S>(field) && Reflect.get(field, ADDITIONAL_PROPERTY_FLAG) ? undefined : (field ?? undefined);
+  return hasSchemaMarker(field, ADDITIONAL_PROPERTY_FLAG) ? undefined : (field ?? undefined);
 }
 
 /** Finds the schema of `key` in `parent`. A property `parent` declares comes first, then one of the option rendered for

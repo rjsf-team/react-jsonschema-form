@@ -2582,7 +2582,9 @@ export interface SchemaUtilsType<
   canExpand(schema: S, uiSchema?: UiSchema<T, S, F>, formData?: T): boolean;
   /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
    * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
-   * field is in the `required` list for its parent and if so, it is marked as required on return.
+   * field is in the `required` list for its parent and if so, it is marked as required on return. At each key of the
+   * `path`, a property declared beside an `anyOf` or `oneOf` is found before its options are, and a key no property
+   * declares is found through `patternProperties` or `additionalProperties`.
    *
    * @param schema - The current node within the JSON schema
    * @param path - The remaining keys in the path to the desired field
