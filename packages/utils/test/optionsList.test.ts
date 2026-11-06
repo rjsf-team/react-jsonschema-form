@@ -752,6 +752,16 @@ describe('optionsList()', () => {
       'free',
     ]);
   });
+  it('should reorder by an interface-typed object or a readonly array without a cast', () => {
+    interface Tier {
+      tier: number;
+    }
+    const gold: Tier = { tier: 2 };
+    const pair = [1, 2] as const;
+    const schema: RJSFSchema = { enum: [{ tier: 1 }, { tier: 2 }, [1, 2]] };
+    const uiSchema: UiSchema = { 'ui:enumOrder': [pair, gold, '*'] };
+    expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([[1, 2], { tier: 2 }, { tier: 1 }]);
+  });
   it('should reorder an enum value by the entry equal to it before one that only shares its string', () => {
     const schema: RJSFSchema = { enum: [1, '1', { tier: 1 }] };
     const uiSchema: UiSchema = { 'ui:enumOrder': [1, { tier: 2 }, '*'] };

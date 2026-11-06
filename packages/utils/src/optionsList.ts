@@ -12,8 +12,8 @@ import toConstant from './toConstant.ts';
 import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types.ts';
 
 /** Reorders `options` according to `order`, which may contain a `'*'` wildcard representing all
- * remaining options in their original order. Options not listed in `order` (and not covered by
- * a wildcard) are dropped. An `order` that isn't a list leaves them as they are.
+ * remaining options in their original order, listed at the first `'*'` only. Options not listed in `order` (and not
+ * covered by a wildcard) are dropped. An `order` that isn't a list leaves them as they are.
  */
 function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
   options: EnumOptionsType<S>[],
@@ -119,7 +119,7 @@ export default function optionsList<
   // shortcut: not applied once an option is read through a selector, since `LayoutMultiSchemaField` reads an option's
   // uiSchema at its position in this list; drop the `readsSelector` check once it looks the option up by its position
   // in the schema instead
-  return options && enumOrder && !altSchemas?.some((option) => readsSelector(option as S))
+  return options && !altSchemas?.some((option) => readsSelector(option as S))
     ? applyEnumOrder(options, enumOrder)
     : options;
 }

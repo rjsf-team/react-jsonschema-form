@@ -1916,7 +1916,7 @@ export interface UISchemaSubmitButtonOptions {
 export type SubmitButtonOptions = UISchemaSubmitButtonOptions & Required<Pick<UISchemaSubmitButtonOptions, 'props'>>;
 
 /** Represents a JSON Schema enum value */
-export type EnumValue = string | number | boolean | null | GenericObjectType | unknown[];
+export type EnumValue = string | number | boolean | null | object;
 
 /** This type represents an element used to render an enum option */
 export interface EnumOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
