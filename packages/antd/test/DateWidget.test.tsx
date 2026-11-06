@@ -4,6 +4,8 @@ import { userEvent } from '@testing-library/user-event';
 
 import DateWidget from '../src/widgets/DateWidget/index.tsx';
 
+// The date-time tests paste rather than type: each keystroke re-renders antd's picker, slow enough on a loaded CI
+// runner to near the 5s default timeout
 const user = userEvent.setup();
 
 const schema: RJSFSchema = { type: 'string', format: 'iso-date-time' };
@@ -35,7 +37,9 @@ describe('DateWidget with schema.format = iso-date-time', () => {
     const { container } = render(<DateWidget {...makeProps({ onChange })} showTime />);
 
     const input = container.querySelector('input')!;
-    await user.type(input, '2016-04-05 14:01:30{Enter}');
+    await user.click(input);
+    await user.paste('2016-04-05 14:01:30');
+    await user.keyboard('{Enter}');
 
     expect(onChange).toHaveBeenCalledWith('2016-04-05T14:01:30');
   });
@@ -49,7 +53,9 @@ describe('DateWidget with schema.format = date-time', () => {
     );
 
     const input = container.querySelector('input')!;
-    await user.type(input, '2016-04-05 14:01:30{Enter}');
+    await user.click(input);
+    await user.paste('2016-04-05 14:01:30');
+    await user.keyboard('{Enter}');
 
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2016-04-05T\d{2}:\d{2}:30\.\d{3}Z$/));
   });
