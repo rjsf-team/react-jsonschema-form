@@ -890,8 +890,8 @@ function LayoutGridFieldComponent<
       );
     }
     const namePath = toPath(name);
-    // A cell with no title is labelled by its property name, as outside a grid, or an array item, as `ArrayField` names
-    // it, by its array and indexes; its ids and data come from the full path
+    // A cell with no title is labelled as it is outside a grid: by its property name, or for an array item by its
+    // array's name and indexes, as `ArrayField` names the item. Its ids and data still come from the full path
     const segments = fieldPathToList(fieldPath);
     const nameIndex = segments.findLastIndex((segment) => typeof segment === 'string');
     const cellName = segments.slice(Math.max(nameIndex, 0)).join('-');
