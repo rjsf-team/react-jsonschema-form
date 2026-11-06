@@ -53,7 +53,7 @@ function BooleanField<
     placeholder,
     ...options
   } = uiOptions;
-  const { Widget } = resolveWidget<T, S, F>(schema, getBooleanFieldWidget<T, S, F>(uiOptions), widgets);
+  const { Widget } = resolveWidget<T, S, F>(schema, getBooleanFieldWidget<T, S, F>(uiOptions, registry), widgets);
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
   const labelProps = getWidgetLabelProps<T, S, F>(

@@ -45,6 +45,21 @@ describe('mergeThemePresentation()', () => {
     });
   });
 
+  it("layers a field's widget, which a default or a fieldDefault can't declare", () => {
+    const blanket = { label: 'self', widget: 'radio' } as WidgetPresentationDeclaration;
+    expect(
+      mergeThemePresentation(
+        { fields: { BooleanField: { widget: 'radio' } }, default: blanket, fieldDefault: blanket },
+        { fields: { BooleanField: { widget: 'select', label: 'template' } } },
+      ),
+    ).toStrictEqual({
+      default: { label: 'self' },
+      widgets: {},
+      fields: { BooleanField: { widget: 'select', label: 'template' } },
+      fieldDefault: { label: 'self' },
+    });
+  });
+
   it("layers a layer's default beneath its own entry for every key any layer declares", () => {
     const theme = {
       default: { label: 'self', errors: 'self' },
