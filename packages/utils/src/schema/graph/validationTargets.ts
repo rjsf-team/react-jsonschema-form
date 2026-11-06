@@ -3,17 +3,20 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   ANY_OF_KEY,
+  DEFINITIONS_KEY,
   DEPENDENCIES_KEY,
   DISCRIMINATOR_PATH,
   ELSE_KEY,
   ID_KEY,
   IF_KEY,
+  ITEMS_KEY,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
   REF_KEY,
   REQUIRED_KEY,
   THEN_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
 import hashForSchema from '../../hashForSchema.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
@@ -408,30 +411,57 @@ export function dependencyCondition<S extends StrictRJSFSchema = RJSFSchema>(
 const dependencyConditions = new KeyedMemo<object | null>();
 
 /** Which of the keywords in an option's scope scoring drops: the `required`s with the `dependencies` entries listing
- * names, and the `additionalProperties: false`s
+ * names, the `additionalProperties: false`s, and the parts `partsCut()` names
  */
 interface Loosening {
   required: boolean;
   additionalProperties: boolean;
+  choices: boolean;
 }
 
 /** The `Loosening` that drops nothing, for a subschema outside an option's scope */
-const KEPT: Loosening = { required: false, additionalProperties: false };
+const KEPT: Loosening = { required: false, additionalProperties: false, choices: false };
 
-function loosens(node: ObjectNode, loosening: Loosening): boolean {
+/** The keywords whose subschemas apply to a part of the data, a property or an item, rather than to all of it: one
+ * read as `{}` only widens what the schema accepts, where a `not` or a `contains` read so would narrow it
+ */
+const PART_KEYWORDS = new Set([
+  PROPERTIES_KEY,
+  PATTERN_PROPERTIES_KEY,
+  ADDITIONAL_PROPERTIES_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
+  ITEMS_KEY,
+  'additionalItems',
+  'prefixItems',
+  'unevaluatedItems',
+]);
+
+/** Returns the subschemas under `keyword` that scoring reads as `{}`, the parts of the data that lead to a recursive
+ * choice, see `recursiveChoiceLeaders()`, or undefined for a keyword that holds no part
+ */
+function partsCut<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, keyword: string): ReadonlySet<NodeId> | undefined {
+  return PART_KEYWORDS.has(keyword) ? recursiveChoiceLeaders(graph) : undefined;
+}
+
+function loosens<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  node: ObjectNode<S>,
+  loosening: Loosening,
+): boolean {
   const { raw } = node;
   return (
     (loosening.required &&
       (REQUIRED_KEY in raw ||
         Object.values(isObject(raw[DEPENDENCIES_KEY]) ? raw[DEPENDENCIES_KEY] : {}).some(Array.isArray))) ||
-    (loosening.additionalProperties && raw[ADDITIONAL_PROPERTIES_KEY] === false)
+    (loosening.additionalProperties && raw[ADDITIONAL_PROPERTIES_KEY] === false) ||
+    (loosening.choices && childrenOf(graph, node.id).some(([tokens, child]) => partsCut(graph, tokens[0])?.has(child)))
   );
 }
 
 /** Returns the value the keyword `key` holds in a subschema reached at `place`, whose `$ref`s resolve against `base`,
- * with each subschema it holds replaced by `{ $ref }` naming its place below `place`, or, for a subschema with no
- * place, by what `unplaced` hands a validator for its node, looked up under `base`, since an object reached in two
- * resources is a node in each
+ * with each subschema it holds replaced by `{}` where `cut` holds its node, or else by `{ $ref }` naming its place below
+ * `place`, or, for a subschema with no place, by what `unplaced` hands a validator for its node, looked up under
+ * `base`, since an object reached in two resources is a node in each
  */
 function pointed<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -440,11 +470,15 @@ function pointed<S extends StrictRJSFSchema>(
   place: Place,
   base: string,
   unplaced: (sub: unknown, id: NodeId) => unknown,
+  cut: ReadonlySet<NodeId> | undefined,
 ): unknown {
   const name = (sub: unknown, tokens: string[]) => {
     const id = isObject(sub) ? graph.byObject(sub, base) : undefined;
     if (id === undefined) {
       return sub;
+    }
+    if (cut?.has(id)) {
+      return {};
     }
     return place === undefined ? unplaced(sub, id) : refAt(childPointer(place, tokens));
   };
@@ -506,7 +540,10 @@ function derive<S extends StrictRJSFSchema>(
     ...rest
   } = node.raw as GenericObjectType;
   const copy: GenericObjectType = Object.fromEntries(
-    Object.entries(rest).map(([key, value]) => [key, pointed(graph, key, value, place, node.baseUri, unplaced)]),
+    Object.entries(rest).map(([key, value]) => [
+      key,
+      pointed(graph, key, value, place, node.baseUri, unplaced, loosening.choices ? partsCut(graph, key) : undefined),
+    ]),
   );
   if (!loosening.required && required !== undefined) {
     copy[REQUIRED_KEY] = required;
@@ -557,11 +594,11 @@ function derive<S extends StrictRJSFSchema>(
 }
 
 /** Returns what the `anyOf`/`oneOf` option `id` reached at `place` is scored with: `{ $ref }` naming the place, or,
- * where something in its scope states a `required`, lists names under `dependencies` or, with `relax`, sets
- * `additionalProperties: false`, the copy `derive()` makes without them. A user who has yet to fill in a key the
- * option requires is still matched to it. The `required`s are kept where nothing in the scope declares `properties`: an
- * option such as `{ required: ['email'] }` describes nothing else for the data to fit, and is chosen by the keys it
- * requires.
+ * where something in its scope states a `required`, lists names under `dependencies`, holds a part `partsCut()` names
+ * or, with `relax`, sets `additionalProperties: false`, the copy `derive()` makes without them, such a part read as
+ * `{}`. A user who has yet to fill in a key the option requires is still matched to it. The `required`s are kept where
+ * nothing in the scope declares `properties`: an option such as `{ required: ['email'] }` describes nothing else for
+ * the data to fit, and is chosen by the keys it requires.
  */
 function scoringTargetAt<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -574,8 +611,12 @@ function scoringTargetAt<S extends StrictRJSFSchema>(
     return targetOf(graph, id);
   }
   const scope = scopeOf(graph, id);
-  const loosening = { required: scope.some((member) => isObject(member.raw.properties)), additionalProperties: relax };
-  return place !== undefined && !scope.some((member) => loosens(member, loosening))
+  const loosening = {
+    required: scope.some((member) => isObject(member.raw.properties)),
+    additionalProperties: relax,
+    choices: true,
+  };
+  return place !== undefined && !scope.some((member) => loosens(graph, member, loosening))
     ? targetAt(graph, id, place)
     : derive(graph, node, place, loosening, new Set(), new Set());
 }
@@ -710,45 +751,195 @@ function childrenOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeI
 /** The keywords holding the subschemas `reachedFrom()` reaches */
 const REACHING_KEYWORDS = new Set([IF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY]);
 
+/** Returns whether the subschemas a node holds, see `childrenOf()`, include one `reachedFrom()` reaches: a choice the
+ * form makes on its own
+ */
+function holdsChoice(held: readonly [string[], NodeId][]): boolean {
+  return held.some(([tokens]) => REACHING_KEYWORDS.has(tokens[0]));
+}
+
+/** Returns the nodes the `$ref` of the node `id` names and the conjunction it reads as, see `ObjectNode.conjunction` */
+function refsOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): NodeId[] {
+  const node = graph.node(id);
+  return node.kind === 'schema' ? [node.ref, node.conjunction].filter((ref) => ref !== undefined) : [];
+}
+
+/** Returns the subschemas `held` lists, see `childrenOf()` */
+function heldNodes(held: readonly [string[], NodeId][]): NodeId[] {
+  return held.map(([, child]) => child);
+}
+
+/** The keywords holding subschemas a validator applies only where a `$ref` names one */
+const DEFINITIONS_KEYWORDS = new Set([DEFINITIONS_KEY, '$defs']);
+
+/** Returns the subschemas a validator checks the data against where it checks it against the node `id`, which holds
+ * `held`: those it holds, but for its definitions, and what `refsOf()` names
+ */
+function appliedNodes<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  held: readonly [string[], NodeId][],
+  id: NodeId,
+): NodeId[] {
+  return [...heldNodes(held.filter(([tokens]) => !DEFINITIONS_KEYWORDS.has(tokens[0]))), ...refsOf(graph, id)];
+}
+
+/** Returns `known` with the nodes of `graph` from `start` up that `isSeed` picks or that hold, however deep, one of
+ * those or of `known`, which lists the nodes below `start` that do; a node holds what `edgesOf` returns for it. A graph
+ * extending another adds nodes above the base's, and the base's never hold the new ones, so what was found for the base
+ * stands.
+ */
+function ancestorsOf<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  isSeed: (held: readonly [string[], NodeId][], id: NodeId) => boolean,
+  edgesOf: (held: readonly [string[], NodeId][], id: NodeId) => NodeId[],
+  known: ReadonlySet<NodeId> = new Set(),
+  start = 0,
+): ReadonlySet<NodeId> {
+  const found = new Set(known);
+  const leading: NodeId[] = [];
+  const parents = new Map<NodeId, NodeId[]>();
+  const reach = (id: NodeId) => {
+    if (!found.has(id)) {
+      found.add(id);
+      leading.push(id);
+    }
+  };
+  for (let id = start; id < graph.size; id += 1) {
+    const held = childrenOf(graph, id);
+    for (const child of edgesOf(held, id)) {
+      if (known.has(child)) {
+        reach(id);
+      }
+      const above = parents.get(child);
+      if (above === undefined) {
+        parents.set(child, [id]);
+      } else {
+        above.push(id);
+      }
+    }
+    if (isSeed(held, id)) {
+      reach(id);
+    }
+  }
+  // An array iterator reads the parents pushed while it runs
+  for (const id of leading) {
+    (parents.get(id) ?? []).forEach(reach);
+  }
+  return found;
+}
+
+/** A node `componentsOf()` has entered: the order it was entered in, the lowest order of a node still open that it
+ * holds however deep, and the nodes it holds that are left to follow
+ */
+interface Frame {
+  readonly id: NodeId;
+  readonly order: number;
+  low: number;
+  readonly next: NodeId[];
+}
+
+/** Returns, for each node of `graph` from `start` up, the node naming the strongly connected component it is in: two
+ * nodes share one where each holds the other however deep, as `appliedNodes()` reads holding. The nodes below
+ * `start` never hold the ones from it, so none of them shares a component with one.
+ */
+function componentsOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, start: NodeId): ReadonlyMap<NodeId, NodeId> {
+  const component = new Map<NodeId, NodeId>();
+  // Tarjan's algorithm, run on a stack of frames rather than by recursion, which a deep schema would overflow
+  const open = new Map<NodeId, number>();
+  const stack: NodeId[] = [];
+  const frames: Frame[] = [];
+  const enter = (id: NodeId) => {
+    const order = open.size + component.size;
+    open.set(id, order);
+    stack.push(id);
+    const next = appliedNodes(graph, childrenOf(graph, id), id);
+    frames.push({ id, order, low: order, next: next.filter((child) => child >= start) });
+  };
+  const leave = (frame: Frame) => {
+    frames.pop();
+    const parent = frames.at(-1);
+    if (parent !== undefined) {
+      parent.low = Math.min(parent.low, frame.low);
+    }
+    if (frame.low === frame.order) {
+      for (const member of stack.splice(stack.lastIndexOf(frame.id))) {
+        open.delete(member);
+        component.set(member, frame.id);
+      }
+    }
+  };
+  for (let root = start; root < graph.size; root += 1) {
+    if (!component.has(root)) {
+      enter(root);
+    }
+    for (let frame = frames.at(-1); frame !== undefined; frame = frames.at(-1)) {
+      const child = frame.next.pop();
+      const order = child === undefined ? undefined : open.get(child);
+      if (order !== undefined) {
+        frame.low = Math.min(frame.low, order);
+      } else if (child !== undefined) {
+        if (!component.has(child)) {
+          enter(child);
+        }
+      } else {
+        leave(frame);
+      }
+    }
+  }
+  return component;
+}
+
+/** The nodes `recursiveChoiceLeaders()` finds in each graph */
+const recursiveChoiceLeadersMemo = new KeyedMemo<ReadonlySet<NodeId>>();
+
+/** Returns whether the node `id`, holding the subschemas `held`, is a choice that validates the data below it more than
+ * once at each level it recurs at: two of its `anyOf`/`oneOf` options, or its `if` and its `then` or `else`, are in its
+ * component of `component`, holding it again. A `dependencies` schema applies whenever its key is present, as an
+ * `allOf` entry does, and the `oneOf` it may hold is a choice of its own.
+ */
+function branchesRecursively(
+  held: readonly [string[], NodeId][],
+  id: NodeId,
+  component: ReadonlyMap<NodeId, NodeId>,
+): boolean {
+  const recurring = held
+    .filter(([, child]) => component.get(child) === component.get(id))
+    .map(([[keyword]]) => keyword);
+  const options = recurring.filter((keyword) => keyword === ANY_OF_KEY || keyword === ONE_OF_KEY);
+  return (
+    options.length > 1 || (recurring.includes(IF_KEY) && (recurring.includes(THEN_KEY) || recurring.includes(ELSE_KEY)))
+  );
+}
+
+/** Returns the nodes of `graph` from which a validator reaches a recursive choice, see `branchesRecursively()`, however
+ * deep and through any `$ref` but not through definitions. Validating data against such a choice walks each of its
+ * recurring branches at every level of the data, which grows exponentially with the depth of the data where
+ * definitions offer each other as options. A choice with one recurring branch, such as a tree written as an `anyOf` of
+ * a leaf and a list of trees, or one that recurs nowhere, such as an OpenAPI nullable `anyOf` of a `$ref` and `null`,
+ * costs no more than the data below it.
+ *
+ * @param graph - The graph
+ * @returns - The nodes that lead to a recursive choice
+ */
+function recursiveChoiceLeaders<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>): ReadonlySet<NodeId> {
+  return recursiveChoiceLeadersMemo.get([graph], () => {
+    const start = graph.base?.size ?? 0;
+    const component = componentsOf(graph, start);
+    const holdsRecursiveChoice = (held: readonly [string[], NodeId][], id: NodeId) =>
+      branchesRecursively(held, id, component);
+    const base = graph.base === undefined ? undefined : recursiveChoiceLeaders(graph.base);
+    return ancestorsOf(graph, holdsRecursiveChoice, (held, id) => appliedNodes(graph, held, id), base, start);
+  });
+}
+
 /** Returns, for each node of the root `graph` that holds a subschema `reachedFrom()` reaches, or holds one that does
  * however deep, the subschemas it holds that do, see `childrenOf()`; a node that leads to none is left out
  */
 function childrenLeadingToTargets<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
 ): ReadonlyMap<NodeId, [string[], NodeId][]> {
-  const children = new Map<NodeId, [string[], NodeId][]>();
-  const parents = new Map<NodeId, NodeId[]>();
-  const leading: NodeId[] = [];
-  for (let id = 0; id < graph.size; id += 1) {
-    const held = childrenOf(graph, id);
-    children.set(id, held);
-    for (const [, child] of held) {
-      const known = parents.get(child);
-      if (known === undefined) {
-        parents.set(child, [id]);
-      } else {
-        known.push(id);
-      }
-    }
-    if (held.some(([tokens]) => REACHING_KEYWORDS.has(tokens[0]))) {
-      leading.push(id);
-    }
-  }
-  const found = new Set(leading);
-  // An array iterator reads the parents pushed while it runs
-  for (const id of leading) {
-    for (const parent of parents.get(id) ?? []) {
-      if (!found.has(parent)) {
-        found.add(parent);
-        leading.push(parent);
-      }
-    }
-  }
-  return new Map(
-    [...children]
-      .filter(([id]) => found.has(id))
-      .map(([id, held]) => [id, held.filter(([, child]) => found.has(child))]),
-  );
+  const found = ancestorsOf(graph, holdsChoice, heldNodes);
+  return new Map([...found].map((id) => [id, childrenOf(graph, id).filter(([, child]) => found.has(child))]));
 }
 
 /** Calls `visit` with each node of the root `graph` at every place the root holds it, below the root and below the
