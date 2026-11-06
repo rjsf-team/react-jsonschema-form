@@ -1,5 +1,5 @@
 import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from './constants.ts';
-import deepEquals from './deepEquals.ts';
+import enumOptionClaimer from './enumOptionClaimer.ts';
 import enumOptionValueLabel from './enumOptionValueLabel.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getPropertySchema from './getPropertySchema.ts';
@@ -12,47 +12,21 @@ import toConstant from './toConstant.ts';
 import type { RJSFSchema, EnumOptionsType, EnumValue, StrictRJSFSchema, FormContextType, UiSchema } from './types.ts';
 
 /** Reorders `options` according to `order`, which may contain a `'*'` wildcard representing all
- * remaining options in their original order. Options not listed in `order` (and not covered by
- * a wildcard) are dropped.
+ * remaining options in their original order, listed at the first `'*'` only. Options not listed in `order` (and not
+ * covered by a wildcard) are dropped. An `order` that isn't a list leaves them as they are.
  */
 function applyEnumOrder<S extends StrictRJSFSchema = RJSFSchema>(
   options: EnumOptionsType<S>[],
-  order: (EnumValue | null)[],
+  order?: EnumValue[],
 ): EnumOptionsType<S>[] {
-  // Built from the last option back, so the first of any options sharing a key is the one found
-  const primitiveOptions = options.filter((opt) => !isContainerValue(opt.value)).reverse();
-  const optionsByValue = new Map(primitiveOptions.map((opt) => [opt.value, opt]));
-  const optionsByString = new Map(primitiveOptions.map((opt) => [String(opt.value), opt]));
-  const findOption = (entry: unknown) => {
-    if (entry === '*') {
-      return undefined;
-    }
-    // `String()` spells every object `[object Object]`, so an object or array entry is found by deep equality instead
-    if (isContainerValue(entry)) {
-      return options.find((opt) => deepEquals(opt.value, entry));
-    }
-    // An option equal to the entry wins over one that only shares its string, as `'1'` does `1`'s
-    return optionsByValue.get(entry) ?? optionsByString.get(String(entry));
-  };
-  const listed = new Set<EnumOptionsType<S>>();
-  // An option several entries find is listed at the first of them only, so it isn't rendered twice
-  const orderedOptions = order.map((entry) => {
-    const opt = findOption(entry);
-    if (!opt || listed.has(opt)) {
-      return undefined;
-    }
-    listed.add(opt);
-    return opt;
-  });
-  const rest = options.filter((opt) => !listed.has(opt));
+  if (!Array.isArray(order)) {
+    return options;
+  }
+  const { claim, unclaimed } = enumOptionClaimer(options);
+  const claimedOptions = order.map((entry) => (entry === '*' ? undefined : claim(entry)));
+  const wildcardIndex = order.indexOf('*');
 
-  return order.flatMap((entry, index) => {
-    if (entry === '*') {
-      return rest;
-    }
-    const opt = orderedOptions[index];
-    return opt ? [opt] : [];
-  });
+  return claimedOptions.flatMap((option, index) => (index === wildcardIndex ? unclaimed() : (option ?? [])));
 }
 
 /** Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned,
@@ -94,15 +68,12 @@ export default function optionsList<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   if (schema.enum) {
     const { enumNames, enumOrder } = uiOptions;
-    let options: EnumOptionsType<S>[] = schema.enum.map((value, i) => {
+    const options: EnumOptionsType<S>[] = schema.enum.map((value, i) => {
       // A map is keyed by strings, which can't name an object or array value
       const name = Array.isArray(enumNames) ? enumNames[i] : !isContainerValue(value) && enumNames?.[String(value)];
       return { label: name || unnamedLabel(value), value };
     });
-    if (enumOrder) {
-      options = applyEnumOrder(options, enumOrder);
-    }
-    return options;
+    return applyEnumOrder(options, enumOrder);
   }
   const xxxOfKey = getXxxOfKey<S>(schema);
   const altSchemas: S['anyOf'] | S['oneOf'] = xxxOfKey && schema[xxxOfKey];
@@ -148,7 +119,7 @@ export default function optionsList<
   // shortcut: not applied once an option is read through a selector, since `LayoutMultiSchemaField` reads an option's
   // uiSchema at its position in this list; drop the `readsSelector` check once it looks the option up by its position
   // in the schema instead
-  return options && enumOrder && !altSchemas?.some((option) => readsSelector(option as S))
+  return options && !altSchemas?.some((option) => readsSelector(option as S))
     ? applyEnumOrder(options, enumOrder)
     : options;
 }

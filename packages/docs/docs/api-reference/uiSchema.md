@@ -613,6 +613,7 @@ The `ui:emptyValue` uiSchema directive provides the value to store whenever a fi
 ### enumDisabled
 
 To disable an option, use the `enumDisabled` property in uiSchema.
+A primitive value matches strictly, and an object or array value by deep equality.
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -655,6 +656,10 @@ const uiSchemaMap: UiSchema = {
 ### enumOrder
 
 Controls the display order of enum options. Use `'*'` to represent remaining values in their original schema order. Unlisted values not covered by `'*'` are dropped.
+
+An entry matches the enum value equal to it. Failing that, an object or array entry matches one deeply equal to it, and a primitive entry one sharing its string form, so `'1'` matches the enum value `1`.
+Each enum value goes to the first entry that finds it, and an entry takes the next value not yet found, so `['1', '1']` over the enum `[1, '1']` lists `'1'` and then `1`.
+Only the first `'*'` lists the remaining values, and a `ui:enumOrder` that isn't a list is ignored.
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
@@ -828,10 +833,9 @@ Keys are the group labels, values are arrays of enum values belonging to that gr
 Any enum values not listed in a group are rendered ungrouped after the groups. This is supported by every `@rjsf` theme package.
 
 A value in a group matches the enum entry it is equal to.
-Primitive values also match by their string form, the same way `ui:enumOrder` does, so `'1'` groups the enum value `1`.
-Object and array enum values can't be grouped from a JSON-authored uiSchema, since a value only matches that very same object.
+Object and array values also match by deep equality, and primitive values by their string form, the same way `ui:enumOrder` does, so `'1'` groups the enum value `1`.
 Values that match no enum entry are ignored, and a group with no matching entries is not rendered.
-`ui:enumDisabled`, which often sits beside `optgroups` in the same `ui:options` block, does not share that string-form fallback — it matches enum values strictly.
+`ui:enumDisabled`, which often sits beside `optgroups` in the same `ui:options` block, does not share that string-form fallback — it matches primitive enum values strictly.
 So for the enum `[1, 2, 3]`, `{ enumDisabled: ['2'], optgroups: { Low: ['1', '2'] } }` groups `2` but leaves it selectable; write the enum's own value (`2`) in `enumDisabled`.
 
 Groups render in the object's property order. JavaScript always places integer-like keys (such as `'2024'`) first, in ascending numeric order, ahead of every other key no matter where they were written.

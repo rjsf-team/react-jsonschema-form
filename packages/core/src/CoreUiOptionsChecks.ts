@@ -23,6 +23,14 @@ type NonBuiltInObject = object & {
   [Symbol.split]?: never;
 };
 
+/** @internal The options of a field an `enum` or `oneOf`/`anyOf` of constants renders as a select, radio or checkboxes */
+interface EnumUiOptions {
+  enumDisabled?: EnumValue[];
+  enumNames?: string[] | Record<string | number, string>;
+  enumOrder?: EnumValue[];
+  optgroups?: Record<string, EnumValue[]>;
+}
+
 /** The `{ when, then }` rules describing which of `@rjsf/core`'s built-in widgets, fields and `ui:options` are valid
  * for each of the JSON Schema primitive types, based on the shape of the corresponding form-data field. Pass it as
  * `StrictUiSchema`'s `Checks` type parameter to narrow `ui:widget`/`ui:field`/`ui:options` to `@rjsf/core`'s own
@@ -69,11 +77,7 @@ export type CoreUiOptionsChecks =
         hideNowButton?: boolean;
         yearsRange?: readonly [number, number];
         inline?: boolean;
-        enumDisabled?: EnumValue[];
-        enumNames?: string[] | Record<string | number, string>;
-        enumOrder?: (EnumValue | null)[];
-        optgroups?: Record<string, EnumValue[]>;
-      }
+      } & EnumUiOptions
     >
   | UiOptionsCheck<
       number,
@@ -98,11 +102,7 @@ export type CoreUiOptionsChecks =
         shape?: 'star' | 'heart';
         stars?: number;
         inline?: boolean;
-        enumDisabled?: EnumValue[];
-        enumNames?: string[] | Record<string | number, string>;
-        enumOrder?: (EnumValue | null)[];
-        optgroups?: Record<string, EnumValue[]>;
-      }
+      } & EnumUiOptions
     >
   | UiOptionsCheck<
       boolean,
@@ -112,11 +112,7 @@ export type CoreUiOptionsChecks =
         placeholder?: string;
         emptyValue?: boolean;
         inline?: boolean;
-        enumDisabled?: EnumValue[];
-        enumNames?: string[] | Record<string | number, string>;
-        enumOrder?: (EnumValue | null)[];
-        optgroups?: Record<string, EnumValue[]>;
-      }
+      } & EnumUiOptions
     >
   | UiOptionsCheck<
       null,
@@ -153,11 +149,7 @@ export type CoreUiOptionsChecks =
         filePreview?: boolean;
         placeholder?: string;
         emptyValue?: unknown[];
-        enumDisabled?: EnumValue[];
-        enumNames?: string[] | Record<string | number, string>;
-        enumOrder?: (EnumValue | null)[];
-        optgroups?: Record<string, EnumValue[]>;
-      }
+      } & EnumUiOptions
     >
   | UiOptionsCheck<
       NonBuiltInObject,
@@ -172,7 +164,9 @@ export type CoreUiOptionsChecks =
         expandable?: boolean;
         optionsSchemaSelector?: string;
         order?: string[];
-      }
+        // A map's keys are strings, which `optionsList()` can't match to an object value
+        enumNames?: string[];
+      } & EnumUiOptions
     >
   | UiOptionsCheck<
       unknown,

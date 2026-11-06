@@ -1,5 +1,5 @@
+import enumOptionClaimer from './enumOptionClaimer.ts';
 import enumOptionsIsDisabled from './enumOptionsIsDisabled.ts';
-import isContainerValue from './isContainerValue.ts';
 import type {
   EnumOptionsGroupType,
   EnumOptionsType,
@@ -28,10 +28,10 @@ import type {
  * ahead of all other keys, in ascending numeric order, regardless of the order they were written in, so those groups
  * come first.
  *
- * A group value matches an option whose `value` is equal to it. Failing that, primitive values also match by their
- * string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since uiSchemas authored as
- * JSON often stringify them. Object and array enum values only match the very same object, so a JSON-authored
- * uiSchema can't group them.
+ * A group value matches an option whose `value` is equal to it. Failing that, an object or array value matches one
+ * deeply equal to it, and a primitive value one sharing its string form (so `'1'` groups the enum value `1`), the same
+ * way `ui:enumOrder` does, since uiSchemas authored as JSON can't hold the schema's own objects and often stringify
+ * primitives.
  *
  * @param enumOptions - The available enum options
  * @param [optgroups] - The `ui:options.optgroups` mapping of group label to the enum values it contains
@@ -55,43 +55,13 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
     return indexed;
   }
 
-  const byValue = new Map<unknown, IndexedEnumOptionType<S>[]>();
-  const byString = new Map<string, IndexedEnumOptionType<S>[]>();
-  const append = <K>(map: Map<K, IndexedEnumOptionType<S>[]>, key: K, option: IndexedEnumOptionType<S>) => {
-    const existing = map.get(key);
-    if (existing) {
-      existing.push(option);
-    } else {
-      map.set(key, [option]);
-    }
-  };
-  indexed.forEach((option) => {
-    append(byValue, option.value, option);
-    if (!isContainerValue(option.value)) {
-      append(byString, String(option.value), option);
-    }
-  });
-
-  const claimedIndices = new Set<number>();
-  const findUnclaimed = (candidates: IndexedEnumOptionType<S>[] | undefined) =>
-    candidates?.find((candidate) => !claimedIndices.has(candidate.index));
-  const findOption = (value: unknown) =>
-    findUnclaimed(byValue.get(value)) ??
-    (isContainerValue(value) ? undefined : findUnclaimed(byString.get(String(value))));
-
+  const { claim, unclaimed } = enumOptionClaimer(indexed);
   const groups: EnumOptionsGroupType<S>[] = Object.entries(optgroups)
-    .map(([label, values]) => {
-      const options = (Array.isArray(values) ? values : []).flatMap((value) => {
-        const option = findOption(value);
-        if (option) {
-          claimedIndices.add(option.index);
-        }
-        return option ? [option] : [];
-      });
-      return { label, options };
-    })
+    .map(([label, values]) => ({
+      label,
+      options: (Array.isArray(values) ? values : []).flatMap((value) => claim(value) ?? []),
+    }))
     .filter((group) => group.options.length > 0);
-  const ungrouped = indexed.filter((option) => !claimedIndices.has(option.index));
 
-  return [...groups, ...ungrouped];
+  return [...groups, ...unclaimed()];
 }

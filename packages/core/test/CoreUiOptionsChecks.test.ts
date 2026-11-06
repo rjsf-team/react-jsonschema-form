@@ -220,7 +220,7 @@ describe('CoreUiOptionsChecks', () => {
   it('offers the enum options, optgroups included, on every type whose widgets read them', () => {
     type Checked = StrictUiSchema<
       CoreUiOptionsChecks,
-      { pet: string; rank: number; agree: boolean; tags: string[]; home: { city: string } }
+      { pet: string; rank: number; agree: boolean; tags: string[]; home: { city: string }; nothing: null }
     >;
 
     const ui: Checked = {
@@ -228,14 +228,27 @@ describe('CoreUiOptionsChecks', () => {
       rank: { 'ui:options': { optgroups: { Low: [1, 2] } } },
       agree: { 'ui:options': { optgroups: { Answers: [true, false] } } },
       tags: { 'ui:options': { optgroups: { Colors: ['red'] } } },
+      home: {
+        'ui:options': {
+          enumDisabled: [{ city: 'Rome' }],
+          enumNames: ['Oslo', 'Rome'],
+          enumOrder: [{ city: 'Oslo' }, '*'],
+          optgroups: { North: [{ city: 'Oslo' }] },
+        },
+      },
     };
-    const badOnObject: Checked = {
-      // @ts-expect-error `optgroups` is an enum option; an object field never renders a select
-      home: { 'ui:options': { optgroups: { Any: ['x'] } } },
+    const badOnNull: Checked = {
+      // @ts-expect-error `optgroups` is an enum option; a null field has no options to group
+      nothing: { 'ui:options': { optgroups: { Any: ['x'] } } },
+    };
+    const badNamesOnObject: Checked = {
+      // @ts-expect-error a map's keys are strings, which can't name an object value
+      home: { 'ui:options': { enumNames: { Oslo: 'North' } } },
     };
 
     expect(ui.pet?.['ui:options']?.optgroups).toEqual({ Mammals: ['cat', 'dog'], Birds: ['parrot'] });
-    expect(badOnObject).toBeDefined();
+    expect(badOnNull).toBeDefined();
+    expect(badNamesOnObject).toBeDefined();
   });
 
   it('narrows a readonly array field and does not mistake a length-bearing object for an array', () => {
