@@ -70,7 +70,7 @@ export default function getUiOptions<
           options[name] = option;
         } else if (option !== undefined) {
           logOnce(
-            `ui:options.${name} is ignored, since ${name} can only be set through ui:${name}. A custom widget's own option needs another name.`,
+            `ui:options.${name} is ignored, since ${name} can only be set through ui:${name}${FORM_KEYS.includes(`ui:${name}`) ? ' on the root uiSchema' : ''}. A custom widget's own option needs another name.`,
           );
         }
       }

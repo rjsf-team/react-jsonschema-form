@@ -151,12 +151,17 @@ describe('getUiOptions()', () => {
     const warnings = setupConsoleWarnSuppression();
 
     // Untyped, as a JSON uiSchema is, since the type rejects these
-    it.each(['field', 'fieldReplacesAnyOrOneOf', 'definitions', 'globalOptions'])('ignores %s and warns', (name) => {
+    it.each([
+      ['field', ''],
+      ['fieldReplacesAnyOrOneOf', ''],
+      ['definitions', ' on the root uiSchema'],
+      ['globalOptions', ' on the root uiSchema'],
+    ])('ignores %s and warns', (name, where) => {
       const given: GenericObjectType = { 'ui:options': { [name]: 'given', inline: true } };
 
       expect(getUiOptions(given)).toEqual({ inline: true });
       expect(warnings.consoleSpy).toHaveBeenCalledExactlyOnceWith(
-        `ui:options.${name} is ignored, since ${name} can only be set through ui:${name}. A custom widget's own option needs another name.`,
+        `ui:options.${name} is ignored, since ${name} can only be set through ui:${name}${where}. A custom widget's own option needs another name.`,
       );
     });
     it.each<[string, GenericObjectType]>([

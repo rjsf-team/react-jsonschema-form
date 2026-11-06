@@ -48,6 +48,25 @@ describe('pickGlobalUiOptions()', () => {
       'globalUiOptionsKeys names enumOptions, an option RJSF reads per field, so it is not read from ui:globalOptions.',
     );
   });
+  it.each(['definitions', 'globalOptions'])(
+    'drops an extension key named %s, which only the root uiSchema sets, and says so',
+    (name) => {
+      const given: GenericObjectType = { label: false, [name]: {} };
+
+      expect(pickGlobalUiOptions(given, [name])).toEqual({ label: false });
+      expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
+        `globalUiOptionsKeys names ${name}, which no field could override since only the root uiSchema's ui:${name} sets it, so it is not read from ui:globalOptions.`,
+      );
+    },
+  );
+  it.each(['definitions', 'globalOptions'])('says only the root uiSchema sets an undeclared %s', (name) => {
+    const given: GenericObjectType = { [name]: {} };
+
+    expect(pickGlobalUiOptions(given)).toEqual({});
+    expect(consoleWarnSpy).toHaveBeenCalledExactlyOnceWith(
+      `ui:globalOptions.${name} is not read: only the root uiSchema's ui:${name} sets ${name}.`,
+    );
+  });
   it('warns once about each option RJSF reads per field that the options hold', () => {
     pickGlobalUiOptions(globalOptions);
     pickGlobalUiOptions(globalOptions);

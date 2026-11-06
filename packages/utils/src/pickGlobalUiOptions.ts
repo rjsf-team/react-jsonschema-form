@@ -5,6 +5,8 @@ import type { GenericObjectType, GlobalUISchemaOptions } from './types.ts';
 
 const GLOBAL_NAMES: ReadonlySet<string> = new Set(GLOBAL_UI_OPTIONS_KEYS);
 const RESERVED_NAMES: ReadonlySet<string> = new Set(RESERVED_UI_OPTION_NAMES);
+/** The reserved names RJSF doesn't read per field: only the root uiSchema's `ui:` spelling of each sets it */
+const ROOT_ONLY_NAMES: ReadonlySet<string> = new Set(['definitions', 'globalOptions']);
 
 /** Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which
  * `GLOBAL_UI_OPTIONS_KEYS` lists, and the extension keys the form's theme and the `Form` itself declare. Every other key
@@ -36,7 +38,9 @@ export default function pickGlobalUiOptions(
   for (const key of extensionKeys.filter((extensionKey) => !GLOBAL_NAMES.has(extensionKey))) {
     if (RESERVED_NAMES.has(key)) {
       logOnce(
-        `globalUiOptionsKeys names ${key}, an option RJSF reads per field, so it is not read from ui:globalOptions.`,
+        ROOT_ONLY_NAMES.has(key)
+          ? `globalUiOptionsKeys names ${key}, which no field could override since only the root uiSchema's ui:${key} sets it, so it is not read from ui:globalOptions.`
+          : `globalUiOptionsKeys names ${key}, an option RJSF reads per field, so it is not read from ui:globalOptions.`,
       );
     } else if (Object.hasOwn(globals, key)) {
       picked[key] = globals[key];
@@ -44,7 +48,11 @@ export default function pickGlobalUiOptions(
   }
   for (const key of Object.keys(globals)) {
     if (RESERVED_NAMES.has(key) && !GLOBAL_NAMES.has(key) && !extensionKeys.includes(key)) {
-      logOnce(`ui:globalOptions.${key} is not read: RJSF reads ${key} per field only.`);
+      logOnce(
+        ROOT_ONLY_NAMES.has(key)
+          ? `ui:globalOptions.${key} is not read: only the root uiSchema's ui:${key} sets ${key}.`
+          : `ui:globalOptions.${key} is not read: RJSF reads ${key} per field only.`,
+      );
     }
   }
   return picked;
