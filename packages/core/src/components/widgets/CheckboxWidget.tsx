@@ -50,6 +50,10 @@ function CheckboxWidget<
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.checked),
@@ -94,6 +98,7 @@ function CheckboxWidget<
           name={htmlName || id}
           checked={Boolean(value)}
           required={trueValueRequired}
+          aria-required={(marksRequired && !trueValueRequired) || undefined}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onChange={handleChange}
@@ -104,7 +109,7 @@ function CheckboxWidget<
         {labelValue(
           <span>
             {label}
-            {trueValueRequired && <span className='rjsf-required'>*</span>}
+            {marksRequired && <span className='rjsf-required'>*</span>}
           </span>,
           !showsLabel,
         )}

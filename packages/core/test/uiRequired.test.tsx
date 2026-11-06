@@ -284,6 +284,52 @@ describe('ui:required enforcement', () => {
       await expectSubmitBlocked(schema, { c: { oneOf: [uiSchema.c as UiSchema, {}] } }, { c: [] });
     });
 
+    it("blocks a submit with no box checked, on a group an option renders under the field's own `ui:required`", async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          c: {
+            title: 'Colors',
+            oneOf: [
+              { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+              { title: 'B', type: 'number' },
+            ],
+          },
+        },
+      };
+      await expectSubmitBlocked(
+        schema,
+        { c: { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] } },
+        { c: [] },
+      );
+    });
+
+    it("submits `[]` from a group a nested option shows, which the field's own `ui:required` doesn't reach", async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            c: {
+              title: 'Colors',
+              oneOf: [
+                {
+                  oneOf: [
+                    { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+                    { type: 'string' },
+                  ],
+                },
+                { title: 'B', type: 'number' },
+              ],
+            },
+          },
+        },
+        uiSchema: { c: { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] } },
+        initialFormData: { c: [] },
+      });
+      await submitForm(node, user);
+      expect(onSubmit).toHaveBeenCalled();
+    });
+
     it('submits under an untyped option whose `ui:required` it has no control to answer', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: {

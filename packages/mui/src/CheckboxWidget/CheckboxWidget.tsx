@@ -60,6 +60,10 @@ export default function CheckboxWidget<
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
 
   const handleChange: NonNullable<CheckboxProps['onChange']> = (_, checked) => onChange(checked);
   const handleBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
@@ -82,7 +86,7 @@ export default function CheckboxWidget<
       <FormControlLabel
         {...otherMuiProps}
         {...muiSlotProps?.formControlLabel}
-        required={trueValueRequired && templateMarksRequired<T, S, F>(props)}
+        required={marksRequired && templateMarksRequired<T, S, F>(props)}
         control={
           <Checkbox
             id={id}
@@ -99,6 +103,7 @@ export default function CheckboxWidget<
             slotProps={withInputSlot(
               {
                 required: muiSlotProps?.checkbox?.required ?? trueValueRequired,
+                'aria-required': (marksRequired && !trueValueRequired) || undefined,
                 ...getControlAttributes<T, S, F>({ id, presentation }),
               },
               muiSlotProps?.checkbox?.slotProps,

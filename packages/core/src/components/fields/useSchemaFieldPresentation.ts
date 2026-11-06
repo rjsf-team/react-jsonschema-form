@@ -348,7 +348,8 @@ export default function useSchemaFieldPresentation<
   ]);
   // A field rendering its options is required as the option shown is, since that option's control holds its value. An
   // option holding nothing fails the form whatever its control accepts left alone, as a checkbox just switched to does,
-  // which nothing seeds a `false` for
+  // which nothing seeds a `false` for, and so does a field its own `ui:required` asks of, whether or not its parent is
+  // there, which the schema's `required` only demands where it is
   const holdsNoValue = formData === undefined;
   const controlRequired = useMemo(() => {
     // An option drawing the unsupported-field template has no control to answer its own `ui:required` with, and the field
@@ -357,7 +358,8 @@ export default function useSchemaFieldPresentation<
       return (
         required &&
         !(rendersUnsupportedTemplate && inherited !== undefined) &&
-        demandsAnswer<T, S, F>(declaration, schema, uiSchema, registry)
+        ((holdsNoValue && uiBooleanOption(getUiOptions<T, S, F>(uiSchema).required) === true) ||
+          demandsAnswer<T, S, F>(declaration, schema, uiSchema, registry))
       );
     }
     const { field: optionField, schema: optionSchema, uiSchema: optionUiSchema } = shownOptionField;

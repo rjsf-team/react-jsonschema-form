@@ -44,6 +44,10 @@ export default function CheckboxWidget<
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.checked);
   const description = getWidgetDescription<T, S, F>(props);
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
   const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
 
   return (
@@ -62,12 +66,11 @@ export default function CheckboxWidget<
         name={htmlName || id}
         // Fluent marks the label by the checkbox's `required` unless the label's slot says otherwise
         label={
-          hideLabel
-            ? undefined
-            : { children: label, required: trueValueRequired && templateMarksRequired<T, S, F>(props) }
+          hideLabel ? undefined : { children: label, required: marksRequired && templateMarksRequired<T, S, F>(props) }
         }
         checked={typeof value === 'undefined' ? false : Boolean(value)}
         required={trueValueRequired}
+        aria-required={(marksRequired && !trueValueRequired) || undefined}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         onChange={handleChange}

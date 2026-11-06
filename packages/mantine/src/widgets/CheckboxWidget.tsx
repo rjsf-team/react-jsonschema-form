@@ -41,6 +41,10 @@ export default function CheckboxWidget<
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = props.presentation?.control ? required : trueValueRequired;
   const handleCheckboxChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (!disabled && !readonly && onChange) {
@@ -81,7 +85,7 @@ export default function CheckboxWidget<
           !hideLabel && label ? (
             <>
               {label}
-              {trueValueRequired && templateMarksRequired<T, S, F>(props) && <span className='required'>*</span>}
+              {marksRequired && templateMarksRequired<T, S, F>(props) && <span className='required'>*</span>}
             </>
           ) : (
             labelValue(label || undefined, hideLabel, false)
@@ -89,6 +93,7 @@ export default function CheckboxWidget<
         }
         disabled={disabled || readonly}
         required={trueValueRequired}
+        aria-required={(marksRequired && !trueValueRequired) || undefined}
         autoFocus={autofocus}
         checked={Boolean(value)}
         onChange={handleCheckboxChange}

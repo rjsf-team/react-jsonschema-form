@@ -129,6 +129,33 @@ export function requiredCueTests(
       expect(countMarkers(container)).toBe(1);
     });
 
+    it('shows one marker on a checkbox with its own `ui:required`, which nothing seeds a value for', () => {
+      const container = renderForm(
+        { type: 'object', properties: { b: { type: 'boolean', title: 'B' } } },
+        { b: { 'ui:required': true } },
+      );
+      expect(countMarkers(container)).toBe(1);
+      // RJSF's own check reports it, so the browser's doesn't stop the submit first, while a screen reader is told
+      expect(container.querySelector('[required]:not([aria-hidden="true"])')).toBeNull();
+      expect(container.querySelector('[aria-required="true"]')).not.toBeNull();
+    });
+
+    it('marks nothing on a schema-required checkbox holding no value under a parent the data leaves out', () => {
+      const { container } = render(
+        <Form
+          schema={{
+            type: 'object',
+            properties: { o: { type: 'object', required: ['b'], properties: { b: { type: 'boolean', title: 'B' } } } },
+          }}
+          defaultFormStateBehavior={{ emptyObjectFields: 'skipDefaults' }}
+          validator={validator}
+        />,
+      );
+      expect(screen.getByRole('checkbox', { name: 'B' })).toBeInTheDocument();
+      expect(countMarkers(container)).toBe(0);
+      expect(requiredIds(container)).toEqual([]);
+    });
+
     it("shows no marker where the option's `ui:required` turns it off", () => {
       const container = renderForm(withOption({ title: 'A', type: 'string' }), {
         pet: { oneOf: [{ 'ui:required': false }, {}] },
@@ -232,6 +259,48 @@ export function requiredCueTests(
         ['`ui:required` on an optional field', asOption({}, []), { 'ui:required': true }],
       ])('shows one marker with %s', (_, schema, uiOptions) => {
         expect(countMarkers(renderOption(schema, uiOptions))).toBe(1);
+      });
+
+      it("says so where the field's own `ui:required` asks for it", () => {
+        const { container } = render(
+          <Form
+            schema={asOption({}, [])}
+            uiSchema={{ c: { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] } }}
+            initialFormData={{ c: [] }}
+            validator={validator}
+          />,
+        );
+        expect(screen.getByRole('group', { name: 'Colors required' })).toBeInTheDocument();
+        expect(countMarkers(container)).toBe(1);
+      });
+
+      // The `ui:required` check reads the option shown, not the options it renders in turn, so `[]` passes there
+      it("says nothing on a group a nested option shows under the field's own `ui:required`", () => {
+        render(
+          <Form
+            schema={{
+              type: 'object',
+              properties: {
+                c: {
+                  title: 'Colors',
+                  oneOf: [
+                    {
+                      oneOf: [
+                        { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+                        { type: 'string' },
+                      ],
+                    },
+                    OTHER_OPTION,
+                  ],
+                },
+              },
+            }}
+            uiSchema={{ c: { 'ui:required': true, oneOf: [{ oneOf: [{ 'ui:widget': 'checkboxes' }, {}] }, {}] } }}
+            initialFormData={{ c: [] }}
+            validator={validator}
+          />,
+        );
+        expect(screen.getByRole('group', { name: 'Colors' })).toBeInTheDocument();
       });
     });
 

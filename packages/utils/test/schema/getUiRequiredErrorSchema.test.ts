@@ -1449,6 +1449,21 @@ describe('getUiRequiredErrorSchema()', () => {
       expect(errorsFor(schema, { oneOf: [checkboxes, {}] }, { c: [] })).toEqual(missing);
     });
 
+    it("reports `[]` on a group an option renders, from the field's own `ui:required`", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { c: { oneOf: [colors, { type: 'string' }] } } };
+      const field: UiSchema = { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] };
+      expect(errorsFor(schema, field, { c: [] })).toEqual(missing);
+    });
+
+    it("lets `[]` through on an option rendering options of its own, which the field's `ui:required` doesn't reach", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { c: { oneOf: [{ oneOf: [colors, { type: 'string' }] }, { type: 'number' }] } },
+      };
+      const field: UiSchema = { 'ui:required': true, oneOf: [{ 'ui:widget': 'checkboxes' }, {}] };
+      expect(errorsFor(schema, field, { c: [] })).toEqual([]);
+    });
+
     it('leaves `[]` to the validator where the option shown has a `minItems`', () => {
       const schema: RJSFSchema = {
         type: 'object',

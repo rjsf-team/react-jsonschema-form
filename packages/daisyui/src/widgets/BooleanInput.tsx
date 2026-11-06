@@ -113,6 +113,9 @@ export default function BooleanInput<
       // before RJSF validates or calls `onSubmit` or `onError`, for every optional-in-effect boolean a parent merely
       // lists as required
       required={trueValueRequired}
+      // Where its plan requires a box whose `false` the schema accepts, which `ui:required` asks of while it holds no value,
+      // RJSF's own check reports it rather than the browser's, and `aria-required` tells a screen reader of it
+      aria-required={(presentation?.control !== undefined && required && !trueValueRequired) || undefined}
       disabled={disabled || readonly}
       autoFocus={autofocus}
       onChange={handleChange}

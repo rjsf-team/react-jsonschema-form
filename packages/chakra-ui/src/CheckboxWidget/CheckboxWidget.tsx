@@ -1,6 +1,6 @@
 import type { FocusEvent } from 'react';
 import type { CheckboxCheckedChangeDetails } from '@chakra-ui/react';
-import { Field as ChakraField, Text } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
   getControlAttributes,
@@ -14,7 +14,7 @@ import {
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
-import { Field } from '../components/ui/field.tsx';
+import { Field, RequiredMarker } from '../components/ui/field.tsx';
 import { getChakra, isInputElement, labelledByOrNone } from '../utils.ts';
 
 export default function CheckboxWidget<
@@ -47,6 +47,10 @@ export default function CheckboxWidget<
   const description =
     presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
+  // The label is marked as a plan's `required` says, which takes in a box `ui:required` asks of that holds no value
+  // yet, while the box is natively required only where the schema demands `true`, as RJSF's own check covers the rest
+  // and `aria-required` tells a screen reader of, as the marker is hidden from it
+  const marksRequired = presentation?.control ? required : trueValueRequired;
 
   const handleChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
   const handleBlur = ({ target }: FocusEvent<HTMLElement>) =>
@@ -81,12 +85,13 @@ export default function CheckboxWidget<
           ...controlAttributes,
           'aria-labelledby': labelledByOrNone(controlAttributes['aria-labelledby'], drawsLabel),
           autoFocus: autofocus,
+          'aria-required': (marksRequired && !trueValueRequired) || undefined,
         }}
       >
         {drawsLabel ? (
           <Text>
             {label}
-            {trueValueRequired && templateMarksRequired<T, S, F>(props) && <ChakraField.RequiredIndicator />}
+            {marksRequired && templateMarksRequired<T, S, F>(props) && <RequiredMarker />}
           </Text>
         ) : undefined}
       </Checkbox>

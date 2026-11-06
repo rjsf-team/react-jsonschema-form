@@ -280,12 +280,15 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return;
   }
   // The option's `ui:required` is read here and not above, which reads the field's, since an option is never walked as a
-  // node of its own. A group of checkboxes holds `[]` with no box checked, whether seeded or left by unchecking the last
-  // box, which the validator accepts unless a `minItems` has it report this itself. The group says it is required, so
-  // `[]` can't pass
+  // node of its own; an option leaving it unset takes the field's, unless it renders options of its own, which
+  // `@rjsf/core` hands nothing on to. A group of checkboxes holds `[]` with no box checked,
+  // whether seeded or left by unchecking the last box, which the validator accepts unless a `minItems` has it report
+  // this itself. The group says it is required, so `[]` can't pass
   // shortcut: a theme's declarations don't reach this walk, so only the built-in's names count, not a widget of your own
   // declared `uncheckedIsEmpty` or given as a component; hand the walk the form's presentation if one is reported
-  if (path.length > 0 && uiBooleanOption(branchUiRequired) === true) {
+  const optionUiRequired =
+    uiBooleanOption(branchUiRequired) ?? (getXxxOfOptions<S>(retrieved) ? undefined : fieldUiRequired);
+  if (path.length > 0 && optionUiRequired === true) {
     const isUnanswered =
       formData === undefined
         ? fieldUiRequired !== true &&
