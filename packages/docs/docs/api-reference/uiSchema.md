@@ -50,6 +50,7 @@ Be sure to pay attention to the hierarchical intersection to these other types: 
 ## Exceptions to the equivalence
 
 There are 4 properties that exist in a `UiSchema` that will not be found in an inner `ui:options` object.
+One given in `ui:options` is ignored, with a console warning.
 
 ### `ui:globalOptions`
 
@@ -66,7 +67,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-The `GlobalUISchemaOptions` type takes a `UserExtensions` parameter for options your own widgets, fields and templates read, whose keys may not reuse an option name RJSF reads for a field.
+The `GlobalUISchemaOptions` type takes a `UserExtensions` parameter for options your own widgets, fields and templates read, whose keys may not reuse an option name RJSF reads for a field, or `definitions` or `globalOptions`, which only the root uiSchema's `ui:` keys set.
 Declare the options against it, then hand them to the uiSchema, and name their keys in the `Form`'s [`globalUiOptionsKeys`](form-props.md#globaluioptionskeys) prop, so every field hands them to its widget in its `options`, beneath the field's own, and a template reads them with `getUiOptions(uiSchema, registry.globalUiOptions)`:
 
 ```tsx
@@ -195,11 +196,13 @@ Specify either the name of a field that is used to look up an implementation fro
 
 See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md#custom-field-components) for more information about how to use this property.
 
+A custom field named by `ui:field` isn't handed the select `SchemaField` infers for a boolean with labelled `oneOf`/`anyOf` options, so one that renders `BooleanField` sets `ui:widget: 'select'` itself to keep it.
+
 A field's own `ui:field` comes first, then a field registered under the schema's [`$id`](../advanced-customization/custom-widgets-fields.md#custom-field-by-id).
 The field they name is applied once per data path: a `SchemaField` the named field renders for its own data, and the selected `anyOf`/`oneOf` option, render as though no field were named, the option's own `ui:field` or `$id` included.
 The field's own `SchemaField` renders the extra key's input and remove button and the `anyOf`/`oneOf` option selector around the named field, and a `SchemaField` the named field renders for its own data renders none of them again.
 It draws the label, description and help the named field's [plan](form-props.md#presentation) hands down to it, so each renders once: a custom field draws its own label and description unless its `presentation` declaration leaves them to the template, and one that renders `SchemaField` for its own data leaves them to that field.
-`SchemaField` and `FallbackField` are not custom fields, whichever of the three ways names them: `SchemaField` renders exactly as though no field were named, and `FallbackField` renders as it does for a schema whose type sends it there, labelled as though no field were named.
+`SchemaField` and `FallbackField` are not custom fields, whichever of the two ways names them: `SchemaField` renders exactly as though no field were named, and `FallbackField` renders as it does for a schema whose type sends it there, labelled as though no field were named.
 
 ### `ui:fieldReplacesAnyOrOneOf`
 

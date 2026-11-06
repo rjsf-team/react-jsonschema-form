@@ -1,12 +1,5 @@
 import { use, useCallback, useMemo, useState } from 'react';
-import type {
-  FallbackFieldProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UIOptionsType,
-  UiSchema,
-} from '@rjsf/utils';
+import type { FallbackFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -247,7 +240,7 @@ function getValueUiSchema<
   const ownUiSchema = uiSchema ?? noUiSchema;
   const valueUiSchema = keepsWidget ? { ...ownUiSchema } : withoutUiWidget<T, S, F>(ownUiSchema);
   delete valueUiSchema[HELP_UI_KEY];
-  const uiOptions = { ...valueUiSchema[UI_OPTIONS_KEY] } as UIOptionsType<T, S, F>;
+  const uiOptions = { ...valueUiSchema[UI_OPTIONS_KEY] };
   delete uiOptions[HELP_UI_OPTION];
   valueUiSchema[UI_OPTIONS_KEY] = uiOptions;
   return valueUiSchema;

@@ -837,14 +837,34 @@ describe('SchemaField', () => {
       );
     }
 
-    it.each<[string, UiSchema]>([
-      ["ui:field: 'SchemaField'", { val: { 'ui:field': 'SchemaField' } }],
-      ["ui:options.field: 'SchemaField'", { val: { 'ui:options': { field: 'SchemaField' } } }],
-    ])('renders the field %s names once, rather than until the heap runs out (#5377)', (_, uiSchema) => {
-      const { node } = createFormComponent({ schema, uiSchema });
+    it("renders the field ui:field: 'SchemaField' names once, rather than until the heap runs out (#5377)", () => {
+      const { node } = createFormComponent({ schema, uiSchema: { val: { 'ui:field': 'SchemaField' } } });
 
       expect(node.querySelectorAll('input#root_val')).toHaveLength(1);
       expect(screen.getByLabelText('Value')).toBe(node.querySelector('input#root_val'));
+    });
+
+    describe('the keys ui:options does not take', () => {
+      setupConsoleWarnSuppression();
+      const fields = { own: () => <div className='own-field' /> };
+
+      // Untyped, as a JSON uiSchema is, since the type rejects these
+      it('ignores the field ui:options.field names', () => {
+        const uiSchema = { 'ui:options': { field: 'own' } } as unknown as UiSchema;
+        const { node } = createFormComponent({ schema: { type: 'string' }, uiSchema, fields });
+
+        expect(node.querySelector('.own-field')).not.toBeInTheDocument();
+        expect(node.querySelectorAll('input#root')).toHaveLength(1);
+      });
+
+      it('leaves the options for ui:options.fieldReplacesAnyOrOneOf', () => {
+        const uiSchema = { 'ui:field': 'own', 'ui:options': { fieldReplacesAnyOrOneOf: true } } as unknown as UiSchema;
+        const schema: RJSFSchema = { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] };
+        const { node } = createFormComponent({ schema, uiSchema, fields });
+
+        expect(node.querySelectorAll('.own-field')).toHaveLength(1);
+        expect(node.querySelectorAll('#root__anyof_select')).toHaveLength(1);
+      });
     });
 
     it('renders a field that wraps SchemaField for its own data once (#5377)', () => {
@@ -872,7 +892,6 @@ describe('SchemaField', () => {
       ['no field', schema, {}],
       ["ui:field: 'SchemaField'", schema, { val: { 'ui:field': 'SchemaField' } }],
       ['a ui:field wrapping SchemaField', schema, { val: { 'ui:field': 'wrapping' } }],
-      ['a ui:options.field wrapping SchemaField', schema, { val: { 'ui:options': { field: 'wrapping' } } }],
       ['a $id wrapping SchemaField', { type: 'object', properties: { val: { $id: 'wrapping', type: 'string' } } }, {}],
     ])("hands the widget the field's own errors with %s named, and renders them once", (_, schema, uiSchema) => {
       const renderWidget = vi.fn<(id: string, rawErrors: WidgetProps['rawErrors']) => void>();
@@ -1038,12 +1057,6 @@ describe('SchemaField', () => {
           displayLabel: false,
         },
         {
-          named: 'a ui:options.field naming a field written for the item',
-          items: titled,
-          uiSchema: { items: { 'ui:options': { field: 'own' } } },
-          displayLabel: false,
-        },
-        {
           named: 'a $id naming a field written for the item',
           items: { ...titled, $id: 'own' },
           uiSchema: {},
@@ -1060,13 +1073,6 @@ describe('SchemaField', () => {
         {
           spelling: 'ui:field',
           naming: (key) => ({ schema: { type: 'array', items: titled }, uiSchema: { items: { 'ui:field': key } } }),
-        },
-        {
-          spelling: 'ui:options.field',
-          naming: (key) => ({
-            schema: { type: 'array', items: titled },
-            uiSchema: { items: { 'ui:options': { field: key } } },
-          }),
         },
         { spelling: 'a $id', naming: (key) => ({ schema: { type: 'array', items: { ...titled, $id: key } } }) },
       ];
@@ -1287,16 +1293,7 @@ describe('SchemaField', () => {
 
     it.each<[string, RJSFSchema, UiSchema]>([
       ["ui:field: 'SchemaField'", describedSchema, { val: { 'ui:field': 'SchemaField', 'ui:help': 'Help' } }],
-      [
-        "ui:options.field: 'SchemaField'",
-        describedSchema,
-        { val: { 'ui:options': { field: 'SchemaField' }, 'ui:help': 'Help' } },
-      ],
-      [
-        'a ui:options.field wrapping SchemaField',
-        describedSchema,
-        { val: { 'ui:options': { field: 'wrapping' }, 'ui:help': 'Help' } },
-      ],
+      ['a ui:field wrapping SchemaField', describedSchema, { val: { 'ui:field': 'wrapping', 'ui:help': 'Help' } }],
       ['a $id wrapping SchemaField', describedIdSchema, { val: { 'ui:help': 'Help' } }],
     ])('renders one label, description and help for the field %s names', (_, schema, uiSchema) => {
       const { node } = createFormComponent({ schema, uiSchema, fields: { wrapping: WrappingField } });
@@ -1328,19 +1325,9 @@ describe('SchemaField', () => {
         { val: { 'ui:field': 'SchemaField' } },
       ],
       [
-        "ui:options.field: 'SchemaField'",
-        { type: 'object', properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } } },
-        { val: { 'ui:options': { field: 'SchemaField' } } },
-      ],
-      [
         'a ui:field wrapping SchemaField',
         { type: 'object', properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } } },
         { val: { 'ui:field': 'wrapping' } },
-      ],
-      [
-        'a ui:options.field wrapping SchemaField',
-        { type: 'object', properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } } },
-        { val: { 'ui:options': { field: 'wrapping' } } },
       ],
       [
         'a $id wrapping SchemaField',
@@ -1413,19 +1400,9 @@ describe('SchemaField', () => {
         { additionalProperties: { 'ui:field': 'SchemaField' } },
       ],
       [
-        "ui:options.field: 'SchemaField'",
-        { type: 'object', additionalProperties: { type: 'string' } },
-        { additionalProperties: { 'ui:options': { field: 'SchemaField' } } },
-      ],
-      [
         'a ui:field wrapping SchemaField',
         { type: 'object', additionalProperties: { type: 'string' } },
         { additionalProperties: { 'ui:field': 'wrapping' } },
-      ],
-      [
-        'a ui:options.field wrapping SchemaField',
-        { type: 'object', additionalProperties: { type: 'string' } },
-        { additionalProperties: { 'ui:options': { field: 'wrapping' } } },
       ],
       ['a $id wrapping SchemaField', { type: 'object', additionalProperties: { $id: 'wrapping', type: 'string' } }, {}],
     ])('renders one key input and one remove button for an extra key the field %s names', (_, schema, uiSchema) => {
@@ -1589,7 +1566,6 @@ describe('SchemaField', () => {
 
     it.each<[string, UiSchema]>([
       ['a registered field through ui:field', { 'ui:field': 'OptionField' }],
-      ['a registered field through ui:options.field', { 'ui:options': { field: 'OptionField' } }],
       ['no registered field', { 'ui:field': 'NotRegistered' }],
     ])('warns that an option entry naming %s is ignored', (_, optionUiSchema) => {
       const { node } = createFormComponent({

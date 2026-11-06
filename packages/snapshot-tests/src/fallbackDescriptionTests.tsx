@@ -13,7 +13,7 @@ import { render, screen } from '@testing-library/react';
  * @param descriptionAbove - Whether the theme draws the description above the type selector rather than below it
  */
 export function fallbackDescriptionTests(Form: ComponentType<FormProps>, descriptionAbove: boolean) {
-  describe("the fallback UI's description, however its ui:field is spelled (#5389)", () => {
+  describe("the fallback UI's description, whatever its ui:field names (#5389)", () => {
     // A `ui:field` naming nothing warns that no such field is registered. `setupConsoleWarnSuppression()` lives in the
     // repo's `testing/` directory, which this published package can't import. `vi.spyOn()` hands back a spy the caller's
     // file already installed, and restoring that would remove it for the caller's later tests, so whatever
@@ -34,8 +34,6 @@ export function fallbackDescriptionTests(Form: ComponentType<FormProps>, descrip
       ['no ui:field', {}],
       ['a ui:field naming FallbackField', { 'ui:field': 'FallbackField' }],
       ['a ui:field naming nothing', { 'ui:field': 'Nope' }],
-      ['a ui:options.field naming FallbackField', { 'ui:options': { field: 'FallbackField' } }],
-      ['a ui:options.field naming nothing', { 'ui:options': { field: 'Nope' } }],
     ])(`is drawn once, ${descriptionAbove ? 'above' : 'below'} the type selector, under %s`, (_, valUiSchema) => {
       const { container } = render(
         <Form

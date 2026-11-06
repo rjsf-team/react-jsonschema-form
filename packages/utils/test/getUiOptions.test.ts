@@ -1,6 +1,7 @@
 import { createElement, forwardRef, lazy, memo } from 'react';
 import type { MockInstance } from 'vitest';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import type {
   GenericObjectType,
   GlobalUISchemaOptions,
@@ -145,5 +146,35 @@ describe('getUiOptions()', () => {
   });
   it('reads no global options from a null one, as a JSON uiSchema can give', () => {
     expect(getUiOptions({ 'ui:label': true }, null as unknown as GlobalUISchemaOptions)).toEqual({ label: true });
+  });
+  describe('the keys ui:options does not take', () => {
+    const warnings = setupConsoleWarnSuppression();
+
+    // Untyped, as a JSON uiSchema is, since the type rejects these
+    it.each([
+      ['field', ''],
+      ['fieldReplacesAnyOrOneOf', ''],
+      ['definitions', ' on the root uiSchema'],
+      ['globalOptions', ' on the root uiSchema'],
+    ])('ignores %s and warns', (name, where) => {
+      const given: GenericObjectType = { 'ui:options': { [name]: 'given', inline: true } };
+
+      expect(getUiOptions(given)).toEqual({ inline: true });
+      expect(warnings.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:options.${name} is ignored, since ${name} can only be set through ui:${name}${where}. A custom widget's own option needs another name.`,
+      );
+    });
+    it.each<[string, GenericObjectType]>([
+      ['before', { 'ui:field': 'Mine', 'ui:options': { field: 'Other' } }],
+      ['after', { 'ui:options': { field: 'Other' }, 'ui:field': 'Mine' }],
+    ])('keeps the ui:field spelled %s it', (_, given) => {
+      expect(getUiOptions(given)).toEqual({ field: 'Mine' });
+    });
+    it('does not warn about one left undefined', () => {
+      const given: GenericObjectType = { 'ui:options': { field: undefined, inline: true } };
+
+      expect(getUiOptions(given)).toEqual({ inline: true });
+      expect(warnings.consoleSpy).not.toHaveBeenCalled();
+    });
   });
 });

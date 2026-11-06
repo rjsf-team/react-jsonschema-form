@@ -544,6 +544,10 @@ describe('GlobalUISchemaOptions (extensions)', () => {
     expectTypeOf<GlobalUISchemaOptions<{ widget?: string }>>().not.toBeNever();
     // @ts-expect-error `enumOptions` is the list a field computes for its widget, which a global one would replace
     expectTypeOf<GlobalUISchemaOptions<{ enumOptions?: string[] }>>().not.toBeNever();
+    // @ts-expect-error `definitions` is a key `ui:options` doesn't take, so no field could override a global one
+    expectTypeOf<GlobalUISchemaOptions<{ definitions?: object }>>().not.toBeNever();
+    // @ts-expect-error `globalOptions` is a key `ui:options` doesn't take, so no field could override a global one
+    expectTypeOf<GlobalUISchemaOptions<{ globalOptions?: object }>>().not.toBeNever();
     // @ts-expect-error an index signature would cover every one of RJSF's keys
     expectTypeOf<GlobalUISchemaOptions<Record<string, unknown>>>().not.toBeNever();
   });
@@ -553,6 +557,40 @@ describe('GlobalUISchemaOptions (extensions)', () => {
     expectTypeOf<ThemeGlobalUISchemaOptions<{ addable?: string }>>().not.toBeNever();
     // @ts-expect-error `gridCols` is the theme's key
     expectTypeOf<ThemeGlobalUISchemaOptions<{ gridCols?: number }, { gridCols?: string }>>().not.toBeNever();
+  });
+
+  it('rejects the keys only their ui: spelling sets in ui:options', () => {
+    const plain: UiSchema = {
+      'ui:options': {
+        // @ts-expect-error: TS2322, only `ui:field` names a field
+        field: 'MyField',
+        // @ts-expect-error: TS2322, only `ui:fieldReplacesAnyOrOneOf` sets this
+        fieldReplacesAnyOrOneOf: true,
+        // @ts-expect-error: TS2322, only `ui:definitions` sets these
+        definitions: {},
+        // @ts-expect-error: TS2322, only `ui:globalOptions` sets these
+        globalOptions: {},
+      },
+    };
+    type Checks = UiOptionsCheck<
+      unknown,
+      { field?: 'MyField'; fieldReplacesAnyOrOneOf?: boolean; definitions?: object; globalOptions?: object }
+    >;
+    const strict: StrictUiSchema<Checks> = {
+      'ui:options': {
+        // @ts-expect-error: TS2322, only `ui:field` names a field
+        field: 'MyField',
+        // @ts-expect-error: TS2322, only `ui:fieldReplacesAnyOrOneOf` sets this
+        fieldReplacesAnyOrOneOf: true,
+        // @ts-expect-error: TS2322, only `ui:definitions` sets these
+        definitions: {},
+        // @ts-expect-error: TS2322, only `ui:globalOptions` sets these
+        globalOptions: {},
+      },
+    };
+
+    expect(plain).toBeDefined();
+    expect(strict).toBeDefined();
   });
 
   it("hands a theme's options with a user's extension on to the plain type RJSF takes", () => {

@@ -670,15 +670,10 @@ describe('a discriminated cell of a layout grid', () => {
       'ui:field for cell \'pick\' in "root" is ignored, since a cell with discriminated oneOf/anyOf options renders ' +
       'only its option selector.';
 
-    // `SchemaField` merges the `ui:definitions` entry for the cell's `$ref` beneath the cell's `uiSchema`, so the
-    // entry's own spelling of either directive comes wherever the entry orders it
+    // `SchemaField` merges the `ui:definitions` entry for the cell's `$ref` beneath the cell's `uiSchema`
     it.each([
-      ['a ui:field', { 'ui:options': { inline: true }, 'ui:field': 'CustomField' }, [[ignoredFieldWarning]]],
-      [
-        'a ui:fieldReplacesAnyOrOneOf of false',
-        { 'ui:options': { inline: true }, 'ui:fieldReplacesAnyOrOneOf': false },
-        [],
-      ],
+      ['a ui:field', { 'ui:field': 'CustomField' }, [[ignoredFieldWarning]]],
+      ['a ui:fieldReplacesAnyOrOneOf of false', { 'ui:fieldReplacesAnyOrOneOf': false }, []],
     ])(
       'renders its selector in place of the options, over %s its ui:definitions entry names',
       (_, definition, expectedWarnings) => {
@@ -691,33 +686,16 @@ describe('a discriminated cell of a layout grid', () => {
       },
     );
 
-    // `getUiOptions()` reads both spellings in key order, so its own `ui:options` coming after its top-level spelling
-    // would win were the grid's directive not in both
     it.each([
-      ['a ui:field', { 'ui:field': 'CustomField', 'ui:options': { field: 'CustomField' } }, [[ignoredFieldWarning]]],
-      [
-        'a ui:fieldReplacesAnyOrOneOf of false',
-        { 'ui:fieldReplacesAnyOrOneOf': false, 'ui:options': { fieldReplacesAnyOrOneOf: false } },
-        [],
-      ],
-    ])(
-      'renders its selector in place of the options, over %s of its own in both spellings',
-      (_, pickUiSchema, expectedWarnings) => {
-        createFormComponent({ schema, uiSchema: gridUiSchema({ pick: pickUiSchema }), fields: { CustomField } });
-
-        expect(screen.queryByTestId('custom-field')).not.toBeInTheDocument();
-        expect(screen.getAllByRole('radiogroup')).toHaveLength(1);
-        expect(warnings.consoleSpy.mock.calls).toEqual(expectedWarnings);
-      },
-    );
-
-    it.each([
-      ['in ui:options', { 'ui:options': { field: 'CustomField' } }],
-      ['as a component', { 'ui:field': CustomField }],
-    ])('warns about a ui:field %s that it ignores', (_, pickUiSchema) => {
+      ['a ui:field', { 'ui:field': 'CustomField' }, [[ignoredFieldWarning]]],
+      ['a ui:field given as a component', { 'ui:field': CustomField }, [[ignoredFieldWarning]]],
+      ['a ui:fieldReplacesAnyOrOneOf of false', { 'ui:fieldReplacesAnyOrOneOf': false }, []],
+    ])('renders its selector in place of the options, over %s of its own', (_, pickUiSchema, expectedWarnings) => {
       createFormComponent({ schema, uiSchema: gridUiSchema({ pick: pickUiSchema }), fields: { CustomField } });
 
-      expect(warnings.consoleSpy).toHaveBeenCalledExactlyOnceWith(ignoredFieldWarning);
+      expect(screen.queryByTestId('custom-field')).not.toBeInTheDocument();
+      expect(screen.getAllByRole('radiogroup')).toHaveLength(1);
+      expect(warnings.consoleSpy.mock.calls).toEqual(expectedWarnings);
     });
 
     // `SchemaField` reads a `ui:field` naming itself as naming none, so a cell naming it, like one naming none, asks for
@@ -725,7 +703,7 @@ describe('a discriminated cell of a layout grid', () => {
     it.each([
       ['LayoutMultiSchemaField', { 'ui:field': 'LayoutMultiSchemaField' }],
       ['SchemaField', { 'ui:field': 'SchemaField' }],
-      ['no field', { 'ui:field': false, 'ui:options': { field: '' } }],
+      ['no field', { 'ui:field': false }],
     ])('warns about neither a ui:field naming %s nor a plain cell rendering its own', (_, pickUiSchema) => {
       createFormComponent({
         schema,

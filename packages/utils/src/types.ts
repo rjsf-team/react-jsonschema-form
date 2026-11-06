@@ -763,16 +763,20 @@ export interface GlobalUISchemaOptionsKeys {
  */
 type OverridableTemplateName = Exclude<keyof DeclaredTemplatesType, 'ButtonTemplates'>;
 
-/** Every option name RJSF reads for a field, which an extension of `GlobalUISchemaOptions` may not reuse: the
- * registry hands an extension's keys to every field along with RJSF's own, so one of these names would act as the
- * option RJSF reads per field. `ui:fieldReplacesAnyOrOneOf` is among them, since `getUiOptions()` returns it as an
- * option too, and so is `enumOptions`, which a field computes and hands its widget beside the options, and every
- * template `getTemplates()` reads from a field's options, the ones `ui:options` doesn't declare included. A theme whose
- * widgets read more lists them in the `Reserved` its `<Theme>GlobalUISchemaOptions` checks a user's extension against.
+/** The names an extension of `GlobalUISchemaOptions` may not reuse: every option name RJSF reads for a field, and
+ * `definitions` and `globalOptions`, which only the root uiSchema's `ui:` keys set. The registry hands an extension's
+ * keys to every field along with RJSF's own, so a per-field name would act as the option RJSF reads per field, and no
+ * field could override the other two, since `ui:options` doesn't take them. `fieldReplacesAnyOrOneOf` is a per-field
+ * name, since `getUiOptions()` returns `ui:fieldReplacesAnyOrOneOf` as an option too, and so are `enumOptions`, which a
+ * field computes and hands its widget beside the options, and every template `getTemplates()` reads from a field's
+ * options, the ones `ui:options` doesn't declare included. A theme whose widgets read more lists them in the `Reserved`
+ * its `<Theme>GlobalUISchemaOptions` checks a user's extension against.
  */
 export type ReservedUiOptionName =
   | keyof UIOptionsDeclaredType
   | 'fieldReplacesAnyOrOneOf'
+  | 'definitions'
+  | 'globalOptions'
   | 'enumOptions'
   | OverridableTemplateName;
 
@@ -2081,9 +2085,17 @@ type UIOptionsDeclaredType<
     yearsRange?: readonly [number, number];
   };
 
-/** The type that represents the Options potentially provided by `ui:options`. Its string index leaves the vocabulary
- * open to any option a theme or custom component reads, typed `unknown` until it is checked, which is also what gives
- * `UiSchema` its `ui:${string}` keys once remapped
+/** The keys only their `ui:` spelling sets, which `getUiOptions()` ignores in `ui:options` */
+interface NotInUiOptions {
+  field?: never;
+  fieldReplacesAnyOrOneOf?: never;
+  definitions?: never;
+  globalOptions?: never;
+}
+
+/** The options `getUiOptions()` returns, which `ui:options` also takes except for the keys in `NotInUiOptions`. Its
+ * string index leaves the vocabulary open to any option a theme or custom component reads, typed `unknown` until it is
+ * checked, which is also what gives `UiSchema` its `ui:${string}` keys once remapped
  */
 export interface UIOptionsType<
   T = unknown,
@@ -2190,9 +2202,9 @@ interface UiOptionsComponentPart<T, S extends StrictRJSFSchema, F extends FormCo
   'ui:field'?: FieldsFor<T, Checks> | Field<T, S, F>;
   'ui:options'?: {
     widget?: WidgetsFor<T, Checks> | Widget<T, S, F>;
-    field?: FieldsFor<T, Checks> | Field<T, S, F>;
   } & RawOptsFor<T, Checks> &
-    CommonUiOptions<T, S, F>;
+    CommonUiOptions<T, S, F> &
+    NotInUiOptions;
 }
 
 /** @internal Common `ui:*` options valid on any field regardless of its type, kept separate from a `Checks` union
@@ -2304,7 +2316,7 @@ export type UiSchema<
   F extends FormContextType = FormContextType,
 > = {
   [K in keyof UiSchemaChildData<T>]?: UiSchemaChild<K, UiSchemaChildData<T>[K], S, F>;
-} & MakeUIType<UIOptionsType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> } & {
+} & MakeUIType<UIOptionsType<T, S, F>> & { 'ui:options'?: UIOptionsType<T, S, F> & NotInUiOptions } & {
     /** The set of Globally relevant UI Schema options that are read from the root-level UiSchema and stored in the
      * Registry for use everywhere.
      */

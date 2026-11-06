@@ -1875,7 +1875,7 @@ This will allow you to use `TEST_IDS.examplePropertyName` within your tests, whi
 Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
 Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
 A global `required` is left out: `ui:required` is a field's own, since validation reads it from the field's own uiSchema alone, so a form-wide one would mark fields required that validation doesn't require.
-`ui:definitions` and `ui:globalOptions` aren't options either.
+`ui:definitions` and `ui:globalOptions` aren't options either. A `field` or `fieldReplacesAnyOrOneOf` in `ui:options` is ignored with a warning, since only `ui:field` and `ui:fieldReplacesAnyOrOneOf` set them, and so is a `definitions` or `globalOptions`.
 Pass the registry's `globalUiOptions`, which hold only the options RJSF reads there and the extension keys the theme and the `Form` declare, as [`pickGlobalUiOptions()`](#pickglobaluioptions) leaves them. A root uiSchema's `ui:globalOptions` read some other way goes through `pickGlobalUiOptions()` with those keys first, or it keeps only RJSF's own.
 
 #### Parameters
@@ -3008,7 +3008,7 @@ partId('root_when', 'time'); // 'root_when__time'
 Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which `GLOBAL_UI_OPTIONS_KEYS` lists, and the extension keys the form's theme and the `Form` itself declare.
 Every other key is left out, so a global option RJSF reads only per field, such as `widget` or `placeholder`, reaches no field.
 Such an option is warned about once, since a form that set one, such as a global `readonly`, would otherwise change with no sign of why.
-An extension key that is one of those per-field names, which `RESERVED_UI_OPTION_NAMES` lists, is left out too, with a warning: every field would otherwise read it as its own option.
+An extension key that `RESERVED_UI_OPTION_NAMES` lists is left out too, with a warning: one of those per-field names, which every field would otherwise read as its own option, or `definitions` or `globalOptions`, which only the root uiSchema's `ui:` keys set.
 `Form` builds its registry's `globalUiOptions` with it.
 
 #### Parameters
