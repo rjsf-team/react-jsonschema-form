@@ -73,7 +73,7 @@ jobs:
   # Tests resolve `@rjsf/*` to source, so they need no build and run beside the build job. They are split across two
   # runners because nx's `--parallel` can't add CPU: each vitest run already starts a worker per core, so more tasks on
   # one runner only slow each test, which is how a test hits its timeout. The themes, which take most of the time, run
-  # on one runner and everything else, any new package included, on the other.
+  # on one runner. Everything else, any new package included, runs on the other, along with bootstrap3 to even them out.
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -95,7 +95,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test ${{ matrix.shard == 'themes' && '--projects' || '--exclude' }}="$THEMES"
         env:
-          THEMES: '@rjsf/antd,@rjsf/bootstrap3,@rjsf/chakra-ui,@rjsf/daisyui,@rjsf/fluentui-rc,@rjsf/mantine,@rjsf/mui,@rjsf/react-bootstrap,@rjsf/shadcn'
+          THEMES: '@rjsf/antd,@rjsf/chakra-ui,@rjsf/daisyui,@rjsf/fluentui-rc,@rjsf/mantine,@rjsf/mui,@rjsf/react-bootstrap,@rjsf/shadcn'
 
   deploy_playground_and_docs:
     runs-on: ubuntu-latest
