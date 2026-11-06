@@ -41,10 +41,11 @@ export interface PresentationSubject<
    */
   fieldKey?: string;
   /** The single widget the field renders its value with, as an alias, a registry key or a component, after the field's
-   * own defaulting: a `BooleanField` given no widget or a `null` one renders `'checkbox'`. The caller knows it by how
-   * the field picks it: `@rjsf/core` takes a component registered under one of its widget-rendering field keys to pick
-   * it as its own does, so a replacement that picks another, such as a `BooleanField` defaulting to radios, declares
-   * its parts under that key. Left out for a field that renders no single widget, such as an object's or an array's
+   * own defaulting: a `BooleanField` given no widget or a `null` one renders the `widget` its entry declares, or else
+   * `'checkbox'`. The caller knows it by how the field picks it: `@rjsf/core` takes a component registered under one
+   * of its widget-rendering field keys to pick it as its own does, so a replacement that renders another, such as a
+   * `BooleanField` rendering radios, declares that `widget` under `BooleanField`. Left out for a field that renders no
+   * single widget, such as an object's or an array's
    */
   widget?: Widget<T, S, F> | string;
 }
@@ -75,6 +76,36 @@ function ownerOf(
 ) {
   const owner = fieldDeclaration[part];
   return (owner === 'widget' ? widgetDeclaration[part] : owner) === 'self' ? 'self' : 'template';
+}
+
+/** The parts a widget can draw for its field, which a field drawing them itself must keep its widget from drawing again */
+const FIELD_DRAWN_PARTS = ['label', 'description', 'errors'] as const;
+
+/** Gets how a label the template draws reaches the control. A field leaving its label to the widget it renders takes
+ * that widget's, or else its own entry's. One keeping its label takes its own entry's, or else that of the widget it
+ * renders, which knows whether a `for` can name its control, or else the theme's `fieldDefault`'s
+ *
+ * @param leavesLabelToWidget - Whether the field's declaration leaves its label to its widget
+ * @param widget - The single widget the field renders, if any
+ * @param ownDeclaration - The field's own entry, if any
+ * @param widgetDeclaration - The widget's declaration, the field default where it renders none
+ * @param fieldDefault - The field default, under the theme's `fieldDefault`
+ * @returns - `'for'` or `'aria-labelledby'`
+ */
+function getLabelledBy(
+  leavesLabelToWidget: boolean,
+  widget: unknown,
+  ownDeclaration: PresentationDeclaration | undefined,
+  widgetDeclaration: WidgetPresentationDeclaration,
+  fieldDefault: WidgetPresentationDeclaration,
+): ResolvedPresentationDeclaration['labelledBy'] {
+  if (widget === undefined) {
+    return ownDeclaration?.labelledBy ?? fieldDefault.labelledBy ?? 'for';
+  }
+  if (leavesLabelToWidget) {
+    return widgetDeclaration.labelledBy ?? ownDeclaration?.labelledBy ?? 'for';
+  }
+  return ownDeclaration?.labelledBy ?? widgetDeclaration.labelledBy ?? fieldDefault.labelledBy ?? 'for';
 }
 
 /** Gets the declaration `declared` holds for `component`: the one under the key that named it, or else the first one
@@ -142,8 +173,10 @@ function getWidgetDeclaration<
  * each layer's `default`, or the merged `default` for a widget no layer declares. A part a field leaves to its widget,
  * with no widget given, falls back to the field default, and a part nothing declares is drawn by the template. A
  * field leaving its label to the widget it renders takes that widget's `labelledBy`, or else its own entry's, never the
- * `fieldDefault`'s. A label drawn by the component takes the `labelPlacement` of the declaration that settled it on
- * `'self'`: the widget's when the field leaves its label to one, or else the field's.
+ * `fieldDefault`'s, and one keeping its label takes its own entry's, or else its widget's, or else the `fieldDefault`'s.
+ * The label, description and errors the field's own declaration settles on `'self'`, rather than a widget's, are
+ * listed in `drawnByField`. A label drawn by the component takes the `labelPlacement` of the declaration that settled it
+ * on `'self'`: the widget's when the field leaves its label to one, or else the field's.
  *
  * @param source - The registry's fields and widgets, and the merged `presentation`
  * @param subject - The field's schema and the components that render it
@@ -166,6 +199,7 @@ export default function getPresentationDeclaration<
   // checkbox says nothing about the radios a `ui:widget` swaps in
   const { uncheckedIsFalse, uncheckedIsEmpty } = (widget === undefined ? ownDeclaration : widgetDeclaration) ?? {};
   const label = ownerOf('label', fieldDeclaration, widgetDeclaration);
+  const drawnByField = FIELD_DRAWN_PARTS.filter((part) => fieldDeclaration[part] === 'self');
   // Where a self-drawn label sits is declared by whoever draws it: the declaration that settled the label on `'self'`
   const labelPlacement =
     label === 'self'
@@ -176,14 +210,16 @@ export default function getPresentationDeclaration<
     description: ownerOf('description', fieldDeclaration, widgetDeclaration),
     errors: ownerOf('errors', fieldDeclaration, widgetDeclaration),
     help: ownerOf('help', fieldDeclaration, widgetDeclaration),
-    // How the template's label reaches the control: the widget's when the field leaves its label to one it renders, or
-    // else the field's own, since the theme's `fieldDefault` speaks for fields that keep their label
-    labelledBy:
-      (fieldDeclaration.label === 'widget' && widget !== undefined
-        ? (widgetDeclaration.labelledBy ?? ownDeclaration?.labelledBy)
-        : fieldDeclaration.labelledBy) ?? 'for',
+    labelledBy: getLabelledBy(
+      fieldDeclaration.label === 'widget',
+      widget,
+      ownDeclaration,
+      widgetDeclaration,
+      fieldDefault,
+    ),
     ...(uncheckedIsFalse && { uncheckedIsFalse }),
     ...(uncheckedIsEmpty && { uncheckedIsEmpty }),
     ...(labelPlacement && { labelPlacement }),
+    ...(drawnByField.length > 0 && { drawnByField }),
   };
 }

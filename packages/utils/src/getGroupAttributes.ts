@@ -3,6 +3,7 @@ import getControlAttributes from './getControlAttributes.ts';
 import getControlFallbackName from './getControlFallbackName.ts';
 import { partId } from './idGenerators.ts';
 import type { ControlAttributes, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
+import widgetDrawsLabel from './widgetDrawsLabel.ts';
 
 /** The role of the element wrapping a group of controls: `radiogroup` for radios, `group` for anything else */
 export type GroupRole = 'radiogroup' | 'group';
@@ -59,7 +60,7 @@ export default function getGroupAttributes<
     ...described
   } = getControlAttributes<T, S, F>(props);
   const { presentation, label = '', placeholder, registry } = props;
-  const drawsOwnLabel = presentation ? presentation.label.by === 'self' : true;
+  const drawsOwnLabel = presentation ? widgetDrawsLabel<T, S, F>({ presentation }) : true;
   const labelledBy = plannedLabelledBy || (drawsOwnLabel ? drawnLabelId : undefined);
   const name =
     ariaLabel ||

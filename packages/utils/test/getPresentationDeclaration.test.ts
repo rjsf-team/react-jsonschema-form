@@ -20,6 +20,8 @@ const TEMPLATE = {
   labelledBy: 'for',
 };
 const FIELD_DEFAULT = { ...TEMPLATE, label: 'self', description: 'self' };
+/** What a field draws itself when nothing declares otherwise, its own declaration settling both parts on it */
+const FIELD_DRAWN = { ...FIELD_DEFAULT, drawnByField: ['label', 'description'] };
 
 const StringField: Field = () => null;
 const ArrayField: Field = () => null;
@@ -50,7 +52,7 @@ describe('getPresentationDeclaration()', () => {
   it('has a field draw its own label and description when nothing declares otherwise', () => {
     expect(
       getPresentationDeclaration({ fields: {}, widgets: {} }, { schema: { type: 'object' }, field: ObjectField }),
-    ).toEqual(FIELD_DEFAULT);
+    ).toEqual(FIELD_DRAWN);
     expect(
       getPresentationDeclaration(source, {
         schema: { type: 'string' },
@@ -58,7 +60,7 @@ describe('getPresentationDeclaration()', () => {
         fieldKey: 'MyField',
         widget: 'text',
       }),
-    ).toEqual(FIELD_DEFAULT);
+    ).toEqual(FIELD_DRAWN);
   });
 
   it('leaves the parts of a field declared by its key to its widget', () => {
@@ -84,8 +86,19 @@ describe('getPresentationDeclaration()', () => {
     expect(getPresentationDeclaration({ ...source, presentation: { ...presentation, fields } }, subject)).toEqual({
       ...FIELD_DEFAULT,
       label: 'template',
+      drawnByField: ['description'],
     });
     expect(getPresentationDeclaration(source, subject)).toEqual(TEMPLATE);
+  });
+
+  it('lists the errors a field declares drawing itself among the parts it draws', () => {
+    const fields = { ...presentation.fields, MyField: { errors: 'self' } } as const;
+    expect(
+      getPresentationDeclaration(
+        { ...source, presentation: { ...presentation, fields } },
+        { schema: { type: 'string' }, field: () => null, fieldKey: 'MyField', widget: 'text' },
+      ),
+    ).toEqual({ ...FIELD_DEFAULT, errors: 'self', drawnByField: ['label', 'description', 'errors'] });
   });
 
   it('reads a component registered under several keys by the first of them that declares it', () => {
@@ -99,7 +112,7 @@ describe('getPresentationDeclaration()', () => {
         widgets: { MyInput: { label: 'self' } },
       },
     };
-    const expected = { ...FIELD_DEFAULT, label: 'template' };
+    const expected = { ...FIELD_DEFAULT, label: 'template', drawnByField: ['description'] };
     expect(getPresentationDeclaration(theme, { schema: {}, field: MultiSchemaField })).toEqual(expected);
     expect(getPresentationDeclaration(theme, { schema: {}, field: MultiSchemaField, fieldKey: 'AnyOfField' })).toEqual(
       expected,
@@ -146,7 +159,7 @@ describe('getPresentationDeclaration()', () => {
 
     it('is what a field draws for a part nothing declares for it, custom fields included', () => {
       const MyField: Field = () => null;
-      const expected = { ...FIELD_DEFAULT, ...fieldDefault };
+      const expected = { ...FIELD_DEFAULT, ...fieldDefault, drawnByField: ['label', 'errors'] };
       expect(getPresentationDeclaration(theme, { schema: { type: 'string' }, field: MyField })).toEqual(expected);
       expect(getPresentationDeclaration(theme, { schema: { type: 'object' }, field: ObjectField })).toEqual(expected);
     });
@@ -173,7 +186,7 @@ describe('getPresentationDeclaration()', () => {
           { ...source, presentation: { ...presentation, fields, fieldDefault } },
           { schema: { type: 'object' }, field: ObjectField },
         ),
-      ).toEqual({ ...FIELD_DEFAULT, errors: 'self' });
+      ).toEqual({ ...FIELD_DRAWN, errors: 'self', drawnByField: ['label', 'description', 'errors'] });
     });
 
     it('gives its labelledBy only to fields that keep their label, not to one leaving it to a widget', () => {
@@ -185,6 +198,7 @@ describe('getPresentationDeclaration()', () => {
       expect(getPresentationDeclaration(labelled, { schema: { type: 'string' }, field: MyField })).toEqual({
         ...FIELD_DEFAULT,
         label: 'template',
+        drawnByField: ['description'],
         labelledBy: 'aria-labelledby',
       });
       expect(
@@ -214,7 +228,7 @@ describe('getPresentationDeclaration()', () => {
     it('gives an unmerged layer the same answer as a merged one', () => {
       const layer: ThemePresentation = { fields: { ObjectField: { label: 'template' } }, fieldDefault };
       const subject = { schema: { type: 'object' }, field: ObjectField } as const;
-      const expected = { ...FIELD_DEFAULT, ...fieldDefault, label: 'template' };
+      const expected = { ...FIELD_DEFAULT, ...fieldDefault, label: 'template', drawnByField: ['errors'] };
       expect(getPresentationDeclaration({ ...source, presentation: layer }, subject)).toEqual(expected);
       expect(getPresentationDeclaration({ ...source, presentation: mergeThemePresentation(layer) }, subject)).toEqual(
         expected,
@@ -327,10 +341,10 @@ describe('getPresentationDeclaration()', () => {
   describe('a field that draws its own parts', () => {
     const MyField: Field = () => null;
 
-    it('ignores the widget unless it leaves a part to it', () => {
+    it("keeps its parts from the widget it renders, taking only how a label names the widget's control", () => {
       expect(
         getPresentationDeclaration(source, { schema: { type: 'boolean' }, field: MyField, widget: 'RadioWidget' }),
-      ).toEqual(FIELD_DEFAULT);
+      ).toEqual({ ...FIELD_DRAWN, labelledBy: 'aria-labelledby' });
     });
 
     it('can opt into the template label under its key, however it was named', () => {
@@ -339,7 +353,7 @@ describe('getPresentationDeclaration()', () => {
         widgets: {},
         presentation: { fields: { MyField: { label: 'template' } } },
       };
-      const expected = { ...TEMPLATE, description: 'self' };
+      const expected = { ...TEMPLATE, description: 'self', drawnByField: ['description'] };
       expect(
         getPresentationDeclaration(theme, { schema: { type: 'string' }, field: MyField, fieldKey: 'MyField' }),
       ).toEqual(expected);
@@ -354,13 +368,14 @@ describe('getPresentationDeclaration()', () => {
           { ...source, presentation: { ...presentation, fields: cell } },
           { ...subject, widget: 'RadioWidget' },
         ),
-      ).toEqual({ ...TEMPLATE, description: 'self', labelledBy: 'aria-labelledby' });
+      ).toEqual({ ...TEMPLATE, description: 'self', labelledBy: 'aria-labelledby', drawnByField: ['description'] });
+      // The widget draws the label it is left, so only the description is the field's own
       expect(
         getPresentationDeclaration(
           { fields: {}, widgets: {}, presentation: { fields: cell, widgets: { SelectWidget: { label: 'self' } } } },
           { ...subject, widget: 'select' },
         ),
-      ).toEqual(FIELD_DEFAULT);
+      ).toEqual({ ...FIELD_DEFAULT, drawnByField: ['description'] });
     });
   });
 
@@ -375,7 +390,37 @@ describe('getPresentationDeclaration()', () => {
       ...FIELD_DEFAULT,
       label: 'template',
       labelledBy: 'aria-labelledby',
+      drawnByField: ['description'],
     });
+  });
+
+  it("names a field's widget by its labelledBy where the field keeps its label and declares none of its own (#5591)", () => {
+    const subject = {
+      schema: { type: 'boolean' },
+      field: StringField,
+      fieldKey: 'BooleanField',
+      widget: 'radio',
+    } as const;
+    const keeps = (BooleanField: object, fieldDefault = {}): PresentationSource => ({
+      ...source,
+      // As `mergeThemePresentation()` layers a theme's entry over core's
+      presentation: {
+        ...presentation,
+        fields: { ...presentation.fields, BooleanField: { ...WIDGET_FIELD_PRESENTATION, ...BooleanField } },
+        fieldDefault,
+      },
+    });
+    expect(getPresentationDeclaration(keeps({ label: 'template' }), subject)).toEqual({
+      ...TEMPLATE,
+      labelledBy: 'aria-labelledby',
+    });
+    expect(getPresentationDeclaration(keeps({ label: 'template', labelledBy: 'for' }), subject).labelledBy).toBe('for');
+    expect(
+      getPresentationDeclaration(keeps({ label: 'template' }, { labelledBy: 'aria-labelledby' }), {
+        ...subject,
+        widget: 'text',
+      }).labelledBy,
+    ).toBe('aria-labelledby');
   });
 
   it("falls back to a field's own labelledBy when the widget it leaves its label to declares none", () => {
@@ -497,7 +542,7 @@ describe('getPresentationDeclaration()', () => {
     it("takes it from the field's own entry when the field draws its label itself", () => {
       expect(
         getPresentationDeclaration(placed, { schema: { type: 'object' }, field: ObjectField, fieldKey: 'Selector' }),
-      ).toEqual({ ...FIELD_DEFAULT, labelPlacement: 'above' });
+      ).toEqual({ ...FIELD_DRAWN, labelPlacement: 'above' });
     });
 
     it('takes it from the fieldDefault for a field leaving its label to a widget it does not render', () => {
@@ -540,6 +585,6 @@ describe('getPresentationDeclaration()', () => {
         fieldKey: 'constructor',
         widget: 'text',
       }),
-    ).toEqual(FIELD_DEFAULT);
+    ).toEqual(FIELD_DRAWN);
   });
 });

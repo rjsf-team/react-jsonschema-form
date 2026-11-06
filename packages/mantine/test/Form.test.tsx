@@ -10,7 +10,7 @@ import {
   wrapIfAdditionalErrorStateTests,
   wrapIfAdditionalFlagTests,
 } from '@rjsf/snapshot-tests';
-import type { ArrayFieldItemTemplateProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { ArrayFieldItemTemplateProps, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
@@ -380,6 +380,44 @@ describe('mantine FieldTemplate', () => {
     expect(container.querySelector('#root_r__label')).not.toHaveAttribute('for');
     expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Rate');
     expect(screen.getAllByRole('radio')[0]).toHaveAccessibleDescription('How good');
+  });
+});
+
+describe('mantine widget under a custom field', () => {
+  test('draws once the errors a custom field declares drawing itself and spreads its plan into a widget (#5591)', () => {
+    function MyField(props: FieldProps) {
+      const { TextWidget } = props.registry.widgets;
+      const { id, name, schema, uiSchema, registry, presentation, formData } = props;
+      return (
+        <div>
+          <h5>{schema.title}</h5>
+          <TextWidget
+            {...{ id, name, schema, uiSchema, registry, presentation }}
+            value={formData}
+            label={schema.title ?? ''}
+            options={{}}
+            onChange={(value) => props.onChange(value, props.fieldPath)}
+            onBlur={props.onBlur}
+            onFocus={props.onFocus}
+          />
+          <div id={presentation?.errors.id}>{presentation?.errors.messages}</div>
+        </div>
+      );
+    }
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'string', title: 'X' } } }}
+        uiSchema={{ x: { 'ui:field': 'MyField' } }}
+        fields={{ MyField }}
+        presentation={{ fields: { MyField: { errors: 'self' } } }}
+        extraErrors={{ x: { __errors: ['is wrong'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByText('is wrong')).toHaveLength(1);
+    expect(screen.getByRole('textbox', { name: 'X' })).toHaveAccessibleDescription('is wrong');
+    expect(screen.getByRole('textbox', { name: 'X' })).toHaveAttribute('aria-invalid', 'true');
   });
 });
 

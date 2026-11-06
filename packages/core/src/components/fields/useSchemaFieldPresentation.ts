@@ -192,6 +192,7 @@ function rendersControl<
       fieldKey: 'BooleanField',
       widget: getBooleanFieldWidget<T, S, F>(
         fallbackValueKeepsWidget<T, S, F>(schema, 'boolean', uiOptions.widget, registry.widgets) ? uiOptions : {},
+        registry,
       ),
     });
     // A `FallbackField` drawing its own label leaves no template label at stake, so there the answer only places the
@@ -243,8 +244,9 @@ function demandsAnswer<
  * hands every template and widget the same plan (#5490 decision 19)
  *
  * @param inputs - What `SchemaField` has decided about the field
- * @returns - The plan, or undefined when no field renders, and where its declaration places a label the field or its
- *   widget draws itself, which no template or widget reads, only the array item holding the field
+ * @returns - The plan, or undefined when no field renders, where its declaration places a label the field or its
+ *   widget draws itself, which no template or widget reads, only the array item holding the field, and the parts the
+ *   field's own declaration has it draw itself
  */
 export default function useSchemaFieldPresentation<
   T = unknown,
@@ -252,7 +254,11 @@ export default function useSchemaFieldPresentation<
   F extends FormContextType = FormContextType,
 >(
   inputs: SchemaFieldPresentationInputs<T, S, F>,
-): { presentation: FieldPresentation | undefined; labelPlacement: ResolvedPresentationDeclaration['labelPlacement'] } {
+): {
+  presentation: FieldPresentation | undefined;
+  labelPlacement: ResolvedPresentationDeclaration['labelPlacement'];
+  drawnByField: ResolvedPresentationDeclaration['drawnByField'];
+} {
   const {
     id,
     componentId,
@@ -434,5 +440,5 @@ export default function useSchemaFieldPresentation<
     inherited,
     handsLabelDown,
   ]);
-  return { presentation, labelPlacement: declaration?.labelPlacement };
+  return { presentation, labelPlacement: declaration?.labelPlacement, drawnByField: declaration?.drawnByField };
 }

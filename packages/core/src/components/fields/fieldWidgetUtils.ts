@@ -141,17 +141,19 @@ export function optionsKeywordOf<S extends StrictRJSFSchema = RJSFSchema>(schema
   return getXxxOfKey<S>(schema) ?? (Array.isArray(schema[ANY_OF_KEY]) ? ANY_OF_KEY : ONE_OF_KEY);
 }
 
-/** Gets the widget `BooleanField` renders with: its `ui:widget`, or a checkbox for none or a `null` one
+/** Gets the widget `BooleanField` renders with: its `ui:widget`, or for none or a `null` one the widget declared for
+ * `BooleanField`, or else a checkbox
  *
  * @param uiOptions - The field's ui options
+ * @param registry - The registry, whose `presentation` is read
  * @returns - The widget
  */
 export function getBooleanFieldWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(uiOptions: UIOptionsType<T, S, F>): Widget<T, S, F> | string {
-  return uiOptions.widget ?? 'checkbox';
+>(uiOptions: UIOptionsType<T, S, F>, registry: Registry<T, S, F>): Widget<T, S, F> | string {
+  return uiOptions.widget ?? registry.presentation.fields.BooleanField?.widget ?? 'checkbox';
 }
 
 /** Whether `BooleanField` lists a schema's constant `anyOf`/`oneOf` options. Unlike `optionsList()`, which reads an `enum`
@@ -516,7 +518,7 @@ export default function getFieldWidget<
     return resolveStringFieldWidget<T, S, F>(schema, uiSchema, registry).widget;
   }
   if (field === fields.BooleanField) {
-    return getBooleanFieldWidget<T, S, F>(getUiOptions<T, S, F>(uiSchema));
+    return getBooleanFieldWidget<T, S, F>(getUiOptions<T, S, F>(uiSchema), registry);
   }
   if (field === fields.ArrayField) {
     return getArrayFieldWidget<T, S, F>(schema, uiSchema, registry);

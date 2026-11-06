@@ -16,6 +16,7 @@ const DECLARED = [
   'labelPlacement',
   'uncheckedIsFalse',
   'uncheckedIsEmpty',
+  'widget',
 ] as const;
 
 /** Layers `declarations` over one another, each later one replacing a part an earlier one declares. A part declared
@@ -43,8 +44,8 @@ export function layerDeclarations<Owner extends PartOwner>(
 
 /** Layers blanket declarations, a `ThemePresentation`'s `default`s or `fieldDefault`s, leaving out `uncheckedIsFalse`
  * and `uncheckedIsEmpty`: each describes one control, and a blanket would also mark the `select` or `radio` a boolean can
- * render. Their type already leaves them out, but a theme written in JavaScript, or a declaration typed wider and passed
- * through a variable, can still carry them
+ * render. A `widget` is left out too, since it names the widget of one field. Their type already leaves them out, but
+ * a theme written in JavaScript, or a declaration typed wider and passed through a variable, can still carry them
  *
  * @param declarations - The blankets to layer, from the bottom; `undefined` entries are skipped
  * @returns - The layered blanket
@@ -55,6 +56,7 @@ export function layerBlankets(
   const layered = layerDeclarations(...declarations);
   delete layered.uncheckedIsFalse;
   delete layered.uncheckedIsEmpty;
+  delete layered.widget;
   return layered;
 }
 

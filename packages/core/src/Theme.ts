@@ -4,6 +4,7 @@ import type {
   FormContextType,
   GlobalFormOptions,
   MergedClassMap,
+  MergedThemePresentation,
   Registry,
   RJSFSchema,
   SchemaUtilsType,
@@ -14,6 +15,7 @@ import {
   DEFAULT_ID_PREFIX,
   DEFAULT_ID_SEPARATOR,
   englishStringTranslator,
+  logOnce,
   mergeClassMaps,
   mergeThemePresentation,
   pickGlobalUiOptions,
@@ -26,6 +28,7 @@ import { generateFields } from './components/fields/index.ts';
 import type { FormProps } from './components/Form.tsx';
 import { generateTemplates } from './components/templates/index.ts';
 import { generateWidgets } from './components/widgets/index.ts';
+import isDevelopment from './isDevelopment.ts';
 
 /** Which parts of a field `@rjsf/core`'s fields and widgets draw themselves. The fields that render one widget, the
  * discriminator selector of a layout grid's `LayoutMultiSchemaField` among them, leave every part to it, and a widget
@@ -172,6 +175,26 @@ function getGlobalFormOptions<
   };
 }
 
+/** Warns once in development about a `widget` declared under a field key other than `BooleanField`, which nothing reads, since
+ * the declaration's type can't tell the keys apart (#5591)
+ *
+ * @param presentation - The merged presentation of the form's layers
+ * @returns - The same presentation
+ */
+function warnIgnoredWidgets(presentation: MergedThemePresentation): MergedThemePresentation {
+  if (!isDevelopment) {
+    return presentation;
+  }
+  for (const [key, declaration] of Object.entries(presentation.fields)) {
+    if (key !== 'BooleanField' && declaration.widget !== undefined) {
+      logOnce(
+        `Form: \`presentation.fields.${key}\` declares a \`widget\`, which only the \`BooleanField\` entry reads, so it is ignored.`,
+      );
+    }
+  }
+  return presentation;
+}
+
 /** Builds the `Registry` for a form from the given `props`, `schema` and `schemaUtils`
  *
  * @param props - The form props to build the registry from
@@ -197,7 +220,7 @@ export function buildRegistry<
       },
     },
     widgets: { ...widgets, ...props.widgets },
-    presentation: mergeThemePresentation(presentation, props.presentation),
+    presentation: warnIgnoredWidgets(mergeThemePresentation(presentation, props.presentation)),
     classMap: resolveClassMap(mergeClassMaps(classMap, props.classMap)),
     rootSchema: schema,
     // `F` may be narrower than `{}`, but an omitted formContext is an empty object
