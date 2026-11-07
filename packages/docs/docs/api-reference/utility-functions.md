@@ -80,7 +80,7 @@ that label where `hideLabel` leaves it to the select, or else names the select b
 
 Renders one of the six date element selectors an `AltDateWidget` is made of, using the `SelectWidget` from the registry.
 Each element is a control of its own, so the `SelectWidget` receives [dateElementId()](#dateelementid) as both its `id` and its `name`, the element's translated name, from [dateElementLabel()](#dateelementlabel), as its `placeholder`, and its accessible name, from [dateElementAriaLabel()](#dateelementarialabel), as its `aria-label`.
-Given its field's `presentation`, it hands the `SelectWidget` a plan of its own, which describes the element by the field's parts that render and marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank the element's own name; without one, it hands it the field's description, help and error ids as its `aria-describedby`.
+Given its field's `presentation`, it hands the `SelectWidget` a plan of its own, which describes the element by the field's parts that render and marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank the element's own name, or by the `attributes` its caller gives over them; without either, it hands it the field's description, help and error ids as its `aria-describedby`.
 Every theme's `SelectWidget` gives those to the control it renders through [widgetAriaProps()](#widgetariaprops).
 The `useAltDateWidgetProps()` hook returns the props for each of them, so a theme's `AltDateWidget` maps over those rather than assembling the selectors itself.
 
@@ -102,6 +102,8 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - [label]: string - Optional label of the field, which leads the element's accessible name, as built by [dateElementAriaLabel()](#dateelementarialabel)
 - [elementLabel]: string - Optional translated name of the element, for a caller that already translated it to display it; defaults to [dateElementLabel()](#dateelementlabel)
 - [presentation]: FieldPresentation - Optional plan of the field, whose parts that render describe the element, and whose errors mark it `aria-invalid` while they show
+- [attributes]: Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'> - Optional `aria-describedby` and `aria-invalid` for the element, such as those with the id of a message the theme renders around the field, over those of `presentation`'s control, each one left out defaulting to that of `presentation`'s control; given without a `presentation`, they describe and mark the element as they do with one
+- [elementOptions]: UIOptionsType&lt;T, S, F> - Optional further options for the `SelectWidget`, such as the props of a theme's own select, beside the element's `enumOptions`, which they can't replace; the `SelectWidget` also receives them, with those `enumOptions`, as its `uiSchema`'s `ui:options`
 
 ### SelectedOptionDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#selectedoptiondescription}
 

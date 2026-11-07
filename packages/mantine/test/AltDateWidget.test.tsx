@@ -6,6 +6,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import Templates from '../src/templates/index.ts';
 import AltDateWidget from '../src/widgets/DateTime/AltDateWidget.tsx';
+import Widgets from '../src/widgets/index.ts';
 
 const user = userEvent.setup();
 
@@ -16,7 +17,8 @@ function makeProps(props: Partial<WidgetProps> = {}): WidgetProps {
     id: 'root',
     name: 'root',
     schema,
-    registry: getTestRegistry(schema, {}, Templates, {}),
+    // Mantine's own widgets, since each part renders the registry's `SelectWidget`
+    registry: getTestRegistry(schema, {}, Templates, Widgets),
     options: {},
     label: 'Alt Date',
     value: undefined,
@@ -82,11 +84,11 @@ describe('AltDateWidget', () => {
 
     expect(getAllByRole('combobox').map((part) => (part as HTMLInputElement).value)).toEqual([
       '2020',
-      '1',
-      '2',
-      '0',
-      '0',
-      '0',
+      '01',
+      '02',
+      '00',
+      '00',
+      '00',
     ]);
   });
 
@@ -141,11 +143,11 @@ describe('AltDateWidget', () => {
     expect(onBlur).toHaveBeenCalledWith('root__year', undefined);
   });
 
-  test.each([true, false])('marks each part required when the field required is %s', (required) => {
+  test.each([true, false])('leaves each part unrequired when the field required is %s', (required) => {
     const { getAllByRole } = renderWidget({ required });
 
     for (const part of getAllByRole('combobox')) {
-      expect((part as HTMLInputElement).required).toBe(required);
+      expect((part as HTMLInputElement).required).toBe(false);
     }
   });
 
@@ -177,5 +179,14 @@ describe('AltDateWidget', () => {
     for (const part of getAllByRole('combobox')) {
       expect(part).toHaveAccessibleDescription(/Looks good/);
     }
+  });
+
+  test("renders each part through the registry's SelectWidget", () => {
+    const CustomSelectWidget = ({ id }: WidgetProps) => <span data-testid='custom-select' id={id} />;
+    const { getAllByTestId } = renderWidget({
+      registry: getTestRegistry(schema, {}, Templates, { ...Widgets, SelectWidget: CustomSelectWidget }),
+    });
+
+    expect(getAllByTestId('custom-select').map((part) => part.id)).toEqual(['root__year', 'root__month', 'root__day']);
   });
 });

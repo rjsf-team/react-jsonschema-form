@@ -56,4 +56,18 @@ describe("chakra-ui's AltDateWidget", () => {
       }
     },
   );
+
+  // A required native select would block the submit of a date whose parts aren't all picked yet
+  it("doesn't require each part of a required field", () => {
+    render(
+      <NativeSelectForm
+        schema={{ type: 'object', required: ['when'], properties: { when: { type: 'string', title: 'When' } } }}
+        uiSchema={{ when: { 'ui:widget': 'alt-date' } }}
+        validator={validator}
+      />,
+    );
+    for (const part of ['year', 'month', 'day']) {
+      expect(screen.getByRole('combobox', { name: `When, ${part}` })).not.toBeRequired();
+    }
+  });
 });
