@@ -1179,6 +1179,17 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       ]);
       expect(schemaUtils.sanitizeDataForNewSchema(stringSchema, stringSchema, ['a', 'c'])).toEqual(['a']);
     });
+    it('filters out object items a multi-value enum option rejects when the items declare properties (#5440)', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: { id: { type: 'string' } },
+          oneOf: [{ enum: [{ id: 'a' }, { id: 'b' }] }],
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [{ id: 'a' }, { id: 'c' }])).toEqual([{ id: 'a' }]);
+    });
     it('sanitizes the array items of an array per element, as it does an array property (#5440)', () => {
       const items = (...keys: string[]): RJSFSchema => ({
         type: 'array',
@@ -1202,10 +1213,14 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       const schema: RJSFSchema = { type: 'array', items: { type: 'array', oneOf: [{ enum: [['a'], ['b']] }] } };
       expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [['a'], ['c']])).toEqual([['a']]);
     });
-    it('drops an array item whose items the new schema gives another type (#5440)', () => {
+    it('keeps an array item whose items the new schema describes differently, as before (#5440)', () => {
       const oldSchema: RJSFSchema = { type: 'array', items: { type: 'array', items: { type: 'string' } } };
-      const newSchema: RJSFSchema = { type: 'array', items: { type: 'array', items: { type: 'number' } } };
-      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [['1']])).toEqual([]);
+      const row = (items?: RJSFSchema): RJSFSchema => ({ type: 'array', ...(items && { items }) });
+      [row({ type: 'number' }), row({ type: ['string', 'null'] }), row({}), row()].forEach((newItems) => {
+        expect(schemaUtils.sanitizeDataForNewSchema({ type: 'array', items: newItems }, oldSchema, [['1']])).toEqual([
+          ['1'],
+        ]);
+      });
     });
     it('keeps the array items the new schema describes where the old items declare no type (#5440)', () => {
       const newSchema: RJSFSchema = { type: 'array', items: { type: 'array', items: { type: 'string' } } };

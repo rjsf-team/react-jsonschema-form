@@ -139,12 +139,12 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *       - If the new items' type, read through `getSchemaType()`, is "object" or "array" and the items aren't a select
  *         over object or array constants (see `isWholeValueSelect()`), then, for each element in the `data`, stopping
  *         at `maxItems` if specified:
- *         - Retrieve the items schemas for that element. An object element whose new items schema declares
- *           `properties` is recursively sanitized against them
- *         - Any other array or object element is dropped when it is none of the new items schema's `enum` or constant
- *           options. Otherwise an array element is recursively sanitized, against the new items schema on both sides
- *           when the old items declare no type, and dropped when that returns `undefined`, and an object element is
- *           kept as it is
+ *         - Retrieve the items schemas for that element, and drop an array or object element that is none of the new
+ *           items schema's `enum` or constant options
+ *         - Otherwise, an object element whose new items schema declares `properties` is recursively sanitized against
+ *           them, and any other object element is kept as it is
+ *         - Otherwise, an array element is recursively sanitized, against the new items schema on both sides when the
+ *           old items declare no type, and kept as it is when that returns `undefined`
  *         - For array items, an element that is not an array is kept as it is. Under a type list for object items, so
  *           is an element that is not an object, such as a `null` the list allows
  *       - Otherwise, return the `data` without the items that are none of the new `enum` or constant options, removing
@@ -361,24 +361,23 @@ export default function sanitizeDataForNewSchema<
               // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
               const newItemSchema = retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
               // An item its options don't list is dropped, as a scalar item is, whatever the old schema listed
-              const isListed = () => replacementForInvalidEnumValue<S>(newItemSchema, aValue) === NO_VALUE;
-              if (itemsType === 'array' ? isListed() : newItemSchema[PROPERTIES_KEY]) {
+              if (replacementForInvalidEnumValue<S>(newItemSchema, aValue) !== NO_VALUE) {
+                itemValue = undefined;
+              } else if (itemsType === 'array' || newItemSchema[PROPERTIES_KEY]) {
                 // Old items declaring no type describe no array to sanitize against, so an array element is read
-                // against the new items schema alone, rather than dropped for an old side holding no array
+                // against the new items schema alone, rather than kept unsanitized for an old side holding no array
                 const oldItemSchema =
                   sameRawItemsSchema || (itemsType === 'array' && !oldSchemaType)
                     ? newItemSchema
                     : retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
-                itemValue = sanitizeDataForNewSchema<T, S, F>(
-                  context,
-                  rootSchema,
-                  newItemSchema,
-                  oldItemSchema,
-                  aValue,
-                );
+                // An array element whose items the two sides describe differently is kept as it is: the shared array
+                // rule clears it even where the new items accept it
+                itemValue =
+                  sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newItemSchema, oldItemSchema, aValue) ??
+                  aValue;
               } else {
-                // An object item declaring no `properties` has none to prune, so it is kept as it is when listed
-                itemValue = isPlainObject(aValue) && isListed() ? aValue : undefined;
+                // An object item declaring no `properties` has none to prune, so it is kept as it is
+                itemValue = isPlainObject(aValue) ? aValue : undefined;
               }
             }
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {

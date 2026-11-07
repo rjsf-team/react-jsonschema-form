@@ -1523,6 +1523,25 @@ describe('oneOf', () => {
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ tags: [{ k: 1 }] });
   });
 
+  it.each([
+    ['nullable cells', { type: 'array', items: { type: ['string', 'null'] } }],
+    ['typeless cells', { type: 'array', items: {} }],
+    ['no items', { type: 'array' }],
+  ] as [string, RJSFSchema][])('keeps grid rows when switching to %s', async (_, rowB) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { grid: { type: 'array', items: { type: 'array', items: { type: 'string' } } } } },
+        { title: 'B', properties: { grid: { type: 'array', items: rowB } } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { grid: [['a', 'b'], ['c']] } });
+
+    await user.selectOptions(elementOf(node, 'select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ grid: [['a', 'b'], ['c']] });
+  });
+
   describe('Arrays', () => {
     it('should correctly render mixed types for oneOf inside array items', async () => {
       const schema: RJSFSchema = {
