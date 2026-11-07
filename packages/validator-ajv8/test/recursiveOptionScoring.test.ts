@@ -113,6 +113,31 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
           { type: 'object', additionalProperties: { $ref: '#/definitions/Value' } },
         ],
       },
+      // The same JSON value, whose recurring options state their types through an allOf
+      WrappedValue: {
+        anyOf: [
+          { type: 'string' },
+          { allOf: [{ $ref: '#/definitions/ValueArray' }] },
+          { allOf: [{ $ref: '#/definitions/ValueObject' }] },
+        ],
+      },
+      ValueArray: { type: 'array', items: { $ref: '#/definitions/WrappedValue' } },
+      ValueObject: { type: 'object', additionalProperties: { $ref: '#/definitions/WrappedValue' } },
+      // Kinds of node, told apart by a const, that offer each other as children, as in #4990
+      A: {
+        type: 'object',
+        properties: {
+          kind: { const: 'A' },
+          child: { oneOf: [{ type: 'null' }, { $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] },
+        },
+      },
+      B: {
+        type: 'object',
+        properties: {
+          kind: { const: 'B' },
+          child: { oneOf: [{ type: 'null' }, { $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] },
+        },
+      },
       // A tree whose recurring options both take objects
       Tree: {
         type: 'object',
@@ -128,7 +153,7 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
     { properties: { v: { type: 'number' } } },
   ];
 
-  it.each(['Value', 'Tree'])('checks the type of a property leading to %s', (below) => {
+  it.each(['Value', 'WrappedValue', 'Tree'])('checks the type of a property leading to %s', (below) => {
     expect(getFirstMatchingOption({ validator }, { v: 5 }, optionsBelow(below), ROOT)).toBe(1);
   });
 
@@ -146,5 +171,30 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
     expect(getClosestMatchingOption({ validator }, ROOT, { meta: { kind: 'b' } }, [metaOf('a'), metaOf('b')], -1)).toBe(
       1,
     );
+  });
+
+  it('tells options apart by a const in the node a property names, where that node recurs', () => {
+    const options: RJSFSchema[] = [
+      { properties: { w: { $ref: '#/definitions/A' } } },
+      { properties: { w: { $ref: '#/definitions/B' } } },
+    ];
+    const formData = { w: { kind: 'B' } };
+    expect(getFirstMatchingOption({ validator }, formData, options, ROOT)).toBe(1);
+    expect(getClosestMatchingOption({ validator }, ROOT, formData, options, -1)).toBe(1);
+    const schema: RJSFSchema = { ...ROOT, type: 'object', dependencies: { x: ['w'] }, oneOf: options };
+    expect(retrieveSchema({ validator }, schema, schema, formData).properties?.w).toEqual({
+      $ref: '#/definitions/B',
+    });
+  });
+
+  it.each([
+    ['a oneOf', { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] }, { kind: 'A' }],
+    ['a not', { not: { $ref: '#/definitions/A' } }, { kind: 'B' }],
+  ])('checks a node that recurs in full below %s beside the option', (_keyword, beside, data) => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { other: { type: 'number' } } },
+      { type: 'object', properties: { name: { type: 'string' } }, required: ['name'], ...beside },
+    ];
+    expect(getFirstMatchingOption({ validator }, { name: 'x', ...data }, options, ROOT)).toBe(1);
   });
 });
