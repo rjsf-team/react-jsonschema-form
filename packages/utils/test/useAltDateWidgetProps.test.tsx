@@ -557,6 +557,59 @@ describe('useAltDateWidgetProps()', () => {
       expect(select).not.toHaveAttribute('aria-labelledby');
     });
 
+    test('describes and marks each element by the attributes its caller gives, without a plan', () => {
+      render(
+        <DateElement
+          rootId='other'
+          label='Other'
+          type='year'
+          range={[2020, 2024]}
+          value={-1}
+          select={vi.fn()}
+          registry={REGISTRY}
+          onBlur={vi.fn()}
+          onFocus={vi.fn()}
+          attributes={{ 'aria-describedby': 'other__error other__success', 'aria-invalid': true }}
+        />,
+      );
+      const select = screen.getByRole('combobox', { name: 'Other, year' });
+      expect(select).toHaveAttribute('aria-describedby', 'other__error other__success');
+      expect(select).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    test("describes each element by the attributes its caller gives in place of its plan's", () => {
+      const presentation = resolveFieldPresentation({
+        id: TIME_PROPS.id,
+        declaration: {
+          label: 'template',
+          description: 'template',
+          errors: 'template',
+          help: 'template',
+          labelledBy: 'aria-labelledby',
+        },
+        label: 'When',
+        errors: ['is required'],
+      });
+      render(
+        <DateElement
+          rootId={TIME_PROPS.id}
+          label='When'
+          type='year'
+          range={[2020, 2024]}
+          value={-1}
+          select={vi.fn()}
+          registry={REGISTRY}
+          onBlur={vi.fn()}
+          onFocus={vi.fn()}
+          presentation={presentation}
+          attributes={{ 'aria-describedby': `${TIME_PROPS.id}__error ${TIME_PROPS.id}__success` }}
+        />,
+      );
+      const select = screen.getByRole('combobox', { name: 'When, year' });
+      expect(select).toHaveAttribute('aria-describedby', `${TIME_PROPS.id}__error ${TIME_PROPS.id}__success`);
+      expect(select).not.toHaveAttribute('aria-invalid');
+    });
+
     test('names an element by the translated name its caller already has, without translating it again', () => {
       const translateString = vi.fn(englishStringTranslator);
       render(
@@ -585,6 +638,43 @@ describe('useAltDateWidgetProps()', () => {
       const select = screen.getByRole('combobox', { name: '[minute] / When' });
       expect(select).toHaveDisplayValue('[minute]');
     });
+  });
+  test('DateElement leaves its SelectWidget unrequired unless its caller requires it', () => {
+    const elementProps = {
+      rootId: 'root',
+      type: 'year',
+      range: [2000, 2030] as [number, number],
+      value: -1,
+      select: vi.fn(),
+      registry: REGISTRY,
+      onBlur: vi.fn(),
+      onFocus: vi.fn(),
+    };
+    const { rerender } = render(<DateElement {...elementProps} />);
+    expect(screen.getByRole('combobox', { name: 'year' })).not.toBeRequired();
+    rerender(<DateElement {...elementProps} elementRequired />);
+    expect(screen.getByRole('combobox', { name: 'year' })).toBeRequired();
+  });
+  test('DateElement hands its SelectWidget the options its caller gives, beside its own enumOptions', () => {
+    const SpySelectWidget = vi.fn((props: WidgetProps) => SelectWidget(props));
+    const registry = { ...REGISTRY, widgets: { SelectWidget: SpySelectWidget } } as unknown as Registry;
+    render(
+      <DateElement
+        rootId='root'
+        type='month'
+        range={[1, 12]}
+        value={-1}
+        select={vi.fn()}
+        registry={registry}
+        onBlur={vi.fn()}
+        onFocus={vi.fn()}
+        elementOptions={{ searchable: false, enumOptions: [{ value: 0, label: 'replaced' }] }}
+      />,
+    );
+    const { options } = SpySelectWidget.mock.calls[0][0];
+    expect(options.searchable).toBe(false);
+    expect(options.enumOptions).toHaveLength(12);
+    expect(options.enumOptions?.[0]).toEqual({ value: 1, label: '01' });
   });
   test('DateElement hands its SelectWidget an unset element as undefined, and a set one as it is', () => {
     const SpySelectWidget = vi.fn((props: WidgetProps) => SelectWidget(props));

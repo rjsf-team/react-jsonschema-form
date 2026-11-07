@@ -1,148 +1,67 @@
-import { useCallback, useMemo } from 'react';
-import { Flex, Box, Group, Button, Select, Input } from '@mantine/core';
-import type { SelectProps } from '@mantine/core';
+import { useMemo } from 'react';
+import { Flex, Group, Button, Input } from '@mantine/core';
 import type {
   DateElementProp,
-  DateObject,
+  DateElementProps,
   FormContextType,
-  GenericObjectType,
-  Registry,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import {
-  dateElementAriaLabel,
-  dateElementId,
-  dateElementLabel,
-  dateRangeOptions,
-  getControlDescribedBy,
-  TranslatableString,
-  useAltDateWidgetProps,
-} from '@rjsf/utils';
+import { DateElement, getControlDescribedBy, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 import {
   getOwnLabel,
-  useAriaDescribedByProps,
   useFieldWrapperProps,
   useShownSuccessId,
+  useThemeWrapperProps,
   wrapperPropsOption,
 } from '../../utils.tsx';
 
-interface AltDatePartProps {
-  id: string;
-  part: DateElementProp;
-  ariaDescribedByProps: GenericObjectType;
-  disabled?: boolean;
-  autofocus?: boolean;
-  required?: boolean;
-  invalid: boolean;
-  success: boolean;
-  label?: string;
-  /** The size `useFieldWrapperProps()` resolves for the field's inputs */
-  size?: SelectProps['size'];
-  translateString: Registry['translateString'];
-  onChange: (property: keyof DateObject, value?: string) => void;
-  onBlur: (id: string, value: unknown) => void;
-  onFocus: (id: string, value: unknown) => void;
-}
-
-/** One part of the date, such as the year, as a `Select` with its own id. The part is named by the same
- * `aria-label` every theme's `DateElement` gives its selects, such as `When, year`, which Mantine also gives the
- * part's listbox.
- */
-function AltDatePart({
-  id,
-  part,
-  ariaDescribedByProps,
-  disabled,
-  autofocus,
-  required,
-  invalid,
-  success,
-  label,
-  size,
-  translateString,
-  onChange,
-  onBlur,
-  onFocus,
-}: AltDatePartProps) {
-  const partId = dateElementId(id, part.type);
-  const partLabel = dateElementLabel(part.type, translateString);
-  const [start, end] = part.range;
-  const data = useMemo(() => dateRangeOptions(start, end).map((item) => item.value.toString()), [start, end]);
-  const handleChange = useCallback(
-    (value: string | null) => onChange(part.type as keyof DateObject, value || undefined),
-    [onChange, part.type],
-  );
-  const handleBlur = useCallback(() => onBlur(partId, part.value), [onBlur, partId, part.value]);
-  const handleFocus = useCallback(() => onFocus(partId, part.value), [onFocus, partId, part.value]);
-  return (
-    <Box>
-      <Select
-        id={partId}
-        name={partId}
-        placeholder={partLabel}
-        aria-label={dateElementAriaLabel(partLabel, translateString, label)}
-        disabled={disabled}
-        autoFocus={autofocus}
-        size={size}
-        // The parts are read-only while `searchable` is false, so this adds no constraint validation
-        required={required}
-        // Booleans mark and style the part invalid or successful, without Mantine rendering the field's messages again
-        error={invalid}
-        success={success}
-        data={data}
-        value={part.value === undefined ? null : part.value.toString()}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        searchable={false}
-        allowDeselect={false}
-        comboboxProps={{ withinPortal: false }}
-        {...ariaDescribedByProps}
-      />
-    </Box>
-  );
-}
-
-interface AltDatePartsProps extends Omit<AltDatePartProps, 'part' | 'ariaDescribedByProps' | 'success'> {
+interface AltDatePartsProps<T, S extends StrictRJSFSchema, F extends FormContextType> extends Omit<
+  DateElementProps<T, S, F>,
+  'value' | 'type' | 'range' | 'attributes'
+> {
   elements: DateElementProp[];
-  /** The ids its field's plan describes each part by */
-  describedBy?: string;
-  inputContainer: unknown;
-  wrapperOverrides: GenericObjectType;
+  invalid: boolean;
   fieldSuccessId: string;
 }
 
-/** The parts of the date, rendered inside the field's `Input.Wrapper`, whose success message they are described by
- * while it is shown. Their aria props are the same for every part, so they are resolved once here.
- */
-function AltDateParts({
+/** Rendered inside the field's `Input.Wrapper`, whose context `useShownSuccessId()` reads */
+function AltDateParts<T, S extends StrictRJSFSchema, F extends FormContextType>({
   elements,
-  describedBy,
+  invalid,
   autofocus,
-  inputContainer,
-  wrapperOverrides,
+  elementOptions,
   fieldSuccessId,
   ...partProps
-}: AltDatePartsProps) {
+}: AltDatePartsProps<T, S, F>) {
+  const { rootId, presentation } = partProps;
   const shownSuccessId = useShownSuccessId(fieldSuccessId);
-  const ariaDescribedByProps = useAriaDescribedByProps(
-    'Select',
-    partProps.id,
-    { inputContainer },
-    { describedBy, alsoDescribedBy: shownSuccessId, wrapperOverrides },
+  const attributes = useMemo(
+    () => ({
+      'aria-describedby': getControlDescribedBy<T, S, F>(
+        { id: rootId, presentation },
+        shownSuccessId ? [shownSuccessId] : [],
+      ),
+      'aria-invalid': invalid || undefined,
+    }),
+    [rootId, presentation, shownSuccessId, invalid],
+  );
+  // `success` styles each part, while its `wrapperProps.success` of null keeps the part's wrapper from repeating the
+  // field's message
+  const partOptions = useMemo(
+    () => ({ ...elementOptions, success: !!shownSuccessId }),
+    [elementOptions, shownSuccessId],
   );
   return elements.map((part, i) => (
-    <AltDatePart
-      // oxlint-disable-next-line react/no-array-index-key
-      key={i}
-      part={part}
-      ariaDescribedByProps={ariaDescribedByProps}
-      autofocus={autofocus && i === 0}
-      success={!!shownSuccessId}
+    <DateElement<T, S, F>
+      key={part.type}
       {...partProps}
+      {...part}
+      autofocus={autofocus && i === 0}
+      attributes={attributes}
+      elementOptions={partOptions}
     />
   ));
 }
@@ -155,43 +74,50 @@ export default function AltDateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, disabled, readonly, autofocus, required, label, options, registry, onBlur, onFocus } = props;
+  const { id, disabled, readonly, autofocus, required, label, options, registry, onBlur, onFocus, presentation } =
+    props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
   const { wrapperProps, size, invalid, successId, slotlessErrors } = useFieldWrapperProps(props, 'Select', true);
   const { inputContainer, wrapperProps: fieldWrapperProps } = options;
-  // Each part renders the field's `inputContainer` in its own wrapper, rather than the field's wrapper around them all,
-  // resolved as for any input. The field's own wrapper applies the rest of its `wrapperProps`, so only their
-  // `inputContainer` reaches the parts, over the theme's `Select` `wrapperProps` without replacing them. The field's
-  // wrapper also renders the one success message, which each part is described by.
-  const wrapperOverrides = useMemo(() => {
+  // The field's own wrapper applies its `wrapperProps` but for `inputContainer`, which each part renders around itself.
+  // The theme's `Select` `wrapperProps` are merged in here, since the parts' own would replace them
+  const themeWrapperProps = useThemeWrapperProps('Select');
+  const partOptions = useMemo(() => {
     const ownWrapperProps = wrapperPropsOption(fieldWrapperProps);
     return {
-      success: null,
-      ...(ownWrapperProps && 'inputContainer' in ownWrapperProps && { inputContainer: ownWrapperProps.inputContainer }),
+      searchable: false,
+      allowDeselect: false,
+      size,
+      inputContainer,
+      wrapperProps: {
+        ...themeWrapperProps,
+        success: null,
+        ...(ownWrapperProps &&
+          'inputContainer' in ownWrapperProps && { inputContainer: ownWrapperProps.inputContainer }),
+      },
     };
-  }, [fieldWrapperProps]);
+  }, [size, inputContainer, themeWrapperProps, fieldWrapperProps]);
   return (
     <>
       <Input.Wrapper {...wrapperProps}>
         <Flex gap='xs' align='center' wrap='nowrap'>
-          <AltDateParts
-            id={id}
+          <AltDateParts<T, S, F>
+            rootId={id}
             elements={elements}
-            describedBy={getControlDescribedBy<T, S, F>(props)}
-            inputContainer={inputContainer}
-            wrapperOverrides={wrapperOverrides}
-            disabled={disabled || readonly}
-            autofocus={autofocus}
-            required={required}
+            select={handleChange}
+            presentation={presentation}
             invalid={invalid}
+            elementOptions={partOptions}
+            disabled={disabled}
+            readonly={readonly}
+            autofocus={autofocus}
+            elementRequired={required}
             // The text `ui:label: false` hides names the parts, as it names the field's other controls; where the
             // template draws the label, the parts still name themselves after it
             label={getOwnLabel<T, S, F>(props) ?? label}
-            size={size}
-            translateString={translateString}
+            registry={registry}
             fieldSuccessId={successId}
-            onChange={handleChange}
             onBlur={onBlur}
             onFocus={onFocus}
           />

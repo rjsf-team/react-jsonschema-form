@@ -362,6 +362,16 @@ const themeComponentNames = {
 
 export type AriaInputComponentName = keyof typeof themeComponentNames;
 
+/** The `wrapperProps` the theme gives `component`, resolved from the components `useAriaDescribedByProps()` resolves
+ * them from, for a caller that hands an input `wrapperProps` of its own, which would otherwise replace them
+ *
+ * @param component - The Mantine input whose theme `wrapperProps` to resolve
+ * @returns - The theme's `wrapperProps`, or `undefined` where it gives none
+ */
+export function useThemeWrapperProps(component: AriaInputComponentName) {
+  return wrapperPropsOption(useProps<GenericObjectType>(themeComponentNames[component], {}, {}).wrapperProps);
+}
+
 /** Returns `value` when it is an object, else `undefined`
  *
  * @param value - The value an option or the theme gives
@@ -894,12 +904,10 @@ export function useFieldWrapperProps<
  * @param component - The Mantine input the props are spread on, whose theme `defaultProps` supply any `inputContainer`
  * @param id - The id of the field the input belongs to
  * @param options - The widget's options, whose own `inputContainer`, if any, is still applied inside the override
- * @param settings - `describedBy`, the ids to describe the input by, `alsoDescribedBy`, further ids to describe it by,
- *   `wrapperOverrides`, set over the `wrapperProps` the input would otherwise take, rather than replacing them,
- *   `slotlessErrors`, which gets what to render after the input from the `inputWrapperOrder` it resolves to, and
- *   `label`, the input's own label, which names it through `aria-label` where that `inputWrapperOrder` leaves the label
- *   out, since Mantine then renders no label to name it, unless the options or the theme give an `aria-label` of
- *   their own
+ * @param settings - `describedBy`, the ids to describe the input by, `slotlessErrors`, which gets what to render after
+ *   the input from the `inputWrapperOrder` it resolves to, and `label`, the input's own label, which names it through
+ *   `aria-label` where that `inputWrapperOrder` leaves the label out, since Mantine then renders no label to name it,
+ *   unless the options or the theme give an `aria-label` of their own
  * @returns - An object to spread on the props of the Mantine input, after the theme props
  */
 export function useAriaDescribedByProps(
@@ -908,23 +916,16 @@ export function useAriaDescribedByProps(
   options: GenericObjectType,
   {
     describedBy,
-    alsoDescribedBy,
-    wrapperOverrides,
     slotlessErrors,
     label,
   }: {
     describedBy?: string;
-    alsoDescribedBy?: string;
-    wrapperOverrides?: GenericObjectType;
     slotlessErrors?: (inputWrapperOrder: unknown) => ReactNode;
     label?: string;
   },
 ) {
   const props = useProps<GenericObjectType>(themeComponentNames[component], {}, pickOptions(options, inputPickedKeys));
-  const wrapperObject = useMemo(() => {
-    const ownWrapperProps = wrapperPropsOption(props.wrapperProps);
-    return wrapperOverrides ? { ...ownWrapperProps, ...wrapperOverrides } : ownWrapperProps;
-  }, [props.wrapperProps, wrapperOverrides]);
+  const wrapperObject = useMemo(() => wrapperPropsOption(props.wrapperProps), [props.wrapperProps]);
   // As in Mantine's `useInputProps`, a key present in `wrapperProps` wins even when `undefined`, which `Input.Wrapper`
   // then resolves from `InputWrapper`'s theme `defaultProps`
   const fromWrapper = (name: string): unknown =>
@@ -938,7 +939,7 @@ export function useAriaDescribedByProps(
   const containerProps = useAriaContainerProps({
     id,
     successId: ownIdOr(ownSuccessProps, partId(id, 'success')),
-    describedBy: [describedBy, alsoDescribedBy].filter(Boolean).join(' '),
+    describedBy,
     ownDescriptionProps: resolved.descriptionProps,
     // Mantine's `Select` and `MultiSelect` name their listbox by the `-label` id they derive, whatever the label's id
     idsLabel: component !== 'Select' && component !== 'MultiSelect',
