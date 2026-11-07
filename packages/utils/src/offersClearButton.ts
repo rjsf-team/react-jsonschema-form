@@ -15,14 +15,20 @@ const SHOWN_VALUE = new Map<string | undefined, RegExp>(
 );
 
 /** Reports whether an input with `allowClearTextInputs` offers its clear button: when it shows a value that isn't the
- * number `0`. A `number`, `date`, `datetime-local`, `month`, `time` or `week` input shows only a value in its type's syntax and
- * blanks anything else, `false` included, read by that syntax alone, so a day past its month's end counts as shown; any
- * other input shows whatever isn't an empty string
+ * number `0`. A `range` or `color` input offers none, since it always shows a value and can't show an empty one. A
+ * `number`, `date`, `datetime-local`, `month`, `time` or `week` input shows only a value in its type's syntax and blanks
+ * anything else, `false` included, read by that syntax alone, so a day past its month's end counts as shown; any other
+ * input shows whatever isn't an empty string
  *
  * @param inputValue - The input's `value`, as `toInputValue()` gives it
  * @param [type] - The input's `type`
  * @returns - True if the input offers its clear button
  */
 export default function offersClearButton(inputValue: string | number, type?: string): boolean {
-  return Boolean(inputValue) && (SHOWN_VALUE.get(type)?.test(String(inputValue)) ?? true);
+  return (
+    type !== 'range' &&
+    type !== 'color' &&
+    Boolean(inputValue) &&
+    (SHOWN_VALUE.get(type)?.test(String(inputValue)) ?? true)
+  );
 }
