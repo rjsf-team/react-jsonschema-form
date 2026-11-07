@@ -49,4 +49,23 @@ describe('getControlAttributes()', () => {
     const presentation = plan({ declaration: { ...TEMPLATE, labelledBy: 'aria-labelledby' } });
     expect(getControlAttributes({ id: ID, presentation })).toEqual({ 'aria-labelledby': `${ID}__label` });
   });
+
+  it('names a control by its label where the field handing it its plan draws that label, unless the plan names it', () => {
+    const own = plan({ declaration: { ...TEMPLATE, label: 'self' }, label: 'Foo' });
+    expect(getControlAttributes({ id: ID, presentation: { ...own, drawnByField: ['label'] } })['aria-label']).toBe(
+      'Foo',
+    );
+    expect(getControlAttributes({ id: ID, presentation: own })['aria-label']).toBeUndefined();
+    const hidden = plan({ declaration: { ...TEMPLATE, label: 'self' }, label: 'Foo', showLabel: false });
+    expect(
+      getControlAttributes({
+        id: ID,
+        presentation: {
+          ...hidden,
+          drawnByField: ['label'],
+          control: { id: ID, attributes: { 'aria-labelledby': 'other' } },
+        },
+      }),
+    ).toEqual({ 'aria-labelledby': 'other' });
+  });
 });

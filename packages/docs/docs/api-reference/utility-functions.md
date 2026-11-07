@@ -1184,6 +1184,7 @@ A `SelectWidget` takes this name from [widgetAriaProps()](#widgetariaprops) inst
 Gets the ARIA attributes a widget spreads onto the focusable element that carries its `id`: the `aria-labelledby`, the `aria-label` a control whose label `ui:label: false` hides is named by, the `aria-describedby` and the `aria-invalid` its field's plan gives its control, followed in `aria-describedby` by the ids of the elements the widget renders to describe that control itself, such as its examples list, each once.
 A widget rendered without a plan, as one a caller renders without a `SchemaField` above it, is described by [ariaDescribedByIds()](#ariadescribedbyids).
 The plan's `required` is left to the widget's own `required` prop, which a widget may turn off, as `FileWidget` does once a file is chosen.
+A control whose label the field handing the widget its plan draws itself, as the plan's `drawnByField` says, and which nothing else names, is named by the label's text through `aria-label`, since the widget draws no label to name it by. A field that draws a `<label for>` naming that control gives its own `aria-labelledby` in the `control.attributes` of the plan it hands down, since that `aria-label` would replace the label's name. A control the field renders itself takes the plan's `control.attributes`, which carry no such name, rather than these.
 
 #### Parameters
 
@@ -1618,7 +1619,7 @@ A field that renders its value with a single widget declares `WIDGET_FIELD_PRESE
 A widget's declaration is the merged `widgets` entry for its key, beneath which [mergeThemePresentation()](#mergethemepresentation) layered each layer's `default`, or the merged `default` for a key no layer declares.
 An alias is looked up by the key it stands for, and a widget given as a component by the first key it is registered under that declares it, or by the `default` alone when none does.
 A part a field leaves to its widget, with no widget given, falls back to the field default, so a field such as `ArrayField` that renders a single widget only for a multi-select draws its own heading otherwise.
-A field that leaves its label to the widget it renders takes that widget's `labelledBy`, or else its own entry's, but never the `fieldDefault`'s, which reaches only the fields that keep their label or render no widget to leave it to.
+A field that leaves its label to the widget it renders takes that widget's `labelledBy`, or else its own entry's, but never the `fieldDefault`'s. A field that keeps its label takes its own entry's, or else that of the widget it renders, which knows whether a `for` can name its control, as a group of radios can't, or else the `fieldDefault`'s. A widget's `labelledBy` includes the theme's `default`, so a `default.labelledBy` beats a `fieldDefault.labelledBy` there.
 `uncheckedIsFalse` and `uncheckedIsEmpty` are the widget's when the field renders one, since they describe the control, or else the field's own entry's, and are left out where nothing declares them.
 A label the component draws takes the `labelPlacement` of the declaration that settled it on `'self'`: the widget's when the field leaves its label to one, or else the field's. It is left out where nothing declares it or the template draws the label.
 A part nothing declares is drawn by the template. A widget `getWidget()` rejects, such as a name that is neither registered nor an alias, gets whatever is declared for it.
@@ -1626,11 +1627,11 @@ A part nothing declares is drawn by the template. A widget `getWidget()` rejects
 #### Parameters
 
 - source: PresentationSource&lt;T, S, F> - The registry's `fields` and `widgets`, and the `presentation` [mergeThemePresentation()](#mergethemepresentation) merged, or a single layer, which gets the same answer
-- subject: PresentationSubject&lt;T, S, F> - The field's `schema`, its `field` component, the `fieldKey` that named that component, if a key did, and the `widget` it renders its value with, if it renders a single one, after the field's own defaulting: a `BooleanField` given no widget or a `null` one renders `'checkbox'`. `@rjsf/core` takes a component registered under one of its widget-rendering field keys to pick its widget as its own does, so a replacement that picks another, such as a `BooleanField` defaulting to radios, declares its parts under that key
+- subject: PresentationSubject&lt;T, S, F> - The field's `schema`, its `field` component, the `fieldKey` that named that component, if a key did, and the `widget` it renders its value with, if it renders a single one, after the field's own defaulting: a `BooleanField` given no widget or a `null` one renders the `widget` its entry declares, or else `'checkbox'`. `@rjsf/core` takes a component registered under one of its widget-rendering field keys to pick its widget as its own does, so a replacement that renders another, such as a `BooleanField` rendering radios, declares that `widget` under `BooleanField`, the one key it is read under
 
 #### Returns
 
-- ResolvedPresentationDeclaration: The owner, `'template'` or `'self'`, of each part, `labelledBy`, how a label the template draws reaches the control, `uncheckedIsFalse` where the control holds `false` left alone, `uncheckedIsEmpty` where it holds an empty array, and `labelPlacement` where a label the component draws is declared to sit
+- ResolvedPresentationDeclaration: The owner, `'template'` or `'self'`, of each part, `labelledBy`, how a label the template draws reaches the control, `uncheckedIsFalse` where the control holds `false` left alone, `uncheckedIsEmpty` where it holds an empty array, `labelPlacement` where a label the component draws is declared to sit, and `drawnByField`, the label and description the field's own declaration, rather than its widget's, has it draw itself
 
 ### getPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1959,6 +1960,7 @@ Deprecated, and kept through v7 for a component rendered without a plan: read [g
 ### getWidgetDescription()
 
 Gets the description a widget draws itself, as a checkbox does: the one its field's plan says the widget draws, with the text and id the plan gives it.
+It draws none that the field component handing it the plan draws itself, as the plan's `drawnByField` says.
 A widget rendered without a plan draws its `ui:description` or schema `description` unless `hideLabel` turns its label off, an empty `ui:description` falling back to the schema's, as a field's description and `getArrayDescription()`'s do.
 Without a plan it can't tell which description the theme's `FieldTemplate` draws: `@rjsf/core`'s and `@rjsf/chakra-ui`'s draw it for a field whose `ui:widget` is the `checkbox` alias ([#4825](https://github.com/rjsf-team/react-jsonschema-form/issues/4825)), so a checkbox widget in those themes doesn't call it there, as their own `CheckboxWidget`s don't.
 
@@ -3812,6 +3814,7 @@ widgetAriaProps(partProps); // { 'aria-label': 'When, year', 'aria-describedby':
 ### widgetDrawsLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#widgetdrawslabel}
 
 Whether a widget draws its field's label itself: where the field's plan says the widget draws it, or, for a widget rendered without a plan, unless the deprecated `hideLabel` turns it off.
+It is false for a label the field component handing it the plan draws itself, as the plan's `drawnByField` says, so a custom field that draws its label and spreads its props into a widget shows the label once.
 Read it rather than `hideLabel`, which stays through v7 only for a widget rendered without a plan.
 A field with no label can still leave its description to the widget, so a widget that draws its own description takes it from [getWidgetDescription()](#getwidgetdescription) rather than gating it on this.
 

@@ -153,6 +153,12 @@ describe('widgetDrawsLabel()', () => {
     expect(widgetDrawsLabel({})).toBe(true);
     expect(widgetDrawsLabel({ hideLabel: true })).toBe(false);
   });
+
+  it('draws no label the field handing it its plan draws itself', () => {
+    const presentation = plan({ declaration: { ...TEMPLATE, label: 'self' } });
+    expect(widgetDrawsLabel({ presentation: { ...presentation, drawnByField: ['label'] } })).toBe(false);
+    expect(widgetDrawsLabel({ presentation: { ...presentation, drawnByField: ['description'] } })).toBe(true);
+  });
 });
 
 describe('templateLabelFor()', () => {

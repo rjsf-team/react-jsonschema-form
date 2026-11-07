@@ -1013,30 +1013,30 @@ function withoutOwnParts({ label, description, help, errors }: FieldPresentation
 /** Gets the plan a field the form's author supplies hands the field below it rendering the same id: the label,
  * description and help it was planned to draw itself are left to that field, which draws them, so a wrapper drawing
  * none of them doesn't leave its description drawn nowhere and named by its control's `aria-describedby`. The parts its
- * template draws stay above. Errors it was planned to draw itself are drawn by none, since a field below takes the
- * errors of the field above as drawn there, and its control is described by none of the ids of the parts handed down
+ * template draws stay above, and so do errors it was planned to draw itself, which a component declaring them its own
+ * promises to render under their id, so the field below takes them as drawn above and its control is described by
+ * them. Its control is described by none of the ids of the parts handed down
  *
  * @param presentation - The plan of the field the author supplies
  * @returns - The plan the field below inherits
  */
 function getPresentationHandedDown(presentation: FieldPresentation): FieldPresentation {
   const { label, description, help, errors } = presentation;
-  const ownIds = new Set(
-    [label, description, help, errors].filter((part) => part.by === 'self').map((part) => part.id),
-  );
+  const ownIds = new Set([label, description, help].filter((part) => part.by === 'self').map((part) => part.id));
   if (ownIds.size === 0) {
     return presentation;
   }
-  return { ...presentation, ...withoutOwnParts(presentation), ...withoutDescribers(presentation, ownIds) };
+  return { ...presentation, ...withoutOwnParts(presentation), errors, ...withoutDescribers(presentation, ownIds) };
 }
 
 /** Gets the plan the field rendering a field component's options is handed when that component is not planned as it:
  * the parts the component draws itself are its own, such as a custom field's label or an object's heading, so the
  * options' selector draws none of them. A container's heading, which renders under the label id its plan gives it,
  * names the selector as a template's label would, and its description and errors describe it, marking it invalid while
- * they show. A custom field, or a layout grid, may render none of the ids its own parts take, so neither its label
- * nor the ids of the parts it draws itself name or describe the selector, or the option below that inherits this plan.
- * Only the control's attributes reach the selector, which takes an id of its own
+ * they show. A custom field, or a layout grid, may render none of the ids its own parts take, so neither its label nor
+ * the ids of the label, description and help it draws itself name or describe the selector, or the option below that
+ * inherits this plan. The errors it declares drawing itself are rendered under their id, as a wrapper's are, so they
+ * describe both as drawn above. Only the control's attributes reach the selector, which takes an id of its own
  *
  * @param presentation - The plan of the field component the options render beside
  * @param id - The id of the field
@@ -1046,7 +1046,9 @@ function getPresentationHandedDown(presentation: FieldPresentation): FieldPresen
  */
 function getOptionsPresentation(presentation: FieldPresentation, id: string, isContainer: boolean): FieldPresentation {
   if (!isContainer) {
-    return getPresentationHandedDown(presentation);
+    const handedDown = getPresentationHandedDown(presentation);
+    const { errors } = handedDown;
+    return errors.by === 'self' ? { ...handedDown, errors: { ...errors, by: 'above' } } : handedDown;
   }
   const { label, errors, control, describedBy } = presentation;
   const parts = withoutOwnParts(presentation);
@@ -1331,7 +1333,7 @@ export function useSchemaFieldPlan<
   // The `SchemaField` that named the field takes its own errors out of the `errorSchema` it hands on, and passes them
   // to the field framed inside its template through the context, whatever the named field does with its `rawErrors`
   const ownErrors = framedAbove ? namedHere?.errors : errorSchema?.__errors;
-  const { presentation, labelPlacement } = useSchemaFieldPresentation<T, S, F>({
+  const { presentation, labelPlacement, drawnByField } = useSchemaFieldPresentation<T, S, F>({
     id: fieldId,
     // The parts the field draws itself render under its own id, unless it is planned as the field rendering the options
     componentId: plannedAsOptions ? undefined : fieldComponentId,
@@ -1391,6 +1393,7 @@ export function useSchemaFieldPlan<
     renderedComponent,
     presentation,
     labelPlacement,
+    drawnByField,
     ownErrors,
     xxxOfOptions,
     uiState,
@@ -1459,6 +1462,7 @@ function SchemaFieldRender<
     plannedAsOptions,
     renderedComponent,
     presentation,
+    drawnByField,
     ownErrors,
     xxxOfOptions,
     uiState,
@@ -1548,6 +1552,12 @@ function SchemaFieldRender<
       schemaDescription,
     };
   }, [fieldId, presentation, handsDownOwnParts, valueDrawsLabel, title, schemaDescription]);
+  // A field the form's author supplies may spread its props, plan included, into a widget, which mustn't draw again the
+  // parts that field draws itself (#5591)
+  const fieldPresentation = useMemo(
+    () => (handsDownOwnParts && presentation && drawnByField ? { ...presentation, drawnByField } : presentation),
+    [handsDownOwnParts, presentation, drawnByField],
+  );
   const isContainer = renderedComponent === fields.ObjectField || renderedComponent === fields.ArrayField;
   // Keyed on whether the options render rather than on their array, which is retrieved afresh with every change of the
   // data, so a keystroke beside the options hands the selector the same plan
@@ -1686,7 +1696,7 @@ function SchemaFieldRender<
       errorSchema={fieldErrorSchema as ErrorSchema}
       // The `XxxOfField` hands the field's own errors to the selected option and its selector
       {...getFieldErrorProps<T, S, F>(XxxOfField ? undefined : ownErrors)}
-      presentation={presentation}
+      presentation={fieldPresentation}
     />
   );
   // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it.

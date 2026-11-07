@@ -2114,3 +2114,252 @@ describe('the label a field hands its widget', () => {
     },
   );
 });
+
+describe('the plan of a field that renders another widget or draws its own parts (#5591)', () => {
+  const warnings = setupConsoleWarnSuppression();
+
+  /** The props a field hands the widget it renders, its plan included, as a field spreading its own props would */
+  function widgetPropsOf(props: FieldProps): Omit<WidgetProps, 'options'> {
+    const { id, name, schema, uiSchema, registry, presentation, required, disabled, readonly, formData } = props;
+    return {
+      id,
+      name,
+      schema,
+      uiSchema,
+      registry,
+      presentation,
+      required,
+      disabled,
+      readonly,
+      value: formData,
+      label: schema.title ?? '',
+      onChange: (value: unknown) => props.onChange(value, props.fieldPath),
+      onBlur: props.onBlur,
+      onFocus: props.onFocus,
+    };
+  }
+  function RadioBool(props: FieldProps) {
+    const { RadioWidget } = props.registry.widgets;
+    return (
+      <RadioWidget
+        {...widgetPropsOf(props)}
+        options={{
+          enumOptions: [
+            { label: 'Yes', value: true },
+            { label: 'No', value: false },
+          ],
+        }}
+      />
+    );
+  }
+  const requiredBoolean: RJSFSchema = {
+    type: 'object',
+    required: ['b'],
+    properties: { b: { type: 'boolean', title: 'B' } },
+  };
+
+  it('plans a replacement BooleanField by the widget its declaration names', () => {
+    const plans: (FieldPresentation | undefined)[] = [];
+    function RecordingRadioBool(props: FieldProps) {
+      plans.push(props.presentation);
+      return <RadioBool {...props} />;
+    }
+    createFormComponent({
+      schema: requiredBoolean,
+      fields: { BooleanField: RecordingRadioBool },
+      presentation: { fields: { BooleanField: { widget: 'radio' } } },
+    });
+
+    expect(plans.at(-1)?.control?.attributes.required).toBe(true);
+    expect(plans.at(-1)?.label.requiredMarker).toBe(true);
+    expect(screen.getByRole('radiogroup', { name: /B/ })).toBeInTheDocument();
+  });
+
+  it("renders core's BooleanField with the widget its declaration names", () => {
+    createFormComponent({
+      schema: requiredBoolean,
+      presentation: { fields: { BooleanField: { widget: 'radio' } } },
+    });
+
+    expect(screen.getByRole('radiogroup', { name: /B/ })).toBeInTheDocument();
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+    expect(warnings.consoleSpy).not.toHaveBeenCalled();
+  });
+
+  it('reads a declared widget only under BooleanField, so a string keeps the widget its schema picks', () => {
+    createFormComponent({
+      schema: { type: 'object', properties: { s: { type: 'string', title: 'S', enum: ['a', 'b'] } } },
+      presentation: { fields: { StringField: { widget: 'textarea' }, NumberField: { widget: 'updown' } } },
+    });
+
+    expect(screen.getByRole('combobox', { name: 'S' })).toBeInTheDocument();
+    for (const key of ['StringField', 'NumberField']) {
+      expect(warnings.consoleSpy).toHaveBeenCalledWith(
+        `Form: \`presentation.fields.${key}\` declares a \`widget\`, which only the \`BooleanField\` entry reads, so it is ignored.`,
+      );
+    }
+  });
+
+  it("keeps a field's ui:widget over the widget its declaration names", () => {
+    createFormComponent({
+      schema: requiredBoolean,
+      uiSchema: { b: { 'ui:widget': 'select' } },
+      presentation: { fields: { BooleanField: { widget: 'radio' } } },
+    });
+
+    expect(screen.getByRole('combobox', { name: /B/ })).toBeInTheDocument();
+  });
+
+  it('draws once the label and description a custom field draws itself and spreads its plan into a widget that draws them', () => {
+    function MyField(props: FieldProps) {
+      const { CheckboxWidget } = props.registry.widgets;
+      return (
+        <div>
+          <h5>{props.schema.title}</h5>
+          <p id={props.presentation?.description.id}>{props.schema.description}</p>
+          <CheckboxWidget {...widgetPropsOf(props)} options={{}} />
+        </div>
+      );
+    }
+    createFormComponent({
+      schema: { type: 'object', properties: { b: { type: 'boolean', title: 'Agree', description: 'About it' } } },
+      uiSchema: { b: { 'ui:field': MyField } },
+    });
+
+    expect(screen.getAllByText('Agree')).toHaveLength(1);
+    expect(screen.getAllByText('About it')).toHaveLength(1);
+    expect(screen.getByRole('checkbox', { name: 'Agree' })).toHaveAccessibleDescription('About it');
+  });
+
+  it('names a widget by the label a custom field draws for it, through the aria-labelledby its plan hands down', () => {
+    function LabelledWidgetField(props: FieldProps) {
+      const { TextWidget } = props.registry.widgets;
+      const { presentation } = props;
+      const ownLabelId = `${props.id}-own-label`;
+      return (
+        <div>
+          <label htmlFor={props.id} id={ownLabelId}>
+            Custom name
+          </label>
+          <TextWidget
+            {...widgetPropsOf(props)}
+            presentation={
+              presentation?.control && {
+                ...presentation,
+                control: {
+                  ...presentation.control,
+                  attributes: { ...presentation.control.attributes, 'aria-labelledby': ownLabelId },
+                },
+              }
+            }
+            options={{}}
+          />
+        </div>
+      );
+    }
+    createFormComponent({
+      schema: { type: 'object', properties: { s: { type: 'string', title: 'S' } } },
+      uiSchema: { s: { 'ui:field': LabelledWidgetField } },
+    });
+
+    expect(screen.getByRole('textbox', { name: 'Custom name' })).toBeInTheDocument();
+  });
+
+  it('keeps the name a custom field gives its own control by the label it draws for it', () => {
+    function LabelledField({ id, presentation }: FieldProps) {
+      return (
+        <div>
+          <label htmlFor={id}>Custom name</label>
+          <input id={id} {...presentation?.control?.attributes} />
+        </div>
+      );
+    }
+    createFormComponent({
+      schema: { type: 'object', properties: { s: { type: 'string', title: 'S' } } },
+      uiSchema: { s: { 'ui:field': LabelledField } },
+    });
+
+    expect(screen.getByRole('textbox', { name: 'Custom name' })).toBeInTheDocument();
+  });
+
+  it("names a boolean's radios by the label its field keeps, through the radio's labelledBy", () => {
+    createFormComponent({
+      schema: { type: 'object', properties: { b: { type: 'boolean', title: 'B' } } },
+      uiSchema: { b: { 'ui:widget': 'radio' } },
+      presentation: { fields: { BooleanField: { label: 'template' } } },
+    });
+
+    expect(screen.getByRole('radiogroup', { name: 'B' })).toHaveAttribute('aria-labelledby');
+  });
+
+  it('describes the control below by the errors a wrapper declared drawing them draws', () => {
+    function Wrapper(props: FieldProps) {
+      const { SchemaField } = props.registry.fields;
+      const { errors } = props.presentation ?? {};
+      return (
+        <div>
+          <SchemaField {...props} uiSchema={{ ...props.uiSchema, 'ui:field': undefined }} />
+          {errors?.by === 'self' && errors.messages.length > 0 && (
+            <ul id={errors.id}>
+              {errors.messages.map((message) => (
+                <li key={message}>{message}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    }
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { x: { type: 'string', title: 'X' } } },
+      uiSchema: { x: { 'ui:field': 'Wrapper' } },
+      fields: { Wrapper },
+      presentation: { fields: { Wrapper: { errors: 'self' } } },
+      extraErrors: { x: { __errors: ['is wrong'] } },
+    });
+    const input = node.querySelector('#root_x')!;
+
+    expect(node.querySelectorAll(`#${errorId('root_x')}`)).toHaveLength(1);
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(input.getAttribute('aria-describedby')?.split(' ')).toContain(errorId('root_x'));
+  });
+
+  it('describes the selector beside a custom field, and the option below, by the errors it declared drawing them draws', () => {
+    const plans: (FieldPresentation | undefined)[] = [];
+    function RecordingSelect(props: WidgetProps) {
+      plans.push(props.presentation);
+      return <select id={props.id} aria-label='Option' />;
+    }
+    function MyField(props: FieldProps) {
+      const { errors } = props.presentation ?? {};
+      return <div id={errors?.id}>{errors?.messages.join(',')}</div>;
+    }
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          x: {
+            anyOf: [
+              { type: 'string', title: 'A' },
+              { type: 'number', title: 'B' },
+            ],
+          },
+        },
+      },
+      uiSchema: { x: { 'ui:field': 'MyField' } },
+      fields: { MyField },
+      widgets: { SelectWidget: RecordingSelect },
+      presentation: { fields: { MyField: { errors: 'self' } } },
+      extraErrors: { x: { __errors: ['is wrong'] } },
+    });
+
+    const { errors, control } = plans.at(-1)!;
+    const input = screen.getByRole('textbox');
+
+    expect(screen.getAllByText('is wrong')).toHaveLength(1);
+    expect(errors.by).toBe('above');
+    expect(control?.attributes['aria-describedby']?.split(' ')).toContain(errors.id);
+    expect(control?.attributes['aria-invalid']).toBe(true);
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(input).toHaveAccessibleDescription('is wrong');
+  });
+});
