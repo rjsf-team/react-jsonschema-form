@@ -58,6 +58,15 @@ function oldListedValues<S extends StrictRJSFSchema = RJSFSchema>(oldSchema: S, 
     : undefined;
 }
 
+/** Whether `newSchema` declares an array `const` that `data` isn't, where `oldSchema` didn't declare the same one */
+function arrayConstRejects<S extends StrictRJSFSchema = RJSFSchema>(newSchema: S, oldSchema: S, data: unknown) {
+  return (
+    Array.isArray(newSchema.const) &&
+    !deepEquals(newSchema.const, data) &&
+    !deepEquals(oldSchema.const, newSchema.const)
+  );
+}
+
 /** Whether two schemas' `type`s name the same types. A list is compared by what it names rather than by identity or
  * order, since the two schemas declaring it are usually separate objects and `['null', 'string']` allows what
  * `['string', 'null']` does
@@ -136,11 +145,18 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *   - If the old and new schema `items` are both a single schema rather than a tuple or a boolean:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
- *       - If the new items' type, read through `getSchemaType()`, is "object" and the items aren't a select over object
- *         constants (see `isWholeValueSelect()`), then:
- *         - For each element in the `data`, recursively sanitize it against the items schemas retrieved for that
- *           element, stopping at `maxItems` if specified. Under a type list, only an element that is an object is
- *           sanitized, and any other, such as a `null` the list allows, is kept as it is
+ *       - If the new items' type, read through `getSchemaType()`, is "object" or "array" and the items aren't a select
+ *         over object or array constants (see `isWholeValueSelect()`), then, for each element in the `data`, stopping
+ *         at `maxItems` if specified:
+ *         - Retrieve the items schemas for that element, and keep an element that is one of the new items
+ *           schema's `enum` or constant options as it is, dropping one that is none of them
+ *         - Otherwise, an object element whose new items schema declares `properties` is recursively sanitized against
+ *           them, and any other object element is kept as it is
+ *         - Otherwise, an array element the new items' array `const` rejects, as above, is dropped, and any other is
+ *           recursively sanitized, against the new items schema on both sides when the old items declare no type, and
+ *           kept as it is when that returns `undefined`
+ *         - For array items, an element that is not an array is kept as it is unless the options don't list it. Under
+ *           a type list for object items, so is an element that is not an object, such as a `null` the list allows
  *       - Otherwise, return the `data` without the items that are none of the new `enum` or constant options, removing
  *         any values after `maxItems` if it is set
  *   - Otherwise, if both schemas declare the same `items` and `prefixItems`, and the same `additionalItems` where
@@ -297,9 +313,7 @@ export default function sanitizeDataForNewSchema<
     // reading it as the value would clear the array on every sanitize pass. A `const` the old schema already declared
     // was rejecting the array before, so `Form`'s sanitize pass, which runs whenever a conditional anywhere in the
     // form flips, keeps it for validation to report rather than dropping data nothing refills
-    (!Array.isArray(newSchema.const) ||
-      deepEquals(newSchema.const, data) ||
-      deepEquals(oldSchema.const, newSchema.const)) &&
+    !arrayConstRejects<S>(newSchema, oldSchema, data) &&
     // A select over whole arrays holds one of its values, so an array it does not list is cleared as well, unless the
     // old schema listed the same values, for the same reason. Its constant options are read as the property's are
     (replacementForInvalidEnumValue<S>(resolveConstantOptions<S>(newSchema, rootSchema), data) === NO_VALUE ||
@@ -345,19 +359,44 @@ export default function sanitizeDataForNewSchema<
         const itemsType = newSchemaType === undefined ? undefined : getSchemaType<S>(newItemsSchema);
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
-        if (itemsType === 'object' && !isWholeValueSelect<S>(newItemsSchema)) {
+        if ((itemsType === 'object' || itemsType === 'array') && !isWholeValueSelect<S>(newItemsSchema)) {
           newFormData = data.reduce<unknown[]>((newValue, aValue: T) => {
-            let itemValue: unknown = aValue;
-            if (newSchemaType === 'object' || isPlainObject(aValue)) {
-              // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
-              // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
-              const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
-              const newItemSchema = sameRawItemsSchema
-                ? oldItemSchema
-                : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
-              itemValue = sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newItemSchema, oldItemSchema, aValue);
+            if (maxItems >= 0 && newValue.length >= maxItems) {
+              return newValue;
             }
-            if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
+            const isContainerItem =
+              itemsType === 'array' ? Array.isArray(aValue) : newSchemaType === 'object' || isPlainObject(aValue);
+            // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
+            // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
+            const newItemSchema = retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
+            const listedValues = enumValuesForSchema<S>(newItemSchema);
+            let itemValue: unknown = aValue;
+            if (listedValues) {
+              // An item its options list is one of them as a whole, so it is kept as it is, and one they don't list is
+              // dropped, as a scalar item is, whatever the old schema listed
+              itemValue = listedValues.some((value) => deepEquals(value, aValue)) ? aValue : undefined;
+            } else if (isContainerItem && (itemsType === 'array' || newItemSchema[PROPERTIES_KEY])) {
+              const oldItemSchema = sameRawItemsSchema
+                ? newItemSchema
+                : retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
+              // Old items declaring no type describe no array to sanitize against, so an array element is read
+              // against the new items schema alone, rather than kept unsanitized for an old side holding no array.
+              // An array element whose items the two sides describe differently is kept as it is: the shared array
+              // rule clears it even where the new items accept it. One a new `const` rejects is dropped, as there
+              itemValue = arrayConstRejects<S>(newItemSchema, oldItemSchema, aValue)
+                ? undefined
+                : (sanitizeDataForNewSchema<T, S, F>(
+                    context,
+                    rootSchema,
+                    newItemSchema,
+                    itemsType === 'array' && !oldSchemaType ? newItemSchema : oldItemSchema,
+                    aValue,
+                  ) ?? aValue);
+            } else if (isContainerItem) {
+              // An object item declaring no `properties` has none to prune, so it is kept as it is
+              itemValue = isPlainObject(aValue) ? aValue : undefined;
+            }
+            if (itemValue !== undefined) {
               newValue.push(itemValue);
             }
             return newValue;
