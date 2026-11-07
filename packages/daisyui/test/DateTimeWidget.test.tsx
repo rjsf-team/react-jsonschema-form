@@ -240,6 +240,21 @@ describe('DateTimeWidget', () => {
       expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020 2:30 PM');
     });
 
+    // A parent that rebuilds its form data hands over a new `Date` for the same instant on every render
+    test('keeps the day picked in the open popup across a new Date for the same instant', async () => {
+      const onChange = vi.fn();
+      const props = (value: Date) =>
+        makeWidgetMockProps({ value, onChange, schema: { type: 'string', format: 'date-time' } });
+      const { container, rerender } = render(<DateTimeWidget {...props(new Date(Date.UTC(2016, 3, 5, 14, 30)))} />);
+
+      await openPicker(container);
+      await pickTheTwelfth();
+      rerender(<DateTimeWidget {...props(new Date(Date.UTC(2016, 3, 5, 14, 30)))} />);
+      await user.click(screen.getByText('Done'));
+
+      expect(onChange).toHaveBeenCalledWith('2016-04-12T14:30:00.000Z');
+    });
+
     // date-fns prints a year with no era, so year 0 would show as the year 1, and RFC 3339 has no room for either
     describe.each(['date', 'iso-date-time', 'date-time'])('in a %s field', (formatName) => {
       test.each([

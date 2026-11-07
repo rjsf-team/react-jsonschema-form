@@ -1,12 +1,12 @@
 import type { ChangeEvent } from 'react';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { isNamedByTemplateLabel, partId, TranslatableString } from '@rjsf/utils';
 import { format, isValid } from 'date-fns';
 
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
 import type { DatePickerCalendarProps } from '../DatePickerCalendar.tsx';
-import { useDateFormatter, useDatePicker, useDateReader } from '../datePickerHooks.ts';
+import { useDateFormatter, useDatePicker, useStoredDate } from '../datePickerHooks.ts';
 import DatePickerTrigger, { DatePickerPopup, getDatePickerName } from '../DatePickerTrigger.tsx';
 
 /** Props for the DateTimePicker popup component, which is the calendar's own plus the time input's
@@ -82,8 +82,7 @@ export default function DateTimeWidget<
   const named = isNamedByTemplateLabel<T, S, F>(props);
   const pickerName = getDatePickerName<T, S, F>(props);
   const formatDate = useDateFormatter<S>(schema, 'date-time');
-  const readDate = useDateReader<S>(schema, 'date-time');
-  const initialDate = useMemo(() => readDate(value), [readDate, value]);
+  const initialDate = useStoredDate<S>(schema, value, 'date-time');
   const {
     isOpen,
     popupId,

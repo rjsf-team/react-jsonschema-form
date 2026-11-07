@@ -50,7 +50,9 @@ const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 /** The shapes either picker knows how to commit, and so the ones it takes from the schema rather than from its own
  * fallback: any other format is one neither picker can spell
  */
-const KNOWN_FORMATS = ['date', 'date-time', 'iso-date-time'];
+const KNOWN_FORMATS = ['date', 'date-time', 'iso-date-time'] as const;
+
+type KnownFormat = (typeof KNOWN_FORMATS)[number];
 
 /** Reads a stored value that is a `date` proper as the day it names, at local midnight. The `Date` constructor reads
  * a day with no zone as UTC midnight, which names the day before to every reader behind UTC once date-fns formats it
@@ -128,7 +130,8 @@ function dayNamedBy(text?: string) {
  */
 function readDay(raw: unknown, text: string | undefined) {
   const utc = text?.match(UTC_DATE_TIME);
-  const instant = readInstant(utc ? `${utc[1]}T${utc[2]}Z` : (text ?? raw));
+  // The spec's format allows a fraction of exactly three digits, and this one can only be zeros
+  const instant = readInstant(utc ? `${utc[1]}T${utc[2].replace(/\.0+$/, '')}Z` : (text ?? raw));
   const dayInItsOwnText = dayNamedBy(text);
   if (!instant) {
     // Every dialect beyond ISO 8601 is optional for an engine to accept, so a text naming a day outright is read as
@@ -154,7 +157,7 @@ function readDay(raw: unknown, text: string | undefined) {
  * @returns - That format, or `undefined` where the widget's own fallback decides
  */
 function declaredFormat<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
-  return typeof schema.format === 'string' && KNOWN_FORMATS.includes(schema.format) ? schema.format : undefined;
+  return KNOWN_FORMATS.find((known) => known === schema.format);
 }
 
 /** Reads a field's stored value as the date a picker holds, in the shape its format names: a `date` as the calendar
@@ -165,7 +168,7 @@ function declaredFormat<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
  * @param shape - The format to read it as
  * @returns - The date it names, or `undefined` for a value naming none
  */
-function readStoredDate(raw: unknown, shape: string) {
+function readStoredDate(raw: unknown, shape: KnownFormat) {
   const text = typeof raw === 'string' ? raw.trim() : undefined;
   const dateOnly = readDateOnly(text);
   if (dateOnly) {
@@ -182,31 +185,38 @@ function readStoredDate(raw: unknown, shape: string) {
       return readDateOnly(naive) ?? readInstant(naive ?? raw);
     }
     // `Date` rejects ISO text with surrounding whitespace
-    default:
+    case 'date-time':
       return readInstant(text ?? raw);
+    default:
+      return shape satisfies never;
   }
 }
 
-/** Builds the reader that turns a field's stored value into the date a picker holds, deciding the shape from the same
- * format `useDateFormatter()` writes, so either picker reads a field the way it writes it.
+/** Reads a field's stored value as the date a picker holds, deciding the shape from the same format
+ * `useDateFormatter()` writes, so either picker reads a field the way it writes it.
  *
  * A date whose local year is outside 1-9999 reads as no date at all: RFC 3339 has no room for its year, and date-fns
  * prints a year with no era, so year 0 would show as the year 1.
  *
  * @param schema - The schema for the field, whose `format` names the shape it stores
+ * @param value - The stored value
  * @param fallback - The shape to read where the schema declares no format either picker knows
- * @returns - The reader for the field's stored value, which returns `undefined` for a value naming no date it can show
+ * @returns - The date it names, or `undefined` for a value naming no date it can show. It keeps its identity while the
+ *          value is unchanged, counting a `Date` by its instant, since a new one discards the draft of an open picker
  */
-export function useDateReader<S extends StrictRJSFSchema = RJSFSchema>(schema: S, fallback: 'date' | 'date-time') {
-  const schemaFormat = declaredFormat(schema);
-  return useCallback(
-    (raw: unknown) => {
-      const date = readStoredDate(raw, schemaFormat ?? fallback);
-      const year = date?.getFullYear() ?? 0;
-      return year >= 1 && year <= 9999 ? date : undefined;
-    },
-    [fallback, schemaFormat],
-  );
+export function useStoredDate<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  value: unknown,
+  fallback: 'date' | 'date-time',
+) {
+  const shape = declaredFormat(schema) ?? fallback;
+  // A parent rebuilding its form data hands over a new `Date` for the same instant on every render
+  const raw = value instanceof Date ? value.getTime() : value;
+  return useMemo(() => {
+    const date = readStoredDate(raw, shape);
+    const year = date?.getFullYear() ?? 0;
+    return year >= 1 && year <= 9999 ? date : undefined;
+  }, [raw, shape]);
 }
 
 /** Builds the formatter that turns the date a picker is holding into the text the field stores. Either picker can be
@@ -223,20 +233,22 @@ export function useDateReader<S extends StrictRJSFSchema = RJSFSchema>(schema: S
  * @returns - The formatter for the field's committed value
  */
 export function useDateFormatter<S extends StrictRJSFSchema = RJSFSchema>(schema: S, fallback: 'date' | 'date-time') {
-  const schemaFormat = declaredFormat(schema);
+  const shape = declaredFormat(schema) ?? fallback;
   return useCallback(
     (date: Date) => {
-      switch (schemaFormat ?? fallback) {
+      switch (shape) {
         case 'date':
           return format(date, 'yyyy-MM-dd');
         // That format's timezone is optional, so it stores the naive wall-clock time its widget displays
         case 'iso-date-time':
           return format(date, "yyyy-MM-dd'T'HH:mm:ss");
-        default:
+        case 'date-time':
           return date.toISOString();
+        default:
+          return shape satisfies never;
       }
     },
-    [fallback, schemaFormat],
+    [shape],
   );
 }
 

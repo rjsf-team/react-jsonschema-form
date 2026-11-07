@@ -1,10 +1,10 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { isNamedByTemplateLabel } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
 
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
-import { useDateFormatter, useDatePicker, useDateReader } from '../datePickerHooks.ts';
+import { useDateFormatter, useDatePicker, useStoredDate } from '../datePickerHooks.ts';
 import DatePickerTrigger, { DatePickerPopup, getDatePickerName } from '../DatePickerTrigger.tsx';
 
 /** The `DateWidget` component provides a date picker with DaisyUI styling.
@@ -27,8 +27,7 @@ export default function DateWidget<
     props;
   const named = isNamedByTemplateLabel<T, S, F>(props);
   const pickerName = getDatePickerName<T, S, F>(props);
-  const readDate = useDateReader<S>(schema, 'date');
-  const initialDate = useMemo(() => readDate(value), [readDate, value]);
+  const initialDate = useStoredDate<S>(schema, value, 'date');
   const formatDate = useDateFormatter<S>(schema, 'date');
   const {
     isOpen,
