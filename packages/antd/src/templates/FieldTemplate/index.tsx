@@ -12,11 +12,10 @@ import {
 } from '@rjsf/utils';
 import { Form } from 'antd';
 
-import { DEFAULT_LABEL_COL } from '../../formContext.ts';
+import { DEFAULT_LABEL_COL, DEFAULT_WRAPPER_COL } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
 import stripTrailingColon from '../stripTrailingColon.ts';
 
-const VERTICAL_WRAPPER_COL = { span: 24 };
 const TOOLTIP_ICON = <QuestionCircleOutlined aria-hidden />;
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
@@ -50,7 +49,7 @@ export default function FieldTemplate<
     colon,
     labelAlign,
     labelCol = DEFAULT_LABEL_COL,
-    wrapperCol = VERTICAL_WRAPPER_COL,
+    wrapperCol = DEFAULT_WRAPPER_COL,
     wrapperStyle,
     descriptionLocation = 'below',
   }: AntdFormContext = formContext;

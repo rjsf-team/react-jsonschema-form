@@ -20,10 +20,8 @@ import {
 import { Col, Row, Form, Input } from 'antd';
 
 import useControlState from '../../controlState.ts';
-import { DEFAULT_LABEL_COL, DEFAULT_ROW_GUTTER } from '../../formContext.ts';
+import { DEFAULT_LABEL_COL, DEFAULT_ROW_GUTTER, DEFAULT_WRAPPER_COL } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
-
-const VERTICAL_WRAPPER_COL = { span: 24 };
 
 const INPUT_STYLE = {
   width: '100%',
@@ -66,7 +64,7 @@ export default function WrapIfAdditionalTemplate<
     labelCol = DEFAULT_LABEL_COL,
     rowGutter = DEFAULT_ROW_GUTTER,
     toolbarAlign = 'top',
-    wrapperCol = VERTICAL_WRAPPER_COL,
+    wrapperCol = DEFAULT_WRAPPER_COL,
     wrapperStyle,
   }: AntdFormContext = registry.formContext;
   const { templates, translateString } = registry;
