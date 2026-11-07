@@ -219,17 +219,15 @@ function withoutAddedOptionalObjectsWithin<T, S extends StrictRJSFSchema, F exte
   uiSchemas: WalkUiSchemas<T, S, F>,
 ): unknown {
   const isObjectValue = isPlainObject(value) && isPlainObject(oldValue);
+  const isArrayPair = Array.isArray(value) && Array.isArray(oldValue);
   // A value sanitize carried over as it was holds only what the old data held
-  if (value === oldValue || (!isObjectValue && !(Array.isArray(value) && Array.isArray(oldValue)))) {
+  if (value === oldValue || (!isObjectValue && !isArrayPair)) {
     return value;
   }
   // An array's schema is resolved against the old data, as sanitize resolved the one whose `maxItems` it cut to: a
   // `$ref`, `allOf` or `if`/`then` can supply it, and a condition on the items reads differently after the cut
   const schema = schemaUtils.retrieveSchema(rawSchema, asFieldValue<T>(isObjectValue ? value : oldValue));
-  if (
-    !isObjectValue &&
-    (value as unknown[]).length !== Math.min((oldValue as unknown[]).length, schema.maxItems ?? Infinity)
-  ) {
+  if (isArrayPair && value.length !== Math.min(oldValue.length, schema.maxItems ?? Infinity)) {
     return value;
   }
   const { uiSchemaDefinitions } = uiSchemas;
