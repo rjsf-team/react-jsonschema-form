@@ -150,6 +150,8 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *         at `maxItems` if specified:
  *         - Retrieve the items schemas for that element, and keep an element that is one of the new items
  *           schema's `enum` or constant options as it is, dropping one that is none of them
+ *         - Otherwise, an object element whose new items schema declares `properties`, or an array element, is kept as
+ *           it is when it equals the new items' `const`
  *         - Otherwise, an object element whose new items schema declares `properties` is recursively sanitized against
  *           them, and any other object element is kept as it is
  *         - Otherwise, an array element the new items' array `const` rejects, as above, is dropped, and any other is
@@ -382,16 +384,20 @@ export default function sanitizeDataForNewSchema<
               // Old items declaring no type describe no array to sanitize against, so an array element is read
               // against the new items schema alone, rather than kept unsanitized for an old side holding no array.
               // An array element whose items the two sides describe differently is kept as it is: the shared array
-              // rule clears it even where the new items accept it. One a new `const` rejects is dropped, as there
-              itemValue = arrayConstRejects<S>(newItemSchema, oldItemSchema, aValue)
-                ? undefined
-                : (sanitizeDataForNewSchema<T, S, F>(
+              // rule clears it even where the new items accept it. One a new `const` rejects is dropped, as there, and
+              // one equal to it is kept as it is, as a listed one is
+              if (arrayConstRejects<S>(newItemSchema, oldItemSchema, aValue)) {
+                itemValue = undefined;
+              } else if (newItemSchema.const === undefined || !deepEquals(newItemSchema.const, aValue)) {
+                itemValue =
+                  sanitizeDataForNewSchema<T, S, F>(
                     context,
                     rootSchema,
                     newItemSchema,
                     itemsType === 'array' && !oldSchemaType ? newItemSchema : oldItemSchema,
                     aValue,
-                  ) ?? aValue);
+                  ) ?? aValue;
+              }
             } else if (isContainerItem) {
               // An object item declaring no `properties` has none to prune, so it is kept as it is
               itemValue = isPlainObject(aValue) ? aValue : undefined;

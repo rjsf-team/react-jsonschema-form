@@ -1244,6 +1244,22 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, { type: 'array', items }, data)).toEqual([['x']]);
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, newSchema, data)).toEqual(data);
     });
+    it('keeps an array item equal to its items const as it is, rather than filling its absent object properties', () => {
+      const items: RJSFSchema = {
+        type: 'array',
+        const: [{ k: 'a' }],
+        items: {
+          type: 'object',
+          properties: { k: { type: 'string' }, opt: { type: 'object', properties: { x: { type: 'string' } } } },
+        },
+      };
+      const schema: RJSFSchema = { type: 'array', items };
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [[{ k: 'a' }]])).toEqual([[{ k: 'a' }]]);
+    });
+    it('sanitizes an undefined object item whose items declare no const, rather than dropping it', () => {
+      const schema: RJSFSchema = { type: 'array', items: { type: 'object', properties: { k: { type: 'string' } } } };
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [undefined, { k: 'a' }])).toEqual([{}, { k: 'a' }]);
+    });
     it('filters out array items a new array const rejects where the old items declare no type', () => {
       const newSchema: RJSFSchema = {
         type: 'array',
