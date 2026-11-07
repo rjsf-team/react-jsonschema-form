@@ -1442,7 +1442,7 @@ describe('Form change handler under a parent', () => {
 
     expect(onChange.mock.lastCall![0].errorSchema.foo.__errors).toEqual(['custom on foo']);
   });
-  it('should merge in the custom errors a change raised under noValidate once validation is turned on', async () => {
+  it('should show the custom errors a change raises under noValidate at once, and keep them once validation is turned on', async () => {
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, baz: { type: 'string' } } };
     const RaiseWidget = ({ onChange }: WidgetProps) => (
       <button type='button' id='raise' onClick={() => onChange('x', { __errors: ['custom on foo'] })}>
@@ -1456,7 +1456,7 @@ describe('Form change handler under a parent', () => {
       validator: customizeValidator(),
       onChange,
     };
-    // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what the custom errors must survive
+    // oxlint-disable-next-line typescript/no-deprecated -- a widget's custom error shows under `noValidate` too
     const { container, rerender } = render(<Form {...props} noValidate />);
 
     await user.click(container.querySelector('#raise')!);
