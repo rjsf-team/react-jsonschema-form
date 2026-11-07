@@ -1222,6 +1222,46 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         ]);
       });
     });
+    it('keeps an object item its enum option lists as it is, rather than filling its absent object properties', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: { id: { type: 'string' }, opt: { type: 'object', properties: { x: { type: 'string' } } } },
+          oneOf: [{ enum: [{ id: 'a' }, { id: 'b' }] }],
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [{ id: 'a' }])).toEqual([{ id: 'a' }]);
+    });
+    it('filters out an item of array items that is not an array when the options do not list it', () => {
+      const schema: RJSFSchema = { type: 'array', items: { type: 'array', oneOf: [{ enum: [['a'], ['b']] }] } };
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [['a'], 'junk'])).toEqual([['a']]);
+    });
+    it('filters out array items a new array const rejects, unless the old items declared the same const', () => {
+      const items: RJSFSchema = { type: 'array', items: { type: 'string' } };
+      const newSchema: RJSFSchema = { type: 'array', items: { ...items, const: ['x'] } };
+      const data = [['x'], ['c']];
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, { type: 'array', items }, data)).toEqual([['x']]);
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, newSchema, data)).toEqual(data);
+    });
+    it('filters out array items a new array const rejects where the old items declare no type', () => {
+      const newSchema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'array', items: { type: 'string' }, const: ['x'] },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, { type: 'array', items: {} }, [['x'], ['c']])).toEqual([
+        ['x'],
+      ]);
+    });
+    it('checks an item of array items that is not an array against the options its own value resolves', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { type: ['array', 'null'], if: { type: 'array' }, then: { oneOf: [{ enum: [['a'], ['b']] }] } },
+      };
+      // The whole array and its `['a']` meet the `if`, and the `null` does not, so no options apply to it
+      testValidator.setReturnValues({ isValid: [true, true, false] });
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [['a'], null])).toEqual([['a'], null]);
+    });
     it('keeps the array items the new schema describes where the old items declare no type (#5440)', () => {
       const newSchema: RJSFSchema = { type: 'array', items: { type: 'array', items: { type: 'string' } } };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, { type: 'array', items: {} }, [['a'], ['b', 1]])).toEqual([
