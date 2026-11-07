@@ -2778,11 +2778,7 @@ describe('optionalDataControls', () => {
         properties: { k: { type: 'string' }, opt: { type: 'object', properties: { level: { type: 'string' } } } },
       },
     };
-    const rowDroppingBad: RJSFSchema = {
-      ...row,
-      if: { contains: { properties: { k: { const: 'bad' } }, required: ['k'] } },
-      then: { const: [] },
-    };
+    const rowDroppingBad: RJSFSchema = { ...row, oneOf: [{ enum: [[{ k: 'ok', opt: {} }], []] }] };
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
