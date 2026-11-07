@@ -273,4 +273,40 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
       expect(getFirstMatchingOption({ validator }, { v: 5 }, options, root)).toBe(1);
     },
   );
+
+  it.each([
+    ['an allOf entry', { allOf: [{ $ref: '#/$defs/Tree' }], unevaluatedProperties: false }],
+    ['a $ref beside it', { $ref: '#/$defs/Tree', unevaluatedProperties: false }],
+    ['an allOf entry naming another', { allOf: [{ $ref: '#/$defs/Wrapped' }], unevaluatedProperties: false }],
+  ])(
+    'matches an option holding a node whose unevaluatedProperties sees the properties of %s leading to a recursive choice',
+    (_spelling, wrapper) => {
+      const root: RJSFSchema = {
+        $defs: {
+          Tree: {
+            type: 'object',
+            anyOf: [
+              { properties: { child: { $ref: '#/$defs/Tree' }, a: { type: 'string' } } },
+              { properties: { child: { $ref: '#/$defs/Tree' }, b: { type: 'number' } } },
+            ],
+          },
+          Wrapped: { allOf: [{ $ref: '#/$defs/Tree' }] },
+          W: wrapper as RJSFSchema,
+        },
+      };
+      const options: RJSFSchema[] = [
+        { properties: { w: { $ref: '#/$defs/W' } } },
+        { properties: { w: { type: 'object' } } },
+      ];
+      // Cutting the `$ref` to `Tree` down to its type would hide `child` from the `unevaluatedProperties` beside it
+      expect(
+        getFirstMatchingOption(
+          { validator: customizeValidator({ AjvClass: Ajv2019 }) },
+          { w: { child: {} } },
+          options,
+          root,
+        ),
+      ).toBe(0);
+    },
+  );
 });

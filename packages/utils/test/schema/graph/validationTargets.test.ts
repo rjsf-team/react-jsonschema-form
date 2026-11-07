@@ -684,6 +684,69 @@ describe('scoringTarget()', () => {
       };
       expect(scored(schema, '/oneOf/0')).toEqual({ properties: { never: { allOf: [{ not: {} }] } } });
     });
+    it('reads the types of subschemas that apply to one value in a cycle the same whichever of them is read first', () => {
+      const A: RJSFSchema = { anyOf: [{ $ref: '#/definitions/B' }, { type: 'string' }] };
+      const B: RJSFSchema = { type: 'number', allOf: [{ $ref: '#/definitions/A' }] };
+      const Tree: RJSFSchema = {
+        anyOf: [
+          { allOf: [{ $ref: '#/definitions/A' }], properties: { c: { $ref: '#/definitions/Tree' } } },
+          { allOf: [{ $ref: '#/definitions/B' }], properties: { c: { $ref: '#/definitions/Tree' } } },
+        ],
+      };
+      const option: RJSFSchema = { properties: { v: { $ref: '#/definitions/Tree' } } };
+      const aFirst = scored({ definitions: { A, B, Tree }, oneOf: [option] }, '/oneOf/0');
+      const bFirst = scored({ definitions: { B, A, Tree }, oneOf: [option] }, '/oneOf/0');
+      expect(aFirst).toEqual({ properties: { v: { allOf: [{ type: ['number', 'string'] }] } } });
+      expect(bFirst).toEqual(aFirst);
+    });
+    it('cuts as a whole a node whose unevaluatedProperties sees a conjunct leading to a recursive choice', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          Node: { allOf: [{ $ref: '#/definitions/Base' }], unevaluatedProperties: false },
+          Base: {
+            type: 'object',
+            anyOf: [
+              { properties: { c: { $ref: '#/definitions/Node' } } },
+              { properties: { c: { $ref: '#/definitions/Node' } } },
+            ],
+          },
+          Items: { unevaluatedItems: false, $ref: '#/definitions/List' },
+          List: {
+            type: 'array',
+            anyOf: [{ prefixItems: [{ $ref: '#/definitions/List' }] }, { items: { $ref: '#/definitions/List' } }],
+          },
+        },
+        oneOf: [{ properties: { node: { $ref: '#/definitions/Node' }, items: { $ref: '#/definitions/Items' } } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: { node: { allOf: [{ type: 'object' }] }, items: { allOf: [{ type: 'array' }] } },
+      });
+    });
+    it('copies a node whose unevaluatedProperties sees only conjuncts leading to no recursive choice', () => {
+      const schema: RJSFSchema = {
+        definitions: { Choice: NESTED },
+        oneOf: [
+          {
+            properties: {
+              w: {
+                allOf: [{ type: 'object' }],
+                unevaluatedProperties: false,
+                properties: { t: { $ref: '#/definitions/Choice' } },
+              },
+            },
+          },
+        ],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: {
+          w: {
+            allOf: [{ $ref: '#/oneOf/0/properties/w/allOf/0' }],
+            unevaluatedProperties: false,
+            properties: { t: { allOf: [{ type: 'object' }] } },
+          },
+        },
+      });
+    });
     it('keeps an empty allOf entry the option writes, which no cut emptied', () => {
       const schema: RJSFSchema = { oneOf: [{ allOf: [{}], properties: { a: { type: 'string' } }, required: ['a'] }] };
       expect(scored(schema, '/oneOf/0')).toEqual({

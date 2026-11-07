@@ -29,7 +29,7 @@ import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, Str
 import KeyedMemo from './keyedMemo.ts';
 import { childPointer, isRootPointer } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
-import { booleanSchema, schemaFrom } from './schemaFrom.ts';
+import { booleanSchema, schemaFrom, schemaOfBoolean } from './schemaFrom.ts';
 
 /** The suffix `withVariantId()` adds to an `$id`, matched at the end so deriving a variant of a variant replaces it
  * rather than stacking another one on
@@ -424,19 +424,28 @@ interface Loosening {
 /** The `Loosening` that drops nothing, for a subschema outside an option's scope */
 const KEPT: Loosening = { required: false, additionalProperties: false };
 
-/** The keywords whose subschemas apply to a part of the data, a property or an item, rather than to all of it: one
- * read as `{}` only widens what the schema accepts, where a `not` or a `contains` read so would narrow it
+/** The keywords whose subschemas apply to a part of the data rather than to all of it, each with the part: `.` a
+ * property, by the name it is held under, `*` any property, `[]` any item
  */
-const PART_KEYWORDS = new Set([
-  PROPERTIES_KEY,
-  PATTERN_PROPERTIES_KEY,
-  ADDITIONAL_PROPERTIES_KEY,
-  UNEVALUATED_PROPERTIES_KEY,
-  ITEMS_KEY,
-  'additionalItems',
-  'prefixItems',
-  'unevaluatedItems',
+const PART_OF_KEYWORD = new Map([
+  [PROPERTIES_KEY, '.'],
+  [PATTERN_PROPERTIES_KEY, '*'],
+  [ADDITIONAL_PROPERTIES_KEY, '*'],
+  [UNEVALUATED_PROPERTIES_KEY, '*'],
+  [ITEMS_KEY, '[]'],
+  ['additionalItems', '[]'],
+  ['prefixItems', '[]'],
+  ['unevaluatedItems', '[]'],
+  ['contains', '[]'],
 ]);
+
+/** The keywords of `PART_OF_KEYWORD` whose subschema read as `{}` only widens what the schema accepts, where a
+ * `contains` read so would narrow it, as a `not` would
+ */
+const PART_KEYWORDS = new Set([...PART_OF_KEYWORD.keys()].filter((keyword) => keyword !== 'contains'));
+
+/** The keywords that read which parts of the data the subschemas applied beside them evaluate */
+const EVALUATING_KEYWORDS = [UNEVALUATED_PROPERTIES_KEY, 'unevaluatedItems'];
 
 /** The keywords besides the `PART_KEYWORDS` whose subschemas a copy of the node holding them can read as `{}` and only
  * widen what it accepts: each applies on top of the others, as a `$ref` does
@@ -479,17 +488,16 @@ const cutAway = new WeakSet<object>();
 /** Returns what scoring reads a subschema `recursiveChoices()` cuts as: the types `statedTypes()` reads it as taking,
  * which it accepts no more than, or `{}`
  */
-function cutTo<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): GenericObjectType {
+function cutTo<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S {
   const types = statedTypes(graph, id);
   if (types === undefined) {
-    const anything = {};
+    const anything = schemaOfBoolean(true, graph.rawRoot);
     cutAway.add(anything);
     return anything;
   }
-  if (types.length === 0) {
-    return { not: {} };
-  }
-  return { type: types.length === 1 ? types[0] : types };
+  return types.length === 0
+    ? schemaOfBoolean(false, graph.rawRoot)
+    : schemaFrom(graph.rawRoot, { type: types.length === 1 ? types[0] : types });
 }
 
 /** Returns the value the keyword `key` holds in a subschema reached at `place`, whose `$ref`s resolve against `base`,
@@ -554,8 +562,8 @@ function derive<S extends StrictRJSFSchema>(
   const innerPath = new Set(path).add(placeKey(id, place));
   const innerAbove = new Set(above).add(id);
   const choices = recursiveChoices(graph);
-  // A subschema reached where `below` says the copy cuts is named where it leads to no recursive choice and has a place,
-  // read as what `cutTo()` keeps of it where it is cut, and otherwise copied
+  // A subschema reached where `below` says the copy cuts is named where it leads to no recursive choice and has a
+  // place, read as what `cutTo()` keeps of it where it is cut, and otherwise copied
   const sub = (
     value: unknown,
     child: NodeId | undefined,
@@ -672,9 +680,9 @@ function derive<S extends StrictRJSFSchema>(
 /** Returns what the `anyOf`/`oneOf` option `id` reached at `place` is scored with: `{ $ref }` naming the place, or,
  * where something in its scope states a `required`, lists names under `dependencies`, holds a part leading to a
  * recursive choice, see `recursiveChoices()`, or, with `relax`, sets `additionalProperties: false`, the copy `derive()`
- * makes without them. A user who has yet to fill in a key the option requires is still matched to it. The `required`s are kept where
- * nothing in the scope declares `properties`: an option such as `{ required: ['email'] }` describes nothing else for
- * the data to fit, and is chosen by the keys it requires.
+ * makes without them. A user who has yet to fill in a key the option requires is still matched to it. The `required`s
+ * are kept where nothing in the scope declares `properties`: an option such as `{ required: ['email'] }` describes
+ * nothing else for the data to fit, and is chosen by the keys it requires.
  */
 function scoringTargetAt<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -845,50 +853,76 @@ function uniteTypes(
   return types === undefined || others === undefined ? undefined : [...new Set([...types, ...others])];
 }
 
-/** The reader of `statedTypes()` for each graph, which remembers what it read */
-const statedTypesMemo = new KeyedMemo<(id: NodeId) => readonly string[] | undefined>();
+/** The types `statedTypes()` reads each node of a graph as taking, per graph */
+const statedTypesMemo = new KeyedMemo<ReadonlyMap<NodeId, readonly string[] | undefined>>();
+
+/** Returns whether `types` and `others` allow the same types, undefined allowing any */
+function sameTypes(types: readonly string[] | undefined, others: readonly string[] | undefined): boolean {
+  if (types === undefined || others === undefined) {
+    return types === others;
+  }
+  return types.length === others.length && types.every((type) => others.includes(type));
+}
 
 /** Returns the types of value the node `id` takes, an `integer` read as a `number`, as its `type`, `const` and `enum`
  * say, along with what its `$ref` and `allOf` apply on top of it and the options of its `anyOf` and `oneOf` take, or
- * undefined where none of them limits the type. A node reached again while it is read limits nothing further.
+ * undefined where none of them limits the type. Where these apply to the same value in a cycle, each node of the cycle
+ * takes the most types the others let it, whichever of them is read first: every node starts out taking any, and is
+ * read again whenever a node it applies changes, which, a node only ever losing types, ends.
  */
 function statedTypes<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): readonly string[] | undefined {
-  const read = statedTypesMemo.get([graph], () => {
+  const typesOf = statedTypesMemo.get([graph], () => {
     const known = new Map<NodeId, readonly string[] | undefined>();
-    const reading = new Set<NodeId>();
-    const typesOf = (at: NodeId): readonly string[] | undefined => {
+    const appliedBy = new Map<NodeId, NodeId[]>();
+    const reads: (() => readonly string[] | undefined)[] = [];
+    const pending: NodeId[] = [];
+    for (let at = 0; at < graph.size; at += 1) {
       const node = graph.node(at);
-      if (node.kind !== 'schema' || reading.has(at)) {
-        return undefined;
+      if (node.kind === 'schema') {
+        const { type, [CONST_KEY]: constant, [ENUM_KEY]: values } = node.raw as GenericObjectType;
+        const stated = [
+          ...(type === undefined
+            ? []
+            : [(Array.isArray(type) ? type : [type]).map((one) => (one === 'integer' ? 'number' : String(one)))]),
+          ...(constant === undefined ? [] : [[guessType(constant)]]),
+          ...(Array.isArray(values) ? [values.map(guessType)] : []),
+        ];
+        const conjuncts = [
+          ...(node.ref === undefined ? [] : [node.ref]),
+          ...graph.subschemas(at, ALL_OF_KEY).map(([, entry]) => entry),
+        ];
+        const choices = [ANY_OF_KEY, ONE_OF_KEY]
+          .map((keyword) => graph.subschemas(at, keyword).map(([, option]) => option))
+          .filter((options) => options.length > 0);
+        [...conjuncts, ...choices.flat()].forEach((child) => {
+          const holders = appliedBy.get(child);
+          if (holders === undefined) {
+            appliedBy.set(child, [at]);
+          } else {
+            holders.push(at);
+          }
+        });
+        reads[at] = () =>
+          [
+            ...stated,
+            ...conjuncts.map((child) => known.get(child)),
+            ...choices.map((options) =>
+              options.map((option) => known.get(option)).reduce<readonly string[] | undefined>(uniteTypes, []),
+            ),
+          ].reduce<readonly string[] | undefined>(intersectTypes, undefined);
+        pending.push(at);
       }
-      if (known.has(at)) {
-        return known.get(at);
+    }
+    for (let at = pending.pop(); at !== undefined; at = pending.pop()) {
+      const types = reads[at]();
+      if (!sameTypes(types, known.get(at))) {
+        known.set(at, types);
+        pending.push(...(appliedBy.get(at) ?? []));
       }
-      reading.add(at);
-      const { type, [CONST_KEY]: constant, [ENUM_KEY]: values } = node.raw as GenericObjectType;
-      const typed = type === undefined ? [] : [(Array.isArray(type) ? type : [type]).map(String)];
-      const optionsOf = (keyword: string) => {
-        const options = graph.subschemas(at, keyword);
-        return options.length === 0
-          ? []
-          : [options.map(([, option]) => typesOf(option)).reduce<readonly string[] | undefined>(uniteTypes, [])];
-      };
-      const types = [
-        ...typed.map((written) => written.map((stated) => (stated === 'integer' ? 'number' : stated))),
-        ...(constant === undefined ? [] : [[guessType(constant)]]),
-        ...(Array.isArray(values) ? [values.map(guessType)] : []),
-        ...(node.ref === undefined ? [] : [typesOf(node.ref)]),
-        ...graph.subschemas(at, ALL_OF_KEY).map(([, entry]) => typesOf(entry)),
-        ...optionsOf(ANY_OF_KEY),
-        ...optionsOf(ONE_OF_KEY),
-      ].reduce<readonly string[] | undefined>(intersectTypes, undefined);
-      reading.delete(at);
-      known.set(at, types);
-      return types;
-    };
-    return typesOf;
+    }
+    return known;
   });
-  return read(id);
+  return typesOf.get(id);
 }
 
 /** Returns whether a value can be of a type both `types` and `others` allow */
@@ -913,15 +947,8 @@ const SAME_VALUE_KEYWORDS = new Set([
  * by its name, `*` for any property, `[]` for any item, or else the keyword
  */
 function partOf(keyword: string, entry: string | undefined): string {
-  if (keyword === PROPERTIES_KEY) {
-    return `.${entry}`;
-  }
-  if ([PATTERN_PROPERTIES_KEY, ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY].includes(keyword)) {
-    return '*';
-  }
-  return [ITEMS_KEY, 'prefixItems', 'additionalItems', 'unevaluatedItems', 'contains'].includes(keyword)
-    ? '[]'
-    : keyword;
+  const part = PART_OF_KEYWORD.get(keyword);
+  return part === '.' ? `.${entry}` : (part ?? keyword);
 }
 
 /** Returns whether a part `parts` names and one `others` names can be the same part of the data, any property being
@@ -957,36 +984,40 @@ function branchingNodes<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   cycle: ReadonlyMap<NodeId, readonly [string[], NodeId][]>,
 ): Set<NodeId> {
-  const reached = new Map<NodeId, ReadonlySet<string>>();
-  // The parts of the value through which the node `id` of the cycle holds the cycle again
-  const partsOf = (id: NodeId, path: ReadonlySet<NodeId>): ReadonlySet<string> => {
-    const known = reached.get(id);
-    const held = cycle.get(id);
-    if (known !== undefined || held === undefined || path.has(id)) {
-      return known ?? new Set();
-    }
-    const inner = new Set(path).add(id);
-    const node = graph.node(id);
+  // The parts of the value through which the node `id` of the cycle, or a node of the cycle it applies to the same
+  // value however deep, holds the cycle again
+  const partsOf = (id: NodeId): ReadonlySet<string> => {
     const parts = new Set<string>();
-    held.forEach(([[keyword, entry], child]) => {
-      if (!cycle.has(child) || DEFINITIONS_KEYWORDS.has(keyword)) {
-        return;
+    const sameValue = new Map<NodeId, readonly [string[], NodeId][]>();
+    const reach = (at: NodeId) => {
+      const held = cycle.get(at);
+      if (held !== undefined && !sameValue.has(at)) {
+        sameValue.set(at, held);
       }
-      if (SAME_VALUE_KEYWORDS.has(keyword)) {
-        partsOf(child, inner).forEach((part) => parts.add(part));
-      } else {
-        parts.add(partOf(keyword, entry));
+    };
+    reach(id);
+    // A map iterator reads the nodes added while it runs
+    for (const [at, held] of sameValue) {
+      held.forEach(([[keyword, entry], child]) => {
+        if (!cycle.has(child) || DEFINITIONS_KEYWORDS.has(keyword)) {
+          return;
+        }
+        if (SAME_VALUE_KEYWORDS.has(keyword)) {
+          reach(child);
+        } else {
+          parts.add(partOf(keyword, entry));
+        }
+      });
+      const node = graph.node(at);
+      if (node.kind === 'schema' && node.ref !== undefined) {
+        reach(node.ref);
       }
-    });
-    if (node.kind === 'schema' && node.ref !== undefined && cycle.has(node.ref)) {
-      partsOf(node.ref, inner).forEach((part) => parts.add(part));
     }
-    reached.set(id, parts);
     return parts;
   };
   const recurrence = (keyword: string, child: NodeId): Recurrence => ({
     types: keyword === 'not' || keyword === IF_KEY ? undefined : statedTypes(graph, child),
-    parts: partsOf(child, new Set()),
+    parts: partsOf(child),
   });
   return new Set(
     [...cycle].flatMap(([id, held]) => {
@@ -1043,6 +1074,10 @@ interface Frame {
   readonly held: [string[], NodeId][];
   readonly applied: NodeId[];
   readonly next: NodeId[];
+  /** The subschemas applied on top of it whose evaluated parts an `unevaluatedProperties` or `unevaluatedItems` it
+   * holds sees: its `$ref`, `allOf` entries, `then`, `else` and `dependencies` schemas, or none where it holds neither
+   */
+  readonly evaluated: NodeId[];
 }
 
 /** What scoring makes of a subschema leading to a recursive choice: `cut`, where it leads to the choice, or recurs with
@@ -1087,9 +1122,10 @@ function recursiveChoices<S extends StrictRJSFSchema = RJSFSchema>(graph: Schema
     const cycles = new Map<NodeId, NodeId>();
     const holders = new Set<NodeId>();
     const leadOf = (id: NodeId) => (id < start ? base?.leadOf(id) : leads.get(id));
-    // Tarjan's strongly connected components, run on a stack of frames rather than by recursion, which a deep schema
-    // would overflow. It closes a component after every component it holds, so whether that leads to a recursive
-    // choice is known by then.
+    // Tarjan's strongly connected components, run on a stack of frames rather than by recursion: it enters every node
+    // of the graph, however long a chain of `$ref`s a generated schema holds, where only a copy `derive()` makes
+    // recurses, as deep as the copy, as `retrieveSchema()` does. It closes a component after every component it
+    // holds, so whether that leads to a recursive choice is known by then.
     const component = new Map<NodeId, NodeId>();
     const open = new Map<NodeId, number>();
     const stack: Frame[] = [];
@@ -1102,7 +1138,22 @@ function recursiveChoices<S extends StrictRJSFSchema = RJSFSchema>(graph: Schema
         ...held.filter(([[keyword]]) => !DEFINITIONS_KEYWORDS.has(keyword)).map(([, child]) => child),
         ...(node.kind === 'schema' ? [node.ref, node.conjunction].filter((ref) => ref !== undefined) : []),
       ];
-      const frame = { id, order, low: order, held, applied, next: applied.filter((child) => child >= start) };
+      const evaluated =
+        node.kind === 'schema' && EVALUATING_KEYWORDS.some((keyword) => keyword in node.raw)
+          ? [
+              ...held.filter(([[keyword]]) => CONJUNCT_KEYWORDS.has(keyword)).map(([, child]) => child),
+              ...(node.ref === undefined ? [] : [node.ref]),
+            ]
+          : [];
+      const frame = {
+        id,
+        order,
+        low: order,
+        held,
+        applied,
+        next: applied.filter((child) => child >= start),
+        evaluated,
+      };
       open.set(id, order);
       stack.push(frame);
       frames.push(frame);
@@ -1125,14 +1176,19 @@ function recursiveChoices<S extends StrictRJSFSchema = RJSFSchema>(graph: Schema
       const recurs = members.length > 1 || frame.applied.includes(frame.id);
       const branching = recurs ? branchingNodes(graph, new Map(members.map(({ id, held }) => [id, held]))) : new Set();
       if (branching.size > 0 || members.some(({ applied }) => applied.some((child) => leadOf(child) !== undefined))) {
-        members.forEach(({ id, held }) => {
-          const copied = held.every(
-            ([[keyword], child]) =>
-              (leadOf(child) === undefined && !inComponent(child)) ||
-              PART_KEYWORDS.has(keyword) ||
-              CONJUNCT_KEYWORDS.has(keyword) ||
-              DEFINITIONS_KEYWORDS.has(keyword),
-          );
+        members.forEach(({ id, held, evaluated }) => {
+          // A part a cut below a conjunct declares no longer counts as evaluated for the `unevaluatedProperties` or
+          // `unevaluatedItems` beside it, which would reject what the node accepts, so such a node is cut as a whole
+          const evaluatesCut = evaluated.some((child) => leadOf(child) !== undefined || inComponent(child));
+          const copied =
+            !evaluatesCut &&
+            held.every(
+              ([[keyword], child]) =>
+                (leadOf(child) === undefined && !inComponent(child)) ||
+                PART_KEYWORDS.has(keyword) ||
+                CONJUNCT_KEYWORDS.has(keyword) ||
+                DEFINITIONS_KEYWORDS.has(keyword),
+            );
           leads.set(id, copied && !branching.has(id) ? 'copied' : 'cut');
           if (recurs) {
             cycles.set(id, frame.id);
