@@ -441,8 +441,8 @@ exports[`array fields > checkboxes 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_5_"
-            id="radix-_r_4_"
+            for="radix-_r_6_"
+            id="radix-_r_5_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
           <div
@@ -453,6 +453,7 @@ exports[`array fields > checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
+                aria-controls="_r_3_"
                 aria-expanded="false"
                 aria-label="Select ..."
                 autocomplete="off"
@@ -467,6 +468,10 @@ exports[`array fields > checkboxes 1`] = `
               />
             </div>
           </div>
+          <div
+            class="relative"
+            id="_r_3_"
+          />
         </div>
       </div>
     </div>
@@ -1490,8 +1495,8 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
         >
           <label
             cmdk-label=""
-            for="radix-_r_1c_"
-            id="radix-_r_1b_"
+            for="radix-_r_1i_"
+            id="radix-_r_1h_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
           <div
@@ -1502,6 +1507,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             >
               <input
                 aria-autocomplete="list"
+                aria-controls="_r_1f_"
                 aria-expanded="false"
                 aria-label="Select ..."
                 autocomplete="off"
@@ -1516,6 +1522,10 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               />
             </div>
           </div>
+          <div
+            class="relative"
+            id="_r_1f_"
+          />
         </div>
       </div>
     </div>
@@ -4106,8 +4116,8 @@ exports[`with title and description > checkboxes 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_c_"
-            id="radix-_r_b_"
+            for="radix-_r_e_"
+            id="radix-_r_d_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
           <div
@@ -4118,6 +4128,7 @@ exports[`with title and description > checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
+                aria-controls="_r_b_"
                 aria-describedby="root__description"
                 aria-expanded="false"
                 autocomplete="off"
@@ -4132,6 +4143,10 @@ exports[`with title and description > checkboxes 1`] = `
               />
             </div>
           </div>
+          <div
+            class="relative"
+            id="_r_b_"
+          />
         </div>
       </div>
     </div>
@@ -4854,8 +4869,8 @@ exports[`with title and description from both > checkboxes 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_q_"
-            id="radix-_r_p_"
+            for="radix-_r_u_"
+            id="radix-_r_t_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
           <div
@@ -4866,6 +4881,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
+                aria-controls="_r_r_"
                 aria-describedby="root__description"
                 aria-expanded="false"
                 autocomplete="off"
@@ -4880,6 +4896,10 @@ exports[`with title and description from both > checkboxes 1`] = `
               />
             </div>
           </div>
+          <div
+            class="relative"
+            id="_r_r_"
+          />
         </div>
       </div>
     </div>
@@ -5602,8 +5622,8 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_j_"
-            id="radix-_r_i_"
+            for="radix-_r_m_"
+            id="radix-_r_l_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
           <div
@@ -5614,6 +5634,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
+                aria-controls="_r_j_"
                 aria-describedby="root__description"
                 aria-expanded="false"
                 autocomplete="off"
@@ -5628,6 +5649,10 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               />
             </div>
           </div>
+          <div
+            class="relative"
+            id="_r_j_"
+          />
         </div>
       </div>
     </div>
@@ -6240,8 +6265,8 @@ exports[`with title and description with global label off > checkboxes 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_11_"
-            id="radix-_r_10_"
+            for="radix-_r_16_"
+            id="radix-_r_15_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
           <div
@@ -6252,6 +6277,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
+                aria-controls="_r_13_"
                 aria-expanded="false"
                 aria-label="Test field"
                 autocomplete="off"
@@ -6266,6 +6292,10 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               />
             </div>
           </div>
+          <div
+            class="relative"
+            id="_r_13_"
+          />
         </div>
       </div>
     </div>

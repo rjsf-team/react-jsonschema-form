@@ -1,7 +1,7 @@
 'use client';
 
 import type { FocusEvent, FocusEventHandler, KeyboardEvent, ReactElement } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useId, useMemo, useRef, useState } from 'react';
 import { deepEquals, enumOptionValueLabel } from '@rjsf/utils';
 import { defaultFilter } from 'cmdk';
 import { X } from 'lucide-react';
@@ -9,7 +9,7 @@ import { X } from 'lucide-react';
 import { cn } from '../../lib/utils.ts';
 import { Badge } from './badge.tsx';
 import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
-import { cmdkOption, UNGROUPED_SECTION_KEY } from './fancy-select.tsx';
+import { UNGROUPED_SECTION_KEY, useCmdkIds } from './fancy-select.tsx';
 import type { FancySelectItem, FancySelectSection } from './fancy-select.tsx';
 
 /**
@@ -54,14 +54,32 @@ interface FancyMultiSelectProps {
 
 const NO_ITEMS: FancySelectItem[] = [];
 
-/** Whether an item matches the search, by the value or the label it shows, never by the index cmdk holds it under
+/** How well an item matches the search, by the value or the label it shows, never by the index cmdk holds it under: 0
+ * for an item the search leaves out
  *
  * @param item - The item
  * @param search - The text typed in the input
- * @returns - Whether the item is listed
+ * @returns - The score cmdk's own filter gives it
  */
-function matchesSearch(item: FancySelectItem, search: string) {
-  return search === '' || defaultFilter(`${enumOptionValueLabel(item.value)} ${item.label}`, search) > 0;
+function searchScore(item: FancySelectItem, search: string) {
+  return defaultFilter(`${enumOptionValueLabel(item.value)} ${item.label}`, search);
+}
+
+/** Returns the `items` of a group the search matches, best match first, as cmdk ranks the options of a group
+ *
+ * @param items - The group's items, in schema order
+ * @param search - The text typed in the input
+ * @returns - The items, ranked
+ */
+function rankedForSearch(items: FancySelectItem[], search: string) {
+  if (search === '') {
+    return items;
+  }
+  return items
+    .map((item) => ({ item, score: searchScore(item, search) }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map(({ item }) => item);
 }
 
 /**
@@ -93,29 +111,37 @@ export function FancyMultiSelect({
   const [inputValue, setInputValue] = useState('');
   // The input is our own rather than cmdk's `Command.Input`, which replaces the `id`, `aria-expanded`, `aria-controls`
   // and `aria-labelledby` it is given with its own. cmdk gives the listbox and the options ids it keeps to itself, so
-  // the input points at them by the ids read from the page
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [listboxId, setListboxId] = useState<string>();
+  // the input points at them by the ids their refs read, and at the element the list opens in while it is closed
+  const { listboxId, highlightedId, listboxRef, highlightedRef } = useCmdkIds();
+  const popupId = useId();
 
   const selectedItems = useMemo(
     () => items.filter((item) => selected.some((selectedValue) => deepEquals(item.value, selectedValue))),
     [items, selected],
   );
 
-  const isListed = useCallback(
-    (search: string) => (framework: FancySelectItem) =>
-      !selectedItems.some((item) => deepEquals(item.value, framework.value)) && matchesSearch(framework, search),
-    [selectedItems],
+  // A flat list keeps its matches in schema order, while the options of each group are ranked by how well they match,
+  // as cmdk ranks the options it holds in a group, the groups keeping their order
+  const listedFor = useCallback(
+    (search: string) => {
+      const unselected = (framework: FancySelectItem) =>
+        !selectedItems.some((item) => deepEquals(item.value, framework.value));
+      return {
+        listedItems: items.filter((item) => unselected(item) && (search === '' || searchScore(item, search) > 0)),
+        listedSections: sections
+          ?.map((section) => ({
+            label: section.label,
+            items: rankedForSearch(section.items.filter(unselected), search),
+          }))
+          .filter((section) => section.items.length > 0),
+      };
+    },
+    [items, sections, selectedItems],
   );
 
-  const selectables = useMemo(() => items.filter(isListed(inputValue)), [items, isListed, inputValue]);
-
-  const selectableSections = useMemo(
-    () =>
-      sections
-        ?.map((section) => ({ label: section.label, items: section.items.filter(isListed(inputValue)) }))
-        .filter((section) => section.items.length > 0),
-    [sections, isListed, inputValue],
+  const { listedItems: selectables, listedSections: selectableSections } = useMemo(
+    () => listedFor(inputValue),
+    [listedFor, inputValue],
   );
 
   const handleUnselect = useCallback(
@@ -129,15 +155,10 @@ export function FancyMultiSelect({
     [selectedItems, onValueChange, disabled],
   );
 
-  // The focus `autoFocus` gives the input as it mounts opens no list, which would cover the fields below before the user
-  // does anything, so the list opens on the user's own focus, click, typing or Down Arrow. React focuses it while
-  // committing the mount, before this effect runs
-  const focusedOnMount = useRef(autoFocus);
-  useEffect(() => {
-    focusedOnMount.current = false;
-  }, []);
+  // The list opens on a click, typing or an arrow key, not on focus, which `autoFocus` and `focusOnFirstError` give the
+  // input too, where a list opening would cover the fields below before the user does anything
   const openList = useCallback(() => {
-    if (!disabled && !focusedOnMount.current) {
+    if (!disabled) {
       setOpen(true);
     }
   }, [disabled]);
@@ -147,25 +168,13 @@ export function FancyMultiSelect({
   const [highlighted, setHighlighted] = useState('');
   const search = (newValue: string) => {
     setInputValue(newValue);
-    const first = (sections ? sections.flatMap((section) => section.items) : items).find(
-      (item) => !item.disabled && isListed(newValue)(item),
+    const { listedItems, listedSections } = listedFor(newValue);
+    const first = (listedSections ? listedSections.flatMap((section) => section.items) : listedItems).find(
+      (item) => !item.disabled,
     );
     setHighlighted(first ? String(first.index) : '');
     openList();
   };
-
-  // Read as the options change too, not only as the highlight moves: cmdk mounts the options afresh, under new ids, as
-  // the list opens or a search changes them
-  const [highlightedId, setHighlightedId] = useState<string>();
-  const shownOptions = selectableSections ?? selectables;
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!open || !container || shownOptions.length === 0) {
-      return;
-    }
-    setHighlightedId(cmdkOption(container, highlighted)?.id);
-    setListboxId(container.querySelector<HTMLElement>('[cmdk-list]')?.id);
-  }, [open, highlighted, shownOptions]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
@@ -198,16 +207,23 @@ export function FancyMultiSelect({
     [multiple, selectedItems, onValueChange, disabled],
   );
 
+  // cmdk's root is out of the tab order, so it takes focus only from a click on the select beside its input and remove
+  // buttons, such as on a selected item's label. The input takes it from there, as from a click on itself, since cmdk
+  // moves focus to its listbox as it highlights an option while its root has it
   const handleFocus = useCallback(
     (e: FocusEvent<HTMLDivElement>) => {
-      openList();
+      if (e.target === e.currentTarget) {
+        inputRef.current?.focus();
+        openList();
+        return;
+      }
       onFocus?.(e);
     },
     [openList, onFocus],
   );
 
-  // The list opens on focus anywhere in the select, a remove button's included, which the input's blur doesn't follow, so
-  // it closes as focus leaves the select
+  // An arrow key opens the list from a remove button too, whose blur the input's doesn't follow, so the list closes as
+  // focus leaves the select
   const handleBlur = useCallback(
     (e: FocusEvent<HTMLDivElement>) => {
       if (!e.currentTarget.contains(e.relatedTarget)) {
@@ -223,6 +239,7 @@ export function FancyMultiSelect({
     // one as text and `''` would have none, and a highlight it holds is lost as that text changes
     return (
       <CommandItem
+        ref={String(item.index) === highlighted ? highlightedRef : undefined}
         disabled={item.disabled}
         key={item.index}
         value={String(item.index)}
@@ -244,7 +261,6 @@ export function FancyMultiSelect({
   return (
     // The options are filtered here, as the search is typed in an input cmdk doesn't own
     <Command
-      ref={containerRef}
       shouldFilter={false}
       value={highlighted}
       onValueChange={setHighlighted}
@@ -294,7 +310,7 @@ export function FancyMultiSelect({
             spellCheck={false}
             aria-autocomplete='list'
             aria-expanded={listShown}
-            aria-controls={listShown ? listboxId : undefined}
+            aria-controls={(listShown && listboxId) || popupId}
             aria-activedescendant={listShown ? highlightedId : undefined}
             value={inputValue}
             onChange={(e) => search(e.target.value)}
@@ -313,11 +329,11 @@ export function FancyMultiSelect({
           />
         </div>
       </div>
-      {listShown && (
-        <div className='relative mt-2'>
-          <div className='absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in'>
+      <div id={popupId} className='relative'>
+        {listShown && (
+          <div className='absolute w-full z-10 top-0 mt-2 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in'>
             {selectableSections ? (
-              <CommandList className='h-full overflow-auto'>
+              <CommandList ref={listboxRef} className='h-full overflow-auto'>
                 {selectableSections.map((section) => (
                   <CommandGroup
                     key={section.label === undefined ? UNGROUPED_SECTION_KEY : `optgroup-${section.label}`}
@@ -329,12 +345,12 @@ export function FancyMultiSelect({
               </CommandList>
             ) : (
               <CommandGroup className='h-full overflow-auto'>
-                <CommandList>{selectables.map(renderItem)}</CommandList>
+                <CommandList ref={listboxRef}>{selectables.map(renderItem)}</CommandList>
               </CommandGroup>
             )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </Command>
   );
 }
