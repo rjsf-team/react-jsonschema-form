@@ -1036,8 +1036,8 @@ describe('SelectWidget combobox', () => {
     );
 
     await user.click(screen.getByRole('combobox'));
-    expect(screen.getAllByRole('option')).toHaveLength(2);
     await user.tab({ shift: true });
+    await user.keyboard('{ArrowDown}');
     expect(screen.getAllByRole('option')).toHaveLength(2);
     await user.tab({ shift: true });
 
@@ -1467,13 +1467,74 @@ describe("the multiple select's combobox input", () => {
     expect(screen.getByRole('combobox')).toHaveFocus();
   });
 
-  test('says it is collapsed and controls nothing while its list is closed', () => {
+  test('says it is collapsed and controls the element its list opens in while its list is closed', () => {
     renderColorForm();
     const input = screen.getByRole('combobox');
 
     expect(input).toHaveAttribute('aria-expanded', 'false');
-    expect(input).not.toHaveAttribute('aria-controls');
+    const controlled = input.getAttribute('aria-controls');
+    expect(controlled && document.getElementById(controlled)).toBeTruthy();
     expect(input).not.toHaveAttribute('aria-activedescendant');
+  });
+
+  test('stays closed when focusOnFirstError focuses it on submit', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    const input = screen.getByRole('combobox');
+    expect(input).toHaveFocus();
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  test('takes focus and opens on a click beside its input, so typing searches and Escape closes', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+
+    await user.click(screen.getByText('red'));
+    expect(input).toHaveFocus();
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+    await user.keyboard('bl');
+    expect(input).toHaveFocus();
+    expect(input).toHaveValue('bl');
+
+    await user.keyboard('{Backspace}{Backspace}{Escape}');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  test('never points at the listbox or option of an earlier opening as it opens again', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    const earlier = [screen.getByRole('listbox').id, screen.getByRole('option', { name: 'red' }).id];
+    await user.keyboard('{Escape}');
+
+    const held: (string | null)[] = [];
+    const observer = new MutationObserver((records) => {
+      held.push(...records.map((record) => record.oldValue));
+    });
+    observer.observe(input, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ['aria-controls', 'aria-activedescendant'],
+    });
+    await user.click(input);
+    observer.disconnect();
+
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(held.filter((value) => value !== null && earlier.includes(value))).toEqual([]);
   });
 
   test('points at the listbox and at the option it highlights while its list is open', async () => {
@@ -1526,7 +1587,6 @@ describe("the multiple select's combobox input", () => {
     expect(input).toHaveAttribute('aria-autocomplete', 'list');
   });
 
-  // The order cmdk showed a search's matches in, measured in Chrome as well as here
   test("lists a search's matches in schema order and highlights the first", async () => {
     const user = userEvent.setup();
     render(
@@ -1590,5 +1650,56 @@ describe("the single select's combobox with no option to show", () => {
     } finally {
       delete (Element.prototype as Partial<Element>).scrollIntoView;
     }
+  });
+});
+
+describe("the multiple select's search among optgroups", () => {
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterEach(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
+  const renderFruit = (optgroups: Record<string, string[]>) =>
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          multiple: true,
+          value: [],
+          options: {
+            enumOptions: ['Pineapple', 'Grape', 'Apple', 'Applet'].map((fruit) => ({ label: fruit, value: fruit })),
+            optgroups,
+          },
+        })}
+      />,
+    );
+
+  test('ranks the matches in a group by how well they match, highlighting the best', async () => {
+    const user = userEvent.setup();
+    renderFruit({ Fruit: ['Pineapple', 'Grape', 'Apple', 'Applet'] });
+
+    await user.type(screen.getByRole('combobox'), 'appl');
+
+    const options = screen.getAllByRole('option');
+    expect(options.map((option) => option.textContent)).toEqual(['Apple', 'Applet', 'Pineapple']);
+    expect(options.map((option) => option.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
+  });
+
+  test('keeps the groups in schema order, highlighting the best match of the first', async () => {
+    const user = userEvent.setup();
+    renderFruit({ Tropical: ['Pineapple'], Orchard: ['Grape', 'Apple', 'Applet'] });
+
+    await user.type(screen.getByRole('combobox'), 'appl');
+
+    const [first, second] = screen.getAllByRole('group');
+    expect(first).toHaveAccessibleName('Tropical');
+    expect(second).toHaveAccessibleName('Orchard');
+    const options = screen.getAllByRole('option');
+    expect(options.map((option) => option.textContent)).toEqual(['Pineapple', 'Apple', 'Applet']);
+    expect(options.map((option) => option.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
   });
 });
