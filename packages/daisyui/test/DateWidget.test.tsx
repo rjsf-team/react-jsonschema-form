@@ -147,6 +147,37 @@ describe('DateWidget', () => {
         expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
       });
 
+      // A backend writing a v6 value back keeps the instant but not always its spelling, and the value still stands
+      // for the day the user picked
+      test.each([
+        ["Java's `Instant.toString()` and Go's RFC 3339 layout", 'T', ':00Z'],
+        ["Java's `OffsetDateTime.toString()`", 'T', 'Z'],
+        ["Elixir's `:utc_datetime_usec`", 'T', ':00.000000Z'],
+        [`.NET's round-trip "o" format`, 'T', ':00.0000000Z'],
+        ["Python's `isoformat()`", 'T', ':00+00:00'],
+        ['a `+0000` zone', 'T', ':00+0000'],
+        // V8's `Date` rejects this spelling, so the instant has to be read from the `Z` form of it
+        ['an hour-only `+00` zone', 'T', ':00+00'],
+        ["Postgres's `timestamptz` text", ' ', ':00+00'],
+      ])(
+        'names the day a UTC instant that is a local midnight stands for once written back by %s',
+        (_, separator, ending) => {
+          const rewritten = new Date(2020, 4, 3).toISOString().replace('T', separator).replace(':00.000Z', ending);
+          const { container } = render(<DateWidget {...makeWidgetMockProps({ value: rewritten, schema })} />);
+
+          expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
+        },
+      );
+
+      // Before standard time a zone's offset was its local mean time, to the second, so v6's text has seconds
+      test('names the day a local midnight from before standard time stands for', () => {
+        const localMidnight = new Date(1850, 4, 3).toISOString();
+        const { container } = render(<DateWidget {...makeWidgetMockProps({ value: localMidnight, schema })} />);
+
+        expect(localMidnight).not.toMatch(/:00\.000Z$/);
+        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 1850');
+      });
+
       // Read as an instant these would each name the previous day somewhere: a UTC midnight everywhere behind UTC,
       // and a noon one far enough east. The day each of them names is the one its own text spells
       test.each([
@@ -208,21 +239,21 @@ describe('DateWidget', () => {
       });
     });
 
-    // The one zone where the two rules above cannot both hold — `parseDateValue()`'s own doc has the argument, and
-    // #5395 is the fix. These two tests are what keeps the reading it settles on from being changed by accident: the
-    // second value is the first's text to the millisecond, so whichever way the rule reads one, it reads the other
+    // The one zone where a midday UTC value is a local midnight, and so is what v6 stored for the day after. Reading a
+    // v6 value a backend wrote back in another spelling of UTC as the day the user picked is what this case pays for, so
+    // these pin that a backend's own midday value, spelled either way, reads as the day after its text here
     describe('in a timezone exactly twelve hours ahead of UTC', () => {
       pinTimeZone('Pacific/Auckland');
 
-      test('reads a midday UTC value as the local day its instant begins, not the day its text spells', () => {
-        const { container } = render(
-          <DateWidget {...makeWidgetMockProps({ value: '2020-05-03T12:00:00Z', schema })} />,
-        );
+      test.each([
+        ['without milliseconds', '2020-05-03T12:00:00Z'],
+        ['with milliseconds', '2020-05-03T12:00:00.000Z'],
+      ])('reads a midday UTC value %s as the local day its instant begins', (_, value) => {
+        const { container } = render(<DateWidget {...makeWidgetMockProps({ value, schema })} />);
 
         expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 4, 2020');
       });
 
-      // The reading the case above pays for: this is the same text, to the millisecond
       test('names the day a value stored from here stands for', () => {
         const localMidnight = new Date(2020, 4, 3).toISOString();
         const { container } = render(<DateWidget {...makeWidgetMockProps({ value: localMidnight, schema })} />);
@@ -232,8 +263,8 @@ describe('DateWidget', () => {
       });
     });
 
-    // The `Date` constructor reads a year below 100 as a two-digit one, so building the day from its parts would name
-    // 1950 here
+    // `new Date(year, month, day)` reads a year below 100 as a two-digit one, so building the day from its parts would
+    // name 1950 here, where the text and the instant it names both say 50
     test('names a year below 100 as itself', () => {
       const { container } = render(
         <DateWidget {...makeWidgetMockProps({ value: '0050-05-03T00:00:00.000Z', schema })} />,
@@ -250,6 +281,15 @@ describe('DateWidget', () => {
       const trigger = container.querySelector('button[aria-haspopup]');
       expect(trigger).toHaveTextContent('When');
       expect(trigger).not.toHaveTextContent('Invalid');
+    });
+
+    // date-fns prints a year with no era, so year 0 would show as the year 1, and RFC 3339 has no room for it
+    test('falls back to the title for a day in year 0', () => {
+      const { container } = render(
+        <DateWidget {...makeWidgetMockProps({ value: '0000-05-03', label: 'When', placeholder: '', schema })} />,
+      );
+
+      expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent(/^When$/);
     });
 
     // RFC 3339 lets both the separator and the zone be lowercase, and neither an epoch number nor a `Date` is ISO text
@@ -769,6 +809,29 @@ describe('DateWidget', () => {
 
       expect(onError).not.toHaveBeenCalled();
       expect(onSubmit.mock.calls[0][0].formData.when).toMatch(shape);
+    });
+
+    // Behind UTC each of these instants lands on the day before the one its text spells, so the day shown says which
+    // of the two the field's format chose
+    describe('in a timezone behind UTC', () => {
+      pinTimeZone('America/Los_Angeles');
+
+      test.each([
+        // An instant, so the day it lands on here
+        ['date-time', '2020-05-03T00:00:00.000Z', 'May 2, 2020'],
+        // A naive wall-clock time, so the day it spells whatever its offset
+        ['iso-date-time', '2020-05-03T00:30:00+02:00', 'May 3, 2020'],
+        // No time at all, which neither date-time format explains, so the day it names
+        ['date-time', '2020-05-03', 'May 3, 2020'],
+        // `Date` rejects ISO text with whitespace around it, so the instant is read from the trimmed text
+        ['date-time', ' 2020-05-03T00:00:00.000Z ', 'May 2, 2020'],
+      ])('reads a %s field holding %s as %s', (formatName, value, day) => {
+        const { container } = render(
+          <DateWidget {...makeWidgetMockProps({ value, schema: { type: 'string', format: formatName } })} />,
+        );
+
+        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent(day);
+      });
     });
   });
 
