@@ -1442,7 +1442,7 @@ describe('Form change handler under a parent', () => {
 
     expect(onChange.mock.lastCall![0].errorSchema.foo.__errors).toEqual(['custom on foo']);
   });
-  it('should merge in the custom errors a change raised under noValidate once validation is turned on', async () => {
+  it('should show the custom errors a change raises under noValidate at once, and keep them once validation is turned on', async () => {
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, baz: { type: 'string' } } };
     const RaiseWidget = ({ onChange }: WidgetProps) => (
       <button type='button' id='raise' onClick={() => onChange('x', { __errors: ['custom on foo'] })}>
@@ -1456,10 +1456,11 @@ describe('Form change handler under a parent', () => {
       validator: customizeValidator(),
       onChange,
     };
-    // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what the custom errors must survive
+    // oxlint-disable-next-line typescript/no-deprecated -- a widget's custom error shows under `noValidate` too
     const { container, rerender } = render(<Form {...props} noValidate />);
 
     await user.click(container.querySelector('#raise')!);
+    expect(fieldErrorsById(container).root_foo).toContain('custom on foo');
     rerender(<Form {...props} />);
     await user.type(container.querySelector('#root_baz')!, 'fine');
 
@@ -1732,53 +1733,42 @@ describe('Form change handler under a parent', () => {
     expect(onChange.mock.lastCall![0].formData).toEqual({ foo: 'a' });
   });
   it.each([
-    [
-      'keeps the errors in their order',
-      { foo: { __errors: ['foo server'] }, bar: { __errors: ['bar server'] } },
-      false,
-    ],
-    ['adds no empty node where nothing was shown', undefined, true],
-  ])(
-    'should rebuild the errors at the path of a custom error an edit clears, and %s',
-    async (_, extraErrors, toggle) => {
-      const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, bar: { type: 'string' } } };
-      const RaiseWidget = ({ onChange }: WidgetProps) => (
-        <>
-          <button type='button' id='raise' onClick={() => onChange('x', { __errors: ['custom'] })}>
-            raise
-          </button>
-          <button type='button' id='edit' onClick={() => onChange('xy')}>
-            edit
-          </button>
-        </>
-      );
-      const onChange = vi.fn<NonNullable<FormProps['onChange']>>();
-      const props = {
-        schema,
-        uiSchema: { foo: { 'ui:widget': RaiseWidget } },
-        validator: customizeValidator(),
-        extraErrors: extraErrors as ErrorSchema | undefined,
-        onChange,
-      };
-      // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what hides the custom error
-      const { container, rerender } = render(<Form {...props} noValidate={toggle} />);
+    ['keeps the errors in their order', { foo: { __errors: ['foo server'] }, bar: { __errors: ['bar server'] } }],
+    ['adds no empty node where the custom error was the only one', undefined],
+  ])('should rebuild the errors at the path of a custom error an edit clears, and %s', async (_, extraErrors) => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, bar: { type: 'string' } } };
+    const RaiseWidget = ({ onChange }: WidgetProps) => (
+      <>
+        <button type='button' id='raise' onClick={() => onChange('x', { __errors: ['custom'] })}>
+          raise
+        </button>
+        <button type='button' id='edit' onClick={() => onChange('xy')}>
+          edit
+        </button>
+      </>
+    );
+    const onChange = vi.fn<NonNullable<FormProps['onChange']>>();
+    const props = {
+      schema,
+      uiSchema: { foo: { 'ui:widget': RaiseWidget } },
+      validator: customizeValidator(),
+      extraErrors: extraErrors as ErrorSchema | undefined,
+      onChange,
+    };
+    const { container } = render(<Form {...props} />);
 
-      await user.click(container.querySelector('#raise')!);
-      if (toggle) {
-        // oxlint-disable-next-line typescript/no-deprecated -- `noValidate` is what hides the custom error
-        rerender(<Form {...props} noValidate={false} />);
-      }
-      await user.click(container.querySelector('#edit')!);
+    await user.click(container.querySelector('#raise')!);
+    expect(fieldErrorsById(container).root_foo).toContain('custom');
+    await user.click(container.querySelector('#edit')!);
 
-      const [{ errorSchema, errors }] = onChange.mock.lastCall!;
-      if (extraErrors) {
-        expect(errors.map((error) => error.message)).toEqual(['foo server', 'bar server']);
-      } else {
-        expect(errors).toEqual([]);
-        expect(errorSchema).toEqual({});
-      }
-    },
-  );
+    const [{ errorSchema, errors }] = onChange.mock.lastCall!;
+    if (extraErrors) {
+      expect(errors.map((error) => error.message)).toEqual(['foo server', 'bar server']);
+    } else {
+      expect(errors).toEqual([]);
+      expect(errorSchema).toEqual({});
+    }
+  });
   it.each([
     ['without', {}],
     ['with', { $id: 'https://example.com/kind.json' }],
@@ -1809,7 +1799,7 @@ describe('Form change handler under a parent', () => {
 
     expect(onChange.mock.lastCall![0].formData).toEqual({ kind: 'b' });
   });
-  it('should merge the extraErrors once when a change is applied with the schema the parent set in the same event', async () => {
+  it('should show the extraErrors once when the parent sets a new schema in the same event as a change', async () => {
     const narrow: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' } } };
     const wide: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, bar: { type: 'string' } } };
     const ref = createFormRef();
