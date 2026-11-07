@@ -3109,6 +3109,108 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe('a const inherited from an ancestor', () => {
+        const run = (schema: RJSFSchema, formData?: unknown, opts = {}, behavior?: DefaultFormStateBehavior) =>
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: behavior },
+            { schema, formData, ...opts },
+          );
+        const X: RJSFSchema = { type: 'object', properties: { a: { type: 'number' } } };
+
+        test.each<[string, RJSFSchema, unknown]>([
+          [
+            'an undeclared key',
+            { type: 'object', const: { x: { a: 2, b: 3 } }, properties: { x: X } },
+            { x: { a: 2, b: 3 } },
+          ],
+          [
+            'a nested object with no properties',
+            {
+              type: 'object',
+              properties: {
+                x: { type: 'object', properties: { n: { type: 'object' } }, const: { n: { m: 1 } } },
+              },
+            },
+            { x: { n: { m: 1 } } },
+          ],
+          [
+            'an object with no properties',
+            { type: 'object', const: { x: { a: 2 } }, properties: { x: { type: 'object' } } },
+            { x: { a: 2 } },
+          ],
+        ])('keeps %s', (_, schema, expected) => {
+          expect(run(schema)).toEqual(expected);
+        });
+
+        test('gives the same result as the const placed on the property itself', () => {
+          const C = { a: 2, b: 3 };
+          expect(run({ type: 'object', const: { x: C }, properties: { x: X } })).toEqual(
+            run({ type: 'object', properties: { x: { ...X, const: C } } }),
+          );
+        });
+
+        test('does not add back a key the user removed', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            const: { x: { a: 2, b: 3 } },
+            properties: { x: { ...X, additionalProperties: true } },
+          };
+          expect(run(schema, { x: { a: 2 } }, { initialDefaultsGenerated: true })).toEqual({ x: { a: 2 } });
+        });
+
+        test('does not seed under constAsDefaults never', () => {
+          expect(
+            run(
+              { type: 'object', const: { x: { a: 2, b: 3 } }, properties: { x: X } },
+              undefined,
+              {},
+              {
+                constAsDefaults: 'never',
+              },
+            ),
+          ).toEqual({});
+        });
+      });
+
+      describe('partial data for an undeclared nested const key', () => {
+        const run = (schema: RJSFSchema, formData?: unknown) =>
+          getDefaultFormState({ validator: testValidator }, { schema, formData });
+        const x: RJSFSchema = { type: 'object', const: { n: { m: 1, q: 2 } } };
+
+        test.each<[string, RJSFSchema, unknown, unknown]>([
+          ['one level down', x, { x: { n: { m: 1 } } }, { x: { n: { m: 1, q: 2 } } }],
+          [
+            'another key',
+            { type: 'object', const: { a: { p: 1, q: 2 } } },
+            { x: { a: { p: 1 } } },
+            { x: { a: { p: 1, q: 2 } } },
+          ],
+        ])('fills in the rest of the const (%s)', (_, xs, data, expected) => {
+          expect(run({ type: 'object', properties: { x: xs } }, data)).toEqual(expected);
+        });
+
+        test.each([{ x: { n: { m: 1 } } }, { x: { n: { m: 5 } } }, { x: { n: {} } }])(
+          'gives the same result as a declared key and as additionalProperties for %j',
+          (data) => {
+            const undeclared = run({ type: 'object', properties: { x } }, data);
+            expect(undeclared).toEqual(
+              run({ type: 'object', properties: { x: { ...x, additionalProperties: true } } }, data),
+            );
+            expect(undeclared).toEqual(
+              run(
+                {
+                  type: 'object',
+                  properties: {
+                    x: { ...x, properties: { n: { type: 'object', properties: { m: {}, q: {} } } } },
+                  },
+                },
+                data,
+              ),
+            );
+          },
+        );
+      });
+
       describe('an object const on a property that declares no properties', () => {
         const x = { type: 'object', const: { a: 2 } } as const;
         const schema: RJSFSchema = { type: 'object', default: { x: { a: 2 } }, properties: { x } };

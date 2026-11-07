@@ -565,6 +565,8 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   fieldState?: FormFieldState<S>;
   /** The path of the field, which only `fieldState` is asked about, so without one none is built */
   fieldPath?: FoldPath;
+  /** Whether `parentDefaults` holds a const that an ancestor or the field's own declaration gives it */
+  inheritsConst?: boolean;
 }
 
 /** A field's path as its parent's and its own key, so a child's is made without copying its parent's, and is spelled
@@ -1523,6 +1525,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     memo,
     onNullFill,
     nullFills,
+    inheritsConst,
   } = props;
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
@@ -1589,7 +1592,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const addedByAdditionalProperty =
       isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
     const child = defaultsChild(view, seeds, edge, propertySchema);
-    const ownProps = childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key);
+    const ownProps = {
+      ...childProps(key, addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key),
+      inheritsConst: hasConst,
+    };
     // An optional object the Optional Data Controls render while it has no value renders none of its fields, so the
     // `null` of none of them is filled in until the user adds it
     const propertyNullFills = nullFillsForProperty<T, S, F>(context, child, propertySchema, {
@@ -1664,17 +1670,22 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     shouldMergeDefaultsIntoFormData && Object.hasOwn(formData, key) && formData[key] !== undefined;
   const seededKeys = new Set<string>();
   if (
-    isObject(parentConst) &&
+    (isObject(parentConst) || inheritsConst) &&
     isObject(defaults) &&
     !(initialDefaultsGenerated && allowsAdditionalProperties<S, F>(context, schema)) &&
     defaultFormStateBehavior?.constAsDefaults !== 'never' &&
     !constIsAjvDataReference(schema)
   ) {
     Object.keys(defaults)
-      .filter((key) => !Object.hasOwn(schema.properties ?? {}, key) && !keepsFormData(key))
+      .filter(
+        (key) =>
+          !Object.hasOwn(schema.properties ?? {}, key) &&
+          (!keepsFormData(key) || (isObject(formData[key]) && isObject(getByPath(defaults, key)))),
+      )
       .forEach((key) => {
         seededKeys.add(key);
-        setOwn(computed, key, getByPath(defaults, key));
+        const value = getByPath(defaults, key);
+        setOwn(computed, key, keepsFormData(key) ? mergeDefaultsWithFormData(value, formData[key]) : value);
       });
   }
   if (additionalProperties && !initialDefaultsGenerated) {
