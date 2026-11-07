@@ -1,9 +1,18 @@
-import type { ErrorSchema, FieldPath, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  ErrorSchema,
+  FieldPath,
+  FieldProps,
+  FieldTemplateProps,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
 import { fireEvent, act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import StringField from '../src/components/fields/StringField.tsx';
+import CoreFieldTemplate from '../src/components/templates/FieldTemplate/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
 import {
   createFormComponent,
@@ -1044,6 +1053,18 @@ describe('StringField', () => {
       },
     );
 
+    it('should write ui:emptyValue when unchecked', async () => {
+      const { onChange } = createFormComponent({
+        schema: constSchema,
+        uiSchema: { confirm: { 'ui:widget': 'checkbox', 'ui:emptyValue': '' } },
+        initialFormData: { confirm: 'foo' },
+      });
+
+      await user.click(screen.getByRole('checkbox', { name: 'Confirmation' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { confirm: '' }, 'root_confirm');
+    });
+
     it.each([
       ['foo', true],
       ['bar', false],
@@ -1131,10 +1152,18 @@ describe('StringField', () => {
       function NoPlanStringField(props: FieldProps) {
         return <StringField {...props} presentation={undefined} />;
       }
+      // As a custom field rendering the template itself would, without the plan `SchemaField` builds
+      function NoPlanFieldTemplate(props: FieldTemplateProps) {
+        // oxlint-disable-next-line typescript/no-deprecated -- the label a template rendered without a plan is told to draw
+        const displayLabel = props.registry.schemaUtils.getDisplayLabel(props.schema, props.uiSchema);
+        // oxlint-disable-next-line typescript/no-deprecated -- a template rendered without a plan reads the deprecated prop
+        return <CoreFieldTemplate {...props} presentation={undefined} displayLabel={displayLabel} />;
+      }
       createFormComponent({
         schema: constSchema,
         uiSchema: { confirm: { 'ui:widget': widget } },
         fields: { StringField: NoPlanStringField },
+        templates: { FieldTemplate: NoPlanFieldTemplate },
       });
 
       expect(screen.getAllByText('Confirmation')).toHaveLength(1);

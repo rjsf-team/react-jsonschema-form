@@ -62,9 +62,9 @@ function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       if (!confirmsConst) {
         return value;
       }
-      return value ? schema.const : undefined;
+      return value ? schema.const : uiOptions.emptyValue;
     },
-    [confirmsConst, schema.const],
+    [confirmsConst, schema.const, uiOptions.emptyValue],
   );
   const onWidgetChange = useCallback(
     (value: T | undefined, errorSchema?: ErrorSchema, id?: string) =>
