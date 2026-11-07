@@ -3109,6 +3109,170 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe('an object const on a property that declares no properties', () => {
+        const x = { type: 'object', const: { a: 2 } } as const;
+        const schema: RJSFSchema = { type: 'object', default: { x: { a: 2 } }, properties: { x } };
+        const run = (s: RJSFSchema, formData?: unknown, extra = {}) =>
+          getDefaultFormState({ validator: testValidator, ...extra }, { schema: s, formData });
+
+        test('takes the const as the default', () => {
+          expect(run(schema)).toEqual({ x: { a: 2 } });
+        });
+
+        test('takes the const as the default without a parent default', () => {
+          const { default: _default, ...noDefault } = schema;
+          expect(run(noDefault)).toEqual({ x: { a: 2 } });
+        });
+
+        test('takes the const for an empty properties', () => {
+          expect(run({ type: 'object', properties: { x: { ...x, properties: {} } } })).toEqual({ x: { a: 2 } });
+        });
+
+        test('takes the const keys that properties does not declare', () => {
+          const s: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', properties: { a: { type: 'number' } }, const: { a: 2, b: 3 } } },
+          };
+          expect(run(s)).toEqual({ x: { a: 2, b: 3 } });
+        });
+
+        test('takes the const at the root', () => {
+          expect(run({ type: 'object', const: { a: 2 } })).toEqual({ a: 2 });
+        });
+
+        test('keeps existing form data', () => {
+          expect(run(schema, { x: { a: 5 } })).toEqual({ x: { a: 5 } });
+          expect(run({ type: 'object', const: { a: 2 } }, { a: 5 })).toEqual({ a: 5 });
+        });
+
+        test('does not take the const when constAsDefaults is never', () => {
+          const s: RJSFSchema = { type: 'object', properties: { x } };
+          expect(run(s, undefined, { defaultFormStateBehavior: { constAsDefaults: 'never' } })).toEqual({});
+        });
+
+        test('prefers ui:initialValue over the const', () => {
+          const result = getDefaultFormState(
+            { validator: testValidator },
+            { schema: { type: 'object', properties: { x } }, uiSchema: { x: { 'ui:initialValue': { a: 9 } } } },
+          );
+          expect(result).toEqual({ x: { a: 9 } });
+        });
+
+        test('writes an object const holding $data as literal data', () => {
+          const s: RJSFSchema = {
+            type: 'object',
+            properties: { y: { type: 'string', default: 'hi' }, x: { type: 'object', const: { $data: '1/y' } } },
+          };
+          expect(run(s)).toEqual({ y: 'hi', x: { $data: '1/y' } });
+          expect(run({ type: 'object', const: { $data: '0' } })).toEqual({ $data: '0' });
+        });
+
+        test('does not add back a const key the user removed', () => {
+          const s: RJSFSchema = { type: 'object', additionalProperties: true, const: { a: 2, b: 3 } };
+          const result = getDefaultFormState(
+            { validator: testValidator },
+            { schema: s, formData: { a: 2 }, initialDefaultsGenerated: true },
+          );
+          expect(result).toEqual({ a: 2 });
+        });
+
+        test('takes the undeclared const keys when initialDefaultsGenerated and additionalProperties is not set', () => {
+          const result = getDefaultFormState(
+            { validator: testValidator },
+            {
+              schema: { type: 'object', properties: { k: { type: 'object', const: { c: 1 } } } },
+              initialDefaultsGenerated: true,
+            },
+          );
+          expect(result).toEqual({ k: { c: 1 } });
+        });
+
+        test('takes every key of the ui:initialValue, not just the const keys', () => {
+          const result = getDefaultFormState(
+            { validator: testValidator },
+            {
+              schema: { type: 'object', properties: { x: { type: 'object', const: { a: 2 } } } },
+              uiSchema: { x: { 'ui:initialValue': { a: 9, z: 1 } } },
+            },
+          );
+          expect(result).toEqual({ x: { a: 9, z: 1 } });
+        });
+
+        test('keeps a seeded const key instead of the additionalProperties defaults', () => {
+          const s: RJSFSchema = {
+            type: 'object',
+            additionalProperties: { type: 'object', properties: { m: { type: 'number', default: 7 } } },
+            const: { a: { z: 1 } },
+          };
+          expect(run(s)).toEqual({ a: { z: 1 } });
+        });
+
+        test('ignores the const keys when constAsDefaults is never and a default is set', () => {
+          const s: RJSFSchema = {
+            type: 'object',
+            properties: { x: { type: 'object', const: { a: 2, b: 3 }, default: { b: 5, c: 6 } } },
+          };
+          expect(run(s, undefined, { defaultFormStateBehavior: { constAsDefaults: 'never' } })).toEqual({});
+        });
+
+        test('copies the ui:initialValue instead of sharing it', () => {
+          const iv = { n: { m: 1 } };
+          const result = getDefaultFormState(
+            { validator: testValidator },
+            {
+              schema: { type: 'object', properties: { x: { type: 'object', const: { n: { m: 0 } } } } },
+              uiSchema: { x: { 'ui:initialValue': iv } },
+            },
+          ) as { x: { n: unknown } };
+          expect(result.x.n).toEqual({ m: 1 });
+          expect(result.x.n).not.toBe(iv.n);
+        });
+
+        test('keeps the form data of an undeclared const key when computeDefaults is called with merging off', () => {
+          const result = computeDefaults(
+            { validator: testValidator },
+            { type: 'object', const: { a: 2, b: 3 } },
+            { rawFormData: { b: 1 }, shouldMergeDefaultsIntoFormData: false },
+          );
+          expect(result).toEqual({ a: 2, b: 3 });
+        });
+
+        test('does not add back a const key the user removed under patternProperties with initialDefaultsGenerated', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            patternProperties: { '^[a-z]$': { type: 'number' } },
+            const: { a: 2, b: 3 },
+          };
+          const run = (extra: RJSFSchema) =>
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema: { ...schema, ...extra }, formData: { a: 2 }, initialDefaultsGenerated: true },
+            );
+          expect(run({})).toEqual({ a: 2 });
+          expect(run({ additionalProperties: false })).toEqual({ a: 2 });
+        });
+
+        test('does not add a key the ui:initialValue leaves out as undefined', () => {
+          const result = getDefaultFormState(
+            { validator: testValidator },
+            {
+              schema: { type: 'object', properties: { x: { type: 'object', const: { a: 2, b: 3 } } } },
+              uiSchema: { x: { 'ui:initialValue': { a: 9 } } },
+            },
+          ) as { x: object };
+          expect(result.x).toStrictEqual({ a: 9 });
+          expect(Object.hasOwn(result.x, 'b')).toBe(false);
+        });
+
+        test('takes the const with additionalPropertiesWhenAbsent allow', () => {
+          expect(
+            run({ type: 'object', properties: { x } }, undefined, {
+              defaultFormStateBehavior: { additionalPropertiesWhenAbsent: 'allow' },
+            }),
+          ).toEqual({ x: { a: 2 } });
+        });
+      });
+
       describe('an array with const', () => {
         const schema: RJSFSchema = { type: 'array', const: ['foo', 'bar'] };
 

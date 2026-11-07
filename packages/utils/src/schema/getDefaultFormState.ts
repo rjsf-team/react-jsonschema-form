@@ -1078,7 +1078,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (uiSchema) {
     const { initialValue, emptyValue } = getUiOptions<T, S, F>(uiSchema);
     if (initialValue !== undefined && !initialDefaultsGenerated) {
-      defaults = initialValue;
+      defaults = ownValue(initialValue);
     } else if (defaults === undefined && emptyValue !== undefined) {
       defaults = emptyValue;
     }
@@ -1656,6 +1656,27 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     });
   }
   const additionalProperties = absentKeywordAllows<S, F>(context, schema) || schema.additionalProperties;
+  // The loop above only rebuilds the const's keys the schema declares, so the rest are taken from `defaults`, which
+  // holds the const, or the `ui:initialValue` that takes priority over it. Only where `additionalProperties` or
+  // `patternProperties` lets the user remove a key does `initialDefaultsGenerated` skip it, so a removed key isn't added
+  // back, as for additional properties
+  const keepsFormData = (key: string) =>
+    shouldMergeDefaultsIntoFormData && Object.hasOwn(formData, key) && formData[key] !== undefined;
+  const seededKeys = new Set<string>();
+  if (
+    isObject(parentConst) &&
+    isObject(defaults) &&
+    !(initialDefaultsGenerated && allowsAdditionalProperties<S, F>(context, schema)) &&
+    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    !constIsAjvDataReference(schema)
+  ) {
+    Object.keys(defaults)
+      .filter((key) => !Object.hasOwn(schema.properties ?? {}, key) && !keepsFormData(key))
+      .forEach((key) => {
+        seededKeys.add(key);
+        setOwn(computed, key, getByPath(defaults, key));
+      });
+  }
   if (additionalProperties && !initialDefaultsGenerated) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
@@ -1678,32 +1699,34 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
         .forEach((key) => keys.add(key));
     }
-    keys.forEach((key) => {
-      const { value, holdsNull } = foldReporting(
-        context,
-        `additional:${key}`,
-        defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
-        // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
-        // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
-        childProps(key, ADDITIONAL_PROPERTIES_KEY),
-      );
-      // Added whatever the form's settings say, below, so its `null` only has to reach the objects above
-      if (holdsNull) {
-        fillOverUndefined(nullFills, rawFormData, key, value);
-        onNullFill?.();
-      }
-      maybeAddDefaultToObject(
-        computed,
-        key,
-        value,
-        includeUndefinedValues,
-        required,
-        formDataRequired,
-        // A property added by `additionalProperties` is one the user added, so it is populated whatever the form's
-        // `emptyObjectFields` says about the properties the schema names
-        'populateAllDefaults',
-      );
-    });
+    [...keys]
+      .filter((key) => !seededKeys.has(key))
+      .forEach((key) => {
+        const { value, holdsNull } = foldReporting(
+          context,
+          `additional:${key}`,
+          defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
+          // Matches ObjectField's convention for properties added by `additionalProperties`: they all share
+          // `uiSchema.additionalProperties` rather than each having its own dynamically-named entry in `uiSchema`.
+          childProps(key, ADDITIONAL_PROPERTIES_KEY),
+        );
+        // Added whatever the form's settings say, below, so its `null` only has to reach the objects above
+        if (holdsNull) {
+          fillOverUndefined(nullFills, rawFormData, key, value);
+          onNullFill?.();
+        }
+        maybeAddDefaultToObject(
+          computed,
+          key,
+          value,
+          includeUndefinedValues,
+          required,
+          formDataRequired,
+          // A property added by `additionalProperties` is one the user added, so it is populated whatever the form's
+          // `emptyObjectFields` says about the properties the schema names
+          'populateAllDefaults',
+        );
+      });
   }
   // Once the form has generated its defaults, the additional properties the data holds keep the values the user left
   // them (#3759), except for the `null` the field of a `null` schema holds, which is filled in for them as it is for

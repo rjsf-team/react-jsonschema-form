@@ -869,7 +869,7 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     ];
     it.each(shapes)('is merged from a %s as the branch is merged into the field, the branch winning', (_, schema) => {
       const defaults = defaultsOf(schema);
-      expect(defaults).toEqual({ a: 'x', o: { x: 1, y: 2 }, n: { i: 'bi', j: 'bj' }, k: { c: 1 } });
+      expect(defaults).toEqual({ a: 'x', o: { x: 1, y: 2 }, n: { i: 'bi', j: 'bj' }, k: { c: 1, d: 2 } });
       expect(isObject(defaults) && isObject(defaults.n) ? Object.keys(defaults.n) : []).toEqual(['i', 'j']);
     });
     it('renders in the order and with the default the field it is merged into shows', () => {
