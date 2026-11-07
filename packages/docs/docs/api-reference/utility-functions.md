@@ -2759,7 +2759,7 @@ Reports whether an input with `allowClearTextInputs` offers its clear button: wh
 A `number`, `date`, `datetime-local`, `month`, `time` or `week` input shows only a value in its type's [syntax](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html) and blanks anything else, `false` included.
 It reads that syntax alone, so a day past its month's end counts as shown.
 Any other input shows whatever isn't an empty string.
-A `range` input offers none, since it can't show an empty value.
+A `range` or `color` input offers none, since it can't show an empty value.
 
 #### Parameters
 

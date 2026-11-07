@@ -509,6 +509,33 @@ describe("mui widgets are named by their label and carry the field's id on the e
       pickB,
       'b',
     ],
+    [
+      "a select's select slot's inputProps' display props",
+      letters,
+      {},
+      at('rjsfSlotProps', 'select', 'inputProps', 'SelectDisplayProps'),
+      'a',
+      pickB,
+      'b',
+    ],
+    [
+      "a select's input slot's inputProps' display props",
+      letters,
+      {},
+      at('rjsfSlotProps', 'input', 'inputProps', 'SelectDisplayProps'),
+      'a',
+      pickB,
+      'b',
+    ],
+    [
+      "a select's htmlInput slot's display props",
+      letters,
+      {},
+      at('rjsfSlotProps', 'htmlInput', 'SelectDisplayProps'),
+      'a',
+      pickB,
+      'b',
+    ],
     ['a checkbox', bool, {}, at('rjsfSlotProps', 'checkbox'), false, press(' '), true],
     ['a slider', range, { 'ui:widget': 'range' }, at(), 4, right, 5],
     ["a slider's target", range, { 'ui:widget': 'range' }, at('rjsfSlotProps', 'slider'), 4, right, 5],
@@ -539,6 +566,47 @@ describe("mui widgets are named by their label and carry the field's id on the e
     expect(author.onChange).toHaveBeenCalled();
     expect(author.onFocus).toHaveBeenCalled();
     expect(author.onBlur).toHaveBeenCalled();
+  });
+
+  test.each([
+    ['select slot', at('rjsfSlotProps', 'select', 'inputProps', 'SelectDisplayProps')],
+    ['input slot', at('rjsfSlotProps', 'input', 'inputProps', 'SelectDisplayProps')],
+    ['htmlInput slot', at('rjsfSlotProps', 'htmlInput', 'SelectDisplayProps')],
+  ])("keeps the field's id on a select's combobox over display props its %s gives", (_, mui) => {
+    render(<Form schema={letters} uiSchema={{ 'ui:options': { mui: mui({ title: 't' }) } }} validator={validator} />);
+
+    expect(screen.getByRole('combobox')).toHaveAttribute('id', 'root');
+  });
+
+  test.each([
+    ['select slot', at('rjsfSlotProps', 'select')],
+    ["select slot's inputProps", at('rjsfSlotProps', 'select', 'inputProps')],
+    ["input slot's inputProps", at('rjsfSlotProps', 'input', 'inputProps')],
+    ['htmlInput slot', at('rjsfSlotProps', 'htmlInput')],
+    ["select slot's slotProps.input", at('rjsfSlotProps', 'select', 'slotProps', 'input')],
+    ["input slot's slotProps.input", at('rjsfSlotProps', 'input', 'slotProps', 'input')],
+    ["select slot's MenuProps", at('rjsfSlotProps', 'select', 'MenuProps')],
+  ])("keeps a read-only select's menu closed over an open its %s gives", (_, mui) => {
+    render(
+      <Form
+        schema={letters}
+        uiSchema={{ 'ui:readonly': true, 'ui:options': { mui: mui({ open: true, defaultOpen: true }) } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByRole('option')).toBeNull();
+  });
+
+  test('opens a select held open by its select slot once it is no longer read-only', () => {
+    const uiSchema = (readonly: boolean): UiSchema => ({
+      'ui:readonly': readonly,
+      'ui:options': { mui: { rjsfSlotProps: { select: { open: true } } } },
+    });
+    const { rerender } = render(<Form schema={letters} uiSchema={uiSchema(true)} validator={validator} />);
+    rerender(<Form schema={letters} uiSchema={uiSchema(false)} validator={validator} />);
+
+    expect(screen.getAllByRole('option')).not.toHaveLength(0);
   });
 
   test("runs the onFocus and onBlur ui:options.mui gives a slider's input slot beside the form's", async () => {
