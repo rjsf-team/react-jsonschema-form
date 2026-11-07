@@ -11,7 +11,7 @@
  */
 
 import type { RJSFSchema } from '@rjsf/utils';
-import { getFirstMatchingOption } from '@rjsf/utils';
+import { getClosestMatchingOption, getFirstMatchingOption, retrieveSchema } from '@rjsf/utils';
 import { Ajv2019 } from 'ajv/dist/2019.js';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 
@@ -100,4 +100,177 @@ describe('scoring an option that references itself', () => {
     // The `required` an option declares is dropped for scoring, so a key the user has yet to fill in still matches
     expect(getFirstMatchingOption({ validator: precompiled }, { b: undefined }, options, schema)).toBe(0);
   });
+});
+
+describe('scoring an option whose property leads to a choice that recurs (#4990)', () => {
+  const ROOT: RJSFSchema = {
+    definitions: {
+      // A JSON value, whose recurring options take different types
+      Value: {
+        anyOf: [
+          { type: 'string' },
+          { type: 'array', items: { $ref: '#/definitions/Value' } },
+          { type: 'object', additionalProperties: { $ref: '#/definitions/Value' } },
+        ],
+      },
+      // The same JSON value, whose recurring options state their types through an allOf
+      WrappedValue: {
+        anyOf: [
+          { type: 'string' },
+          { allOf: [{ $ref: '#/definitions/ValueArray' }] },
+          { allOf: [{ $ref: '#/definitions/ValueObject' }] },
+        ],
+      },
+      ValueArray: { type: 'array', items: { $ref: '#/definitions/WrappedValue' } },
+      ValueObject: { type: 'object', additionalProperties: { $ref: '#/definitions/WrappedValue' } },
+      // Kinds of node, told apart by a const, that offer each other as children, as in #4990
+      A: {
+        type: 'object',
+        properties: {
+          kind: { const: 'A' },
+          child: { oneOf: [{ type: 'null' }, { $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] },
+        },
+      },
+      B: {
+        type: 'object',
+        properties: {
+          kind: { const: 'B' },
+          child: { oneOf: [{ type: 'null' }, { $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] },
+        },
+      },
+      // A tree whose recurring options both take objects
+      Tree: {
+        type: 'object',
+        anyOf: [
+          { properties: { left: { $ref: '#/definitions/Tree' } } },
+          { properties: { right: { $ref: '#/definitions/Tree' } } },
+        ],
+      },
+    },
+  };
+  const optionsBelow = (below: string): RJSFSchema[] => [
+    { properties: { v: { $ref: `#/definitions/${below}` } } },
+    { properties: { v: { type: 'number' } } },
+  ];
+
+  it.each(['Value', 'WrappedValue', 'Tree'])('checks the type of a property leading to %s', (below) => {
+    expect(getFirstMatchingOption({ validator }, { v: 5 }, optionsBelow(below), ROOT)).toBe(1);
+  });
+
+  it('merges the option the data matches into a schema whose dependencies offer them', () => {
+    const schema: RJSFSchema = { ...ROOT, type: 'object', dependencies: { x: ['v'] }, oneOf: optionsBelow('Value') };
+    expect(retrieveSchema({ validator }, schema, schema, { v: 5 }).properties?.v).toEqual({ type: 'number' });
+  });
+
+  it.each(['Value', 'Tree'])('tells options apart by what sits beside a property leading to %s', (below) => {
+    const metaOf = (kind: string): RJSFSchema => ({
+      properties: {
+        meta: { type: 'object', properties: { kind: { const: kind }, tree: { $ref: `#/definitions/${below}` } } },
+      },
+    });
+    expect(getClosestMatchingOption({ validator }, ROOT, { meta: { kind: 'b' } }, [metaOf('a'), metaOf('b')], -1)).toBe(
+      1,
+    );
+  });
+
+  it('tells options apart by a const in the node a property names, where that node recurs', () => {
+    const options: RJSFSchema[] = [
+      { properties: { w: { $ref: '#/definitions/A' } } },
+      { properties: { w: { $ref: '#/definitions/B' } } },
+    ];
+    const formData = { w: { kind: 'B' } };
+    expect(getFirstMatchingOption({ validator }, formData, options, ROOT)).toBe(1);
+    expect(getClosestMatchingOption({ validator }, ROOT, formData, options, -1)).toBe(1);
+    const schema: RJSFSchema = { ...ROOT, type: 'object', dependencies: { x: ['w'] }, oneOf: options };
+    expect(retrieveSchema({ validator }, schema, schema, formData).properties?.w).toEqual({
+      $ref: '#/definitions/B',
+    });
+  });
+
+  it.each([
+    ['a oneOf', { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] }, { kind: 'A' }],
+    ['a not', { not: { $ref: '#/definitions/A' } }, { kind: 'B' }],
+  ])('checks a node that recurs in full below %s beside the option', (_keyword, beside, data) => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { other: { type: 'number' } } },
+      { type: 'object', properties: { name: { type: 'string' } }, required: ['name'], ...beside },
+    ];
+    expect(getFirstMatchingOption({ validator }, { name: 'x', ...data }, options, ROOT)).toBe(1);
+  });
+
+  it.each([
+    ['a $ref', (base: string): RJSFSchema => ({ $ref: base })],
+    ['an allOf', (base: string): RJSFSchema => ({ allOf: [{ $ref: base }] })],
+  ])('tells options apart by a const in the node a recurring alias written as %s names', (_spelling, alias) => {
+    const animal = (kind: string): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        kind: { const: kind },
+        child: { oneOf: [{ type: 'null' }, { $ref: '#/definitions/Cat' }, { $ref: '#/definitions/Dog' }] },
+      },
+    });
+    const root: RJSFSchema = {
+      definitions: {
+        Cat: alias('#/definitions/CatBase'),
+        Dog: alias('#/definitions/DogBase'),
+        CatBase: animal('cat'),
+        DogBase: animal('dog'),
+      },
+    };
+    const options: RJSFSchema[] = [
+      { properties: { w: { $ref: '#/definitions/Cat' } } },
+      { properties: { w: { $ref: '#/definitions/Dog' } } },
+    ];
+    expect(getFirstMatchingOption({ validator }, { w: { kind: 'dog' } }, options, root)).toBe(1);
+  });
+
+  it('checks the type of a property leading to a oneOf of recurring objects that states no type itself', () => {
+    const node = (name: string): RJSFSchema => ({
+      type: 'object',
+      properties: { kind: { const: name }, next: { $ref: '#/definitions/Expr' } },
+    });
+    const root: RJSFSchema = {
+      definitions: {
+        Expr: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] },
+        A: node('A'),
+        B: node('B'),
+      },
+    };
+    const options: RJSFSchema[] = [
+      { properties: { v: { $ref: '#/definitions/Expr' } } },
+      { properties: { v: { type: 'number' } } },
+    ];
+    expect(getFirstMatchingOption({ validator }, { v: 5 }, options, root)).toBe(1);
+  });
+
+  it.each([
+    [
+      'allOf entries',
+      {
+        allOf: [
+          { $ref: '#/definitions/Base' },
+          { properties: { children: { items: { $ref: '#/definitions/Node' } } } },
+        ],
+      },
+    ],
+    [
+      'a $ref beside properties',
+      { $ref: '#/definitions/Base', properties: { children: { items: { $ref: '#/definitions/Node' } } } },
+    ],
+  ])(
+    'checks a node whose %s recur through different properties, which validates the data once',
+    (_spelling, nodeSchema) => {
+      const root: RJSFSchema = {
+        definitions: {
+          Node: nodeSchema as RJSFSchema,
+          Base: { type: 'object', properties: { kind: { type: 'string' }, parent: { $ref: '#/definitions/Node' } } },
+        },
+      };
+      const options: RJSFSchema[] = [
+        { properties: { v: { $ref: '#/definitions/Node' } } },
+        { properties: { v: { type: 'number' } } },
+      ];
+      expect(getFirstMatchingOption({ validator }, { v: 5 }, options, root)).toBe(1);
+    },
+  );
 });

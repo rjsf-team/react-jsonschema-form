@@ -528,6 +528,29 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'y' }, options)).toEqual(1);
       expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { a: 'y' }, options)).toEqual(0);
     });
+    it('scores a property written as a $ref to a oneOf by the option of it the data matches', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          Shift: {
+            oneOf: [
+              { type: 'object', properties: { day: { type: 'string' } }, required: ['day'] },
+              { type: 'object', properties: { night: { type: 'string' } }, required: ['night'] },
+            ],
+          },
+          Leave: { oneOf: [{ type: 'object', properties: { reason: { type: 'string' } } }] },
+        },
+      };
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { entry: { $ref: '#/definitions/Leave' } } },
+        { type: 'object', properties: { entry: { $ref: '#/definitions/Shift' } } },
+      ];
+      expect(
+        getClosestMatchingOption({ validator: testValidator }, rootSchema, { entry: { night: 'late' } }, options),
+      ).toEqual(1);
+      expect(
+        getClosestMatchingOption({ validator: testValidator }, rootSchema, { entry: { reason: 'ill' } }, options),
+      ).toEqual(0);
+    });
     it('scores an option and a property written as a $ref with constraints beside it as the allOf of both', () => {
       const rootSchema: RJSFSchema = {
         definitions: {

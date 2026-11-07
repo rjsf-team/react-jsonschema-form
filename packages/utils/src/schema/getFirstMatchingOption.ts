@@ -156,7 +156,8 @@ function discriminates<S extends StrictRJSFSchema = RJSFSchema>(
 /** Returns whether `option` matches `formData`. With a `discriminatorField` the option names a property for, and whose
  * declarations of it can tell it from the others, see `discriminates()`, only that property is checked, against the
  * data's value for it. Otherwise the data has to hold a key the option declares, see `holdsDeclaredKey()`, and
- * validate against the option as scored, see `scoringTarget()`. A boolean option matches whatever it says.
+ * validate against the option as scored, see `scoringTarget()`, which reads a property or item recurring along with a
+ * recursive choice as the types it takes. A boolean option matches whatever it says.
  *
  * @param context - The `SchemaContext` whose `validator` checks the option
  * @param formData - The data being matched
