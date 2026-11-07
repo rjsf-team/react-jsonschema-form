@@ -585,6 +585,149 @@ describe("mui widgets are named by their label and carry the field's id on the e
     expect(author.onBlur).toHaveBeenCalled();
   });
 
+  type ValueRow = [string, RJSFSchema, UiSchema, object, unknown, () => Promise<void>, unknown, () => void];
+  const showsQ = () => expect(screen.getByRole('textbox')).toHaveValue('q');
+  const showsB = () => expect(screen.getByRole('combobox')).toHaveTextContent('b');
+  const checksA = () => expect(screen.getByRole('radio', { name: 'a' })).toBeChecked();
+  // The select's DOM value for `a`, which the combobox shows
+  const pinA = { value: '0' };
+  test.each<ValueRow>([
+    ['a text field', text, {}, at()({ value: 'pinned' }), undefined, press('q'), 'q', showsQ],
+    [
+      "a text field's input slot",
+      text,
+      {},
+      at('slotProps', 'input')({ value: 'pinned' }),
+      undefined,
+      press('q'),
+      'q',
+      showsQ,
+    ],
+    [
+      "a text field's input slot's inputProps",
+      text,
+      {},
+      at('slotProps', 'input', 'inputProps')({ value: 'pinned' }),
+      undefined,
+      press('q'),
+      'q',
+      showsQ,
+    ],
+    [
+      "a text field's htmlInput slot",
+      text,
+      {},
+      at('slotProps', 'htmlInput')({ value: 'pinned' }),
+      undefined,
+      press('q'),
+      'q',
+      showsQ,
+    ],
+    ['a select', letters, {}, at()(pinA), 'a', pickB, 'b', showsB],
+    ["a select's select slot", letters, {}, at('rjsfSlotProps', 'select')(pinA), 'a', pickB, 'b', showsB],
+    ["a select's htmlInput slot", letters, {}, at('rjsfSlotProps', 'htmlInput')(pinA), 'a', pickB, 'b', showsB],
+    [
+      "a select's select slot's inputProps",
+      letters,
+      {},
+      at('rjsfSlotProps', 'select', 'inputProps')(pinA),
+      'a',
+      pickB,
+      'b',
+      showsB,
+    ],
+    [
+      'a checkbox',
+      bool,
+      {},
+      at('rjsfSlotProps', 'checkbox')({ checked: false }),
+      false,
+      press(' '),
+      true,
+      () => expect(screen.getByRole('checkbox')).toBeChecked(),
+    ],
+    [
+      'a radio',
+      letters,
+      { 'ui:widget': 'radio' },
+      at('rjsfSlotProps', 'radio')({ checked: false }),
+      undefined,
+      press(' '),
+      'a',
+      checksA,
+    ],
+    [
+      "a radio's value",
+      letters,
+      { 'ui:widget': 'radio' },
+      at('rjsfSlotProps', 'radio')({ value: 'pinned' }),
+      undefined,
+      press(' '),
+      'a',
+      checksA,
+    ],
+    [
+      "a checkbox's input slot",
+      bool,
+      {},
+      checkboxInput({ checked: false }),
+      false,
+      press(' '),
+      true,
+      () => expect(screen.getByRole('checkbox')).toBeChecked(),
+    ],
+    [
+      "a radio's input slot",
+      letters,
+      { 'ui:widget': 'radio' },
+      radioInput({ value: 'pinned' }),
+      undefined,
+      press(' '),
+      'a',
+      checksA,
+    ],
+    [
+      "a radio's formControlLabel slot",
+      letters,
+      { 'ui:widget': 'radio' },
+      at('rjsfSlotProps', 'formControlLabel')({ checked: false }),
+      undefined,
+      press(' '),
+      'a',
+      checksA,
+    ],
+    [
+      "a slider's input slot",
+      range,
+      { 'ui:widget': 'range' },
+      sliderInput({ value: 9 }),
+      4,
+      right,
+      5,
+      () => expect(screen.getByRole('slider')).toHaveValue('5'),
+    ],
+  ])(
+    "shows %s's form data over a value ui:options.mui gives it",
+    async (_, schema, uiSchema, mui, initial, act, expected, shows) => {
+      const onChange = vi.fn();
+      render(
+        <Form
+          schema={schema}
+          uiSchema={{ ...uiSchema, 'ui:options': { mui } }}
+          validator={validator}
+          initialFormData={initial}
+          onChange={onChange}
+        />,
+      );
+
+      await user.tab();
+      await act();
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: expected }), 'root');
+      shows();
+    },
+  );
+
   test.each([
     ['select slot', at('rjsfSlotProps', 'select', 'inputProps', 'SelectDisplayProps')],
     ['input slot', at('rjsfSlotProps', 'input', 'inputProps', 'SelectDisplayProps')],

@@ -19,7 +19,7 @@ import {
   templateMarksRequired,
 } from '@rjsf/utils';
 
-import { getMuiProps, withInputSlot } from '../util.ts';
+import { getMuiProps, omitKeys, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the RadioWidget. */
 export interface RadioWidgetMuiProps extends GenericObjectType {
@@ -83,8 +83,9 @@ export default function RadioWidget<
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, RadioWidgetMuiProps>(options);
   // `required`, the field's or one the form author gives the `Radio`, which replaces it, goes on the `<input>` rather
-  // than the `Radio`, whose `FormControlLabel` would mark each option's label `*`
-  const { required: authorRequired, ...radioProps } = muiSlotProps?.radio ?? {};
+  // than the `Radio`, whose `FormControlLabel` would mark each option's label `*`. An author's `checked` and `value`
+  // would take the form's data, as `Radio` derives its own only where they are undefined
+  const { required: authorRequired, checked: _checked, value: _value, ...radioProps } = muiSlotProps?.radio ?? {};
   const radioSlotProps = withInputSlot(
     { ...optionAttributes, required: authorRequired ?? required },
     radioProps.slotProps,
@@ -117,7 +118,8 @@ export default function RadioWidget<
             const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
             const radio = (
               <FormControlLabel
-                {...muiSlotProps?.formControlLabel}
+                // `FormControlLabel` hands its `checked` to a `Radio` given none, which would pin it
+                {...omitKeys(muiSlotProps?.formControlLabel, ['checked'])}
                 control={
                   <Radio
                     {...radioProps}

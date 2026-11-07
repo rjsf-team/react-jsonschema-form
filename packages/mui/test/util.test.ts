@@ -104,7 +104,7 @@ describe('computeSxProps', () => {
 
 describe('omitFormOwnedProps', () => {
   it('drops the props the form sets, and keeps the rest', () => {
-    const formOwned = { disabled: false, onChange: () => {}, onBlur: () => {}, onFocus: () => {} };
+    const formOwned = { value: 'v', disabled: false, onChange: () => {}, onBlur: () => {}, onFocus: () => {} };
     expect(omitFormOwnedProps({ ...formOwned, title: 'T' })).toEqual({ title: 'T' });
   });
 });
@@ -112,12 +112,13 @@ describe('omitFormOwnedProps', () => {
 describe('omitFormOwnedInputProps', () => {
   const onChange = () => {};
 
-  it('drops the props the form sets, and disabled from the <input> props nested in the slot', () => {
+  it('drops the props the form sets, and value and disabled from the <input> props nested in the slot', () => {
     const slot = omitFormOwnedInputProps({
+      value: 'v',
       disabled: false,
       onChange,
-      inputProps: { disabled: false, onChange },
-      slotProps: { input: { disabled: false, onChange }, root: { title: 'R' } },
+      inputProps: { value: 'v', disabled: false, onChange },
+      slotProps: { input: { value: 'v', disabled: false, onChange }, root: { title: 'R' } },
     });
     expect(slot).toEqual({ inputProps: { onChange }, slotProps: { input: { onChange }, root: { title: 'R' } } });
   });

@@ -94,10 +94,10 @@ export default function CheckboxWidget<
           <Checkbox
             id={id}
             name={htmlName || id}
-            checked={typeof value === 'undefined' ? false : Boolean(value)}
             autoFocus={autofocus}
             {...muiSlotProps?.checkbox}
             // After the author's props, so they can't take the form's data or focus
+            checked={typeof value === 'undefined' ? false : Boolean(value)}
             onChange={handleChange}
             onBlur={handleBlur}
             onFocus={handleFocus}

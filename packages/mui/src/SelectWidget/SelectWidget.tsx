@@ -62,11 +62,11 @@ export interface SelectWidgetMuiProps extends GenericObjectType {
 
 /** Keeps the form's hold on the props MUI's `Select` hands its `SelectInput`: those given as its `inputProps`, which
  * replace the `SelectDisplayProps` it builds for the combobox whole, and the select slot itself. `SelectInput` takes
- * their `disabled` over the form's, the combobox keeps its id and its focus reports, and a locked select can't be held
- * open, as `SelectInput` lets a user pick from an open menu even while disabled. An author's `open` becomes `false`
- * rather than going, since `SelectInput` fixes whether its `open` is controlled on its first render. A locked select
- * also takes no `tabIndex`, which would let a keyboard user focus it and open its menu, as `SelectInput` checks only
- * `readOnly` before a key opens it
+ * their `value` and `disabled` over the form's, the combobox keeps its id and its focus reports, and a locked select
+ * can't be held open, as `SelectInput` lets a user pick from an open menu even while disabled. An author's `open`
+ * becomes `false` rather than going, since `SelectInput` fixes whether its `open` is controlled on its first render. A
+ * locked select also takes no `tabIndex`, which would let a keyboard user focus it and open its menu, as `SelectInput`
+ * checks only `readOnly` before a key opens it
  *
  * @param props - The props the form author gives `SelectInput`
  * @param comboboxId - The id `Select` gives the combobox
@@ -82,7 +82,7 @@ function omitFormOwnedSelectInputProps<P extends object>(props: P, comboboxId: s
   };
   const lockedKeys = locked ? ['defaultOpen', 'tabIndex'] : [];
   return {
-    ...omitKeys(props, ['disabled', ...lockedKeys]),
+    ...omitKeys(props, ['value', 'disabled', ...lockedKeys]),
     ...(locked && open !== undefined && { open: false }),
     // `SelectInput` spreads these over the `open` it gives its menu
     ...(locked && MenuProps && { MenuProps: { ...MenuProps, open: false } }),
@@ -208,7 +208,6 @@ export default function SelectWidget<
         id={id}
         name={htmlName || id}
         label={ownLabel}
-        value={selectedValue}
         required={templateMarksRequired<T, S, F>(props)}
         autoFocus={autofocus}
         autoComplete={autocomplete}
@@ -216,6 +215,7 @@ export default function SelectWidget<
         error={hasWidgetErrors<T, S, F>(props)}
         {...textFieldOverrides}
         select // Apply this and the following props after the potential overrides defined in textFieldProps
+        value={selectedValue}
         disabled={locked}
         onChange={handleChange}
         onBlur={handleBlur}

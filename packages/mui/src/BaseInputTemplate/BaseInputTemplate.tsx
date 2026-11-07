@@ -36,6 +36,7 @@ import {
   omitFormOwnedInputProps,
   resolveSlotProps,
   withoutDisabled,
+  withoutKeys,
 } from '../util.ts';
 
 type HtmlInputAttributes = React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
@@ -159,7 +160,8 @@ export default function BaseInputTemplate<
   const htmlInputProps = (ownerState: TextFieldOwnerState) => {
     const callerHtmlInput = {
       ...resolveSlotProps<HtmlInputAttributes, TextFieldOwnerState>(slotProps?.htmlInput, ownerState),
-      ...resolveSlotProps(withoutDisabled(muiSlotProps?.htmlInput), ownerState),
+      // `InputBase` puts this `value` over the form's
+      ...resolveSlotProps(withoutKeys(muiSlotProps?.htmlInput, ['value', 'disabled']), ownerState),
     };
     return {
       title: 'pattern' in callerHtmlInput ? undefined : title,
@@ -234,10 +236,10 @@ export default function BaseInputTemplate<
           ),
         }}
         {...rest}
-        value={inputValue}
         error={hasWidgetErrors<T, S, F>(props)}
         {...textFieldOverrides}
         // After the author's props, so they can't take the form's data, focus or disabled state
+        value={inputValue}
         disabled={disabled || readonly}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
