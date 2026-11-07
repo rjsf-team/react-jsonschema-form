@@ -9,9 +9,9 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { isPlainObject, noop, optionDescriptionId } from '@rjsf/utils';
+import { getByPath, isPlainObject, noop, optionDescriptionId } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
-import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
+import { createPrecompiledValidator, customizeValidator } from '@rjsf/validator-ajv8';
 import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
 import { act, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -5230,25 +5230,28 @@ describe('oneOf', () => {
     expect(node.querySelector('#root_status_reason')).not.toBeInTheDocument();
   });
   describe('definitions offering each other as options (#4990)', () => {
-    it('opens data nested 11 levels deep, and switches the option at the deepest level, without stalling', async () => {
-      // Validating each option against the data whole walks every option of each oneOf below it, four times as long for
-      // each level deeper: over 4 s at this depth, which the bounds below leave ample room under
-      const start = performance.now();
-      createFormComponent({ schema: CROSS_REFERENCING_SCHEMA, initialFormData: nestedChildren(11) });
-      const mounted = performance.now() - start;
+    it('opens data nested 11 levels deep and switches its deepest option, matching no option below its child', async () => {
+      const counting = customizeValidator();
+      const isValid = vi.spyOn(counting, 'isValid');
+      createFormComponent({ schema: CROSS_REFERENCING_SCHEMA, initialFormData: nestedChildren(11) }, counting);
 
       const selects = screen.getAllByRole('combobox');
       expect(selects).toHaveLength(12);
       const deepest = selects[11];
       expect(deepest).toHaveDisplayValue('None');
       const [, firstDefinition] = within(deepest).getAllByRole('option');
-      const switchStart = performance.now();
       await user.selectOptions(deepest, firstDefinition);
-      const switched = performance.now() - switchStart;
 
       expect(screen.getAllByRole('combobox')).toHaveLength(13);
-      expect(mounted).toBeLessThan(2000);
-      expect(switched).toBeLessThan(2000);
+      // Every `$ref` the schema writes leads into the definitions, where a validator would walk every option of each
+      // `oneOf` below the child, four times as long for each level deeper; the field below matches its own options. A
+      // pointer to an option that writes none, such as `None`, names nothing further.
+      expect(isValid).toHaveBeenCalled();
+      const named = (schema: unknown) =>
+        isPlainObject(schema) && typeof schema.$ref === 'string'
+          ? getByPath(CROSS_REFERENCING_SCHEMA, schema.$ref.slice(2).split('/'))
+          : schema;
+      expect(isValid.mock.calls.filter(([schema]) => JSON.stringify(named(schema)).includes('$ref'))).toEqual([]);
     });
   });
 });

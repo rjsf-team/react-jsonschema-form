@@ -11,7 +11,7 @@
  */
 
 import type { RJSFSchema } from '@rjsf/utils';
-import { getFirstMatchingOption } from '@rjsf/utils';
+import { getClosestMatchingOption, getFirstMatchingOption, retrieveSchema } from '@rjsf/utils';
 import { Ajv2019 } from 'ajv/dist/2019.js';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 
@@ -99,5 +99,52 @@ describe('scoring an option that references itself', () => {
     expect(getFirstMatchingOption({ validator: precompiled }, { c: 1 }, options, schema)).toBe(1);
     // The `required` an option declares is dropped for scoring, so a key the user has yet to fill in still matches
     expect(getFirstMatchingOption({ validator: precompiled }, { b: undefined }, options, schema)).toBe(0);
+  });
+});
+
+describe('scoring an option whose property leads to a choice that recurs (#4990)', () => {
+  const ROOT: RJSFSchema = {
+    definitions: {
+      // A JSON value, whose recurring options take different types
+      Value: {
+        anyOf: [
+          { type: 'string' },
+          { type: 'array', items: { $ref: '#/definitions/Value' } },
+          { type: 'object', additionalProperties: { $ref: '#/definitions/Value' } },
+        ],
+      },
+      // A tree whose recurring options both take objects
+      Tree: {
+        type: 'object',
+        anyOf: [
+          { properties: { left: { $ref: '#/definitions/Tree' } } },
+          { properties: { right: { $ref: '#/definitions/Tree' } } },
+        ],
+      },
+    },
+  };
+  const optionsBelow = (below: string): RJSFSchema[] => [
+    { properties: { v: { $ref: `#/definitions/${below}` } } },
+    { properties: { v: { type: 'number' } } },
+  ];
+
+  it.each(['Value', 'Tree'])('checks the type of a property leading to %s', (below) => {
+    expect(getFirstMatchingOption({ validator }, { v: 5 }, optionsBelow(below), ROOT)).toBe(1);
+  });
+
+  it('merges the option the data matches into a schema whose dependencies offer them', () => {
+    const schema: RJSFSchema = { ...ROOT, type: 'object', dependencies: { x: ['v'] }, oneOf: optionsBelow('Value') };
+    expect(retrieveSchema({ validator }, schema, schema, { v: 5 }).properties?.v).toEqual({ type: 'number' });
+  });
+
+  it.each(['Value', 'Tree'])('tells options apart by what sits beside a property leading to %s', (below) => {
+    const metaOf = (kind: string): RJSFSchema => ({
+      properties: {
+        meta: { type: 'object', properties: { kind: { const: kind }, tree: { $ref: `#/definitions/${below}` } } },
+      },
+    });
+    expect(getClosestMatchingOption({ validator }, ROOT, { meta: { kind: 'b' } }, [metaOf('a'), metaOf('b')], -1)).toBe(
+      1,
+    );
   });
 });
