@@ -83,6 +83,70 @@ function recordRadioWidget() {
   return { widgets: { RadioWidget: RecordingRadioWidget }, lastWidgetProps: () => recordWidgetProps.mock.lastCall![0] };
 }
 
+describe('a cell of a layout grid', () => {
+  it('is labelled by its property name, not its dotted path, when the grid names it inside an object', () => {
+    const { templateProps } = renderGrid(
+      { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['person.note'] }] } },
+      { type: 'object', properties: { person: { type: 'object', properties: { note: { type: 'string' } } } } },
+    );
+
+    expect(templateProps.get('root_person_note')?.label).toBe('note');
+  });
+
+  it('is labelled by its array and indexes when the grid names an array item, as ArrayField names the item', () => {
+    const { templateProps } = renderGrid(
+      { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['list.0', 'matrix.0.1'] }] } },
+      {
+        type: 'object',
+        properties: {
+          list: { type: 'array', items: { type: 'string' } },
+          matrix: { type: 'array', items: { type: 'array', items: { type: 'string' } } },
+        },
+      },
+    );
+
+    expect(templateProps.get('root_list_0')?.label).toBe('list-0');
+    expect(templateProps.get('root_matrix_0_1')?.label).toBe('matrix-0-1');
+  });
+
+  it('is labelled by its array and index when the grid over an array names an item by its index alone', () => {
+    const { templateProps } = renderGrid(
+      { things: { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['0'] }] } } },
+      { type: 'object', properties: { things: { type: 'array', items: { type: 'string' } } } },
+    );
+
+    expect(templateProps.get('root_things_0')?.label).toBe('things-0');
+  });
+
+  it("is labelled by its property name when the grid names an object's numeric key, not as an array item", () => {
+    const { templateProps } = renderGrid(
+      { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['codes.0'] }] } },
+      { type: 'object', properties: { codes: { type: 'object', properties: { 0: { type: 'string' } } } } },
+    );
+
+    expect(templateProps.get('root_codes_0')?.label).toBe('0');
+  });
+
+  it('hands a field the cell names its property name as name and its full path as fieldPath', () => {
+    const fieldProps = vi.fn<(props: FieldProps) => void>();
+    function NamedField(props: FieldProps) {
+      fieldProps(props);
+      return null;
+    }
+    createFormComponent({
+      schema: { type: 'object', properties: { person: { type: 'object', properties: { pick: { type: 'string' } } } } },
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['person.pick'] }] },
+        person: { pick: { 'ui:field': 'NamedField' } },
+      },
+      fields: { NamedField },
+    });
+
+    expect(fieldProps).toHaveBeenLastCalledWith(expect.objectContaining({ name: 'pick', fieldPath: 'person.pick' }));
+  });
+});
+
 // A discriminated cell renders the selector alone, through `SchemaField` like every other cell, so its template is
 // handed whatever `SchemaField` hands any field (#5419)
 describe('a discriminated cell of a layout grid', () => {
@@ -237,6 +301,36 @@ describe('a discriminated cell of a layout grid', () => {
     expect(templateProps.get('root_things_0_note')?.label).toBe('note');
     expect(templateProps.get('root_things_0_pick')?.label).toBe('pick');
     expect(screen.getByRole('radiogroup')).toHaveAccessibleName('pick');
+  });
+
+  it('is labelled by its property name, not its dotted path, when the grid names it inside an object', () => {
+    const { templateProps } = renderGrid(
+      { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['person.pick'] }] } },
+      {
+        type: 'object',
+        properties: { person: { type: 'object', properties: { pick: { ...SIMPLE_ONEOF, title: undefined } } } },
+      },
+    );
+
+    expect(templateProps.get('root_person_pick')?.label).toBe('pick');
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('pick');
+  });
+
+  it('is labelled by its array and index when the grid names an array item, as ArrayField names the item', () => {
+    const { templateProps } = renderGrid(
+      { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['person.picks.0'] }] } },
+      {
+        type: 'object',
+        properties: {
+          person: {
+            type: 'object',
+            properties: { picks: { type: 'array', items: { ...SIMPLE_ONEOF, title: undefined } } },
+          },
+        },
+      },
+    );
+
+    expect(templateProps.get('root_person_picks_0')?.label).toBe('picks-0');
   });
 
   it("keeps its title, as a plain cell does, once the key of the additionalProperties entry it's in is renamed", async () => {

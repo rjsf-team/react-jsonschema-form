@@ -38,6 +38,7 @@ import {
   READONLY_KEY,
   resolveUiSchema,
   toFieldPath,
+  fieldPathToList,
   fieldPathToId,
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
@@ -889,6 +890,11 @@ function LayoutGridFieldComponent<
       );
     }
     const namePath = toPath(name);
+    // A cell with no title is labelled as it is outside a grid: by its property name, or for an array item by its
+    // array's name and indexes, as `ArrayField` names the item. Its ids and data still come from the full path
+    const segments = fieldPathToList(fieldPath);
+    const nameIndex = segments.findLastIndex((segment) => typeof segment === 'string');
+    const cellName = segments.slice(Math.max(nameIndex, 0)).join('-');
     // The grid's own title, such as the one `ArrayField` gives an item, labels the grid, not each cell it lays out,
     // which `SchemaField` would otherwise label by the title ahead of the cell's name. An autofocus handed to the grid,
     // from its own `ui:autofocus` or the array whose item it lays out, would likewise autofocus every cell, leaving the
@@ -913,7 +919,7 @@ function LayoutGridFieldComponent<
             hasDiscriminator ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField : LAYOUT_GRID_FIELD_TEST_IDS.field
           }
           {...cellProps}
-          name={name}
+          name={cellName}
           required={isRequired}
           readonly={uiReadonly}
           schema={schema}
