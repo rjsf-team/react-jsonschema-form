@@ -197,4 +197,80 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
     ];
     expect(getFirstMatchingOption({ validator }, { name: 'x', ...data }, options, ROOT)).toBe(1);
   });
+
+  it.each([
+    ['a $ref', (base: string): RJSFSchema => ({ $ref: base })],
+    ['an allOf', (base: string): RJSFSchema => ({ allOf: [{ $ref: base }] })],
+  ])('tells options apart by a const in the node a recurring alias written as %s names', (_spelling, alias) => {
+    const animal = (kind: string): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        kind: { const: kind },
+        child: { oneOf: [{ type: 'null' }, { $ref: '#/definitions/Cat' }, { $ref: '#/definitions/Dog' }] },
+      },
+    });
+    const root: RJSFSchema = {
+      definitions: {
+        Cat: alias('#/definitions/CatBase'),
+        Dog: alias('#/definitions/DogBase'),
+        CatBase: animal('cat'),
+        DogBase: animal('dog'),
+      },
+    };
+    const options: RJSFSchema[] = [
+      { properties: { w: { $ref: '#/definitions/Cat' } } },
+      { properties: { w: { $ref: '#/definitions/Dog' } } },
+    ];
+    expect(getFirstMatchingOption({ validator }, { w: { kind: 'dog' } }, options, root)).toBe(1);
+  });
+
+  it('checks the type of a property leading to a oneOf of recurring objects that states no type itself', () => {
+    const node = (name: string): RJSFSchema => ({
+      type: 'object',
+      properties: { kind: { const: name }, next: { $ref: '#/definitions/Expr' } },
+    });
+    const root: RJSFSchema = {
+      definitions: {
+        Expr: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] },
+        A: node('A'),
+        B: node('B'),
+      },
+    };
+    const options: RJSFSchema[] = [
+      { properties: { v: { $ref: '#/definitions/Expr' } } },
+      { properties: { v: { type: 'number' } } },
+    ];
+    expect(getFirstMatchingOption({ validator }, { v: 5 }, options, root)).toBe(1);
+  });
+
+  it.each([
+    [
+      'allOf entries',
+      {
+        allOf: [
+          { $ref: '#/definitions/Base' },
+          { properties: { children: { items: { $ref: '#/definitions/Node' } } } },
+        ],
+      },
+    ],
+    [
+      'a $ref beside properties',
+      { $ref: '#/definitions/Base', properties: { children: { items: { $ref: '#/definitions/Node' } } } },
+    ],
+  ])(
+    'checks a node whose %s recur through different properties, which validates the data once',
+    (_spelling, nodeSchema) => {
+      const root: RJSFSchema = {
+        definitions: {
+          Node: nodeSchema as RJSFSchema,
+          Base: { type: 'object', properties: { kind: { type: 'string' }, parent: { $ref: '#/definitions/Node' } } },
+        },
+      };
+      const options: RJSFSchema[] = [
+        { properties: { v: { $ref: '#/definitions/Node' } } },
+        { properties: { v: { type: 'number' } } },
+      ];
+      expect(getFirstMatchingOption({ validator }, { v: 5 }, options, root)).toBe(1);
+    },
+  );
 });
