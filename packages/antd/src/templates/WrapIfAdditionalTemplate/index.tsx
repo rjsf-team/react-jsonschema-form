@@ -20,10 +20,9 @@ import {
 import { Col, Row, Form, Input } from 'antd';
 
 import useControlState from '../../controlState.ts';
-import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
+import { DEFAULT_LABEL_COL, DEFAULT_ROW_GUTTER } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
 
-const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
 
 const INPUT_STYLE = {
@@ -63,7 +62,8 @@ export default function WrapIfAdditionalTemplate<
   const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   const {
     colon,
-    labelCol = VERTICAL_LABEL_COL,
+    labelAlign,
+    labelCol = DEFAULT_LABEL_COL,
     rowGutter = DEFAULT_ROW_GUTTER,
     toolbarAlign = 'top',
     wrapperCol = VERTICAL_WRAPPER_COL,
@@ -103,6 +103,7 @@ export default function WrapIfAdditionalTemplate<
               hasFeedback
               htmlFor={keyId}
               label={hasKeyLabel ? keyLabel : undefined}
+              labelAlign={labelAlign}
               labelCol={labelCol}
               required={required}
               style={wrapperStyle}
