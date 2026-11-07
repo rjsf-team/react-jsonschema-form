@@ -147,8 +147,17 @@ export function withSlotProps<P extends object, O>(
   return { ...props, ...slotProps } as P;
 }
 
-/** The props the form sets on a control, which a form author's slot can't replace */
-type FormOwnedProps = 'disabled' | 'onChange' | 'onBlur' | 'onFocus';
+/** Drops `keys` from the props a form author gives a MUI slot
+ *
+ * @param props - The props the form author gives the slot, or nothing where a slot's `(ownerState) => props` returns none
+ * @param keys - The keys to drop
+ * @returns - The props without those keys
+ */
+export function omitKeys<P extends object>(props: P | undefined, keys: readonly string[]): P {
+  // Each key it drops is optional on a MUI slot, so the rest is still a `P`, which `Omit` can't say of a union such as
+  // `SelectProps`
+  return Object.fromEntries(Object.entries(props ?? {}).filter(([key]) => !keys.includes(key))) as P;
+}
 
 /** Drops `disabled`, `onChange`, `onBlur` and `onFocus` from the props a form author gives a slot whose handlers MUI
  * uses in place of the form's, so the author can't take the form's data, focus or disabled state from it
@@ -157,52 +166,53 @@ type FormOwnedProps = 'disabled' | 'onChange' | 'onBlur' | 'onFocus';
  * @returns - The props without those
  */
 export function omitFormOwnedProps<P extends object>(props: P): P {
-  const {
-    disabled: _disabled,
-    onChange: _onChange,
-    onBlur: _onBlur,
-    onFocus: _onFocus,
-    ...rest
-  } = props as P & Partial<Record<FormOwnedProps, unknown>>;
-  // Each prop it drops is optional on a MUI slot, so the rest is still a `P`, which `Omit` can't say of a union such as
-  // `SelectProps`
-  return rest as P;
+  return omitKeys(props, ['disabled', 'onChange', 'onBlur', 'onFocus']);
 }
 
-function omitDisabled<P extends object>(props: P): P {
-  const { disabled: _disabled, ...rest } = props as P & { disabled?: unknown };
-  // `disabled` is optional on a MUI slot, so the rest is still a `P`
-  return rest as P;
+/** Drops `keys` from the props a form author gives a slot, as an object or as MUI's `(ownerState) => props`
+ *
+ * @param slotProps - The props the form author gives the slot
+ * @param keys - The keys to drop
+ * @returns - The slot's props without those keys, in the form the author gave them
+ */
+export function withoutKeys<P extends object, O>(
+  slotProps: MuiSlotProps<P, O> | undefined,
+  keys: readonly string[],
+): MuiSlotProps<P, O> | undefined {
+  if (typeof slotProps === 'function') {
+    // MUI takes a slot whose `(ownerState) => props` returns nothing, which its type doesn't say
+    return (ownerState: O) => omitKeys(slotProps(ownerState) as P | undefined, keys);
+  }
+  return slotProps && omitKeys(slotProps, keys);
 }
 
-/** Drops `disabled` from the props a form author gives a slot of the `<input>` a user edits, so the author can't undo
- * the form's disabled state there. Its handlers stay, since MUI calls them alongside the form's
+/** Drops `disabled` from the props a form author gives a slot whose `disabled` MUI puts over the form's, such as one of
+ * the `<input>` a user edits, so the author can't undo the form's disabled state there. Its handlers stay, since MUI
+ * calls them alongside the form's
  *
  * @param [slotProps] - The props the form author gives the slot, as an object or as MUI's `(ownerState) => props`
  * @returns - The slot's props without `disabled`, in the form the author gave them
  */
 export function withoutDisabled<P extends object, O>(slotProps?: MuiSlotProps<P, O>): MuiSlotProps<P, O> | undefined {
-  if (typeof slotProps === 'function') {
-    return (ownerState: O) => omitDisabled(slotProps(ownerState));
-  }
-  return slotProps && omitDisabled(slotProps);
+  return withoutKeys(slotProps, ['disabled']);
 }
 
-/** Drops `disabled`, `onChange`, `onBlur` and `onFocus` from the props a form author gives a `TextField`'s `input` or
- * `select` slot, which MUI spreads over the `TextField`'s own, and `disabled` from the `<input>` props nested in it,
- * which MUI's `InputBase` spreads over its own
+/** Drops `disabled`, `onChange`, `onBlur` and `onFocus` from the props a form author gives a `TextField`'s `input`
+ * slot, which MUI spreads over the `TextField`'s own, and `disabled` from the `<input>` props nested in it, which MUI's
+ * `InputBase` spreads over its own
  *
  * @param props - The props the form author gives the slot
  * @returns - The props without those
  */
 export function omitFormOwnedInputProps<P extends object>(props: P): P {
+  // Reads the `<input>` props the slot nests, which its type may not name
   const rest = omitFormOwnedProps(props) as P & {
     inputProps?: object;
     slotProps?: { input?: MuiSlotProps<object, never> };
   };
   return {
     ...rest,
-    ...(rest.inputProps && { inputProps: omitDisabled(rest.inputProps) }),
+    ...(rest.inputProps && { inputProps: omitKeys(rest.inputProps, ['disabled']) }),
     ...(rest.slotProps && { slotProps: { ...rest.slotProps, input: withoutDisabled(rest.slotProps.input) } }),
   };
 }

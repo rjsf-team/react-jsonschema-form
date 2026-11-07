@@ -46,7 +46,21 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { label, id, htmlName, disabled, options, value, autofocus, readonly, onChange, onBlur, onFocus } = props;
+  // `disabled` and `readonly` are `false` where unset, since `FormControlLabel` takes the control's `disabled` where its
+  // own is undefined
+  const {
+    label,
+    id,
+    htmlName,
+    disabled = false,
+    options,
+    value,
+    autofocus,
+    readonly = false,
+    onChange,
+    onBlur,
+    onFocus,
+  } = props;
   const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);

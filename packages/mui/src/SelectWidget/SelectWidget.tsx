@@ -35,17 +35,18 @@ import {
   getMuiProps,
   helperTextSlot,
   inputLabelId,
-  omitFormOwnedInputProps,
   omitFormOwnedProps,
+  omitKeys,
   resolveSlotProps,
   withoutDisabled,
-  withSlotProps,
 } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the SelectWidget. */
 export interface SelectWidgetMuiProps extends GenericObjectType {
   /** RJSF-specific slot props for targeting child elements of the SelectWidget. */
   rjsfSlotProps?: {
+    /** Props applied to the field's root `FormControl`, as an object or as MUI's `(ownerState) => props`. */
+    root?: NonNullable<TextFieldProps['slotProps']>['root'];
     /** Props applied to the `InputLabel` element. */
     inputLabel?: MuiInputLabelProps;
     /** Props applied to the `Select` element. */
@@ -60,10 +61,12 @@ export interface SelectWidgetMuiProps extends GenericObjectType {
 }
 
 /** Keeps the form's hold on the props MUI's `Select` hands its `SelectInput`: those given as its `inputProps`, which
- * replace the `SelectDisplayProps` it builds for the combobox whole, and the select slot itself. The combobox keeps its
- * id and its focus reports, and a locked select can't be held open, as `SelectInput` lets a user pick from an open menu
- * even while disabled. An author's `open` becomes `false` rather than going, since `SelectInput` fixes whether its
- * `open` is controlled on its first render
+ * replace the `SelectDisplayProps` it builds for the combobox whole, and the select slot itself. `SelectInput` takes
+ * their `disabled` over the form's, the combobox keeps its id and its focus reports, and a locked select can't be held
+ * open, as `SelectInput` lets a user pick from an open menu even while disabled. An author's `open` becomes `false`
+ * rather than going, since `SelectInput` fixes whether its `open` is controlled on its first render. A locked select
+ * also takes no `tabIndex`, which would let a keyboard user focus it and open its menu, as `SelectInput` checks only
+ * `readOnly` before a key opens it
  *
  * @param props - The props the form author gives `SelectInput`
  * @param comboboxId - The id `Select` gives the combobox
@@ -71,25 +74,22 @@ export interface SelectWidgetMuiProps extends GenericObjectType {
  * @returns - The props, with those the form owns put back
  */
 function omitFormOwnedSelectInputProps<P extends object>(props: P, comboboxId: string, locked: boolean): P {
-  const {
-    open,
-    defaultOpen: _defaultOpen,
-    MenuProps,
-    ...closed
-  } = props as P & { open?: unknown; defaultOpen?: unknown; MenuProps?: object };
-  const rest = (
-    locked
-      ? {
-          ...closed,
-          ...(open !== undefined && { open: false }),
-          // `SelectInput` spreads these over the `open` it gives its menu
-          ...(MenuProps && { MenuProps: { ...MenuProps, open: false } }),
-        }
-      : props
-  ) as P & { SelectDisplayProps?: object };
-  return rest.SelectDisplayProps
-    ? { ...rest, SelectDisplayProps: { id: comboboxId, ...omitFormOwnedProps(rest.SelectDisplayProps) } }
-    : rest;
+  // Reads the keys `SelectInput` takes, which the type of the slot that reaches it may not name
+  const { open, MenuProps, SelectDisplayProps } = props as {
+    open?: unknown;
+    MenuProps?: object;
+    SelectDisplayProps?: object;
+  };
+  const lockedKeys = locked ? ['defaultOpen', 'tabIndex'] : [];
+  return {
+    ...omitKeys(props, ['disabled', ...lockedKeys]),
+    ...(locked && open !== undefined && { open: false }),
+    // `SelectInput` spreads these over the `open` it gives its menu
+    ...(locked && MenuProps && { MenuProps: { ...MenuProps, open: false } }),
+    ...(SelectDisplayProps && {
+      SelectDisplayProps: { id: comboboxId, ...omitKeys(omitFormOwnedProps(SelectDisplayProps), lockedKeys) },
+    }),
+  };
 }
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
@@ -119,9 +119,9 @@ export default function SelectWidget<
     // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     hideLabel: _hideLabel,
     required,
-    disabled,
+    disabled = false,
     placeholder,
-    readonly,
+    readonly = false,
     value,
     multiple,
     autofocus,
@@ -169,21 +169,25 @@ export default function SelectWidget<
   const ownLabel = labelValue(label || undefined, hideLabel, undefined);
   const textFieldLabel = 'label' in textFieldOverrides ? textFieldOverrides.label : ownLabel;
   const labelId = muiSlotProps?.inputLabel?.id ?? inputLabelId(textFieldId);
-  const locked = Boolean(disabled || readonly);
-  // MUI's `Select` hands its own `inputProps` and `slotProps.input` to the `InputBase`, over its `disabled`
-  const authorSelect = omitFormOwnedInputProps(muiSlotProps?.select ?? {});
+  const locked = disabled || readonly;
+  // `TextField` gives the `Select` an `input` element of its own, carrying the form's props, which one given here would
+  // replace whole
+  const { input: _input, ...authorSelect } = muiSlotProps?.select ?? {};
   const comboboxId = authorSelect.id ?? textFieldId;
-  /** Applies `omitFormOwnedSelectInputProps()` to the `inputProps` and `slotProps.input` a slot nests, which also reach
+  /** Drops the form's props from a select's `select` or `input` slot, which MUI spreads over the `TextField`'s own, and
+   * applies `omitFormOwnedSelectInputProps()` to the `inputProps` and `slotProps.input` it nests, which reach
    * `SelectInput`, the latter over all the rest */
-  const withSelectInputProps = <P extends { inputProps?: object; slotProps?: { input?: unknown } }>(slot: P): P => {
-    const nestedInput = slot.slotProps?.input;
+  const omitFormOwnedSlotProps = <P extends object>(slot: P): P => {
+    // Reads the props the slot nests, which its type may not name
+    const rest = omitFormOwnedProps(slot) as P & { inputProps?: object; slotProps?: { input?: unknown } };
+    const nestedInput = rest.slotProps?.input;
     return {
-      ...slot,
-      ...(slot.inputProps && { inputProps: omitFormOwnedSelectInputProps(slot.inputProps, comboboxId, locked) }),
+      ...rest,
+      ...(rest.inputProps && { inputProps: omitFormOwnedSelectInputProps(rest.inputProps, comboboxId, locked) }),
       // `InputBase` spreads only an object given here
       ...(typeof nestedInput === 'object' &&
         nestedInput && {
-          slotProps: { ...slot.slotProps, input: omitFormOwnedSelectInputProps(nestedInput, comboboxId, locked) },
+          slotProps: { ...rest.slotProps, input: omitFormOwnedSelectInputProps(nestedInput, comboboxId, locked) },
         }),
     };
   };
@@ -218,9 +222,11 @@ export default function SelectWidget<
         onFocus={handleFocus}
         slotProps={{
           ...muiSlotProps,
+          // MUI puts this slot's `disabled` over the one the `TextField` gives its root, which the select takes
+          root: withoutDisabled(muiSlotProps?.root),
           // MUI spreads this slot over the `TextField`'s own handlers and `disabled`
           input: (ownerState: TextFieldOwnerState) =>
-            withSelectInputProps(omitFormOwnedInputProps(resolveSlotProps(muiSlotProps?.input, ownerState) ?? {})),
+            omitFormOwnedSlotProps(resolveSlotProps(muiSlotProps?.input, ownerState) ?? {}),
           inputLabel: {
             ...muiSlotProps?.inputLabel,
             shrink: !isEmpty,
@@ -232,19 +238,17 @@ export default function SelectWidget<
             ...((ariaProps['aria-labelledby'] || textFieldLabel) && {
               labelId: ariaProps['aria-labelledby'] ?? labelId,
             }),
-            ...withSelectInputProps(omitFormOwnedSelectInputProps(authorSelect, comboboxId, locked)),
+            ...omitFormOwnedSlotProps(omitFormOwnedSelectInputProps(authorSelect, comboboxId, locked)),
             multiple,
           },
           // The `TextField`'s `required` is its marker, which the outline's notch has to fit, so the combobox takes its own
           htmlInput: (ownerState: TextFieldOwnerState) =>
             omitFormOwnedSelectInputProps(
-              resolveSlotProps(
-                withSlotProps(
-                  { ...ariaProps, required: textFieldOverrides.required ?? required },
-                  withoutDisabled(muiSlotProps?.htmlInput),
-                ),
-                ownerState,
-              ) ?? {},
+              {
+                ...ariaProps,
+                required: textFieldOverrides.required ?? required,
+                ...resolveSlotProps(muiSlotProps?.htmlInput, ownerState),
+              },
               comboboxId,
               locked,
             ),
