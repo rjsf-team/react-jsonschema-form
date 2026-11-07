@@ -411,16 +411,15 @@ export function dependencyCondition<S extends StrictRJSFSchema = RJSFSchema>(
 const dependencyConditions = new KeyedMemo<object | null>();
 
 /** Which of the keywords in an option's scope scoring drops: the `required`s with the `dependencies` entries listing
- * names, the `additionalProperties: false`s, and the parts `partsCut()` names
+ * names, and the `additionalProperties: false`s
  */
 interface Loosening {
   required: boolean;
   additionalProperties: boolean;
-  choices: boolean;
 }
 
 /** The `Loosening` that drops nothing, for a subschema outside an option's scope */
-const KEPT: Loosening = { required: false, additionalProperties: false, choices: false };
+const KEPT: Loosening = { required: false, additionalProperties: false };
 
 /** The keywords whose subschemas apply to a part of the data, a property or an item, rather than to all of it: one
  * read as `{}` only widens what the schema accepts, where a `not` or a `contains` read so would narrow it
@@ -436,12 +435,10 @@ const PART_KEYWORDS = new Set([
   'unevaluatedItems',
 ]);
 
-/** Returns the subschemas under `keyword` that scoring reads as `{}`, the parts of the data that lead to a recursive
- * choice, see `recursiveChoiceLeaders()`, or undefined for a keyword that holds no part
+/** The keywords besides the `PART_KEYWORDS` whose subschemas a copy of the node holding them can read as `{}` and only
+ * widen what it accepts: each applies on top of the others, as a `$ref` does
  */
-function partsCut<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, keyword: string): ReadonlySet<NodeId> | undefined {
-  return PART_KEYWORDS.has(keyword) ? recursiveChoiceLeaders(graph) : undefined;
-}
+const CONJUNCT_KEYWORDS = new Set([ALL_OF_KEY, THEN_KEY, ELSE_KEY, DEPENDENCIES_KEY]);
 
 function loosens<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -454,14 +451,22 @@ function loosens<S extends StrictRJSFSchema>(
       (REQUIRED_KEY in raw ||
         Object.values(isObject(raw[DEPENDENCIES_KEY]) ? raw[DEPENDENCIES_KEY] : {}).some(Array.isArray))) ||
     (loosening.additionalProperties && raw[ADDITIONAL_PROPERTIES_KEY] === false) ||
-    (loosening.choices && childrenOf(graph, node.id).some(([tokens, child]) => partsCut(graph, tokens[0])?.has(child)))
+    recursiveChoices(graph).holders.has(node.id)
   );
 }
 
+/** Returns what scoring reads a subschema `recursiveChoices()` cuts as: its own `type`, which it accepts no more than,
+ * or `{}`
+ */
+function cutTo<S extends StrictRJSFSchema>(node: ObjectNode<S>): GenericObjectType {
+  const { type } = node.raw;
+  return type === undefined ? {} : { type };
+}
+
 /** Returns the value the keyword `key` holds in a subschema reached at `place`, whose `$ref`s resolve against `base`,
- * with each subschema it holds replaced by `{}` where `cut` holds its node, or else by `{ $ref }` naming its place below
- * `place`, or, for a subschema with no place, by what `unplaced` hands a validator for its node, looked up under
- * `base`, since an object reached in two resources is a node in each
+ * with each subschema it holds replaced by what `leading` hands back for it, if anything, or else by `{ $ref }` naming
+ * its place below `place`, or, for a subschema with no place, by what `unplaced` hands a validator for its node, looked
+ * up under `base`, since an object reached in two resources is a node in each
  */
 function pointed<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -470,17 +475,14 @@ function pointed<S extends StrictRJSFSchema>(
   place: Place,
   base: string,
   unplaced: (sub: unknown, id: NodeId) => unknown,
-  cut: ReadonlySet<NodeId> | undefined,
+  leading?: (sub: unknown, id: NodeId, tokens: string[]) => unknown,
 ): unknown {
   const name = (sub: unknown, tokens: string[]) => {
     const id = isObject(sub) ? graph.byObject(sub, base) : undefined;
     if (id === undefined) {
       return sub;
     }
-    if (cut?.has(id)) {
-      return {};
-    }
-    return place === undefined ? unplaced(sub, id) : refAt(childPointer(place, tokens));
+    return leading?.(sub, id, tokens) ?? (place === undefined ? unplaced(sub, id) : refAt(childPointer(place, tokens)));
   };
   const shape = keywordShape(key, value);
   if (shape === 'single') {
@@ -504,7 +506,9 @@ function pointed<S extends StrictRJSFSchema>(
  * where the root holds its node, or else copied as well, keeping all it states: the validator would resolve the `$ref`s
  * of the subschema as written against the root rather than against that resource. A subschema reached again at a place
  * on the way to it, `path`, or below itself, `above`, which only a root holding itself through its own objects does, is
- * named rather than copied without end.
+ * named rather than copied without end. A part of the data leading to a recursive choice, see `recursiveChoices()`, is
+ * read as what `cutTo()` keeps of it where it recurs itself, and is copied in turn where it only leads to one, as is a
+ * subschema applied on top of the others below the option's scope.
  */
 function derive<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -517,10 +521,22 @@ function derive<S extends StrictRJSFSchema>(
   const { id } = node;
   const innerPath = new Set(path).add(placeKey(id, place));
   const innerAbove = new Set(above).add(id);
-  const sub = (value: unknown, child: NodeId | undefined, at: Place, viaRef = false, as = loosening) => {
+  const { leaders } = recursiveChoices(graph);
+  // With `cutting`, a subschema `recursiveChoices()` cuts reads as what `cutTo()` keeps of it
+  const sub = (
+    value: unknown,
+    child: NodeId | undefined,
+    at: Place,
+    viaRef = false,
+    as = loosening,
+    cutting = false,
+  ) => {
     const childNode = child === undefined ? undefined : graph.node(child);
     if (childNode?.kind !== 'schema') {
       return value;
+    }
+    if (cutting && leaders.get(childNode.id) === 'cut') {
+      return cutTo(childNode);
     }
     return innerPath.has(placeKey(childNode.id, at)) || (!viaRef && innerAbove.has(childNode.id))
       ? targetAt(graph, childNode.id, at)
@@ -528,6 +544,12 @@ function derive<S extends StrictRJSFSchema>(
   };
   const unplaced = (value: unknown, child: NodeId) =>
     pointerTo(graph, child) ?? sub(value, child, undefined, false, KEPT);
+  const leading = (value: unknown, child: NodeId, tokens: string[]) =>
+    leaders.has(child) ? sub(value, child, placeBelow(place, tokens), false, KEPT, true) : undefined;
+  // Below the option's scope, a subschema applied on top of the others is cut too; within the scope it is part of the
+  // option, which is copied
+  const conjunct = (value: unknown, child: NodeId | undefined, at: Place, viaRef = false) =>
+    sub(value, child, at, viaRef, loosening, loosening === KEPT);
   // The schema reads as a record of keywords, each of which is copied
   const {
     [ID_KEY]: _id,
@@ -542,7 +564,7 @@ function derive<S extends StrictRJSFSchema>(
   const copy: GenericObjectType = Object.fromEntries(
     Object.entries(rest).map(([key, value]) => [
       key,
-      pointed(graph, key, value, place, node.baseUri, unplaced, loosening.choices ? partsCut(graph, key) : undefined),
+      pointed(graph, key, value, place, node.baseUri, unplaced, PART_KEYWORDS.has(key) ? leading : undefined),
     ]),
   );
   if (!loosening.required && required !== undefined) {
@@ -550,20 +572,21 @@ function derive<S extends StrictRJSFSchema>(
   }
   const target = node.ref === undefined ? undefined : graph.node(node.ref);
   const resolved = target?.kind === 'invalid' ? undefined : target;
+  // An empty entry, as a cut subschema reads, adds nothing
   const conjuncts = [
     ...(Array.isArray(allOf)
       ? allOf.map((entry, index) =>
-          sub(entry, graph.child(id, ALL_OF_KEY, String(index)), placeBelow(place, [ALL_OF_KEY, String(index)])),
+          conjunct(entry, graph.child(id, ALL_OF_KEY, String(index)), placeBelow(place, [ALL_OF_KEY, String(index)])),
         )
       : []),
     ...(resolved === undefined
       ? []
       : [
           resolved.kind === 'schema'
-            ? sub(resolved.raw, resolved.id, refPlace(node), true)
+            ? conjunct(resolved.raw, resolved.id, refPlace(node), true)
             : targetOf(graph, resolved.id),
         ]),
-  ];
+  ].filter((entry) => !isObject(entry) || Object.keys(entry).length > 0);
   if (ref !== undefined && resolved === undefined) {
     copy[REF_KEY] = ref;
   }
@@ -571,10 +594,10 @@ function derive<S extends StrictRJSFSchema>(
     copy[ALL_OF_KEY] = conjuncts;
   }
   if (then !== undefined) {
-    copy[THEN_KEY] = sub(then, graph.child(id, THEN_KEY), placeBelow(place, [THEN_KEY]));
+    copy[THEN_KEY] = conjunct(then, graph.child(id, THEN_KEY), placeBelow(place, [THEN_KEY]));
   }
   if (otherwise !== undefined) {
-    copy[ELSE_KEY] = sub(otherwise, graph.child(id, ELSE_KEY), placeBelow(place, [ELSE_KEY]));
+    copy[ELSE_KEY] = conjunct(otherwise, graph.child(id, ELSE_KEY), placeBelow(place, [ELSE_KEY]));
   }
   const keptDependencies = Object.entries(isObject(dependencies) ? dependencies : {}).filter(
     ([, dependency]) => !loosening.required || !Array.isArray(dependency),
@@ -583,7 +606,7 @@ function derive<S extends StrictRJSFSchema>(
     copy[DEPENDENCIES_KEY] = Object.fromEntries(
       keptDependencies.map(([key, dependency]) => [
         key,
-        sub(dependency, graph.child(id, DEPENDENCIES_KEY, key), placeBelow(place, [DEPENDENCIES_KEY, key])),
+        conjunct(dependency, graph.child(id, DEPENDENCIES_KEY, key), placeBelow(place, [DEPENDENCIES_KEY, key])),
       ]),
     );
   }
@@ -594,9 +617,9 @@ function derive<S extends StrictRJSFSchema>(
 }
 
 /** Returns what the `anyOf`/`oneOf` option `id` reached at `place` is scored with: `{ $ref }` naming the place, or,
- * where something in its scope states a `required`, lists names under `dependencies`, holds a part `partsCut()` names
- * or, with `relax`, sets `additionalProperties: false`, the copy `derive()` makes without them, such a part read as
- * `{}`. A user who has yet to fill in a key the option requires is still matched to it. The `required`s are kept where
+ * where something in its scope states a `required`, lists names under `dependencies`, holds a part leading to a
+ * recursive choice, see `recursiveChoices()`, or, with `relax`, sets `additionalProperties: false`, the copy `derive()`
+ * makes without them. A user who has yet to fill in a key the option requires is still matched to it. The `required`s are kept where
  * nothing in the scope declares `properties`: an option such as `{ required: ['email'] }` describes nothing else for
  * the data to fit, and is chosen by the keys it requires.
  */
@@ -611,11 +634,7 @@ function scoringTargetAt<S extends StrictRJSFSchema>(
     return targetOf(graph, id);
   }
   const scope = scopeOf(graph, id);
-  const loosening = {
-    required: scope.some((member) => isObject(member.raw.properties)),
-    additionalProperties: relax,
-    choices: true,
-  };
+  const loosening = { required: scope.some((member) => isObject(member.raw.properties)), additionalProperties: relax };
   return place !== undefined && !scope.some((member) => loosens(graph, member, loosening))
     ? targetAt(graph, id, place)
     : derive(graph, node, place, loosening, new Set(), new Set());
@@ -754,27 +773,61 @@ const REACHING_KEYWORDS = new Set([IF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_
 /** The keywords holding subschemas a validator applies only where a `$ref` names one */
 const DEFINITIONS_KEYWORDS = new Set([DEFINITIONS_KEY, '$defs']);
 
-/** Returns whether the node `id`, holding the subschemas `held`, is a choice that validates the data below it more than
- * once at each level it recurs at: two of its `anyOf`/`oneOf` options, or its `if` and its `then` or `else`, are in its
- * component of `component`, holding it again. A `dependencies` schema applies whenever its key is present, as an
- * `allOf` entry does, and the `oneOf` it may hold is a choice of its own.
+/** Returns the `type`s the node `id` states, or reaches through `$ref`s where it states none itself, or undefined where
+ * it names none and takes data of any type
  */
-function branchesRecursively(
+function statedTypes<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): readonly unknown[] | undefined {
+  const seen = new Set<NodeId>();
+  for (let node = graph.node(id); node.kind === 'schema' && !seen.has(node.id);) {
+    seen.add(node.id);
+    const { type } = node.raw;
+    if (type !== undefined) {
+      return Array.isArray(type) ? type : [type];
+    }
+    if (node.ref === undefined) {
+      return undefined;
+    }
+    node = graph.node(node.ref);
+  }
+  return undefined;
+}
+
+/** Returns whether a value can be of a type both `types` and `others` allow, an `integer` being a `number` too */
+function typesOverlap(types: readonly unknown[] | undefined, others: readonly unknown[] | undefined): boolean {
+  const widened = (type: unknown) => (type === 'integer' ? 'number' : type);
+  return (
+    types === undefined ||
+    others === undefined ||
+    types.some((type) => others.some((other) => widened(type) === widened(other)))
+  );
+}
+
+/** Returns whether the node `id`, holding the subschemas `held`, is a choice that validates the data below it more than
+ * once at each level it recurs at: two of its `anyOf`/`oneOf` options that can take a value of the same type, or its
+ * `if` and its `then` or `else`, are in its component of `component`, holding it again. Options of other types, such as
+ * the array and the object of a JSON value written as an `anyOf` of a string, an array of values and an object of
+ * values, fail on `type` alone, so no more than one of them recurs for each value. A `dependencies` schema applies
+ * whenever its key is present, as an `allOf` entry does, and the `oneOf` it may hold is a choice of its own.
+ */
+function branchesRecursively<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
   held: readonly [string[], NodeId][],
   id: NodeId,
   component: ReadonlyMap<NodeId, NodeId>,
 ): boolean {
-  const recurring = held
-    .filter(([, child]) => component.get(child) === component.get(id))
-    .map(([[keyword]]) => keyword);
-  const options = recurring.filter((keyword) => keyword === ANY_OF_KEY || keyword === ONE_OF_KEY);
+  const recurring = held.filter(([, child]) => component.get(child) === component.get(id));
+  const keywords = recurring.map(([[keyword]]) => keyword);
+  const optionTypes = recurring
+    .filter(([[keyword]]) => keyword === ANY_OF_KEY || keyword === ONE_OF_KEY)
+    .map(([, child]) => statedTypes(graph, child));
   return (
-    options.length > 1 || (recurring.includes(IF_KEY) && (recurring.includes(THEN_KEY) || recurring.includes(ELSE_KEY)))
+    optionTypes.some((types, index) => optionTypes.slice(index + 1).some((others) => typesOverlap(types, others))) ||
+    (keywords.includes(IF_KEY) && (keywords.includes(THEN_KEY) || keywords.includes(ELSE_KEY)))
   );
 }
 
-/** A node the walk of `recursiveChoiceLeaders()` has entered: the order it was entered in, the lowest order of a node
- * still open that it holds however deep, the subschemas it holds, those a validator applies with it, see
+/** A node the walk of `recursiveChoices()` has entered: the order it was entered in, the lowest order of a node still
+ * open that it holds however deep, the subschemas it holds, those a validator applies with it, see
  * `DEFINITIONS_KEYWORDS`, along with what its `$ref` names and the conjunction it reads as, and those left to follow
  */
 interface Frame {
@@ -786,25 +839,43 @@ interface Frame {
   readonly next: NodeId[];
 }
 
-/** The nodes `recursiveChoiceLeaders()` finds in each graph */
-const recursiveChoiceLeadersMemo = new KeyedMemo<ReadonlySet<NodeId>>();
+/** What scoring makes of a subschema leading to a recursive choice: `cut`, where it recurs itself or leads to the choice
+ * through a keyword that a copy of it reading the subschema there as `{}` would narrow, such as an `if` or a `oneOf`, or
+ * `copied`, with what it leads through read so
+ */
+type Lead = 'cut' | 'copied';
+
+/** The recursive choices of a graph, see `recursiveChoices()` */
+interface RecursiveChoices {
+  /** The nodes from which a validator reaches a recursive choice, each with what scoring makes of it */
+  readonly leaders: ReadonlyMap<NodeId, Lead>;
+  /** The nodes holding a part of the data, see `PART_KEYWORDS`, that is one of `leaders` */
+  readonly holders: ReadonlySet<NodeId>;
+}
+
+/** The `RecursiveChoices` of each graph */
+const recursiveChoicesMemo = new KeyedMemo<RecursiveChoices>();
 
 /** Returns the nodes of `graph` from which a validator reaches a recursive choice, see `branchesRecursively()`, however
- * deep and through any `$ref` but not through definitions. Validating data against such a choice walks each of its
- * recurring branches at every level of the data, which grows exponentially with the depth of the data where
- * definitions offer each other as options. A choice with one recurring branch, such as a tree written as an `anyOf` of
- * a leaf and a list of trees, or one that recurs nowhere, such as an OpenAPI nullable `anyOf` of a `$ref` and `null`,
- * costs no more than the data below it.
+ * deep and through any `$ref` but not through definitions, and those holding a part of the data that does. Validating
+ * data against such a choice walks each of its recurring branches at every level of the data, which grows
+ * exponentially with the depth of the data where definitions offer each other as options. A choice with one recurring
+ * branch, such as a tree written as an `anyOf` of a leaf and a list of trees, or one that recurs nowhere, such as an
+ * OpenAPI nullable `anyOf` of a `$ref` and `null`, costs no more than the data below it. Only the nodes that recur along
+ * with the choice need cutting to stop the walk; one that only leads to it, such as an object holding the choice in a
+ * property, can be copied with that property cut, and keeps checking the rest.
  *
  * @param graph - The graph
- * @returns - The nodes that lead to a recursive choice
+ * @returns - The nodes that lead to a recursive choice, and those that hold one as a part of the data
  */
-function recursiveChoiceLeaders<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>): ReadonlySet<NodeId> {
-  return recursiveChoiceLeadersMemo.get([graph], () => {
+function recursiveChoices<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>): RecursiveChoices {
+  return recursiveChoicesMemo.get([graph], () => {
     // A graph extending another adds nodes above the base's, which the base's never hold, so what was found for the
     // base stands
     const start = graph.base?.size ?? 0;
-    const leaders = new Set(graph.base === undefined ? [] : recursiveChoiceLeaders(graph.base));
+    const base = graph.base === undefined ? undefined : recursiveChoices(graph.base);
+    const leaders = new Map(base?.leaders);
+    const holders = new Set(base?.holders);
     // Tarjan's strongly connected components, run on a stack of frames rather than by recursion, which a deep schema
     // would overflow. It closes a component after every component it holds, so whether that leads to a recursive
     // choice is known by then.
@@ -842,11 +913,25 @@ function recursiveChoiceLeaders<S extends StrictRJSFSchema = RJSFSchema>(graph: 
       if (
         members.some(
           ({ id, held, applied }) =>
-            branchesRecursively(held, id, component) || applied.some((child) => leaders.has(child)),
+            branchesRecursively(graph, held, id, component) || applied.some((child) => leaders.has(child)),
         )
       ) {
-        members.forEach(({ id }) => leaders.add(id));
+        const [{ id, held, applied }] = members;
+        const copied =
+          members.length === 1 &&
+          !applied.includes(id) &&
+          held.every(
+            ([[keyword], child]) =>
+              !leaders.has(child) ||
+              PART_KEYWORDS.has(keyword) ||
+              CONJUNCT_KEYWORDS.has(keyword) ||
+              DEFINITIONS_KEYWORDS.has(keyword),
+          );
+        members.forEach((member) => leaders.set(member.id, copied ? 'copied' : 'cut'));
       }
+      members
+        .filter(({ held }) => held.some(([[keyword], child]) => PART_KEYWORDS.has(keyword) && leaders.has(child)))
+        .forEach((member) => holders.add(member.id));
     };
     for (let root = start; root < graph.size; root += 1) {
       if (!component.has(root)) {
@@ -864,7 +949,7 @@ function recursiveChoiceLeaders<S extends StrictRJSFSchema = RJSFSchema>(graph: 
         }
       }
     }
-    return leaders;
+    return { leaders, holders };
   });
 }
 

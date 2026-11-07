@@ -207,12 +207,12 @@ describe('scoringTarget()', () => {
     });
   });
   describe('a part of the data that leads to a recursive choice (#4990)', () => {
-    /** A choice two of whose options hold the choice again */
+    /** A choice two of whose options take objects and hold the choice again */
     const NESTED: RJSFSchema = {
       anyOf: [
         { type: 'string' },
-        { type: 'array', items: { $ref: '#/definitions/Choice' } },
-        { type: 'object', additionalProperties: { $ref: '#/definitions/Choice' } },
+        { type: 'object', properties: { left: { $ref: '#/definitions/Choice' } } },
+        { type: 'object', properties: { right: { $ref: '#/definitions/Choice' } } },
       ],
     };
     it('reads a property holding a oneOf as {}, which the field below matches on its own', () => {
@@ -235,7 +235,7 @@ describe('scoringTarget()', () => {
       };
       expect(scored(schema, '/oneOf/0')).toEqual({ allOf: [{ type: 'object', properties: { child: {} } }] });
     });
-    it('reads a part as {} where the choice sits below it through a $ref, an allOf, an item or a nested property', () => {
+    it('reads a part recurring with the choice as {}, and copies one leading to it through a $ref, an allOf, a then or a property', () => {
       const schema: RJSFSchema = {
         definitions: { Choice: NESTED },
         oneOf: [
@@ -245,6 +245,13 @@ describe('scoringTarget()', () => {
               viaAllOf: { allOf: [{ $ref: '#/definitions/Choice' }] },
               nested: { type: 'object', properties: { deep: { $ref: '#/definitions/Choice' } } },
               conditional: { if: { $ref: '#/definitions/Choice' }, then: { minLength: 1 } },
+              branches: {
+                type: 'object',
+                if: { required: ['a'] },
+                then: { $ref: '#/definitions/Choice' },
+                else: { $ref: '#/definitions/Choice' },
+                dependencies: { a: { $ref: '#/definitions/Choice' } },
+              },
               plain: { type: 'string' },
             },
             patternProperties: { '^x-': { $ref: '#/definitions/Choice' } },
@@ -259,8 +266,15 @@ describe('scoringTarget()', () => {
         properties: {
           viaRef: {},
           viaAllOf: {},
-          nested: {},
+          nested: { type: 'object', properties: { deep: {} } },
           conditional: {},
+          branches: {
+            type: 'object',
+            if: { $ref: '#/oneOf/0/properties/branches/if' },
+            then: {},
+            else: {},
+            dependencies: { a: {} },
+          },
           plain: { $ref: '#/oneOf/0/properties/plain' },
         },
         patternProperties: { '^x-': {} },
@@ -322,7 +336,7 @@ describe('scoringTarget()', () => {
       };
       expect(scored(schema, '/oneOf/0')).toEqual({ $ref: '#/oneOf/0' });
     });
-    it('reads a part as {} in a schema adopted from outside the root that names a recursive choice of the root', () => {
+    it('cuts a part in a schema adopted from outside the root that names a recursive choice of the root', () => {
       const choice: RJSFSchema = {
         oneOf: [{ type: 'null' }, { $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }],
       };
@@ -335,7 +349,45 @@ describe('scoringTarget()', () => {
       const { graph, node } = parseSchemaGraph(root).adopt({
         properties: { child: { $ref: '#/definitions/A' }, name: { type: 'string' } },
       });
-      expect(scoringTarget(graph, node, false)).toEqual({ properties: { child: {}, name: { type: 'string' } } });
+      expect(scoringTarget(graph, node, false)).toEqual({
+        properties: { child: { allOf: [{ type: 'object' }] }, name: { type: 'string' } },
+      });
+    });
+    it('keeps a part leading to a choice whose recurring options take different types, as a JSON value does', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          Value: {
+            anyOf: [
+              { type: 'string' },
+              { type: 'array', items: { $ref: '#/definitions/Value' } },
+              { type: 'object', additionalProperties: { $ref: '#/definitions/Value' } },
+            ],
+          },
+        },
+        oneOf: [{ properties: { payload: { $ref: '#/definitions/Value' } } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({ $ref: '#/oneOf/0' });
+    });
+    it('cuts a part leading to a choice whose recurring options can take the same value, an integer being a number', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          Count: {
+            anyOf: [
+              { type: ['integer', 'array'], items: { $ref: '#/definitions/Count' } },
+              { type: ['number', 'object'], additionalProperties: { $ref: '#/definitions/Count' } },
+            ],
+          },
+          Anything: true,
+          Untyped: {
+            anyOf: [
+              { $ref: '#/definitions/Anything', items: { $ref: '#/definitions/Untyped' } },
+              { type: 'object', additionalProperties: { $ref: '#/definitions/Untyped' } },
+            ],
+          },
+        },
+        oneOf: [{ properties: { count: { $ref: '#/definitions/Count' }, untyped: { $ref: '#/definitions/Untyped' } } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({ properties: { count: {}, untyped: {} } });
     });
     it('keeps a part leading to a choice with one recurring option, which validates the data below it once', () => {
       const schema: RJSFSchema = {
@@ -386,7 +438,7 @@ describe('scoringTarget()', () => {
       };
       expect(scored(schema, '/oneOf/0')).toEqual({ $ref: '#/oneOf/0' });
     });
-    it('reads a part as {} where a dependency offers options that recur', () => {
+    it('cuts a part where a dependency offers options that recur, keeping the type of what recurs', () => {
       const schema: RJSFSchema = {
         definitions: {
           Node: {
@@ -404,7 +456,7 @@ describe('scoringTarget()', () => {
         },
         oneOf: [{ properties: { tree: { $ref: '#/definitions/Node' } } }],
       };
-      expect(scored(schema, '/oneOf/0')).toEqual({ properties: { tree: {} } });
+      expect(scored(schema, '/oneOf/0')).toEqual({ properties: { tree: { allOf: [{ type: 'object' }] } } });
     });
     it('keeps a part whose $defs hold a recursive choice, which a validator reaches only through a $ref', () => {
       const schema: RJSFSchema = {
