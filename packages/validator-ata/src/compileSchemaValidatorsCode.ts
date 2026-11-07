@@ -14,6 +14,7 @@ import {
   rootSchemaIdOf,
   ROOT_SCHEMA_PREFIX,
   SCHEMA_KEY,
+  schemaKey,
   getValidationSchemas,
 } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
@@ -111,14 +112,18 @@ function resourceAt(value: unknown, base: string, laterDialect: boolean): Resour
 
 /** Returns the resource `rootSchema` is and every resource of it, by `documentKey()` of its base URI, the first found
  * where two share one. The root is also found under the id the runtime validator registers it under, as
- * `rootSchemaIdOf()` returns it, `__rjsf_rootSchema` for a root without an `$id`
+ * `rootSchemaIdOf()` returns it, `__rjsf_rootSchema` for a root without an `$id`, and its `$ref`s are read against that
+ * id where it has one, as `withRootIdRefPrefix()` reads them, even where a draft-07 `$ref` beside it hides its `$id`
  */
 function resourcesOf(
   rootSchema: unknown,
   laterDialect: boolean,
 ): { id: string; root: Resource; resources: Map<string, Resource> } {
   const id = rootSchemaIdOf(rootSchema as RJSFSchema);
-  const root: Resource = resourceAt(rootSchema, '', laterDialect) ?? { schema: rootSchema, base: '' };
+  const root: Resource = resourceAt(rootSchema, '', laterDialect) ?? {
+    schema: rootSchema,
+    base: id === ROOT_SCHEMA_PREFIX ? '' : id,
+  };
   const resources = new Map<string, Resource>([[documentKey(id), root]]);
   const visit = (node: unknown, base: string) => {
     if (!isObject(node)) {
@@ -249,21 +254,69 @@ interface RootReading {
   id: string;
   root: Resource;
   resources: ReadonlyMap<string, Resource>;
-  /** The `$id`s of the extra schemas compiled into the module beside the root, by `documentKey()` */
+  /** The URIs the extra schemas compiled into the module beside the root, and the resources nested in them, are
+   * registered under, by `documentKey()`
+   */
   extras: ReadonlySet<string>;
 }
 
-/** Returns the `RootReading` of `rootSchema`, compiled beside the extra schemas under the `$id`s `extraIds` */
-function readRoot(rootSchema: object, extraIds: Iterable<string>): RootReading {
+/** Returns whether ata reads the `$id`s of the extra schema `extra` as 2019-09 and later do: by the dialect it
+ * declares, else by the form's, else as 2020-12
+ */
+function readsAsLaterDialect(extra: object, { dialect, laterDialect }: Pick<RootReading, 'dialect' | 'laterDialect'>) {
+  const own: unknown = getByPath(extra, [SCHEMA_KEY]);
+  return typeof own === 'string'
+    ? LATER_DIALECTS.has(own.replace(/#$/, ''))
+    : typeof dialect !== 'string' || laterDialect;
+}
+
+/** The URIs each extra schema registers, by whether its `$id`s are read as 2019-09 and later read them, kept so
+ * compiling on every request walks each of them once
+ */
+const REGISTERED = new Map([
+  [true, new WeakMap<object, ReadonlySet<string>>()],
+  [false, new WeakMap<object, ReadonlySet<string>>()],
+]);
+
+/** Returns the URIs ata registers the extra schema `extra` under `id` and the resources nested in it under, by
+ * `documentKey()`, each nested `$id` resolved against the base around it
+ */
+function registeredBy(extra: object, id: string, laterDialect: boolean): ReadonlySet<string> {
+  const cache = REGISTERED.get(laterDialect)!;
+  let uris = cache.get(extra);
+  if (uris === undefined) {
+    const found = new Set<string>();
+    const visit = (node: unknown, base: string) => {
+      if (!isObject(node)) {
+        return;
+      }
+      const inner = node === extra ? base : (resourceAt(node, base, laterDialect)?.base ?? base);
+      found.add(documentKey(inner));
+      subschemasOf(node).forEach((subschema) => visit(subschema, inner));
+    };
+    visit(extra, id);
+    uris = found;
+    cache.set(extra, uris);
+  }
+  return uris;
+}
+
+/** Returns the `RootReading` of `rootSchema`, compiled beside the extra schemas `extras`, by the `$id` each is
+ * registered under
+ */
+function readRoot(rootSchema: object, extras: ReadonlyMap<string, object>): RootReading {
   const dialect: unknown = getByPath(rootSchema, [SCHEMA_KEY]);
   const laterDialect = typeof dialect === 'string' && LATER_DIALECTS.has(dialect.replace(/#$/, ''));
+  const registered = [...extras].flatMap(([id, extra]) => [
+    ...registeredBy(extra, id, readsAsLaterDialect(extra, { dialect, laterDialect })),
+  ]);
   return {
     container: isObject(getByPath(rootSchema, ['$defs'])) ? '$defs' : 'definitions',
     dialect,
     draft07: typeof dialect === 'string' && DRAFT_07_IDS.has(dialect),
     laterDialect,
     ...resourcesOf(rootSchema, laterDialect),
-    extras: new Set([...extraIds].map(documentKey)),
+    extras: new Set(registered),
   };
 }
 
@@ -360,11 +413,6 @@ function standalone(
   return count === 0 ? declared : { ...declared, [container]: carried };
 }
 
-/** Returns the `$id` of `schema` and of every subschema in it */
-function idsIn(schema: unknown): unknown[] {
-  return isObject(schema) ? [schema[ID_KEY], ...subschemasOf(schema).flatMap(idsIn)] : [];
-}
-
 /** The extras found to hold no `$ref` into each root, kept so compiling on every request walks each of them once. An
  * extra or root changed in place after a compile keeps the answer it had then
  */
@@ -375,7 +423,7 @@ const UNLINKED = new WeakMap<object, WeakSet<object>>();
  * names, under an `$id` `targetId()` returns. The module compiles no copy of the root a pointer into it could reach, so
  * without this such a `$ref` names nothing there and holds for any data. Each document is added to `targets` under the
  * subschema it is compiled from, so a subschema several `$ref`s name is compiled once. A `$ref` to the whole root is
- * renamed to the `$id` the module compiles the root under instead, where the root's own `$id` is that.
+ * renamed to the key the module compiles the root under instead. An extra holding no such `$ref` is returned as it is.
  */
 function linkedToForm(
   extra: object,
@@ -398,9 +446,12 @@ function linkedToForm(
       return ref;
     }
     const [resource, fragment] = named;
-    if (resource === reading.root && fragment === '#' && getByPath(resource.schema, [ID_KEY]) === reading.id) {
+    const rootKey: unknown = schemaKey(root as RJSFSchema);
+    // A key that is only a fragment, such as `#root`, would be read as a fragment of the extra itself, and an untyped
+    // caller may hand over an `$id` that is no string
+    if (resource === reading.root && fragment === '#' && typeof rootKey === 'string' && !rootKey.startsWith('#')) {
       isLinked = true;
-      return reading.id;
+      return rootKey;
     }
     const [subschema, around] = locate(resource, fragment, reading.laterDialect);
     if (subschema === undefined) {
@@ -414,12 +465,7 @@ function linkedToForm(
     isLinked = true;
     return target[ID_KEY] as string;
   };
-  // ata reads the `$id`s of an extra by the dialect it declares, else by the form's, else as 2020-12
-  const dialect: unknown = getByPath(extra, [SCHEMA_KEY]);
-  const laterDialect =
-    typeof dialect === 'string'
-      ? LATER_DIALECTS.has(dialect.replace(/#$/, ''))
-      : typeof reading.dialect !== 'string' || reading.laterDialect;
+  const laterDialect = readsAsLaterDialect(extra, reading);
   const link = (value: unknown, base: string): unknown => {
     if (!isObject(value)) {
       return value;
@@ -435,7 +481,7 @@ function linkedToForm(
   if (!isLinked) {
     unlinked.add(extra);
   }
-  return linked;
+  return isLinked ? linked : extra;
 }
 
 /** The size of each extra schema a warning has given, kept so compiling on every request serializes it once */
@@ -515,17 +561,15 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
       winners.set(id, extra);
     }
   }
-  const reading = readRoot(schema, winners.keys());
+  const reading = readRoot(schema, winners);
   const schemas = Object.entries(schemaMaps).map(([key, listed]) => {
     const { [ID_KEY]: _id, ...withoutId } = listed;
     return { ...standalone(withoutId, reading), [ID_KEY]: key };
   });
   const targets = new Map<unknown, GenericObjectType>();
   let targetCount = 0;
-  // An extra's nested `$id`s are registered in the module too; read only once a target is needed
-  let taken: Set<unknown> | undefined;
+  const taken = new Set([...[...formIds].map(documentKey), ...reading.extras]);
   const targetId = (): string => {
-    taken ??= new Set([...formIds, ...[...winners.values()].flatMap(idsIn)]);
     let id: string;
     do {
       id = `urn:rjsf:form-target:${targetCount}`;
