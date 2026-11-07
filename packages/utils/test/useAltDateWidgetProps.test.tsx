@@ -577,6 +577,26 @@ describe('useAltDateWidgetProps()', () => {
       expect(select).toHaveAttribute('aria-invalid', 'true');
     });
 
+    test('describes each element by the field when its caller only marks it, without a plan', () => {
+      render(
+        <DateElement
+          rootId='other'
+          label='Other'
+          type='year'
+          range={[2020, 2024]}
+          value={-1}
+          select={vi.fn()}
+          registry={REGISTRY}
+          onBlur={vi.fn()}
+          onFocus={vi.fn()}
+          attributes={{ 'aria-invalid': true }}
+        />,
+      );
+      const select = screen.getByRole('combobox', { name: 'Other, year' });
+      expect(select).toHaveAttribute('aria-describedby', ariaDescribedByIds('other'));
+      expect(select).toHaveAttribute('aria-invalid', 'true');
+    });
+
     test("describes each element by the attributes its caller gives over its plan's, keeping the rest", () => {
       const presentation = resolveFieldPresentation({
         id: TIME_PROPS.id,

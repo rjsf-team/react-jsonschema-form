@@ -69,8 +69,9 @@ export type DateElementProps<
    */
   presentation?: FieldPresentation;
   /** The `aria-describedby` and `aria-invalid` each date element takes, such as those of `presentation`'s control with
-   * the id of a message the theme renders around the field. Each one left out defaults to that of `presentation`'s
-   * control. Given without a `presentation`, they describe and mark the element as they do with one
+   * the id of a message the theme renders around the field. Each one left out defaults to what the element would take
+   * without them: that of `presentation`'s control, or without a `presentation`, `ariaDescribedByIds(rootId)` and no
+   * `aria-invalid`
    */
   attributes?: Pick<ControlAttributes, 'aria-describedby' | 'aria-invalid'>;
   /** Further options for the `SelectWidget`, such as the props of a theme's own select, beside the `enumOptions` of
@@ -85,10 +86,11 @@ export type DateElementProps<
  * as its placeholder and an `aria-label` built from the field's `label`, such as `When, year`. Given its field's plan,
  * it hands it a plan of its own, through which `widgetAriaProps()` describes it by the field's parts that render and
  * marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank its
- * own name, or by the `attributes` its caller gives over them. Without either, it describes it by
- * `ariaDescribedByIds(rootId)`. An unset element, which the hook's `elements` give as `undefined` and a `DateObject`
- * holds as -1, is no option, so it is handed to the `SelectWidget` as an `undefined` value, which a native select
- * reports to `onFocus` and `onBlur` as `undefined` and every other built-in `SelectWidget` reports as it is handed.
+ * own name, or by the `attributes` its caller gives over them. Without a plan, it describes it by
+ * `ariaDescribedByIds(rootId)` unless `attributes` give an `aria-describedby`. An unset element, which the hook's
+ * `elements` give as `undefined` and a `DateObject` holds as -1, is no option, so it is handed to the `SelectWidget`
+ * as an `undefined` value, which a native select reports to `onFocus` and `onBlur` as `undefined` and every other
+ * built-in `SelectWidget` reports as it is handed.
  *
  * @param props - The `DateElementProps` for the date element
  */
@@ -125,8 +127,15 @@ export function DateElement<
   const elementPresentation = useMemo(
     () =>
       (presentation ?? attributes) &&
-      getNestedControlPresentation({ id, label: ariaLabel, field: presentation, attributes }),
-    [id, ariaLabel, presentation, attributes],
+      getNestedControlPresentation({
+        id,
+        label: ariaLabel,
+        field: presentation,
+        attributes: presentation
+          ? attributes
+          : { ...attributes, 'aria-describedby': attributes?.['aria-describedby'] ?? ariaDescribedByIds(rootId) },
+      }),
+    [id, ariaLabel, presentation, attributes, rootId],
   );
   const [start, end] = range;
   const selectOptions = useMemo(
