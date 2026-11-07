@@ -662,6 +662,72 @@ describe('compileSchemaValidatorsCode', () => {
       expect(agree(form, { x: 1 }, options)).toBe(true);
     });
 
+    test('reads the $id beside a $ref in an extra as a resource where neither it nor the form declares a $schema, as at runtime', () => {
+      const form = {
+        $id: 'https://e.com/a/f',
+        definitions: { n: { type: 'integer' } },
+        type: 'object',
+        properties: { x: { $ref: 'https://e.com/b/x' } },
+      } as RJSFSchema;
+      const extra = { $id: 'https://e.com/b/x', properties: { p: { $id: '../a/inner', $ref: 'f#/definitions/n' } } };
+      const options = { ataOptionsOverrides: { schemas: [extra] } };
+      expect(agree(form, { x: { p: 'a' } }, options)).toBe(false);
+      expect(agree(form, { x: { p: 1 } }, options)).toBe(true);
+    });
+
+    test("reads a relative $ref into another document from a target against the base of the root's resource around it", () => {
+      const form = {
+        $id: 'https://e.com/f',
+        definitions: { n: { $ref: 'g' } },
+        type: 'object',
+        properties: { x: { $ref: 'urn:x' }, z: { $ref: '#/definitions/n' } },
+      } as RJSFSchema;
+      const options = {
+        ataOptionsOverrides: {
+          schemas: [
+            { $id: 'https://e.com/g', type: 'integer' },
+            { $id: 'urn:x', $ref: 'https://e.com/f#/definitions/n' },
+          ],
+        },
+      };
+      expect(agree(form, { x: 'a' }, options)).toBe(false);
+      expect(agree(form, { z: 'a' }, options)).toBe(false);
+      expect(agree(form, { x: 1, z: 1 }, options)).toBe(true);
+    });
+
+    test("reads a relative $ref into another document from a nested resource of the root against that resource's base", () => {
+      const form = {
+        $id: 'https://e.com/f',
+        type: 'object',
+        properties: { y: { $id: 'https://e.com/sub/', properties: { z: { $ref: 'g' } } } },
+      } as RJSFSchema;
+      const options = { ataOptionsOverrides: { schemas: [{ $id: 'https://e.com/sub/g', type: 'integer' }] } };
+      expect(agree(form, { y: { z: 'a' } }, options)).toBe(false);
+      expect(agree(form, { y: { z: 1 } }, options)).toBe(true);
+    });
+
+    test.each([
+      ['from the root', { x: { $ref: 'defs/r.json' } }, { x: 'a' }, { x: 1 }],
+      [
+        'from a nested resource',
+        { y: { $id: 'https://e.com/r/sub/', properties: { z: { $ref: 'defs/r.json' } } } },
+        { y: { z: 'a' } },
+        { y: { z: 1 } },
+      ],
+    ])(
+      'reads a relative $ref as written %s where only that names an extra, under a relative $id, as the form does',
+      (_name, properties, invalid, valid) => {
+        const form = { $id: 'https://e.com/r/f', type: 'object', properties } as RJSFSchema;
+        const options = { ataOptionsOverrides: { schemas: [{ $id: 'defs/r.json', type: 'integer' }] } };
+        const live = customizeValidator(options);
+        const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(form, options)), form);
+        for (const each of [live, validator]) {
+          expect(each.validateFormData(invalid, form).errors).toHaveLength(1);
+          expect(each.validateFormData(valid, form).errors).toEqual([]);
+        }
+      },
+    );
+
     test('serializes a json-schema.org extra once for its size however often it is compiled', ({ onTestFinished }) => {
       const doc = { $id: 'https://json-schema.org/draft/next/schema', description: 'once' };
       const encode = vi.spyOn(TextEncoder.prototype, 'encode');
