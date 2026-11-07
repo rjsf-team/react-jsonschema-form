@@ -207,15 +207,14 @@ describe('scoringTarget()', () => {
     });
   });
   describe('a part of the data that leads to a recursive choice (#4990)', () => {
-    /** A choice two of whose options take objects and hold the choice again */
+    /** A choice two of whose options take objects and hold the choice again in the same property */
     const NESTED: RJSFSchema = {
       anyOf: [
-        { type: 'string' },
-        { type: 'object', properties: { left: { $ref: '#/definitions/Choice' } } },
-        { type: 'object', properties: { right: { $ref: '#/definitions/Choice' } } },
+        { type: 'object', properties: { child: { $ref: '#/definitions/Choice' }, a: { type: 'string' } } },
+        { type: 'object', properties: { child: { $ref: '#/definitions/Choice' }, b: { type: 'number' } } },
       ],
     };
-    it('reads a property holding a oneOf as {}, which the field below matches on its own', () => {
+    it('reads a property holding a oneOf as the types its options take, which the field below matches on its own', () => {
       const schema: RJSFSchema = {
         definitions: {
           A: {
@@ -233,9 +232,11 @@ describe('scoringTarget()', () => {
         },
         oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }],
       };
-      expect(scored(schema, '/oneOf/0')).toEqual({ allOf: [{ type: 'object', properties: { child: {} } }] });
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        allOf: [{ type: 'object', properties: { child: { type: ['null', 'object'] } } }],
+      });
     });
-    it('reads a part recurring with the choice as {}, and copies one leading to it through a $ref, an allOf, a then or a property', () => {
+    it('reads a part recurring with the choice as its types, and copies one leading to it through a $ref, an allOf, a then or a property', () => {
       const schema: RJSFSchema = {
         definitions: { Choice: NESTED },
         oneOf: [
@@ -266,30 +267,32 @@ describe('scoringTarget()', () => {
           },
         ],
       };
+      // `Choice` takes objects alone
+      const choice = { allOf: [{ type: 'object' }] };
       expect(scored(schema, '/oneOf/0')).toEqual({
         properties: {
-          viaRef: {},
-          viaAllOf: {},
+          viaRef: choice,
+          viaAllOf: { allOf: [choice] },
           nested: {
             type: 'object',
-            properties: { deep: {} },
+            properties: { deep: choice },
             allOf: [{ $ref: '#/oneOf/0/properties/nested/allOf/0' }],
           },
           conditional: {},
           branches: {
             type: 'object',
             if: { $ref: '#/oneOf/0/properties/branches/if' },
-            then: {},
-            else: {},
-            dependencies: { a: {} },
+            then: choice,
+            else: choice,
+            dependencies: { a: choice },
           },
           plain: { $ref: '#/oneOf/0/properties/plain' },
         },
-        patternProperties: { '^x-': {} },
-        additionalProperties: {},
-        unevaluatedProperties: {},
-        items: {},
-        unevaluatedItems: {},
+        patternProperties: { '^x-': choice },
+        additionalProperties: choice,
+        unevaluatedProperties: choice,
+        items: choice,
+        unevaluatedItems: choice,
       });
     });
     it('keeps a not and a contains leading to a choice, which read as {} would narrow what the option accepts', () => {
@@ -358,7 +361,10 @@ describe('scoringTarget()', () => {
         properties: { child: { $ref: '#/definitions/A' }, name: { type: 'string' } },
       });
       expect(scoringTarget(graph, node, false)).toEqual({
-        properties: { child: { allOf: [{ type: 'object', properties: { child: {} } }] }, name: { type: 'string' } },
+        properties: {
+          child: { allOf: [{ type: 'object', properties: { child: { type: ['null', 'object'] } } }] },
+          name: { type: 'string' },
+        },
       });
     });
     it('keeps a part leading to a choice whose recurring options take different types, as a JSON value does', () => {
@@ -382,20 +388,22 @@ describe('scoringTarget()', () => {
           Count: {
             anyOf: [
               { type: ['integer', 'array'], items: { $ref: '#/definitions/Count' } },
-              { type: ['number', 'object'], additionalProperties: { $ref: '#/definitions/Count' } },
+              { type: ['number', 'object'], items: { $ref: '#/definitions/Count' } },
             ],
           },
           Anything: true,
           Untyped: {
             anyOf: [
               { $ref: '#/definitions/Anything', items: { $ref: '#/definitions/Untyped' } },
-              { type: 'object', additionalProperties: { $ref: '#/definitions/Untyped' } },
+              { type: 'array', items: { $ref: '#/definitions/Untyped' } },
             ],
           },
         },
         oneOf: [{ properties: { count: { $ref: '#/definitions/Count' }, untyped: { $ref: '#/definitions/Untyped' } } }],
       };
-      expect(scored(schema, '/oneOf/0')).toEqual({ properties: { count: {}, untyped: {} } });
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: { count: { allOf: [{ type: ['number', 'array', 'object'] }] }, untyped: {} },
+      });
     });
     it('keeps a part leading to a choice with one recurring option, which validates the data below it once', () => {
       const schema: RJSFSchema = {
@@ -411,11 +419,11 @@ describe('scoringTarget()', () => {
         definitions: {
           Twice: {
             if: { properties: { a: { $ref: '#/definitions/Twice' } } },
-            then: { properties: { b: { $ref: '#/definitions/Twice' } } },
+            then: { properties: { a: { $ref: '#/definitions/Twice' } } },
           },
           Otherwise: {
             if: { properties: { a: { $ref: '#/definitions/Otherwise' } } },
-            else: { properties: { b: { $ref: '#/definitions/Otherwise' } } },
+            else: { properties: { a: { $ref: '#/definitions/Otherwise' } } },
           },
           Once: { if: { type: 'object' }, then: { properties: { b: { $ref: '#/definitions/Once' } } } },
         },
@@ -456,7 +464,7 @@ describe('scoringTarget()', () => {
               kind: {
                 oneOf: [
                   { properties: { left: { $ref: '#/definitions/Node' } } },
-                  { properties: { right: { $ref: '#/definitions/Node' } } },
+                  { properties: { left: { $ref: '#/definitions/Node' }, side: { const: 'right' } } },
                 ],
               },
             },
@@ -485,7 +493,7 @@ describe('scoringTarget()', () => {
             type: 'object',
             properties: { c: { allOf: [{ $ref: '#/definitions/Pair' }, { $ref: '#/definitions/PairExt' }] } },
           },
-          PairExt: { properties: { d: { $ref: '#/definitions/Pair' } } },
+          PairExt: { properties: { c: { $ref: '#/definitions/Pair' } } },
           Pet: { type: 'object', $ref: '#/definitions/Base', oneOf: [{ $ref: '#/definitions/Cat' }, { type: 'null' }] },
           Base: { type: 'object', properties: { next: { $ref: '#/definitions/Pet' } } },
           Cat: { allOf: [{ $ref: '#/definitions/Base' }, { properties: { meow: { type: 'string' } } }] },
@@ -494,7 +502,7 @@ describe('scoringTarget()', () => {
       };
       expect(scored(schema, '/oneOf/0')).toEqual({
         properties: {
-          pair: { allOf: [{ type: 'object', properties: { c: {} } }] },
+          pair: { allOf: [{ type: 'object', properties: { c: { type: 'object' } } }] },
           pet: { allOf: [{ type: 'object' }] },
         },
       });
@@ -517,7 +525,7 @@ describe('scoringTarget()', () => {
           Consts: {
             anyOf: [
               { const: 1, items: { $ref: '#/definitions/Consts' } },
-              { type: 'integer', additionalProperties: { $ref: '#/definitions/Consts' } },
+              { type: 'integer', items: { $ref: '#/definitions/Consts' } },
             ],
           },
           Lists: {
@@ -546,8 +554,8 @@ describe('scoringTarget()', () => {
       expect(scored(schema, '/oneOf/0')).toEqual({
         properties: {
           wrapped: { $ref: '#/oneOf/0/properties/wrapped' },
-          consts: {},
-          lists: {},
+          consts: { allOf: [{ type: 'number' }] },
+          lists: { allOf: [{ type: 'array' }] },
           either: { $ref: '#/oneOf/0/properties/either' },
         },
       });
@@ -578,11 +586,109 @@ describe('scoringTarget()', () => {
           },
         ],
       };
-      const entered = { type: 'object', properties: { kind: { $ref: '#/definitions/A/properties/kind' }, child: {} } };
+      const entered = {
+        type: 'object',
+        properties: { kind: { $ref: '#/definitions/A/properties/kind' }, child: { type: ['null', 'object'] } },
+      };
       expect(scored(schema, '/oneOf/0')).toEqual({
         properties: { w: { allOf: [entered] } },
         not: { $ref: '#/oneOf/0/not' },
         allOf: [{ properties: { plain: { $ref: '#/oneOf/0/allOf/0/properties/plain' } } }, { allOf: [entered] }],
+      });
+    });
+    it('keeps a part whose subschemas recur through different parts of the data, which walks each part once', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          Node: {
+            allOf: [
+              { $ref: '#/definitions/Base' },
+              { properties: { children: { items: { $ref: '#/definitions/Node' } } } },
+            ],
+          },
+          Base: { type: 'object', properties: { parent: { $ref: '#/definitions/Node' } } },
+          Sides: {
+            type: 'object',
+            anyOf: [
+              { properties: { left: { $ref: '#/definitions/Sides' } } },
+              { properties: { right: { $ref: '#/definitions/Sides' } } },
+            ],
+          },
+          Items: {
+            anyOf: [
+              { type: 'array', items: { $ref: '#/definitions/Items' } },
+              { type: 'array', contains: { type: 'string' }, additionalProperties: { $ref: '#/definitions/Items' } },
+            ],
+          },
+        },
+        oneOf: [
+          {
+            properties: {
+              node: { $ref: '#/definitions/Node' },
+              sides: { $ref: '#/definitions/Sides' },
+              items: { $ref: '#/definitions/Items' },
+            },
+          },
+        ],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({ $ref: '#/oneOf/0' });
+    });
+    it('cuts where a recurring property meets a recurring pattern property, which can name the same key', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          Keys: {
+            type: 'object',
+            anyOf: [
+              { properties: { a: { $ref: '#/definitions/Keys' } } },
+              { patternProperties: { '^a': { $ref: '#/definitions/Keys' } } },
+            ],
+          },
+        },
+        oneOf: [{ properties: { keys: { $ref: '#/definitions/Keys' } } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({ properties: { keys: { allOf: [{ type: 'object' }] } } });
+    });
+    it('cuts where subschemas recur through the same keyword, or a dependentSchemas entry through a property the node holds', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          Names: {
+            anyOf: [
+              { type: 'object', propertyNames: { $ref: '#/definitions/Names' } },
+              { type: 'object', propertyNames: { $ref: '#/definitions/Names' } },
+            ],
+          },
+          Deps: {
+            type: 'object',
+            properties: { x: { $ref: '#/definitions/Deps' } },
+            dependentSchemas: { a: { properties: { x: { $ref: '#/definitions/Deps' } } } },
+          },
+        },
+        oneOf: [{ properties: { names: { $ref: '#/definitions/Names' }, deps: { $ref: '#/definitions/Deps' } } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: { names: { allOf: [{ type: 'object' }] }, deps: { allOf: [{ type: 'object' }] } },
+      });
+    });
+    it('reads a cut choice that takes no type at all as accepting nothing', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          Never: {
+            type: 'string',
+            const: 1,
+            anyOf: [
+              { properties: { c: { $ref: '#/definitions/Never' } } },
+              { properties: { c: { $ref: '#/definitions/Never' } } },
+            ],
+          },
+        },
+        oneOf: [{ properties: { never: { $ref: '#/definitions/Never' } } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({ properties: { never: { allOf: [{ not: {} }] } } });
+    });
+    it('keeps an empty allOf entry the option writes, which no cut emptied', () => {
+      const schema: RJSFSchema = { oneOf: [{ allOf: [{}], properties: { a: { type: 'string' } }, required: ['a'] }] };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        allOf: [{}],
+        properties: { a: { $ref: '#/oneOf/0/properties/a' } },
       });
     });
     it('keeps a part whose $defs hold a recursive choice, which a validator reaches only through a $ref', () => {
