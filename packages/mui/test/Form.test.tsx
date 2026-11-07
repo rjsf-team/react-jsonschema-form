@@ -1,3 +1,4 @@
+import OutlinedInput from '@mui/material/OutlinedInput';
 import Switch from '@mui/material/Switch';
 import { withTheme } from '@rjsf/core';
 import { getTestRegistry } from '@rjsf/core/testing';
@@ -20,8 +21,10 @@ import { userEvent } from '@testing-library/user-event';
 import { renderToString } from 'react-dom/server';
 
 import { elementOf } from '../../../testing/elementOf.ts';
+import CheckboxesWidget from '../src/CheckboxesWidget/index.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import Form, { Theme, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
+import RadioWidget from '../src/RadioWidget/index.ts';
 
 const user = userEvent.setup();
 
@@ -460,6 +463,10 @@ describe("mui widgets are named by their label and carry the field's id on the e
   const radioInput = at('rjsfSlotProps', 'radio', 'slotProps', 'input');
   const sliderInput = at('rjsfSlotProps', 'slider', 'slotProps', 'input');
   const right = press('{ArrowRight}');
+  /** Gives a select's select slot an `input` element carrying `props` */
+  const selectInputElement = (props: object) => ({
+    rjsfSlotProps: { select: { input: <OutlinedInput {...props} /> } },
+  });
 
   /** Renders a field whose `ui:options.mui` gives author handlers at `mui`, acts on it, and checks the form still saw
    * the change, the focus and the blur
@@ -536,9 +543,19 @@ describe("mui widgets are named by their label and carry the field's id on the e
       pickB,
       'b',
     ],
+    ["a select's select slot's input element", letters, {}, selectInputElement, 'a', pickB, 'b'],
     ['a checkbox', bool, {}, at('rjsfSlotProps', 'checkbox'), false, press(' '), true],
     ['a slider', range, { 'ui:widget': 'range' }, at(), 4, right, 5],
     ["a slider's target", range, { 'ui:widget': 'range' }, at('rjsfSlotProps', 'slider'), 4, right, 5],
+    [
+      "a slider's root slot",
+      range,
+      { 'ui:widget': 'range' },
+      at('rjsfSlotProps', 'slider', 'slotProps', 'root'),
+      4,
+      right,
+      5,
+    ],
   ])("keeps %s's form data and focus reports over handlers ui:options.mui gives it", async (...row) => {
     const author = await expectFormHandlersRun(...row);
     expect(author.onChange).not.toHaveBeenCalled();
@@ -618,13 +635,16 @@ describe("mui widgets are named by their label and carry the field's id on the e
 
   test.each<[string, RJSFSchema, UiSchema, (props: object) => object, string]>([
     ['a text field', text, {}, at(), 'textbox'],
+    ["a text field's root slot", text, {}, at('slotProps', 'root'), 'textbox'],
     ["a text field's input slot", text, {}, at('slotProps', 'input'), 'textbox'],
     ["a text field's htmlInput slot", text, {}, at('slotProps', 'htmlInput'), 'textbox'],
     ["a text field's input slot's inputProps", text, {}, at('slotProps', 'input', 'inputProps'), 'textbox'],
     ["a text field's input slot's own input slot", text, {}, at('slotProps', 'input', 'slotProps', 'input'), 'textbox'],
     ["a slider through ui:inputType: 'range'", range, { 'ui:inputType': 'range' }, at(), 'slider'],
     ['a select', letters, {}, at(), 'combobox'],
+    ["a select's root slot", letters, {}, at('rjsfSlotProps', 'root'), 'combobox'],
     ["a select's select slot", letters, {}, at('rjsfSlotProps', 'select'), 'combobox'],
+    ["a select's select slot's input element", letters, {}, selectInputElement, 'combobox'],
     ["a select's select slot's inputProps", letters, {}, at('rjsfSlotProps', 'select', 'inputProps'), 'combobox'],
     [
       "a select's select slot's input slot",
@@ -691,6 +711,72 @@ describe("mui widgets are named by their label and carry the field's id on the e
       // MUI's select is a `<div>` combobox, which marks itself disabled through ARIA
       expect(control.matches(':disabled') || control.getAttribute('aria-disabled') === 'true').toBe(true);
     }
+  });
+
+  test.each([
+    ['htmlInput slot', at('rjsfSlotProps', 'htmlInput')],
+    ["select slot's inputProps", at('rjsfSlotProps', 'select', 'inputProps')],
+    ["select slot's display props", at('rjsfSlotProps', 'select', 'SelectDisplayProps')],
+    ["input slot's inputProps", at('rjsfSlotProps', 'input', 'inputProps')],
+  ])("keeps a read-only select out of the keyboard's reach over a tabIndex its %s gives", async (_, mui) => {
+    render(
+      <Form
+        schema={letters}
+        uiSchema={{ 'ui:readonly': true, 'ui:options': { mui: mui({ tabIndex: 0 }) } }}
+        validator={validator}
+      />,
+    );
+
+    await user.tab();
+    await user.keyboard(' ');
+
+    expect(screen.getByRole('combobox')).not.toHaveFocus();
+    expect(screen.queryByRole('option')).toBeNull();
+  });
+
+  // MUI takes a slot whose `(ownerState) => props` returns nothing
+  test.each<[string, RJSFSchema, UiSchema, (props: object) => object, string]>([
+    ["a text field's htmlInput slot", text, {}, at('slotProps', 'htmlInput'), 'textbox'],
+    ["a select's htmlInput slot", letters, {}, at('rjsfSlotProps', 'htmlInput'), 'combobox'],
+    ["a checkbox's input slot", bool, {}, at('rjsfSlotProps', 'checkbox', 'slotProps', 'input'), 'checkbox'],
+    [
+      "a slider's input slot",
+      range,
+      { 'ui:widget': 'range' },
+      at('rjsfSlotProps', 'slider', 'slotProps', 'input'),
+      'slider',
+    ],
+  ])('draws %s given as a function that returns no props', (_, schema, uiSchema, mui, role) => {
+    render(
+      <Form
+        schema={schema}
+        uiSchema={{ ...uiSchema, 'ui:options': { mui: mui(() => undefined) } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role)).toBeInTheDocument();
+  });
+
+  test("reports a slider's value to the form's onFocus and onBlur, rather than its input's string", async () => {
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <Form
+        schema={range}
+        uiSchema={{ 'ui:widget': 'range' }}
+        validator={validator}
+        initialFormData={4}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />,
+    );
+
+    await user.tab();
+    await user.tab();
+
+    expect(onFocus).toHaveBeenCalledWith('root', 4);
+    expect(onBlur).toHaveBeenCalledWith('root', 4);
   });
 
   // A required field asks for one checkbox, not each, while a radio is required, as core's are
@@ -1449,6 +1535,60 @@ describe('mui CheckboxWidget required attribute', () => {
 
     expect(container.querySelector('input[type=checkbox]')).not.toHaveAttribute('required');
   });
+
+  test('keeps a box rendered with no disabled or readonly editable over a disabled its checkbox slot gives', () => {
+    render(
+      <CheckboxWidget
+        id='root'
+        name='root'
+        schema={agree}
+        uiSchema={{}}
+        value={false}
+        required={false}
+        autofocus={false}
+        label='Agree'
+        options={{ mui: { rjsfSlotProps: { checkbox: { disabled: true } } } }}
+        onChange={vi.fn()}
+        onBlur={vi.fn()}
+        onFocus={vi.fn()}
+        registry={getTestRegistry(agree)}
+      />,
+    );
+
+    expect(screen.getByRole('checkbox')).toBeEnabled();
+  });
+
+  test.each([
+    ['checkboxes', CheckboxesWidget, 'checkbox', 'checkbox'],
+    ['radio', RadioWidget, 'radio', 'radio'],
+  ] as const)(
+    'keeps a %s option rendered with no disabled or readonly editable over a disabled its slot gives',
+    (_, Widget, slot, role) => {
+      const letters: RJSFSchema = { type: 'string', enum: ['a'] };
+      render(
+        <Widget
+          id='root'
+          name='root'
+          schema={letters}
+          uiSchema={{}}
+          value={undefined}
+          required={false}
+          autofocus={false}
+          label='Letter'
+          options={{
+            enumOptions: [{ value: 'a', label: 'a' }],
+            mui: { rjsfSlotProps: { [slot]: { disabled: true } } },
+          }}
+          onChange={vi.fn()}
+          onBlur={vi.fn()}
+          onFocus={vi.fn()}
+          registry={getTestRegistry(letters)}
+        />,
+      );
+
+      expect(screen.getByRole(role)).toBeEnabled();
+    },
+  );
 });
 
 describe('mui renderToString and hydration (#4083)', () => {

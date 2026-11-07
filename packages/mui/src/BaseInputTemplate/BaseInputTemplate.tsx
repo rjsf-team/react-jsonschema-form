@@ -49,6 +49,8 @@ export interface BaseInputTemplateMuiProps extends GenericObjectType {
     /** Props applied to the base native HTML `<input>` or `<textarea>` element, as an object or as MUI's
      * `(ownerState) => props` */
     htmlInput?: MuiSlotProps<HtmlInputAttributes, TextFieldOwnerState>;
+    /** Props applied to the `TextField`'s root `FormControl`, as an object or as MUI's `(ownerState) => props`. */
+    root?: NonNullable<TextFieldProps['slotProps']>['root'];
     /** Props applied to the MUI `Input` element, useful for `endAdornment`/`startAdornment`. */
     input?: MuiInputProps;
     /** Props applied to the MUI `InputLabel` element. */
@@ -220,6 +222,8 @@ export default function BaseInputTemplate<
         slotProps={{
           ...slotProps,
           ...muiSlotProps,
+          // MUI puts this slot's `disabled` over the one the `TextField` gives its root, which the `<input>` takes
+          ...(muiSlotProps?.root && { root: withoutDisabled(muiSlotProps.root) }),
           input: inputProps,
           htmlInput: htmlInputProps,
           inputLabel: { ...DisplayInputLabelProps, id: DisplayInputLabelProps.id ?? inputLabelId(textFieldId) },

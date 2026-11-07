@@ -41,8 +41,9 @@ export default function CheckboxWidget<
     id,
     htmlName,
     value,
-    disabled,
-    readonly,
+    // `false` where unset, since `FormControlLabel` takes the control's `disabled` where its own is undefined
+    disabled = false,
+    readonly = false,
     label,
     autofocus,
     onChange,

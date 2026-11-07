@@ -44,8 +44,22 @@ export default function RadioWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, options, value, required, disabled, readonly, autofocus, label, onChange, onBlur, onFocus } =
-    props;
+  // `disabled` and `readonly` are `false` where unset, since `FormControlLabel` takes the control's `disabled` where its
+  // own is undefined
+  const {
+    id,
+    htmlName,
+    options,
+    value,
+    required,
+    disabled = false,
+    readonly = false,
+    autofocus,
+    label,
+    onChange,
+    onBlur,
+    onFocus,
+  } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);

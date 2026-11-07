@@ -1,4 +1,3 @@
-import type { FocusEvent } from 'react';
 import { useEffect, useRef } from 'react';
 import FormLabel from '@mui/material/FormLabel';
 import type { SliderProps } from '@mui/material/Slider';
@@ -18,7 +17,7 @@ import {
   templateMarksRequired,
 } from '@rjsf/utils';
 
-import { getMuiProps, withInputSlot } from '../util.ts';
+import { getMuiProps, withInputSlot, withoutKeys } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the RangeWidget. */
 export interface RangeWidgetMuiProps extends GenericObjectType {
@@ -97,8 +96,9 @@ export default function RangeWidget<
       onChange(storesString ? String(newValue) : newValue);
     }
   };
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
+  // The field's value, rather than the focused thumb's string
+  const handleBlur = () => onBlur(id, value);
+  const handleFocus = () => onFocus(id, value);
 
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, RangeWidgetMuiProps>(options);
   // The `Slider` puts a name the form author gives it on the `<input>`, where the `input` slot would replace it, so the
@@ -160,7 +160,11 @@ export default function RangeWidget<
         // The slider's root isn't focusable but its thumb's `<input>` is, so the input carries the field's id and plan
         slotProps={withInputSlot(
           { ...thumbProps, required, ...controlAttributes, ...plannedName },
-          authorSlider.slotProps,
+          // The `Slider` takes its root slot's `onFocus` and `onBlur` over the form's, which it gives its root
+          authorSlider.slotProps && {
+            ...authorSlider.slotProps,
+            root: withoutKeys(authorSlider.slotProps.root, ['onFocus', 'onBlur']),
+          },
         )}
       />
     </>
