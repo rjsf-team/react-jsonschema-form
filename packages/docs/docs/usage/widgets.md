@@ -68,6 +68,7 @@ uiSchema:
 - `textarea`: a `textarea` element is used;
 - `password`: an `input[type=password]` element is used;
 - `color`: an `input[type=color]` element is used;
+- `checkbox`: for a string with a string `const` only, a checkbox that sets the value to the `const` when checked and clears it when unchecked, or writes `ui:emptyValue` where one is set. Any `ui:emptyValue` other than `undefined` fails the `const`, even on an optional field. Under the default `defaultFormStateBehavior.constAsDefaults: 'always'` the `const` is filled in as a default, so the box starts checked; set `constAsDefaults: 'never'` to start it unchecked. `CheckboxWidget` named by its key, and a theme's switch such as `@rjsf/daisyui`'s `toggle`, do the same;
 - by default, a regular `input[type=text]` element is used.
 
 `@rjsf/mantine` draws `color` with Mantine's `ColorInput`, and `ui:options.colorFormat` sets its format, such as `rgba`.

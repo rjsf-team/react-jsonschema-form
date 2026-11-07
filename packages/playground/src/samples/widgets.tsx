@@ -62,6 +62,11 @@ const widgets: Sample = {
             title: 'Favorite color (color picker)',
             default: '#151ce6',
           },
+          confirmation: {
+            type: 'string',
+            title: 'Details confirmed (checkbox for a string const)',
+            const: 'confirmed',
+          },
         },
       },
       customWidgets: {
@@ -183,6 +188,9 @@ const widgets: Sample = {
     },
     contactDetails: {
       'ui:widget': 'textarea',
+      confirmation: {
+        'ui:widget': 'checkbox',
+      },
     },
     customWidgets: {
       rating: {

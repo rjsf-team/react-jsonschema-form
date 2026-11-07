@@ -89,6 +89,14 @@ describe('CoreUiOptionsChecks', () => {
     expect([badWidget, badField]).toHaveLength(2);
   });
 
+  it('accepts a checkbox on a string field, which confirms a string const', () => {
+    type Checked = StrictUiSchema<CoreUiOptionsChecks, { confirm: string; agree: string }>;
+
+    const ui: Checked = { confirm: { 'ui:widget': 'checkbox' }, agree: { 'ui:widget': 'CheckboxWidget' } };
+
+    expect(ui.confirm?.['ui:widget']).toBe('checkbox');
+  });
+
   it('closes the ui: namespace to just the options CoreUiOptionsChecks declares', () => {
     type Checked = StrictUiSchema<CoreUiOptionsChecks, { bio: string }>;
 

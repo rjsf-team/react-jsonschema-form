@@ -1,9 +1,18 @@
-import type { ErrorSchema, FieldPath, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  ErrorSchema,
+  FieldPath,
+  FieldProps,
+  FieldTemplateProps,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
 import { fireEvent, act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import StringField from '../src/components/fields/StringField.tsx';
+import CoreFieldTemplate from '../src/components/templates/FieldTemplate/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
 import {
   createFormComponent,
@@ -1012,6 +1021,152 @@ describe('StringField', () => {
       await user.selectOptions(select, [optionFor('a'), optionFor('c')]);
 
       expectToHaveBeenCalledWithFormData(onChange, ['a', 'c'], 'root');
+    });
+  });
+
+  describe('CheckboxWidget confirming a const', () => {
+    const constSchema: RJSFSchema = {
+      type: 'object',
+      properties: { confirm: { title: 'Confirmation', type: 'string', const: 'foo' } },
+    };
+    const constUiSchema: UiSchema = { confirm: { 'ui:widget': 'checkbox' } };
+    const neverConst = { constAsDefaults: 'never' } as const;
+
+    it.each(['checkbox', 'CheckboxWidget'])(
+      'should write the const when %s is checked and clear the field when unchecked',
+      async (widget) => {
+        const { onChange } = createFormComponent({
+          schema: constSchema,
+          uiSchema: { confirm: { 'ui:widget': widget } },
+          defaultFormStateBehavior: neverConst,
+        });
+        const checkbox = screen.getByRole('checkbox', { name: 'Confirmation' });
+        expect(checkbox).not.toBeChecked();
+
+        await user.click(checkbox);
+        expectToHaveBeenCalledWithFormData(onChange, { confirm: 'foo' }, 'root_confirm');
+        expect(checkbox).toBeChecked();
+
+        await user.click(checkbox);
+        expectToHaveBeenCalledWithFormData(onChange, { confirm: undefined }, 'root_confirm');
+        expect(checkbox).not.toBeChecked();
+      },
+    );
+
+    it('should write ui:emptyValue when unchecked', async () => {
+      const { onChange } = createFormComponent({
+        schema: constSchema,
+        uiSchema: { confirm: { 'ui:widget': 'checkbox', 'ui:emptyValue': '' } },
+        initialFormData: { confirm: 'foo' },
+      });
+
+      await user.click(screen.getByRole('checkbox', { name: 'Confirmation' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { confirm: '' }, 'root_confirm');
+    });
+
+    it.each([
+      ['foo', true],
+      ['bar', false],
+    ])('should show %j as checked: %s', (confirm, checked) => {
+      createFormComponent({ schema: constSchema, uiSchema: constUiSchema, initialFormData: { confirm } });
+
+      expect(screen.getByRole('checkbox', { name: 'Confirmation' }).matches(':checked')).toBe(checked);
+    });
+
+    it('should start checked when the const is a default, and stay unchecked once cleared', async () => {
+      const { onChange } = createFormComponent({ schema: constSchema, uiSchema: constUiSchema });
+      const checkbox = screen.getByRole('checkbox', { name: 'Confirmation' });
+      expect(checkbox).toBeChecked();
+
+      await user.click(checkbox);
+
+      expectToHaveBeenCalledWithFormData(onChange, { confirm: undefined }, 'root_confirm');
+      expect(checkbox).not.toBeChecked();
+    });
+
+    it('should hand onFocus and onBlur the const', async () => {
+      const onBlur = vi.fn();
+      const onFocus = vi.fn();
+      createFormComponent({
+        schema: constSchema,
+        uiSchema: constUiSchema,
+        initialFormData: { confirm: 'foo' },
+        onBlur,
+        onFocus,
+      });
+
+      await user.tab();
+      await user.tab();
+
+      expect(onFocus).toHaveBeenLastCalledWith('root_confirm', 'foo');
+      expect(onBlur).toHaveBeenLastCalledWith('root_confirm', 'foo');
+    });
+
+    it('should write the const for a checkbox on a `type` list naming the string after a number', async () => {
+      const { onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { confirm: { title: 'Confirmation', type: ['number', 'string'], const: 'foo' } },
+        },
+        uiSchema: constUiSchema,
+        defaultFormStateBehavior: neverConst,
+      });
+
+      await user.click(screen.getByRole('checkbox', { name: 'Confirmation' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { confirm: 'foo' }, 'root_confirm');
+    });
+
+    it('should hand a widget the form registers under `checkbox` the string itself', async () => {
+      function StringCheckbox({ id, value, onChange }: WidgetProps) {
+        return <input id={id} type='checkbox' checked={value === 'foo'} onChange={() => onChange('bar')} />;
+      }
+      const { onChange } = createFormComponent({
+        schema: constSchema,
+        uiSchema: constUiSchema,
+        widgets: { checkbox: StringCheckbox },
+        initialFormData: { confirm: 'foo' },
+      });
+
+      await user.click(screen.getByRole('checkbox'));
+
+      expectToHaveBeenCalledWithFormData(onChange, { confirm: 'bar' }, 'root_confirm');
+    });
+
+    it('should report a required const as missing until it is checked', async () => {
+      const { node, onError } = createFormComponent({
+        schema: { ...constSchema, required: ['confirm'] },
+        uiSchema: constUiSchema,
+        defaultFormStateBehavior: neverConst,
+        noHtml5Validate: true,
+      });
+      expect(screen.getByRole('checkbox', { name: /Confirmation/ })).toBeRequired();
+
+      await submitForm(node, user);
+
+      expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ name: 'required', property: 'confirm' })]);
+    });
+
+    it.each(['checkbox', 'CheckboxWidget'])('should leave the label to %s when rendered without a plan', (widget) => {
+      function NoPlanStringField(props: FieldProps) {
+        return <StringField {...props} presentation={undefined} />;
+      }
+      // As a custom field rendering the template itself would, without the plan `SchemaField` builds
+      function NoPlanFieldTemplate(props: FieldTemplateProps) {
+        // oxlint-disable-next-line typescript/no-deprecated -- the label a template rendered without a plan is told to draw
+        const displayLabel = props.registry.schemaUtils.getDisplayLabel(props.schema, props.uiSchema);
+        // oxlint-disable-next-line typescript/no-deprecated -- a template rendered without a plan reads the deprecated prop
+        return <CoreFieldTemplate {...props} presentation={undefined} displayLabel={displayLabel} />;
+      }
+      createFormComponent({
+        schema: constSchema,
+        uiSchema: { confirm: { 'ui:widget': widget } },
+        fields: { StringField: NoPlanStringField },
+        templates: { FieldTemplate: NoPlanFieldTemplate },
+      });
+
+      expect(screen.getAllByText('Confirmation')).toHaveLength(1);
     });
   });
 

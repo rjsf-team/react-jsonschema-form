@@ -93,9 +93,26 @@ const widgetMap = {
   },
 } as const;
 
+/** Only a string `const` takes a `checkbox`, whose checked state `StringField` writes as the `const`; any other string
+ * would get a boolean */
+const constStringWidgetMap = { ...widgetMap.string, checkbox: widgetMap.boolean.checkbox };
+
 /** The types whose field renders its value with a widget, and so the ones a `type` list can hand a widget to when the
  * type it resolves to has none by that name */
 const WIDGET_FIELD_TYPES = ['string', 'number', 'integer', 'boolean'];
+
+/** Gets the aliases of `type` for `schema`, where a string `const` adds the `checkbox` to a string's
+ *
+ * @param type - A type `widgetMap` has aliases for
+ * @param schema - The schema for the field
+ * @returns - The aliases of `type` for `schema`
+ */
+function aliasesFor<S extends StrictRJSFSchema = RJSFSchema>(
+  type: keyof typeof widgetMap,
+  schema: S,
+): Record<string, string> {
+  return type === 'string' && typeof schema.const === 'string' ? constStringWidgetMap : widgetMap[type];
+}
 
 /** Whether `type` is a type `widgetMap` has aliases for */
 function isWidgetMapType(type: string): type is keyof typeof widgetMap {
@@ -131,18 +148,20 @@ function findWidgetType<S extends StrictRJSFSchema = RJSFSchema>(
   const widgets =
     holdsContainer || (fieldType === 'array' && isWholeValueSelect<S>(schema))
       ? wholeValueSelectWidgetMap
-      : widgetMap[fieldType];
+      : aliasesFor<S>(fieldType, schema);
+  // shortcut: a `type` list resolving to `boolean`, or naming it before `string` after a type with no checkbox, as
+  // `['number', 'boolean', 'string']` does, takes the boolean's own `checkbox` over a string `const`, which then fails
+  // validation; prefer the string member if that is reported
   if (hasWidget(widgets)) {
     return { type: fieldType, widgets };
   }
   if (selectType !== undefined) {
     return undefined;
   }
-  // The other types are all scalars, whose aliases don't depend on the schema
   const otherType = getKnownTypes<S>(schema).find(
-    (aType) => aType !== fieldType && WIDGET_FIELD_TYPES.includes(aType) && hasWidget(widgetMap[aType]),
+    (aType) => aType !== fieldType && WIDGET_FIELD_TYPES.includes(aType) && hasWidget(aliasesFor<S>(aType, schema)),
   );
-  return otherType && { type: otherType, widgets: widgetMap[otherType] };
+  return otherType && { type: otherType, widgets: aliasesFor<S>(otherType, schema) };
 }
 
 /** Gets the type whose field renders `widget` for `schema`, matching the widget's alias or the registered name an alias

@@ -997,8 +997,10 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
    * renders a `boolean`, which `getDefaultFormState()` seeds a required one with. A native `required` would then fail a
    * value the schema accepts, so `@rjsf/core` plans the control as required only where the schema demands `true`
    * (#5388), and as any other control where its field renders another type, as a `type` list's string field renders a
-   * switch. A fact about one control, so it is declared under the key of the widget, or of a field drawing the control
-   * itself, and the blanket `default` and `fieldDefault` of a `ThemePresentation` take none
+   * switch. `@rjsf/core`'s `StringField` also reads it to hand such a widget on a string with a string `const` a
+   * boolean, writing the `const` when it is checked and clearing the field when it is not (#3882). A fact about one
+   * control, so it is declared under the key of the widget, or of a field drawing the control itself, and the blanket
+   * `default` and `fieldDefault` of a `ThemePresentation` take none
    */
   uncheckedIsFalse?: boolean;
   /** Whether the control, left alone, already holds an empty array, as a group of checkboxes does, which

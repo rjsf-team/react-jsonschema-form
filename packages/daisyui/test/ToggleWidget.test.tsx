@@ -1,6 +1,9 @@
-import { render } from '@testing-library/react';
+import type { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import Form from '../src/index.ts';
 import ToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
@@ -99,5 +102,34 @@ describe('ToggleWidget', () => {
 
     const toggle = getByRole('checkbox');
     expect(toggle).toHaveProperty('checked', true);
+  });
+
+  test('writes the const of a string when switched on, and clears the field when switched off (#3882)', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { agree: { type: 'string', const: 'yes', title: 'Agree' } },
+    };
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={schema}
+        uiSchema={{ agree: { 'ui:widget': 'toggle' } }}
+        validator={validator}
+        onChange={onChange}
+        defaultFormStateBehavior={{ constAsDefaults: 'never' }}
+      />,
+    );
+    const toggle = screen.getByRole('checkbox', { name: 'Agree' });
+
+    await user.click(toggle);
+    expect(toggle).toBeChecked();
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { agree: 'yes' } }), 'root_agree');
+
+    await user.click(toggle);
+    expect(toggle).not.toBeChecked();
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { agree: undefined } }),
+      'root_agree',
+    );
   });
 });

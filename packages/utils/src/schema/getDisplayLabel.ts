@@ -72,8 +72,13 @@ export default function getDisplayLabel<
     // naming it through `ui:widget`. The `checkbox` alias is deliberately not matched here: a theme's `FieldTemplate`
     // keys its own checkbox layout on that exact spelling, taking over the field's description along with its label.
     // Under a plan, `getPresentationDeclaration()` finds the widget by its alias, its key or the component itself, and
-    // its declaration, not this name match, says who draws the field's label
-    if (schemaType === 'boolean' && (!widget || widget === DEFAULT_BOOLEAN_WIDGET)) {
+    // its declaration, not this name match, says who draws the field's label. A string with a string `const` named
+    // that key renders the same checkbox, which confirms the `const` (#3882)
+    const confirmsConst = schemaType === 'string' && typeof schema.const === 'string';
+    if (
+      (schemaType === 'boolean' && !widget) ||
+      (widget === DEFAULT_BOOLEAN_WIDGET && (schemaType === 'boolean' || confirmsConst))
+    ) {
       displayLabel = false;
     }
     if (uiSchema[UI_FIELD_KEY]) {
