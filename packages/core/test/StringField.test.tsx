@@ -1442,6 +1442,18 @@ describe('StringField', () => {
         expect(node.querySelector<HTMLInputElement>('[type=datetime-local]')).toHaveValue('2016-04-05T14:01:30');
       });
 
+      it.each(['2020-05-03', '2020-05-03+02:00'])('should display a bare day %s as the start of that day', (value) => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+          initialFormData: value,
+        });
+
+        expect(node.querySelector<HTMLInputElement>('[type=datetime-local]')).toHaveValue('2020-05-03T00:00');
+      });
+
       it('should pad seconds without adding a timezone offset when changed', async () => {
         const { node, onSubmit } = createFormComponent({
           schema: {

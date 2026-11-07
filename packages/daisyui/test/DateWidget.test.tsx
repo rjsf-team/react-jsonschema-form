@@ -3,10 +3,10 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import pinTimeZone from '../../../testing/pinTimeZone.ts';
 import Form from '../src/index.ts';
 import DateWidget from '../src/widgets/DateWidget/DateWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
-import pinTimeZone from './helpers/pinTimeZone.ts';
 import stubViewport, { rectAt } from './helpers/stubViewport.ts';
 
 const user = userEvent.setup();

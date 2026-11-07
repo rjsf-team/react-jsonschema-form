@@ -1,18 +1,9 @@
+import pinTimeZone from '../../../testing/pinTimeZone.ts';
 import { getDateTimeLocalValue } from '../src/index.ts';
 
 describe('getDateTimeLocalValue()', () => {
-  // Mirrors packages/daisyui/test/helpers/pinTimeZone.ts: the non date-time cases below depend on the local zone
-  const realTZ = process.env.TZ;
-  beforeAll(() => {
-    process.env.TZ = 'America/Los_Angeles';
-  });
-  afterAll(() => {
-    if (realTZ === undefined) {
-      delete process.env.TZ;
-    } else {
-      process.env.TZ = realTZ;
-    }
-  });
+  // The non date-time cases below depend on the local zone
+  pinTimeZone('America/Los_Angeles');
 
   it('should report isIsoDateTime as false for format=date-time', () => {
     expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, undefined).isIsoDateTime).toBe(false);
@@ -118,9 +109,11 @@ describe('getDateTimeLocalValue()', () => {
     expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, new Date(NaN)).localValue).toBeUndefined();
   });
 
-  it('should leave a string value untouched when format is not iso-date-time', () => {
-    const value = '2016-04-05T14:01:30.000Z';
-    expect(getDateTimeLocalValue({ type: 'string', format: 'date-time' }, value).localValue).toEqual(value);
+  it.each([
+    ['date-time', '2016-04-05T14:01:30.000Z'],
+    ['date', '2020-05-03'],
+  ])('should leave a string value untouched when format is %s', (format, value) => {
+    expect(getDateTimeLocalValue({ type: 'string', format }, value).localValue).toEqual(value);
   });
 
   it('should strip a timezone offset from a string value for iso-date-time', () => {
@@ -128,6 +121,15 @@ describe('getDateTimeLocalValue()', () => {
       getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, '2016-04-05T14:01:30.000Z').localValue,
     ).toEqual('2016-04-05T14:01:30.000');
   });
+
+  it.each(['2020-05-03', '2020-05-03+02:00'])(
+    'should read a bare day %s as the start of that day for iso-date-time',
+    (value) => {
+      expect(getDateTimeLocalValue({ type: 'string', format: 'iso-date-time' }, value).localValue).toEqual(
+        '2020-05-03T00:00:00',
+      );
+    },
+  );
 
   it('should leave a string value without a timezone offset untouched for iso-date-time', () => {
     const value = '2016-04-05T14:01:30';

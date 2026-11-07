@@ -21,6 +21,22 @@ describe('offsetTimeToLocalTime()', () => {
     expect(offsetTimeToLocalTime('14:30:00+05')).toEqual('14:30:00');
   });
 
+  it('should strip an offset suffix after fractional seconds', () => {
+    expect(offsetTimeToLocalTime('2020-05-03T10:00:00.123+02:00')).toEqual('2020-05-03T10:00:00.123');
+  });
+
+  it('should strip an offset suffix after a time with no seconds', () => {
+    expect(offsetTimeToLocalTime('2020-05-03T10:00+02:00')).toEqual('2020-05-03T10:00');
+  });
+
+  it('should leave a bare day untouched instead of taking its "-DD" for an offset', () => {
+    expect(offsetTimeToLocalTime('2020-05-03')).toEqual('2020-05-03');
+  });
+
+  it('should strip an offset suffix after a bare day', () => {
+    expect(offsetTimeToLocalTime('2020-05-03+02:00')).toEqual('2020-05-03');
+  });
+
   it('should leave a value with no offset untouched', () => {
     expect(offsetTimeToLocalTime('14:30:00')).toEqual('14:30:00');
   });

@@ -4,10 +4,10 @@ import { act, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { mockIntersectionObserver } from 'jsdom-testing-mocks';
 
+import pinTimeZone from '../../../testing/pinTimeZone.ts';
 import Form from '../src/index.ts';
 import DateTimeWidget from '../src/widgets/DateTimeWidget/DateTimeWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
-import pinTimeZone from './helpers/pinTimeZone.ts';
 import stubViewport, { measureClientRectsFrom, rectAt } from './helpers/stubViewport.ts';
 
 const user = userEvent.setup();
