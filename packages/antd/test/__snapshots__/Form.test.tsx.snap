@@ -340,7 +340,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -397,7 +397,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                             style="margin-inline: -12px;"
                                                           >
                                                             <div
-                                                              class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                              class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                               style="padding-inline: 12px;"
                                                             >
                                                               <label
@@ -672,7 +672,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                             style="margin-inline: -12px;"
                                                           >
                                                             <div
-                                                              class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                              class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                               style="padding-inline: 12px;"
                                                             >
                                                               <label
@@ -1054,7 +1054,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -1726,7 +1726,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -1895,7 +1895,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -2811,7 +2811,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -2868,7 +2868,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                             style="margin-inline: -12px;"
                                                           >
                                                             <div
-                                                              class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                              class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                               style="padding-inline: 12px;"
                                                             >
                                                               <label
@@ -3143,7 +3143,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                             style="margin-inline: -12px;"
                                                           >
                                                             <div
-                                                              class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                              class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                               style="padding-inline: 12px;"
                                                             >
                                                               <label
@@ -3525,7 +3525,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -4027,7 +4027,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -4196,7 +4196,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -5700,7 +5700,7 @@ exports[`single fields > Cyclic schema 1`] = `
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                       style="padding-inline: 12px;"
                     >
                       <label
@@ -5749,7 +5749,7 @@ exports[`single fields > Cyclic schema 1`] = `
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -8040,7 +8040,7 @@ exports[`single fields > optional data controls > does not show optional control
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                       style="padding-inline: 12px;"
                     >
                       <label
@@ -8089,7 +8089,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -8198,7 +8198,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -8316,7 +8316,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -8435,7 +8435,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -8547,7 +8547,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -8659,7 +8659,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -8780,7 +8780,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -8891,7 +8891,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -9010,7 +9010,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -9522,7 +9522,7 @@ exports[`single fields > optional data controls > does not show optional control
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                       style="padding-inline: 12px;"
                     >
                       <label
@@ -9571,7 +9571,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -9682,7 +9682,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -9802,7 +9802,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -9923,7 +9923,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -10036,7 +10036,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -10149,7 +10149,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -10271,7 +10271,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -10383,7 +10383,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -10504,7 +10504,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -11022,7 +11022,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                       style="padding-inline: 12px;"
                     >
                       <label
@@ -11071,7 +11071,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <div
@@ -11225,7 +11225,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <div
@@ -11331,7 +11331,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -11450,7 +11450,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -11562,7 +11562,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <div
@@ -11673,7 +11673,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -11794,7 +11794,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <div
@@ -12058,7 +12058,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -12177,7 +12177,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -12307,7 +12307,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     style="margin-inline: -12px;"
                                                   >
                                                     <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                       style="padding-inline: 12px;"
                                                     >
                                                       <div
@@ -12440,7 +12440,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     style="margin-inline: -12px;"
                                                   >
                                                     <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                       style="padding-inline: 12px;"
                                                     >
                                                       <div
@@ -12578,7 +12578,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                       style="padding-inline: 12px;"
                     >
                       <label
@@ -12627,7 +12627,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -12742,7 +12742,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -12810,7 +12810,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -12931,7 +12931,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -13044,7 +13044,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -13113,7 +13113,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         style="margin-inline: -12px;"
                                                       >
                                                         <div
-                                                          class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                          class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                           style="padding-inline: 12px;"
                                                         >
                                                           <label
@@ -13235,7 +13235,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -13458,7 +13458,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -13579,7 +13579,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -13710,7 +13710,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     style="margin-inline: -12px;"
                                                   >
                                                     <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                       style="padding-inline: 12px;"
                                                     >
                                                       <label
@@ -13805,7 +13805,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     style="margin-inline: -12px;"
                                                   >
                                                     <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                       style="padding-inline: 12px;"
                                                     >
                                                       <label
@@ -13901,7 +13901,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                       style="padding-inline: 12px;"
                     >
                       <label
@@ -13950,7 +13950,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <div
@@ -14057,7 +14057,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <div
@@ -14167,7 +14167,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -14286,7 +14286,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -14416,7 +14416,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                     style="margin-inline: -12px;"
                                                   >
                                                     <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                       style="padding-inline: 12px;"
                                                     >
                                                       <div
@@ -14549,7 +14549,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                     style="margin-inline: -12px;"
                                                   >
                                                     <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                       style="padding-inline: 12px;"
                                                     >
                                                       <div
@@ -14687,7 +14687,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                       style="padding-inline: 12px;"
                     >
                       <label
@@ -14736,7 +14736,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -14805,7 +14805,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -14873,7 +14873,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -14993,7 +14993,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       style="margin-inline: -12px;"
                                     >
                                       <div
-                                        class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                        class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                         style="padding-inline: 12px;"
                                       >
                                         <label
@@ -15124,7 +15124,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                     style="margin-inline: -12px;"
                                                   >
                                                     <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                       style="padding-inline: 12px;"
                                                     >
                                                       <label
@@ -15219,7 +15219,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                     style="margin-inline: -12px;"
                                                   >
                                                     <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                                                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                                                       style="padding-inline: 12px;"
                                                     >
                                                       <label
@@ -18817,7 +18817,7 @@ exports[`single fields > title field 1`] = `
                     style="margin-inline: -12px;"
                   >
                     <div
-                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-i19pbt css-var-root"
+                      class="ant-col ant-col-24 ant-form-item-label ant-form-item-label-start ant-form-item-label-left css-dev-only-do-not-override-i19pbt css-var-root"
                       style="padding-inline: 12px;"
                     >
                       <label

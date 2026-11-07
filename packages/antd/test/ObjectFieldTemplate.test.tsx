@@ -380,3 +380,87 @@ describe('ObjectFieldTemplate colSpan map', () => {
     });
   });
 });
+
+describe('heading alignment', () => {
+  const headedSchema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      plain: { title: 'Plain object', type: 'object', properties: { x: { type: 'string' } } },
+      list: { title: 'List', type: 'array', items: { type: 'string' } },
+    },
+  };
+
+  function getHeadingClasses(formContext?: Record<string, unknown>) {
+    const { container } = render(<Form schema={headedSchema} validator={validator} formContext={formContext} />);
+    return Array.from(container.querySelectorAll('fieldset > .ant-row > .ant-form-item-label')).map(
+      (col) => col.className,
+    );
+  }
+
+  it.each([
+    ['by default', undefined],
+    ['for a labelAlign of left', { labelAlign: 'left' }],
+    ['for a labelAlign of start', { labelAlign: 'start' }],
+    ['for a labelCol of 24 columns', { labelCol: { span: 24 } }],
+    ['for a labelCol that is 24 columns at xl', { labelCol: { span: 8, xl: 24 } }],
+    ['for a labelCol of "24" columns', { labelCol: { span: '24' } }],
+    ['for a labelCol that is "24" columns at xl', { labelCol: { span: 8, xl: '24' } }],
+    ['for a labelCol that is 24 columns at xl as an object', { labelCol: { span: 8, xl: { span: 24 } } }],
+    ['for a labelAlign of left beside a narrower labelCol', { labelAlign: 'left', labelCol: { span: 8 } }],
+  ])('starts an object and an array heading %s', (_, formContext) => {
+    const classes = getHeadingClasses(formContext);
+    expect(classes).toHaveLength(2);
+    classes.forEach((c) => {
+      expect(c).toContain('ant-form-item-label-start');
+      expect(c).toContain('ant-form-item-label-left');
+    });
+  });
+
+  it.each([
+    ['for a labelAlign of right', { labelAlign: 'right' }],
+    ['for a labelAlign of end', { labelAlign: 'end' }],
+    ['for a labelAlign of right beside a labelCol of 24 columns', { labelAlign: 'right', labelCol: { span: 24 } }],
+    ['for a labelCol of 24 columns at xs only', { labelCol: { span: 8, xs: 24 } }],
+    ['for a horizontal labelCol without a labelAlign', { labelCol: { span: 8 }, wrapperCol: { span: 16 } }],
+  ])('ends an object and an array heading %s', (_, formContext) => {
+    const classes = getHeadingClasses(formContext);
+    expect(classes).toHaveLength(2);
+    classes.forEach((c) => {
+      expect(c).not.toContain('ant-form-item-label-start');
+      expect(c).not.toContain('ant-form-item-label-left');
+    });
+  });
+
+  function getFieldLabelClasses(formContext: Record<string, unknown>) {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { name: { type: 'string' } }, additionalProperties: { type: 'string' } }}
+        initialFormData={{ extra: 'x' }}
+        validator={validator}
+        formContext={formContext}
+      />,
+    );
+    const labelClass = (forId: string) =>
+      container.querySelector(`label[for="${forId}"]`)?.closest('.ant-form-item-label')?.className;
+    return { field: labelClass('root_name'), key: labelClass('root_extra__key') };
+  }
+
+  it.each(['left', 'start'])(
+    'starts a field label and an additional property key label for a labelAlign of %s',
+    (labelAlign) => {
+      const { field, key } = getFieldLabelClasses({ labelAlign, labelCol: { span: 8 } });
+      [field, key].forEach((c) => {
+        expect(c).toContain('ant-form-item-label-start');
+        expect(c).toContain('ant-form-item-label-left');
+      });
+    },
+  );
+
+  it('leaves a field label and an additional property key label to antd when labelAlign is unset', () => {
+    const { field, key } = getFieldLabelClasses({ labelCol: { span: 8 } });
+    [field, key].forEach((c) => {
+      expect(c).toContain('ant-form-item-label');
+      expect(c).not.toContain('ant-form-item-label-start');
+    });
+  });
+});

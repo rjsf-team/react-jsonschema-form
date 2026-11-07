@@ -20,10 +20,10 @@ import {
   titleDrawsOptionalDataControl,
 } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
-import classNames from 'classnames';
 
 import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
+import headingLabelColClassName from '../headingLabelColClassName.ts';
 
 /** Whether `span` is a span antd's `Col` renders, which is a whole number of its 24 grid columns */
 function isColSpan(span: unknown): span is number {
@@ -63,7 +63,7 @@ export default function ObjectFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { colSpan = 24, labelAlign = 'right', rowGutter = DEFAULT_ROW_GUTTER }: AntdFormContext = formContext;
+  const { colSpan = 24, rowGutter = DEFAULT_ROW_GUTTER }: AntdFormContext = formContext;
 
   const visibleProperties = properties.filter((e) => !e.hidden);
 
@@ -124,12 +124,7 @@ export default function ObjectFieldTemplate<
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('form');
-  const labelClsBasic = `${prefixCls}-item-label`;
-  const labelColClassName = classNames(
-    labelClsBasic,
-    labelAlign === 'left' && `${labelClsBasic}-left`,
-    // labelCol.className,
-  );
+  const labelColClassName = headingLabelColClassName(prefixCls, formContext);
 
   return (
     <fieldset id={id}>

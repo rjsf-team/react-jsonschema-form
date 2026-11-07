@@ -2,10 +2,10 @@ import { useContext } from 'react';
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
-import classNames from 'classnames';
 
 import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
+import headingLabelColClassName from '../headingLabelColClassName.ts';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -39,16 +39,11 @@ export default function ArrayFieldTemplate<
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
-  const { labelAlign = 'right', rowGutter = DEFAULT_ROW_GUTTER }: AntdFormContext = formContext;
+  const { rowGutter = DEFAULT_ROW_GUTTER }: AntdFormContext = formContext;
 
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('form');
-  const labelClsBasic = `${prefixCls}-item-label`;
-  const labelColClassName = classNames(
-    labelClsBasic,
-    labelAlign === 'left' && `${labelClsBasic}-left`,
-    // labelCol.className,
-  );
+  const labelColClassName = headingLabelColClassName(prefixCls, formContext);
 
   return (
     <fieldset className={className} id={id}>

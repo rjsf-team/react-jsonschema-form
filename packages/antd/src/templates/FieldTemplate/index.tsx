@@ -12,10 +12,10 @@ import {
 } from '@rjsf/utils';
 import { Form } from 'antd';
 
+import { DEFAULT_LABEL_COL } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
 import stripTrailingColon from '../stripTrailingColon.ts';
 
-const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
 const TOOLTIP_ICON = <QuestionCircleOutlined aria-hidden />;
 
@@ -48,7 +48,8 @@ export default function FieldTemplate<
   const { formContext } = registry;
   const {
     colon,
-    labelCol = VERTICAL_LABEL_COL,
+    labelAlign,
+    labelCol = DEFAULT_LABEL_COL,
     wrapperCol = VERTICAL_WRAPPER_COL,
     wrapperStyle,
     descriptionLocation = 'below',
@@ -110,6 +111,7 @@ export default function FieldTemplate<
         help={explainNode}
         htmlFor={templateLabelFor<T, S, F>(props)}
         label={labelNode}
+        labelAlign={labelAlign}
         labelCol={labelCol}
         required={templateMarksRequired<T, S, F>(props)}
         style={wrapperStyle}
