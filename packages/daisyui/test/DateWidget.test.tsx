@@ -147,24 +147,36 @@ describe('DateWidget', () => {
         expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
       });
 
-      // A backend writing a v6 value back keeps the instant but not always the spelling of its zero milliseconds, and
-      // the value still stands for the day the user picked
+      // A backend writing a v6 value back keeps the instant but not always its spelling, and the value still stands
+      // for the day the user picked
       test.each([
-        // Java's `Instant.toString()` and Go's RFC 3339 layout
-        ['drops', 'Z'],
-        // A microsecond store, such as Elixir's `:utc_datetime_usec`
-        ['writes six digits for', '.000000Z'],
-        // .NET's round-trip `"o"` format
-        ['writes seven digits for', '.0000000Z'],
+        ["Java's `Instant.toString()` and Go's RFC 3339 layout", 'T', ':00Z'],
+        ["Java's `OffsetDateTime.toString()`", 'T', 'Z'],
+        ["Elixir's `:utc_datetime_usec`", 'T', ':00.000000Z'],
+        [`.NET's round-trip "o" format`, 'T', ':00.0000000Z'],
+        ["Python's `isoformat()`", 'T', ':00+00:00'],
+        ['a `+0000` zone', 'T', ':00+0000'],
+        // V8's `Date` rejects this spelling, so the instant has to be read from the `Z` form of it
+        ['an hour-only `+00` zone', 'T', ':00+00'],
+        ["Postgres's `timestamptz` text", ' ', ':00+00'],
       ])(
-        'names the day a UTC instant that is a local midnight stands for once a backend %s its milliseconds',
-        (_, fraction) => {
-          const rewritten = new Date(2020, 4, 3).toISOString().replace('.000Z', fraction);
+        'names the day a UTC instant that is a local midnight stands for once written back by %s',
+        (_, separator, ending) => {
+          const rewritten = new Date(2020, 4, 3).toISOString().replace('T', separator).replace(':00.000Z', ending);
           const { container } = render(<DateWidget {...makeWidgetMockProps({ value: rewritten, schema })} />);
 
           expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 2020');
         },
       );
+
+      // Before standard time a zone's offset was its local mean time, to the second, so v6's text has seconds
+      test('names the day a local midnight from before standard time stands for', () => {
+        const localMidnight = new Date(1850, 4, 3).toISOString();
+        const { container } = render(<DateWidget {...makeWidgetMockProps({ value: localMidnight, schema })} />);
+
+        expect(localMidnight).not.toMatch(/:00\.000Z$/);
+        expect(container.querySelector('button[aria-haspopup]')).toHaveTextContent('May 3, 1850');
+      });
 
       // Read as an instant these would each name the previous day somewhere: a UTC midnight everywhere behind UTC,
       // and a noon one far enough east. The day each of them names is the one its own text spells
@@ -228,7 +240,7 @@ describe('DateWidget', () => {
     });
 
     // The one zone where a midday UTC value is a local midnight, and so is what v6 stored for the day after. Reading a
-    // v6 value a backend wrote back without its milliseconds as the day the user picked is what this case pays for, so
+    // v6 value a backend wrote back in another spelling of UTC as the day the user picked is what this case pays for, so
     // these pin that a backend's own midday value, spelled either way, reads as the day after its text here
     describe('in a timezone exactly twelve hours ahead of UTC', () => {
       pinTimeZone('Pacific/Auckland');

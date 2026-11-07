@@ -89,6 +89,12 @@ function readInstant(value: unknown) {
 /** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
 const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
 
+/** A date-time in UTC, however a backend spells the seconds, zero fraction, separator and zone. The day and time are
+ * captured so the instant is read from the ISO spelling every engine's `Date` must accept, since the others are each
+ * engine's to reject: V8 rejects `+00` after a `T`
+ */
+const UTC_DATE_TIME = /^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2}(?::\d{2}(?:\.0+)?)?)(?:Z|[+-]00(?::?00)?)$/;
+
 /** The calendar day a date-time's own text names, read as a day in its own right rather than as the instant the text
  * names, whose local day differs from the text's for a reader far enough from the zone it was written in.
  *
@@ -108,10 +114,9 @@ function dayNamedBy(text?: string) {
  * The exception is what v6's `DateWidget` stored in every field, a `date` one included: `toISOString()` of the midnight
  * beginning the day the user picked, in the zone they picked it in, whose text names the day before to everyone ahead
  * of UTC. The field's format cannot tell that apart from a value written elsewhere, so the value has to: it is read as
- * its instant only where its text is what `toISOString()` writes for it, give or take the zero fractional digits a
- * backend writes it back with — none from Java or Go, six or seven from a microsecond store or .NET — and that instant
- * is a local midnight. A value spelled any other way, with an offset of its own or a lowercase `t`, came from
- * somewhere else.
+ * its instant only where its text spells that instant in UTC, however a backend writes it back — with or without the
+ * seconds and zero fraction, a space for the `T`, and `Z`, `+00:00`, `+0000` or `+00` for the zone — and that instant
+ * is a local midnight. A value with an offset of its own, or a lowercase `t`, came from somewhere else.
  *
  * Exactly twelve hours ahead of UTC, `toISOString()` of a local midnight is a midday UTC instant of the day before, so a
  * backend's midday-UTC value spelled the same way is read there as the day after its text.
@@ -122,17 +127,15 @@ function dayNamedBy(text?: string) {
  *          unreadable text
  */
 function readDay(raw: unknown, text: string | undefined) {
-  const instant = readInstant(text ?? raw);
+  const utc = text?.match(UTC_DATE_TIME);
+  const instant = readInstant(utc ? `${utc[1]}T${utc[2]}Z` : (text ?? raw));
   const dayInItsOwnText = dayNamedBy(text);
   if (!instant) {
     // Every dialect beyond ISO 8601 is optional for an engine to accept, so a text naming a day outright is read as
     // that day rather than thrown away along with the instant no engine agreed on
     return dayInItsOwnText;
   }
-  const iso = instant.toISOString();
-  const writtenByV6 =
-    (text === undefined || text.replace(/\.0+Z$/, 'Z') === iso.replace('.000Z', 'Z')) &&
-    instant.getTime() === startOfDay(instant).getTime();
+  const writtenByV6 = (text === undefined || utc !== null) && instant.getTime() === startOfDay(instant).getTime();
   if (writtenByV6) {
     return instant;
   }
@@ -141,6 +144,7 @@ function readDay(raw: unknown, text: string | undefined) {
   }
   // Left with a value whose text names no day at all — a `YYYY-MM`, or an epoch number that is not text to begin with.
   // A UTC midnight names the day `Date` resolved it to; anything else names only the day its instant lands on here
+  const iso = instant.toISOString();
   return (iso.endsWith('T00:00:00.000Z') ? dayNamedBy(iso) : undefined) ?? instant;
 }
 
