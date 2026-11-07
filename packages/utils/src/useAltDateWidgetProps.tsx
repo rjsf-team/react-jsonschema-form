@@ -69,14 +69,10 @@ export type DateElementProps<
    */
   presentation?: FieldPresentation;
   /** The `aria-describedby` and `aria-invalid` each date element takes, such as those of `presentation`'s control with
-   * the id of a message the theme renders around the field. Defaults to those of `presentation`'s control. Given
-   * without a `presentation`, they describe and mark the element as they do with one
+   * the id of a message the theme renders around the field. Each one left out defaults to that of `presentation`'s
+   * control. Given without a `presentation`, they describe and mark the element as they do with one
    */
   attributes?: Pick<ControlAttributes, 'aria-describedby' | 'aria-invalid'>;
-  /** Whether each date element is required. Defaults to false, since a native select that is required blocks the
-   * submit of a date the field doesn't require all of yet
-   */
-  elementRequired?: boolean;
   /** Further options for the `SelectWidget`, such as the props of a theme's own select, beside the `enumOptions` of
    * the date element, which they can't replace
    */
@@ -89,7 +85,7 @@ export type DateElementProps<
  * as its placeholder and an `aria-label` built from the field's `label`, such as `When, year`. Given its field's plan,
  * it hands it a plan of its own, through which `widgetAriaProps()` describes it by the field's parts that render and
  * marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank its
- * own name, or by the `attributes` its caller gives in their place. Without either, it describes it by
+ * own name, or by the `attributes` its caller gives over them. Without either, it describes it by
  * `ariaDescribedByIds(rootId)`. An unset element, which the hook's `elements` give as `undefined` and a `DateObject`
  * holds as -1, is no option, so it is handed to the `SelectWidget` as an `undefined` value, which a native select
  * reports to `onFocus` and `onBlur` as `undefined` and every other built-in `SelectWidget` reports as it is handed.
@@ -118,7 +114,6 @@ export function DateElement<
     elementLabel: translatedElementLabel,
     presentation,
     attributes,
-    elementRequired,
     elementOptions,
   } = props;
   const id = dateElementId(rootId, type);
@@ -130,14 +125,8 @@ export function DateElement<
   const elementPresentation = useMemo(
     () =>
       (presentation ?? attributes) &&
-      getNestedControlPresentation({
-        id,
-        label: ariaLabel,
-        required: elementRequired,
-        field: presentation,
-        attributes,
-      }),
-    [id, ariaLabel, elementRequired, presentation, attributes],
+      getNestedControlPresentation({ id, label: ariaLabel, field: presentation, attributes }),
+    [id, ariaLabel, presentation, attributes],
   );
   const [start, end] = range;
   const selectOptions = useMemo(
@@ -147,8 +136,8 @@ export function DateElement<
   // As the element's own options, so a theme that drops a form's extension keys from its select's options keeps them.
   // Cast since `ui:options` also bars the `ui:`-only keys, such as `field`, which a select's options never hold
   const uiSchema = useMemo(
-    () => elementOptions && ({ 'ui:options': elementOptions } as UiSchema<T, S, F>),
-    [elementOptions],
+    () => elementOptions && ({ 'ui:options': selectOptions } as UiSchema<T, S, F>),
+    [elementOptions, selectOptions],
   );
   return (
     <SelectWidget
@@ -159,7 +148,6 @@ export function DateElement<
       options={selectOptions}
       placeholder={elementLabel}
       value={elementValue(value)}
-      required={elementRequired}
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}

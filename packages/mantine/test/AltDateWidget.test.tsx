@@ -143,11 +143,11 @@ describe('AltDateWidget', () => {
     expect(onBlur).toHaveBeenCalledWith('root__year', undefined);
   });
 
-  test.each([true, false])('marks each part required when the field required is %s', (required) => {
+  test.each([true, false])('leaves each part unrequired when the field required is %s', (required) => {
     const { getAllByRole } = renderWidget({ required });
 
     for (const part of getAllByRole('combobox')) {
-      expect((part as HTMLInputElement).required).toBe(required);
+      expect((part as HTMLInputElement).required).toBe(false);
     }
   });
 

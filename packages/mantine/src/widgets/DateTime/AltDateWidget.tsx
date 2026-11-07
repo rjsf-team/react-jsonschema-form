@@ -74,8 +74,7 @@ export default function AltDateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, disabled, readonly, autofocus, required, label, options, registry, onBlur, onFocus, presentation } =
-    props;
+  const { id, disabled, readonly, autofocus, label, options, registry, onBlur, onFocus, presentation } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow, buttonsDisabled } = useAltDateWidgetProps(props);
   const { wrapperProps, size, invalid, successId, slotlessErrors } = useFieldWrapperProps(props, 'Select', true);
@@ -112,7 +111,6 @@ export default function AltDateWidget<
             disabled={disabled}
             readonly={readonly}
             autofocus={autofocus}
-            elementRequired={required}
             // The text `ui:label: false` hides names the parts, as it names the field's other controls; where the
             // template draws the label, the parts still name themselves after it
             label={getOwnLabel<T, S, F>(props) ?? label}

@@ -577,7 +577,7 @@ describe('useAltDateWidgetProps()', () => {
       expect(select).toHaveAttribute('aria-invalid', 'true');
     });
 
-    test("describes each element by the attributes its caller gives in place of its plan's", () => {
+    test("describes each element by the attributes its caller gives over its plan's, keeping the rest", () => {
       const presentation = resolveFieldPresentation({
         id: TIME_PROPS.id,
         declaration: {
@@ -607,7 +607,7 @@ describe('useAltDateWidgetProps()', () => {
       );
       const select = screen.getByRole('combobox', { name: 'When, year' });
       expect(select).toHaveAttribute('aria-describedby', `${TIME_PROPS.id}__error ${TIME_PROPS.id}__success`);
-      expect(select).not.toHaveAttribute('aria-invalid');
+      expect(select).toHaveAttribute('aria-invalid', 'true');
     });
 
     test('names an element by the translated name its caller already has, without translating it again', () => {
@@ -639,22 +639,6 @@ describe('useAltDateWidgetProps()', () => {
       expect(select).toHaveDisplayValue('[minute]');
     });
   });
-  test('DateElement leaves its SelectWidget unrequired unless its caller requires it', () => {
-    const elementProps = {
-      rootId: 'root',
-      type: 'year',
-      range: [2000, 2030] as [number, number],
-      value: -1,
-      select: vi.fn(),
-      registry: REGISTRY,
-      onBlur: vi.fn(),
-      onFocus: vi.fn(),
-    };
-    const { rerender } = render(<DateElement {...elementProps} />);
-    expect(screen.getByRole('combobox', { name: 'year' })).not.toBeRequired();
-    rerender(<DateElement {...elementProps} elementRequired />);
-    expect(screen.getByRole('combobox', { name: 'year' })).toBeRequired();
-  });
   test('DateElement hands its SelectWidget the options its caller gives, beside its own enumOptions', () => {
     const SpySelectWidget = vi.fn((props: WidgetProps) => SelectWidget(props));
     const registry = { ...REGISTRY, widgets: { SelectWidget: SpySelectWidget } } as unknown as Registry;
@@ -671,10 +655,11 @@ describe('useAltDateWidgetProps()', () => {
         elementOptions={{ searchable: false, enumOptions: [{ value: 0, label: 'replaced' }] }}
       />,
     );
-    const { options } = SpySelectWidget.mock.calls[0][0];
+    const { options, uiSchema } = SpySelectWidget.mock.calls[0][0];
     expect(options.searchable).toBe(false);
     expect(options.enumOptions).toHaveLength(12);
     expect(options.enumOptions?.[0]).toEqual({ value: 1, label: '01' });
+    expect(uiSchema?.['ui:options']).toEqual(options);
   });
   test('DateElement hands its SelectWidget an unset element as undefined, and a set one as it is', () => {
     const SpySelectWidget = vi.fn((props: WidgetProps) => SelectWidget(props));

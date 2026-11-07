@@ -34,8 +34,8 @@ export interface NestedControlInputs {
   required?: boolean;
   /** The plan of the field the control sits in, if it has one */
   field?: FieldPresentation;
-  /** The `aria-describedby` and `aria-invalid` the control takes from the errors around it. Defaults to those of
-   * `field`'s control
+  /** The `aria-describedby` and `aria-invalid` the control takes from the errors around it. Each one left out
+   * defaults to that of `field`'s control
    */
   attributes?: Pick<ControlAttributes, 'aria-describedby' | 'aria-invalid'>;
 }
@@ -53,15 +53,8 @@ export interface NestedControlInputs {
  * @returns - The control's plan
  */
 export default function getNestedControlPresentation(inputs: NestedControlInputs): FieldPresentation {
-  const {
-    id,
-    label,
-    showLabel = false,
-    labelledByTemplate = false,
-    required,
-    field,
-    attributes = field?.control?.attributes,
-  } = inputs;
+  const { id, label, showLabel = false, labelledByTemplate = false, required, field, attributes } = inputs;
+  const fieldAttributes = field?.control?.attributes;
   const plan = resolveFieldPresentation({
     id,
     declaration: labelledByTemplate ? TEMPLATE_LABELLED_DECLARATION : NESTED_DECLARATION,
@@ -69,10 +62,11 @@ export default function getNestedControlPresentation(inputs: NestedControlInputs
     showLabel: showLabel || labelledByTemplate,
     required,
   });
-  if (!attributes) {
+  if (!attributes && !fieldAttributes) {
     return plan;
   }
-  const { 'aria-describedby': describedBy, 'aria-invalid': invalid } = attributes;
+  const describedBy = attributes?.['aria-describedby'] ?? fieldAttributes?.['aria-describedby'];
+  const invalid = attributes?.['aria-invalid'] ?? fieldAttributes?.['aria-invalid'];
   const controlAttributes: ControlAttributes = {
     ...plan.control?.attributes,
     ...(describedBy && { 'aria-describedby': describedBy }),
