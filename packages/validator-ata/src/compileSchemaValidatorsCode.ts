@@ -423,7 +423,8 @@ const UNLINKED = new WeakMap<object, WeakSet<object>>();
  * names, under an `$id` `targetId()` returns. The module compiles no copy of the root a pointer into it could reach, so
  * without this such a `$ref` names nothing there and holds for any data. Each document is added to `targets` under the
  * subschema it is compiled from, so a subschema several `$ref`s name is compiled once. A `$ref` to the whole root is
- * renamed to the key the module compiles the root under instead. An extra holding no such `$ref` is returned as it is.
+ * renamed to the key the module compiles the root under instead. An extra in which nothing is renamed is returned as it
+ * is.
  */
 function linkedToForm(
   extra: object,
@@ -431,6 +432,7 @@ function linkedToForm(
   reading: RootReading,
   targets: Map<unknown, GenericObjectType>,
   targetId: () => string,
+  rootKey: unknown,
 ): object {
   const root = reading.root.schema as object;
   const unlinked = UNLINKED.get(root) ?? new WeakSet<object>();
@@ -446,11 +448,10 @@ function linkedToForm(
       return ref;
     }
     const [resource, fragment] = named;
-    const rootKey: unknown = schemaKey(root as RJSFSchema);
     // A key that is only a fragment, such as `#root`, would be read as a fragment of the extra itself, and an untyped
     // caller may hand over an `$id` that is no string
     if (resource === reading.root && fragment === '#' && typeof rootKey === 'string' && !rootKey.startsWith('#')) {
-      isLinked = true;
+      isLinked ||= rootKey !== ref;
       return rootKey;
     }
     const [subschema, around] = locate(resource, fragment, reading.laterDialect);
@@ -577,7 +578,8 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
     } while (taken.has(id));
     return id;
   };
-  const bundled = [...winners].map(([id, extra]) => linkedToForm(extra, id, reading, targets, targetId));
+  const rootKey = schemaKey(schema);
+  const bundled = [...winners].map(([id, extra]) => linkedToForm(extra, id, reading, targets, targetId, rootKey));
   for (const [id, extra] of winners) {
     if (/^https?:\/\/json-schema\.org\//.test(id)) {
       logOnce(

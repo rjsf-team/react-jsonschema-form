@@ -598,6 +598,17 @@ describe('compileSchemaValidatorsCode', () => {
       },
     );
 
+    test("passes an extra whose $ref to all of the root already names the root's key through as it is", ({
+      onTestFinished,
+    }) => {
+      const form = { $id: 'https://e.com/f', type: 'object', properties: { x: { $ref: 'urn:x' } } } as RJSFSchema;
+      const doc = { $id: 'urn:x', properties: { back: { $ref: 'https://e.com/f' } } };
+      const bundle = vi.spyOn(Validator, 'bundleStandalone');
+      onTestFinished(() => bundle.mockRestore());
+      compileSchemaValidatorsCode(form, { ataOptionsOverrides: { schemas: [doc] } });
+      expect(bundle.mock.calls[0][0]).toContain(doc);
+    });
+
     test("links an extra's $ref to all of a root whose $id is only a fragment, as at runtime", () => {
       const form = {
         $id: '#root',
