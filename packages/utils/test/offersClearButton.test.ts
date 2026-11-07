@@ -63,6 +63,10 @@ describe('offersClearButton()', () => {
     expect(offersClearButton(value, 'range')).toBe(false);
   });
 
+  it('a color input offers none', () => {
+    expect(offersClearButton('#ff0000', 'color')).toBe(false);
+  });
+
   it.each([['text'], ['constructor'], [undefined]])(
     'a %s input offers it for anything but an empty string or 0',
     (type) => {

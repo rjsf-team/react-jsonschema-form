@@ -103,5 +103,18 @@ export function clearButtonTests(Form: ComponentType<FormProps>, clearButtonName
       expect(screen.getByRole('slider')).toBeInTheDocument();
       expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
     });
+
+    test('offers no clear button for a color input', () => {
+      const { container } = render(
+        <Form
+          schema={{ type: 'string', title: 'Color' }}
+          uiSchema={{ 'ui:inputType': 'color', 'ui:allowClearTextInputs': true }}
+          validator={validator}
+          initialFormData='#ff0000'
+        />,
+      );
+      expect(container.querySelector('input[type="color"]')).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: clearButtonName })).toBeNull();
+    });
   });
 }
