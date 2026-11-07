@@ -249,10 +249,12 @@ interface RootReading {
   id: string;
   root: Resource;
   resources: ReadonlyMap<string, Resource>;
+  /** The `$id`s of the extra schemas compiled into the module beside the root, by `documentKey()` */
+  extras: ReadonlySet<string>;
 }
 
-/** Returns the `RootReading` of `rootSchema` */
-function readRoot(rootSchema: object): RootReading {
+/** Returns the `RootReading` of `rootSchema`, compiled beside the extra schemas under the `$id`s `extraIds` */
+function readRoot(rootSchema: object, extraIds: Iterable<string>): RootReading {
   const dialect: unknown = getByPath(rootSchema, [SCHEMA_KEY]);
   const laterDialect = typeof dialect === 'string' && LATER_DIALECTS.has(dialect.replace(/#$/, ''));
   return {
@@ -261,6 +263,7 @@ function readRoot(rootSchema: object): RootReading {
     draft07: typeof dialect === 'string' && DRAFT_07_IDS.has(dialect),
     laterDialect,
     ...resourcesOf(rootSchema, laterDialect),
+    extras: new Set([...extraIds].map(documentKey)),
   };
 }
 
@@ -273,8 +276,10 @@ function readRoot(rootSchema: object): RootReading {
  * carried in a single container of the document under a generated name the `$ref` is renamed to. A `$ref` is read
  * against the innermost resource around it, an option with an `$id` of its own included, as the schema graph reads the
  * root's resources: its document part is resolved against that resource's base URI and names whichever resource of the
- * root has that URI, however it is spelled. One into another document is left as it is, for ata to resolve against the
- * extra schemas compiled into the module beside it. One that names nothing there or in them leaves ata nothing to
+ * root has that URI, however it is spelled. One into another document is given that resolved URI, its fragment kept as
+ * written, for ata to resolve against the extra schemas compiled into the module beside it, since the document holding
+ * it is compiled under an `$id` of its own, unless only the `$ref` as written names one of them, which ata falls back
+ * to, as for an extra under a relative `$id`. One that names nothing there or in them leaves ata nothing to
  * compile and the module reporting it when the schema is first validated against. No subschema of the document keeps
  * an `$id` or a container, which only the renamed `$ref`s could need. Only the keywords holding subschemas are
  * rewritten, never the data a `const` or a `default` holds.
@@ -286,7 +291,7 @@ function readRoot(rootSchema: object): RootReading {
  */
 function standalone(
   schema: unknown,
-  { container, dialect, draft07, laterDialect, id, root, resources }: RootReading,
+  { container, dialect, draft07, laterDialect, id, root, resources, extras }: RootReading,
   start: Resource = root,
 ): GenericObjectType {
   const names = new Map<unknown, Map<string, string>>();
@@ -295,7 +300,10 @@ function standalone(
   const renamed = (ref: string, around: Resource): string => {
     const target = referenced(ref, around, { id, resources });
     if (target === undefined) {
-      return ref;
+      const [document] = ref.split('#', 1);
+      const resolved = resolveUri(around.base, document);
+      const asWritten = around.base === '' || (extras.has(documentKey(document)) && !extras.has(documentKey(resolved)));
+      return asWritten ? ref : `${resolved}${ref.slice(document.length)}`;
     }
     const [resource, fragment] = target;
     const [subschema, subschemaBase] = locate(resource, fragment, laterDialect);
@@ -406,10 +414,12 @@ function linkedToForm(
     isLinked = true;
     return target[ID_KEY] as string;
   };
-  // ata reads the `$id`s of an extra that declares a `$schema` by that dialect, not by the form's
+  // ata reads the `$id`s of an extra by the dialect it declares, else by the form's, else as 2020-12
   const dialect: unknown = getByPath(extra, [SCHEMA_KEY]);
   const laterDialect =
-    typeof dialect === 'string' ? LATER_DIALECTS.has(dialect.replace(/#$/, '')) : reading.laterDialect;
+    typeof dialect === 'string'
+      ? LATER_DIALECTS.has(dialect.replace(/#$/, ''))
+      : typeof reading.dialect !== 'string' || reading.laterDialect;
   const link = (value: unknown, base: string): unknown => {
     if (!isObject(value)) {
       return value;
@@ -475,11 +485,6 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   const { customFormats, additionalMetaSchemas = [], extenderFn, ataOptionsOverrides = {} } = options;
   const schemaMaps = getValidationSchemas(schema);
   const keys = Object.keys(schemaMaps);
-  const reading = readRoot(schema);
-  const schemas = Object.entries(schemaMaps).map(([key, listed]) => {
-    const { [ID_KEY]: _id, ...withoutId } = listed;
-    return { ...standalone(withoutId, reading), [ID_KEY]: key };
-  });
 
   // What the module cannot carry is left out. `engine` only picks how the runtime validator
   // answers, never what it answers, and a standalone module is generated code by definition.
@@ -500,7 +505,7 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   // schemas, or the one the runtime validator registers the root under, is left out: at runtime the
   // form's schema wins. A record entry under the empty key is left out, as at runtime. A `$ref` an
   // extra holds into the form's document is read against the root, see `linkedToForm()`.
-  const formIds = new Set([...keys, reading.id]);
+  const formIds = new Set([...keys, rootSchemaIdOf(schema)]);
   const extras = [...schemaList(extraSchemas, isDraft04(schema, false)), ...additionalMetaSchemas].map(
     (extra) => [extra !== null && typeof extra === 'object' ? ownId(extra) : undefined, extra] as const,
   );
@@ -510,6 +515,11 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
       winners.set(id, extra);
     }
   }
+  const reading = readRoot(schema, winners.keys());
+  const schemas = Object.entries(schemaMaps).map(([key, listed]) => {
+    const { [ID_KEY]: _id, ...withoutId } = listed;
+    return { ...standalone(withoutId, reading), [ID_KEY]: key };
+  });
   const targets = new Map<unknown, GenericObjectType>();
   let targetCount = 0;
   // An extra's nested `$id`s are registered in the module too; read only once a target is needed
