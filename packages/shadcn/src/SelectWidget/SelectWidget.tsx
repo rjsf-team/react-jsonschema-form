@@ -12,7 +12,6 @@ import {
   enumOptionsDomValues,
   enumOptionsValueForIndex,
   flattenGroupedOptions,
-  getControlFallbackName,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
@@ -122,9 +121,6 @@ export default function SelectWidget<
   const cnClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className);
 
   const placeholderText = placeholder || registry.translateString(TranslatableString.SelectPlaceholder);
-  // With no label naming it, a combobox, which takes no name from the item it displays, is named by the field's label,
-  // or, for a field with no title, such as an array item, by its placeholder, else the select prompt
-  const fallbackName = getControlFallbackName<T, S, F>(props);
 
   return (
     <div className='p-0.5'>
@@ -151,9 +147,9 @@ export default function SelectWidget<
         />
       ) : (
         <FancyMultiSelect
-          // cmdk names its input by this text alone, so a caller's `aria-label` names it over the field's label, as the
-          // fallback name does where the field has no title
-          label={ariaLabel || fallbackName}
+          id={id}
+          ariaLabel={ariaLabel}
+          ariaLabelledby={ariaLabelledby}
           placeholder={placeholderText}
           autoFocus={autofocus}
           disabled={disabled || readonly}

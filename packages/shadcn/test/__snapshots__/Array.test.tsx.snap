@@ -444,9 +444,7 @@ exports[`array fields > checkboxes 1`] = `
             for="radix-_r_5_"
             id="radix-_r_4_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-          >
-            Select ...
-          </label>
+          />
           <div
             class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
           >
@@ -455,14 +453,12 @@ exports[`array fields > checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-_r_3_"
-                aria-expanded="true"
-                aria-labelledby="radix-_r_4_"
+                aria-expanded="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 autocorrect="off"
                 class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-                cmdk-input=""
-                id="radix-_r_5_"
+                id="root"
                 placeholder="Select ..."
                 role="combobox"
                 spellcheck="false"
@@ -1497,9 +1493,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             for="radix-_r_1c_"
             id="radix-_r_1b_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-          >
-            Select ...
-          </label>
+          />
           <div
             class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
           >
@@ -1508,14 +1502,12 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-_r_1a_"
-                aria-expanded="true"
-                aria-labelledby="radix-_r_1b_"
+                aria-expanded="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 autocorrect="off"
                 class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-                cmdk-input=""
-                id="radix-_r_1c_"
+                id="root"
                 placeholder="Select ..."
                 role="combobox"
                 spellcheck="false"
@@ -4117,9 +4109,7 @@ exports[`with title and description > checkboxes 1`] = `
             for="radix-_r_c_"
             id="radix-_r_b_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-          >
-            Test field
-          </label>
+          />
           <div
             class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
           >
@@ -4128,15 +4118,12 @@ exports[`with title and description > checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-_r_a_"
                 aria-describedby="root__description"
-                aria-expanded="true"
-                aria-labelledby="radix-_r_b_"
+                aria-expanded="false"
                 autocomplete="off"
                 autocorrect="off"
                 class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-                cmdk-input=""
-                id="radix-_r_c_"
+                id="root"
                 placeholder="Select ..."
                 role="combobox"
                 spellcheck="false"
@@ -4870,9 +4857,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             for="radix-_r_q_"
             id="radix-_r_p_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-          >
-            My Field
-          </label>
+          />
           <div
             class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
           >
@@ -4881,15 +4866,12 @@ exports[`with title and description from both > checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-_r_o_"
                 aria-describedby="root__description"
-                aria-expanded="true"
-                aria-labelledby="radix-_r_p_"
+                aria-expanded="false"
                 autocomplete="off"
                 autocorrect="off"
                 class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-                cmdk-input=""
-                id="radix-_r_q_"
+                id="root"
                 placeholder="Select ..."
                 role="combobox"
                 spellcheck="false"
@@ -5623,9 +5605,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             for="radix-_r_j_"
             id="radix-_r_i_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-          >
-            My Field
-          </label>
+          />
           <div
             class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
           >
@@ -5634,15 +5614,12 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-_r_h_"
                 aria-describedby="root__description"
-                aria-expanded="true"
-                aria-labelledby="radix-_r_i_"
+                aria-expanded="false"
                 autocomplete="off"
                 autocorrect="off"
                 class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-                cmdk-input=""
-                id="radix-_r_j_"
+                id="root"
                 placeholder="Select ..."
                 role="combobox"
                 spellcheck="false"
@@ -6266,9 +6243,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             for="radix-_r_11_"
             id="radix-_r_10_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-          >
-            Test field
-          </label>
+          />
           <div
             class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
           >
@@ -6277,14 +6252,12 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-_r_v_"
-                aria-expanded="true"
-                aria-labelledby="radix-_r_10_"
+                aria-expanded="false"
+                aria-label="Test field"
                 autocomplete="off"
                 autocorrect="off"
                 class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-                cmdk-input=""
-                id="radix-_r_11_"
+                id="root"
                 placeholder="Select ..."
                 role="combobox"
                 spellcheck="false"

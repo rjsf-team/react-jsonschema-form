@@ -9845,9 +9845,7 @@ exports[`single fields > select field multiple choice 1`] = `
             for="radix-_r_7_"
             id="radix-_r_6_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-          >
-            Select ...
-          </label>
+          />
           <div
             class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
           >
@@ -9856,14 +9854,12 @@ exports[`single fields > select field multiple choice 1`] = `
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-_r_5_"
-                aria-expanded="true"
-                aria-labelledby="radix-_r_6_"
+                aria-expanded="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 autocorrect="off"
                 class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-                cmdk-input=""
-                id="radix-_r_7_"
+                id="root"
                 placeholder="Select ..."
                 role="combobox"
                 spellcheck="false"
@@ -9911,9 +9907,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             for="radix-_r_p_"
             id="radix-_r_o_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-          >
-            Select ...
-          </label>
+          />
           <div
             class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
           >
@@ -9922,14 +9916,12 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-_r_n_"
-                aria-expanded="true"
-                aria-labelledby="radix-_r_o_"
+                aria-expanded="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 autocorrect="off"
                 class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-                cmdk-input=""
-                id="radix-_r_p_"
+                id="root"
                 placeholder="Select ..."
                 role="combobox"
                 spellcheck="false"
@@ -10124,9 +10116,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
             for="radix-_r_1c_"
             id="radix-_r_1b_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-          >
-            Select ...
-          </label>
+          />
           <div
             class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
           >
@@ -10197,14 +10187,12 @@ exports[`single fields > select field multiple choice formData 1`] = `
               </span>
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-_r_1a_"
-                aria-expanded="true"
-                aria-labelledby="radix-_r_1b_"
+                aria-expanded="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 autocorrect="off"
                 class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-                cmdk-input=""
-                id="radix-_r_1c_"
+                id="root"
                 placeholder="Select ..."
                 role="combobox"
                 spellcheck="false"
@@ -10252,9 +10240,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             for="radix-_r_b_"
             id="radix-_r_a_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-          >
-            Select ...
-          </label>
+          />
           <div
             class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
           >
@@ -10263,14 +10249,12 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-_r_9_"
-                aria-expanded="true"
-                aria-labelledby="radix-_r_a_"
+                aria-expanded="false"
+                aria-label="Select ..."
                 autocomplete="off"
                 autocorrect="off"
                 class="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
-                cmdk-input=""
-                id="radix-_r_b_"
+                id="root"
                 placeholder="Select ..."
                 role="combobox"
                 spellcheck="false"

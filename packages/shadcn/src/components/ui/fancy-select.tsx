@@ -96,7 +96,7 @@ function cmdkValue(item: FancySelectItem<string>) {
  * @param value - The value cmdk holds the option under
  * @returns - The option, if it is rendered
  */
-function cmdkOption(container: HTMLElement | null, value: string) {
+export function cmdkOption(container: HTMLElement | null, value: string) {
   return [...(container?.querySelectorAll<HTMLElement>('[cmdk-item]') ?? [])].find(
     (option) => option.dataset.value === value,
   );
@@ -149,6 +149,10 @@ export function FancySelect({
   // Read on opening and as the options change too, not only as the highlight moves: the options mount afresh, under new
   // ids, each time the listbox opens or its options change, while cmdk keeps the highlight it had and reports no change
   const shownOptions = sections ?? items;
+  // Options that empty while it is open leave no listbox, so it closes rather than point at the one that unmounted
+  if (open && !items?.length) {
+    setOpen(false);
+  }
   useEffect(() => {
     const container = containerRef.current;
     if (!open || !container || !shownOptions?.length) {
@@ -163,7 +167,11 @@ export function FancySelect({
   // highlighted, which cmdk keeps
   const itemsInOrder = sections ? sections.flatMap((section) => section.items) : items;
   const openList = () => {
-    const opening = selectedItem ?? itemsInOrder?.find((item) => !item.disabled);
+    // With no option to show, it would open on an empty popup a screen reader announces as expanded
+    if (!itemsInOrder?.length) {
+      return;
+    }
+    const opening = selectedItem ?? itemsInOrder.find((item) => !item.disabled);
     if (opening) {
       setHighlighted(cmdkValue(opening));
     }

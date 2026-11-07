@@ -1422,3 +1422,173 @@ describe("the single select's combobox while its listbox is open", () => {
     }
   });
 });
+
+describe("the multiple select's combobox input", () => {
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterEach(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
+  const color: RJSFSchema = {
+    type: 'array',
+    title: 'Color',
+    items: { type: 'string', enum: ['red', 'blue'] },
+    uniqueItems: true,
+    minItems: 1,
+  };
+  const renderColorForm = (uiSchema = {}, required = ['color']) =>
+    render(
+      <Form
+        schema={{ type: 'object', required, properties: { color } }}
+        uiSchema={uiSchema}
+        validator={validator}
+        focusOnFirstError
+      />,
+    );
+
+  test('takes the field id, so clicking the field label focuses it', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    expect(input).toHaveAttribute('id', 'root_color');
+    await user.click(screen.getByText('Color'));
+    expect(input).toHaveFocus();
+  });
+
+  test('is focused by focusOnFirstError on submit', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(screen.getByRole('combobox')).toHaveFocus();
+  });
+
+  test('says it is collapsed and controls nothing while its list is closed', () => {
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(input).not.toHaveAttribute('aria-controls');
+    expect(input).not.toHaveAttribute('aria-activedescendant');
+  });
+
+  test('points at the listbox and at the option it highlights while its list is open', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    await user.keyboard('{ArrowDown}');
+
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(input).toHaveAttribute('aria-controls', screen.getByRole('listbox').id);
+    expect(input).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'blue' }).id);
+  });
+
+  test('points at the option it highlights as its list opens and as a search changes the options', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    expect(input).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'red' }).id);
+
+    await user.type(input, 'bl');
+    expect(input).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'blue' }).id);
+  });
+
+  test('is named by the field label pointing at it', () => {
+    renderColorForm({}, []);
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Color');
+  });
+
+  test('opens on Up Arrow as on Down Arrow, as a closed combobox does', async () => {
+    const user = userEvent.setup();
+    renderColorForm({ color: { 'ui:autofocus': true } });
+
+    expect(screen.queryByRole('option')).not.toBeInTheDocument();
+    await user.keyboard('{ArrowUp}');
+    expect(screen.getAllByRole('option')).toHaveLength(2);
+  });
+
+  test('turns off the browser autofill, autocorrect and spellcheck that would cover its list', () => {
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    expect(input).toHaveAttribute('autocomplete', 'off');
+    expect(input).toHaveAttribute('autocorrect', 'off');
+    expect(input).toHaveAttribute('spellcheck', 'false');
+    expect(input).toHaveAttribute('aria-autocomplete', 'list');
+  });
+
+  // The order cmdk showed a search's matches in, measured in Chrome as well as here
+  test("lists a search's matches in schema order and highlights the first", async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{
+          type: 'array',
+          uniqueItems: true,
+          items: { type: 'string', enum: ['Pineapple', 'Grape', 'Apple', 'Applet'] },
+        }}
+        validator={validator}
+      />,
+    );
+
+    await user.type(screen.getByRole('combobox'), 'appl');
+
+    const options = screen.getAllByRole('option');
+    expect(options.map((option) => option.textContent)).toEqual(['Pineapple', 'Apple', 'Applet']);
+    expect(options.map((option) => option.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
+  });
+});
+
+describe("the single select's combobox with no option to show", () => {
+  const props = (enumOptions: { label: string; value: string }[]) =>
+    makeWidgetMockProps({
+      id: 'root_color',
+      label: 'Color',
+      disabled: false,
+      readonly: false,
+      autofocus: false,
+      value: undefined,
+      options: { enumOptions },
+    });
+
+  test('stays collapsed on Down Arrow', async () => {
+    const user = userEvent.setup();
+    render(<SelectWidget {...props([])} />);
+    const combobox = screen.getByRole('combobox');
+
+    await user.click(combobox);
+    await user.keyboard('{ArrowDown}');
+
+    expect(combobox).toHaveAttribute('aria-expanded', 'false');
+    expect(combobox).not.toHaveAttribute('aria-activedescendant');
+  });
+
+  test('collapses and points at no option once its options empty while it is open', async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(<SelectWidget {...props([{ label: 'Red', value: 'red' }])} />);
+    const combobox = screen.getByRole('combobox');
+
+    Element.prototype.scrollIntoView = vi.fn();
+    try {
+      await user.click(combobox);
+      expect(combobox).toHaveAttribute('aria-expanded', 'true');
+      rerender(<SelectWidget {...props([])} />);
+
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(combobox).not.toHaveAttribute('aria-activedescendant');
+      const controlled = combobox.getAttribute('aria-controls');
+      expect(controlled && document.getElementById(controlled)).toBeTruthy();
+    } finally {
+      delete (Element.prototype as Partial<Element>).scrollIntoView;
+    }
+  });
+});
