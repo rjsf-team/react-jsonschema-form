@@ -13,11 +13,14 @@ import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
 import toNumericValue from './toNumericValue.ts';
 import type {
+  ControlAttributes,
   DateObject,
   FieldPresentation,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  UIOptionsType,
+  UiSchema,
   WidgetProps,
 } from './types.ts';
 
@@ -65,6 +68,16 @@ export type DateElementProps<
    * `aria-invalid` while they show
    */
   presentation?: FieldPresentation;
+  /** The `aria-describedby` and `aria-invalid` each date element takes, such as those of `presentation`'s control with
+   * the id of a message the theme renders around the field. Each one left out defaults to what the element would take
+   * without them: that of `presentation`'s control, or without a `presentation`, `ariaDescribedByIds(rootId)` and no
+   * `aria-invalid`
+   */
+  attributes?: Pick<ControlAttributes, 'aria-describedby' | 'aria-invalid'>;
+  /** Further options for the `SelectWidget`, such as the props of a theme's own select, beside the `enumOptions` of
+   * the date element, which they can't replace
+   */
+  elementOptions?: UIOptionsType<T, S, F>;
 };
 
 /** The `DateElement` component renders one of the 6 date element selectors for an `AltDateWidget`, using the `select`
@@ -73,10 +86,11 @@ export type DateElementProps<
  * as its placeholder and an `aria-label` built from the field's `label`, such as `When, year`. Given its field's plan,
  * it hands it a plan of its own, through which `widgetAriaProps()` describes it by the field's parts that render and
  * marks it `aria-invalid` while the field's errors show, without the field's `aria-labelledby`, which would outrank its
- * own name. Without one, it describes it by `ariaDescribedByIds(rootId)`. An unset element, which the hook's
- * `elements` give as `undefined` and a `DateObject` holds as -1, is no option, so it is handed to the `SelectWidget` as
- * an `undefined` value, which a native select reports to `onFocus` and `onBlur` as `undefined` and every other built-in
- * `SelectWidget` reports as it is handed.
+ * own name, or by the `attributes` its caller gives over them. Without a plan, it describes it by
+ * `ariaDescribedByIds(rootId)` unless `attributes` give an `aria-describedby`. An unset element, which the hook's
+ * `elements` give as `undefined` and a `DateObject` holds as -1, is no option, so it is handed to the `SelectWidget`
+ * as an `undefined` value, which a native select reports to `onFocus` and `onBlur` as `undefined` and every other
+ * built-in `SelectWidget` reports as it is handed.
  *
  * @param props - The `DateElementProps` for the date element
  */
@@ -101,6 +115,8 @@ export function DateElement<
     label,
     elementLabel: translatedElementLabel,
     presentation,
+    attributes,
+    elementOptions,
   } = props;
   const id = dateElementId(rootId, type);
   const { widgets, translateString } = registry;
@@ -109,8 +125,28 @@ export function DateElement<
   const elementLabel = translatedElementLabel ?? dateElementLabel(type, translateString);
   const ariaLabel = dateElementAriaLabel(elementLabel, translateString, label);
   const elementPresentation = useMemo(
-    () => presentation && getNestedControlPresentation({ id, label: ariaLabel, field: presentation }),
-    [id, ariaLabel, presentation],
+    () =>
+      (presentation ?? attributes) &&
+      getNestedControlPresentation({
+        id,
+        label: ariaLabel,
+        field: presentation,
+        attributes: presentation
+          ? attributes
+          : { ...attributes, 'aria-describedby': attributes?.['aria-describedby'] ?? ariaDescribedByIds(rootId) },
+      }),
+    [id, ariaLabel, presentation, attributes, rootId],
+  );
+  const [start, end] = range;
+  const selectOptions = useMemo(
+    () => ({ ...elementOptions, enumOptions: dateRangeOptions<S>(start, end) }),
+    [elementOptions, start, end],
+  );
+  // As the element's own options, so a theme that drops a form's extension keys from its select's options keeps them.
+  // Cast since `ui:options` also bars the `ui:`-only keys, such as `field`, which a select's options never hold
+  const uiSchema = useMemo(
+    () => elementOptions && ({ 'ui:options': selectOptions } as UiSchema<T, S, F>),
+    [elementOptions, selectOptions],
   );
   return (
     <SelectWidget
@@ -118,7 +154,7 @@ export function DateElement<
       id={id}
       name={id}
       className={className}
-      options={{ enumOptions: dateRangeOptions<S>(range[0], range[1]) }}
+      options={selectOptions}
       placeholder={elementLabel}
       value={elementValue(value)}
       disabled={disabled}
@@ -128,9 +164,10 @@ export function DateElement<
       onBlur={onBlur}
       onFocus={onFocus}
       registry={registry}
+      uiSchema={uiSchema}
       label=''
       aria-label={ariaLabel}
-      aria-describedby={presentation ? undefined : ariaDescribedByIds(rootId)}
+      aria-describedby={elementPresentation ? undefined : ariaDescribedByIds(rootId)}
       presentation={elementPresentation}
     />
   );

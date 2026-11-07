@@ -2,6 +2,7 @@ import { altDateTests } from '@rjsf/snapshot-tests';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
+import type { UiSchema as MantineUiSchema } from '../src/index.ts';
 import WrappedForm from './WrappedForm.tsx';
 
 altDateTests(WrappedForm);
@@ -29,4 +30,20 @@ describe("mantine's AltDateWidget", () => {
       });
     },
   );
+
+  it('keeps each part read-only where a form declares searchable as an extension key', () => {
+    const uiSchema: MantineUiSchema<{ searchable?: boolean }> = {
+      'ui:globalOptions': { searchable: true },
+      when: { 'ui:widget': 'alt-date' },
+    };
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
+        uiSchema={uiSchema}
+        globalUiOptionsKeys={['searchable']}
+        validator={validator}
+      />,
+    );
+    expect(screen.getByRole('combobox', { name: 'When, year' })).toHaveAttribute('readonly');
+  });
 });
