@@ -1,7 +1,7 @@
 'use client';
 
 import type { FocusEvent, FocusEventHandler, ReactElement } from 'react';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
 import { cn } from '../../lib/utils.ts';
@@ -102,6 +102,21 @@ function cmdkOption(container: HTMLElement | null, value: string) {
   );
 }
 
+/** Returns the ids cmdk gives a listbox and its highlighted option, which it keeps to itself, so a combobox can point
+ * at them, with the ref callbacks to put on the `CommandList` and on the highlighted `CommandItem`. An element hands its
+ * id over as it mounts, before the browser paints, and takes it back as it unmounts, so a list that opens again under
+ * new ids is never pointed at by the ids of the one that closed
+ *
+ * @returns - The ids, undefined while nothing holds them, and the ref callbacks reading them
+ */
+export function useCmdkIds() {
+  const [listboxId, setListboxId] = useState<string>();
+  const [highlightedId, setHighlightedId] = useState<string>();
+  const listboxRef = useCallback((listbox: HTMLElement | null) => setListboxId(listbox?.id), []);
+  const highlightedRef = useCallback((option: HTMLElement | null) => setHighlightedId(option?.id), []);
+  return { listboxId, highlightedId, listboxRef, highlightedRef };
+}
+
 /**
  * A fancy select component that provides a styled dropdown with search functionality
  * @param props - The component props
@@ -132,10 +147,17 @@ export function FancySelect({
   // the listbox holding it by the ids cmdk gives them, which it keeps to itself. cmdk reports the option it highlights
   // only while its value is controlled
   const [highlighted, setHighlighted] = useState('');
-  const [highlightedId, setHighlightedId] = useState<string>();
-  const [listboxId, setListboxId] = useState<string>();
+  const { listboxId, highlightedId, listboxRef, highlightedRef } = useCmdkIds();
   const selectedItem = items?.find((item) => item.value === selected);
   const selectedRef = useRef<HTMLDivElement>(null);
+  // The option the select holds is the one it opens on, so it is often highlighted too, and takes both refs
+  const selectedHighlightedRef = useCallback(
+    (option: HTMLDivElement | null) => {
+      selectedRef.current = option;
+      highlightedRef(option);
+    },
+    [highlightedRef],
+  );
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -146,24 +168,20 @@ export function FancySelect({
     }
   }, [open]);
 
-  // Read on opening and as the options change too, not only as the highlight moves: the options mount afresh, under new
-  // ids, each time the listbox opens or its options change, while cmdk keeps the highlight it had and reports no change
-  const shownOptions = sections ?? items;
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!open || !container || !shownOptions?.length) {
-      return;
-    }
-    setHighlightedId(cmdkOption(container, highlighted)?.id);
-    setListboxId(container.querySelector<HTMLElement>('[cmdk-list]')?.id);
-  }, [open, highlighted, shownOptions]);
-
+  // Options that empty while it is open leave no listbox, so it closes rather than point at the one that unmounted
+  if (open && !items?.length) {
+    setOpen(false);
+  }
   // The listbox opens on the option the select holds, as a native select's does, so Enter keeps the value until the
   // highlight is moved, else on the first option a user can choose, rather than on one an earlier opening left
   // highlighted, which cmdk keeps
   const itemsInOrder = sections ? sections.flatMap((section) => section.items) : items;
   const openList = () => {
-    const opening = selectedItem ?? itemsInOrder?.find((item) => !item.disabled);
+    // With no option to show, it would open on an empty popup a screen reader announces as expanded
+    if (!itemsInOrder?.length) {
+      return;
+    }
+    const opening = selectedItem ?? itemsInOrder.find((item) => !item.disabled);
     if (opening) {
       setHighlighted(cmdkValue(opening));
     }
@@ -219,11 +237,18 @@ export function FancySelect({
     onBlur?.(e);
   };
 
+  const itemRef = (isSelected: boolean, isHighlighted: boolean) => {
+    if (isSelected) {
+      return isHighlighted ? selectedHighlightedRef : selectedRef;
+    }
+    return isHighlighted ? highlightedRef : undefined;
+  };
+
   function renderItem(item: FancySelectItem<string>) {
     return (
       <CommandItem
         disabled={item.disabled}
-        ref={item.value === selected ? selectedRef : undefined}
+        ref={itemRef(item.value === selected, cmdkValue(item) === highlighted)}
         key={item.value}
         value={cmdkValue(item)}
         onMouseDown={(e) => {
@@ -331,7 +356,7 @@ export function FancySelect({
             className='absolute w-full z-10 rounded-md border bg-popover text-popover-foreground shadow-md outline-none'
           >
             {sections ? (
-              <CommandList className='h-full overflow-auto'>
+              <CommandList ref={listboxRef} className='h-full overflow-auto'>
                 {sections.map((section) => (
                   <CommandGroup
                     key={section.label === undefined ? UNGROUPED_SECTION_KEY : `optgroup-${section.label}`}
@@ -343,7 +368,7 @@ export function FancySelect({
               </CommandList>
             ) : (
               <CommandGroup className='h-full overflow-auto'>
-                <CommandList>{items.map(renderItem)}</CommandList>
+                <CommandList ref={listboxRef}>{items.map(renderItem)}</CommandList>
               </CommandGroup>
             )}
           </div>
