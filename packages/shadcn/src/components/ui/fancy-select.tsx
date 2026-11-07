@@ -149,24 +149,16 @@ export function FancySelect({
   const [highlighted, setHighlighted] = useState('');
   const { listboxId, highlightedId, listboxRef, highlightedRef } = useCmdkIds();
   const selectedItem = items?.find((item) => item.value === selected);
-  const selectedRef = useRef<HTMLDivElement>(null);
-  // The option the select holds is the one it opens on, so it is often highlighted too, and takes both refs
-  const selectedHighlightedRef = useCallback(
-    (option: HTMLDivElement | null) => {
-      selectedRef.current = option;
-      highlightedRef(option);
-    },
-    [highlightedRef],
-  );
+  const selectedValue = selectedItem && cmdkValue(selectedItem);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (open && selectedRef.current) {
+    if (open && selectedValue !== undefined) {
       requestAnimationFrame(() => {
-        selectedRef.current?.scrollIntoView({ block: 'nearest' });
+        cmdkOption(containerRef.current, selectedValue)?.scrollIntoView({ block: 'nearest' });
       });
     }
-  }, [open]);
+  }, [open, selectedValue]);
 
   // Options that empty while it is open leave no listbox, so it closes rather than point at the one that unmounted
   if (open && !items?.length) {
@@ -237,18 +229,11 @@ export function FancySelect({
     onBlur?.(e);
   };
 
-  const itemRef = (isSelected: boolean, isHighlighted: boolean) => {
-    if (isSelected) {
-      return isHighlighted ? selectedHighlightedRef : selectedRef;
-    }
-    return isHighlighted ? highlightedRef : undefined;
-  };
-
   function renderItem(item: FancySelectItem<string>) {
     return (
       <CommandItem
         disabled={item.disabled}
-        ref={itemRef(item.value === selected, cmdkValue(item) === highlighted)}
+        ref={cmdkValue(item) === highlighted ? highlightedRef : undefined}
         key={item.value}
         value={cmdkValue(item)}
         onMouseDown={(e) => {

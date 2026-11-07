@@ -1,6 +1,6 @@
 'use client';
 
-import type { FocusEvent, FocusEventHandler, KeyboardEvent, ReactElement } from 'react';
+import type { FocusEvent, FocusEventHandler, KeyboardEvent, MouseEvent, ReactElement } from 'react';
 import { useCallback, useId, useMemo, useRef, useState } from 'react';
 import { deepEquals, enumOptionValueLabel } from '@rjsf/utils';
 import { defaultFilter } from 'cmdk';
@@ -122,27 +122,14 @@ export function FancyMultiSelect({
 
   // A flat list keeps its matches in schema order, while the options of each group are ranked by how well they match,
   // as cmdk ranks the options it holds in a group, the groups keeping their order
-  const listedFor = useCallback(
-    (search: string) => {
-      const unselected = (framework: FancySelectItem) =>
-        !selectedItems.some((item) => deepEquals(item.value, framework.value));
-      return {
-        listedItems: items.filter((item) => unselected(item) && (search === '' || searchScore(item, search) > 0)),
-        listedSections: sections
-          ?.map((section) => ({
-            label: section.label,
-            items: rankedForSearch(section.items.filter(unselected), search),
-          }))
-          .filter((section) => section.items.length > 0),
-      };
-    },
-    [items, sections, selectedItems],
-  );
-
-  const { listedItems: selectables, listedSections: selectableSections } = useMemo(
-    () => listedFor(inputValue),
-    [listedFor, inputValue],
-  );
+  const unselected = (framework: FancySelectItem) =>
+    !selectedItems.some((item) => deepEquals(item.value, framework.value));
+  const selectableSections = sections
+    ?.map((section) => ({ label: section.label, items: rankedForSearch(section.items.filter(unselected), inputValue) }))
+    .filter((section) => section.items.length > 0);
+  const selectables = selectableSections
+    ? selectableSections.flatMap((section) => section.items)
+    : items.filter((item) => unselected(item) && (inputValue === '' || searchScore(item, inputValue) > 0));
 
   const handleUnselect = useCallback(
     (framework: FancySelectItem) => {
@@ -163,33 +150,31 @@ export function FancyMultiSelect({
     }
   }, [disabled]);
 
-  // cmdk moves the highlight to a search's first match only for a search typed in its own input, so the highlight is
-  // held here and moved to that match as the search changes
-  const [highlighted, setHighlighted] = useState('');
+  // cmdk moves the highlight to a search's first match only for a search typed in its own input, so a new search
+  // forgets the option the highlight was moved to, and the highlight falls back to the first match
+  const [movedTo, setMovedTo] = useState<string>();
+  const firstMatch = selectables.find((item) => !item.disabled);
+  const highlighted = movedTo ?? (firstMatch ? String(firstMatch.index) : '');
   const search = (newValue: string) => {
     setInputValue(newValue);
-    const { listedItems, listedSections } = listedFor(newValue);
-    const first = (listedSections ? listedSections.flatMap((section) => section.items) : listedItems).find(
-      (item) => !item.disabled,
-    );
-    setHighlighted(first ? String(first.index) : '');
+    setMovedTo(undefined);
     openList();
   };
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
-      if (disabled || inputRef.current?.value !== '') {
+      if (disabled) {
         return;
       }
-
-      if (e.key === 'Delete' || e.key === 'Backspace') {
-        const newSelected = selectedItems.slice(0, -1);
-        onValueChange?.(newSelected.map((item) => item.index));
-      } else if (e.key === 'Escape') {
-        inputRef.current.blur();
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        // The input `autoFocus` focuses as it mounts opens no list, so either arrow opens it, as on a closed combobox
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         openList();
+      } else if (inputRef.current?.value === '') {
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+          const newSelected = selectedItems.slice(0, -1);
+          onValueChange?.(newSelected.map((item) => item.index));
+        } else if (e.key === 'Escape') {
+          inputRef.current.blur();
+        }
       }
     },
     [selectedItems, onValueChange, disabled, openList],
@@ -207,20 +192,17 @@ export function FancyMultiSelect({
     [multiple, selectedItems, onValueChange, disabled],
   );
 
-  // cmdk's root is out of the tab order, so it takes focus only from a click on the select beside its input and remove
-  // buttons, such as on a selected item's label. The input takes it from there, as from a click on itself, since cmdk
-  // moves focus to its listbox as it highlights an option while its root has it
-  const handleFocus = useCallback(
-    (e: FocusEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {
-        inputRef.current?.focus();
-        openList();
-        return;
-      }
-      onFocus?.(e);
-    },
-    [openList, onFocus],
-  );
+  // A press anywhere in the select but on its input and remove buttons, such as on a selected item's label, a group
+  // heading or the list's padding, would focus cmdk's root or listbox, which are out of the tab order and close the list
+  // as the input blurs. The press is kept from moving focus and acts as a click on the input, whose focus and open list
+  // a press inside the list leaves as they are
+  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    if (e.target !== inputRef.current) {
+      e.preventDefault();
+      inputRef.current?.focus();
+      openList();
+    }
+  };
 
   // An arrow key opens the list from a remove button too, whose blur the input's doesn't follow, so the list closes as
   // focus leaves the select
@@ -243,10 +225,6 @@ export function FancyMultiSelect({
         disabled={item.disabled}
         key={item.index}
         value={String(item.index)}
-        onMouseDown={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
         onSelect={() => handleSelect(item)}
         className='cursor-pointer'
       >
@@ -263,12 +241,13 @@ export function FancyMultiSelect({
     <Command
       shouldFilter={false}
       value={highlighted}
-      onValueChange={setHighlighted}
+      onValueChange={setMovedTo}
       onKeyDown={handleKeyDown}
       className={cn('overflow-visible bg-transparent', className)}
       aria-disabled={disabled}
       onBlur={handleBlur}
-      onFocus={handleFocus}
+      onFocus={onFocus}
+      onMouseDown={handleMouseDown}
     >
       <div
         className={cn(
@@ -283,7 +262,8 @@ export function FancyMultiSelect({
               <button
                 type='button'
                 className='rtl:mr-1 ltr:ml-1 ring-offset-background rounded-full outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1'
-                onKeyDown={(e) => e.key === 'Enter' && !disabled && handleUnselect(item)}
+                // Enter clicks the button, so it is kept from cmdk's root, which would choose the highlighted option too
+                onKeyDown={(e) => e.key === 'Enter' && e.stopPropagation()}
                 onMouseDown={(e) => {
                   e.preventDefault();
                   e.stopPropagation();

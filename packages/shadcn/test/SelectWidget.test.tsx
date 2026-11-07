@@ -1606,6 +1606,93 @@ describe("the multiple select's combobox input", () => {
     expect(options.map((option) => option.textContent)).toEqual(['Pineapple', 'Apple', 'Applet']);
     expect(options.map((option) => option.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
   });
+
+  test('opens again on Down Arrow with a search left in it, as focus coming back leaves it closed', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    await user.type(input, 'bl');
+    await user.tab();
+    await user.tab({ shift: true });
+    expect(input).toHaveFocus();
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+
+    await user.keyboard('{ArrowDown}');
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual(['blue']);
+  });
+
+  test('removes only the item whose remove button Enter is pressed on, leaving the highlighted option unchosen', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color: { ...color, minItems: undefined } } }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+    await user.tab({ shift: true });
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByRole('option', { name: 'blue' })).toHaveAttribute('aria-selected', 'true');
+    await user.keyboard('{Enter}');
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { color: [] } }), 'root_color');
+  });
+
+  test('keeps focus on its input and its list open on a click on a group heading', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          readonly: false,
+          multiple: true,
+          value: [],
+          options: {
+            enumOptions: ['red', 'blue'].map((value) => ({ label: value, value })),
+            optgroups: { Warm: ['red'], Cool: ['blue'] },
+          },
+        })}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    await user.click(screen.getByText('Warm'));
+
+    expect(input).toHaveFocus();
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+  });
+
+  test('takes no focus, and so reports no blur, on a click on a selected item of a readonly select', async () => {
+    const user = userEvent.setup();
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          readonly: true,
+          multiple: true,
+          value: ['red'],
+          options: { enumOptions: ['red', 'blue'].map((value) => ({ label: value, value })) },
+          onFocus,
+          onBlur,
+        })}
+      />,
+    );
+
+    await user.click(screen.getByText('red'));
+    await user.click(document.body);
+
+    expect(onFocus).not.toHaveBeenCalled();
+    expect(onBlur).not.toHaveBeenCalled();
+  });
 });
 
 describe("the single select's combobox with no option to show", () => {
