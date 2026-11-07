@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, ErrorSchema } from '@rjsf/utils';
-import { fieldPathToName, getPresentationDeclaration, getUiOptions, resolveWidget } from '@rjsf/utils';
+import { fieldPathToName, getPresentationDeclaration, getUiOptions, resolveWidget, uiBooleanOption } from '@rjsf/utils';
 
 import {
   displaysLabel,
@@ -42,10 +42,8 @@ function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const { widget, enumOptions } = resolveStringFieldWidget<T, S, F>(schema, uiSchema, registry, uiOptions);
   const { widget: _widget, placeholder = '', title: uiTitle, ...options } = uiOptions;
-  const labelProps = getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? title ?? schemaTitle ?? name, () =>
-    displaysLabel(registry, schema, uiSchema),
-  );
   const { Widget } = resolveWidget<T, S, F>(schema, widget, widgets);
+  const labelOption = uiBooleanOption(uiOptions.label);
   // Read from the widget's declaration, so a theme's switch confirms the `const` too, while a widget the form registers
   // under the `checkbox` key, which declares nothing, is handed the string
   const confirmsConst = useMemo(
@@ -54,6 +52,10 @@ function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       !!getPresentationDeclaration<T, S, F>(registry, { schema, field: StringField, fieldKey: 'StringField', widget })
         .uncheckedIsFalse,
     [registry, schema, widget],
+  );
+  // As `BooleanField` does, a checkbox confirming the `const` skips `getDisplayLabel()`, which leaves the label to it
+  const labelProps = getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? title ?? schemaTitle ?? name, () =>
+    confirmsConst ? labelOption !== false : displaysLabel(registry, schema, uiSchema),
   );
   const toFormValue = useCallback(
     (value: unknown) => {

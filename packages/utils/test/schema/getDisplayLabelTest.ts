@@ -82,6 +82,14 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
     ])('boolean type naming the checkbox it already resolves to, through %s', (_, uiSchema) => {
       expect(getDisplayLabel({ validator: testValidator }, { type: 'boolean' }, uiSchema)).toEqual(false);
     });
+    it.each<[string, string, boolean, RJSFSchema]>([
+      ['a string const', 'CheckboxWidget', false, { type: 'string', const: 'yes' }],
+      ['a string const on a type list', 'CheckboxWidget', false, { type: ['number', 'string'], const: 'yes' }],
+      ['a string const', 'checkbox', true, { type: 'string', const: 'yes' }],
+      ['a number const', 'CheckboxWidget', true, { type: 'number', const: 1 }],
+    ])('%s naming %s gives displayLabel %s', (_, widget, expected, schema) => {
+      expect(getDisplayLabel({ validator: testValidator }, schema, { 'ui:widget': widget })).toEqual(expected);
+    });
     it('boolean type naming the checkbox by its alias, which a FieldTemplate lays out itself', () => {
       expect(getDisplayLabel({ validator: testValidator }, { type: 'boolean' }, { 'ui:widget': 'checkbox' })).toEqual(
         true,

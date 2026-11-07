@@ -1126,6 +1126,19 @@ describe('StringField', () => {
 
       expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ name: 'required', property: 'confirm' })]);
     });
+
+    it.each(['checkbox', 'CheckboxWidget'])('should leave the label to %s when rendered without a plan', (widget) => {
+      function NoPlanStringField(props: FieldProps) {
+        return <StringField {...props} presentation={undefined} />;
+      }
+      createFormComponent({
+        schema: constSchema,
+        uiSchema: { confirm: { 'ui:widget': widget } },
+        fields: { StringField: NoPlanStringField },
+      });
+
+      expect(screen.getAllByText('Confirmation')).toHaveLength(1);
+    });
   });
 
   describe('TextareaWidget', () => {
