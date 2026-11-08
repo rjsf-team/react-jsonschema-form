@@ -667,6 +667,48 @@ describe('scoringTarget()', () => {
         properties: { names: { allOf: [{ type: 'object' }] }, deps: { allOf: [{ type: 'object' }] } },
       });
     });
+    it('copies a dependentSchemas entry leading to a recursive choice, as it copies a dependencies one, keeping the node beside it', () => {
+      const expression = (kind: string): RJSFSchema => ({
+        type: 'object',
+        properties: { kind: { const: kind }, next: { $ref: '#/$defs/Expr' } },
+      });
+      const schema: RJSFSchema = {
+        $defs: {
+          Expr: { oneOf: [{ type: 'null' }, { $ref: '#/$defs/P' }, { $ref: '#/$defs/Q' }] },
+          P: expression('p'),
+          Q: expression('q'),
+        },
+        oneOf: [
+          {
+            properties: {
+              v: {
+                type: 'object',
+                properties: { kind: { const: 'p' } },
+                dependentSchemas: { kind: { $ref: '#/$defs/P' } },
+              },
+            },
+          },
+        ],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: {
+          v: {
+            type: 'object',
+            properties: { kind: { $ref: '#/oneOf/0/properties/v/properties/kind' } },
+            dependentSchemas: {
+              kind: {
+                allOf: [
+                  {
+                    type: 'object',
+                    properties: { kind: { $ref: '#/$defs/P/properties/kind' }, next: { type: ['null', 'object'] } },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      });
+    });
     it('reads a cut choice that takes no type at all as accepting nothing', () => {
       const schema: RJSFSchema = {
         definitions: {
@@ -827,6 +869,23 @@ describe('scoringTarget()', () => {
           },
           Prefixed: { type: 'array', prefixItems: [ref('Prefixed')], items: ref('Prefixed') },
           Rest: { type: 'array', items: [ref('Rest')], additionalItems: ref('Rest') },
+          EvaluatedItems: { type: 'array', items: ref('EvaluatedItems'), unevaluatedItems: ref('EvaluatedItems') },
+          EvaluatedRest: {
+            type: 'array',
+            items: [ref('EvaluatedRest')],
+            additionalItems: ref('EvaluatedRest'),
+            unevaluatedItems: ref('EvaluatedRest'),
+          },
+          TupleThenUnevaluated: {
+            type: 'array',
+            items: [ref('TupleThenUnevaluated')],
+            unevaluatedItems: ref('TupleThenUnevaluated'),
+          },
+          EvaluatedProperties: {
+            type: 'object',
+            additionalProperties: ref('EvaluatedProperties'),
+            unevaluatedProperties: ref('EvaluatedProperties'),
+          },
         },
         oneOf: [
           {
@@ -843,6 +902,10 @@ describe('scoringTarget()', () => {
                 'Tuple',
                 'Prefixed',
                 'Rest',
+                'EvaluatedItems',
+                'EvaluatedRest',
+                'TupleThenUnevaluated',
+                'EvaluatedProperties',
               ].map((name) => [name, ref(name)]),
             ),
           },
@@ -876,11 +939,16 @@ describe('scoringTarget()', () => {
             ],
           },
           Items: { type: 'array', allOf: [{ items: [ref('Items')] }, { items: ref('Items') }] },
+          // An empty tuple leaves every item to the `additionalItems` beside it
+          EmptyTuple: { type: 'array', items: [], additionalItems: ref('EmptyTuple'), contains: ref('EmptyTuple') },
         },
         oneOf: [
           {
             properties: Object.fromEntries(
-              ['OwnPattern', 'OwnContains', 'Patterns', 'Rests', 'Unclaimed', 'Items'].map((name) => [name, ref(name)]),
+              ['OwnPattern', 'OwnContains', 'Patterns', 'Rests', 'Unclaimed', 'Items', 'EmptyTuple'].map((name) => [
+                name,
+                ref(name),
+              ]),
             ),
           },
         ],
@@ -895,6 +963,7 @@ describe('scoringTarget()', () => {
           Rests: object,
           Unclaimed: object,
           Items: array,
+          EmptyTuple: array,
         },
       });
     });

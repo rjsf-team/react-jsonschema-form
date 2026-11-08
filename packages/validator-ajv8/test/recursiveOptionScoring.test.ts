@@ -11,7 +11,13 @@
  */
 
 import type { RJSFSchema } from '@rjsf/utils';
-import { getClosestMatchingOption, getFirstMatchingOption, retrieveSchema } from '@rjsf/utils';
+import {
+  getByPath,
+  getClosestMatchingOption,
+  getFirstMatchingOption,
+  isPlainObject,
+  retrieveSchema,
+} from '@rjsf/utils';
 import { Ajv2019 } from 'ajv/dist/2019.js';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 
@@ -333,6 +339,22 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
       (inner: unknown) => [inner],
       's',
     ],
+    [
+      'the additionalItems beside an empty tuple and contains',
+      {
+        anyOf: [
+          { type: 'string' },
+          {
+            type: 'array',
+            items: [],
+            additionalItems: { $ref: '#/definitions/X' },
+            contains: { $ref: '#/definitions/X' },
+          },
+        ],
+      },
+      (inner: unknown) => [inner],
+      's',
+    ],
   ])('matches data many levels deep against a node holding itself through %s', (_parts, nodeSchema, wrap, leaf) => {
     const root: RJSFSchema = { definitions: { X: nodeSchema as RJSFSchema } };
     const options: RJSFSchema[] = [
@@ -340,13 +362,84 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
       { properties: { v: { type: 'number' } } },
     ];
     let value: unknown = leaf;
-    for (let level = 0; level < 26; level += 1) {
+    for (let level = 0; level < 8; level += 1) {
       value = wrap(value);
     }
-    const start = performance.now();
-    expect(getFirstMatchingOption({ validator }, { v: value }, options, root)).toBe(0);
-    // Validating both subschemas at every level doubles the time per level, which took seconds at 26 levels
-    expect(performance.now() - start).toBeLessThan(1000);
+    const counting = customizeValidator();
+    const isValid = vi.spyOn(counting, 'isValid');
+    expect(getFirstMatchingOption({ validator: counting }, { v: value }, options, root)).toBe(0);
+    // Validating both subschemas holding X at every level would double the work per level of the data, so no schema
+    // the validator is handed may reach X
+    expect(isValid).toHaveBeenCalled();
+    const named = (schema: unknown) =>
+      isPlainObject(schema) && typeof schema.$ref === 'string'
+        ? getByPath(root, schema.$ref.slice(2).split('/'))
+        : schema;
+    expect(isValid.mock.calls.filter(([schema]) => JSON.stringify(named(schema)).includes('#/definitions/X'))).toEqual(
+      [],
+    );
+  });
+
+  it('keeps checking a node beside a dependentSchemas entry that leads to a recursive choice', () => {
+    const expression = (kind: string): RJSFSchema => ({
+      type: 'object',
+      properties: { kind: { const: kind }, next: { $ref: '#/$defs/Expr' } },
+    });
+    const root: RJSFSchema = {
+      $defs: {
+        Expr: { oneOf: [{ type: 'null' }, { $ref: '#/$defs/P' }, { $ref: '#/$defs/Q' }] },
+        P: expression('p'),
+        Q: expression('q'),
+      },
+    };
+    const options: RJSFSchema[] = [
+      {
+        properties: {
+          v: {
+            type: 'object',
+            properties: { kind: { const: 'p' } },
+            dependentSchemas: { kind: { $ref: '#/$defs/P' } },
+          },
+        },
+      },
+      { properties: { v: { type: 'object', properties: { kind: { const: 'q' } } } } },
+    ];
+    expect(
+      getFirstMatchingOption(
+        { validator: customizeValidator({ AjvClass: Ajv2020 }) },
+        { v: { kind: 'q' } },
+        options,
+        root,
+      ),
+    ).toBe(1);
+  });
+
+  it.each([
+    [
+      'unevaluatedItems beside an items that evaluates every item',
+      { type: 'array', items: { $ref: '#/definitions/X' }, unevaluatedItems: { $ref: '#/definitions/X' } },
+      { type: 'array', items: { type: 'number' } },
+      [1],
+    ],
+    [
+      'unevaluatedProperties beside an additionalProperties that evaluates every property',
+      {
+        type: 'object',
+        additionalProperties: { $ref: '#/definitions/X' },
+        unevaluatedProperties: { $ref: '#/definitions/X' },
+      },
+      { type: 'object', additionalProperties: { type: 'number' } },
+      { a: 1 },
+    ],
+  ])('checks a node holding itself through %s, which applies to nothing', (_parts, nodeSchema, other, value) => {
+    const root: RJSFSchema = { definitions: { X: nodeSchema as RJSFSchema } };
+    const options: RJSFSchema[] = [
+      { properties: { v: { $ref: '#/definitions/X' } } },
+      { properties: { v: other as RJSFSchema } },
+    ];
+    expect(
+      getFirstMatchingOption({ validator: customizeValidator({ AjvClass: Ajv2019 }) }, { v: value }, options, root),
+    ).toBe(1);
   });
 
   it.each([
