@@ -121,7 +121,9 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *       - If type of the key in the new schema is `object`, or `array` with array data, and the key isn't a select
  *         over object or array constants (see `isWholeValueSelect()`):
  *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`, or, for data that
- *           holds no object, an empty object when the new schema declares `properties`
+ *           holds no object, an empty object when the new schema declares `properties`. An array the old schema
+ *           declares no type for, as for a key new to the new schema, is sanitized against the new schema on both
+ *           sides, unless the new schema's array `const` rejects it, as below, in which case it is cleared
  *       - Otherwise, check for default, const or enum values:
  *         - Get the old and new `default` values from the schema and check:
  *           - If the new `default` value does not match the form value:
@@ -243,11 +245,14 @@ export default function sanitizeDataForNewSchema<
           newSchemaTypeForKey === 'object' || (containerType === 'object' && isPlainObject(formValue));
         const isContainer = (isObjectValue || isArrayValue) && !isWholeValueSelect<S>(newKeyedSchema);
         if (isContainer) {
-          // SIDE-EFFECT: process the new schema type of object recursively to save iterations. A position the
-          // old schema does not cover borrows the new schema as its old side (an array property the new schema
-          // introduces), so its data is filtered against the new schema rather than cleared for an old side
-          // that declares no array
-          const borrowOld = isNewProperty && isArrayValue;
+          // SIDE-EFFECT: process the new schema type of object recursively to save iterations. An array whose old
+          // schema declares no type, as one the new schema introduces, borrows the new schema as its old side, so its
+          // data is filtered against the new schema rather than cleared for an old side that declares no array. One
+          // the new `const` rejects doesn't borrow, since the borrowed side declares the same `const`, so it is cleared
+          const borrowOld =
+            isArrayValue &&
+            (isNewProperty || !oldKeyedSchema.type) &&
+            !arrayConstRejects<S>(newKeyedSchema, oldKeyedSchema, formValue);
           // Data holding no object has no properties to sanitize. Descending into it would sanitize the absent
           // properties of every level a recursive `$ref` reaches, without end
           const itemData =

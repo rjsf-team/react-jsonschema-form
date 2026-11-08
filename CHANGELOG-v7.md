@@ -1458,6 +1458,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `sanitizeDataForNewSchema()` not sanitizing the items of an array of arrays, so data the new schema no longer describes survived an option switch ([#5754](https://github.com/rjsf-team/react-jsonschema-form/pull/5754), [#5440](https://github.com/rjsf-team/react-jsonschema-form/issues/5440))
 - Fix `sanitizeDataForNewSchema()` keeping an array's object items that their `enum` or constant options don't list when the items declare `properties`, as it drops such items of any other type, and writing an empty object into the absent object properties of one they list ([#5754](https://github.com/rjsf-team/react-jsonschema-form/pull/5754), [#5440](https://github.com/rjsf-team/react-jsonschema-form/issues/5440))
 - Fix `sanitizeDataForNewSchema()` changing an array that equals its schema's `const`, such as writing `{}` into its items' absent object properties, so it no longer matched the `const` and failed validation ([#5770](https://github.com/rjsf-team/react-jsonschema-form/issues/5770))
+- Fix `sanitizeDataForNewSchema()` clearing an array property whose old schema declares no type, so switching `anyOf`/`oneOf` options dropped a list the new option accepts; it's now sanitized against the new schema, as an inner array is ([#5757](https://github.com/rjsf-team/react-jsonschema-form/issues/5757))
 
 ## @rjsf/validator-ajv8
 

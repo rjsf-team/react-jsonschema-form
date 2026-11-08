@@ -100,8 +100,10 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         },
       };
 
+      // An old schema declaring no type allows any value, so the array is filtered by the new items' enum rather than
+      // cleared
       expect(schemaUtils.sanitizeDataForNewSchema(newArraySchema, oldSchema, { values: ['existing'] })).toEqual({
-        values: undefined,
+        values: [],
       });
     });
     it('keeps the data of a property whose type was guessed from it, even when that type changed', () => {
@@ -1086,6 +1088,46 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { rows: [{ tags: ['a', 'x'] }] })).toEqual({
         rows: [{ tags: ['a'] }],
+      });
+    });
+    describe('an array property whose old schema declares no type', () => {
+      const listOf = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
+      const stringList: RJSFSchema = { type: 'array', items: { type: 'string' } };
+      it('is sanitized against the new schema rather than cleared', () => {
+        expect(schemaUtils.sanitizeDataForNewSchema(listOf(stringList), listOf({}), { list: ['a', 1] })).toEqual({
+          list: ['a', 1],
+        });
+      });
+      it('still has its items filtered by the new schema', () => {
+        const enumList: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a'] } };
+        expect(schemaUtils.sanitizeDataForNewSchema(listOf(enumList), listOf({}), { list: ['a', 'b'] })).toEqual({
+          list: ['a'],
+        });
+      });
+      it('is cleared when the new array const rejects it', () => {
+        const constList: RJSFSchema = { ...stringList, const: ['z'] };
+        expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), listOf({}), { list: ['a'] })).toEqual({
+          list: undefined,
+        });
+      });
+      it('is cleared, as a property new to the new schema, when the new array const rejects it', () => {
+        const constList: RJSFSchema = { ...stringList, const: ['z'] };
+        const oldSchema: RJSFSchema = { type: 'object', properties: {} };
+        expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), oldSchema, { list: ['a'] })).toEqual({
+          list: undefined,
+        });
+      });
+      it('is kept when it equals the new array const', () => {
+        const constList: RJSFSchema = { ...stringList, const: ['z'] };
+        expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), listOf({}), { list: ['z'] })).toEqual({
+          list: ['z'],
+        });
+      });
+      it('is still cleared when its old type was only guessed and the new schema declares items', () => {
+        const guessed: RJSFMarkedSchema = { type: 'array', [GUESSED_TYPE_FLAG]: true };
+        expect(schemaUtils.sanitizeDataForNewSchema(listOf(stringList), listOf(guessed), { list: ['a'] })).toEqual({
+          list: undefined,
+        });
       });
     });
     it('keeps items that remain valid in the new items enum', () => {
