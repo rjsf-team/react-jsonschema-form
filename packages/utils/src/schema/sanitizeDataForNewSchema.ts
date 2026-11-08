@@ -83,11 +83,12 @@ function isSameType(oldType: unknown, newType: unknown): boolean {
   return oldTypes.size === newTypes.size && oldType.every((type) => newTypes.has(type));
 }
 
-/** What data holding no object is sanitized to against the object schema `schema`: an empty object where it declares
- * `properties`, for the defaults to fill, and otherwise nothing
+/** What `formValue`, data holding no object, is sanitized to against the object schema `schema`: an empty object in
+ * place of a value of another type where it declares `properties`, and otherwise nothing. Absent data stays absent, so
+ * the defaults decide whether the object is added, as they do when the form mounts
  */
-function emptyObjectFor<S extends StrictRJSFSchema>(schema: S): object | undefined {
-  return schema[PROPERTIES_KEY] ? {} : undefined;
+function emptyObjectFor<S extends StrictRJSFSchema>(schema: S, formValue: unknown): object | undefined {
+  return formValue !== undefined && schema[PROPERTIES_KEY] ? {} : undefined;
 }
 
 function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: unknown) {
@@ -107,21 +108,24 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
 /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the new
  * schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the nature
  * of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the old schema
- * that are non-existent in the new schema are set to `undefined`. The data sanitization process has the following flow:
+ * that are non-existent in the new schema, or that it declares with another type, are removed from the data at every
+ * level. The data sanitization process has the following flow:
  *
  * - If the new schema is an object that contains a `properties` object then:
- *   - Create a `removeOldSchemaData` object, setting each key in the `oldSchema.properties` having `data` to undefined
+ *   - Create an empty `removeOldSchemaData` object, and a set of `discardedKeys` holding each key in the
+ *     `oldSchema.properties` having `data`
  *   - Create an empty `nestedData` object for use in the key filtering below:
  *   - Iterate over each key in the `newSchema.properties` as follows:
  *     - Get the `formValue` of the key from the `data`
  *     - Get the `oldKeySchema` and `newKeyedSchema` for the key, defaulting to `{}` when it doesn't exist
  *     - Retrieve the schema for any refs within each `oldKeySchema` and/or `newKeySchema`
  *     - Get the types of the old and new keyed schemas and if the old doesn't exist or the old & new are the same then:
- *       - If `removeOldSchemaData` has an entry for the key, delete it since the new schema has the same property
+ *       - Delete the key from `discardedKeys`, since the new schema has the same property
  *       - If type of the key in the new schema is `object`, or `array` with array data, and the key isn't a select
  *         over object or array constants (see `isWholeValueSelect()`):
  *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`, or, for data that
- *           holds no object, an empty object when the new schema declares `properties`. An array the old schema
+ *           holds a value other than an object, an empty object when the new schema declares `properties`. Data the
+ *           key does not hold is left out, for the defaults to fill as they do on mount. An array the old schema
  *           declares no type for, as for a key new to the new schema, is sanitized against the new schema on both
  *           sides, unless the new schema's array `const` rejects it, as below, in which case it is cleared
  *       - Otherwise, check for default, const or enum values:
@@ -137,8 +141,8 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *             - Otherwise, replace `removeOldSchemaData[key]` with undefined
  *         - If the form value is none of the new `enum` or constant options, replace it with the new `default` when that
  *           is an option, the only option when there is one, or undefined
- *   - Once all keys have been processed, return an object built as follows:
- *     - `{ ...data, ...removeOldSchemaData, ...nestedData }`
+ *   - Once all keys have been processed, return `{ ...data, ...removeOldSchemaData, ...nestedData }` without the keys
+ *     left in `discardedKeys`
  * - If the old and new schema types, read through `getSchemaType()` so that a type list also allowing `null` counts,
  *   are both array, the `data` is an array, the new schema's `const` is not an array other than the `data` unless the
  *   old schema declares the same `const`, and the `data` is one of the new schema's `enum` or constant options when it
@@ -175,8 +179,8 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  * @param [newSchema] - The new schema for which the data is being sanitized
  * @param [oldSchema] - The old schema from which the data originated
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
- * @returns - The new form data, with all the fields uniquely associated with the old schema set
- *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
+ * @returns - The new form data, without the fields uniquely associated with the old schema. Will return `undefined` if
+ *      the new schema is not an object containing properties.
  */
 export default function sanitizeDataForNewSchema<
   T = unknown,
@@ -188,15 +192,18 @@ export default function sanitizeDataForNewSchema<
   const newProperties = newSchema?.[PROPERTIES_KEY];
   // If the new schema is of type object and that object contains a list of properties
   if (newProperties) {
-    // Create an object containing root-level keys in the old schema, setting each key to undefined to remove the data.
-    // It and `nestedData` are without a prototype, so that a `__proto__` key is written as a plain key, and the spread
-    // into `newFormData` copies it as an own one
+    // An object of the values replacing the data's own. It and `nestedData` are without a prototype, so that a
+    // `__proto__` key is written as a plain key, and the spread into `newFormData` copies it as an own one
     const removeOldSchemaData: GenericObjectType = Object.create(null);
+    // The keys the old schema declares that the data holds, each removed from the data unless the new schema declares
+    // it with the same type. Removed rather than set to `undefined`, which a nested object's field would read as an
+    // extra key, and which would keep the defaults from reaching the key
+    const discardedKeys = new Set<string>();
     const oldProperties = oldSchema?.[PROPERTIES_KEY];
     if (oldProperties) {
       Object.keys(oldProperties).forEach((key) => {
         if (hasByPath(data, key)) {
-          removeOldSchemaData[key] = undefined;
+          discardedKeys.add(key);
         }
       });
     }
@@ -229,10 +236,7 @@ export default function sanitizeDataForNewSchema<
       const newSchemaTypeForKey = newKeyedSchema.type;
       // Check if the old option has the same key with the same type
       if (!oldSchemaTypeForKey || isSameType(oldSchemaTypeForKey, newSchemaTypeForKey)) {
-        if (Object.hasOwn(removeOldSchemaData, key)) {
-          // SIDE-EFFECT: remove the undefined value for a key that has the same type between the old and new schemas
-          delete removeOldSchemaData[key];
-        }
+        discardedKeys.delete(key);
         // If it is an object, we'll recurse and store the resulting sanitized data for the key. A select over object or
         // array constants holds one of them as a whole, so it's checked against its options like any other select
         // A container is read through `getSchemaType()`, as the array branch below reads it, so one whose type list also
@@ -264,7 +268,7 @@ export default function sanitizeDataForNewSchema<
                   borrowOld ? newKeyedSchema : oldKeyedSchema,
                   formValue,
                 )
-              : emptyObjectFor<S>(newKeyedSchema);
+              : emptyObjectFor<S>(newKeyedSchema, formValue);
           if (itemData !== undefined || isArrayValue) {
             // only put undefined values for the array type and not the object type
             nestedData[key] = itemData;
@@ -302,12 +306,13 @@ export default function sanitizeDataForNewSchema<
       }
     });
 
-    newFormData = {
+    const sanitized: GenericObjectType = {
       ...(isObject(data) ? data : undefined),
       ...removeOldSchemaData,
       ...nestedData,
     };
-    // First apply removing the old schema data, then apply the nested data, then apply the old data keys to keep
+    discardedKeys.forEach((key) => delete sanitized[key]);
+    newFormData = sanitized;
   } else if (
     // Read through `getSchemaType()`, as the field rendering each schema is picked, so an array whose type list also
     // allows `null` keeps its items as a plain array does

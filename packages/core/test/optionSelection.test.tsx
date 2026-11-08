@@ -850,7 +850,7 @@ describe('option selection as form state', () => {
   it.each([
     ['a null option', null],
     ['another object option', {}],
-  ])('writes the empty object of an object property switching from %s', async (_from, p) => {
+  ])('leaves out an optional object property the data does not hold, switching from %s', async (_from, p) => {
     const options: RJSFSchema[] = [
       { title: 'Other', type: 'object', properties: { z: { type: 'string' } } },
       {
@@ -866,7 +866,7 @@ describe('option selection as form state', () => {
     await user.selectOptions(selectOf(node, 'root_p__oneof_select'), 'Obj');
 
     expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({ formData: { p: { d: 'D', meta: {} } } }),
+      expect.objectContaining({ formData: { p: { d: 'D' } } }),
       'root_p__oneof_select',
     );
   });

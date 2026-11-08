@@ -1542,6 +1542,96 @@ describe('oneOf', () => {
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ grid: [['a', 'b'], ['c']] });
   });
 
+  it('leaves out an optional object the data does not hold when switching options, so it passes validation (#5768)', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', required: ['kind'], properties: { kind: { const: 'A' }, k: { type: 'string' } } },
+        {
+          title: 'B',
+          required: ['kind'],
+          properties: {
+            kind: { const: 'B' },
+            k: { type: 'string' },
+            opt: { type: 'object', required: ['x'], properties: { x: { type: 'string' } } },
+          },
+        },
+      ],
+    };
+    // The rendered `opt.x` input is `required`, which the browser's own validation would stop the submit on before the
+    // schema's is reached
+    const { node, onChange, onSubmit, onError } = createFormComponent({
+      schema,
+      initialFormData: { kind: 'A', k: 'a' },
+      noHtml5Validate: true,
+    });
+
+    await user.selectOptions(elementOf(node, 'select'), 'B');
+    await submitForm(node, user);
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ kind: 'B', k: 'a' });
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+
+  it.each([
+    ['the default behavior', undefined, { k: 'a', addr: { city: 'X' } }],
+    ['skipDefaults', 'skipDefaults', { k: 'a' }],
+    ['populateRequiredDefaults', 'populateRequiredDefaults', { k: 'a' }],
+  ] as const)(
+    'gives an optional object property the data does not hold the defaults a mount gives it under %s (#5768)',
+    async (_title, emptyObjectFields, expected) => {
+      const optionB: RJSFSchema = {
+        title: 'B',
+        properties: {
+          k: { type: 'string' },
+          addr: { type: 'object', properties: { city: { type: 'string', default: 'X' } } },
+        },
+      };
+      const schemaWith = (oneOf: RJSFSchema[]): RJSFSchema => ({ type: 'object', oneOf });
+      const defaultFormStateBehavior = emptyObjectFields ? { emptyObjectFields } : undefined;
+      const { node, onChange } = createFormComponent({
+        schema: schemaWith([{ title: 'A', properties: { k: { type: 'string' } } }, optionB]),
+        initialFormData: { k: 'a' },
+        defaultFormStateBehavior,
+      });
+      const mounted = createFormComponent({
+        schema: schemaWith([optionB]),
+        initialFormData: { k: 'a' },
+        defaultFormStateBehavior,
+      });
+
+      await user.selectOptions(elementOf(node, 'select'), 'B');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual(expected);
+      expect(mounted.getFormData()).toEqual(expected);
+    },
+  );
+
+  it('drops a cleared nested key only the old option declares, rather than rendering it as an extra key (#5768)', async () => {
+    const x = (key: string): RJSFSchema => ({
+      type: 'object',
+      additionalProperties: true,
+      properties: { [key]: { type: 'string' } },
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { x: x('p') } },
+        { title: 'B', properties: { x: x('q') } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+    const input = elementOf(node, 'input#root_x_p');
+    await user.type(input, 'v');
+    await user.clear(input);
+
+    await user.selectOptions(elementOf(node, 'select'), 'B');
+
+    expect(node.querySelector('#root_x_p__key')).toBeNull();
+    expect(Object.keys(onChange.mock.lastCall?.[0].formData.x)).toEqual([]);
+  });
+
   describe('Arrays', () => {
     it('should correctly render mixed types for oneOf inside array items', async () => {
       const schema: RJSFSchema = {

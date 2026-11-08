@@ -147,6 +147,52 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       // is cleared rather than left sitting in a number field
       expect(schemaUtils.sanitizeDataForNewSchema(typedSchema, freeFormSchema, { aKey: 'text' })).toEqual({});
     });
+    describe('keys and objects the new schema does not take', () => {
+      const withX = (x: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { x } });
+      const xWith = (key: string, extra?: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        ...extra,
+        properties: { [key]: { type: 'string' } },
+      });
+      it('removes a key only the old schema declares rather than setting it to undefined', () => {
+        expect(schemaUtils.sanitizeDataForNewSchema(newArraySchema, oldDisjointSchema, { idCode: 'x' })).toStrictEqual({
+          values: [],
+        });
+      });
+      it('removes a key whose type the new schema changes rather than setting it to undefined', () => {
+        const numberId: RJSFSchema = { type: 'object', properties: { idCode: { type: 'number' } } };
+        expect(schemaUtils.sanitizeDataForNewSchema(numberId, oldDisjointSchema, { idCode: 'x' })).toStrictEqual({});
+      });
+      it('removes a nested key only the old schema declares', () => {
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(withX(xWith('q')), withX(xWith('p')), { x: { p: 'v' } }),
+        ).toStrictEqual({ x: {} });
+      });
+      it('removes a cleared nested key only the old schema declares, where the object takes extra keys', () => {
+        const open = { additionalProperties: true } as RJSFSchema;
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(withX(xWith('q', open)), withX(xWith('p', open)), {
+            x: { p: undefined },
+          }),
+        ).toStrictEqual({ x: {} });
+      });
+      it('leaves out an object property the data does not hold', () => {
+        const optional: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string' }, opt: { type: 'object', properties: { x: { type: 'string' } } } },
+        };
+        expect(schemaUtils.sanitizeDataForNewSchema(optional, optional, { k: 'a' })).toStrictEqual({ k: 'a' });
+        expect(schemaUtils.sanitizeDataForNewSchema(optional, optional, { k: 'a', opt: undefined })).toStrictEqual({
+          k: 'a',
+          opt: undefined,
+        });
+      });
+      it('still replaces a value of another type with an empty object', () => {
+        expect(schemaUtils.sanitizeDataForNewSchema(withX(xWith('q')), withX({}), { x: 'stale' })).toStrictEqual({
+          x: {},
+        });
+      });
+    });
     it('preserves explicit undefined data for a property shared by both schemas', () => {
       const oldSchema: RJSFSchema = {
         type: 'object',
@@ -889,7 +935,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       ).toEqual({ addr: { street: 'x', zip: undefined } });
       expect(schemaUtils.sanitizeDataForNewSchema(addr(false), addr(true), { addr: null })).toEqual({ addr: null });
     });
-    it('gives an object property the data does not hold an empty object, without descending into a recursive $ref', () => {
+    it('leaves out an object property the data does not hold, without descending into a recursive $ref', () => {
       const rootSchema: RJSFSchema = {
         definitions: {
           node: { type: 'object', properties: { name: { type: 'string' }, child: { $ref: '#/definitions/node' } } },
@@ -899,7 +945,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       const otherOption: RJSFSchema = { type: 'object', properties: { b: { type: 'string' } } };
       expect(
         sanitizeDataForNewSchema({ validator: testValidator }, rootSchema, treeOption, otherOption, { b: 'v' }),
-      ).toEqual({ b: undefined, tree: {} });
+      ).toStrictEqual({});
     });
     it('leaves out an object property the data does not hold whose schema declares no properties', () => {
       const newSchema: RJSFSchema = { type: 'object', properties: { meta: { type: 'object' } } };
@@ -1706,7 +1752,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         expect(Object.getPrototypeOf(result.nested)).toBe(Object.prototype);
       });
       // The prototype setter ignores a string or `undefined`, so each write below is only seen as an own key
-      it('clears a __proto__ property that only the old schema declares', () => {
+      it('removes a __proto__ property that only the old schema declares', () => {
         const oldSchema = JSON.parse(
           '{"type": "object", "properties": {"__proto__": {"type": "string"}}}',
         ) as RJSFSchema;
@@ -1714,9 +1760,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         const data = JSON.parse('{"__proto__": "stale"}');
         const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data);
         expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
-        expect(Object.getOwnPropertyDescriptor(result, '__proto__')).toEqual(
-          expect.objectContaining({ value: undefined }),
-        );
+        expect(Object.hasOwn(result as object, '__proto__')).toBe(false);
       });
       it('clears a __proto__ property whose new default is readOnly', () => {
         const oldSchema = JSON.parse(
