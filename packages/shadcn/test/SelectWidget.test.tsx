@@ -1012,36 +1012,34 @@ describe('SelectWidget combobox', () => {
     expect(screen.getAllByRole('option')).toHaveLength(2);
   });
 
-  test("closes a multiple select's list as focus leaves it from a remove button", async () => {
+  test("closes a multiple select's list as focus leaves its input, for a remove button or out of the select", async () => {
     const user = userEvent.setup();
     render(
-      <>
-        <button type='button'>Before</button>
-        <Form
-          schema={{
-            type: 'object',
-            properties: {
-              color: {
-                type: 'array',
-                title: 'Color',
-                items: { type: 'string', enum: ['red', 'blue', 'green'] },
-                uniqueItems: true,
-              },
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: {
+              type: 'array',
+              title: 'Color',
+              items: { type: 'string', enum: ['red', 'blue', 'green'] },
+              uniqueItems: true,
             },
-          }}
-          initialFormData={{ color: ['red'] }}
-          validator={validator}
-        />
-      </>,
+          },
+        }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+      />,
     );
 
     await user.click(screen.getByRole('combobox'));
-    await user.tab({ shift: true });
-    await user.keyboard('{ArrowDown}');
     expect(screen.getAllByRole('option')).toHaveLength(2);
     await user.tab({ shift: true });
+    expect(screen.queryByRole('option')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('combobox'));
+    await user.tab();
 
-    expect(screen.getByRole('button', { name: 'Before' })).toHaveFocus();
+    expect(screen.getByRole('button', { name: 'Submit' })).toHaveFocus();
     expect(screen.queryByRole('option')).not.toBeInTheDocument();
   });
 
@@ -1587,7 +1585,8 @@ describe("the multiple select's combobox input", () => {
     expect(input).toHaveAttribute('aria-autocomplete', 'list');
   });
 
-  test("lists a search's matches in schema order and highlights the first", async () => {
+  test("ranks a search's matches by how well they match, so Enter adds the best", async () => {
+    const onChange = vi.fn();
     const user = userEvent.setup();
     render(
       <Form
@@ -1597,14 +1596,17 @@ describe("the multiple select's combobox input", () => {
           items: { type: 'string', enum: ['Pineapple', 'Grape', 'Apple', 'Applet'] },
         }}
         validator={validator}
+        onChange={onChange}
       />,
     );
 
     await user.type(screen.getByRole('combobox'), 'appl');
 
     const options = screen.getAllByRole('option');
-    expect(options.map((option) => option.textContent)).toEqual(['Pineapple', 'Apple', 'Applet']);
+    expect(options.map((option) => option.textContent)).toEqual(['Apple', 'Applet', 'Pineapple']);
     expect(options.map((option) => option.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
+    await user.keyboard('{Enter}');
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: ['Apple'] }), 'root');
   });
 
   test('opens again on Down Arrow with a search left in it, as focus coming back leaves it closed', async () => {
@@ -1623,7 +1625,7 @@ describe("the multiple select's combobox input", () => {
     expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual(['blue']);
   });
 
-  test('removes only the item whose remove button Enter is pressed on, leaving the highlighted option unchosen', async () => {
+  test('stays closed on an arrow on a remove button, whose Enter removes only its own item', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(
@@ -1637,11 +1639,78 @@ describe("the multiple select's combobox input", () => {
 
     await user.click(screen.getByRole('combobox'));
     await user.tab({ shift: true });
+    const remove = screen.getByRole('button', { name: '' });
+    expect(remove).toHaveFocus();
     await user.keyboard('{ArrowDown}');
-    expect(screen.getByRole('option', { name: 'blue' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    expect(remove).toHaveFocus();
     await user.keyboard('{Enter}');
 
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { color: [] } }), 'root_color');
+  });
+
+  test('removes the item whose remove button Backspace or Delete is pressed on only by its Enter, never the last item', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['red', 'blue', 'green'] } },
+          },
+        }}
+        initialFormData={{ color: ['red', 'blue', 'green'] }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+    await user.tab({ shift: true });
+    await user.tab({ shift: true });
+    await user.tab({ shift: true });
+    await user.keyboard('{Backspace}{Delete}{Enter}');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { color: ['blue', 'green'] } }),
+      'root_color',
+    );
+  });
+
+  test('closes its list on Escape and keeps focus, with a search in its input or none', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    await user.type(input, 'bl');
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    await user.keyboard('{Escape}');
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(input).toHaveValue('bl');
+    expect(input).toHaveFocus();
+
+    await user.clear(input);
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    await user.keyboard('{Escape}');
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(input).toHaveFocus();
+  });
+
+  test('neither takes focus nor opens on a right-click on a selected item', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+      />,
+    );
+
+    await user.pointer({ keys: '[MouseRight]', target: screen.getByText('red') });
+
+    expect(screen.getByRole('combobox')).not.toHaveFocus();
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
 
   test('keeps focus on its input and its list open on a click on a group heading', async () => {
@@ -1776,17 +1845,17 @@ describe("the multiple select's search among optgroups", () => {
     expect(options.map((option) => option.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
   });
 
-  test('keeps the groups in schema order, highlighting the best match of the first', async () => {
+  test('ranks the groups by their best match, highlighting the best match of all', async () => {
     const user = userEvent.setup();
     renderFruit({ Tropical: ['Pineapple'], Orchard: ['Grape', 'Apple', 'Applet'] });
 
     await user.type(screen.getByRole('combobox'), 'appl');
 
     const [first, second] = screen.getAllByRole('group');
-    expect(first).toHaveAccessibleName('Tropical');
-    expect(second).toHaveAccessibleName('Orchard');
+    expect(first).toHaveAccessibleName('Orchard');
+    expect(second).toHaveAccessibleName('Tropical');
     const options = screen.getAllByRole('option');
-    expect(options.map((option) => option.textContent)).toEqual(['Pineapple', 'Apple', 'Applet']);
+    expect(options.map((option) => option.textContent)).toEqual(['Apple', 'Applet', 'Pineapple']);
     expect(options.map((option) => option.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
   });
 });

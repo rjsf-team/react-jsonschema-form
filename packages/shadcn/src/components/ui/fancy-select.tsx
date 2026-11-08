@@ -105,7 +105,11 @@ function cmdkOption(container: HTMLElement | null, value: string) {
 /** Returns the ids cmdk gives a listbox and its highlighted option, which it keeps to itself, so a combobox can point
  * at them, with the ref callbacks to put on the `CommandList` and on the highlighted `CommandItem`. An element hands its
  * id over as it mounts, before the browser paints, and takes it back as it unmounts, so a list that opens again under
- * new ids is never pointed at by the ids of the one that closed
+ * new ids is never pointed at by the ids of the one that closed.
+ * The callbacks are stable, but cmdk composes them into a new ref on each render, so React detaches and reattaches them
+ * at every commit while the list is open. That sets each id to `undefined` and back, and React's extra render pass
+ * bails out on the unchanged value. Ignoring the `null` instead would keep the id of an element that really unmounted,
+ * as a detach can't tell whether a reattach follows
  *
  * @returns - The ids, undefined while nothing holds them, and the ref callbacks reading them
  */
