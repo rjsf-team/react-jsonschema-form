@@ -477,4 +477,96 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
       ).toBe(0);
     },
   );
+
+  it.each<[string, RJSFSchema, 'anyOf' | 'oneOf', RJSFSchema[], unknown]>([
+    [
+      'type',
+      { type: ['integer', 'number', 'null', 'object'] },
+      'oneOf',
+      [{ type: 'null' }, { type: 'integer' }],
+      { kind: 'p', next: null },
+    ],
+    ['enum', { enum: ['a', 'b'] }, 'anyOf', [{ type: 'string' }], 'a'],
+  ])(
+    'matches an option holding a recursive choice whose %s states one type twice',
+    (_spelling, stated, keyword, leaves, value) => {
+      const expression = (kind: string): RJSFSchema => ({
+        type: 'object',
+        properties: { kind: { const: kind }, next: { $ref: '#/$defs/Expr' } },
+      });
+      const root: RJSFSchema = {
+        $defs: { Expr: { ...stated, [keyword]: [...leaves, expression('p'), expression('q')] } },
+      };
+      const options: RJSFSchema[] = [
+        { properties: { child: { type: 'boolean' } } },
+        { properties: { child: { $ref: '#/$defs/Expr' } } },
+      ];
+      // A cut `type` repeating an entry fails to compile, so the option would match nothing
+      expect(
+        getFirstMatchingOption(
+          { validator: customizeValidator({ AjvClass: Ajv2020 }) },
+          { child: value },
+          options,
+          root,
+        ),
+      ).toBe(1);
+    },
+  );
+
+  it.each<[string, RJSFSchema, RJSFSchema, unknown]>([
+    [
+      'the properties an allOf entry declares',
+      {
+        type: 'object',
+        allOf: [{ properties: { a: { $ref: '#/definitions/X' } } }],
+        unevaluatedProperties: { $ref: '#/definitions/X' },
+      },
+      { type: 'object', properties: { a: { type: 'number' } } },
+      { a: 1 },
+    ],
+    [
+      'the items an allOf entry evaluates',
+      { type: 'array', allOf: [{ items: { $ref: '#/definitions/X' } }], unevaluatedItems: { $ref: '#/definitions/X' } },
+      { type: 'array', items: { type: 'number' } },
+      [1],
+    ],
+  ])(
+    'checks a node whose unevaluated keyword leaves out %s, which walks each part once',
+    (_parts, nodeSchema, other, value) => {
+      const root: RJSFSchema = { definitions: { X: nodeSchema } };
+      const options: RJSFSchema[] = [{ properties: { v: { $ref: '#/definitions/X' } } }, { properties: { v: other } }];
+      expect(
+        getFirstMatchingOption({ validator: customizeValidator({ AjvClass: Ajv2019 }) }, { v: value }, options, root),
+      ).toBe(1);
+    },
+  );
+
+  it('keeps the properties a then below a $ref declares for an unevaluatedProperties: false in the option, where they lead to a recursive choice', () => {
+    const expression = (kind: string): RJSFSchema => ({
+      properties: { kind: { const: kind }, next: { $ref: '#/$defs/Expr' } },
+    });
+    const root: RJSFSchema = {
+      $defs: {
+        // States no type, so a cut leaves nothing of it
+        Expr: { anyOf: [expression('p'), expression('q')] },
+        Base: {
+          if: { properties: { kind: { const: 'p' } }, required: ['kind'] },
+          then: { properties: { kind: true, next: { $ref: '#/$defs/Expr' } } },
+        },
+      },
+    };
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { other: { type: 'string' } } },
+      { allOf: [{ $ref: '#/$defs/Base' }], unevaluatedProperties: false },
+    ];
+    // Leaving `next` out of the copy would have the `unevaluatedProperties: false` reject it, and no option match
+    expect(
+      getFirstMatchingOption(
+        { validator: customizeValidator({ AjvClass: Ajv2019 }) },
+        { kind: 'p', next: { kind: 'q', next: null } },
+        options,
+        root,
+      ),
+    ).toBe(1);
+  });
 });

@@ -1465,6 +1465,8 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Fix `sanitizeDataForNewSchema()` replacing an array item that isn't an object, such as a string or `null`, with an empty object where the new items declare `type: 'object'`, so switching `anyOf`/`oneOf` options turned a list of strings into rows the user never filled; such an item is now dropped, whatever the old items declare, unless it is a `null` that `nullable: true` allows ([#5773](https://github.com/rjsf-team/react-jsonschema-form/pull/5773))
 - Fix `getFirstMatchingOption()` and `getClosestMatchingOption()` taking exponentially longer with depth, stalling a form, on data nested in definitions that offer each other as `anyOf`/`oneOf` options ([#5756](https://github.com/rjsf-team/react-jsonschema-form/pull/5756), [#4990](https://github.com/rjsf-team/react-jsonschema-form/issues/4990))
 - Change `getFirstMatchingOption()`, `getClosestMatchingOption()` and the `dependencies` option `retrieveSchema()` merges to pick the first of options that differ only within such definitions ([#5756](https://github.com/rjsf-team/react-jsonschema-form/pull/5756))
+- Change `getFirstMatchingOption()` and `getClosestMatchingOption()` to ignore the `required` of an option's `dependentSchemas` entries, as they already ignore one in its `dependencies` schemas, so an option whose dependent property is still empty matches ([#5756](https://github.com/rjsf-team/react-jsonschema-form/pull/5756))
+- Add the `ADDITIONAL_ITEMS_KEY`, `CONTAINS_KEY`, `DEPENDENT_SCHEMAS_KEY`, `NOT_KEY`, `PREFIX_ITEMS_KEY` and `UNEVALUATED_ITEMS_KEY` constants ([#5756](https://github.com/rjsf-team/react-jsonschema-form/pull/5756))
 
 ## @rjsf/validator-ajv8
 

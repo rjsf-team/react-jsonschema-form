@@ -8,14 +8,17 @@ import type { JSONSchema7TypeName } from 'json-schema';
  * markers invisible to JSON serialisation and JSON Schema validators (AJV, ATA, etc.), which only enumerate
  * string-keyed properties.
  */
+export const ADDITIONAL_ITEMS_KEY = 'additionalItems';
 export const ADDITIONAL_PROPERTY_FLAG = Symbol('__additional_property');
 export const ADDITIONAL_PROPERTIES_KEY = 'additionalProperties';
 export const ALL_OF_KEY = 'allOf';
 export const ANY_OF_KEY = 'anyOf';
 export const CONST_KEY = 'const';
+export const CONTAINS_KEY = 'contains';
 export const DEFAULT_KEY = 'default';
 export const DEFINITIONS_KEY = 'definitions';
 export const DEPENDENCIES_KEY = 'dependencies';
+export const DEPENDENT_SCHEMAS_KEY = 'dependentSchemas';
 export const ELSE_KEY = 'else';
 export const ENUM_KEY = 'enum';
 export const ERRORS_KEY = '__errors';
@@ -30,14 +33,17 @@ export const ID_KEY = '$id';
 export const IF_KEY = 'if';
 export const ITEMS_KEY = 'items';
 export const NAME_KEY = '$name';
+export const NOT_KEY = 'not';
 export const ONE_OF_KEY = 'oneOf';
 export const PATTERN_PROPERTIES_KEY = 'patternProperties';
+export const PREFIX_ITEMS_KEY = 'prefixItems';
 export const PROPERTIES_KEY = 'properties';
 export const READONLY_KEY = 'readonly';
 export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
 export const THEN_KEY = 'then';
+export const UNEVALUATED_ITEMS_KEY = 'unevaluatedItems';
 export const UNEVALUATED_PROPERTIES_KEY = 'unevaluatedProperties';
 export const RJSF_REF_KEY = Symbol('__rjsf_ref');
 export const RJSF_REF_CYCLE_KEY = Symbol('__rjsf_ref_cycle');

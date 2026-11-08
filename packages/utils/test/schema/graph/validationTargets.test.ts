@@ -725,6 +725,30 @@ describe('scoringTarget()', () => {
       };
       expect(scored(schema, '/oneOf/0')).toEqual({ properties: { never: { allOf: [{ not: {} }] } } });
     });
+    it('reads a cut choice whose type or enum repeats a type as naming it once, as the meta-schema requires', () => {
+      const ref = (name: string): RJSFSchema => ({ $ref: `#/definitions/${name}` });
+      const expression = (kind: string): RJSFSchema => ({
+        type: 'object',
+        properties: { kind: { const: kind }, next: ref('Repeated') },
+      });
+      const branch: RJSFSchema = { type: 'object', properties: { c: ref('Strings') } };
+      const schema: RJSFSchema = {
+        definitions: {
+          Repeated: {
+            type: ['integer', 'number', 'null', 'object'],
+            oneOf: [{ type: 'null' }, { type: 'integer' }, expression('p'), expression('q')],
+          },
+          Strings: { enum: ['a', 'b'], anyOf: [{ type: 'string' }, branch, branch] },
+        },
+        oneOf: [{ properties: { repeated: ref('Repeated'), strings: ref('Strings') } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: {
+          repeated: { allOf: [{ type: ['number', 'null', 'object'] }] },
+          strings: { allOf: [{ type: 'string' }] },
+        },
+      });
+    });
     it('reads the types of subschemas that apply to one value in a cycle the same whichever of them is read first', () => {
       const A: RJSFSchema = { anyOf: [{ $ref: '#/definitions/B' }, { type: 'string' }] };
       const B: RJSFSchema = { type: 'number', allOf: [{ $ref: '#/definitions/A' }] };
@@ -886,6 +910,38 @@ describe('scoringTarget()', () => {
             additionalProperties: ref('EvaluatedProperties'),
             unevaluatedProperties: ref('EvaluatedProperties'),
           },
+          // The properties and items its conjuncts evaluate, however deep, are left out of an unevaluated keyword
+          Shared: { properties: { b: { type: 'string' } } },
+          ConjunctEvaluated: {
+            type: 'object',
+            allOf: [true, ref('Shared'), { allOf: [ref('Shared')] }, { properties: { a: ref('ConjunctEvaluated') } }],
+            unevaluatedProperties: ref('ConjunctEvaluated'),
+          },
+          ConjunctRest: {
+            type: 'object',
+            allOf: [{ additionalProperties: ref('ConjunctRest') }],
+            unevaluatedProperties: ref('ConjunctRest'),
+          },
+          ConjunctUnevaluated: {
+            type: 'object',
+            allOf: [{ unevaluatedProperties: ref('ConjunctUnevaluated') }],
+            unevaluatedProperties: ref('ConjunctUnevaluated'),
+          },
+          ConjunctItems: {
+            type: 'array',
+            allOf: [{ items: ref('ConjunctItems') }],
+            unevaluatedItems: ref('ConjunctItems'),
+          },
+          ConjunctUnevaluatedItems: {
+            type: 'array',
+            allOf: [{ unevaluatedItems: ref('ConjunctUnevaluatedItems') }],
+            unevaluatedItems: ref('ConjunctUnevaluatedItems'),
+          },
+          ConjunctTuple: {
+            type: 'array',
+            allOf: [{ prefixItems: [ref('ConjunctTuple')] }],
+            unevaluatedItems: ref('ConjunctTuple'),
+          },
         },
         oneOf: [
           {
@@ -906,6 +962,12 @@ describe('scoringTarget()', () => {
                 'EvaluatedRest',
                 'TupleThenUnevaluated',
                 'EvaluatedProperties',
+                'ConjunctEvaluated',
+                'ConjunctRest',
+                'ConjunctUnevaluated',
+                'ConjunctItems',
+                'ConjunctUnevaluatedItems',
+                'ConjunctTuple',
               ].map((name) => [name, ref(name)]),
             ),
           },

@@ -1,22 +1,28 @@
 import { allowsAdditionalProperties, patternRegExp, readsAbsentAsAllowed } from '../../additionalPropertiesUtils.ts';
 import {
+  ADDITIONAL_ITEMS_KEY,
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   ANY_OF_KEY,
   CONST_KEY,
+  CONTAINS_KEY,
   DEPENDENCIES_KEY,
+  DEPENDENT_SCHEMAS_KEY,
   DISCRIMINATOR_PATH,
   ELSE_KEY,
   ENUM_KEY,
   ID_KEY,
   IF_KEY,
   ITEMS_KEY,
+  NOT_KEY,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
+  PREFIX_ITEMS_KEY,
   PROPERTIES_KEY,
   REF_KEY,
   REQUIRED_KEY,
   THEN_KEY,
+  UNEVALUATED_ITEMS_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
 import guessType from '../../guessType.ts';
@@ -424,11 +430,6 @@ interface Loosening {
 /** The `Loosening` that drops nothing, for a subschema outside an option's scope */
 const KEPT: Loosening = { required: false, additionalProperties: false };
 
-const ADDITIONAL_ITEMS_KEY = 'additionalItems';
-const DEPENDENT_SCHEMAS_KEY = 'dependentSchemas';
-const PREFIX_ITEMS_KEY = 'prefixItems';
-const UNEVALUATED_ITEMS_KEY = 'unevaluatedItems';
-
 /** A part of the data a subschema applies to, see `PART_OF_KEYWORD`: the properties whose names `test` takes, written
  * as one `name`, as one `pattern`, or as the rest of them, which leaves those matching the `claimed` patterns to them;
  * the items from `from` up to but not including `to`; what a subschema under `keyword` applies to, such as the
@@ -446,10 +447,15 @@ type Part =
   | { readonly kind: 'keyword'; readonly keyword: string }
   | { readonly kind: 'nothing' };
 
-/** Returns the part `PART_OF_KEYWORD` names a subschema by, from the key `entry` it is held under, if any, and the
- * subschema `beside` holding it
+/** Returns the part `PART_OF_KEYWORD` names a subschema by, from the key `entry` it is held under, if any, the
+ * subschema `beside` holding it, and the `evaluators` whose evaluated parts an unevaluated keyword of that subschema
+ * sees besides its own, see `evaluatorsOf()`
  */
-type PartOf = (entry: string | undefined, beside: GenericObjectType) => Part;
+type PartOf = (
+  entry: string | undefined,
+  beside: GenericObjectType,
+  evaluators: () => readonly GenericObjectType[],
+) => Part;
 
 /** The part of a subschema that applies to no part of the data */
 const NOTHING: Part = { kind: 'nothing' };
@@ -481,12 +487,12 @@ function propertiesMatching(pattern: string): Part {
   return { kind: 'properties', pattern, claimed: NO_CLAIMS, test: (name) => compiled.some((one) => one.test(name)) };
 }
 
-/** Returns the properties an `additionalProperties` applies to, those the `properties` and `patternProperties` of the
- * subschema `beside` leave
+/** Returns the properties the `properties` and `patternProperties` of the subschemas `besides` leave, which for an
+ * `additionalProperties` is the subschema holding it
  */
-function propertiesLeft(beside: GenericObjectType): Part {
-  const names = new Set(namesIn(beside, PROPERTIES_KEY));
-  const patterns = namesIn(beside, PATTERN_PROPERTIES_KEY);
+function propertiesLeft(besides: readonly GenericObjectType[]): Part {
+  const names = new Set(besides.flatMap((beside) => namesIn(beside, PROPERTIES_KEY)));
+  const patterns = besides.flatMap((beside) => namesIn(beside, PATTERN_PROPERTIES_KEY));
   const compiled = patterns.flatMap(compiledPattern);
   return {
     kind: 'properties',
@@ -500,16 +506,38 @@ function itemsFrom(from: number): Part {
   return { kind: 'items', from, to: Infinity };
 }
 
-/** Returns the items an `unevaluatedItems` applies to: none where the `items` beside it evaluates every item, as one
- * subschema does, or as a tuple does along with an `additionalItems`, and otherwise those after the longer of the
- * tuples beside it
+/** Returns the properties an `unevaluatedProperties` of the subschema `beside` applies to: none where an
+ * `additionalProperties` beside it, or one or an `unevaluatedProperties` of its `evaluators`, evaluates every property,
+ * and otherwise those the `properties` and `patternProperties` of all of them leave
  */
-function itemsLeft(beside: GenericObjectType): Part {
+function propertiesUnevaluated(beside: GenericObjectType, evaluators: readonly GenericObjectType[]): Part {
+  return ADDITIONAL_PROPERTIES_KEY in beside ||
+    evaluators.some((one) => ADDITIONAL_PROPERTIES_KEY in one || UNEVALUATED_PROPERTIES_KEY in one)
+    ? NOTHING
+    : propertiesLeft([beside, ...evaluators]);
+}
+
+/** Returns whether the `items` of the subschema `beside` evaluates every item, as one subschema does, or as a tuple
+ * does along with an `additionalItems`
+ */
+function evaluatesEveryItem(beside: GenericObjectType): boolean {
   const tuple = tupleLength(beside, ITEMS_KEY);
-  if ((ITEMS_KEY in beside && tuple === undefined) || (tuple !== undefined && ADDITIONAL_ITEMS_KEY in beside)) {
+  return (ITEMS_KEY in beside && tuple === undefined) || (tuple !== undefined && ADDITIONAL_ITEMS_KEY in beside);
+}
+
+/** Returns the items an `unevaluatedItems` of the subschema `beside` applies to: none where it or one of its
+ * `evaluators` evaluates every item, see `evaluatesEveryItem()`, or one of its `evaluators` holds an
+ * `unevaluatedItems`, and otherwise those after the longest of their tuples
+ */
+function itemsLeft(beside: GenericObjectType, evaluators: readonly GenericObjectType[]): Part {
+  if (evaluatesEveryItem(beside) || evaluators.some((one) => evaluatesEveryItem(one) || UNEVALUATED_ITEMS_KEY in one)) {
     return NOTHING;
   }
-  return itemsFrom(Math.max(tupleLength(beside, PREFIX_ITEMS_KEY) ?? 0, tuple ?? 0));
+  const tuples = [beside, ...evaluators].flatMap((one) => [
+    tupleLength(one, PREFIX_ITEMS_KEY) ?? 0,
+    tupleLength(one, ITEMS_KEY) ?? 0,
+  ]);
+  return itemsFrom(Math.max(...tuples));
 }
 
 /** Returns the item at `index` of a tuple */
@@ -519,9 +547,9 @@ function itemAt(index: string | undefined): Part {
 
 /** The keywords whose subschemas apply to a part of the data rather than to all of it, each with how to read the part:
  * a property by the name it is held under, the properties a pattern matches, the properties left by those beside it,
- * which an `additionalProperties` beside an `unevaluatedProperties` leaves none of, a tuple's item by its index, the
- * items after a tuple from its length on, which an `additionalItems` with no tuple beside it applies to none of, and
- * the items `itemsLeft()` leaves to an `unevaluatedItems`
+ * the properties `propertiesUnevaluated()` leaves to an `unevaluatedProperties`, a tuple's item by its index, the items
+ * after a tuple from its length on, which an `additionalItems` with no tuple beside it applies to none of, and the
+ * items `itemsLeft()` leaves to an `unevaluatedItems`
  */
 const PART_OF_KEYWORD = new Map<string, PartOf>([
   [
@@ -529,11 +557,8 @@ const PART_OF_KEYWORD = new Map<string, PartOf>([
     (entry) => ({ kind: 'properties', name: String(entry), claimed: NO_CLAIMS, test: (name) => name === entry }),
   ],
   [PATTERN_PROPERTIES_KEY, (entry) => propertiesMatching(String(entry))],
-  [ADDITIONAL_PROPERTIES_KEY, (_entry, beside) => propertiesLeft(beside)],
-  [
-    UNEVALUATED_PROPERTIES_KEY,
-    (_entry, beside) => (ADDITIONAL_PROPERTIES_KEY in beside ? NOTHING : propertiesLeft(beside)),
-  ],
+  [ADDITIONAL_PROPERTIES_KEY, (_entry, beside) => propertiesLeft([beside])],
+  [UNEVALUATED_PROPERTIES_KEY, (_entry, beside, evaluators) => propertiesUnevaluated(beside, evaluators())],
   [
     ITEMS_KEY,
     (entry, beside) => (entry === undefined ? itemsFrom(tupleLength(beside, PREFIX_ITEMS_KEY) ?? 0) : itemAt(entry)),
@@ -546,14 +571,14 @@ const PART_OF_KEYWORD = new Map<string, PartOf>([
     },
   ],
   [PREFIX_ITEMS_KEY, itemAt],
-  [UNEVALUATED_ITEMS_KEY, (_entry, beside) => itemsLeft(beside)],
-  ['contains', () => itemsFrom(0)],
+  [UNEVALUATED_ITEMS_KEY, (_entry, beside, evaluators) => itemsLeft(beside, evaluators())],
+  [CONTAINS_KEY, () => itemsFrom(0)],
 ]);
 
 /** The keywords of `PART_OF_KEYWORD` whose subschema read as `{}` only widens what the schema accepts, where a
  * `contains` read so would narrow it, as a `not` would
  */
-const PART_KEYWORDS = new Set([...PART_OF_KEYWORD.keys()].filter((keyword) => keyword !== 'contains'));
+const PART_KEYWORDS = new Set([...PART_OF_KEYWORD.keys()].filter((keyword) => keyword !== CONTAINS_KEY));
 
 /** The keywords that read which parts of the data the subschemas applied beside them evaluate */
 const EVALUATING_KEYWORDS = [UNEVALUATED_PROPERTIES_KEY, UNEVALUATED_ITEMS_KEY];
@@ -987,13 +1012,15 @@ function statedTypes<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: Node
       const node = graph.node(at);
       if (node.kind === 'schema') {
         const { type, [CONST_KEY]: constant, [ENUM_KEY]: values } = node.raw as GenericObjectType;
+        // Each list is deduplicated: a `type` naming `integer` and `number`, or an `enum` of two strings, would
+        // otherwise hand a cut a `type` repeating an entry, which the meta-schema rejects
         const stated = [
           ...(type === undefined
             ? []
             : [(Array.isArray(type) ? type : [type]).map((one) => (one === 'integer' ? 'number' : String(one)))]),
           ...(constant === undefined ? [] : [[guessType(constant)]]),
           ...(Array.isArray(values) ? [values.map(guessType)] : []),
-        ];
+        ].map((types) => [...new Set(types)]);
         const conjuncts = [
           ...(node.ref === undefined ? [] : [node.ref]),
           ...graph.subschemas(at, ALL_OF_KEY).map(([, entry]) => entry),
@@ -1044,7 +1071,7 @@ const SAME_VALUE_KEYWORDS = new Set([
   ALL_OF_KEY,
   ANY_OF_KEY,
   ONE_OF_KEY,
-  'not',
+  NOT_KEY,
   IF_KEY,
   THEN_KEY,
   ELSE_KEY,
@@ -1054,8 +1081,45 @@ const SAME_VALUE_KEYWORDS = new Set([
 /** Returns the part of the data a subschema the keyword `keyword` of the subschema `beside` holds under `entry`
  * applies to, see `Part`
  */
-function partOf(keyword: string, entry: string | undefined, beside: GenericObjectType): Part {
-  return PART_OF_KEYWORD.get(keyword)?.(entry, beside) ?? { kind: 'keyword', keyword };
+function partOf(
+  keyword: string,
+  entry: string | undefined,
+  beside: GenericObjectType,
+  evaluators: () => readonly GenericObjectType[],
+): Part {
+  return PART_OF_KEYWORD.get(keyword)?.(entry, beside, evaluators) ?? { kind: 'keyword', keyword };
+}
+
+/** Returns the keywords of the subschemas whose evaluated parts an `unevaluatedProperties` or `unevaluatedItems` of the
+ * node `id` sees besides its own, however deep: what its `$ref` names and what it holds under `CONJUNCT_KEYWORDS`. Its
+ * `anyOf`/`oneOf` options, `if` and `contains` are left out: a part one of them walks without passing, which leaves
+ * the node to pass, is walked again by the unevaluated keyword, where a conjunct that fails fails the node.
+ */
+function evaluatorsOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): GenericObjectType[] {
+  const evaluators: GenericObjectType[] = [];
+  const seen = new Set([id]);
+  const pending = [id];
+  for (let at = pending.pop(); at !== undefined; at = pending.pop()) {
+    const node = graph.node(at);
+    const raw: unknown = node.kind === 'schema' ? node.raw : undefined;
+    if (at !== id && isObject(raw)) {
+      evaluators.push(raw);
+    }
+    const ref = node.kind === 'schema' ? node.ref : undefined;
+    const applied = [
+      ...childrenOf(graph, at)
+        .filter(([[keyword]]) => CONJUNCT_KEYWORDS.has(keyword))
+        .map(([, child]) => child),
+      ...(ref === undefined ? [] : [ref]),
+    ];
+    for (const child of applied) {
+      if (!seen.has(child)) {
+        seen.add(child);
+        pending.push(child);
+      }
+    }
+  }
+  return evaluators;
 }
 
 /** Returns whether the properties `others` names are all left by the patterns `part` claims */
@@ -1114,6 +1178,16 @@ function branchingNodes<S extends StrictRJSFSchema>(
   cycle: ReadonlyMap<NodeId, CycleMember>,
 ): Set<NodeId> {
   const walked = new Map<NodeId, readonly Part[]>();
+  const evaluatorsMemo = new Map<NodeId, readonly GenericObjectType[]>();
+  const evaluatorsAt = (id: NodeId) => () => {
+    const known = evaluatorsMemo.get(id);
+    if (known !== undefined) {
+      return known;
+    }
+    const found = evaluatorsOf(graph, id);
+    evaluatorsMemo.set(id, found);
+    return found;
+  };
   // The parts of the value through which the node `id` of the cycle, or a node of the cycle it applies to the same
   // value however deep, holds the cycle again, walked once per node
   const partsOf = (id: NodeId): readonly Part[] => {
@@ -1139,7 +1213,7 @@ function branchingNodes<S extends StrictRJSFSchema>(
         if (SAME_VALUE_KEYWORDS.has(keyword)) {
           reach(child);
         } else {
-          parts.push(partOf(keyword, entry, beside));
+          parts.push(partOf(keyword, entry, beside, evaluatorsAt(at)));
         }
       });
       const node = graph.node(at);
@@ -1151,7 +1225,7 @@ function branchingNodes<S extends StrictRJSFSchema>(
     return parts;
   };
   const recurrence = (keyword: string, child: NodeId): Recurrence => ({
-    types: keyword === 'not' || keyword === IF_KEY ? undefined : statedTypes(graph, child),
+    types: keyword === NOT_KEY || keyword === IF_KEY ? undefined : statedTypes(graph, child),
     parts: partsOf(child),
   });
   return new Set(
@@ -1170,7 +1244,10 @@ function branchingNodes<S extends StrictRJSFSchema>(
           ([[keyword], child]) =>
             cycle.has(child) && !SAME_VALUE_KEYWORDS.has(keyword) && !DEFINITIONS_KEYWORDS.has(keyword),
         )
-        .map(([[keyword, entry]]): Recurrence => ({ types, parts: [partOf(keyword, entry, beside)] }));
+        .map(([[keyword, entry]]): Recurrence => ({
+          types,
+          parts: [partOf(keyword, entry, beside, evaluatorsAt(id))],
+        }));
       const recurrences: Recurrence[] = [
         ...own,
         ...applying.map(([[keyword], child]) => recurrence(keyword, child)),
@@ -1254,113 +1331,133 @@ function recursiveChoices<S extends StrictRJSFSchema = RJSFSchema>(graph: Schema
     // base stands, and is read from it
     const start = graph.base?.size ?? 0;
     const base = graph.base === undefined ? undefined : recursiveChoices(graph.base);
-    const leads = new Map<NodeId, Lead>();
-    const cycles = new Map<NodeId, NodeId>();
-    const holders = new Set<NodeId>();
-    const leadOf = (id: NodeId) => (id < start ? base?.leadOf(id) : leads.get(id));
-    // Tarjan's strongly connected components, run on a stack of frames rather than by recursion: it enters every node
-    // of the graph, however long a chain of `$ref`s a generated schema holds, where only a copy `derive()` makes
-    // recurses, as deep as the copy, as `retrieveSchema()` does. It closes a component after every component it
-    // holds, so whether that leads to a recursive choice is known by then.
-    const component = new Map<NodeId, NodeId>();
-    const open = new Map<NodeId, number>();
-    const stack: Frame[] = [];
-    const frames: Frame[] = [];
-    const enter = (id: NodeId) => {
-      const order = open.size + component.size;
-      const node = graph.node(id);
-      const raw: unknown = node.kind === 'schema' ? node.raw : undefined;
-      const held = childrenOf(graph, id);
-      const applied = [
-        ...held.filter(([[keyword]]) => !DEFINITIONS_KEYWORDS.has(keyword)).map(([, child]) => child),
-        ...(node.kind === 'schema' ? [node.ref, node.conjunction].filter((ref) => ref !== undefined) : []),
-      ];
-      const evaluated =
-        node.kind === 'schema' && EVALUATING_KEYWORDS.some((keyword) => keyword in node.raw)
-          ? [
-              ...held.filter(([[keyword]]) => CONJUNCT_KEYWORDS.has(keyword)).map(([, child]) => child),
-              ...(node.ref === undefined ? [] : [node.ref]),
-            ]
-          : [];
-      const frame = {
-        id,
-        order,
-        low: order,
-        held,
-        beside: isObject(raw) ? raw : {},
-        applied,
-        next: applied.filter((child) => child >= start),
-        evaluated,
-      };
-      open.set(id, order);
-      stack.push(frame);
-      frames.push(frame);
-    };
-    const leave = (frame: Frame) => {
-      frames.pop();
-      const parent = frames.at(-1);
-      if (parent !== undefined) {
-        parent.low = Math.min(parent.low, frame.low);
-      }
-      if (frame.low !== frame.order) {
-        return;
-      }
-      const members = stack.splice(stack.lastIndexOf(frame));
-      members.forEach((member) => {
-        open.delete(member.id);
-        component.set(member.id, frame.id);
-      });
-      const inComponent = (child: NodeId) => component.get(child) === frame.id;
-      const recurs = members.length > 1 || frame.applied.includes(frame.id);
-      const branching = recurs
-        ? branchingNodes(graph, new Map(members.map(({ id, held, beside }) => [id, { held, beside }])))
-        : new Set();
-      if (branching.size > 0 || members.some(({ applied }) => applied.some((child) => leadOf(child) !== undefined))) {
-        members.forEach(({ id, held, evaluated }) => {
-          // A part a cut below a conjunct declares no longer counts as evaluated for the `unevaluatedProperties` or
-          // `unevaluatedItems` beside it, which would reject what the node accepts, so such a node is cut as a whole
-          const evaluatesCut = evaluated.some((child) => leadOf(child) !== undefined || inComponent(child));
-          const copied =
-            !evaluatesCut &&
-            held.every(
-              ([[keyword], child]) =>
-                (leadOf(child) === undefined && !inComponent(child)) ||
-                PART_KEYWORDS.has(keyword) ||
-                CONJUNCT_KEYWORDS.has(keyword) ||
-                DEFINITIONS_KEYWORDS.has(keyword),
-            );
-          leads.set(id, copied && !branching.has(id) ? 'copied' : 'cut');
-          if (recurs) {
-            cycles.set(id, frame.id);
-          }
-        });
-      }
-      members
-        .filter(({ held }) => held.some(([[keyword], child]) => PART_KEYWORDS.has(keyword) && leadOf(child)))
-        .forEach((member) => holders.add(member.id));
-    };
-    for (let root = start; root < graph.size; root += 1) {
-      if (!component.has(root)) {
-        enter(root);
-      }
-      for (let frame = frames.at(-1); frame !== undefined; frame = frames.at(-1)) {
-        const child = frame.next.pop();
-        const order = child === undefined ? undefined : open.get(child);
-        if (order !== undefined) {
-          frame.low = Math.min(frame.low, order);
-        } else if (child === undefined) {
-          leave(frame);
-        } else if (!component.has(child)) {
-          enter(child);
-        }
-      }
-    }
+    const { leads, cycles, holders } = walkRecursiveChoices(graph, start, base);
     return {
-      leadOf,
+      leadOf: (id) => (id < start ? base?.leadOf(id) : leads.get(id)),
       cycleOf: (id) => (id < start ? base?.cycleOf(id) : cycles.get(id)),
       holds: (id) => (id < start ? base?.holds(id) === true : holders.has(id)),
     };
   });
+}
+
+/** What `walkRecursiveChoices()` finds for the nodes of a graph from `start` on, see `RecursiveChoices` */
+interface FoundChoices {
+  readonly leads: ReadonlyMap<NodeId, Lead>;
+  readonly cycles: ReadonlyMap<NodeId, NodeId>;
+  readonly holders: ReadonlySet<NodeId>;
+}
+
+/** Returns what `recursiveChoices()` reads for the nodes of `graph` from `start` on, those below read from `base`. It
+ * runs apart from the object `recursiveChoices()` keeps for as long as the graph lives, so the state of the walk is
+ * freed once it ends rather than held by the closures that object is made of.
+ */
+function walkRecursiveChoices<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  start: number,
+  base: RecursiveChoices | undefined,
+): FoundChoices {
+  const leads = new Map<NodeId, Lead>();
+  const cycles = new Map<NodeId, NodeId>();
+  const holders = new Set<NodeId>();
+  const leadOf = (id: NodeId) => (id < start ? base?.leadOf(id) : leads.get(id));
+  // Tarjan's strongly connected components, run on a stack of frames rather than by recursion: it enters every node
+  // of the graph, however long a chain of `$ref`s a generated schema holds, where only a copy `derive()` makes
+  // recurses, as deep as the copy, as `retrieveSchema()` does. It closes a component after every component it
+  // holds, so whether that leads to a recursive choice is known by then.
+  const component = new Map<NodeId, NodeId>();
+  const open = new Map<NodeId, number>();
+  const stack: Frame[] = [];
+  const frames: Frame[] = [];
+  const enter = (id: NodeId) => {
+    const order = open.size + component.size;
+    const node = graph.node(id);
+    const raw: unknown = node.kind === 'schema' ? node.raw : undefined;
+    const held = childrenOf(graph, id);
+    const applied = [
+      ...held.filter(([[keyword]]) => !DEFINITIONS_KEYWORDS.has(keyword)).map(([, child]) => child),
+      ...(node.kind === 'schema' ? [node.ref, node.conjunction].filter((ref) => ref !== undefined) : []),
+    ];
+    const evaluated =
+      node.kind === 'schema' && EVALUATING_KEYWORDS.some((keyword) => keyword in node.raw)
+        ? [
+            ...held.filter(([[keyword]]) => CONJUNCT_KEYWORDS.has(keyword)).map(([, child]) => child),
+            ...(node.ref === undefined ? [] : [node.ref]),
+          ]
+        : [];
+    const frame = {
+      id,
+      order,
+      low: order,
+      held,
+      beside: isObject(raw) ? raw : {},
+      applied,
+      next: applied.filter((child) => child >= start),
+      evaluated,
+    };
+    open.set(id, order);
+    stack.push(frame);
+    frames.push(frame);
+  };
+  const leave = (frame: Frame) => {
+    frames.pop();
+    const parent = frames.at(-1);
+    if (parent !== undefined) {
+      parent.low = Math.min(parent.low, frame.low);
+    }
+    if (frame.low !== frame.order) {
+      return;
+    }
+    const members = stack.splice(stack.lastIndexOf(frame));
+    members.forEach((member) => {
+      open.delete(member.id);
+      component.set(member.id, frame.id);
+    });
+    const inComponent = (child: NodeId) => component.get(child) === frame.id;
+    const recurs = members.length > 1 || frame.applied.includes(frame.id);
+    const branching = recurs
+      ? branchingNodes(graph, new Map(members.map(({ id, held, beside }) => [id, { held, beside }])))
+      : new Set();
+    if (branching.size > 0 || members.some(({ applied }) => applied.some((child) => leadOf(child) !== undefined))) {
+      members.forEach(({ id, held, evaluated }) => {
+        // A part a cut below a conjunct declares no longer counts as evaluated for the `unevaluatedProperties` or
+        // `unevaluatedItems` beside it, which would reject what the node accepts, so such a node is cut as a whole
+        const evaluatesCut = evaluated.some((child) => leadOf(child) !== undefined || inComponent(child));
+        const copied =
+          !evaluatesCut &&
+          held.every(
+            ([[keyword], child]) =>
+              (leadOf(child) === undefined && !inComponent(child)) ||
+              PART_KEYWORDS.has(keyword) ||
+              CONJUNCT_KEYWORDS.has(keyword) ||
+              DEFINITIONS_KEYWORDS.has(keyword),
+          );
+        leads.set(id, copied && !branching.has(id) ? 'copied' : 'cut');
+        if (recurs) {
+          cycles.set(id, frame.id);
+        }
+      });
+    }
+    members
+      .filter(({ held }) => held.some(([[keyword], child]) => PART_KEYWORDS.has(keyword) && leadOf(child)))
+      .forEach((member) => holders.add(member.id));
+  };
+  for (let root = start; root < graph.size; root += 1) {
+    if (!component.has(root)) {
+      enter(root);
+    }
+    for (let frame = frames.at(-1); frame !== undefined; frame = frames.at(-1)) {
+      const child = frame.next.pop();
+      const order = child === undefined ? undefined : open.get(child);
+      if (order !== undefined) {
+        frame.low = Math.min(frame.low, order);
+      } else if (child === undefined) {
+        leave(frame);
+      } else if (!component.has(child)) {
+        enter(child);
+      }
+    }
+  }
+  return { leads, cycles, holders };
 }
 
 /** Returns, for each node of the root `graph` that holds a subschema `reachedFrom()` reaches, or holds one that does

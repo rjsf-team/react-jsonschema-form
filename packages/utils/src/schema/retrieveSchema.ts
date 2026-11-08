@@ -9,6 +9,7 @@ import {
   withJoinedSchemas,
 } from '../additionalPropertiesUtils.ts';
 import {
+  ADDITIONAL_ITEMS_KEY,
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
@@ -20,6 +21,7 @@ import {
   ITEMS_KEY,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
+  PREFIX_ITEMS_KEY,
   PROPERTIES_KEY,
   REF_KEY,
   RJSF_REF_CYCLE_KEY,
@@ -152,8 +154,8 @@ const NON_LEAF_KEYWORDS: readonly string[] = [
   ADDITIONAL_PROPERTIES_KEY,
   UNEVALUATED_PROPERTIES_KEY,
   ITEMS_KEY,
-  'prefixItems',
-  'additionalItems',
+  PREFIX_ITEMS_KEY,
+  ADDITIONAL_ITEMS_KEY,
 ];
 
 /** Whether `schema` merges nothing and holds no subschemas, so that what it resolves to depends on nothing but itself
@@ -822,7 +824,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   const tuple = (entries: unknown[]) =>
     entries.map((entry, index) => item(entry, tupleSeeds(plan, index), 'tupleItem'));
   // A view drops the row keywords that hold nothing, rather than holding them as undefined
-  const setRows = (keyword: 'items' | 'additionalItems', value: unknown) => {
+  const setRows = (keyword: typeof ITEMS_KEY | typeof ADDITIONAL_ITEMS_KEY, value: unknown) => {
     if (value === undefined) {
       Reflect.deleteProperty(merged, keyword);
     } else {
@@ -832,9 +834,9 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   const { items, additionalItems, prefixItems } = merged;
   setRows(ITEMS_KEY, Array.isArray(items) ? tuple(items) : item(items, seedsAt(plan, ITEMS_KEY), 'item'));
   if (Array.isArray(prefixItems)) {
-    Reflect.set(merged, 'prefixItems', tuple(prefixItems));
+    Reflect.set(merged, PREFIX_ITEMS_KEY, tuple(prefixItems));
   }
-  setRows('additionalItems', item(additionalItems, seedsAt(plan, 'additionalItems'), 'item'));
+  setRows(ADDITIONAL_ITEMS_KEY, item(additionalItems, seedsAt(plan, ADDITIONAL_ITEMS_KEY), 'item'));
   for (const keyword of OPTION_KEYWORDS) {
     const options = merged[keyword];
     if (Array.isArray(options)) {
