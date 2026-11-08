@@ -182,9 +182,14 @@ function keywordOf<S extends StrictRJSFSchema>(layers: readonly S[], keyword: st
   return undefined;
 }
 
+/** Whether a field is an extra key whose schema is guessed from its data, which constrains nothing */
+function isGuessed<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
+  return layers.some((layer) => hasSchemaMarker(layer, GUESSED_TYPE_FLAG));
+}
+
 /** A type guessed from an extra key's data describes the data rather than the schema, so it is no type */
 function typeOf<S extends StrictRJSFSchema>(layers: readonly S[]): unknown {
-  return layers.some((layer) => hasSchemaMarker(layer, GUESSED_TYPE_FLAG)) ? undefined : keywordOf(layers, 'type');
+  return isGuessed(layers) ? undefined : keywordOf(layers, 'type');
 }
 
 /** The values a field offers: its `enum`, or the constants of options that are all constants */
@@ -244,7 +249,7 @@ function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declare
 /** Re-judges a value whose field's constraints changed. A cleared property is dropped, for the defaults to fill. A value
  * equal to the default the old schema declared for it is that schema's, so it becomes the new schema's default; a value
  * of another type, or one the new `const` or `enum` rejects, is replaced as `sanitizeDataForNewSchema()` replaces it,
- * or dropped.
+ * or dropped. An extra key whose schema is guessed from its data declares no type, so it holds a value of any type.
  *
  * @param acceptsNull - Whether the field's new schema holds `null`, asked only of a `null` item
  * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
@@ -276,7 +281,8 @@ function judge<S extends StrictRJSFSchema>(
   if (oldDefault !== undefined && newDefault !== undefined && deepEquals(oldDefault, value)) {
     return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
   }
-  if (before.type !== undefined && !isSameType(before.type, now.type)) {
+  // An extra key that constrains nothing holds any value, so a property that left the tree keeps its value as one
+  if (before.type !== undefined && !isGuessed(newLayers) && !isSameType(before.type, now.type)) {
     return DROP;
   }
   if (now.const !== undefined && !deepEquals(now.const, value)) {
@@ -373,7 +379,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       return judged === UNSET ? undefined : judged;
     }
   }
-  if (newLayers.some((layer) => isWholeValueSelect<S>(layer))) {
+  // Nothing below a guessed extra key constrains what it holds, so the properties the old field declared stay with it
+  if (isGuessed(newLayers) || newLayers.some((layer) => isWholeValueSelect<S>(layer))) {
     return newValue;
   }
   if (isPlainObject(newValue)) {
@@ -463,13 +470,13 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Sanitizes `data` for the field tree it builds, against the tree `previous` built: the diff of the two trees, field
  * by field, as each is rendered (the selected option, the expanded `$ref` cycles). A field that left the tree loses its
- * value. A field whose constraints changed (`type`, `const`, `enum`, `maxItems`, or the default declared for it on its
- * own schema or on its parent's) has its value judged again, see `judge()`: a value still holding the default the old
- * schema declared takes the new one, written in place. A field whose constraints did not change keeps its value, so an
- * edit elsewhere never re-judges it. The value of the field being edited, and of the fields holding it, is the
- * user's, and only what they hold is judged. Both trees show the option the new data is shown under, so an option
- * switch, by the selector or by matching, changes no field's constraints: the data a switch sends is
- * `formDataForNewOption()`'s.
+ * value, unless the object holds it as an extra key that constrains nothing. A field whose constraints changed (`type`,
+ * `const`, `enum`, `maxItems`, or the default declared for it on its own schema or on its parent's) has its value
+ * judged again, see `judge()`: a value still holding the default the old schema declared takes the new one, written in
+ * place. A field whose constraints did not change keeps its value, so an edit elsewhere never re-judges it. The value
+ * of the field being edited, and of the fields holding it, is the user's, and only what they hold is judged. Both trees
+ * show the option the new data is shown under, so an option switch, by the selector or by matching, changes no field's
+ * constraints: the data a switch sends is `formDataForNewOption()`'s.
  *
  * @param previous - The previous tree: the schema utilities it is built with, its data, and the root schema retrieved
  *        for that data
