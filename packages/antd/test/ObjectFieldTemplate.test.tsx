@@ -1,3 +1,4 @@
+import type { ComponentType, PropsWithChildren } from 'react';
 import type { RegistryFieldsType, RegistryWidgetsType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
@@ -457,7 +458,7 @@ describe('heading alignment', () => {
     });
   });
 
-  function getFieldLabelClasses(formContext: Record<string, unknown>) {
+  function getFieldLabelClasses(formContext: Record<string, unknown>, wrapper?: ComponentType<PropsWithChildren>) {
     const { container } = render(
       <Form
         schema={{ type: 'object', properties: { name: { type: 'string' } }, additionalProperties: { type: 'string' } }}
@@ -465,6 +466,7 @@ describe('heading alignment', () => {
         validator={validator}
         formContext={formContext}
       />,
+      { wrapper },
     );
     const labelClass = (forId: string) =>
       container.querySelector(`label[for="${forId}"]`)?.closest('.ant-form-item-label')?.className;
@@ -490,28 +492,16 @@ describe('heading alignment', () => {
     });
   });
 
-  function getLabelClassesInAntdForm(formContext?: Record<string, unknown>) {
-    const { container } = render(
+  function StartingAntdForm({ children }: PropsWithChildren) {
+    return (
       <AntdForm component={false} labelAlign='start'>
-        <Form
-          schema={{
-            type: 'object',
-            properties: { name: { type: 'string' } },
-            additionalProperties: { type: 'string' },
-          }}
-          initialFormData={{ extra: 'x' }}
-          validator={validator}
-          formContext={formContext}
-        />
-      </AntdForm>,
+        {children}
+      </AntdForm>
     );
-    const labelClass = (forId: string) =>
-      container.querySelector(`label[for="${forId}"]`)?.closest('.ant-form-item-label')?.className;
-    return { field: labelClass('root_name'), key: labelClass('root_extra__key') };
   }
 
   it('ends a field label and an additional property key label for a labelAlign of end inside a Form that starts them', () => {
-    const { field, key } = getLabelClassesInAntdForm({ labelAlign: 'end', labelCol: { span: 8 } });
+    const { field, key } = getFieldLabelClasses({ labelAlign: 'end', labelCol: { span: 8 } }, StartingAntdForm);
     [field, key].forEach((c) => {
       expect(c).toContain('ant-form-item-label');
       expect(c).not.toContain('ant-form-item-label-start');
@@ -519,7 +509,7 @@ describe('heading alignment', () => {
   });
 
   it('starts a field label and an additional property key label with no labelAlign inside a Form that starts them', () => {
-    const { field, key } = getLabelClassesInAntdForm({ labelCol: { span: 8 } });
+    const { field, key } = getFieldLabelClasses({ labelCol: { span: 8 } }, StartingAntdForm);
     [field, key].forEach((c) => {
       expect(c).toContain('ant-form-item-label-start');
     });
