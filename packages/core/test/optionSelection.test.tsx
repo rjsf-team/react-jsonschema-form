@@ -107,47 +107,44 @@ describe('option selection as form state', () => {
     expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y' });
   });
 
-  it('hands customValidate the defaults of the option on screen on submit', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      oneOf: [
-        { title: 'A', properties: { a: { type: 'string', default: 'x' } } },
-        { title: 'B', properties: { b: { type: 'string', default: 'y' } }, required: ['b'] },
-      ],
-    };
+  it.each<[string, RJSFSchema, Record<string, string>]>([
+    // The validator is handed `{}`, which only A validates, yet B, which the form shows for `{ b: undefined }`, is the
+    // option the defaults come from
+    [
+      '',
+      {
+        type: 'object',
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string', default: 'x' } } },
+          { title: 'B', properties: { b: { type: 'string', default: 'y' } }, required: ['b'] },
+        ],
+      },
+      { b: 'y' },
+    ],
+    // B keeps the `c` A's `const` filled in, so the validator is handed `{ c: 'z' }`, which A fits better, yet B is shown
+    // for `{ b: undefined, c: 'z' }`
+    [
+      ' where another fits the validated data better',
+      {
+        type: 'object',
+        oneOf: [
+          { title: 'A', properties: { c: { type: 'string', const: 'z' }, a: { type: 'string', default: 'x' } } },
+          { title: 'B', properties: { b: { type: 'string', default: 'y' }, c: { type: 'string' } } },
+        ],
+      },
+      { b: 'y', c: 'z' },
+    ],
+  ])('hands customValidate the defaults of the option on screen on submit%s', async (_where, schema, expected) => {
     const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
-    // The browser's own check of the required `b` would block the submit
+    // The browser's own check of a required `b` would block the submit
     const { node } = createFormComponent({ schema, customValidate, noHtml5Validate: true });
 
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
     await user.clear(elementOf(node, '#root_b'));
     await submitForm(node, user);
 
-    // The validator is handed `{}`, which only A validates, yet B, which the form shows for `{ b: undefined }`, is the
-    // option the defaults come from
     expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('B');
-    expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y' });
-  });
-
-  it('hands customValidate the defaults of the option on screen on submit where another fits the validated data better', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      oneOf: [
-        { title: 'A', properties: { c: { type: 'string', const: 'z' }, a: { type: 'string', default: 'x' } } },
-        { title: 'B', properties: { b: { type: 'string', default: 'y' }, c: { type: 'string' } } },
-      ],
-    };
-    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
-    const { node } = createFormComponent({ schema, customValidate });
-
-    // B keeps the `c` A's `const` filled in
-    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
-    await user.clear(elementOf(node, '#root_b'));
-    await submitForm(node, user);
-
-    // The validator is handed `{ c: 'z' }`, which A's `const` fits better, yet B is shown for `{ b: undefined, c: 'z' }`
-    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('B');
-    expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y', c: 'z' });
+    expect(customValidate.mock.lastCall?.[0]).toEqual(expected);
   });
 
   it('hands customValidate the defaults of the option on screen on submit where an array item holds `undefined`', async () => {
@@ -157,15 +154,12 @@ describe('option selection as form state', () => {
         { title: 'A', properties: { c: { type: 'string', const: 'z' }, a: { type: 'string', default: 'x' } } },
         {
           title: 'B',
-          properties: {
-            b: { type: 'array', items: { type: 'string' } },
-            d: { type: 'string', default: 'y' },
-            c: { type: 'string' },
-          },
+          properties: { b: { type: 'array', items: { type: 'string' } }, c: { type: 'string' } },
         },
       ],
     };
     const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    // The browser's own check of the new, empty item would block the submit
     const { node } = createFormComponent({ schema, customValidate, noHtml5Validate: true });
 
     await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
@@ -174,7 +168,7 @@ describe('option selection as form state', () => {
 
     // The validator is handed the new item as `null`, the JSON copy of the `undefined` it holds
     expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('B');
-    expect(customValidate.mock.lastCall?.[0]).toEqual({ b: [null], c: 'z', d: 'y' });
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ b: [null], c: 'z' });
   });
 
   it('matches the root data setFieldValue sets again for customValidate and liveOmit, as the render does', async () => {
