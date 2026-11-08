@@ -454,7 +454,7 @@ describe('scoringTarget()', () => {
       };
       expect(scored(schema, '/oneOf/0')).toEqual({ $ref: '#/oneOf/0' });
     });
-    it('cuts a dependency offering options that recur, keeping the rest of the node holding it', () => {
+    it('leaves out a dependency offering options that recur, keeping the rest of the node holding it', () => {
       const schema: RJSFSchema = {
         definitions: {
           Node: {
@@ -479,7 +479,6 @@ describe('scoringTarget()', () => {
               {
                 type: 'object',
                 properties: { kind: { $ref: '#/definitions/Node/properties/kind' } },
-                dependencies: { kind: {} },
               },
             ],
           },
@@ -531,7 +530,7 @@ describe('scoringTarget()', () => {
           Lists: {
             anyOf: [
               { const: [1], items: { $ref: '#/definitions/Lists' } },
-              { type: 'array', additionalItems: { $ref: '#/definitions/Lists' } },
+              { type: 'array', items: [{}], additionalItems: { $ref: '#/definitions/Lists' } },
             ],
           },
           Either: {
@@ -769,6 +768,184 @@ describe('scoringTarget()', () => {
         ],
       };
       expect(scored(schema, '/oneOf/0')).toEqual({ $ref: '#/oneOf/0' });
+    });
+    it('keeps a node whose subschemas recur through properties, patterns, the rest of the properties or items that cannot be the same', () => {
+      const ref = (name: string): RJSFSchema => ({ $ref: `#/definitions/${name}` });
+      const schema: RJSFSchema = {
+        definitions: {
+          Pattern: {
+            type: 'object',
+            allOf: [{ properties: { parent: ref('Pattern') } }, { patternProperties: { '^x-': ref('Pattern') } }],
+          },
+          PatternFirst: {
+            type: 'object',
+            allOf: [
+              { patternProperties: { '^x-': ref('PatternFirst') } },
+              { properties: { parent: ref('PatternFirst') } },
+            ],
+          },
+          Claimed: {
+            type: 'object',
+            allOf: [
+              { properties: { parent: ref('Claimed') } },
+              { properties: { parent: { type: 'object' } }, additionalProperties: ref('Claimed') },
+            ],
+          },
+          ClaimedByPattern: {
+            type: 'object',
+            allOf: [
+              { properties: { parent: ref('ClaimedByPattern') } },
+              { patternProperties: { '^p': { type: 'object' } }, additionalProperties: ref('ClaimedByPattern') },
+            ],
+          },
+          Unevaluated: {
+            type: 'object',
+            properties: { a: ref('Unevaluated') },
+            unevaluatedProperties: ref('Unevaluated'),
+          },
+          UnevaluatedItems: {
+            type: 'array',
+            prefixItems: [ref('UnevaluatedItems')],
+            unevaluatedItems: ref('UnevaluatedItems'),
+          },
+          Left: {
+            type: 'object',
+            allOf: [
+              { patternProperties: { '^x-': ref('Left') } },
+              { patternProperties: { '^x-': { type: 'object' } }, additionalProperties: ref('Left') },
+            ],
+          },
+          Own: {
+            type: 'object',
+            properties: { a: ref('Own') },
+            patternProperties: { '^b': ref('Own') },
+            additionalProperties: ref('Own'),
+          },
+          Tuple: {
+            type: 'array',
+            allOf: [{ items: [{ type: 'string' }, ref('Tuple')] }, { additionalItems: ref('Tuple') }],
+          },
+          Prefixed: { type: 'array', prefixItems: [ref('Prefixed')], items: ref('Prefixed') },
+          Rest: { type: 'array', items: [ref('Rest')], additionalItems: ref('Rest') },
+        },
+        oneOf: [
+          {
+            properties: Object.fromEntries(
+              [
+                'Pattern',
+                'PatternFirst',
+                'Claimed',
+                'ClaimedByPattern',
+                'Unevaluated',
+                'UnevaluatedItems',
+                'Left',
+                'Own',
+                'Tuple',
+                'Prefixed',
+                'Rest',
+              ].map((name) => [name, ref(name)]),
+            ),
+          },
+        ],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({ $ref: '#/oneOf/0' });
+    });
+    it('cuts where its own parts, or those of the subschemas applying to the same value, can be the same', () => {
+      const ref = (name: string): RJSFSchema => ({ $ref: `#/definitions/${name}` });
+      const schema: RJSFSchema = {
+        definitions: {
+          OwnPattern: {
+            type: 'object',
+            properties: { a: ref('OwnPattern') },
+            patternProperties: { '^a': ref('OwnPattern') },
+          },
+          OwnContains: { type: 'array', items: ref('OwnContains'), contains: ref('OwnContains') },
+          Patterns: {
+            type: 'object',
+            allOf: [{ patternProperties: { '^a': ref('Patterns') } }, { patternProperties: { '^b': ref('Patterns') } }],
+          },
+          Rests: {
+            type: 'object',
+            allOf: [{ additionalProperties: ref('Rests') }, { additionalProperties: ref('Rests') }],
+          },
+          Unclaimed: {
+            type: 'object',
+            allOf: [
+              { properties: { parent: ref('Unclaimed') } },
+              { properties: { x: {} }, additionalProperties: ref('Unclaimed') },
+            ],
+          },
+          Items: { type: 'array', allOf: [{ items: [ref('Items')] }, { items: ref('Items') }] },
+        },
+        oneOf: [
+          {
+            properties: Object.fromEntries(
+              ['OwnPattern', 'OwnContains', 'Patterns', 'Rests', 'Unclaimed', 'Items'].map((name) => [name, ref(name)]),
+            ),
+          },
+        ],
+      };
+      const object = { allOf: [{ type: 'object' }] };
+      const array = { allOf: [{ type: 'array' }] };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: {
+          OwnPattern: object,
+          OwnContains: array,
+          Patterns: object,
+          Rests: object,
+          Unclaimed: object,
+          Items: array,
+        },
+      });
+    });
+    it('reads a part cut to nothing as {}, and leaves out an allOf entry, then, else or dependency cut to nothing', () => {
+      const free: RJSFSchema = { $ref: '#/definitions/Free' };
+      const schema: RJSFSchema = {
+        definitions: {
+          // A recursive choice stating no type, which a cut leaves nothing of
+          Free: { anyOf: [{ properties: { c: free } }, { properties: { c: free } }] },
+        },
+        oneOf: [
+          {
+            properties: {
+              wrapped: { allOf: [free] },
+              branches: {
+                type: 'object',
+                if: { required: ['a'] },
+                then: free,
+                else: free,
+                dependencies: { a: free, b: ['a'] },
+              },
+            },
+          },
+        ],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: {
+          wrapped: {},
+          branches: {
+            type: 'object',
+            if: { $ref: '#/oneOf/0/properties/branches/if' },
+            dependencies: { b: ['a'] },
+          },
+        },
+      });
+    });
+    it('names a subschema below a part that leads to no choice where the root holds it, though reached outside the root', () => {
+      const plain: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+      const root: RJSFSchema = { definitions: { Choice: NESTED, Plain: plain } };
+      const { graph, node } = parseSchemaGraph(root).adopt({
+        properties: {
+          v: { allOf: [plain, { $ref: '#/definitions/Choice' }] },
+          w: { oneOf: [{ $ref: '#/definitions/Choice' }, { type: 'null' }] },
+        },
+      });
+      expect(scoringTarget(graph, node, false)).toEqual({
+        properties: {
+          v: { allOf: [{ $ref: '#/definitions/Plain' }, { allOf: [{ type: 'object' }] }] },
+          w: { type: ['object', 'null'] },
+        },
+      });
     });
   });
 });

@@ -275,6 +275,81 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
   );
 
   it.each([
+    [
+      'a property and a pattern that cannot match its name',
+      {
+        type: 'object',
+        allOf: [
+          { properties: { parent: { $ref: '#/definitions/Node' } } },
+          { patternProperties: { '^x-': { $ref: '#/definitions/Node' } } },
+        ],
+      },
+      { type: 'object', properties: { parent: { type: 'string' } } },
+      { v: { parent: 'str' } },
+    ],
+    [
+      'tuple positions and the items after a tuple',
+      {
+        type: 'array',
+        allOf: [
+          { items: [{ type: 'string' }, { $ref: '#/definitions/Node' }] },
+          { additionalItems: { $ref: '#/definitions/Node' } },
+        ],
+      },
+      { type: 'array', items: { type: 'number' } },
+      { v: [1, 2] },
+    ],
+  ])(
+    'checks a node whose subschemas recur through %s, which are different parts of the data',
+    (_parts, nodeSchema, other, formData) => {
+      const root: RJSFSchema = { definitions: { Node: nodeSchema as RJSFSchema } };
+      const options: RJSFSchema[] = [
+        { properties: { v: { $ref: '#/definitions/Node' } } },
+        { properties: { v: other as RJSFSchema } },
+      ];
+      expect(getFirstMatchingOption({ validator }, formData, options, root)).toBe(1);
+    },
+  );
+
+  it.each([
+    [
+      'a property and a pattern matching its name',
+      {
+        type: 'object',
+        properties: { a: { $ref: '#/definitions/X' } },
+        patternProperties: { '^a': { $ref: '#/definitions/X' } },
+      },
+      (inner: unknown) => ({ a: inner }),
+      {},
+    ],
+    [
+      'its items and contains',
+      {
+        anyOf: [
+          { type: 'string' },
+          { type: 'array', items: { $ref: '#/definitions/X' }, contains: { $ref: '#/definitions/X' } },
+        ],
+      },
+      (inner: unknown) => [inner],
+      's',
+    ],
+  ])('matches data many levels deep against a node holding itself through %s', (_parts, nodeSchema, wrap, leaf) => {
+    const root: RJSFSchema = { definitions: { X: nodeSchema as RJSFSchema } };
+    const options: RJSFSchema[] = [
+      { properties: { v: { $ref: '#/definitions/X' } } },
+      { properties: { v: { type: 'number' } } },
+    ];
+    let value: unknown = leaf;
+    for (let level = 0; level < 26; level += 1) {
+      value = wrap(value);
+    }
+    const start = performance.now();
+    expect(getFirstMatchingOption({ validator }, { v: value }, options, root)).toBe(0);
+    // Validating both subschemas at every level doubles the time per level, which took seconds at 26 levels
+    expect(performance.now() - start).toBeLessThan(1000);
+  });
+
+  it.each([
     ['an allOf entry', { allOf: [{ $ref: '#/$defs/Tree' }], unevaluatedProperties: false }],
     ['a $ref beside it', { $ref: '#/$defs/Tree', unevaluatedProperties: false }],
     ['an allOf entry naming another', { allOf: [{ $ref: '#/$defs/Wrapped' }], unevaluatedProperties: false }],
