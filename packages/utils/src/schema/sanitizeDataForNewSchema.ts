@@ -187,7 +187,12 @@ export default function sanitizeDataForNewSchema<
 >(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: unknown = {}): T {
   // Data equal to the new `const` is the one value the schema allows, so sanitizing it could only change it into one the
   // `const` rejects. A scalar is left to the rules below, which clear it for the defaults to refill
-  if (typeof data === 'object' && data !== null && deepEquals(newSchema?.const, data)) {
+  if (
+    newSchema?.const !== undefined &&
+    typeof data === 'object' &&
+    data !== null &&
+    deepEquals(newSchema.const, data)
+  ) {
     return data as T;
   }
   // By default, we will clear the form data
