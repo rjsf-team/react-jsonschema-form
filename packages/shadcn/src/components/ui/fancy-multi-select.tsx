@@ -54,19 +54,9 @@ interface FancyMultiSelectProps {
 
 const NO_ITEMS: FancySelectItem[] = [];
 
-/** How well an item matches the search, by the value or the label it shows, never by the index cmdk holds it under: 0
- * for an item the search leaves out
- *
- * @param item - The item
- * @param search - The text typed in the input
- * @returns - The score cmdk's own filter gives it
- */
-function searchScore(item: FancySelectItem, search: string) {
-  return defaultFilter(`${enumOptionValueLabel(item.value)} ${item.label}`, search);
-}
-
 /** Returns the `items` the search matches, best match first, with the best match's score, as cmdk ranked the options
- * it filtered. An empty search matches every item, which keeps its schema order
+ * it filtered. An item is matched by the value or the label it shows, never by the index cmdk holds it under. An empty
+ * search matches every item, which keeps its schema order
  *
  * @param items - The items, in schema order
  * @param search - The text typed in the input
@@ -77,7 +67,7 @@ function rankedForSearch(items: FancySelectItem[], search: string) {
     return { items, best: 0 };
   }
   const scored = items
-    .map((item) => ({ item, score: searchScore(item, search) }))
+    .map((item) => ({ item, score: defaultFilter(`${enumOptionValueLabel(item.value)} ${item.label}`, search) }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score);
   return { items: scored.map(({ item }) => item), best: scored.length > 0 ? scored[0].score : 0 };
@@ -171,9 +161,15 @@ export function FancyMultiSelect({
     openList();
   };
 
-  // The keys are the input's, never a remove button's, which they reach too: an arrow there would open a list whose
-  // highlight the input, holding `aria-activedescendant`, would announce without focus, and Backspace would remove the
-  // last item rather than that button's. Escape closes the list and keeps focus in the input, as a combobox does
+  const listShown = open && !disabled && selectables.length > 0;
+
+  // The arrows, Escape, Backspace and Delete act only from the input, never from a remove button, which they reach too:
+  // an arrow there would open a list whose highlight the input, holding `aria-activedescendant`, would announce without
+  // focus, and Backspace would remove the last item rather than that button's. Escape closes the list and keeps focus in
+  // the input, as a combobox does, and goes no further while the list is shown, so it doesn't also close a dialog the
+  // form is in. cmdk's root still takes its own keys from the input, as it did from its `Command.Input`: Home and End
+  // move the highlight rather than the text cursor, and Ctrl with N, J, P or K moves it in an open list and does nothing
+  // in a closed one
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       const input = inputRef.current;
@@ -182,14 +178,16 @@ export function FancyMultiSelect({
       }
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         openList();
-      } else if (e.key === 'Escape') {
+      } else if (e.key === 'Escape' && listShown) {
         setOpen(false);
+        e.preventDefault();
+        e.stopPropagation();
       } else if ((e.key === 'Delete' || e.key === 'Backspace') && input.value === '') {
         const newSelected = selectedItems.slice(0, -1);
         onValueChange?.(newSelected.map((item) => item.index));
       }
     },
-    [selectedItems, onValueChange, disabled, openList],
+    [selectedItems, onValueChange, disabled, openList, listShown],
   );
 
   const handleSelect = useCallback(
@@ -206,12 +204,15 @@ export function FancyMultiSelect({
 
   // A press anywhere in the select but on its input and remove buttons, such as on a selected item's label, a group
   // heading or the list's padding, would focus cmdk's root or listbox, which are out of the tab order and close the list
-  // as the input blurs. The press is kept from moving focus and acts as a click on the input, whose focus and open list
-  // a press inside the list leaves as they are. Only the primary button's, so a right-click opens the context menu alone.
+  // as the input blurs. No press is let move focus there, and the primary button's acts as a click on the input, whose
+  // focus and open list a press inside the list leaves as they are, while another button's opens its context menu alone.
   // Text in the select can't be selected by dragging from it, the cost of keeping focus in the input
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
-    if (e.button === 0 && e.target !== inputRef.current) {
-      e.preventDefault();
+    if (e.target === inputRef.current) {
+      return;
+    }
+    e.preventDefault();
+    if (e.button === 0) {
       inputRef.current?.focus();
       openList();
     }
@@ -233,9 +234,6 @@ export function FancyMultiSelect({
       </CommandItem>
     );
   }
-
-  const hasSelectableOptions = selectableSections ? selectableSections.length > 0 : selectables.length > 0;
-  const listShown = open && !disabled && hasSelectableOptions;
 
   return (
     // The options are filtered here, as the search is typed in an input cmdk doesn't own

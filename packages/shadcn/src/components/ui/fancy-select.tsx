@@ -164,8 +164,9 @@ export function FancySelect({
     }
   }, [open, selectedValue]);
 
-  // Options that empty while it is open leave no listbox, so it closes rather than point at the one that unmounted
-  if (open && !items?.length) {
+  // Options that empty while it is open leave no listbox, so it closes rather than point at the one that unmounted, and
+  // a select that turns disabled or readonly while open closes, as no option can be chosen from it
+  if (open && (disabled || !items?.length)) {
     setOpen(false);
   }
   // The listbox opens on the option the select holds, as a native select's does, so Enter keeps the value until the

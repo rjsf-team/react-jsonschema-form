@@ -1353,6 +1353,29 @@ describe("the single select's combobox while its listbox is open", () => {
       expect(onChange).toHaveBeenCalledExactlyOnceWith('b');
     });
 
+    test('closes when it turns readonly while open', async () => {
+      const user = userEvent.setup();
+      const { combobox, rerender } = renderSelect();
+
+      await user.click(combobox);
+      expect(combobox).toHaveAttribute('aria-expanded', 'true');
+      rerender(
+        <SelectWidget
+          {...makeWidgetMockProps({
+            id: 'root_color',
+            label: 'Color',
+            disabled: false,
+            readonly: true,
+            autofocus: false,
+            options: { enumOptions },
+          })}
+        />,
+      );
+
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
     test('closes on Escape without choosing', async () => {
       const user = userEvent.setup();
       const { combobox, onChange } = renderSelect();
@@ -1711,6 +1734,49 @@ describe("the multiple select's combobox input", () => {
 
     expect(screen.getByRole('combobox')).not.toHaveFocus();
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  test('keeps focus on its input and its list open on a right-click on a selected item', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    await user.pointer({ keys: '[MouseRight]', target: screen.getByText('red') });
+
+    expect(input).toHaveFocus();
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  test('keeps an Escape that closes its list from the page, and lets one through while the list is closed', async () => {
+    const user = userEvent.setup();
+    const onPageEscape = vi.fn();
+    const listen = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onPageEscape();
+      }
+    };
+    document.addEventListener('keydown', listen);
+    try {
+      renderColorForm();
+      const input = screen.getByRole('combobox');
+
+      await user.type(input, 'bl');
+      await user.keyboard('{Escape}');
+      expect(input).toHaveAttribute('aria-expanded', 'false');
+      expect(onPageEscape).not.toHaveBeenCalled();
+
+      await user.keyboard('{Escape}');
+      expect(onPageEscape).toHaveBeenCalledOnce();
+    } finally {
+      document.removeEventListener('keydown', listen);
+    }
   });
 
   test('keeps focus on its input and its list open on a click on a group heading', async () => {
