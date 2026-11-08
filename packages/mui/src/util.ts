@@ -221,17 +221,22 @@ export function omitFormOwnedInputProps<P extends object>(props: P): P {
 }
 
 /** Gives the `input` slot of a MUI control's `slotProps` the `props` a widget puts on the element a user focuses,
- * beneath the form author's own `input` slot, less its `disabled`, `checked` and `value`, which MUI puts over the
- * control's own, and keeps the author's other slots as they are
+ * beneath the form author's own `input` slot, less the `formOwnedKeys` MUI would put over the control's own, and keeps
+ * the author's other slots as they are
  *
  * @param props - The props the widget gives the `input` slot
  * @param [slotProps] - The `slotProps` the form author gives the control
+ * @param [formOwnedKeys] - The keys of the author's `input` slot to drop, by default `disabled`, `checked` and `value`
  * @returns - The control's `slotProps`
  */
-export function withInputSlot<S extends { input?: MuiSlotProps<object, never> }>(props: object, slotProps?: S): S {
+export function withInputSlot<S extends { input?: MuiSlotProps<object, never> }>(
+  props: object,
+  slotProps?: S,
+  formOwnedKeys: readonly string[] = ['disabled', 'checked', 'value'],
+): S {
   return {
     ...slotProps,
-    input: withSlotProps(props, withoutKeys(slotProps?.input, ['disabled', 'checked', 'value'])),
+    input: withSlotProps(props, withoutKeys(slotProps?.input, formOwnedKeys)),
   } as S;
 }
 

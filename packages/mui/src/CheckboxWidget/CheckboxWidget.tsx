@@ -110,6 +110,8 @@ export default function CheckboxWidget<
                 ...getControlAttributes<T, S, F>({ id, presentation }),
               },
               muiSlotProps?.checkbox?.slotProps,
+              // A lone box's `value` is only what native `FormData` submits, not the form's data
+              ['disabled', 'checked'],
             )}
           />
         }

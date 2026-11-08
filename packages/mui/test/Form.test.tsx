@@ -729,6 +729,15 @@ describe("mui widgets are named by their label and carry the field's id on the e
   );
 
   test.each([
+    ['checkbox slot', at('rjsfSlotProps', 'checkbox')],
+    ['input slot', checkboxInput],
+  ])("gives a checkbox's <input> the value its %s gives, which only native form submission reads", (_, mui) => {
+    render(<Form schema={bool} uiSchema={{ 'ui:options': { mui: mui({ value: 'yes' }) } }} validator={validator} />);
+
+    expect(screen.getByRole('checkbox')).toHaveAttribute('value', 'yes');
+  });
+
+  test.each([
     ['select slot', at('rjsfSlotProps', 'select', 'inputProps', 'SelectDisplayProps')],
     ['input slot', at('rjsfSlotProps', 'input', 'inputProps', 'SelectDisplayProps')],
     ['htmlInput slot', at('rjsfSlotProps', 'htmlInput', 'SelectDisplayProps')],
