@@ -9,7 +9,7 @@ import { X } from 'lucide-react';
 import { cn } from '../../lib/utils.ts';
 import { Badge } from './badge.tsx';
 import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
-import { UNGROUPED_SECTION_KEY, useCmdkIds } from './fancy-select.tsx';
+import { UNGROUPED_SECTION_KEY, useCmdkIds, useEscapeKeptFromDialog } from './fancy-select.tsx';
 import type { FancySelectItem, FancySelectSection } from './fancy-select.tsx';
 
 /**
@@ -161,33 +161,44 @@ export function FancyMultiSelect({
     openList();
   };
 
-  const listShown = open && !disabled && selectables.length > 0;
+  // A select that turns disabled or readonly while open closes, as the single select does, so its list doesn't come back
+  // by itself as it is enabled again
+  if (open && disabled) {
+    setOpen(false);
+  }
+  const listShown = open && selectables.length > 0;
+  useEscapeKeptFromDialog(listShown, inputRef);
 
-  // The arrows, Escape, Backspace and Delete act only from the input, never from a remove button, which they reach too:
-  // an arrow there would open a list whose highlight the input, holding `aria-activedescendant`, would announce without
-  // focus, and Backspace would remove the last item rather than that button's. Escape closes the list and keeps focus in
-  // the input, as a combobox does, and goes no further while the list is shown, so it doesn't also close a dialog the
-  // form is in. cmdk's root still takes its own keys from the input, as it did from its `Command.Input`: Home and End
-  // move the highlight rather than the text cursor, and Ctrl with N, J, P or K moves it in an open list and does nothing
-  // in a closed one
+  // The arrows, Enter, Escape, Backspace and Delete act only from the input, never from a remove button, which they reach
+  // too: an arrow there would open a list whose highlight the input, holding `aria-activedescendant`, would announce
+  // without focus, and Backspace would remove the last item rather than that button's. Down Arrow and Enter open a closed
+  // list on its first match and Up Arrow on its last, as a combobox does, since cmdk, which moves the highlight in an open
+  // list, takes Enter in a closed one too and does nothing with it. Escape closes the list and keeps focus in the input,
+  // and goes no further while the list is shown, so it doesn't also close a dialog the form is in. Backspace and Delete
+  // in an empty input remove the last item, and report nothing with none to remove. cmdk's root still takes its own keys
+  // from the input, as it did from its `Command.Input`: Home and End move the highlight rather than the text cursor, and
+  // Ctrl with N, J, P or K moves it in an open list and does nothing in a closed one
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       const input = inputRef.current;
       if (disabled || !input || e.target !== input) {
         return;
       }
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      const opens = e.key === 'ArrowDown' || e.key === 'ArrowUp' || (e.key === 'Enter' && !e.nativeEvent.isComposing);
+      if (opens && !listShown) {
+        const lastMatch = selectables.findLast((item) => !item.disabled);
+        setMovedTo(e.key === 'ArrowUp' && lastMatch ? String(lastMatch.index) : undefined);
         openList();
       } else if (e.key === 'Escape' && listShown) {
         setOpen(false);
         e.preventDefault();
         e.stopPropagation();
-      } else if ((e.key === 'Delete' || e.key === 'Backspace') && input.value === '') {
+      } else if ((e.key === 'Delete' || e.key === 'Backspace') && input.value === '' && selectedItems.length > 0) {
         const newSelected = selectedItems.slice(0, -1);
         onValueChange?.(newSelected.map((item) => item.index));
       }
     },
-    [selectedItems, onValueChange, disabled, openList, listShown],
+    [selectedItems, selectables, onValueChange, disabled, openList, listShown],
   );
 
   const handleSelect = useCallback(

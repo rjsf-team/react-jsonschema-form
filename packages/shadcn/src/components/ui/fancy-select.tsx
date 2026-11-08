@@ -1,6 +1,6 @@
 'use client';
 
-import type { FocusEvent, FocusEventHandler, ReactElement } from 'react';
+import type { FocusEvent, FocusEventHandler, ReactElement, RefObject } from 'react';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
@@ -32,9 +32,10 @@ export interface FancySelectSection<V = unknown> {
   items: FancySelectItem<V>[];
 }
 
-/** The React key for the unheaded section. `toSections()` emits at most one of them, always last, so a constant key
- * keeps it mounted as earlier sections come and go - an index would shift, remounting the group and discarding
- * cmdk's highlight and scroll state mid-interaction. Labeled sections are prefixed so no label can collide with it.
+/** The React key for the unheaded section. `toSections()` emits at most one of them, so a constant key keeps it
+ * mounted wherever it sits as the sections around it come, go or are reordered - an index would shift, remounting the
+ * group and discarding cmdk's highlight and scroll state mid-interaction. Labeled sections are prefixed so no label can
+ * collide with it.
  */
 export const UNGROUPED_SECTION_KEY = 'ungrouped';
 
@@ -121,6 +122,29 @@ export function useCmdkIds() {
   return { listboxId, highlightedId, listboxRef, highlightedRef };
 }
 
+/** Keeps an Escape pressed on `control` while `active` from a dialog the select is in, by marking it handled before the
+ * dialog sees it. A Radix `Dialog` or `Sheet` listens for Escape on the document in the capture phase, before any React
+ * handler, and closes unless the event is already `defaultPrevented`, so the mark is made from the window, which the
+ * capture phase reaches first. The select's own handler still closes its list
+ *
+ * @param active - Whether the select's list is shown
+ * @param control - The element focus stays on while the list is shown
+ */
+export function useEscapeKeptFromDialog(active: boolean, control: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const view = control.current?.ownerDocument.defaultView;
+    const keep = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && event.target === control.current) {
+        event.preventDefault();
+      }
+    };
+    if (active) {
+      view?.addEventListener('keydown', keep, { capture: true });
+    }
+    return () => view?.removeEventListener('keydown', keep, { capture: true });
+  }, [active, control]);
+}
+
 /**
  * A fancy select component that provides a styled dropdown with search functionality
  * @param props - The component props
@@ -155,6 +179,7 @@ export function FancySelect({
   const selectedItem = items?.find((item) => item.value === selected);
   const selectedValue = selectedItem && cmdkValue(selectedItem);
   const containerRef = useRef<HTMLDivElement>(null);
+  const comboboxRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (open && selectedValue !== undefined) {
@@ -191,6 +216,7 @@ export function FancySelect({
       openList();
     }
   };
+  useEscapeKeptFromDialog(open, comboboxRef);
   const highlightedItem = items?.find((candidate) => cmdkValue(candidate) === highlighted);
   // Choosing the option the select already holds reports no change, as a native select's doesn't
   const choose = (item: FancySelectItem<string> | undefined) => {
@@ -275,6 +301,7 @@ export function FancySelect({
           displays as its value. It controls the listbox while it is open, and the element the listbox opens in while
           it is closed */}
       <button
+        ref={comboboxRef}
         id={id}
         type='button'
         role='combobox'

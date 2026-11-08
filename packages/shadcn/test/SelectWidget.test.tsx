@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
 import type { RJSFSchema } from '@rjsf/utils';
 import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -1388,6 +1389,41 @@ describe("the single select's combobox while its listbox is open", () => {
       expect(onChange).not.toHaveBeenCalled();
     });
 
+    test('closes only its list, not the Radix dialog it is in, on an Escape while open', async () => {
+      const user = userEvent.setup();
+      const onOpenChange = vi.fn();
+      render(
+        <Dialog.Root open onOpenChange={onOpenChange}>
+          <Dialog.Portal>
+            <Dialog.Content aria-describedby={undefined}>
+              <Dialog.Title>Edit</Dialog.Title>
+              <SelectWidget
+                {...makeWidgetMockProps({
+                  id: 'root_color',
+                  label: 'Color',
+                  disabled: false,
+                  readonly: false,
+                  autofocus: false,
+                  options: { enumOptions },
+                })}
+              />
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+      const combobox = screen.getByRole('combobox');
+
+      await user.click(combobox);
+      expect(combobox).toHaveAttribute('aria-expanded', 'true');
+      await user.keyboard('{Escape}');
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(combobox).toHaveFocus();
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      await user.keyboard('{Escape}');
+      expect(onOpenChange).toHaveBeenCalledExactlyOnceWith(false);
+    });
+
     test('chooses the highlighted option on Space while open', async () => {
       const user = userEvent.setup();
       const { combobox, onChange } = renderSelect();
@@ -1756,13 +1792,15 @@ describe("the multiple select's combobox input", () => {
 
   test('keeps an Escape that closes its list from the page, and lets one through while the list is closed', async () => {
     const user = userEvent.setup();
+    // As a Radix dialog listens: on the document, in the capture phase, before any React handler, dismissing unless the
+    // Escape is already marked handled
     const onPageEscape = vi.fn();
     const listen = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && !e.defaultPrevented) {
         onPageEscape();
       }
     };
-    document.addEventListener('keydown', listen);
+    document.addEventListener('keydown', listen, { capture: true });
     try {
       renderColorForm();
       const input = screen.getByRole('combobox');
@@ -1775,8 +1813,106 @@ describe("the multiple select's combobox input", () => {
       await user.keyboard('{Escape}');
       expect(onPageEscape).toHaveBeenCalledOnce();
     } finally {
-      document.removeEventListener('keydown', listen);
+      document.removeEventListener('keydown', listen, { capture: true });
     }
+  });
+
+  test('closes only its list, not the Radix dialog the form is in, on an Escape while its list is shown', async () => {
+    const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    render(
+      <Dialog.Root open onOpenChange={onOpenChange}>
+        <Dialog.Portal>
+          <Dialog.Content aria-describedby={undefined}>
+            <Dialog.Title>Edit</Dialog.Title>
+            <Form schema={{ type: 'object', properties: { color } }} validator={validator} />
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>,
+    );
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    await user.keyboard('{Escape}');
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(input).toHaveFocus();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    await user.keyboard('{Escape}');
+    expect(onOpenChange).toHaveBeenCalledExactlyOnceWith(false);
+  });
+
+  test('stays closed as it is enabled again after turning readonly while open', async () => {
+    const user = userEvent.setup();
+    const props = makeWidgetMockProps({
+      autofocus: false,
+      readonly: false,
+      multiple: true,
+      value: [],
+      options: { enumOptions: ['red', 'blue'].map((value) => ({ label: value, value })) },
+    });
+    const { rerender } = render(<SelectWidget {...props} />);
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    rerender(<SelectWidget {...props} readonly />);
+    rerender(<SelectWidget {...props} />);
+
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  test('reports no change on Backspace or Delete in its empty input with nothing selected', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Form schema={{ type: 'object', properties: { color } }} validator={validator} onChange={onChange} />);
+
+    await user.click(screen.getByRole('combobox'));
+    await user.keyboard('{Backspace}{Delete}');
+    expect(onChange).not.toHaveBeenCalled();
+
+    // The same keys reach the input and report a change once an item is selected
+    await user.click(screen.getByRole('option', { name: 'red' }));
+    await user.keyboard('{Backspace}');
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { color: [] } }), 'root_color');
+  });
+
+  test('opens its closed list on Enter at the first match and on Up Arrow at the last', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['red', 'blue', 'green'] } },
+          },
+        }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+    const highlighted = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '');
+
+    await user.click(input);
+    await user.keyboard('{Escape}');
+    await user.keyboard('{Enter}');
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(highlighted()).toHaveTextContent('red');
+    expect(onChange).not.toHaveBeenCalled();
+
+    await user.keyboard('{Escape}{ArrowUp}');
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(highlighted()).toHaveTextContent('green');
+
+    await user.keyboard('{Enter}');
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { color: ['green'] } }),
+      'root_color',
+    );
   });
 
   test('keeps focus on its input and its list open on a click on a group heading', async () => {
