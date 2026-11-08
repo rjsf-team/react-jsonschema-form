@@ -421,8 +421,8 @@ export default function formDataForNewOption<
             const computed = defaultsForOldOption();
             return isPlainObject(computed) && deepEquals(computed[key], oldData[key]);
           };
-          // Copy rather than delete from what `sanitizeDataForNewSchema()` returned: it builds a fresh object today,
-          // but nothing in its contract promises that, and mutating it would reach the `formData` held in state
+          // Copy rather than delete from what `sanitizeDataForNewSchema()` returned: it can hand back `formData` itself,
+          // as it does an object equal to the new `const`, and mutating it would reach the `formData` held in state
           const withoutBlockedKeys = { ...sanitizedData };
           refillableKeys.forEach((key) => {
             if (sanitizedData[key] === undefined || holdsOldDefault(key)) {

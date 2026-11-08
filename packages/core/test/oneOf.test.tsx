@@ -1608,6 +1608,34 @@ describe('oneOf', () => {
     },
   );
 
+  it('gives nested values holding the old option const the new option const when switching options', async () => {
+    const option = (title: string, a: number): RJSFSchema => ({
+      title,
+      required: ['kind'],
+      properties: {
+        kind: { const: title },
+        w: {
+          type: 'object',
+          required: ['l', 'o', 's'],
+          properties: {
+            l: { type: 'array', const: [a], items: { type: 'number' } },
+            o: { type: 'object', const: { a }, properties: { a: { type: 'number' } } },
+            s: { type: 'number', const: a },
+          },
+        },
+      },
+    });
+    const schema: RJSFSchema = { type: 'object', oneOf: [option('A', 1), option('B', 2)] };
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { kind: 'A', w: { l: [1], o: { a: 1 }, s: 1 } },
+    });
+
+    await user.selectOptions(elementOf(node, 'select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ kind: 'B', w: { l: [2], o: { a: 2 }, s: 2 } });
+  });
+
   it('drops a cleared nested key only the old option declares, rather than rendering it as an extra key (#5768)', async () => {
     const x = (key: string): RJSFSchema => ({
       type: 'object',

@@ -4208,9 +4208,9 @@ Sanitize the `data` associated with the `oldSchema` so it is considered appropri
 If the new schema does not contain any properties, then `undefined` is returned to clear all the form data.
 Due to the nature of schemas, this sanitization happens recursively for nested objects of data.
 Also, any properties in the old schema that are non-existent in the new schema, or that it declares with another type, are removed from the data at every level.
-An object property the data doesn't hold is left out, for the defaults to fill in.
-An object or array equal to the new schema's `const` is kept as it is.
-An array property whose old schema declares no type is sanitized against the new schema, unless the new schema's array `const` rejects it.
+An object property the data doesn't hold, or holds as `null` where neither its type list nor `nullable: true` allows `null`, is left out, for the defaults to fill in.
+An object or array equal to the new schema's `const` is kept as it is. One the new `const` rejects once sanitized takes the new `const` where it holds the old one, and is otherwise cleared, or dropped as an array item, unless the old schema declared the same `const`.
+An array whose old schema declares no type, or declares no `items` (or `items: true`) and no `prefixItems`, is sanitized against the new items. A typed old schema is cleared instead where its type was guessed from the data or the new schema declares a tuple `items` or `prefixItems`, and an untyped one keeps an array the new schema describes as a tuple or with `prefixItems` as it is.
 A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
 A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
 A value outside the new `enum` or constant options is replaced with the new `default` when that is an option, with the only option when there is one, or cleared; array items outside them are dropped.

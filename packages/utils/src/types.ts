@@ -2782,7 +2782,8 @@ export interface SchemaUtilsType<
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
    * @returns - The new form data, without the fields uniquely associated with the old schema. Will return `undefined`
-   *      if the new schema is not an object containing properties.
+   *      if the new schema is not an object containing properties, or where its object or array `const` rejects the
+   *      data, and a copy of that `const` where the data holds the old schema's
    */
   sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown): T;
 }

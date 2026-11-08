@@ -2871,6 +2871,31 @@ describe('optionalDataControls', () => {
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: { rows: [[{ k: 'a' }]] } });
   });
 
+  it('leaves out an optional object holding null after a switch, rather than showing it added (#5768)', async () => {
+    const o: RJSFSchema = { type: 'object', required: ['x'], properties: { x: { type: 'string' } } };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        job: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { o, a: { type: 'string' } } },
+            { title: 'B', properties: { o, b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      uiSchema: objectOnUiSchema,
+      initialFormData: { job: { o: null, a: 'v' } },
+    });
+
+    await user.selectOptions(elementOf(node, '#root_job__oneof_select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: {} });
+  });
+
   it('leaves out an optional object in an array item kept after a switch cuts the array to maxItems', async () => {
     const row: RJSFSchema = {
       type: 'object',
