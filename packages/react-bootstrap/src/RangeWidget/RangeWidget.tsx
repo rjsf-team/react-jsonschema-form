@@ -13,8 +13,9 @@ export default function RangeWidget<
 >(props: WidgetProps<T, S, F>) {
   const { value, disabled, readonly, registry, options } = props;
   const { BaseInputTemplate } = getTemplates<T, S, F>(registry, options);
-  // A browser ignores `readonly` on a range input, so a read-only range is disabled to keep it from being dragged, and a
-  // range input can't show an empty value, so it has no clear button, which would leave the slider at its midpoint
+  // A browser ignores `readonly` on a range input, so a read-only range is disabled to keep it from being dragged.
+  // `offersClearButton()` offers no clear button for a range, and `allowClearTextInputs: false` keeps one off in a custom
+  // `BaseInputTemplate` that doesn't ask it
   return (
     <>
       <BaseInputTemplate

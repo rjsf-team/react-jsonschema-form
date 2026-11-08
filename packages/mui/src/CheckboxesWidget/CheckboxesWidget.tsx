@@ -46,7 +46,21 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { label, id, htmlName, disabled, options, value, autofocus, readonly, onChange, onBlur, onFocus } = props;
+  // `disabled` and `readonly` are `false` where unset, since `FormControlLabel` takes the control's `disabled` where its
+  // own is undefined
+  const {
+    label,
+    id,
+    htmlName,
+    disabled = false,
+    options,
+    value,
+    autofocus,
+    readonly = false,
+    onChange,
+    onBlur,
+    onFocus,
+  } = props;
   const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -100,7 +114,6 @@ export default function CheckboxesWidget<
                 name={htmlName || id}
                 checked={checked}
                 value={domValues[index]}
-                disabled={disabled || itemDisabled || readonly}
                 autoFocus={checkboxProps.autoFocus ?? index === autofocusIndex}
                 onChange={handleChange(index)}
                 onBlur={blurHandlers[index]}
@@ -111,6 +124,8 @@ export default function CheckboxesWidget<
             return (
               <FormControlLabel
                 {...muiSlotProps?.formControlLabel}
+                // `FormControlLabel` gives its own `disabled` to the control in place of the control's, so the form's goes here
+                disabled={disabled || itemDisabled || readonly}
                 control={checkbox}
                 // oxlint-disable-next-line react/no-array-index-key
                 key={index}

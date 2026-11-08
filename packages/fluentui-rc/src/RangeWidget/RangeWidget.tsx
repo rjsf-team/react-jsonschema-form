@@ -1,4 +1,3 @@
-import type { FocusEvent } from 'react';
 import type { SliderProps } from '@fluentui/react-components';
 import { Label, makeStyles, Slider } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
@@ -58,8 +57,8 @@ export default function RangeWidget<
   const storesString = numericWidgetStoresString<S>(schema, value);
   const handleChange: NonNullable<SliderProps['onChange']> = (_, data) =>
     onChange(storesString ? String(data.value) : data.value);
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
+  const handleBlur = () => onBlur(id, value);
+  const handleFocus = () => onFocus(id, value);
 
   return (
     <>

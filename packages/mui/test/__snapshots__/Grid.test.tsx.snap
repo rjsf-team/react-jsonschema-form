@@ -1674,12 +1674,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-113:focus::-ms-input
                   <span
                     class="MuiTypography-root MuiTypography-caption emotion-74"
                   >
-                    <h6
+                    <div
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-75"
                       id="root_person_race__description"
                     >
                       (Check all that apply)
-                    </h6>
+                    </div>
                   </span>
                 </div>
               </div>
@@ -4114,12 +4114,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-113:focus::-ms-input
                   <span
                     class="MuiTypography-root MuiTypography-caption emotion-74"
                   >
-                    <h6
+                    <div
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-75"
                       id="root_person_race__description"
                     >
                       (Check all that apply)
-                    </h6>
+                    </div>
                   </span>
                 </div>
               </div>
@@ -6757,12 +6757,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-159:focus::-ms-input
                   <span
                     class="MuiTypography-root MuiTypography-caption emotion-74"
                   >
-                    <h6
+                    <div
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-75"
                       id="root_person_race__description"
                     >
                       (Check all that apply)
-                    </h6>
+                    </div>
                   </span>
                 </div>
               </div>
@@ -9015,12 +9015,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-113:focus::-ms-input
                   <span
                     class="MuiTypography-root MuiTypography-caption emotion-74"
                   >
-                    <h6
+                    <div
                       class="MuiTypography-root MuiTypography-subtitle2 emotion-75"
                       id="root_person_race__description"
                     >
                       (Check all that apply)
-                    </h6>
+                    </div>
                   </span>
                 </div>
               </div>
@@ -11204,12 +11204,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-105:focus::-ms-input
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-71"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-72"
                     id="root_person_race__description"
                   >
                     (Check all that apply)
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>
@@ -12877,12 +12877,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-105:focus::-ms-input
                 <span
                   class="MuiTypography-root MuiTypography-caption emotion-71"
                 >
-                  <h6
+                  <div
                     class="MuiTypography-root MuiTypography-subtitle2 emotion-72"
                     id="root_person_race__description"
                   >
                     (Check all that apply)
-                  </h6>
+                  </div>
                 </span>
               </div>
             </div>

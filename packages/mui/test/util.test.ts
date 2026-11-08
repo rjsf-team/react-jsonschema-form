@@ -1,7 +1,13 @@
 import type { Theme } from '@mui/material';
 import type { RJSFSchema } from '@rjsf/utils';
 
-import { computeSxProps, getMuiProps } from '../src/util.ts';
+import {
+  computeSxProps,
+  getMuiProps,
+  omitFormOwnedInputProps,
+  omitFormOwnedProps,
+  withoutDisabled,
+} from '../src/util.ts';
 
 describe('getMuiProps', () => {
   it('returns no props for a `mui` option that is not an object', () => {
@@ -93,5 +99,45 @@ describe('computeSxProps', () => {
     const defaults = (theme: Theme) => ({ color: theme.palette.primary.main });
     expect(computeSxProps(defaults, { sx: { mt: 2 } })).toEqual([defaults, { mt: 2 }]);
     expect(computeSxProps([{ mt: 1 }, defaults], { sx: [{ mb: 2 }] })).toEqual([{ mt: 1 }, defaults, { mb: 2 }]);
+  });
+});
+
+describe('omitFormOwnedProps', () => {
+  it('drops the props the form sets, and keeps the rest', () => {
+    const formOwned = { value: 'v', disabled: false, onChange: () => {}, onBlur: () => {}, onFocus: () => {} };
+    expect(omitFormOwnedProps({ ...formOwned, title: 'T' })).toEqual({ title: 'T' });
+  });
+});
+
+describe('omitFormOwnedInputProps', () => {
+  const onChange = () => {};
+
+  it('drops the props the form sets, and value and disabled from the <input> props nested in the slot', () => {
+    const slot = omitFormOwnedInputProps({
+      value: 'v',
+      disabled: false,
+      onChange,
+      inputProps: { value: 'v', disabled: false, onChange },
+      slotProps: { input: { value: 'v', disabled: false, onChange }, root: { title: 'R' } },
+    });
+    expect(slot).toEqual({ inputProps: { onChange }, slotProps: { input: { onChange }, root: { title: 'R' } } });
+  });
+  it('adds no nested props the slot lacks', () => {
+    expect(omitFormOwnedInputProps({ title: 'T' })).toEqual({ title: 'T' });
+  });
+});
+
+describe('withoutDisabled', () => {
+  const onChange = () => {};
+
+  it('drops disabled from a slot given as an object, and keeps its handlers', () => {
+    expect(withoutDisabled({ disabled: false, onChange })).toEqual({ onChange });
+  });
+  it('drops disabled from what a slot given as a function returns, for the owner state', () => {
+    const slot = withoutDisabled((ownerState: { size: string }) => ({ disabled: false, title: ownerState.size }));
+    expect(typeof slot === 'function' && slot({ size: 'small' })).toEqual({ title: 'small' });
+  });
+  it('gives no slot for none', () => {
+    expect(withoutDisabled(undefined)).toBeUndefined();
   });
 });

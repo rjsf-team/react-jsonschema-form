@@ -147,15 +147,97 @@ export function withSlotProps<P extends object, O>(
   return { ...props, ...slotProps } as P;
 }
 
+/** Drops `keys` from the props a form author gives a MUI slot
+ *
+ * @param props - The props the form author gives the slot, or nothing where a slot's `(ownerState) => props` returns none
+ * @param keys - The keys to drop
+ * @returns - The props without those keys
+ */
+export function omitKeys<P extends object>(props: P | undefined, keys: readonly string[]): P {
+  // Each key it drops is optional on a MUI slot, so the rest is still a `P`, which `Omit` can't say of a union such as
+  // `SelectProps`
+  return Object.fromEntries(Object.entries(props ?? {}).filter(([key]) => !keys.includes(key))) as P;
+}
+
+/** Drops `value`, `disabled`, `onChange`, `onBlur` and `onFocus` from the props a form author gives a slot whose
+ * handlers and `value` MUI uses in place of the form's, so the author can't take the form's data, focus or disabled
+ * state from it
+ *
+ * @param props - The props the form author gives the slot
+ * @returns - The props without those
+ */
+export function omitFormOwnedProps<P extends object>(props: P): P {
+  return omitKeys(props, ['value', 'disabled', 'onChange', 'onBlur', 'onFocus']);
+}
+
+/** Drops `keys` from the props a form author gives a slot, as an object or as MUI's `(ownerState) => props`
+ *
+ * @param slotProps - The props the form author gives the slot
+ * @param keys - The keys to drop
+ * @returns - The slot's props without those keys, in the form the author gave them
+ */
+export function withoutKeys<P extends object, O>(
+  slotProps: MuiSlotProps<P, O> | undefined,
+  keys: readonly string[],
+): MuiSlotProps<P, O> | undefined {
+  if (typeof slotProps === 'function') {
+    // MUI takes a slot whose `(ownerState) => props` returns nothing, which its type doesn't say
+    return (ownerState: O) => omitKeys(slotProps(ownerState) as P | undefined, keys);
+  }
+  return slotProps && omitKeys(slotProps, keys);
+}
+
+/** Drops `disabled` from the props a form author gives a slot whose `disabled` MUI puts over the form's, such as one of
+ * the `<input>` a user edits, so the author can't undo the form's disabled state there. Its handlers stay, since MUI
+ * calls them alongside the form's
+ *
+ * @param [slotProps] - The props the form author gives the slot, as an object or as MUI's `(ownerState) => props`
+ * @returns - The slot's props without `disabled`, in the form the author gave them
+ */
+export function withoutDisabled<P extends object, O>(slotProps?: MuiSlotProps<P, O>): MuiSlotProps<P, O> | undefined {
+  return withoutKeys(slotProps, ['disabled']);
+}
+
+/** Drops `value`, `disabled`, `onChange`, `onBlur` and `onFocus` from the props a form author gives a `TextField`'s
+ * `input` slot, which MUI spreads over the `TextField`'s own, and `value` and `disabled` from the `<input>` props
+ * nested in it, which MUI's `InputBase` puts over its own
+ *
+ * @param props - The props the form author gives the slot
+ * @returns - The props without those
+ */
+export function omitFormOwnedInputProps<P extends object>(props: P): P {
+  // Reads the `<input>` props the slot nests, which its type may not name
+  const rest = omitFormOwnedProps(props) as P & {
+    inputProps?: object;
+    slotProps?: { input?: MuiSlotProps<object, never> };
+  };
+  return {
+    ...rest,
+    ...(rest.inputProps && { inputProps: omitKeys(rest.inputProps, ['value', 'disabled']) }),
+    ...(rest.slotProps && {
+      slotProps: { ...rest.slotProps, input: withoutKeys(rest.slotProps.input, ['value', 'disabled']) },
+    }),
+  };
+}
+
 /** Gives the `input` slot of a MUI control's `slotProps` the `props` a widget puts on the element a user focuses,
- * beneath the form author's own `input` slot, and keeps the author's other slots as they are
+ * beneath the form author's own `input` slot, less the `formOwnedKeys` MUI would put over the control's own, and keeps
+ * the author's other slots as they are
  *
  * @param props - The props the widget gives the `input` slot
  * @param [slotProps] - The `slotProps` the form author gives the control
+ * @param [formOwnedKeys] - The keys of the author's `input` slot to drop, by default `disabled`, `checked` and `value`
  * @returns - The control's `slotProps`
  */
-export function withInputSlot<S extends { input?: MuiSlotProps<object, never> }>(props: object, slotProps?: S): S {
-  return { ...slotProps, input: withSlotProps(props, slotProps?.input) } as S;
+export function withInputSlot<S extends { input?: MuiSlotProps<object, never> }>(
+  props: object,
+  slotProps?: S,
+  formOwnedKeys: readonly string[] = ['disabled', 'checked', 'value'],
+): S {
+  return {
+    ...slotProps,
+    input: withSlotProps(props, withoutKeys(slotProps?.input, formOwnedKeys)),
+  } as S;
 }
 
 /** Resolves the props a form author gives a MUI slot, which may be MUI's `(ownerState) => props`, for an owner state

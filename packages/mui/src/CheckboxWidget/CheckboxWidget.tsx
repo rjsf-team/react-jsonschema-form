@@ -41,8 +41,9 @@ export default function CheckboxWidget<
     id,
     htmlName,
     value,
-    disabled,
-    readonly,
+    // `false` where unset, since `FormControlLabel` takes the control's `disabled` where its own is undefined
+    disabled = false,
+    readonly = false,
     label,
     autofocus,
     onChange,
@@ -86,18 +87,20 @@ export default function CheckboxWidget<
       <FormControlLabel
         {...otherMuiProps}
         {...muiSlotProps?.formControlLabel}
+        // `FormControlLabel` gives its own `disabled` to the control in place of the control's, so the form's goes here
+        disabled={disabled || readonly}
         required={marksRequired && templateMarksRequired<T, S, F>(props)}
         control={
           <Checkbox
             id={id}
             name={htmlName || id}
-            checked={typeof value === 'undefined' ? false : Boolean(value)}
-            disabled={disabled || readonly}
             autoFocus={autofocus}
+            {...muiSlotProps?.checkbox}
+            // After the author's props, so they can't take the form's data or focus
+            checked={typeof value === 'undefined' ? false : Boolean(value)}
             onChange={handleChange}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            {...muiSlotProps?.checkbox}
             // The `<input>` carrying the field's id takes its plan, rather than the `<span>` around it
             // `FormControlLabel` hands the control the `required` it marks its label by, so the `<input>` takes its own
             slotProps={withInputSlot(
@@ -107,6 +110,8 @@ export default function CheckboxWidget<
                 ...getControlAttributes<T, S, F>({ id, presentation }),
               },
               muiSlotProps?.checkbox?.slotProps,
+              // A lone box's `value` is only what native `FormData` submits, not the form's data
+              ['disabled', 'checked'],
             )}
           />
         }
