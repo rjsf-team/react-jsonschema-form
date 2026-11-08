@@ -111,8 +111,9 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  * that are non-existent in the new schema, or that it declares with another type, are removed from the data at every
  * level. The data sanitization process has the following flow:
  *
+ * - If the `data` is an object or array equal to the new schema's `const`, return it as it is
  * - If the new schema is an object that contains a `properties` object then:
- *   - Create an empty `removeOldSchemaData` object, and a set of `discardedKeys` holding each key in the
+ *   - Create an empty `replacements` object, and a set of `discardedKeys` holding each key in the
  *     `oldSchema.properties` having `data`
  *   - Create an empty `nestedData` object for use in the key filtering below:
  *   - Iterate over each key in the `newSchema.properties` as follows:
@@ -132,23 +133,22 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *         - Get the old and new `default` values from the schema and check:
  *           - If the new `default` value does not match the form value:
  *             - If the key is new and its form value is undefined, or the old `default` matches the form value, then:
- *               - Replace `removeOldSchemaData[key]` with the new `default`
- *               - Otherwise, if the new schema is `readOnly` then replace `removeOldSchemaData[key]` with undefined
+ *               - Replace `replacements[key]` with the new `default`
+ *               - Otherwise, if the new schema is `readOnly` then replace `replacements[key]` with undefined
  *         - Get the old and new `const` values from the schema and check:
  *           - If the new `const` value does not match the form value:
  *           - If the old `const` value DOES match the form value, then:
- *             - Replace `removeOldSchemaData[key]` with the new `const`
- *             - Otherwise, replace `removeOldSchemaData[key]` with undefined
+ *             - Replace `replacements[key]` with the new `const`
+ *             - Otherwise, replace `replacements[key]` with undefined
  *         - If the form value is none of the new `enum` or constant options, replace it with the new `default` when that
  *           is an option, the only option when there is one, or undefined
- *   - Once all keys have been processed, return `{ ...data, ...removeOldSchemaData, ...nestedData }` without the keys
+ *   - Once all keys have been processed, return `{ ...data, ...replacements, ...nestedData }` without the keys
  *     left in `discardedKeys`
  * - If the old and new schema types, read through `getSchemaType()` so that a type list also allowing `null` counts,
  *   are both array, the `data` is an array, the new schema's `const` is not an array other than the `data` unless the
  *   old schema declares the same `const`, and the `data` is one of the new schema's `enum` or constant options when it
  *   lists any the old schema did not list alike, the options of both read with their `$ref`s resolved against
  *   `rootSchema`, where an old option whose `$ref` names nothing there lists no values, then:
- *   - If the `data` equals the new schema's array `const`, return it as it is
  *   - If the old and new schema `items` are both a single schema rather than a tuple or a boolean:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
@@ -157,8 +157,6 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *         at `maxItems` if specified:
  *         - Retrieve the items schemas for that element, and keep an element that is one of the new items
  *           schema's `enum` or constant options as it is, dropping one that is none of them
- *         - Otherwise, an object element whose new items schema declares `properties`, or an array element, is kept as
- *           it is when it equals the new items' `const`
  *         - Otherwise, an object element whose new items schema declares `properties` is recursively sanitized against
  *           them, and any other object element is kept as it is
  *         - Otherwise, an array element the new items' array `const` rejects, as above, is dropped, and any other is
@@ -187,6 +185,11 @@ export default function sanitizeDataForNewSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: unknown = {}): T {
+  // Data equal to the new `const` is the one value the schema allows, so sanitizing it could only change it into one the
+  // `const` rejects. A scalar is left to the rules below, which clear it for the defaults to refill
+  if (typeof data === 'object' && data !== null && deepEquals(newSchema?.const, data)) {
+    return data as T;
+  }
   // By default, we will clear the form data
   let newFormData;
   const newProperties = newSchema?.[PROPERTIES_KEY];
@@ -194,7 +197,7 @@ export default function sanitizeDataForNewSchema<
   if (newProperties) {
     // An object of the values replacing the data's own. It and `nestedData` are without a prototype, so that a
     // `__proto__` key is written as a plain key, and the spread into `newFormData` copies it as an own one
-    const removeOldSchemaData: GenericObjectType = Object.create(null);
+    const replacements: GenericObjectType = Object.create(null);
     // The keys the old schema declares that the data holds, each removed from the data unless the new schema declares
     // it with the same type. Removed rather than set to `undefined`, which a nested object's field would read as an
     // extra key, and which would keep the defaults from reaching the key
@@ -254,9 +257,7 @@ export default function sanitizeDataForNewSchema<
           // data is filtered against the new schema rather than cleared for an old side that declares no array. One
           // the new `const` rejects doesn't borrow, since the borrowed side declares the same `const`, so it is cleared
           const borrowOld =
-            isArrayValue &&
-            (isNewProperty || !oldKeyedSchema.type) &&
-            !arrayConstRejects<S>(newKeyedSchema, oldKeyedSchema, formValue);
+            isArrayValue && !oldKeyedSchema.type && !arrayConstRejects<S>(newKeyedSchema, oldKeyedSchema, formValue);
           // Data holding no object has no properties to sanitize. Descending into it would sanitize the absent
           // properties of every level a recursive `$ref` reaches, without end
           const itemData =
@@ -282,10 +283,10 @@ export default function sanitizeDataForNewSchema<
           if (newOptionDefault !== NO_VALUE && !deepEquals(newOptionDefault, formValue)) {
             if ((isNewProperty && formValue === undefined) || deepEquals(oldOptionDefault, formValue)) {
               // Initialize a newly entered property or replace an old default with the new default.
-              removeOldSchemaData[key] = newOptionDefault;
+              replacements[key] = newOptionDefault;
             } else if (newKeyedSchema.readOnly === true) {
               // If the new schema has the default set to read-only, treat it like a const and remove the value
-              removeOldSchemaData[key] = undefined;
+              replacements[key] = undefined;
             }
           }
 
@@ -293,13 +294,13 @@ export default function sanitizeDataForNewSchema<
           const oldOptionConst = getByPath(oldKeyedSchema, CONST_KEY, NO_VALUE);
           if (newOptionConst !== NO_VALUE && !deepEquals(newOptionConst, formValue)) {
             // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
-            removeOldSchemaData[key] = deepEquals(oldOptionConst, formValue) ? newOptionConst : undefined;
+            replacements[key] = deepEquals(oldOptionConst, formValue) ? newOptionConst : undefined;
           }
 
           if (hasByPath(data, key)) {
             const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
             if (enumReplacement !== NO_VALUE) {
-              removeOldSchemaData[key] = enumReplacement;
+              replacements[key] = enumReplacement;
             }
           }
         }
@@ -308,7 +309,7 @@ export default function sanitizeDataForNewSchema<
 
     const sanitized: GenericObjectType = {
       ...(isObject(data) ? data : undefined),
-      ...removeOldSchemaData,
+      ...replacements,
       ...nestedData,
     };
     discardedKeys.forEach((key) => delete sanitized[key]);
@@ -335,11 +336,6 @@ export default function sanitizeDataForNewSchema<
         enumValuesForSchema<S>(resolveConstantOptions<S>(newSchema, rootSchema)),
       ))
   ) {
-    // An array equal to the new `const` is the one value the schema allows, so sanitizing its items could only change it
-    // into one the `const` rejects
-    if (Array.isArray(newSchema.const) && deepEquals(newSchema.const, data)) {
-      return data as T;
-    }
     let oldSchemaItems = oldSchema.items;
     let newSchemaItems = newSchema.items;
     // Items described by a single schema are sanitized against it below. A tuple is kept only when both schemas
@@ -400,20 +396,16 @@ export default function sanitizeDataForNewSchema<
               // Old items declaring no type describe no array to sanitize against, so an array element is read
               // against the new items schema alone, rather than kept unsanitized for an old side holding no array.
               // An array element whose items the two sides describe differently is kept as it is: the shared array
-              // rule clears it even where the new items accept it. One a new `const` rejects is dropped, as there, and
-              // one equal to it is kept as it is, as a listed one is
-              if (arrayConstRejects<S>(newItemSchema, oldItemSchema, aValue)) {
-                itemValue = undefined;
-              } else if (newItemSchema.const === undefined || !deepEquals(newItemSchema.const, aValue)) {
-                itemValue =
-                  sanitizeDataForNewSchema<T, S, F>(
+              // rule clears it even where the new items accept it. One a new `const` rejects is dropped, as there
+              itemValue = arrayConstRejects<S>(newItemSchema, oldItemSchema, aValue)
+                ? undefined
+                : (sanitizeDataForNewSchema<T, S, F>(
                     context,
                     rootSchema,
                     newItemSchema,
                     itemsType === 'array' && !oldSchemaType ? newItemSchema : oldItemSchema,
                     aValue,
-                  ) ?? aValue;
-              }
+                  ) ?? aValue);
             } else if (isContainerItem) {
               // An object item declaring no `properties` has none to prune, so it is kept as it is
               itemValue = isPlainObject(aValue) ? aValue : undefined;

@@ -131,11 +131,13 @@ function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType
   );
 }
 
-/** Builds the function that returns data without each key the switch discarded: one the old option declares and neither
- * the new option nor the schema holding the options declares, left holding `undefined`. Left in place, such a key is an extra key of the object holding the options, which renders it as an
- * additional property holding nothing and counts it against its `maxProperties` and its `propertyNames`. A key both
- * options declare under different constraints goes too: the `undefined` it holds is a clear of the old option's field,
- * which gives way to the new one's defaults.
+/** Builds the function that returns data without each key the switch discarded that holds `undefined`: one both options
+ * declare under different constraints, whose `undefined` is a clear of the old option's field that gives way to the new
+ * one's defaults, and one the old option declares and neither the new option's `properties` nor the schema holding the
+ * options declares. `sanitizeDataForNewSchema()` removes the second kind itself, but the defaults filled in afterwards
+ * add one back where the new option declares it through `allOf` or a condition. Left in place, such a key is an extra
+ * key of the object holding the options, which renders it as an additional property holding nothing and counts it
+ * against its `maxProperties` and its `propertyNames`.
  *
  * A switch asks this before and after the defaults are filled in, so each key's answer is kept: comparing two options'
  * fields retrieves both schemas, and a retrieval can call the validator.
@@ -239,7 +241,7 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  *   What an option declares and what `computeDefaults()` acts on are not the same set: a `default` reached through
  *   `allOf` or `if`/`then` resolves here but is not filled, and a `const` is skipped entirely under
  *   `constAsDefaults: 'never'`. Deleting on the declaration alone would empty those keys for good.
- * - Sanitize discarded the value, or the old option declares one and the key still holds it. Only the second of
+ * - Sanitize cleared the value, or the old option declares one and the key still holds it. Only the second of
  *   those compares anything, so only it needs the old option's declaration: a value sanitize threw away is gone
  *   no matter who declared it, and leaving the key holding `undefined` only blocks the fill.
  *

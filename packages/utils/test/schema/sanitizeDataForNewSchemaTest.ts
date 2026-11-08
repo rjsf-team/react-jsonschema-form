@@ -1139,6 +1139,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
     describe('an array property whose old schema declares no type', () => {
       const listOf = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
       const stringList: RJSFSchema = { type: 'array', items: { type: 'string' } };
+      const constList: RJSFSchema = { ...stringList, const: ['z'] };
       it('is sanitized against the new schema rather than cleared', () => {
         expect(schemaUtils.sanitizeDataForNewSchema(listOf(stringList), listOf({}), { list: ['a', 1] })).toEqual({
           list: ['a', 1],
@@ -1151,20 +1152,17 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         });
       });
       it('is cleared when the new array const rejects it', () => {
-        const constList: RJSFSchema = { ...stringList, const: ['z'] };
         expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), listOf({}), { list: ['a'] })).toEqual({
           list: undefined,
         });
       });
       it('is cleared, as a property new to the new schema, when the new array const rejects it', () => {
-        const constList: RJSFSchema = { ...stringList, const: ['z'] };
         const oldSchema: RJSFSchema = { type: 'object', properties: {} };
         expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), oldSchema, { list: ['a'] })).toEqual({
           list: undefined,
         });
       });
       it('is kept when it equals the new array const', () => {
-        const constList: RJSFSchema = { ...stringList, const: ['z'] };
         expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), listOf({}), { list: ['z'] })).toEqual({
           list: ['z'],
         });
@@ -1343,6 +1341,24 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       const schema: RJSFSchema = { type: 'array', items };
       expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [[{ k: 'a' }]])).toEqual([[{ k: 'a' }]]);
+    });
+    describe('an object equal to its const', () => {
+      const withDefault = (properties: RJSFSchema['properties']): RJSFSchema => ({
+        type: 'object',
+        const: { a: 1 },
+        properties: { a: { type: 'number' }, ...properties },
+      });
+      it('is kept as it is when sanitized directly, rather than given a default the new schema adds', () => {
+        const newSchema = withDefault({ b: { type: 'number', default: 2 } });
+        expect(schemaUtils.sanitizeDataForNewSchema(newSchema, withDefault({}), { a: 1 })).toStrictEqual({ a: 1 });
+      });
+      it('is kept as it is as a property', () => {
+        const objectWith = (o: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { o } });
+        const newSchema = objectWith(withDefault({ b: { type: 'number', default: 2 } }));
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(newSchema, objectWith(withDefault({})), { o: { a: 1 } }),
+        ).toStrictEqual({ o: { a: 1 } });
+      });
     });
     describe('an array equal to its const', () => {
       const items: RJSFSchema = {
