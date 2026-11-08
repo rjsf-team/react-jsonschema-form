@@ -1256,6 +1256,29 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       const schema: RJSFSchema = { type: 'array', items };
       expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [[{ k: 'a' }]])).toEqual([[{ k: 'a' }]]);
     });
+    describe('an array equal to its const', () => {
+      const items: RJSFSchema = {
+        type: 'object',
+        properties: { k: { type: 'string' }, opt: { type: 'object', properties: { x: { type: 'string' } } } },
+      };
+      const grid: RJSFSchema = { type: 'array', const: [{ k: 'a' }], items };
+      it('is kept as it is when sanitized directly', () => {
+        expect(schemaUtils.sanitizeDataForNewSchema(grid, grid, [{ k: 'a' }])).toEqual([{ k: 'a' }]);
+      });
+      it('is kept as it is as a property', () => {
+        const schema: RJSFSchema = { type: 'object', properties: { grid } };
+        expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, { grid: [{ k: 'a' }] })).toEqual({
+          grid: [{ k: 'a' }],
+        });
+      });
+      it('is kept as it is when the new items add a property with a default', () => {
+        const newSchema: RJSFSchema = {
+          ...grid,
+          items: { ...items, properties: { ...items.properties, d: { type: 'string', default: 'z' } } },
+        };
+        expect(schemaUtils.sanitizeDataForNewSchema(newSchema, grid, [{ k: 'a' }])).toEqual([{ k: 'a' }]);
+      });
+    });
     it('sanitizes an undefined object item whose items declare no const, rather than dropping it', () => {
       const schema: RJSFSchema = { type: 'array', items: { type: 'object', properties: { k: { type: 'string' } } } };
       expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, [undefined, { k: 'a' }])).toEqual([{}, { k: 'a' }]);

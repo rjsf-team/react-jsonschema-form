@@ -142,6 +142,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *   old schema declares the same `const`, and the `data` is one of the new schema's `enum` or constant options when it
  *   lists any the old schema did not list alike, the options of both read with their `$ref`s resolved against
  *   `rootSchema`, where an old option whose `$ref` names nothing there lists no values, then:
+ *   - If the `data` equals the new schema's array `const`, return it as it is
  *   - If the old and new schema `items` are both a single schema rather than a tuple or a boolean:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
@@ -324,6 +325,11 @@ export default function sanitizeDataForNewSchema<
         enumValuesForSchema<S>(resolveConstantOptions<S>(newSchema, rootSchema)),
       ))
   ) {
+    // An array equal to the new `const` is the one value the schema allows, so sanitizing its items could only change it
+    // into one the `const` rejects
+    if (Array.isArray(newSchema.const) && deepEquals(newSchema.const, data)) {
+      return data as T;
+    }
     let oldSchemaItems = oldSchema.items;
     let newSchemaItems = newSchema.items;
     // Items described by a single schema are sanitized against it below. A tuple is kept only when both schemas
