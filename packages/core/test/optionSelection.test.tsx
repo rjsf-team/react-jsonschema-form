@@ -129,6 +129,54 @@ describe('option selection as form state', () => {
     expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y' });
   });
 
+  it('hands customValidate the defaults of the option on screen on submit where another fits the validated data better', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { c: { type: 'string', const: 'z' }, a: { type: 'string', default: 'x' } } },
+        { title: 'B', properties: { b: { type: 'string', default: 'y' }, c: { type: 'string' } } },
+      ],
+    };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node } = createFormComponent({ schema, customValidate });
+
+    // B keeps the `c` A's `const` filled in
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    await user.clear(elementOf(node, '#root_b'));
+    await submitForm(node, user);
+
+    // The validator is handed `{ c: 'z' }`, which A's `const` fits better, yet B is shown for `{ b: undefined, c: 'z' }`
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('B');
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ b: 'y', c: 'z' });
+  });
+
+  it('hands customValidate the defaults of the option on screen on submit where an array item holds `undefined`', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { c: { type: 'string', const: 'z' }, a: { type: 'string', default: 'x' } } },
+        {
+          title: 'B',
+          properties: {
+            b: { type: 'array', items: { type: 'string' } },
+            d: { type: 'string', default: 'y' },
+            c: { type: 'string' },
+          },
+        },
+      ],
+    };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node } = createFormComponent({ schema, customValidate, noHtml5Validate: true });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    await user.click(elementOf(node, '.rjsf-array-item-add'));
+    await submitForm(node, user);
+
+    // The validator is handed the new item as `null`, the JSON copy of the `undefined` it holds
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('B');
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ b: [null], c: 'z', d: 'y' });
+  });
+
   it('matches the root data setFieldValue sets again for customValidate and liveOmit, as the render does', async () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -155,6 +203,51 @@ describe('option selection as form state', () => {
     expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('A');
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'q' });
     expect(customValidate.mock.lastCall?.[0]).toEqual({ a: 'q' });
+  });
+
+  it('matches the root data setFieldValue sets again for customValidate where it is the JSON copy of the held data', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { c: { type: 'string', const: 'z' } } },
+        { title: 'B', properties: { b: { type: 'string', default: 'y' }, c: { type: 'string' } } },
+      ],
+    };
+    const ref = createFormRef();
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node } = createFormComponent({ ref, schema, liveValidate: 'onChange', customValidate });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    await user.clear(elementOf(node, '#root_b'));
+    act(() => handleOf(ref).setFieldValue('', { c: 'z' }));
+
+    // B held for `{ b: undefined, c: 'z' }`, whose JSON copy is the `{ c: 'z' }` set, yet the form matches it again as A
+    expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('A');
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ c: 'z' });
+  });
+
+  it('hands customValidate the defaults of the option a field below the root shows on submit where another fits the validated data better', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        o: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { c: { type: 'string', const: 'z' }, a: { type: 'string', default: 'x' } } },
+            { title: 'B', properties: { b: { type: 'string', default: 'y' }, c: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node } = createFormComponent({ schema, customValidate });
+
+    await user.selectOptions(selectOf(node, 'root_o__oneof_select'), 'B');
+    await user.clear(elementOf(node, '#root_o_b'));
+    await submitForm(node, user);
+
+    expect(getSelectedOptionValue(selectOf(node, 'root_o__oneof_select'))).toBe('B');
+    expect(customValidate.mock.lastCall?.[0]).toEqual({ o: { b: 'y', c: 'z' } });
   });
 
   it('matches the root data setFieldValue sets again when transformChange rewrites it', async () => {

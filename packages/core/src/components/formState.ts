@@ -58,10 +58,12 @@ import {
   asFieldValue,
   createUiState,
   fieldStateOf,
+  jsonCopyOf,
   settledEntries,
   withoutSelections,
   withSelectionsAsOf,
   withSelectionsHeldFor,
+  withSelectionsHeldForJson,
 } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
@@ -802,11 +804,16 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
   // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
   // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
   // Falsy root values (`false`, `0`, `''`) are valid data, so only `undefined` skips the round trip (#5404).
-  const serializedFormData = JSON.stringify(formData);
-  const validationFormData = serializedFormData === undefined ? undefined : JSON.parse(serializedFormData);
-  // The committed registry's fields, not the props', since whether an option is hidden is a question of what renders
+  const validationFormData = jsonCopyOf(formData) as T | undefined;
+  // The committed registry's fields, not the props', since whether an option is hidden is a question of what renders.
+  // A selection holding for the form's data holds for its JSON copy too, as the defaults for `customValidate` are taken
+  // from that copy
   const fieldState = fieldStateOf(
-    context.uiState,
+    withSelectionsHeldForJson(
+      context.uiState,
+      (at) => getAt(formData, at),
+      (at) => getAt(validationFormData, at),
+    ),
     schemaUtils,
     heldPath,
     (fieldPath, fieldSchema, fieldUiSchema, data) =>

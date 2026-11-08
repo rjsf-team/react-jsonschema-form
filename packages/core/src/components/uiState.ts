@@ -438,6 +438,42 @@ export function withSelectionsHeldFor(
   };
 }
 
+/** The JSON copy of `data` the validator is handed: keys holding `undefined` dropped, array items holding it `null` */
+export function jsonCopyOf(data: unknown): unknown {
+  const serialized = JSON.stringify(data);
+  return serialized === undefined ? undefined : JSON.parse(serialized);
+}
+
+/** `uiState` with each selection that holds for the form's data at its field holding for that data's JSON copy as well,
+ * for matching the copy the validator is handed. A selection the data no longer holds is matched again, as the render
+ * matches it, even where the data's copy equals the copy of the data it held for
+ *
+ * @param uiState - The form's option selections and cycle expansions
+ * @param dataAt - The form's data at a field's path
+ * @param copyAt - The JSON copy of the form's data at a field's path, which writes an array item holding `undefined` as
+ *        the `null` a copy of the item alone would not
+ * @returns - The selections, each holding for its data and, where that is the form's, the data's JSON copy
+ */
+export function withSelectionsHeldForJson(
+  uiState: UiStateReader,
+  dataAt: (path: FieldPathList) => unknown,
+  copyAt: (path: FieldPathList) => unknown,
+): UiStateReader {
+  return {
+    selection: (path, list) => {
+      const selection = uiState.selection(path, list);
+      if (selection === undefined) {
+        return undefined;
+      }
+      const at = fieldPathToList(path);
+      return isHeldFor(selection, dataAt(at))
+        ? { ...selection, holdsFor: [...selection.holdsFor, copyAt(at)] }
+        : selection;
+    },
+    isExpanded: uiState.isExpanded,
+  };
+}
+
 /** `uiState` with the options selected now and never the ones picked later, for the baseline `reset()` derives under
  * the options the form shows at the reset. Each holds for the reset's data, as once the form renders it, so the snapshot
  * keeps none of the data from before the reset
