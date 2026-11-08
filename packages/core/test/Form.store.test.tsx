@@ -281,6 +281,23 @@ it('same-tick validation sees the custom errors a field raises with its edit', a
   expect(onError).toHaveBeenLastCalledWith(expect.arrayContaining([expect.objectContaining({ message: 'blocked' })]));
 });
 
+it('same-tick validation sees a setFieldValue() made just before it', () => {
+  const ref = createFormRef();
+  const { node } = createFormComponent({
+    ref,
+    schema: { type: 'object', properties: { name: { type: 'string', minLength: 3 } } },
+  });
+  let isValid: boolean | undefined;
+
+  act(() => {
+    handleOf(ref).setFieldValue('name', 'a');
+    isValid = handleOf(ref).validateForm();
+  });
+
+  expect(isValid).toBe(false);
+  expect(errorListMessages(node)).toEqual(['.name must NOT have fewer than 3 characters']);
+});
+
 it('an edit customValidate makes through the handle while validateForm() runs is kept', () => {
   const ref = createFormRef();
   let isFirstRun = true;

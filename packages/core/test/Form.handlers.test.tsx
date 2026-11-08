@@ -1630,6 +1630,7 @@ describe('Form change handler under a parent', () => {
     ['a burst, with liveValidate on blur', { liveValidate: 'onBlur' }, ['a', 'b']],
     ['a burst, with liveOmit on blur', { omitExtraData: true, liveOmit: 'onBlur' }, ['a', 'b']],
     ['a single change, with liveValidate on blur', { liveValidate: 'onBlur' }, ['b']],
+    ['a single change, with liveOmit on blur', { omitExtraData: true, liveOmit: 'onBlur' }, ['b']],
   ] as const)('should keep %s made in the same event as a blur', async (_, props, values) => {
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string', minLength: 3 } } };
     const PickWidget = ({ id, onChange, onBlur, value }: WidgetProps) => (
