@@ -355,6 +355,21 @@ export function createUiState() {
         }
       }
     },
+    /** Records, for every selection that holds for the data `beforeAt` gives at its field, the data `dataAt` gives there
+     * in its place: data the form changed under the options it shows, as omitting extra data changes it
+     */
+    followed: (beforeAt: (path: FieldPathList) => unknown, dataAt: (path: FieldPathList) => unknown) => {
+      for (const [at, lists] of selections) {
+        const segments = fieldPathToList(at);
+        const before = beforeAt(segments);
+        const data = dataAt(segments);
+        for (const [list, selection] of lists) {
+          if (isHeldFor(selection, before) && !isHeldFor(selection, data)) {
+            lists.set(list, { ...selection, holdsFor: [data] });
+          }
+        }
+      }
+    },
     /** Records the data the form rendered at each selection's field: the one data the selection holds for from now on,
      * or none where the field showed other data, matched again. Called as React commits, where nothing may render, so
      * it changes no option a field shows for the data it rendered and tells no field
@@ -444,20 +459,21 @@ export function jsonCopyOf(data: unknown): unknown {
   return serialized === undefined ? undefined : JSON.parse(serialized);
 }
 
-/** `uiState` with each selection that holds for the form's data at its field holding for that data's JSON copy as well,
- * for matching the copy the validator is handed. A selection the data no longer holds is matched again, as the render
- * matches it, even where the data's copy equals the copy of the data it held for
+/** `uiState` with each selection that holds for the data the form shows at its field holding for the validated copy of
+ * that data as well, for matching the copy the validator is handed. A selection the data no longer holds is matched
+ * again, as the render matches it, even where the data's copy equals the copy of the data it held for
  *
  * @param uiState - The form's option selections and cycle expansions
- * @param dataAt - The form's data at a field's path
- * @param copyAt - The JSON copy of the form's data at a field's path, which writes an array item holding `undefined` as
- *        the `null` a copy of the item alone would not
- * @returns - The selections, each holding for its data and, where that is the form's, the data's JSON copy
+ * @param dataAt - The data the form shows at a field's path
+ * @param copiesAt - The validated data at a field's path, with extra data omitted on a submit or `validateForm()` that
+ *        asks for it, which the ui:required walk reads, and its JSON copy, which writes an array item holding
+ *        `undefined` as the `null` a copy of the item alone would not
+ * @returns - The selections, each holding for its data and, where that is the form's, its validated copies
  */
 export function withSelectionsHeldForJson(
   uiState: UiStateReader,
   dataAt: (path: FieldPathList) => unknown,
-  copyAt: (path: FieldPathList) => unknown,
+  copiesAt: (path: FieldPathList) => readonly unknown[],
 ): UiStateReader {
   return {
     selection: (path, list) => {
@@ -467,7 +483,7 @@ export function withSelectionsHeldForJson(
       }
       const at = fieldPathToList(path);
       return isHeldFor(selection, dataAt(at))
-        ? { ...selection, holdsFor: [...selection.holdsFor, copyAt(at)] }
+        ? { ...selection, holdsFor: [...selection.holdsFor, ...copiesAt(at)] }
         : selection;
     },
     isExpanded: uiState.isExpanded,
