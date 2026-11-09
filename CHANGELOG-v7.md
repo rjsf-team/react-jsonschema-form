@@ -1105,6 +1105,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `wrapIfAdditionalFlagTests()`, which checks that a theme's `WrapIfAdditionalTemplate` draws the key input and the remove button for a field whose `ADDITIONAL_PROPERTY_FLAG` is set, and the field alone for one whose flag is `undefined` or `false` ([#5689](https://github.com/rjsf-team/react-jsonschema-form/pull/5689))
 - Add `requiredCueTests()`, which pins that a required `anyOf`/`oneOf` field or group of checkboxes gives one required cue in a theme ([#5743](https://github.com/rjsf-team/react-jsonschema-form/pull/5743), [#5573](https://github.com/rjsf-team/react-jsonschema-form/issues/5573))
 - Add a `checkboxLabelTests()` case for a `checkbox` on a string with a string `const`, checking that its label and description are drawn once, where a boolean checkbox's are, and that checking it writes the `const` and unchecking it clears the field ([#5753](https://github.com/rjsf-team/react-jsonschema-form/pull/5753), [#3882](https://github.com/rjsf-team/react-jsonschema-form/issues/3882))
+- Add `presentationContractTests()`, checking that every widget, a `oneOf`, an `anyOf` rendering no option, an array and the fallback UI, clean and errored, give each control one accessible name, draw one description, help and error, and leave no ARIA or `label[for]` id dangling or repeated, with an `exempt` selector for known breaks ([#5592](https://github.com/rjsf-team/react-jsonschema-form/issues/5592))
 
 ## @rjsf/utils
 
