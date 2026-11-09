@@ -3,6 +3,7 @@ import type {
   FieldPath,
   FieldPathList,
   FormContextType,
+  FormFieldState,
   GenericObjectType,
   StrictRJSFSchema,
   RJSFSchema,
@@ -50,7 +51,7 @@ import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from
 import keepClears from './keepClears.ts';
 import { keyMoveOf, moveErrorKeys, moveErrorSchemaKeys, movedPaths, withKeysMoved } from './keyMove.ts';
 import type { ContainerKeyMove, KeyMove, MoveFate } from './keyMove.ts';
-import type { FieldTree } from './sanitizeFieldTree.ts';
+import type { FieldTree, FirstRenderFill } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
 import type { UiStateReader } from './uiState.ts';
 import {
@@ -1185,7 +1186,6 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   const { isSanitized = false, edit, heldPath, isReset = false } = options;
   const uiState = options.uiState ?? current?.uiState;
   const { uiSchema = {} } = props;
-  const rootSchema = schemaUtils.getRootSchema();
   // The data is shared against the committed data when there is some, so an unchanged subtree keeps the reference the
   // fields hold; on construction, against the caller's own value
   const shareBase = current ? current.formData : inputFormData;
@@ -1194,20 +1194,26 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   const initialDefaultsGenerated = (current?.initialDefaultsGenerated ?? false) && !isReset;
   // The defaults of a field offering options are those of the option it shows, which is the form's to keep
   const fieldState = uiState && fieldStateOf(uiState, schemaUtils, heldPath);
+  const defaultsOf = (
+    utils: SchemaUtilsType<T, S, F>,
+    data: T | undefined,
+    areInitialDefaultsGenerated: boolean,
+    state: FormFieldState<S> | undefined,
+  ) =>
+    utils.getDefaultFormState(
+      utils.getRootSchema(),
+      data,
+      false,
+      areInitialDefaultsGenerated,
+      uiSchema,
+      undefined,
+      state,
+    );
+  const fillAsFirstRender: FirstRenderFill<T, S, F> = (utils, data, state) => defaultsOf(utils, data, false, state);
   const fill = (data: T | undefined, clears: unknown) => {
     const filled = replaceEqualDeep(
       shareBase,
-      asFilledFormData<T>(
-        schemaUtils.getDefaultFormState(
-          rootSchema,
-          data,
-          false,
-          initialDefaultsGenerated,
-          uiSchema,
-          undefined,
-          fieldState,
-        ),
-      ),
+      asFilledFormData<T>(defaultsOf(schemaUtils, data, initialDefaultsGenerated, fieldState)),
     );
     return clears === undefined ? filled : keepClears(filled, data, clears);
   };
@@ -1223,7 +1229,10 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     let previous: FieldTree<T, S, F> = current;
     let roundEdit = edit;
     for (;;) {
-      const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, uiState, uiSchema, roundEdit));
+      const sanitized = replaceEqualDeep(
+        formData,
+        sanitizeFieldTree(previous, tree, uiState, fillAsFirstRender, roundEdit),
+      );
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
       // does, so a default the round dropped is there again

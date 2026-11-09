@@ -1,11 +1,4 @@
-import type {
-  FieldPathList,
-  FormContextType,
-  FormFieldState,
-  SchemaUtilsType,
-  StrictRJSFSchema,
-  UiSchema,
-} from '@rjsf/utils';
+import type { FieldPathList, FormContextType, FormFieldState, SchemaUtilsType, StrictRJSFSchema } from '@rjsf/utils';
 import {
   CONST_KEY,
   deepEquals,
@@ -36,7 +29,16 @@ import type { KeyMove } from './keyMove.ts';
 import type { UiStateReader } from './uiState.ts';
 import { asFieldValue, fieldStateOf, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 
-/** What the tree diff needs that does not change as it descends */
+/** The data the form fills `data` with on its first render with `schemaUtils`, under the options `fieldState` says its
+ * fields show
+ */
+export type FirstRenderFill<T, S extends StrictRJSFSchema, F extends FormContextType> = (
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  data: T | undefined,
+  fieldState: FormFieldState<S>,
+) => unknown;
+
+/** What the tree diff needs as it descends: all of it fixed but `oldShown`, which grows as the diff lays out each field */
 interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The schema utilities the previous tree is built with */
   oldSchemaUtils: SchemaUtilsType<T, S, F>;
@@ -51,8 +53,7 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   newKeyOf?: KeyMove;
   /** The data the previous tree is built for */
   oldData: unknown;
-  /** The form's uiSchema, whose `ui:initialValue` and `ui:emptyValue` the form's defaults fill in too */
-  uiSchema?: UiSchema<T, S, F>;
+  fillAsFirstRender: FirstRenderFill<T, S, F>;
   /** The option the previous tree showed from each list, by the field's path in the previous data and the list's
    * `optionListKey()`, kept as the diff lays out each field, so a fill of the previous data is made under them
    */
@@ -397,8 +398,7 @@ interface FieldPair<S> {
 }
 
 /** The options the previous tree showed, as a fill of the previous data reads them: the one the diff laid each field
- * out with where it has reached the field, as it has every field above the one it judges, and otherwise the form's.
- * Only a field holding data is asked, see `isOldFill()`
+ * out with where it has reached the field, as it has every field above the one it judges, and otherwise the form's
  */
 function oldFieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
@@ -416,14 +416,16 @@ function oldFieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextTyp
   };
 }
 
-/** Whether `value` is what the defaults filled the old field at `oldPath` with. Two fills are asked: the field's own,
- * from the option it showed outward and around the default it or its parent declares, and the form's, as the form
- * fills its first render, from the root around the old data without the field's value, with the uiSchema and under the
- * options the old tree showed above the field, which sees the `required` and the defaults of the schemas above it. The
- * own fill is the only one a field with no old path has, since there is no old data around it for the form's fill to
- * read. Without its value the field holds no data, so the form's fill matches its options by its `default` and its
- * conditions without it, as it does for a field the user hasn't reached: what that fills in is still what the
- * defaults fill in, so it drops as a default does, even where it is another option's or another branch's
+/** Whether `value` is what the defaults filled the old field at `oldPath` with. Two fills are asked, since neither sees
+ * all of what decides it. The field's own fill starts from the option it showed and the default it or its parent
+ * declares. The form's fill, made as on its first render so a `ui:initialValue` counts, starts from the root and the
+ * old data without the field's value, and sees the uiSchema, the `required` and the defaults above the field.
+ *
+ * A field with no old path has only its own fill: there is no old data around it for the form's to read.
+ *
+ * Without its value the field holds no data, so the form's fill picks its option by its `default` and evaluates its
+ * conditions without it, as for a field the user hasn't reached. What that fills in is what the defaults would put
+ * there, so it drops as a default does, even when another option or branch filled it.
  */
 function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
@@ -445,15 +447,7 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const withoutValue = copyAlongPath(ctx.oldData, oldPath);
   unsetByPath(withoutValue, oldPath);
-  const formFill = oldSchemaUtils.getDefaultFormState(
-    oldSchemaUtils.getRootSchema(),
-    asFieldValue<T>(withoutValue),
-    false,
-    false,
-    ctx.uiSchema,
-    undefined,
-    oldFieldStateOf(ctx),
-  );
+  const formFill = ctx.fillAsFirstRender(oldSchemaUtils, asFieldValue<T>(withoutValue), oldFieldStateOf(ctx));
   return deepEquals(getByPath(formFill, oldPath), value);
 }
 
@@ -617,7 +611,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  *        for that data
  * @param next - The new tree, likewise, whose data is the data to sanitize
  * @param uiState - The form's option selections and cycle expansions
- * @param uiSchema - The form's uiSchema, whose filled values leave with a field as its defaults do
+ * @param fillAsFirstRender - How the form fills data on its first render, which a field's defaults are judged by
  * @param [edit] - The change being made, if any: its path, and where it moved the keys of the array or object there,
  *        so each item or property is paired with its own previous value
  * @returns - The sanitized data, sharing everything it left alone with `data`
@@ -626,7 +620,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
   previous: FieldTree<T, S, F>,
   next: FieldTree<T, S, F>,
   uiState: UiStateReader,
-  uiSchema: UiSchema<T, S, F> | undefined,
+  fillAsFirstRender: FirstRenderFill<T, S, F>,
   edit?: FieldEdit,
 ): T | undefined {
   const sanitized = walk(
@@ -637,7 +631,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       editedPath: edit?.path,
       newKeyOf: edit?.newKeyOf,
       oldData: previous.formData,
-      uiSchema,
+      fillAsFirstRender,
       oldShown: new Map(),
     },
     {

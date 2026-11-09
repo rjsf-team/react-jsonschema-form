@@ -437,6 +437,21 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(container.querySelector('#root_a__key')).toBeNull();
     });
 
+    it('keeps a value the user typed over the ui:initialValue', async () => {
+      const schema = kindOf({ ...ifThen(), additionalProperties: true });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's' },
+        uiSchema: { a: { 'ui:initialValue': 'd' } },
+        beforeSwitch: async (form) => {
+          await user.clear(input(form, 'root_a'));
+          await user.type(input(form, 'root_a'), 'x');
+        },
+      });
+
+      expect(formData).toEqual({ kind: 't', a: 'x' });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+    });
+
     describe('the defaults filled under the option the old field showed', () => {
       const optionA: RJSFSchema = { title: 'A', type: 'object', properties: { w: { type: 'string', default: 'q' } } };
       const optionB: RJSFSchema = { title: 'B', type: 'object', properties: { x: { type: 'number' } } };
@@ -462,13 +477,14 @@ describe('sanitize as a diff of the field trees before and after a change', () =
 
       // Without its value the field matches the first option, so the fill reads what the old tree showed instead
       it('drops them under the option the data matched, not the one the field matches without it', async () => {
-        const { container, hadField, formData } = await selectT(unionOf(closedB), {
+        const { container, formData } = await selectT(unionOf(closedB), {
           whenAbsent: 'allow',
           initialFormData: { kind: 's', a: { x: 7 } },
           uiSchema,
+          // Only `B` declares `x`
+          beforeSwitch: async (form) => expect(input(form, 'root_a_x').value).toBe('7'),
         });
 
-        expect(hadField).toBe(true);
         expect(formData).toEqual({ kind: 't' });
         expect(container.querySelector('#root_a__key')).toBeNull();
       });
@@ -489,25 +505,38 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       });
     });
 
-    // Without `a` the inner `else` fills `'e'`, and with it the `then` shows it, so `'e'` is what the defaults fill in
-    it('drops a value the defaults fill in under another branch than the one that shows it', async () => {
-      const schema = kindOf({
-        if: { properties: { kind: { const: 's' } } },
-        then: {
-          if: { required: ['a'] },
-          then: { properties: { a: { type: 'string', default: 'd' } } },
-          else: { properties: { a: { type: 'string', default: 'e' } } },
-        },
-        additionalProperties: true,
-      });
-      const { container, formData } = await selectT(schema, {
-        initialFormData: { kind: 's' },
-        beforeSwitch: async (form) => expect(input(form, 'root_a').value).toBe('e'),
-      });
+    // Without `a` the inner `else` fills `'e'`, and with it the `then` shows it, so `'e'` is what the defaults fill in,
+    // whether they filled it or the user typed it
+    it.each([
+      { start: 'the fill', initialFormData: { kind: 's' }, typed: undefined },
+      { start: "the user's", initialFormData: { kind: 's', a: 'x' }, typed: 'e' },
+    ])(
+      'drops a value the defaults fill in under another branch than the one that shows it, from $start',
+      async ({ initialFormData, typed }) => {
+        const schema = kindOf({
+          if: { properties: { kind: { const: 's' } } },
+          then: {
+            if: { required: ['a'] },
+            then: { properties: { a: { type: 'string', default: 'd' } } },
+            else: { properties: { a: { type: 'string', default: 'e' } } },
+          },
+          additionalProperties: true,
+        });
+        const { container, formData } = await selectT(schema, {
+          initialFormData,
+          beforeSwitch: async (form) => {
+            if (typed !== undefined) {
+              await user.clear(input(form, 'root_a'));
+              await user.type(input(form, 'root_a'), typed);
+            }
+            expect(input(form, 'root_a').value).toBe('e');
+          },
+        });
 
-      expect(formData).toEqual({ kind: 't' });
-      expect(container.querySelector('#root_a__key')).toBeNull();
-    });
+        expect(formData).toEqual({ kind: 't' });
+        expect(container.querySelector('#root_a__key')).toBeNull();
+      },
+    );
 
     // No data tells a value the user picked apart from the same value the default filled in
     it.each([
