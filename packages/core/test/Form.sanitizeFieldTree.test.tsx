@@ -452,6 +452,41 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(container.querySelector('#root_a__key')).not.toBeNull();
     });
 
+    // A new schema and a new uiSchema can arrive together, and the old tree was filled under the old uiSchema
+    it.each<{ case: string; oldUi: UiSchema<KindData>; newUi: UiSchema<KindData>; typed?: string; expected: KindData }>(
+      [
+        {
+          case: 'drops what the old uiSchema filled in, when the new one fills nothing',
+          oldUi: { a: { 'ui:initialValue': 'init' } },
+          newUi: {},
+          expected: {},
+        },
+        {
+          case: 'keeps what the user typed, when only the new uiSchema fills it in',
+          oldUi: {},
+          newUi: { a: { 'ui:initialValue': 'x' } },
+          typed: 'x',
+          expected: { a: 'x' },
+        },
+      ],
+    )('$case', async ({ oldUi, newUi, typed, expected }) => {
+      const ref = createRef<FormRef<KindData>>();
+      const oldSchema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+      const newSchema: RJSFSchema = { type: 'object', additionalProperties: true };
+      const { container, rerender } = render(
+        <Form ref={ref} schema={oldSchema} uiSchema={oldUi} validator={validator} />,
+      );
+      if (typed !== undefined) {
+        await user.type(input(container, 'root_a'), typed);
+      }
+      expect(input(container, 'root_a').value).toBe(typed ?? 'init');
+
+      rerender(<Form ref={ref} schema={newSchema} uiSchema={newUi} validator={validator} />);
+
+      expect(ref.current?.getFormData()).toEqual(expected);
+      expect(container.querySelector('#root_a__key') !== null).toBe(typed !== undefined);
+    });
+
     describe('the defaults filled under the option the old field showed', () => {
       const optionA: RJSFSchema = { title: 'A', type: 'object', properties: { w: { type: 'string', default: 'q' } } };
       const optionB: RJSFSchema = { title: 'B', type: 'object', properties: { x: { type: 'number' } } };

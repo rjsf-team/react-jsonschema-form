@@ -1,4 +1,11 @@
-import type { FieldPathList, FormContextType, FormFieldState, SchemaUtilsType, StrictRJSFSchema } from '@rjsf/utils';
+import type {
+  FieldPathList,
+  FormContextType,
+  FormFieldState,
+  SchemaUtilsType,
+  StrictRJSFSchema,
+  UiSchema,
+} from '@rjsf/utils';
 import {
   CONST_KEY,
   deepEquals,
@@ -29,16 +36,16 @@ import type { KeyMove } from './keyMove.ts';
 import type { UiStateReader } from './uiState.ts';
 import { asFieldValue, fieldStateOf, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 
-/** The data the form fills `data` with on its first render with `schemaUtils`, under the options `fieldState` says its
- * fields show
+/** The data the form fills `data` with on its first render, with the schema utilities and uiSchema `tree` is built
+ * with, under the options `fieldState` says its fields show
  */
 export type FirstRenderFill<T, S extends StrictRJSFSchema, F extends FormContextType> = (
-  schemaUtils: SchemaUtilsType<T, S, F>,
+  tree: FieldTree<T, S, F>,
   data: T | undefined,
   fieldState: FormFieldState<S>,
 ) => unknown;
 
-/** What the tree diff needs as it descends: all of it fixed but `oldShown`, which grows as the diff lays out each field */
+/** What the tree diff needs that does not change as it descends */
 interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The schema utilities the previous tree is built with */
   oldSchemaUtils: SchemaUtilsType<T, S, F>;
@@ -53,11 +60,18 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   newKeyOf?: KeyMove;
   /** The data the previous tree is built for */
   oldData: unknown;
+  /** The previous tree, which a fill of the previous data is made as */
+  oldTree: FieldTree<T, S, F>;
   fillAsFirstRender: FirstRenderFill<T, S, F>;
-  /** The option the previous tree showed from each list, by the field's path in the previous data and the list's
-   * `optionListKey()`, kept as the diff lays out each field, so a fill of the previous data is made under them
-   */
-  oldShown: Map<string, Map<string, number>>;
+}
+
+/** The options a field of the previous tree showed, by each list's `optionListKey()`, at its path in the previous data,
+ * linked to those of the fields above it
+ */
+interface ShownAbove {
+  oldPath: FieldPathList;
+  shown: ReadonlyMap<string, number>;
+  above: ShownAbove | undefined;
 }
 
 /** A field tree's schema utilities, its data, and the root schema they retrieve for that data */
@@ -65,6 +79,8 @@ export interface FieldTree<T, S extends StrictRJSFSchema, F extends FormContextT
   schemaUtils: SchemaUtilsType<T, S, F>;
   formData?: T;
   retrievedSchema: S;
+  /** The uiSchema the tree is rendered with */
+  uiSchema?: UiSchema<T, S, F>;
 }
 
 /** Whether `path` is the edited path or one of its ancestors */
@@ -395,17 +411,24 @@ interface FieldPair<S> {
    * undefined for a field with no value of its own there to have come from
    */
   oldPath?: FieldPathList;
+  /** The options the fields above this one showed in the previous tree */
+  shownAbove?: ShownAbove;
 }
 
-/** The options the previous tree showed, as a fill of the previous data reads them: the one the diff laid each field
- * out with where it has reached the field, as it has every field above the one it judges, and otherwise the form's
+/** The options the previous tree showed, as a fill of the previous data reads them: the one the diff laid out the
+ * judged field and each field above it with, and otherwise the form's
  */
 function oldFieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
+  shownAbove: ShownAbove | undefined,
 ): FormFieldState<S> {
-  const { oldSchemaUtils, uiState, editedPath, oldShown } = ctx;
+  const { oldSchemaUtils, uiState, editedPath } = ctx;
   const rootSchema = oldSchemaUtils.getRootSchema();
   const form = fieldStateOf(uiState, oldSchemaUtils, editedPath);
+  const oldShown = new Map<string, ReadonlyMap<string, number>>();
+  for (let link = shownAbove; link; link = link.above) {
+    oldShown.set(fieldPathFromList(link.oldPath), link.shown);
+  }
   return {
     ...form,
     selectedOption: (fieldPath, options, formData, discriminator) => {
@@ -419,11 +442,13 @@ function oldFieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextTyp
 /** Whether `value` is what the defaults filled the old field at `oldPath` with. Two fills are asked, since neither sees
  * all of what decides it. The field's own fill starts from the option it showed and the default it or its parent
  * declares. The form's fill, made as on its first render so a `ui:initialValue` counts, starts from the root and the
- * old data without the field's value, and sees the uiSchema, the `required` and the defaults above the field.
+ * old data without the field's value, under the options the old tree showed, and sees the uiSchema, the `required`
+ * and the defaults above the field.
  *
  * A field with no old path has only its own fill: there is no old data around it for the form's to read.
  *
- * Without its value the field holds no data, so the form's fill picks its option by its `default` and evaluates its
+ * Without its value the field holds no data, so the form's fill picks its own option by its `default`, as
+ * `getDefaultFormState()` does for a field with no data whatever it is told it shows, and evaluates its
  * conditions without it, as for a field the user hasn't reached. What that fills in is what the defaults would put
  * there, so it drops as a default does, even when another option or branch filled it.
  */
@@ -432,6 +457,7 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   oldLayers: readonly S[],
   oldDefault: unknown,
   oldPath: FieldPathList | undefined,
+  shownAbove: ShownAbove | undefined,
   value: unknown,
 ): boolean {
   const { oldSchemaUtils } = ctx;
@@ -447,7 +473,7 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const withoutValue = copyAlongPath(ctx.oldData, oldPath);
   unsetByPath(withoutValue, oldPath);
-  const formFill = ctx.fillAsFirstRender(oldSchemaUtils, asFieldValue<T>(withoutValue), oldFieldStateOf(ctx));
+  const formFill = ctx.fillAsFirstRender(ctx.oldTree, asFieldValue<T>(withoutValue), oldFieldStateOf(ctx, shownAbove));
   return deepEquals(getByPath(formFill, oldPath), value);
 }
 
@@ -468,6 +494,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     oldRetrieved,
     newRetrieved,
     oldPath,
+    shownAbove,
   } = pair;
   const edited = isEdited(ctx, path);
   // A property holding `undefined` is a clear, which is judged as the field around it changes
@@ -487,9 +514,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (newLayers.length === 0) {
     return newValue;
   }
-  if (oldPath !== undefined) {
-    ctx.oldShown.set(fieldPathFromList(oldPath), shown);
-  }
+  const shownHere = oldPath === undefined ? shownAbove : { oldPath, shown, above: shownAbove };
   const oldOwnDefault = keywordOf(oldLayers, DEFAULT_KEY);
   const newOwnDefault = keywordOf(newLayers, DEFAULT_KEY);
   const oldDefault = oldOwnDefault ?? oldInherited;
@@ -498,7 +523,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!edited) {
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
     const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, (value) =>
-      isOldFill(ctx, oldLayers, oldDefault, oldPath, value),
+      isOldFill(ctx, oldLayers, oldDefault, oldPath, shownHere, value),
     );
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
@@ -533,6 +558,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
             isItem: false,
             hasOld: previousValue !== undefined,
             oldPath: oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined,
+            shownAbove: shownHere,
           },
           childPath,
         );
@@ -581,6 +607,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
               isItem: true,
               hasOld: Array.isArray(oldValue),
               oldPath: oldPath && hasPrevious ? [...oldPath, Number(previousIndex)] : undefined,
+              shownAbove: shownHere,
             },
             [...path, index],
           );
@@ -631,8 +658,8 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       editedPath: edit?.path,
       newKeyOf: edit?.newKeyOf,
       oldData: previous.formData,
+      oldTree: previous,
       fillAsFirstRender,
-      oldShown: new Map(),
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),

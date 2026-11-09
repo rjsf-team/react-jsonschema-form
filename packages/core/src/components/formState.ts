@@ -1196,24 +1196,17 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   const fieldState = uiState && fieldStateOf(uiState, schemaUtils, heldPath);
   const defaultsOf = (
     utils: SchemaUtilsType<T, S, F>,
+    ui: UiSchema<T, S, F> | undefined,
     data: T | undefined,
     areInitialDefaultsGenerated: boolean,
     state: FormFieldState<S> | undefined,
-  ) =>
-    utils.getDefaultFormState(
-      utils.getRootSchema(),
-      data,
-      false,
-      areInitialDefaultsGenerated,
-      uiSchema,
-      undefined,
-      state,
-    );
-  const fillAsFirstRender: FirstRenderFill<T, S, F> = (utils, data, state) => defaultsOf(utils, data, false, state);
+  ) => utils.getDefaultFormState(utils.getRootSchema(), data, false, areInitialDefaultsGenerated, ui, undefined, state);
+  const fillAsFirstRender: FirstRenderFill<T, S, F> = (tree, data, state) =>
+    defaultsOf(tree.schemaUtils, tree.uiSchema, data, false, state);
   const fill = (data: T | undefined, clears: unknown) => {
     const filled = replaceEqualDeep(
       shareBase,
-      asFilledFormData<T>(defaultsOf(schemaUtils, data, initialDefaultsGenerated, fieldState)),
+      asFilledFormData<T>(defaultsOf(schemaUtils, uiSchema, data, initialDefaultsGenerated, fieldState)),
     );
     return clears === undefined ? filled : keepClears(filled, data, clears);
   };
@@ -1222,6 +1215,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     schemaUtils,
     formData: data,
     retrievedSchema: resolveRetrievedSchema(current, schemaUtils, data),
+    uiSchema,
   });
   let tree = treeOf(formData);
   if (isSanitized && current && uiState) {
