@@ -1247,6 +1247,38 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           { x: 'b' },
         ]);
       });
+      it('keeps a null item that nullable: true allows under object items', () => {
+        const nullableObjectList: RJSFSchema = {
+          type: 'array',
+          items: { type: 'object', nullable: true, properties: { x: { type: 'string' } } },
+        };
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(nullableObjectList, nullableObjectList, [null, 'a', { x: 'b' }]),
+        ).toStrictEqual([null, { x: 'b' }]);
+      });
+      it('keeps a null item that nullable: true allows under object items declaring no properties', () => {
+        const nullableObjectList: RJSFSchema = { type: 'array', items: { type: 'object', nullable: true } };
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(nullableObjectList, nullableObjectList, [null, 'a', { x: 'b' }]),
+        ).toStrictEqual([null, { x: 'b' }]);
+      });
+      it('gives a nullable null item the new const where it holds the old one, and drops it otherwise', () => {
+        const properties: RJSFSchema['properties'] = { x: { type: 'string' } };
+        const arrayOf = (items: RJSFSchema): RJSFSchema => ({ type: 'array', items });
+        const newList = arrayOf({ type: 'object', nullable: true, const: { x: 'a' }, properties });
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            newList,
+            arrayOf({ type: 'object', nullable: true, const: null, properties }),
+            [null],
+          ),
+        ).toStrictEqual([{ x: 'a' }]);
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(newList, arrayOf({ type: 'object', nullable: true, properties }), [
+            null,
+          ]),
+        ).toStrictEqual([]);
+      });
       it('drops the items that are not objects under new object items, as a nullable list written with anyOf', () => {
         const nullableTags: RJSFSchema = { anyOf: [{ type: 'array', items: { type: 'string' } }, { type: 'null' }] };
         const objectTags: RJSFSchema = {

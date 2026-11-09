@@ -185,7 +185,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *           schema's `enum` or constant options as it is, dropping one that is none of them
  *         - Otherwise, an object element whose new items schema declares `properties` is recursively sanitized against
  *           them, and any other object element is kept as it is. A value that is not an object, other than `undefined`,
- *           is dropped where the new items declare `type: 'object'`
+ *           is dropped where the new items declare `type: 'object'`, except a `null` that `nullable: true` allows
  *         - Otherwise, an array element is recursively sanitized, and kept as it is when that returns `undefined`
  *         - An element the new items' `const` rejects once sanitized, as below, takes the new `const` where it holds
  *           the old one, and is dropped otherwise
@@ -441,6 +441,9 @@ export default function sanitizeDataForNewSchema<
             // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
             const newItemSchema = retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
             const listedValues = enumValuesForSchema<S>(newItemSchema);
+            // A `null` that `nullable: true` allows stays as it is, as it does for a property, unless a new `const`
+            // rejects it
+            const isAllowedNull = aValue === null && newItemSchema.nullable === true;
             let itemValue: unknown = aValue;
             if (listedValues) {
               // An item its options list is one of them as a whole, so it is kept as it is, and one they don't list is
@@ -456,15 +459,18 @@ export default function sanitizeDataForNewSchema<
               // An array element whose items the two sides describe differently is kept as it is: the shared array
               // rule clears it even where the new items accept it. One a new `const` rejects once sanitized takes it or
               // is dropped, rather than kept for the `undefined` the recursion clears it with
-              const sanitizedItem = isObjectless
-                ? undefined
-                : (sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newItemSchema, oldItemSchema, aValue) ??
-                  aValue);
+              let sanitizedItem: unknown = aValue;
+              if (!isAllowedNull) {
+                sanitizedItem = isObjectless
+                  ? undefined
+                  : (sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newItemSchema, oldItemSchema, aValue) ??
+                    aValue);
+              }
               const replacement = constReplacement<S>(newItemSchema, oldItemSchema, sanitizedItem ?? aValue, aValue);
               itemValue = replacement === NO_VALUE ? sanitizedItem : replacement;
             } else if (isContainerItem) {
               // An object item declaring no `properties` has none to prune, so it is kept as it is
-              itemValue = isPlainObject(aValue) ? aValue : undefined;
+              itemValue = isPlainObject(aValue) || isAllowedNull ? aValue : undefined;
             }
             if (itemValue !== undefined) {
               newValue.push(itemValue);
