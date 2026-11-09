@@ -1171,12 +1171,19 @@ function conjunctsOf(held: readonly [string[], NodeId][], ref: NodeId | undefine
   ];
 }
 
+/** What `evaluatorsOf()` found, per graph and node */
+const evaluatorsMemo = new KeyedMemo<readonly GenericObjectType[]>();
+
 /** Returns the keywords of the subschemas whose evaluated parts an `unevaluatedProperties` or `unevaluatedItems` of the
  * node `id` sees besides its own, however deep: what its `$ref` names and what it holds under `CONJUNCT_KEYWORDS`. Its
  * `anyOf`/`oneOf` options, `if` and `contains` are left out: a part one of them walks without passing, which leaves
  * the node to pass, is walked again by the unevaluated keyword, where a conjunct that fails fails the node.
  */
-function evaluatorsOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): GenericObjectType[] {
+function evaluatorsOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): readonly GenericObjectType[] {
+  return evaluatorsMemo.get([graph, id], () => readEvaluators(graph, id));
+}
+
+function readEvaluators<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): GenericObjectType[] {
   const evaluators: GenericObjectType[] = [];
   const seen = new Set([id]);
   const pending = [id];
@@ -1252,16 +1259,6 @@ function branchingNodes<S extends StrictRJSFSchema>(
   cycle: ReadonlyMap<NodeId, CycleMember>,
 ): Set<NodeId> {
   const walked = new Map<NodeId, readonly Part[]>();
-  const evaluatorsMemo = new Map<NodeId, readonly GenericObjectType[]>();
-  const evaluatorsAt = (id: NodeId) => () => {
-    const known = evaluatorsMemo.get(id);
-    if (known !== undefined) {
-      return known;
-    }
-    const found = evaluatorsOf(graph, id);
-    evaluatorsMemo.set(id, found);
-    return found;
-  };
   // The parts of the value through which the node `id` of the cycle, or a node of the cycle it applies to the same
   // value however deep, holds the cycle again, walked once per node
   const partsOf = (id: NodeId): readonly Part[] => {
@@ -1287,7 +1284,7 @@ function branchingNodes<S extends StrictRJSFSchema>(
         if (SAME_VALUE_KEYWORDS.has(keyword)) {
           reach(child);
         } else {
-          parts.push(partOf(keyword, entry, beside, evaluatorsAt(at)));
+          parts.push(partOf(keyword, entry, beside, () => evaluatorsOf(graph, at)));
         }
       });
       const node = graph.node(at);
@@ -1320,7 +1317,7 @@ function branchingNodes<S extends StrictRJSFSchema>(
         )
         .map(([[keyword, entry]]): Recurrence => ({
           types,
-          parts: [partOf(keyword, entry, beside, evaluatorsAt(id))],
+          parts: [partOf(keyword, entry, beside, () => evaluatorsOf(graph, id))],
         }));
       const recurrences: Recurrence[] = [
         ...own,
@@ -1413,6 +1410,8 @@ function recursiveChoices<S extends StrictRJSFSchema = RJSFSchema>(graph: Schema
     const start = graph.base?.size ?? 0;
     const base = graph.base === undefined ? undefined : recursiveChoices(graph.base);
     const walk = recursiveChoicesWalk(graph, start, base);
+    // A node below `start` is read from `base` and any other from the walk. The four reads below and the two
+    // `walkFrom()` makes mid-walk, for `leads` and `narrowing`, keep to that one rule: a change to it changes all six
     return {
       leadOf: (id) => (id < start ? base?.leadOf(id) : walk(id).leads.get(id)),
       cycleOf: (id) => (id < start ? base?.cycleOf(id) : walk(id).cycles.get(id)),
@@ -1474,7 +1473,8 @@ function walkFrom<S extends StrictRJSFSchema>(
   found: FoundChoices,
 ): void {
   const { leads, cycles, holders, narrowing, walked } = found;
-  // A node closes once every subschema it applies has been entered, so what those lead to is known by then
+  // A node closes once every subschema it applies has been entered, so what those lead to is known by then. A node
+  // below `start` is read from `base`, by the rule `recursiveChoices()` keeps to
   const leadOf = (id: NodeId) => (id < start ? base?.leadOf(id) : leads.get(id));
   const narrows = (id: NodeId) => (id < start ? base?.narrows(id) === true : narrowing.has(id));
   const open = new Map<NodeId, number>();
