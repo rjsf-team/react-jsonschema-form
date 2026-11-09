@@ -1,6 +1,14 @@
 import { useMemo } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { getByPath, setByPath, getOptionUiSchema, fieldPathToName, getUiOptions, toFieldPath } from '@rjsf/utils';
+import {
+  getByPath,
+  getDiscriminatorFieldFromSchema,
+  setByPath,
+  getOptionUiSchema,
+  fieldPathToName,
+  getUiOptions,
+  toFieldPath,
+} from '@rjsf/utils';
 
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
@@ -88,6 +96,7 @@ export default function LayoutMultiSchemaField<
     fieldPath,
     options,
     formData,
+    getDiscriminatorFieldFromSchema<S>(schema),
   );
   const uiSchema = useMemo(() => omitFieldDirectives<T, S, F>(namingUiSchema), [namingUiSchema]);
   const keyword = optionsKeywordOf<S>(schema);

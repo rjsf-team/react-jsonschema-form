@@ -833,6 +833,48 @@ describe('a discriminated cell of a layout grid', () => {
     expect(screen.getByRole('textbox')).not.toHaveFocus();
     screen.getAllByRole('radio').forEach((radio) => expect(radio).not.toHaveFocus());
   });
+  it('keeps the option the discriminator names after transformChange refuses a switch, and switches after it', async () => {
+    let refuses = true;
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          thing: {
+            type: 'object',
+            discriminator: { propertyName: 'kind' },
+            oneOf: [
+              {
+                title: 'Option A',
+                properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string', title: 'A' } },
+              },
+              {
+                title: 'Option B',
+                properties: { kind: { type: 'string', const: 'b' }, b: { type: 'string', title: 'B' } },
+              },
+            ],
+          },
+        },
+      },
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing', 'thing.a', 'thing.b'] }] },
+      },
+      initialFormData: { thing: { kind: 'a', a: 'v' } },
+      transformChange: (next, previous) => (refuses ? previous : next),
+    });
+    await user.click(screen.getByRole('radio', { name: 'Option B' }));
+    refuses = false;
+
+    await user.type(screen.getByLabelText('A'), 'x');
+
+    expect(screen.getByLabelText('A')).toHaveValue('vx');
+    expect(screen.queryByLabelText('B')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('radio', { name: 'Option B' }));
+
+    expect(screen.getByLabelText('B')).toBeInTheDocument();
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+  });
 });
 
 describe('a cell in options with no discriminator', () => {
