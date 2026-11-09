@@ -1,7 +1,7 @@
 'use client';
 
-import type { FocusEvent, FocusEventHandler, ReactElement } from 'react';
-import { useEffect, useId, useRef, useState } from 'react';
+import type { FocusEvent, FocusEventHandler, ReactElement, RefObject } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
 import { cn } from '../../lib/utils.ts';
@@ -32,9 +32,10 @@ export interface FancySelectSection<V = unknown> {
   items: FancySelectItem<V>[];
 }
 
-/** The React key for the unheaded section. `toSections()` emits at most one of them, always last, so a constant key
- * keeps it mounted as earlier sections come and go - an index would shift, remounting the group and discarding
- * cmdk's highlight and scroll state mid-interaction. Labeled sections are prefixed so no label can collide with it.
+/** The React key for the unheaded section. `toSections()` emits at most one of them, so a constant key keeps it
+ * mounted wherever it sits as the sections around it come, go or are reordered - an index would shift, remounting the
+ * group and discarding cmdk's highlight and scroll state mid-interaction. Labeled sections are prefixed so no label can
+ * collide with it.
  */
 export const UNGROUPED_SECTION_KEY = 'ungrouped';
 
@@ -102,6 +103,69 @@ function cmdkOption(container: HTMLElement | null, value: string) {
   );
 }
 
+/** Scrolls the option cmdk holds under `value` into view, with its group's heading when it is the group's first option,
+ * as cmdk does for a highlight it moves itself, which it doesn't for one its controlled value is given
+ *
+ * @param container - The element the options render in
+ * @param value - The value cmdk holds the option under
+ */
+export function scrollOptionIntoView(container: HTMLElement | null, value: string) {
+  const option = cmdkOption(container, value);
+  if (!option) {
+    return;
+  }
+  if (option.parentElement?.firstChild === option) {
+    option.closest('[cmdk-group]')?.querySelector('[cmdk-group-heading]')?.scrollIntoView({ block: 'nearest' });
+  }
+  option.scrollIntoView({ block: 'nearest' });
+}
+
+/** Returns the ids cmdk gives a listbox and its highlighted option, which it keeps to itself, so a combobox can point
+ * at them, with the ref callbacks to put on the `CommandList` and on the highlighted `CommandItem`. An element hands its
+ * id over as it mounts, before the browser paints, and takes it back as it unmounts, so a list that opens again under
+ * new ids is never pointed at by the ids of the one that closed.
+ * The callbacks are stable, but cmdk composes them into a new ref on each render, so React detaches and reattaches them
+ * at every commit while the list is open. That sets each id to `undefined` and back, and React's extra render pass
+ * bails out on the unchanged value. Ignoring the `null` instead would keep the id of an element that really unmounted,
+ * as a detach can't tell whether a reattach follows
+ *
+ * @returns - The ids, undefined while nothing holds them, and the ref callbacks reading them
+ */
+export function useCmdkIds() {
+  const [listboxId, setListboxId] = useState<string>();
+  const [highlightedId, setHighlightedId] = useState<string>();
+  const listboxRef = useCallback((listbox: HTMLElement | null) => setListboxId(listbox?.id), []);
+  const highlightedRef = useCallback((option: HTMLElement | null) => setHighlightedId(option?.id), []);
+  return { listboxId, highlightedId, listboxRef, highlightedRef };
+}
+
+/** Keeps an Escape pressed on `control` while `active` from a dialog the select is in, by marking it handled before the
+ * dialog sees it. A Radix `Dialog` or `Sheet` listens for Escape on the document in the capture phase, before any React
+ * handler, and closes unless the event is already `defaultPrevented`, so the mark is made from the window, which the
+ * capture phase reaches first. The select's own handler still closes its list. The control is found by the event's
+ * composed path, as an event from a shadow root reaches the window retargeted to its host, and an Escape that ends an
+ * IME composition is left to the IME
+ *
+ * @param active - Whether the select's list is shown
+ * @param control - The element focus stays on while the list is shown
+ */
+export function useEscapeKeptFromDialog(active: boolean, control: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const view = control.current?.ownerDocument.defaultView;
+    const keep = (event: KeyboardEvent) => {
+      // oxlint-disable-next-line typescript/no-deprecated -- Safari marks a key ending an IME composition only so
+      const composing = event.isComposing || event.keyCode === 229;
+      if (event.key === 'Escape' && !composing && event.composedPath()[0] === control.current) {
+        event.preventDefault();
+      }
+    };
+    if (active) {
+      view?.addEventListener('keydown', keep, { capture: true });
+    }
+    return () => view?.removeEventListener('keydown', keep, { capture: true });
+  }, [active, control]);
+}
+
 /**
  * A fancy select component that provides a styled dropdown with search functionality
  * @param props - The component props
@@ -132,38 +196,35 @@ export function FancySelect({
   // the listbox holding it by the ids cmdk gives them, which it keeps to itself. cmdk reports the option it highlights
   // only while its value is controlled
   const [highlighted, setHighlighted] = useState('');
-  const [highlightedId, setHighlightedId] = useState<string>();
-  const [listboxId, setListboxId] = useState<string>();
+  const { listboxId, highlightedId, listboxRef, highlightedRef } = useCmdkIds();
   const selectedItem = items?.find((item) => item.value === selected);
-  const selectedRef = useRef<HTMLDivElement>(null);
+  const selectedValue = selectedItem && cmdkValue(selectedItem);
   const containerRef = useRef<HTMLDivElement>(null);
+  const comboboxRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (open && selectedRef.current) {
+    if (open && selectedValue !== undefined) {
       requestAnimationFrame(() => {
-        selectedRef.current?.scrollIntoView({ block: 'nearest' });
+        scrollOptionIntoView(containerRef.current, selectedValue);
       });
     }
-  }, [open]);
+  }, [open, selectedValue]);
 
-  // Read on opening and as the options change too, not only as the highlight moves: the options mount afresh, under new
-  // ids, each time the listbox opens or its options change, while cmdk keeps the highlight it had and reports no change
-  const shownOptions = sections ?? items;
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!open || !container || !shownOptions?.length) {
-      return;
-    }
-    setHighlightedId(cmdkOption(container, highlighted)?.id);
-    setListboxId(container.querySelector<HTMLElement>('[cmdk-list]')?.id);
-  }, [open, highlighted, shownOptions]);
-
+  // Options that empty while it is open leave no listbox, so it closes rather than point at the one that unmounted, and
+  // a select that turns disabled or readonly while open closes, as no option can be chosen from it
+  if (open && (disabled || !items?.length)) {
+    setOpen(false);
+  }
   // The listbox opens on the option the select holds, as a native select's does, so Enter keeps the value until the
   // highlight is moved, else on the first option a user can choose, rather than on one an earlier opening left
   // highlighted, which cmdk keeps
   const itemsInOrder = sections ? sections.flatMap((section) => section.items) : items;
   const openList = () => {
-    const opening = selectedItem ?? itemsInOrder?.find((item) => !item.disabled);
+    // With no option to show, it would open on an empty popup a screen reader announces as expanded
+    if (!itemsInOrder?.length) {
+      return;
+    }
+    const opening = selectedItem ?? itemsInOrder.find((item) => !item.disabled);
     if (opening) {
       setHighlighted(cmdkValue(opening));
     }
@@ -176,6 +237,7 @@ export function FancySelect({
       openList();
     }
   };
+  useEscapeKeptFromDialog(open, comboboxRef);
   const highlightedItem = items?.find((candidate) => cmdkValue(candidate) === highlighted);
   // Choosing the option the select already holds reports no change, as a native select's doesn't
   const choose = (item: FancySelectItem<string> | undefined) => {
@@ -198,7 +260,7 @@ export function FancySelect({
     if (next) {
       const value = cmdkValue(next);
       setHighlighted(value);
-      cmdkOption(containerRef.current, value)?.scrollIntoView({ block: 'nearest' });
+      scrollOptionIntoView(containerRef.current, value);
     }
   };
   // cmdk's Alt+Arrow jumps to the first option a user can choose in the next or previous group, which it finds from a
@@ -223,7 +285,7 @@ export function FancySelect({
     return (
       <CommandItem
         disabled={item.disabled}
-        ref={item.value === selected ? selectedRef : undefined}
+        ref={cmdkValue(item) === highlighted ? highlightedRef : undefined}
         key={item.value}
         value={cmdkValue(item)}
         onMouseDown={(e) => {
@@ -260,6 +322,7 @@ export function FancySelect({
           displays as its value. It controls the listbox while it is open, and the element the listbox opens in while
           it is closed */}
       <button
+        ref={comboboxRef}
         id={id}
         type='button'
         role='combobox'
@@ -331,7 +394,7 @@ export function FancySelect({
             className='absolute w-full z-10 rounded-md border bg-popover text-popover-foreground shadow-md outline-none'
           >
             {sections ? (
-              <CommandList className='h-full overflow-auto'>
+              <CommandList ref={listboxRef} className='h-full overflow-auto'>
                 {sections.map((section) => (
                   <CommandGroup
                     key={section.label === undefined ? UNGROUPED_SECTION_KEY : `optgroup-${section.label}`}
@@ -343,7 +406,7 @@ export function FancySelect({
               </CommandList>
             ) : (
               <CommandGroup className='h-full overflow-auto'>
-                <CommandList>{items.map(renderItem)}</CommandList>
+                <CommandList ref={listboxRef}>{items.map(renderItem)}</CommandList>
               </CommandGroup>
             )}
           </div>

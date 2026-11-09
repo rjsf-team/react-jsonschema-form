@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
 import type { RJSFSchema } from '@rjsf/utils';
 import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -13,6 +14,14 @@ const translateToFrench = (stringToTranslate: TranslatableString) =>
   stringToTranslate === TranslatableString.SelectPlaceholder ? 'Choisir ...' : stringToTranslate;
 
 describe('SelectWidget', () => {
+  // jsdom doesn't implement `scrollIntoView`, which the selects call on the option they highlight
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterEach(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
   test('single select is reachable from the tab order and opens with the keyboard', async () => {
     const user = userEvent.setup();
     render(
@@ -326,8 +335,6 @@ describe('SelectWidget', () => {
       />,
     );
 
-    // Moving the highlight scrolls the item into view with an API jsdom lacks
-    Element.prototype.scrollIntoView = vi.fn();
     try {
       await user.click(screen.getByPlaceholderText('Select ...'));
       await user.keyboard('{ArrowDown}');
@@ -341,7 +348,6 @@ describe('SelectWidget', () => {
       expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
     } finally {
       consoleErrorSpy.mockRestore();
-      delete (Element.prototype as Partial<Element>).scrollIntoView;
     }
   });
 
@@ -899,6 +905,14 @@ describe('an anyOf option selector', () => {
 });
 
 describe('SelectWidget combobox', () => {
+  // jsdom doesn't implement `scrollIntoView`, which the selects call on the option they highlight
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterEach(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
   const colors: RJSFSchema = { type: 'string', title: 'Color', enum: ['red', 'blue'] };
 
   test.each<[string, RJSFSchema]>([
@@ -1012,36 +1026,34 @@ describe('SelectWidget combobox', () => {
     expect(screen.getAllByRole('option')).toHaveLength(2);
   });
 
-  test("closes a multiple select's list as focus leaves it from a remove button", async () => {
+  test("closes a multiple select's list as focus leaves its input, for a remove button or out of the select", async () => {
     const user = userEvent.setup();
     render(
-      <>
-        <button type='button'>Before</button>
-        <Form
-          schema={{
-            type: 'object',
-            properties: {
-              color: {
-                type: 'array',
-                title: 'Color',
-                items: { type: 'string', enum: ['red', 'blue', 'green'] },
-                uniqueItems: true,
-              },
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: {
+              type: 'array',
+              title: 'Color',
+              items: { type: 'string', enum: ['red', 'blue', 'green'] },
+              uniqueItems: true,
             },
-          }}
-          initialFormData={{ color: ['red'] }}
-          validator={validator}
-        />
-      </>,
+          },
+        }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+      />,
     );
 
     await user.click(screen.getByRole('combobox'));
     expect(screen.getAllByRole('option')).toHaveLength(2);
     await user.tab({ shift: true });
-    expect(screen.getAllByRole('option')).toHaveLength(2);
-    await user.tab({ shift: true });
+    expect(screen.queryByRole('option')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('combobox'));
+    await user.tab();
 
-    expect(screen.getByRole('button', { name: 'Before' })).toHaveFocus();
+    expect(screen.getByRole('button', { name: 'Submit' })).toHaveFocus();
     expect(screen.queryByRole('option')).not.toBeInTheDocument();
   });
 
@@ -1059,6 +1071,30 @@ describe('SelectWidget combobox', () => {
     );
 
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
+  });
+
+  test('scrolls the group heading into view with the option the single select opens on, first in that group', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          readonly: false,
+          value: 'blue',
+          options: {
+            enumOptions: ['red', 'blue'].map((value) => ({ label: value, value })),
+            optgroups: { Warm: ['red'], Cool: ['blue'] },
+          },
+        })}
+      />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+
+    await waitFor(() => expect(Element.prototype.scrollIntoView).toHaveBeenCalled());
+    const scrolled = vi.mocked(Element.prototype.scrollIntoView).mock.contexts;
+    expect(scrolled).toContain(screen.getByText('Cool'));
+    expect(scrolled.at(-1)).toBe(screen.getByRole('option', { name: 'blue' }));
   });
 });
 
@@ -1355,6 +1391,29 @@ describe("the single select's combobox while its listbox is open", () => {
       expect(onChange).toHaveBeenCalledExactlyOnceWith('b');
     });
 
+    test('closes when it turns readonly while open', async () => {
+      const user = userEvent.setup();
+      const { combobox, rerender } = renderSelect();
+
+      await user.click(combobox);
+      expect(combobox).toHaveAttribute('aria-expanded', 'true');
+      rerender(
+        <SelectWidget
+          {...makeWidgetMockProps({
+            id: 'root_color',
+            label: 'Color',
+            disabled: false,
+            readonly: true,
+            autofocus: false,
+            options: { enumOptions },
+          })}
+        />,
+      );
+
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
     test('closes on Escape without choosing', async () => {
       const user = userEvent.setup();
       const { combobox, onChange } = renderSelect();
@@ -1365,6 +1424,41 @@ describe("the single select's combobox while its listbox is open", () => {
       expect(combobox).toHaveAttribute('aria-expanded', 'false');
       expect(combobox).toHaveFocus();
       expect(onChange).not.toHaveBeenCalled();
+    });
+
+    test('closes only its list, not the Radix dialog it is in, on an Escape while open', async () => {
+      const user = userEvent.setup();
+      const onOpenChange = vi.fn();
+      render(
+        <Dialog.Root open onOpenChange={onOpenChange}>
+          <Dialog.Portal>
+            <Dialog.Content aria-describedby={undefined}>
+              <Dialog.Title>Edit</Dialog.Title>
+              <SelectWidget
+                {...makeWidgetMockProps({
+                  id: 'root_color',
+                  label: 'Color',
+                  disabled: false,
+                  readonly: false,
+                  autofocus: false,
+                  options: { enumOptions },
+                })}
+              />
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+      const combobox = screen.getByRole('combobox');
+
+      await user.click(combobox);
+      expect(combobox).toHaveAttribute('aria-expanded', 'true');
+      await user.keyboard('{Escape}');
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(combobox).toHaveFocus();
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      await user.keyboard('{Escape}');
+      expect(onOpenChange).toHaveBeenCalledExactlyOnceWith(false);
     });
 
     test('chooses the highlighted option on Space while open', async () => {
@@ -1420,5 +1514,735 @@ describe("the single select's combobox while its listbox is open", () => {
     } finally {
       delete (Element.prototype as Partial<Element>).scrollIntoView;
     }
+  });
+});
+
+describe("the multiple select's combobox input", () => {
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterEach(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
+  const color: RJSFSchema = {
+    type: 'array',
+    title: 'Color',
+    items: { type: 'string', enum: ['red', 'blue'] },
+    uniqueItems: true,
+    minItems: 1,
+  };
+  const renderColorForm = (uiSchema = {}, required = ['color']) =>
+    render(
+      <Form
+        schema={{ type: 'object', required, properties: { color } }}
+        uiSchema={uiSchema}
+        validator={validator}
+        focusOnFirstError
+      />,
+    );
+
+  test('takes the field id, so clicking the field label focuses it', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    expect(input).toHaveAttribute('id', 'root_color');
+    await user.click(screen.getByText('Color'));
+    expect(input).toHaveFocus();
+  });
+
+  test('is focused by focusOnFirstError on submit', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(screen.getByRole('combobox')).toHaveFocus();
+  });
+
+  test('says it is collapsed and controls the element its list opens in while its list is closed', () => {
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    const controlled = input.getAttribute('aria-controls');
+    expect(controlled && document.getElementById(controlled)).toBeTruthy();
+    expect(input).not.toHaveAttribute('aria-activedescendant');
+  });
+
+  test('stays closed when focusOnFirstError focuses it on submit', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    const input = screen.getByRole('combobox');
+    expect(input).toHaveFocus();
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  test('takes focus and opens on a click beside its input, so typing searches and Escape closes', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+
+    await user.click(screen.getByText('red'));
+    expect(input).toHaveFocus();
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+    await user.keyboard('bl');
+    expect(input).toHaveFocus();
+    expect(input).toHaveValue('bl');
+
+    await user.keyboard('{Backspace}{Backspace}{Escape}');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  test('never points at the listbox or option of an earlier opening as it opens again', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    const earlier = [screen.getByRole('listbox').id, screen.getByRole('option', { name: 'red' }).id];
+    await user.keyboard('{Escape}');
+
+    const held: (string | null)[] = [];
+    const observer = new MutationObserver((records) => {
+      held.push(...records.map((record) => record.oldValue));
+    });
+    observer.observe(input, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ['aria-controls', 'aria-activedescendant'],
+    });
+    await user.click(input);
+    observer.disconnect();
+
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(held.filter((value) => value !== null && earlier.includes(value))).toEqual([]);
+  });
+
+  test('points at the listbox and at the option it highlights while its list is open', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    await user.keyboard('{ArrowDown}');
+
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(input).toHaveAttribute('aria-controls', screen.getByRole('listbox').id);
+    expect(input).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'blue' }).id);
+  });
+
+  test('points at the option it highlights as its list opens and as a search changes the options', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    expect(input).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'red' }).id);
+
+    await user.type(input, 'bl');
+    expect(input).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'blue' }).id);
+  });
+
+  test('is named by the field label pointing at it', () => {
+    renderColorForm({}, []);
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Color');
+  });
+
+  test('opens on Up Arrow as on Down Arrow, as a closed combobox does', async () => {
+    const user = userEvent.setup();
+    renderColorForm({ color: { 'ui:autofocus': true } });
+
+    expect(screen.queryByRole('option')).not.toBeInTheDocument();
+    await user.keyboard('{ArrowUp}');
+    expect(screen.getAllByRole('option')).toHaveLength(2);
+  });
+
+  test('turns off the browser autofill, autocorrect and spellcheck that would cover its list', () => {
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    expect(input).toHaveAttribute('autocomplete', 'off');
+    expect(input).toHaveAttribute('autocorrect', 'off');
+    expect(input).toHaveAttribute('spellcheck', 'false');
+    expect(input).toHaveAttribute('aria-autocomplete', 'list');
+  });
+
+  test("ranks a search's matches by how well they match, so Enter adds the best", async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{
+          type: 'array',
+          uniqueItems: true,
+          items: { type: 'string', enum: ['Pineapple', 'Grape', 'Apple', 'Applet'] },
+        }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await user.type(screen.getByRole('combobox'), 'appl');
+
+    const options = screen.getAllByRole('option');
+    expect(options.map((option) => option.textContent)).toEqual(['Apple', 'Applet', 'Pineapple']);
+    expect(options.map((option) => option.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
+    await user.keyboard('{Enter}');
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: ['Apple'] }), 'root');
+  });
+
+  test('opens again on Down Arrow with a search left in it, as focus coming back leaves it closed', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    await user.type(input, 'bl');
+    await user.tab();
+    await user.tab({ shift: true });
+    expect(input).toHaveFocus();
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+
+    await user.keyboard('{ArrowDown}');
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual(['blue']);
+  });
+
+  test('stays closed on an arrow on a remove button, whose Enter removes only its own item', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color: { ...color, minItems: undefined } } }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+    await user.tab({ shift: true });
+    const remove = screen.getByRole('button', { name: '' });
+    expect(remove).toHaveFocus();
+    await user.keyboard('{ArrowDown}');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    expect(remove).toHaveFocus();
+    await user.keyboard('{Enter}');
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { color: [] } }), 'root_color');
+  });
+
+  test('removes the item whose remove button Backspace or Delete is pressed on only by its Enter, never the last item', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['red', 'blue', 'green'] } },
+          },
+        }}
+        initialFormData={{ color: ['red', 'blue', 'green'] }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+    await user.tab({ shift: true });
+    await user.tab({ shift: true });
+    await user.tab({ shift: true });
+    await user.keyboard('{Backspace}{Delete}{Enter}');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { color: ['blue', 'green'] } }),
+      'root_color',
+    );
+  });
+
+  test('closes its list on Escape and keeps focus, with a search in its input or none', async () => {
+    const user = userEvent.setup();
+    renderColorForm();
+    const input = screen.getByRole('combobox');
+
+    await user.type(input, 'bl');
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    await user.keyboard('{Escape}');
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(input).toHaveValue('bl');
+    expect(input).toHaveFocus();
+
+    await user.clear(input);
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    await user.keyboard('{Escape}');
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(input).toHaveFocus();
+  });
+
+  test('neither takes focus nor opens on a right-click on a selected item', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+      />,
+    );
+
+    await user.pointer({ keys: '[MouseRight]', target: screen.getByText('red') });
+
+    expect(screen.getByRole('combobox')).not.toHaveFocus();
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  test('keeps focus on its input and its list open on a right-click on a selected item', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    await user.pointer({ keys: '[MouseRight]', target: screen.getByText('red') });
+
+    expect(input).toHaveFocus();
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  test('keeps an Escape that closes its list from the page, and lets one through while the list is closed', async () => {
+    const user = userEvent.setup();
+    // As a Radix dialog listens: on the document, in the capture phase, before any React handler, dismissing unless the
+    // Escape is already marked handled
+    const onPageEscape = vi.fn();
+    const listen = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !e.defaultPrevented) {
+        onPageEscape();
+      }
+    };
+    document.addEventListener('keydown', listen, { capture: true });
+    try {
+      renderColorForm();
+      const input = screen.getByRole('combobox');
+
+      await user.type(input, 'bl');
+      await user.keyboard('{Escape}');
+      expect(input).toHaveAttribute('aria-expanded', 'false');
+      expect(onPageEscape).not.toHaveBeenCalled();
+
+      await user.keyboard('{Escape}');
+      expect(onPageEscape).toHaveBeenCalledOnce();
+    } finally {
+      document.removeEventListener('keydown', listen, { capture: true });
+    }
+  });
+
+  test('closes only its list, not the Radix dialog the form is in, on an Escape while its list is shown', async () => {
+    const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    render(
+      <Dialog.Root open onOpenChange={onOpenChange}>
+        <Dialog.Portal>
+          <Dialog.Content aria-describedby={undefined}>
+            <Dialog.Title>Edit</Dialog.Title>
+            <Form schema={{ type: 'object', properties: { color } }} validator={validator} />
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>,
+    );
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    await user.keyboard('{Escape}');
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(input).toHaveFocus();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    await user.keyboard('{Escape}');
+    expect(onOpenChange).toHaveBeenCalledExactlyOnceWith(false);
+  });
+
+  test('keeps an Escape that closes its list from the page while it renders in a shadow root', async () => {
+    const user = userEvent.setup();
+    const onPageEscape = vi.fn();
+    const listen = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !e.defaultPrevented) {
+        onPageEscape();
+      }
+    };
+    const host = document.body.appendChild(document.createElement('div'));
+    const container = host.attachShadow({ mode: 'open' }).appendChild(document.createElement('div'));
+    document.addEventListener('keydown', listen, { capture: true });
+    try {
+      render(<Form schema={{ type: 'object', properties: { color } }} validator={validator} />, { container });
+      const input = within(container).getByRole('combobox');
+
+      await user.click(input);
+      expect(input).toHaveAttribute('aria-expanded', 'true');
+      await user.keyboard('{Escape}');
+      expect(input).toHaveAttribute('aria-expanded', 'false');
+      expect(onPageEscape).not.toHaveBeenCalled();
+    } finally {
+      document.removeEventListener('keydown', listen, { capture: true });
+      host.remove();
+    }
+  });
+
+  test('leaves an Escape that ends an IME composition to the IME, keeping its list open', async () => {
+    const user = userEvent.setup();
+    const onPageEscape = vi.fn();
+    const listen = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !e.defaultPrevented) {
+        onPageEscape();
+      }
+    };
+    document.addEventListener('keydown', listen, { capture: true });
+    try {
+      renderColorForm();
+      const input = screen.getByRole('combobox');
+
+      await user.click(input);
+      // user-event can't mark a key press as part of an IME composition, so the keydown is dispatched with
+      // `isComposing` set
+      fireEvent.keyDown(input, { key: 'Escape', isComposing: true });
+      expect(input).toHaveAttribute('aria-expanded', 'true');
+      expect(onPageEscape).toHaveBeenCalledOnce();
+    } finally {
+      document.removeEventListener('keydown', listen, { capture: true });
+    }
+  });
+
+  test('neither takes focus nor opens on a Ctrl+click on a selected item, which opens the context menu on a Mac', async () => {
+    const userAgent = vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Macintosh');
+    onTestFinished(() => userAgent.mockRestore());
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+      />,
+    );
+
+    await user.keyboard('{Control>}');
+    await user.click(screen.getByText('red'));
+    await user.keyboard('{/Control}');
+
+    expect(screen.getByRole('combobox')).not.toHaveFocus();
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  test('scrolls the option it highlights into view as Up Arrow opens its list and as a search moves the highlight', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['red', 'blue', 'green'] } },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+    const highlighted = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '');
+    const scrolledTo = () => vi.mocked(Element.prototype.scrollIntoView).mock.contexts.at(-1);
+
+    await user.click(input);
+    await user.keyboard('{Escape}{ArrowUp}');
+    expect(highlighted()).toHaveTextContent('green');
+    expect(scrolledTo()).toBe(highlighted());
+
+    await user.keyboard('{ArrowUp}');
+    expect(highlighted()).toHaveTextContent('blue');
+    await user.type(input, 'red');
+    expect(highlighted()).toHaveTextContent('red');
+    expect(scrolledTo()).toBe(highlighted());
+  });
+
+  test('leaves its list where it is as the pointer moves the highlight', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['red', 'blue', 'green'] } },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+    const highlighted = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '');
+
+    await user.click(input);
+    vi.mocked(Element.prototype.scrollIntoView).mockClear();
+    await user.hover(screen.getByRole('option', { name: 'green' }));
+
+    expect(highlighted()).toHaveTextContent('green');
+    expect(Element.prototype.scrollIntoView).not.toHaveBeenCalled();
+  });
+
+  test('scrolls the group heading into view with the option it highlights first in that group', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          readonly: false,
+          multiple: true,
+          value: [],
+          options: {
+            enumOptions: ['red', 'blue'].map((value) => ({ label: value, value })),
+            optgroups: { Warm: ['red'], Cool: ['blue'] },
+          },
+        })}
+      />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+    await user.keyboard('{Escape}{ArrowUp}');
+
+    const scrolled = vi.mocked(Element.prototype.scrollIntoView).mock.contexts;
+    expect(scrolled).toContain(screen.getByText('Cool'));
+    expect(scrolled.at(-1)).toBe(screen.getByRole('option', { name: 'blue' }));
+  });
+
+  test('stays closed as it is enabled again after turning readonly while open', async () => {
+    const user = userEvent.setup();
+    const props = makeWidgetMockProps({
+      autofocus: false,
+      readonly: false,
+      multiple: true,
+      value: [],
+      options: { enumOptions: ['red', 'blue'].map((value) => ({ label: value, value })) },
+    });
+    const { rerender } = render(<SelectWidget {...props} />);
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    rerender(<SelectWidget {...props} readonly />);
+    rerender(<SelectWidget {...props} />);
+
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  test('reports no change on Backspace or Delete in its empty input with nothing selected', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Form schema={{ type: 'object', properties: { color } }} validator={validator} onChange={onChange} />);
+
+    await user.click(screen.getByRole('combobox'));
+    await user.keyboard('{Backspace}{Delete}');
+    expect(onChange).not.toHaveBeenCalled();
+
+    // The same keys reach the input and report a change once an item is selected
+    await user.click(screen.getByRole('option', { name: 'red' }));
+    await user.keyboard('{Backspace}');
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { color: [] } }), 'root_color');
+  });
+
+  test('opens its closed list on Enter at the first match and on Up Arrow at the last', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['red', 'blue', 'green'] } },
+          },
+        }}
+        validator={validator}
+        onChange={onChange}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+    const highlighted = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '');
+
+    await user.click(input);
+    await user.keyboard('{Escape}');
+    await user.keyboard('{Enter}');
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(highlighted()).toHaveTextContent('red');
+    expect(onChange).not.toHaveBeenCalled();
+
+    await user.keyboard('{Escape}{ArrowUp}');
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(highlighted()).toHaveTextContent('green');
+
+    await user.keyboard('{Enter}');
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { color: ['green'] } }),
+      'root_color',
+    );
+  });
+
+  test('keeps focus on its input and its list open on a click on a group heading', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          readonly: false,
+          multiple: true,
+          value: [],
+          options: {
+            enumOptions: ['red', 'blue'].map((value) => ({ label: value, value })),
+            optgroups: { Warm: ['red'], Cool: ['blue'] },
+          },
+        })}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+
+    await user.click(input);
+    await user.click(screen.getByText('Warm'));
+
+    expect(input).toHaveFocus();
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+  });
+
+  test('takes no focus, and so reports no blur, on a click on a selected item of a readonly select', async () => {
+    const user = userEvent.setup();
+    const onFocus = vi.fn();
+    const onBlur = vi.fn();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          readonly: true,
+          multiple: true,
+          value: ['red'],
+          options: { enumOptions: ['red', 'blue'].map((value) => ({ label: value, value })) },
+          onFocus,
+          onBlur,
+        })}
+      />,
+    );
+
+    await user.click(screen.getByText('red'));
+    await user.click(document.body);
+
+    expect(onFocus).not.toHaveBeenCalled();
+    expect(onBlur).not.toHaveBeenCalled();
+  });
+});
+
+describe("the single select's combobox with no option to show", () => {
+  const props = (enumOptions: { label: string; value: string }[]) =>
+    makeWidgetMockProps({
+      id: 'root_color',
+      label: 'Color',
+      disabled: false,
+      readonly: false,
+      autofocus: false,
+      value: undefined,
+      options: { enumOptions },
+    });
+
+  test('stays collapsed on Down Arrow', async () => {
+    const user = userEvent.setup();
+    render(<SelectWidget {...props([])} />);
+    const combobox = screen.getByRole('combobox');
+
+    await user.click(combobox);
+    await user.keyboard('{ArrowDown}');
+
+    expect(combobox).toHaveAttribute('aria-expanded', 'false');
+    expect(combobox).not.toHaveAttribute('aria-activedescendant');
+  });
+
+  test('collapses and points at no option once its options empty while it is open', async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(<SelectWidget {...props([{ label: 'Red', value: 'red' }])} />);
+    const combobox = screen.getByRole('combobox');
+
+    Element.prototype.scrollIntoView = vi.fn();
+    try {
+      await user.click(combobox);
+      expect(combobox).toHaveAttribute('aria-expanded', 'true');
+      rerender(<SelectWidget {...props([])} />);
+
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(combobox).not.toHaveAttribute('aria-activedescendant');
+      const controlled = combobox.getAttribute('aria-controls');
+      expect(controlled && document.getElementById(controlled)).toBeTruthy();
+    } finally {
+      delete (Element.prototype as Partial<Element>).scrollIntoView;
+    }
+  });
+});
+
+describe("the multiple select's search among optgroups", () => {
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterEach(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
+  const renderFruit = (optgroups: Record<string, string[]>) =>
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          disabled: false,
+          readonly: false,
+          multiple: true,
+          value: [],
+          options: {
+            enumOptions: ['Pineapple', 'Grape', 'Apple', 'Applet'].map((fruit) => ({ label: fruit, value: fruit })),
+            optgroups,
+          },
+        })}
+      />,
+    );
+
+  test('ranks the matches in a group by how well they match, highlighting the best', async () => {
+    const user = userEvent.setup();
+    renderFruit({ Fruit: ['Pineapple', 'Grape', 'Apple', 'Applet'] });
+
+    await user.type(screen.getByRole('combobox'), 'appl');
+
+    const options = screen.getAllByRole('option');
+    expect(options.map((option) => option.textContent)).toEqual(['Apple', 'Applet', 'Pineapple']);
+    expect(options.map((option) => option.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
+  });
+
+  test('ranks the groups by their best match, highlighting the best match of all', async () => {
+    const user = userEvent.setup();
+    renderFruit({ Tropical: ['Pineapple'], Orchard: ['Grape', 'Apple', 'Applet'] });
+
+    await user.type(screen.getByRole('combobox'), 'appl');
+
+    const [first, second] = screen.getAllByRole('group');
+    expect(first).toHaveAccessibleName('Orchard');
+    expect(second).toHaveAccessibleName('Tropical');
+    const options = screen.getAllByRole('option');
+    expect(options.map((option) => option.textContent)).toEqual(['Apple', 'Applet', 'Pineapple']);
+    expect(options.map((option) => option.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
   });
 });
