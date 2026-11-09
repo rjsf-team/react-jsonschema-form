@@ -95,7 +95,13 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       {
         whenAbsent,
         initialFormData = { kind: 's', a: 'x' },
-      }: { whenAbsent?: 'allow'; initialFormData?: KindData } = {},
+        beforeSwitch,
+      }: {
+        whenAbsent?: 'allow';
+        initialFormData?: KindData;
+        /** What the user does in the `s` branch before switching to `t` */
+        beforeSwitch?: (container: HTMLElement) => Promise<void>;
+      } = {},
     ) {
       const events: IChangeEvent<KindData>[] = [];
       const { container } = render(
@@ -107,8 +113,10 @@ describe('sanitize as a diff of the field trees before and after a change', () =
           onChange={(event) => events.push(event)}
         />,
       );
+      await beforeSwitch?.(container);
+      const hadField = container.querySelector('#root_a') !== null;
       await user.selectOptions(elementOf(container, '#root_kind'), 't');
-      return { container, formData: events[events.length - 1].formData };
+      return { container, hadField, formData: events[events.length - 1].formData };
     }
 
     it.each<{ extras: string; schema: RJSFSchema; whenAbsent?: 'allow' }>([
@@ -213,7 +221,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     });
 
     // The form fills these in by itself, so keeping them would leave extra-key rows the user never typed
-    it.each<{ filled: string; schema: RJSFSchema; initialFormData?: KindData }>([
+    it.each<{ filled: string; schema: RJSFSchema; initialFormData?: KindData; whenAbsent?: 'allow' }>([
       {
         filled: 'a default',
         schema: kindOf({ ...ifThen({ type: 'string', default: 'd' }), additionalProperties: true }),
@@ -222,10 +230,31 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       {
         filled: "a required object's empty object",
         schema: kindOf({
-          ...ifThen({ type: 'object', properties: { b: { type: 'string' } } }),
-          required: ['a'],
+          if: { properties: { kind: { const: 's' } } },
+          then: { properties: { a: { type: 'object', properties: { b: { type: 'string' } } } }, required: ['a'] },
           additionalProperties: true,
         }),
+      },
+      {
+        filled: "an object its properties' defaults fill",
+        schema: kindOf({
+          ...ifThen({ type: 'object', properties: { b: { type: 'string', default: 'q' } } }),
+          additionalProperties: true,
+        }),
+        // Under `'allow'` the stub takes `b`, so only what the defaults filled in can drop the object
+        whenAbsent: 'allow',
+      },
+      {
+        filled: "an object the parent's default and its own defaults fill together",
+        schema: kindOf({
+          ...ifThen({
+            type: 'object',
+            properties: { b: { type: 'string' }, c: { type: 'string', default: 'y' } },
+          }),
+          default: { a: { b: 'x' } },
+          additionalProperties: true,
+        }),
+        whenAbsent: 'allow',
       },
       // Equal data can't be told apart from what the defaults fill in, so an empty object the data held goes too
       {
@@ -253,21 +282,52 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         }),
         initialFormData: { kind: 's', a: ['x'] },
       },
-    ])('drops $filled rather than keeping it as an extra key', async ({ schema, initialFormData = { kind: 's' } }) => {
-      const { container, formData } = await selectT(schema, { initialFormData });
+    ])(
+      'drops $filled rather than keeping it as an extra key',
+      async ({ schema, initialFormData = { kind: 's' }, whenAbsent }) => {
+        const { container, hadField, formData } = await selectT(schema, { initialFormData, whenAbsent });
+
+        expect(hadField).toBe(true);
+        expect(formData).toEqual({ kind: 't' });
+        expect(container.querySelector('#root_a__key')).toBeNull();
+      },
+    );
+
+    it("drops the const of the option the user selected, not the first option's default", async () => {
+      const schema = kindOf({
+        ...ifThen({
+          oneOf: [
+            { title: 'X', type: 'string', default: 'x' },
+            { title: 'Y', type: 'string', const: 'y' },
+          ],
+        }),
+        additionalProperties: true,
+      });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's' },
+        beforeSwitch: (form) => user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'Y'),
+      });
 
       expect(formData).toEqual({ kind: 't' });
       expect(container.querySelector('#root_a__key')).toBeNull();
     });
 
-    it('drops a value the user chose that equals the default, which no data tells apart from the default', async () => {
+    // No data tells a value the user picked apart from the same value the default filled in
+    it.each([
+      { picked: 'd', expected: { kind: 't' }, isKept: false },
+      { picked: 'e', expected: { kind: 't', a: 'e' }, isKept: true },
+    ])('keeps the pick $picked only when it is not the default', async ({ picked, expected, isKept }) => {
       const schema = kindOf({
         ...ifThen({ type: 'string', enum: ['d', 'e'], default: 'd' }),
         additionalProperties: true,
       });
-      const { formData } = await selectT(schema, { initialFormData: { kind: 's', a: 'd' } });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's', a: picked === 'd' ? 'e' : 'd' },
+        beforeSwitch: (form) => user.selectOptions(elementOf(form, '#root_a'), picked),
+      });
 
-      expect(formData).toEqual({ kind: 't' });
+      expect(formData).toEqual(expected);
+      expect(container.querySelector('#root_a__key') !== null).toBe(isKept);
     });
   });
 

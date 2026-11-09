@@ -264,12 +264,12 @@ function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: 
  * equal to the default the old schema declared for it is that schema's, so it becomes the new schema's default; a value
  * of another type, or one the new `const` or `enum` rejects, is replaced as `sanitizeDataForNewSchema()` replaces it,
  * or dropped. A field the new schema only holds as an extra key whose schema is guessed from its data keeps a value
- * its stub renders, see `guessedStubRenders()`, unless the value equals what the old field's defaults fill in (its
- * `default`, its `const`, an empty object), which no data can tell apart from a value the user chose.
+ * its stub renders, see `guessedStubRenders()`, unless the value equals what the old field's defaults fill in, such as
+ * its `default`, its `const` or an empty object, which no data can tell apart from a value the user chose.
  *
  * @param acceptsNull - Whether the field's new schema holds `null`, asked only of a `null` item
- * @param oldFill - What the defaults fill the old field with when it holds nothing, asked only of a field that turns
- *   into a guessed extra key
+ * @param oldDefaultFill - What the old field holds when it holds nothing of the user's, asked only of a field that
+ *   turns into a guessed extra key
  * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
  *   judge what it holds
  */
@@ -281,7 +281,7 @@ function judge<S extends StrictRJSFSchema>(
   newDefault: unknown,
   isItem: boolean,
   acceptsNull: () => boolean,
-  oldFill: () => unknown,
+  oldDefaultFill: () => unknown,
 ): unknown {
   const before = constraintsOf(oldLayers, oldDefault);
   const now = constraintsOf(newLayers, newDefault);
@@ -305,7 +305,7 @@ function judge<S extends StrictRJSFSchema>(
   // A guessed stub declares no `const` or `enum`, and its `default` seeds a new extra key rather than standing in for
   // the old field's, so what the old field's defaults filled in leaves with that field
   if (becomesGuessed) {
-    const isFilled = isOldDefault || deepEquals(oldFill(), value);
+    const isFilled = isOldDefault || deepEquals(oldDefaultFill(), value);
     return isFilled || !guessedStubRenders(value, newLayers) ? DROP : undefined;
   }
   if (isOldDefault && newDefault !== undefined) {
@@ -403,8 +403,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The edited value and the values holding it are the user's
   if (!edited) {
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
-    const oldFill = () => ctx.oldSchemaUtils.getDefaultFormState(oldRaw, undefined);
-    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, oldFill);
+    // Filled from the shown option outward, so the option the field showed decides what it was filled with, and from
+    // the default the field or its parent declares, which the field's own defaults fill around
+    const oldDefaultFill = () =>
+      oldLayers.reduceRight<unknown>(
+        (filled, layer) => ctx.oldSchemaUtils.getDefaultFormState(layer, asFieldValue<T>(filled)),
+        oldDefault,
+      );
+    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, oldDefaultFill);
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
     }
