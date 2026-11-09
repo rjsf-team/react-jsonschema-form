@@ -134,6 +134,12 @@ describe('getErrorsToDraw()', () => {
     expect(getErrorsToDraw({ presentation: option, rawErrors: ['bad'] })).toEqual([]);
   });
 
+  it('draws none the field handing the component its plan draws itself', () => {
+    const presentation = plan({ declaration: self, errors: ['bad'] });
+    expect(getErrorsToDraw({ presentation: { ...presentation, drawnByField: ['errors'] } })).toEqual([]);
+    expect(getErrorsToDraw({ presentation: { ...presentation, drawnByField: ['label'] } })).toEqual(['bad']);
+  });
+
   it('follows rawErrors and hideError without a plan', () => {
     expect(getErrorsToDraw({ rawErrors: ['bad'] })).toEqual(['bad']);
     expect(getErrorsToDraw({ rawErrors: ['bad'], hideError: true })).toEqual([]);
@@ -152,6 +158,12 @@ describe('widgetDrawsLabel()', () => {
   it('follows hideLabel without a plan', () => {
     expect(widgetDrawsLabel({})).toBe(true);
     expect(widgetDrawsLabel({ hideLabel: true })).toBe(false);
+  });
+
+  it('draws no label the field handing it its plan draws itself', () => {
+    const presentation = plan({ declaration: { ...TEMPLATE, label: 'self' } });
+    expect(widgetDrawsLabel({ presentation: { ...presentation, drawnByField: ['label'] } })).toBe(false);
+    expect(widgetDrawsLabel({ presentation: { ...presentation, drawnByField: ['description'] } })).toBe(true);
   });
 });
 

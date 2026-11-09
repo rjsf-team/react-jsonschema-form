@@ -108,6 +108,14 @@ describe('getGroupAttributes()', () => {
     });
   });
 
+  it("names a group by its label's text, not the label the widget would draw, where its field draws the label", () => {
+    const presentation = plan({ declaration: { ...GROUP, label: 'self' } });
+    expect(
+      getGroupAttributes({ id: ID, presentation: { ...presentation, drawnByField: ['label'] } }, 'radiogroup', 'drawn')
+        .group,
+    ).toEqual({ role: 'radiogroup', 'aria-label': 'Foo' });
+  });
+
   it('names a group whose label the template draws with a for by no label the widget would draw', () => {
     const presentation = plan({ declaration: { ...GROUP, labelledBy: 'for' } });
     expect(getGroupAttributes({ id: ID, presentation }, 'group', `${ID}__label`).group).toEqual({ role: 'group' });

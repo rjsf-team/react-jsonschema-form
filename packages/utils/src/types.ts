@@ -919,9 +919,10 @@ export interface FieldProps<
   /** An array of strings listing the field's own error messages, which its `errorSchema` doesn't hold. It carries them
    * whatever `hideError` says, so that a field can render them its own way. It is unset for a field rendered beside a
    * `oneOf`/`anyOf` option selector, which is handed them instead
-   * @deprecated Kept through v7 for a field rendered without a plan: read `getErrorsToDraw()` for the messages the
-   *   field draws itself, the plan's `presentation.errors.messages`, with `ui:hideError` applied, where
-   *   `presentation.errors.by` is `'self'`, since the template draws them under `'template'`, and
+   * @deprecated Kept through v7 for a field rendered without a plan: read the plan's `presentation.errors.messages`
+   *   for the messages the field draws itself, with `ui:hideError` applied, where `presentation.errors.by` is
+   *   `'self'`, since the template draws them under `'template'`, not `getErrorsToDraw()`, which gives a field drawing
+   *   them itself none, so that a widget it spreads its plan into doesn't draw them again, and
    *   `presentation.errors.own` for an error state. Beside a selector, the plan keeps the field's
    *   errors, which its template draws, so the field shows as invalid along with the selector
    */
@@ -950,8 +951,9 @@ export interface FieldProps<
   options?: S[];
   /** The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids,
    * and the attributes its control carries. Set on the field `SchemaField` renders, not on the `SchemaField` itself,
-   * which builds it. Its `'self'` is this field's, so hand it to a widget only when the field leaves its parts to that
-   * widget, as one declaring `WIDGET_FIELD_PRESENTATION` does: a widget reads `'self'` as its own
+   * which builds it. Its `'self'` is this field's: a widget the field spreads its props into draws none of the label,
+   * description and errors the field draws itself, as `drawnByField` lists them, so a field leaving them to that widget
+   * declares `WIDGET_FIELD_PRESENTATION`
    */
   presentation?: FieldPresentation;
 }
@@ -1009,10 +1011,18 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
    * the schema's `minItems` demands a checked box or `ui:required: true` asks for it (#5573). A fact about one control, declared as `uncheckedIsFalse` is
    */
   uncheckedIsEmpty?: boolean;
+  /** The widget a boolean renders with when its `uiSchema` names none, as an alias or a registry key. Read only under
+   * `BooleanField`: it is the widget `@rjsf/core`'s `BooleanField` renders in place of its checkbox, and the one
+   * `SchemaField` plans a component registered under that key with, so a replacement rendering another widget, such as
+   * radios, is planned by that widget's declaration. A `ui:widget` still takes its place. Under any other key it is
+   * ignored, with a warning in development, as `StringField` picks among many defaults by the schema. A field's alone,
+   * so a widget's declaration and the blanket `default` and `fieldDefault` take none
+   */
+  widget?: string;
 }
 
 /** A widget's `PresentationDeclaration`, which has no widget beneath it to leave a part to */
-export type WidgetPresentationDeclaration = PresentationDeclaration<Exclude<PartOwner, 'widget'>>;
+export type WidgetPresentationDeclaration = Omit<PresentationDeclaration<Exclude<PartOwner, 'widget'>>, 'widget'>;
 
 /** A declaration every component takes, so it leaves out what describes one control */
 type BlanketPresentationDeclaration = Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'uncheckedIsEmpty'>;
@@ -1024,7 +1034,12 @@ type BlanketPresentationDeclaration = Omit<WidgetPresentationDeclaration, 'unche
 export type ResolvedPresentationDeclaration = Required<
   Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'uncheckedIsEmpty' | 'labelPlacement'>
 > &
-  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'uncheckedIsEmpty' | 'labelPlacement'>;
+  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse' | 'uncheckedIsEmpty' | 'labelPlacement'> & {
+    /** The label, description and errors the field's own declaration settles on `'self'`, rather than the widget it
+     * leaves them to, left out where there are none
+     */
+    drawnByField?: readonly ('label' | 'description' | 'errors')[];
+  };
 
 /** The declarations a theme registers for the components it provides, keyed by the registry key each is registered
  * under, so a component replacing another under the same key draws what that key declares. A component given
@@ -1047,8 +1062,9 @@ export interface ThemePresentation {
    * of drawing its own label and description, e.g. a theme whose template draws every description. It is also what a
    * part a field leaves to its widget falls back to when the field renders none. Unlike `default`, it sits beneath the
    * merged entries rather than beneath each layer's own, so it can't override a part a lower layer declares under a
-   * key, such as a field leaving its parts to its widget. Its `labelledBy` reaches only fields that keep their label or
-   * render no widget to leave it to, since one leaving it to a widget it renders takes the widget's
+   * key, such as a field leaving its parts to its widget. Its `labelledBy` reaches only fields that render no widget, or
+   * keep their label over a widget declaring none, since the widget a field renders knows how its control is named. A
+   * `default` declaring `labelledBy` is what every widget declares, so it beats this one for a field rendering a widget
    */
   fieldDefault?: BlanketPresentationDeclaration;
   /** Where the theme's `SelectWidget` draws the selected option's description among the field's description and help,
@@ -1245,6 +1261,13 @@ export interface FieldPresentation {
      */
     attributes: ControlAttributes;
   };
+  /** The parts the field component a form's author supplies draws itself, set on the plan `SchemaField` hands that
+   * component, so a widget it spreads its props into reads their `'self'` as the field's rather than its own and draws
+   * none of them a second time. `getControlAttributes()` then names the widget's control by the label's text through
+   * `aria-label`, unless the plan names it otherwise, while `control.attributes`, which the field spreads onto a
+   * control of its own, is left as it is. Left out of every other plan
+   */
+  drawnByField?: ResolvedPresentationDeclaration['drawnByField'];
   /** The plan of the field above that renders this same id, which this one was built under */
   inherited?: FieldPresentation;
 }
@@ -1803,8 +1826,8 @@ export interface WidgetProps<
   label: string;
   /** A boolean value, if true, tells the widget not to draw its label: its field's `presentation` has the template, or a
    * field above rendering the same id, draw it, or `label` in the `UiSchema` turns it off
-   * @deprecated Kept through v7 for a widget rendered without a plan: read `presentation.label.by`, or
-   *   `widgetDrawsLabel()`, which falls back to this
+   * @deprecated Kept through v7 for a widget rendered without a plan: read `widgetDrawsLabel()`, which also reads the
+   *   plan's `drawnByField`, and falls back to this
    */
   hideLabel?: boolean;
   /** A boolean value stating if the widget can accept multiple values */

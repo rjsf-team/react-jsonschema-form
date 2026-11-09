@@ -49,4 +49,20 @@ describe('getWidgetDescription()', () => {
     });
     expect(getWidgetDescription({ ...props, presentation })).toBeUndefined();
   });
+
+  it('draws none the field handing it its plan draws itself', () => {
+    const presentation = resolveFieldPresentation({
+      id: 'root_done',
+      declaration: SELF,
+      label: 'Done',
+      description: 'Plan text',
+    });
+    expect(getWidgetDescription({ ...props, presentation: { ...presentation, drawnByField: ['description'] } })).toBe(
+      undefined,
+    );
+    expect(getWidgetDescription({ ...props, presentation: { ...presentation, drawnByField: ['label'] } })).toEqual({
+      text: 'Plan text',
+      id: 'root_done__description',
+    });
+  });
 });
