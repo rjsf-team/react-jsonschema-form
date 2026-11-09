@@ -103,6 +103,23 @@ function cmdkOption(container: HTMLElement | null, value: string) {
   );
 }
 
+/** Scrolls the option cmdk holds under `value` into view, with its group's heading when it is the group's first option,
+ * as cmdk does for a highlight it moves itself, which it doesn't for one its controlled value is given
+ *
+ * @param container - The element the options render in
+ * @param value - The value cmdk holds the option under
+ */
+export function scrollOptionIntoView(container: HTMLElement | null, value: string) {
+  const option = cmdkOption(container, value);
+  if (!option) {
+    return;
+  }
+  if (option.parentElement?.firstChild === option) {
+    option.closest('[cmdk-group]')?.querySelector('[cmdk-group-heading]')?.scrollIntoView({ block: 'nearest' });
+  }
+  option.scrollIntoView({ block: 'nearest' });
+}
+
 /** Returns the ids cmdk gives a listbox and its highlighted option, which it keeps to itself, so a combobox can point
  * at them, with the ref callbacks to put on the `CommandList` and on the highlighted `CommandItem`. An element hands its
  * id over as it mounts, before the browser paints, and takes it back as it unmounts, so a list that opens again under
@@ -125,7 +142,9 @@ export function useCmdkIds() {
 /** Keeps an Escape pressed on `control` while `active` from a dialog the select is in, by marking it handled before the
  * dialog sees it. A Radix `Dialog` or `Sheet` listens for Escape on the document in the capture phase, before any React
  * handler, and closes unless the event is already `defaultPrevented`, so the mark is made from the window, which the
- * capture phase reaches first. The select's own handler still closes its list
+ * capture phase reaches first. The select's own handler still closes its list. The control is found by the event's
+ * composed path, as an event from a shadow root reaches the window retargeted to its host, and an Escape that ends an
+ * IME composition is left to the IME
  *
  * @param active - Whether the select's list is shown
  * @param control - The element focus stays on while the list is shown
@@ -134,7 +153,7 @@ export function useEscapeKeptFromDialog(active: boolean, control: RefObject<HTML
   useEffect(() => {
     const view = control.current?.ownerDocument.defaultView;
     const keep = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && event.target === control.current) {
+      if (event.key === 'Escape' && !event.isComposing && event.composedPath()[0] === control.current) {
         event.preventDefault();
       }
     };
@@ -184,7 +203,7 @@ export function FancySelect({
   useEffect(() => {
     if (open && selectedValue !== undefined) {
       requestAnimationFrame(() => {
-        cmdkOption(containerRef.current, selectedValue)?.scrollIntoView({ block: 'nearest' });
+        scrollOptionIntoView(containerRef.current, selectedValue);
       });
     }
   }, [open, selectedValue]);
@@ -239,7 +258,7 @@ export function FancySelect({
     if (next) {
       const value = cmdkValue(next);
       setHighlighted(value);
-      cmdkOption(containerRef.current, value)?.scrollIntoView({ block: 'nearest' });
+      scrollOptionIntoView(containerRef.current, value);
     }
   };
   // cmdk's Alt+Arrow jumps to the first option a user can choose in the next or previous group, which it finds from a

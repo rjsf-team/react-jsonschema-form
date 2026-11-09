@@ -3,7 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import type { RJSFSchema } from '@rjsf/utils';
 import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
@@ -14,6 +14,14 @@ const translateToFrench = (stringToTranslate: TranslatableString) =>
   stringToTranslate === TranslatableString.SelectPlaceholder ? 'Choisir ...' : stringToTranslate;
 
 describe('SelectWidget', () => {
+  // jsdom doesn't implement `scrollIntoView`, which the selects call on the option they highlight
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterEach(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
   test('single select is reachable from the tab order and opens with the keyboard', async () => {
     const user = userEvent.setup();
     render(
@@ -327,8 +335,6 @@ describe('SelectWidget', () => {
       />,
     );
 
-    // Moving the highlight scrolls the item into view with an API jsdom lacks
-    Element.prototype.scrollIntoView = vi.fn();
     try {
       await user.click(screen.getByPlaceholderText('Select ...'));
       await user.keyboard('{ArrowDown}');
@@ -342,7 +348,6 @@ describe('SelectWidget', () => {
       expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
     } finally {
       consoleErrorSpy.mockRestore();
-      delete (Element.prototype as Partial<Element>).scrollIntoView;
     }
   });
 
@@ -900,6 +905,14 @@ describe('an anyOf option selector', () => {
 });
 
 describe('SelectWidget combobox', () => {
+  // jsdom doesn't implement `scrollIntoView`, which the selects call on the option they highlight
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
+  afterEach(() => {
+    delete (Element.prototype as Partial<Element>).scrollIntoView;
+  });
+
   const colors: RJSFSchema = { type: 'string', title: 'Color', enum: ['red', 'blue'] };
 
   test.each<[string, RJSFSchema]>([
@@ -1058,6 +1071,30 @@ describe('SelectWidget combobox', () => {
     );
 
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
+  });
+
+  test('scrolls the group heading into view with the option the single select opens on, first in that group', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          readonly: false,
+          value: 'blue',
+          options: {
+            enumOptions: ['red', 'blue'].map((value) => ({ label: value, value })),
+            optgroups: { Warm: ['red'], Cool: ['blue'] },
+          },
+        })}
+      />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+
+    await waitFor(() => expect(Element.prototype.scrollIntoView).toHaveBeenCalled());
+    const scrolled = vi.mocked(Element.prototype.scrollIntoView).mock.contexts;
+    expect(scrolled).toContain(screen.getByText('Cool'));
+    expect(scrolled.at(-1)).toBe(screen.getByRole('option', { name: 'blue' }));
   });
 });
 
@@ -1841,6 +1878,152 @@ describe("the multiple select's combobox input", () => {
 
     await user.keyboard('{Escape}');
     expect(onOpenChange).toHaveBeenCalledExactlyOnceWith(false);
+  });
+
+  test('keeps an Escape that closes its list from the page while it renders in a shadow root', async () => {
+    const user = userEvent.setup();
+    const onPageEscape = vi.fn();
+    const listen = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !e.defaultPrevented) {
+        onPageEscape();
+      }
+    };
+    const host = document.body.appendChild(document.createElement('div'));
+    const container = host.attachShadow({ mode: 'open' }).appendChild(document.createElement('div'));
+    document.addEventListener('keydown', listen, { capture: true });
+    try {
+      render(<Form schema={{ type: 'object', properties: { color } }} validator={validator} />, { container });
+      const input = within(container).getByRole('combobox');
+
+      await user.click(input);
+      expect(input).toHaveAttribute('aria-expanded', 'true');
+      await user.keyboard('{Escape}');
+      expect(input).toHaveAttribute('aria-expanded', 'false');
+      expect(onPageEscape).not.toHaveBeenCalled();
+    } finally {
+      document.removeEventListener('keydown', listen, { capture: true });
+      host.remove();
+    }
+  });
+
+  test('leaves an Escape that ends an IME composition to the IME, keeping its list open', async () => {
+    const user = userEvent.setup();
+    const onPageEscape = vi.fn();
+    const listen = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !e.defaultPrevented) {
+        onPageEscape();
+      }
+    };
+    document.addEventListener('keydown', listen, { capture: true });
+    try {
+      renderColorForm();
+      const input = screen.getByRole('combobox');
+
+      await user.click(input);
+      // user-event can't mark a key press as part of an IME composition, so the keydown is dispatched with
+      // `isComposing` set
+      fireEvent.keyDown(input, { key: 'Escape', isComposing: true });
+      expect(input).toHaveAttribute('aria-expanded', 'true');
+      expect(onPageEscape).toHaveBeenCalledOnce();
+    } finally {
+      document.removeEventListener('keydown', listen, { capture: true });
+    }
+  });
+
+  test('neither takes focus nor opens on a Ctrl+click on a selected item, which opens the context menu on a Mac', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        initialFormData={{ color: ['red'] }}
+        validator={validator}
+      />,
+    );
+
+    await user.keyboard('{Control>}');
+    await user.click(screen.getByText('red'));
+    await user.keyboard('{/Control}');
+
+    expect(screen.getByRole('combobox')).not.toHaveFocus();
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  test('scrolls the option it highlights into view as Up Arrow opens its list and as a search moves the highlight', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['red', 'blue', 'green'] } },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+    const highlighted = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '');
+    const scrolledTo = () => vi.mocked(Element.prototype.scrollIntoView).mock.contexts.at(-1);
+
+    await user.click(input);
+    await user.keyboard('{Escape}{ArrowUp}');
+    expect(highlighted()).toHaveTextContent('green');
+    expect(scrolledTo()).toBe(highlighted());
+
+    await user.keyboard('{ArrowUp}');
+    expect(highlighted()).toHaveTextContent('blue');
+    await user.type(input, 'red');
+    expect(highlighted()).toHaveTextContent('red');
+    expect(scrolledTo()).toBe(highlighted());
+  });
+
+  test('leaves its list where it is as the pointer moves the highlight', async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: { type: 'array', uniqueItems: true, items: { type: 'string', enum: ['red', 'blue', 'green'] } },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+    const highlighted = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '');
+
+    await user.click(input);
+    vi.mocked(Element.prototype.scrollIntoView).mockClear();
+    await user.hover(screen.getByRole('option', { name: 'green' }));
+
+    expect(highlighted()).toHaveTextContent('green');
+    expect(Element.prototype.scrollIntoView).not.toHaveBeenCalled();
+  });
+
+  test('scrolls the group heading into view with the option it highlights first in that group', async () => {
+    const user = userEvent.setup();
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          autofocus: false,
+          readonly: false,
+          multiple: true,
+          value: [],
+          options: {
+            enumOptions: ['red', 'blue'].map((value) => ({ label: value, value })),
+            optgroups: { Warm: ['red'], Cool: ['blue'] },
+          },
+        })}
+      />,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+    await user.keyboard('{Escape}{ArrowUp}');
+
+    const scrolled = vi.mocked(Element.prototype.scrollIntoView).mock.contexts;
+    expect(scrolled).toContain(screen.getByText('Cool'));
+    expect(scrolled.at(-1)).toBe(screen.getByRole('option', { name: 'blue' }));
   });
 
   test('stays closed as it is enabled again after turning readonly while open', async () => {

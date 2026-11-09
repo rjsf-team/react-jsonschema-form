@@ -1,7 +1,7 @@
 'use client';
 
 import type { FocusEventHandler, KeyboardEvent, MouseEvent, ReactElement } from 'react';
-import { useCallback, useId, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { deepEquals, enumOptionValueLabel } from '@rjsf/utils';
 import { defaultFilter } from 'cmdk';
 import { X } from 'lucide-react';
@@ -9,7 +9,7 @@ import { X } from 'lucide-react';
 import { cn } from '../../lib/utils.ts';
 import { Badge } from './badge.tsx';
 import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
-import { UNGROUPED_SECTION_KEY, useCmdkIds, useEscapeKeptFromDialog } from './fancy-select.tsx';
+import { scrollOptionIntoView, UNGROUPED_SECTION_KEY, useCmdkIds, useEscapeKeptFromDialog } from './fancy-select.tsx';
 import type { FancySelectItem, FancySelectSection } from './fancy-select.tsx';
 
 /**
@@ -98,6 +98,7 @@ export function FancyMultiSelect({
   className,
 }: Readonly<FancyMultiSelectProps>): ReactElement {
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   // The input is our own rather than cmdk's `Command.Input`, which replaces the `id`, `aria-expanded`, `aria-controls`
@@ -141,8 +142,8 @@ export function FancyMultiSelect({
     [selectedItems, onValueChange, disabled],
   );
 
-  // The list opens on a click, typing or an arrow key, not on focus, which `autoFocus` and `focusOnFirstError` give the
-  // input too, where a list opening would cover the fields below before the user does anything
+  // The list opens on a click, typing, an arrow key or Enter, not on focus, which `autoFocus` and `focusOnFirstError`
+  // give the input too, where a list opening would cover the fields below before the user does anything
   const openList = useCallback(() => {
     if (!disabled) {
       setOpen(true);
@@ -150,11 +151,13 @@ export function FancyMultiSelect({
   }, [disabled]);
 
   // cmdk moves the highlight to a search's first match only for a search typed in its own input, so a new search
-  // forgets the option the highlight was moved to, and the highlight falls back to the first match
-  const [movedTo, setMovedTo] = useState<string>();
+  // forgets the option the highlight was moved to, and the highlight falls back to the first match. Whether cmdk moved
+  // it is kept, since cmdk scrolls to a highlight it moves by key and leaves the list where it is under the pointer
+  const [movedTo, setMovedTo] = useState<{ value: string; byCmdk: boolean }>();
   const firstMatch = selectables.find((item) => !item.disabled);
+  const highlighted = movedTo?.value ?? (firstMatch ? String(firstMatch.index) : '');
   // cmdk reports `''` as the list unmounts, which names no option
-  const highlighted = movedTo || (firstMatch ? String(firstMatch.index) : '');
+  const cmdkMoved = (value: string) => setMovedTo(value ? { value, byCmdk: true } : undefined);
   const search = (newValue: string) => {
     setInputValue(newValue);
     setMovedTo(undefined);
@@ -169,15 +172,24 @@ export function FancyMultiSelect({
   const listShown = open && selectables.length > 0;
   useEscapeKeptFromDialog(listShown, inputRef);
 
+  // The highlight this component gives cmdk, as the list opens or a search changes, is scrolled into view here, since
+  // cmdk scrolls only to one it moves itself
+  const setHere = !movedTo?.byCmdk;
+  useEffect(() => {
+    if (listShown && setHere) {
+      scrollOptionIntoView(containerRef.current, highlighted);
+    }
+  }, [listShown, highlighted, setHere]);
+
   // The arrows, Enter, Escape, Backspace and Delete act only from the input, never from a remove button, which they reach
   // too: an arrow there would open a list whose highlight the input, holding `aria-activedescendant`, would announce
   // without focus, and Backspace would remove the last item rather than that button's. Down Arrow and Enter open a closed
   // list on its first match and Up Arrow on its last, as a combobox does, since cmdk, which moves the highlight in an open
   // list, takes Enter in a closed one too and does nothing with it. Escape closes the list and keeps focus in the input,
-  // and goes no further while the list is shown, so it doesn't also close a dialog the form is in. Backspace and Delete
-  // in an empty input remove the last item, and report nothing with none to remove. cmdk's root still takes its own keys
-  // from the input, as it did from its `Command.Input`: Home and End move the highlight rather than the text cursor, and
-  // Ctrl with N, J, P or K moves it in an open list and does nothing in a closed one
+  // and goes no further while the list is shown, so it doesn't also close a dialog the form is in, but one that ends an
+  // IME composition is left to the IME. Backspace and Delete in an empty input remove the last item, and report nothing
+  // with none to remove. cmdk's root still takes its own keys from the input: Home and End move the highlight rather than
+  // the text cursor, and Ctrl with N, J, P or K moves it in an open list and does nothing in a closed one
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       const input = inputRef.current;
@@ -187,9 +199,9 @@ export function FancyMultiSelect({
       const opens = e.key === 'ArrowDown' || e.key === 'ArrowUp' || (e.key === 'Enter' && !e.nativeEvent.isComposing);
       if (opens && !listShown) {
         const lastMatch = selectables.findLast((item) => !item.disabled);
-        setMovedTo(e.key === 'ArrowUp' && lastMatch ? String(lastMatch.index) : undefined);
+        setMovedTo(e.key === 'ArrowUp' && lastMatch ? { value: String(lastMatch.index), byCmdk: false } : undefined);
         openList();
-      } else if (e.key === 'Escape' && listShown) {
+      } else if (e.key === 'Escape' && listShown && !e.nativeEvent.isComposing) {
         setOpen(false);
         e.preventDefault();
         e.stopPropagation();
@@ -216,14 +228,15 @@ export function FancyMultiSelect({
   // A press anywhere in the select but on its input and remove buttons, such as on a selected item's label, a group
   // heading or the list's padding, would focus cmdk's root or listbox, which are out of the tab order and close the list
   // as the input blurs. No press is let move focus there, and the primary button's acts as a click on the input, whose
-  // focus and open list a press inside the list leaves as they are, while another button's opens its context menu alone.
-  // Text in the select can't be selected by dragging from it, the cost of keeping focus in the input
+  // focus and open list a press inside the list leaves as they are, while another button's, or a Ctrl+click, which a Mac
+  // takes for a right-click, opens its context menu alone. Text in the select can't be selected by dragging from it, the
+  // cost of keeping focus in the input
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target === inputRef.current) {
       return;
     }
     e.preventDefault();
-    if (e.button === 0) {
+    if (e.button === 0 && !e.ctrlKey) {
       inputRef.current?.focus();
       openList();
     }
@@ -249,9 +262,10 @@ export function FancyMultiSelect({
   return (
     // The options are filtered here, as the search is typed in an input cmdk doesn't own
     <Command
+      ref={containerRef}
       shouldFilter={false}
       value={highlighted}
-      onValueChange={setMovedTo}
+      onValueChange={cmdkMoved}
       onKeyDown={handleKeyDown}
       className={cn('overflow-visible bg-transparent', className)}
       aria-disabled={disabled}
