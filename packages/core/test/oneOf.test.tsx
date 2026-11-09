@@ -9,11 +9,11 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { isPlainObject, noop, optionDescriptionId } from '@rjsf/utils';
+import { getByPath, isPlainObject, noop, optionDescriptionId } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
-import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
+import { createPrecompiledValidator, customizeValidator } from '@rjsf/validator-ajv8';
 import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
-import { act, screen } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRequire } from 'node:module';
 
@@ -30,6 +30,33 @@ import {
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
+
+/** The schema of #4990: five definitions, each offering the other four as the options of its `child` */
+const CROSS_REFERENCING_SCHEMA: RJSFSchema = (() => {
+  const names = ['A', 'B', 'C', 'D', 'E'];
+  const optionsBut = (name?: string): RJSFSchema[] => [
+    { type: 'null', title: 'None' },
+    ...names.filter((other) => other !== name).map((other) => ({ $ref: `#/definitions/${other}` })),
+  ];
+  return {
+    definitions: Object.fromEntries(
+      names.map((name) => [
+        name,
+        { type: 'object', title: name, properties: { child: { oneOf: optionsBut(name) } } } satisfies RJSFSchema,
+      ]),
+    ),
+    oneOf: optionsBut(),
+  };
+})();
+
+/** Data for `CROSS_REFERENCING_SCHEMA` holding a `child` `depth` levels deep, the last one `null` */
+function nestedChildren(depth: number): unknown {
+  let data: unknown = null;
+  for (let level = 0; level < depth; level += 1) {
+    data = { child: data };
+  }
+  return data;
+}
 
 describe('oneOf', () => {
   it('should not render a select element if the oneOf keyword is not present', () => {
@@ -5202,6 +5229,31 @@ describe('oneOf', () => {
     expect(node.querySelector('#root_status_by')).toBeInTheDocument();
     expect(node.querySelector('#root_status_reason')).not.toBeInTheDocument();
   });
+  describe('definitions offering each other as options (#4990)', () => {
+    it('opens data nested 11 levels deep and switches its deepest option, matching no option below its child', async () => {
+      const counting = customizeValidator();
+      const isValid = vi.spyOn(counting, 'isValid');
+      createFormComponent({ schema: CROSS_REFERENCING_SCHEMA, initialFormData: nestedChildren(11) }, counting);
+
+      const selects = screen.getAllByRole('combobox');
+      expect(selects).toHaveLength(12);
+      const deepest = selects[11];
+      expect(deepest).toHaveDisplayValue('None');
+      const [, firstDefinition] = within(deepest).getAllByRole('option');
+      await user.selectOptions(deepest, firstDefinition);
+
+      expect(screen.getAllByRole('combobox')).toHaveLength(13);
+      // Every `$ref` the schema writes leads into the definitions, where a validator would walk every option of each
+      // `oneOf` below the child, four times as long for each level deeper; the field below matches its own options. A
+      // pointer to an option that writes none, such as `None`, names nothing further.
+      expect(isValid).toHaveBeenCalled();
+      const named = (schema: unknown) =>
+        isPlainObject(schema) && typeof schema.$ref === 'string'
+          ? getByPath(CROSS_REFERENCING_SCHEMA, schema.$ref.slice(2).split('/'))
+          : schema;
+      expect(isValid.mock.calls.filter(([schema]) => JSON.stringify(named(schema)).includes('$ref'))).toEqual([]);
+    });
+  });
 });
 
 describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes', (keyword) => {
@@ -5366,6 +5418,20 @@ describe('oneOf with a precompiled validator', () => {
       expect.objectContaining({ formData: { v: { id: 'a', s_na: 'xxy' } } }),
       'root_v_s_na',
     );
+  });
+  it('opens and switches definitions offering each other as options, whose matching it compiled (#4990)', async () => {
+    createFormComponent(
+      { schema: CROSS_REFERENCING_SCHEMA, initialFormData: nestedChildren(4) },
+      precompiledValidator(CROSS_REFERENCING_SCHEMA),
+    );
+    const selects = screen.getAllByRole('combobox');
+    expect(selects).toHaveLength(5);
+    const deepest = selects[4];
+    const [, firstDefinition] = within(deepest).getAllByRole('option');
+
+    await user.selectOptions(deepest, firstDefinition);
+
+    expect(screen.getAllByRole('combobox')).toHaveLength(6);
   });
   it('renders and edits an option that carries an $id, with a key its additionalProperties match (#5455)', async () => {
     const schema = oneOfField({
