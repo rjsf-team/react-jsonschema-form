@@ -134,6 +134,61 @@ describe('ObjectField', () => {
       ]);
     });
 
+    it('should hand the template what each property renders as', () => {
+      const capture = vi.fn();
+      const ObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => {
+        capture(Object.fromEntries(properties.map(({ name, renderedAs }) => [name, renderedAs?.()])));
+        return <>{properties.map(({ content }) => content)}</>;
+      };
+      const NamedField = () => <div />;
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            plain: { type: 'string' },
+            yesNo: {
+              oneOf: [
+                { const: true, title: 'Yes' },
+                { const: false, title: 'No' },
+              ],
+            },
+            notes: { type: 'string' },
+            named: { type: 'number', $id: 'NamedField' },
+            choice: { type: 'object', enum: [{ a: 1 }, { a: 2 }] },
+          },
+        },
+        uiSchema: { notes: { 'ui:widget': 'textarea' }, named: { 'ui:widget': 'updown' } },
+        fields: { NamedField },
+        templates: { ObjectFieldTemplate },
+      });
+      expect(capture).toHaveBeenLastCalledWith({
+        plain: { widget: 'text', type: 'string' },
+        yesNo: { widget: 'select', type: 'boolean' },
+        notes: { widget: 'textarea', type: 'string' },
+        named: { field: 'NamedField', widget: 'updown', type: 'number' },
+        choice: { widget: 'select', type: 'object' },
+      });
+      expect(node.querySelector('#root_yesNo')).toHaveRole('combobox');
+      expect(node.querySelector('.rjsf-field-boolean #root_yesNo')).toBeInTheDocument();
+    });
+
+    it('should keep what an unchanged property renders as while another property is edited', async () => {
+      const capture = vi.fn();
+      const ObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => {
+        capture(Object.fromEntries(properties.map(({ name, renderedAs }) => [name, renderedAs?.()])));
+        return <>{properties.map(({ content }) => content)}</>;
+      };
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { edited: { type: 'string' }, kept: { type: 'string' } } },
+        templates: { ObjectFieldTemplate },
+      });
+      const first = capture.mock.lastCall?.[0];
+      await user.type(node.querySelector('#root_edited')!, 'x');
+      const last = capture.mock.lastCall?.[0];
+      expect(capture.mock.calls.length).toBeGreaterThan(1);
+      expect(last.kept).toBe(first.kept);
+    });
+
     const HiddenFlagObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => (
       <>
         {properties.map(({ name, hidden, content }) => (

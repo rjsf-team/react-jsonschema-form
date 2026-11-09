@@ -11,6 +11,7 @@ import type {
   FormContextType,
   GlobalFormOptions,
   GlobalUISchemaOptions,
+  ObjectFieldPropertyRendering,
   Registry,
   RJSFSchema,
   SchemaUtilsType,
@@ -525,6 +526,63 @@ export function createIsSchemaFieldHidden<
     const fieldSchema = isRefCycle ? expandCycle(schema, registry.schemaUtils.getRootSchema()) : schema;
     // An expansion carries no cycle flag, and nothing above the field names one for it
     return resolveFieldWidget(fieldSchema, uiSchema, formData, fieldPath, registry, false, false).hidden;
+  };
+}
+
+/** Creates the function a container works out by what the `SchemaField` it hands `schema`, `uiSchema` and `formData`
+ * renders its field as, for a field it lays out before rendering it. The field is resolved and planned as
+ * `useSchemaFieldPlan()` does, for a field nothing above it names, and a `$ref` cycle as the field it expands to, as in
+ * `createIsSchemaFieldHidden()`. It models core's `SchemaField`, not a replacement registered in `registry.fields`
+ *
+ * @returns - The function, which keeps each step's last result, so a caller keeps one per field it lays out
+ */
+export function createSchemaFieldRenderedAs<T, S extends StrictRJSFSchema, F extends FormContextType>() {
+  const expandCycle = memoizeLast(expandRefCycle<S>);
+  const { resolve } = createFieldWidgetResolver<T, S, F>();
+  // Keyed on the resolver's parts rather than its result, a new object with every change of the data
+  const renderedAs = memoizeLast(
+    (
+      selectSchemaInfo: FieldWidgetPlan<T, S, F>['selectSchemaInfo'],
+      uiField: FieldWidgetPlan<T, S, F>['uiField'],
+      uiSchema: FieldWidgetPlan<T, S, F>['uiSchema'],
+      ownUiOptions: FieldWidgetPlan<T, S, F>['ownUiOptions'],
+      registry: Registry<T, S, F>,
+    ): ObjectFieldPropertyRendering => {
+      const plan = planFieldComponent<T, S, F>({ selectSchemaInfo, uiField, ownUiOptions }, registry);
+      // A field written for the schema is handed its `uiSchema` as given, so its own widget is the one it renders by
+      const widget =
+        plan &&
+        (getFieldWidget<T, S, F>(plan.FieldComponent, selectSchemaInfo.schema, uiSchema, registry) ??
+          (plan.rendersNamedField ? ownUiOptions.widget : undefined));
+      return {
+        field: uiField?.namedFieldKey,
+        widget: typeof widget === 'string' ? widget : undefined,
+        type: plan?.fieldType,
+      };
+    },
+  );
+  /** Works out what the field renders as
+   *
+   * @param schema - The field's schema, as handed to its `SchemaField`
+   * @param uiSchema - The field's uiSchema, as handed to its `SchemaField`
+   * @param formData - The field's data
+   * @param fieldPath - The field's path
+   * @param registry - The registry
+   * @returns - The field named for it, the widget it renders and the type of the field rendered
+   */
+  return (
+    schema: S,
+    uiSchema: UiSchema<T, S, F> | undefined,
+    formData: T | undefined,
+    fieldPath: FieldPath,
+    registry: Registry<T, S, F>,
+  ): ObjectFieldPropertyRendering => {
+    const fieldSchema = hasSchemaMarker(schema, RJSF_REF_CYCLE_KEY)
+      ? expandCycle(schema, registry.schemaUtils.getRootSchema())
+      : schema;
+    // An expansion carries no cycle flag, and nothing above the field names one for it
+    const resolved = resolve(fieldSchema, uiSchema, formData, fieldPath, registry, false, false);
+    return renderedAs(resolved.selectSchemaInfo, resolved.uiField, resolved.uiSchema, resolved.ownUiOptions, registry);
   };
 }
 

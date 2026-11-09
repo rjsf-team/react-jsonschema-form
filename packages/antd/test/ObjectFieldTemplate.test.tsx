@@ -381,6 +381,57 @@ describe('ObjectFieldTemplate colSpan map', () => {
       expect(document.querySelector('#root_constructor')).toHaveAttribute('role', 'spinbutton');
     });
   });
+
+  describe('a property keyed by what SchemaField renders it as (#5516)', () => {
+    const yesNo = [
+      { const: true, title: 'Yes' },
+      { const: false, title: 'No' },
+    ];
+    const formSchemaOf = (property: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { property, other: { type: 'string' } },
+    });
+
+    it('keys a typeless oneOf of labelled booleans by the select SchemaField infers for it', () => {
+      const classes = getColClasses({}, { select: 4, boolean: 5, string: 8 }, formSchemaOf({ oneOf: yesNo }));
+      expect(classes[0]).toContain('ant-col-4');
+      expect(document.querySelector('#root_property')).toHaveRole('combobox');
+    });
+
+    it('keys a boolean with labelled options by the select SchemaField infers for it', () => {
+      const classes = getColClasses(
+        {},
+        { select: 4, boolean: 5, string: 8 },
+        formSchemaOf({ type: 'boolean', oneOf: yesNo }),
+      );
+      expect(classes[0]).toContain('ant-col-4');
+    });
+
+    it('keys a property with no ui:widget by the widget it renders before its type', () => {
+      expect(getColClasses({}, { text: 3, string: 8 })).toEqual([
+        expect.stringContaining('ant-col-3'),
+        expect.stringContaining('ant-col-3'),
+      ]);
+    });
+
+    it('keys a select over object constants by its select', () => {
+      const classes = getColClasses(
+        {},
+        { select: 4, object: 6, string: 8 },
+        formSchemaOf({ type: 'object', enum: [{ a: 1 }, { a: 2 }] }),
+      );
+      expect(classes[0]).toContain('ant-col-4');
+    });
+
+    it('keys a property by the field its $id names', () => {
+      const MyField = () => <div />;
+      const classes = getColClasses({}, { MyField: 3, string: 8 }, formSchemaOf({ type: 'string', $id: 'MyField' }), {
+        MyField,
+      });
+      expect(classes[0]).toContain('ant-col-3');
+      expect(classes[1]).toContain('ant-col-8');
+    });
+  });
 });
 
 describe('heading alignment', () => {

@@ -72,28 +72,35 @@ import {
   withoutOptionalControls,
 } from './fieldWidgetUtils.ts';
 import OptionalControlsBesideContext from './OptionalControlsBesideContext.ts';
-import { createIsSchemaFieldHidden } from './SchemaField.tsx';
+import { createIsSchemaFieldHidden, createSchemaFieldRenderedAs } from './SchemaField.tsx';
 import { useShownOptionBeside } from './ShownOptionContext.ts';
 
-/** Creates what keeps an object's `createIsSchemaFieldHidden()` checks, one per property name, as each property's
- * `SchemaField` keeps its own plan, so a property whose own schema, uiSchema and data are unchanged is not resolved
- * again. A property no longer laid out loses its check
+/** Creates what keeps an object's `createIsSchemaFieldHidden()` and `createSchemaFieldRenderedAs()` functions, one of
+ * each per property name, as each property's `SchemaField` keeps its own plan, so a property whose own schema, uiSchema
+ * and data are unchanged is not resolved again. A property no longer laid out loses them
  *
- * @returns - The function handing back the check of each of the properties it is given, in order
+ * @returns - The function handing back the functions of each of the properties it is given, in order
  */
-function createPropertyHiddenChecks<
+function createPropertyLayouts<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >() {
-  let checks = new Map<string, ReturnType<typeof createIsSchemaFieldHidden<T, S, F>>>();
+  interface Layout {
+    isHidden: ReturnType<typeof createIsSchemaFieldHidden<T, S, F>>;
+    renderedAs: ReturnType<typeof createSchemaFieldRenderedAs<T, S, F>>;
+  }
+  let layouts = new Map<string, Layout>();
   return (properties: readonly string[]) => {
-    const kept = checks;
-    checks = new Map();
+    const kept = layouts;
+    layouts = new Map();
     return properties.map((property) => {
-      const check = kept.get(property) ?? createIsSchemaFieldHidden<T, S, F>();
-      checks.set(property, check);
-      return check;
+      const layout = kept.get(property) ?? {
+        isHidden: createIsSchemaFieldHidden<T, S, F>(),
+        renderedAs: createSchemaFieldRenderedAs<T, S, F>(),
+      };
+      layouts.set(property, layout);
+      return layout;
     });
   };
 }
@@ -589,7 +596,7 @@ export default function ObjectField<
   const controlsDrawnBeside = use(OptionalControlsBesideContext) === fieldPath;
   const hasFormData = isFormDataAvailable<T>(formData);
   // Kept in a closure rather than a ref, since `react/refs` rejects reading or writing a ref during render
-  const propertyHiddenChecks = useMemo(() => createPropertyHiddenChecks<T, S, F>(), []);
+  const propertyLayouts = useMemo(() => createPropertyLayouts<T, S, F>(), []);
   let orderedProperties: string[] = [];
 
   /** Computes the next available key name from the `preferredKey`, indexing through the already existing keys until one
@@ -983,7 +990,7 @@ export default function ObjectField<
     }
   }
 
-  const hiddenChecks = propertyHiddenChecks(orderedProperties);
+  const layouts = propertyLayouts(orderedProperties);
   const { ObjectFieldTemplate: Template } = getTemplates<T, S, F>(registry, uiOptions);
   const optionalDataControl =
     renderOptionalField && !controlsDrawnBeside ? <OptionalDataControlsField {...props} schema={schema} /> : undefined;
@@ -1045,7 +1052,9 @@ export default function ObjectField<
         readonly,
         disabled,
         required,
-        hidden: hiddenChecks[index](propertySchema, fieldUiSchema, propertyFormData, propertyFieldPath, registry),
+        hidden: layouts[index].isHidden(propertySchema, fieldUiSchema, propertyFormData, propertyFieldPath, registry),
+        renderedAs: () =>
+          layouts[index].renderedAs(propertySchema, fieldUiSchema, propertyFormData, propertyFieldPath, registry),
       };
     }),
     readonly,
