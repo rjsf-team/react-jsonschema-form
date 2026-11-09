@@ -13,7 +13,7 @@ import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
-import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
+import getRenderedOptionSchema, { renderOption } from '../getRenderedOptionSchema.ts';
 import getRenderedOptionUiSchema from '../getRenderedOptionUiSchema.ts';
 import getUiOptions from '../getUiOptions.ts';
 import { getFieldTypeForUiSchema } from '../getWidget.tsx';
@@ -44,7 +44,7 @@ import type {
 } from '../types.ts';
 import uiBooleanOption from '../uiBooleanOption.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
+import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
 import { emptySchema } from './graph/mergePlan.ts';
 import retrieveSchema, { expandRefCycle, withOptionExtraKeys } from './retrieveSchema.ts';
 
@@ -324,10 +324,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const listedType = getFieldTypeForUiSchema<T, S, F>(retrieved, branchUiSchema, schemaContext.widgets, formData);
     const ownFallbackType = fallbackTypeAt<T, S, F>(ctx, path, resolvedSchema, uiSchema, formData);
     const optionDepth = ownFallbackType === undefined ? 1 : 2;
-    const renderedOption = getRenderedOptionSchema<S>(resolvedSchema, option);
+    // Below the object's own selector, the option renders from the object with `type` pinned to the type picked, so an
+    // option listing no types of its own has no selector, and is on that type. That parent is a copy made here, which
+    // no later call finds again, so the option is rendered without keeping it
+    const renderedOption =
+      ownFallbackType === undefined
+        ? getRenderedOptionSchema<S>(resolvedSchema, option)
+        : renderOption<S>({ ...resolvedSchema, type: ownFallbackType }, option);
     shownType = ownFallbackType ?? listedType;
     optionShownType =
-      fallbackTypeAt<T, S, F>(ctx, path, renderedOption, branchUiSchema, formData, optionDepth) ?? listedType;
+      fallbackTypeAt<T, S, F>(ctx, path, renderedOption, branchUiSchema, formData, optionDepth) ?? shownType;
   } else {
     shownType = shownFieldType<T, S, F>(ctx, path, retrieved, branchUiSchema, formData);
     optionShownType = shownType;

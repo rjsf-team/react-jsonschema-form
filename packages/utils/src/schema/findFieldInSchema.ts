@@ -1,8 +1,9 @@
 import { getAdditionalPropertySchema } from '../additionalPropertiesUtils.ts';
-import { ADDITIONAL_PROPERTY_FLAG, PROPERTIES_KEY } from '../constants.ts';
+import { ADDITIONAL_PROPERTY_FLAG, ITEMS_KEY, PROPERTIES_KEY } from '../constants.ts';
+import { renderOption } from '../getRenderedOptionSchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
-import { isSchemaObject } from '../isObject.ts';
+import isObject, { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type {
   FormContextType,
@@ -14,6 +15,7 @@ import type {
 } from '../types.ts';
 import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.ts';
 import getFromSchema from './getFromSchema.ts';
+import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getInnerSchemaForArrayItem.ts';
 import retrieveSchema, { joinOptionExtraKeys } from './retrieveSchema.ts';
 
 const NOT_FOUND = { field: undefined, isRequired: undefined };
@@ -38,14 +40,15 @@ function declaredField<S extends StrictRJSFSchema, F extends FormContextType>(
   return hasSchemaMarker(field, ADDITIONAL_PROPERTY_FLAG) ? undefined : (field ?? undefined);
 }
 
-/** Finds the schema of `key` in `parent`. A property `parent` declares comes first, then one of the option rendered for
- * `data` when `parent` has an `anyOf` or `oneOf`, since a form renders both. Only then is `key` an extra key, described
- * by the `patternProperties` and `additionalProperties` of the two together, as the form describes it. An option's field
- * reads the `required` of its parent too, as `getRenderedOptionSchema()` renders it.
+/** Finds the schema of `key` in `parent`. A property `parent` declares comes first, then the array item an index key
+ * names, then one of the option rendered for `data` when `parent` has an `anyOf` or `oneOf`, since a form renders both.
+ * Only then is `key` an extra key, described by the `patternProperties` and `additionalProperties` of the two together,
+ * as the form describes it. An option's field reads the `required` of its parent too, as `getRenderedOptionSchema()`
+ * renders it.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
- * @param parent - The schema in which to find `key`, if there is one
+ * @param rawParent - The schema in which to find `key`, if there is one
  * @param key - The key to find
  * @param data - The form data of `parent`, used to determine which anyOf/oneOf option is rendered
  * @returns - The schema of `key` and its required state, or `NOT_FOUND`
@@ -53,14 +56,16 @@ function declaredField<S extends StrictRJSFSchema, F extends FormContextType>(
 function findKey<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   rootSchema: S,
-  parent: S | undefined,
+  rawParent: S | undefined,
   key: string,
   data: T | undefined,
 ): FoundFieldType<S> {
   // A boolean subschema has no keys to find, and an empty segment, as the `a.` path leaves, names none
-  if (!isSchemaObject<S>(parent) || key === '') {
+  if (!isSchemaObject<S>(rawParent) || key === '') {
     return NOT_FOUND;
   }
+  // Read as the form renders it, with its `$ref`, `allOf` and the `if`/`then` its data meets merged in
+  const parent = retrieveSchema<T, S, F>(context, rawParent, rootSchema, data);
   const foundIn = (field: S, ...holders: (S | undefined)[]) => ({
     field,
     isRequired: holders.some((holder) => Array.isArray(holder?.required) && holder.required.includes(key)),
@@ -71,6 +76,17 @@ function findKey<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const xxxOfKey = getXxxOfKey<S>(parent);
   const option = xxxOfKey && findSelectedOptionInXxxOf(context, rootSchema, parent, key, xxxOfKey, data);
+  // The item the array renders at the index, as the `ui:required` check walks it, its options' `items` met in; an item
+  // is never required. Object data holds an extra key there, as a type list naming both `object` and `array` can
+  const array = /^\d+$/.test(key) && !isObject(data) && (option ? renderOption<S>(parent, option) : parent);
+  if (array && ITEMS_KEY in array) {
+    const item = getInnerSchemaForArrayItem<S>(
+      array,
+      AdditionalItemsHandling.Fallback,
+      Array.isArray(array.items) ? Number(key) : -1,
+    );
+    return { field: getFromSchema<T, S, F>(context, rootSchema, item, [], item), isRequired: false };
+  }
   const field = option && declaredField<S, F>(context, rootSchema, option, key);
   if (field !== undefined) {
     return foundIn(field, parent, option);
@@ -86,7 +102,8 @@ function findKey<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
  * field is in the `required` list for its parent and if so, it is marked as required on return. At each key of the
  * `path`, a property declared beside an `anyOf` or `oneOf` is found before its options are, and a key no property
- * declares is found through `patternProperties` or `additionalProperties`.
+ * declares is found through `patternProperties` or `additionalProperties`. An index key finds the item of an array.
+ * Each step is read with its `$ref`, `allOf` and the `if`/`then` its data meets merged in.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
@@ -101,8 +118,7 @@ export default function findFieldInSchema<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(context: SchemaContext<S, F>, rootSchema: S, schema: S, path: SchemaFieldPath, formData?: T): FoundFieldType<S> {
-  // Only the keys below it are read with their `$ref`s resolved, and `schema` may be a `$ref` itself
-  let parent: S | undefined = getFromSchema<T, S, F>(context, rootSchema, schema, [], schema);
+  let parent: S | undefined = schema;
   let found: FoundFieldType<S> = NOT_FOUND;
   let data = formData;
   for (const key of (Array.isArray(path) ? path : path.split('.')).map(String)) {

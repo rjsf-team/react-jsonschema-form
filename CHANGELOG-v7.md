@@ -1505,6 +1505,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add the optional `renderedAs` to `ObjectFieldTemplatePropertyType` and the `ObjectFieldPropertyRendering` type it returns ([#5791](https://github.com/rjsf-team/react-jsonschema-form/pull/5791), [#5516](https://github.com/rjsf-team/react-jsonschema-form/issues/5516))
 - Add `getContainerAttributes()`, the `aria-labelledby` and `aria-describedby` a container's template gives the group around its title, description and contents ([#5795](https://github.com/rjsf-team/react-jsonschema-form/pull/5795), [#5723](https://github.com/rjsf-team/react-jsonschema-form/issues/5723))
 - Add `listboxAriaProps()`, which names the list of options a `SelectWidget` shows, used by those of `@rjsf/daisyui` and `@rjsf/shadcn` ([#5807](https://github.com/rjsf-team/react-jsonschema-form/pull/5807), [#5792](https://github.com/rjsf-team/react-jsonschema-form/issues/5792))
+- Fix `findFieldInSchema()` finding nothing at an index of an array, or below a nested `allOf` or `if`/`then`: it now finds the item the array renders there and reads each step as the form renders it ([#5785](https://github.com/rjsf-team/react-jsonschema-form/pull/5785), [#5729](https://github.com/rjsf-team/react-jsonschema-form/issues/5729))
 
 ## @rjsf/validator-ajv8
 

@@ -3968,7 +3968,7 @@ const defaults = getDefaultFormState(context, { schema, formData, rootSchema });
 
 ### findFieldInSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-Finds the field at the given path within the root or a nested `schema` node, following `oneOf` / `anyOf` using `formData` where needed. At each key of the path, a property declared beside a `oneOf` / `anyOf` is found before its options are, and a key no property declares is found through a `patternProperties` or `additionalProperties` subschema. An `additionalProperties: true` describes no field, so it finds nothing. If nothing matches the path, `{ field: undefined, isRequired: undefined }` is returned. When a leaf is found, the result includes whether that leaf is required under its parent.
+Finds the field at the given path within the root or a nested `schema` node, following `oneOf` / `anyOf` using `formData` where needed. At each key of the path, a property declared beside a `oneOf` / `anyOf` is found before its options are, and a key no property declares is found through a `patternProperties` or `additionalProperties` subschema. An index of an array finds the item the array renders there, from `items` or `additionalItems`, which is never required. Each step is read as the form renders it, with its `$ref`, `allOf` and the `if`/`then` its data meets merged in, and an array's `items` met with those of its selected option. An `additionalProperties: true` describes no field, so it finds nothing. If nothing matches the path, `{ field: undefined, isRequired: undefined }` is returned. When a leaf is found, the result includes whether that leaf is required under its parent.
 
 #### Parameters
 

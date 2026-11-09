@@ -9,8 +9,10 @@ import type {
 import {
   constrainsValue,
   deepEquals,
+  fieldPathFromList,
   fieldPathToList,
   getByPath,
+  getDiscriminatorFieldFromSchema,
   getValidationTarget,
   getXxxOfOptions,
   isConstantOptionList,
@@ -234,6 +236,52 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
       ),
     isExpanded: (fieldPath) => uiState.isExpanded(fieldPath),
   };
+}
+
+/** Whether the form still renders a field at `path` for `formData`, shown or hidden. Under an `anyOf`/`oneOf`, the
+ * option followed is the one the field shows, the user's pick among them, where `findFieldInSchema()` alone would take
+ * the one the data matches best
+ *
+ * @param uiState - The form's option selections and cycle expansions
+ * @param schemaUtils - The schema utilities the form renders with
+ * @param schema - The retrieved root schema
+ * @param path - The path of the field
+ * @param formData - The form's data
+ * @returns - Whether a field is rendered at `path`
+ */
+export function rendersFieldAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiState: UiStateReader,
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  schema: S,
+  path: FieldPathList,
+  formData: T | undefined,
+): boolean {
+  const fieldState = fieldStateOf<T, S, F>(uiState, schemaUtils);
+  let parent: S | undefined = schema;
+  let data: unknown = formData;
+  for (const [depth, key] of path.entries()) {
+    if (!isSchemaObject<S>(parent)) {
+      return false;
+    }
+    const fieldData = asFieldValue<T>(data);
+    let holder = schemaUtils.retrieveSchema(parent, fieldData);
+    const xxxOf = getXxxOfOptions<S>(holder);
+    const options = xxxOf && retrievedOptionsOf<T, S, F>(schemaUtils, holder, fieldData);
+    if (xxxOf && options) {
+      const shown = fieldState.selectedOption(
+        fieldPathFromList(path.slice(0, depth)),
+        options,
+        data,
+        getDiscriminatorFieldFromSchema<S>(holder),
+      );
+      // The shown option alone, which `findFieldInSchema()` then can't match the data against another for
+      holder = { ...holder, [xxxOf.key]: [options[shown]] };
+      Reflect.deleteProperty(holder, 'discriminator');
+    }
+    parent = schemaUtils.findFieldInSchema(holder, [key], fieldData).field;
+    data = getByPath(data, [key]);
+  }
+  return parent !== undefined;
 }
 
 /** The entries, kept by path, that hold after a move at `container` that `transformChange` rewrote, key by key as

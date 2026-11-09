@@ -48,7 +48,7 @@ import {
 import type { RJSFFormStatus } from './IChangeEvent.ts';
 import { keyMoveOf, moveFateOf } from './keyMove.ts';
 import type { AnnouncedMove, MoveOutcome } from './keyMove.ts';
-import { asFieldValue, fieldStateOf } from './uiState.ts';
+import { asFieldValue, fieldStateOf, rendersFieldAt } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
 const HELD_SCALARS_LIMIT = 100;
@@ -991,7 +991,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         uiState.dropFallbackTypes(
           (at) =>
             at.length > 0 &&
-            derived.schemaUtils.findFieldInSchema(derived.retrievedSchema, at, derived.formData).field === undefined,
+            !rendersFieldAt<T, S, F>(uiState, derived.schemaUtils, derived.retrievedSchema, at, derived.formData),
         );
       }
     },

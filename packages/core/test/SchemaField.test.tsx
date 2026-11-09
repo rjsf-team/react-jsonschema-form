@@ -692,6 +692,126 @@ describe('SchemaField', () => {
 
         expect([typeOf(node, 'root_0'), typeOf(node, 'root_1')]).toEqual(['string', 'number']);
       });
+
+      describe('within an array item', () => {
+        const props = {
+          schema: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              arr: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: { val: { type: ['object', 'number'], properties: { a: { type: 'string' } } } },
+                },
+              },
+            },
+          },
+          initialFormData: { arr: [{}] },
+          useFallbackUiForUnsupportedType: true,
+          noHtml5Validate: true,
+        } satisfies NoValFormProps;
+
+        it('should submit once a number is picked, after an edit of another field', async () => {
+          const { node, onSubmit, onError } = createFormComponent({
+            ...props,
+            uiSchema: { arr: { items: { val: { a: { 'ui:required': true } } } } },
+          });
+          await pickType(node, 'root_arr_0_val', 'number');
+          await user.type(elementOf(node, '#root_name'), 'x');
+          await submitForm(node, user);
+
+          expect(onError).not.toHaveBeenCalled();
+          expect(onSubmit).toHaveBeenCalled();
+        });
+
+        it('should keep the type picked through an edit of another field', async () => {
+          const { node, rerender } = createFormComponent(props);
+          await pickType(node, 'root_arr_0_val', 'number');
+          await user.type(elementOf(node, '#root_name'), 'x');
+
+          rerender({ ...props, uiSchema: { arr: { items: { val: { 'ui:title': 'Value' } } } } });
+
+          expect(typeOf(node, 'root_arr_0_val')).toBe('number');
+        });
+
+        const { items } = props.schema.properties.arr;
+        it.each<[string, RJSFSchema]>([
+          ['an allOf', { allOf: [{ type: 'array' }, { items }] }],
+          ['an anyOf option', { type: 'array', anyOf: [{ items }] }],
+          ['the then of an if the data meets', { type: 'array', if: { minItems: 0 }, then: { items } }],
+        ])('should keep the type picked through an edit of another field, with the items from %s', async (_, arr) => {
+          const { node, onSubmit, onError } = createFormComponent({
+            ...props,
+            schema: { ...props.schema, properties: { ...props.schema.properties, arr } },
+            uiSchema: { arr: { items: { val: { a: { 'ui:required': true } } } } },
+          });
+          await pickType(node, 'root_arr_0_val', 'number');
+          await user.type(elementOf(node, '#root_name'), 'x');
+          await submitForm(node, user);
+
+          expect(typeOf(node, 'root_arr_0_val')).toBe('number');
+          expect(onError).not.toHaveBeenCalled();
+          expect(onSubmit).toHaveBeenCalled();
+        });
+      });
+
+      it('should keep the type picked under an option the user picked, which the data does not match best', async () => {
+        const { node, onSubmit, onError } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              choice: {
+                type: 'object',
+                anyOf: [
+                  { title: 'A', properties: { x: { type: 'string' } } },
+                  {
+                    title: 'B',
+                    properties: { val: { type: ['object', 'number'], properties: { a: { type: 'string' } } } },
+                  },
+                ],
+              },
+            },
+          },
+          uiSchema: { choice: { val: { a: { 'ui:required': true } } } },
+          useFallbackUiForUnsupportedType: true,
+          noHtml5Validate: true,
+        });
+        await user.selectOptions(elementOf(node, '#root_choice__anyof_select'), '1');
+        await pickType(node, 'root_choice_val', 'number');
+        await user.type(elementOf(node, '#root_name'), 'x');
+        await submitForm(node, user);
+
+        expect(typeOf(node, 'root_choice_val')).toBe('number');
+        expect(onError).not.toHaveBeenCalled();
+        expect(onSubmit).toHaveBeenCalled();
+      });
+
+      it('should require nothing of the options of a field on number whose options list no types', async () => {
+        const { node, onSubmit, onError } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              val: {
+                type: ['object', 'number'],
+                properties: { a: { type: 'string' } },
+                anyOf: [{ properties: { b: { type: 'string' } } }, { properties: { c: { type: 'string' } } }],
+              },
+            },
+          },
+          uiSchema: { val: { b: { 'ui:required': true } } },
+          useFallbackUiForUnsupportedType: true,
+          noHtml5Validate: true,
+        });
+        await pickType(node, 'root_val', 'number');
+        await submitForm(node, user);
+
+        expect(node.querySelector('#root_val_b')).not.toBeInTheDocument();
+        expect(onError).not.toHaveBeenCalled();
+        expect(onSubmit).toHaveBeenCalled();
+      });
     });
 
     it('should let the fallback UI start a textarea on the string with no value, and an object on its own type', () => {
