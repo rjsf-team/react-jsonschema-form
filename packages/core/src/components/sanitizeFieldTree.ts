@@ -20,9 +20,10 @@ import {
   RJSF_REF_CYCLE_KEY,
   setOwn,
   toConstant,
+  unsetByPath,
 } from '@rjsf/utils';
 
-import { isPathPrefix } from './dataPaths.ts';
+import { copyAlongPath, isPathPrefix } from './dataPaths.ts';
 import type { FieldEdit } from './formState.ts';
 import type { KeyMove } from './keyMove.ts';
 import type { UiStateReader } from './uiState.ts';
@@ -377,33 +378,23 @@ interface FieldPair<S> {
   /** `oldRaw` and `newRaw` retrieved for their values, when the caller has them */
   oldRetrieved?: S;
   newRetrieved?: S;
+  /** Where `oldValue` sits in the old data, which a move or a pairing makes another path than the field's own, and
+   * undefined for a field with no value of its own there to have come from
+   */
+  oldPath?: FieldPathList;
 }
 
-/** `data` without the value at `path`, copying only the arrays and objects along it */
-function withoutValueAt(data: unknown, path: FieldPathList): unknown {
-  if (path.length === 0 || !(isPlainObject(data) || Array.isArray(data))) {
-    return data;
-  }
-  const [key, ...rest] = path;
-  const copy: unknown[] | Record<string, unknown> = Array.isArray(data) ? [...data] : { ...data };
-  if (rest.length === 0) {
-    Reflect.deleteProperty(copy, key);
-  } else {
-    Reflect.set(copy, key, withoutValueAt(Reflect.get(copy, key), rest));
-  }
-  return copy;
-}
-
-/** Whether `value` is what the defaults filled the old field at `path` with. Two fills are asked, since neither sees all
- * of what decides it: the field's own, from the option it showed outward and around the default it or its parent
- * declares, and the form's, from the root around the old data without the field's value, which sees the `required`
- * and the defaults of the schemas above it but picks options by the data rather than by what the field showed
+/** Whether `value` is what the defaults filled the old field at `oldPath` with. Two fills are asked, since neither
+ * sees all of what decides it: the field's own, from the option it showed outward and around the default it or its
+ * parent declares, and the form's, from the root around the old data without the field's value, which sees the
+ * `required` and the defaults of the schemas above it but picks options by the data rather than by what the field
+ * showed. A field with no old path has no old data around it for the form's fill to read
  */
 function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   oldLayers: readonly S[],
   oldDefault: unknown,
-  path: FieldPathList,
+  oldPath: FieldPathList | undefined,
   value: unknown,
 ): boolean {
   const { oldSchemaUtils } = ctx;
@@ -414,11 +405,13 @@ function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (deepEquals(ownFill, value)) {
     return true;
   }
-  const formFill = oldSchemaUtils.getDefaultFormState(
-    oldSchemaUtils.getRootSchema(),
-    asFieldValue<T>(withoutValueAt(ctx.oldData, path)),
-  );
-  return deepEquals(getByPath(formFill, path), value);
+  if (oldPath === undefined) {
+    return false;
+  }
+  const withoutValue = copyAlongPath(ctx.oldData, oldPath);
+  unsetByPath(withoutValue, oldPath);
+  const formFill = oldSchemaUtils.getDefaultFormState(oldSchemaUtils.getRootSchema(), asFieldValue<T>(withoutValue));
+  return deepEquals(getByPath(formFill, oldPath), value);
 }
 
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -426,8 +419,19 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   pair: FieldPair<S>,
   path: FieldPathList,
 ): unknown {
-  const { oldRaw, newRaw, oldValue, newValue, oldInherited, newInherited, isItem, hasOld, oldRetrieved, newRetrieved } =
-    pair;
+  const {
+    oldRaw,
+    newRaw,
+    oldValue,
+    newValue,
+    oldInherited,
+    newInherited,
+    isItem,
+    hasOld,
+    oldRetrieved,
+    newRetrieved,
+    oldPath,
+  } = pair;
   const edited = isEdited(ctx, path);
   // A property holding `undefined` is a clear, which is judged as the field around it changes
   const isClear = newValue === undefined && !isItem;
@@ -454,7 +458,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!edited) {
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
     const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, (value) =>
-      isOldFill(ctx, oldLayers, oldDefault, path, value),
+      isOldFill(ctx, oldLayers, oldDefault, oldPath, value),
     );
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
@@ -475,7 +479,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       let next: unknown = newValue[key];
       // A `true` property holds the value whatever it is, so there is nothing to judge it by
       if (newChild !== undefined && newChild !== true) {
-        const previousValue = valueAt(oldValue, previousKeyOf(key));
+        const previousKey = previousKeyOf(key);
+        const previousValue = valueAt(oldValue, previousKey);
         next = walk(
           ctx,
           {
@@ -487,6 +492,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
             newInherited: isPlainObject(newOwnDefault) ? getByPath(newOwnDefault, key) : undefined,
             isItem: false,
             hasOld: previousValue !== undefined,
+            oldPath: oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined,
           },
           childPath,
         );
@@ -534,6 +540,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
               newInherited: undefined,
               isItem: true,
               hasOld: Array.isArray(oldValue),
+              oldPath: oldPath && hasPrevious ? [...oldPath, Number(previousIndex)] : undefined,
             },
             [...path, index],
           );
@@ -592,6 +599,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       newInherited: undefined,
       isItem: false,
       hasOld: true,
+      oldPath: [],
       oldRetrieved: previous.retrievedSchema,
       newRetrieved: next.retrievedSchema,
     },

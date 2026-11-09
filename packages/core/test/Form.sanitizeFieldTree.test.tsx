@@ -171,9 +171,14 @@ describe('sanitize as a diff of the field trees before and after a change', () =
 
     // An object whose every key drops holds what an empty one does, which is dropped as the defaults' fill
     it.each([
-      { held: 'only an array', a: { b: ['x'] }, expected: { kind: 't' } },
-      { held: 'an array beside a string', a: { b: ['x'], c: 'y' }, expected: { kind: 't', a: { c: 'y' } } },
-    ])('drops an array inside a kept object holding $held', async ({ a, expected }) => {
+      { held: 'only an array, and the object it empties', a: { b: ['x'] }, expected: { kind: 't' }, rendersA: false },
+      {
+        held: 'an array beside a string, keeping the string',
+        a: { b: ['x'], c: 'y' },
+        expected: { kind: 't', a: { c: 'y' } },
+        rendersA: true,
+      },
+    ])('drops an array inside an object holding $held', async ({ a, expected, rendersA }) => {
       const schema = kindOf(
         ifThen({
           type: 'object',
@@ -183,7 +188,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       const { container, formData } = await selectT(schema, { whenAbsent: 'allow', initialFormData: { kind: 's', a } });
 
       expect(formData).toEqual(expected);
-      expect(container.querySelector('#root_a__key') !== null).toBe('a' in expected);
+      expect(container.querySelector('#root_a__key') !== null).toBe(rendersA);
       expect(container.querySelector('#root_a_b__key')).toBeNull();
     });
 
@@ -305,6 +310,78 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         expect(container.querySelector('#root_a__key')).toBeNull();
       },
     );
+
+    it('keeps a required boolean the user checked', async () => {
+      const schema = kindOf({
+        if: { properties: { kind: { const: 's' } } },
+        then: { properties: { a: { type: 'boolean' } }, required: ['a'] },
+        additionalProperties: true,
+      });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's' },
+        beforeSwitch: (form) => user.click(input(form, 'root_a')),
+      });
+
+      expect(formData).toEqual({ kind: 't', a: true });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+    });
+
+    // The extra key is judged alone, so a limit the new branch puts on the object's keys can reject what it keeps
+    it.each<{ branch: string; otherwise: RJSFSchema; expected: KindData; isValid: boolean }>([
+      {
+        branch: 'propertyNames',
+        otherwise: { propertyNames: { enum: ['kind'] } },
+        expected: { kind: 't', a: 'x' },
+        isValid: false,
+      },
+      { branch: 'maxProperties', otherwise: { maxProperties: 1 }, expected: { kind: 't', a: 'x' }, isValid: false },
+      {
+        branch: 'additionalProperties: false',
+        // `else` declares `kind` too, since its `additionalProperties` sees only the keys it declares itself
+        otherwise: { properties: { kind: true }, additionalProperties: false },
+        expected: { kind: 't' },
+        isValid: true,
+      },
+    ])(
+      "judges a kept value by the extra key alone, whatever the new branch's $branch says",
+      async ({ otherwise, expected, isValid }) => {
+        const schema = kindOf({ ...ifThen(), else: otherwise, additionalProperties: true });
+        const { formData } = await selectT(schema);
+
+        expect(formData).toEqual(expected);
+        expect(validator.isValid(schema, formData, schema)).toBe(isValid);
+      },
+    );
+
+    it('judges a field inside an array item against what the defaults filled that item with', async () => {
+      interface ListData {
+        list?: KindData[];
+      }
+      // Only the form's fill, around the item, sees the `required` that fills the boolean with `false`
+      const item = kindOf({
+        if: { properties: { kind: { const: 's' } } },
+        then: { properties: { a: { type: 'boolean' } }, required: ['a'] },
+        additionalProperties: true,
+      });
+      const schema: RJSFSchema = { type: 'object', properties: { list: { type: 'array', items: item } } };
+      const events: IChangeEvent<ListData>[] = [];
+      const { container } = render(
+        <Form<ListData>
+          schema={schema}
+          validator={validator}
+          initialFormData={{ list: [{ kind: 's' }, { kind: 's' }] }}
+          onChange={(event) => events.push(event)}
+        />,
+      );
+
+      await user.click(input(container, 'root_list_0_a'));
+      await user.selectOptions(elementOf(container, '#root_list_0_kind'), 't');
+      await user.selectOptions(elementOf(container, '#root_list_1_kind'), 't');
+
+      expect(events[events.length - 1].formData).toEqual({ list: [{ kind: 't', a: true }, { kind: 't' }] });
+      expect(container.querySelector('#root_list_0_a__key')).not.toBeNull();
+      expect(container.querySelector('#root_list_1_a__key')).toBeNull();
+    });
 
     it('drops what a default two levels up filled in beside what the user typed', async () => {
       const schema = kindOf({
