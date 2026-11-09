@@ -541,6 +541,77 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
     },
   );
 
+  it('matches null against a cut choice whose options are nullable', () => {
+    const expression = (kind: string): RJSFSchema => ({
+      type: 'object',
+      nullable: true,
+      properties: { kind: { const: kind }, next: { $ref: '#/$defs/Expr' } },
+    });
+    const root: RJSFSchema = { $defs: { Expr: { anyOf: [expression('p'), expression('q')] } } };
+    const options: RJSFSchema[] = [
+      { properties: { other: { type: 'number' } } },
+      { type: 'object', properties: { kind: { const: 'r' }, next: { $ref: '#/$defs/Expr' } } },
+    ];
+    expect(
+      getFirstMatchingOption(
+        { validator: customizeValidator({ AjvClass: Ajv2020 }) },
+        { kind: 'r', next: null },
+        options,
+        root,
+      ),
+    ).toBe(1);
+  });
+
+  it('drops the required of a dependentSchemas entry in an option the root holds, as it drops one of a dependencies entry', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { c: {} } },
+      {
+        type: 'object',
+        properties: { a: { type: 'string' }, b: { type: 'string' } },
+        dependentSchemas: { a: { required: ['b'] } },
+      },
+    ];
+    expect(
+      getFirstMatchingOption({ validator: customizeValidator({ AjvClass: Ajv2019 }) }, { a: 'x' }, options, {
+        oneOf: options,
+      }),
+    ).toBe(1);
+  });
+
+  it('cuts a recursive choice that a dependentSchemas entry of an option the root holds leads to', () => {
+    const expression = (kind: string): RJSFSchema => ({
+      type: 'object',
+      properties: { kind: { const: kind }, next: { $ref: '#/$defs/Expr' } },
+    });
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { c: { type: 'number' } } },
+      {
+        type: 'object',
+        properties: { kind: { const: 'r' } },
+        dependentSchemas: { kind: { properties: { next: { $ref: '#/$defs/Expr' } } } },
+      },
+    ];
+    const root: RJSFSchema = {
+      $defs: {
+        Expr: { oneOf: [{ type: 'null' }, { $ref: '#/$defs/P' }, { $ref: '#/$defs/Q' }] },
+        P: expression('p'),
+        Q: expression('q'),
+      },
+      oneOf: options,
+    };
+    const counting = customizeValidator({ AjvClass: Ajv2020 });
+    const isValid = vi.spyOn(counting, 'isValid');
+    const data = { kind: 'r', next: { kind: 'p', next: { kind: 'q', next: null } } };
+    expect(getFirstMatchingOption({ validator: counting }, data, options, root)).toBe(1);
+    expect(isValid).toHaveBeenCalled();
+    const named = (schema: unknown) =>
+      isPlainObject(schema) && typeof schema.$ref === 'string'
+        ? getByPath(root, schema.$ref.slice(2).split('/'))
+        : schema;
+    // Scoring the option as the root holds it would walk both recurring branches of Expr at every level of the data
+    expect(isValid.mock.calls.filter(([schema]) => JSON.stringify(named(schema)).includes('#/$defs/Expr'))).toEqual([]);
+  });
+
   it('keeps the properties a then below a $ref declares for an unevaluatedProperties: false in the option, where they lead to a recursive choice', () => {
     const expression = (kind: string): RJSFSchema => ({
       properties: { kind: { const: kind }, next: { $ref: '#/$defs/Expr' } },

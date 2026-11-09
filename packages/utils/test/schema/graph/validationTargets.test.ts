@@ -749,6 +749,49 @@ describe('scoringTarget()', () => {
         },
       });
     });
+    it('reads a cut choice whose options are nullable as taking null too, as Ajv reads nullable', () => {
+      const expression = (kind: string): RJSFSchema => ({
+        type: 'object',
+        nullable: true,
+        properties: { kind: { const: kind }, next: { $ref: '#/definitions/Expr' } },
+      });
+      const schema: RJSFSchema = {
+        definitions: { Expr: { anyOf: [expression('p'), expression('q')] } },
+        oneOf: [{ properties: { next: { $ref: '#/definitions/Expr' } } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({ properties: { next: { allOf: [{ type: ['object', 'null'] }] } } });
+    });
+    it('reads the dependentSchemas of an option the root holds as part of its scope, as it reads its dependencies', () => {
+      const expression = (kind: string): RJSFSchema => ({
+        type: 'object',
+        properties: { kind: { const: kind }, next: { $ref: '#/definitions/Expr' } },
+      });
+      const schema: RJSFSchema = {
+        definitions: {
+          Expr: { oneOf: [{ type: 'null' }, { $ref: '#/definitions/P' }, { $ref: '#/definitions/Q' }] },
+          P: expression('p'),
+          Q: expression('q'),
+        },
+        oneOf: [
+          { type: 'object', properties: { a: { type: 'string' } }, dependentSchemas: { a: { required: ['b'] } } },
+          {
+            type: 'object',
+            properties: { kind: { const: 'r' } },
+            dependentSchemas: { kind: { properties: { next: { $ref: '#/definitions/Expr' } } } },
+          },
+        ],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        type: 'object',
+        properties: { a: { $ref: '#/oneOf/0/properties/a' } },
+        dependentSchemas: { a: {} },
+      });
+      expect(scored(schema, '/oneOf/1')).toEqual({
+        type: 'object',
+        properties: { kind: { $ref: '#/oneOf/1/properties/kind' } },
+        dependentSchemas: { kind: { properties: { next: { allOf: [{ type: ['null', 'object'] }] } } } },
+      });
+    });
     it('reads the types of subschemas that apply to one value in a cycle the same whichever of them is read first', () => {
       const A: RJSFSchema = { anyOf: [{ $ref: '#/definitions/B' }, { type: 'string' }] };
       const B: RJSFSchema = { type: 'number', allOf: [{ $ref: '#/definitions/A' }] };
