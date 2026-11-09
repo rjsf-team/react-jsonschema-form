@@ -410,10 +410,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    *
    * @param props - The props the operation started with
    * @param readFormData - Returns the form data to validate; read again when the validation runs again, see `settled()`
+   * @param [isFormsData=true] - Whether `readFormData` returns the form's own data, with extra data omitted or not
    * @returns - True if the form is valid, false otherwise.
    */
-  const runValidation = (props: FormProps<T, S, F>, readFormData: () => T | undefined): boolean => {
-    const { hasError, next } = settled((base) => applyValidation(base, props, readFormData()));
+  const runValidation = (props: FormProps<T, S, F>, readFormData: () => T | undefined, isFormsData = true): boolean => {
+    const { hasError, next } = settled((base) => {
+      const formData = readFormData();
+      return applyValidation(base, props, formData, isFormsData ? base.formData : formData);
+    });
     if (isDetached) {
       return !hasError;
     }
@@ -617,6 +621,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     });
   };
 
+  /** Keeps the options the form showed for `from`'s data through the extra data an operation omitted from it, as a
+   * field's edit keeps them through the data it leaves
+   */
+  const followOmission = (from: FormState<T, S, F>, committed: FormState<T, S, F>) => {
+    if (committed.formData !== from.formData) {
+      uiState.followed(
+        (at) => getAt(from.formData, at),
+        (at) => getAt(committed.formData, at),
+      );
+    }
+  };
+
   /** What a blurred field does to the form, after the `Form`'s `onBlur`: the field is touched, and any live validation
    * and live omit that the flags ask for on blur run, reported through `onChange` when they changed the data or the
    * errors an `IChangeEvent` carries. A touch alone is not reported; the next event and `getStatus()` carry it. Run
@@ -634,7 +650,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       return;
     }
     const start = current();
-    const committed = commit(settled((base) => applyBlur(base, props, blurred && { ...blurred, dataAtBlur })));
+    let from = start;
+    const committed = commit(
+      settled((base) => {
+        from = base;
+        return applyBlur(base, props, blurred && { ...blurred, dataAtBlur });
+      }),
+    );
+    followOmission(from, committed);
     // Only the `IChangeEvent` members count; the validator's own results and the status are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
       props.onChange?.(eventOf(committed), id);
@@ -681,7 +704,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       return;
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
-    const committed = commit(settled((base) => applySubmit(base, props, isOmitted ? omitOnce(base) : undefined)));
+    let from = current();
+    const committed = commit(
+      settled((base) => {
+        from = base;
+        return applySubmit(base, props, isOmitted ? omitOnce(base) : undefined);
+      }),
+    );
+    followOmission(from, committed);
     // Held from before `onSubmit` runs, so a submit it starts before it returns its promise is ignored too
     pendingSubmit = event;
     let submitted: unknown;
@@ -842,7 +872,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       return runValidation(props, () => withExtraDataOmitted(props));
     },
 
-    validateFormWithFormData: (formData?: T) => runValidation(committedProps, () => formData),
+    validateFormWithFormData: (formData?: T) => runValidation(committedProps, () => formData, false),
 
     validate: (formData: T | undefined) => validateFormData(committedProps, current(), formData),
 

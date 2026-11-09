@@ -58,10 +58,12 @@ import {
   asFieldValue,
   createUiState,
   fieldStateOf,
+  jsonCopyOf,
   settledEntries,
   withoutSelections,
   withSelectionsAsOf,
   withSelectionsHeldFor,
+  withSelectionsHeldForValidated,
 } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
@@ -786,6 +788,8 @@ function mergeErrors<T>(
  * @param formData - The form data to validate
  * @param [retrievedSchema] - An optionally pre-resolved schema to validate against instead of the context's `schema`
  * @param [heldPath] - The path whose field and the fields above it keep the options they show, see `heldPathOf()`
+ * @param [shownData=formData] - The data the form shows, which `formData` is with extra data omitted on a submit,
+ *          `validateForm()` or a `liveOmit: 'onBlur'` blur
  */
 export function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
@@ -793,6 +797,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
   formData: T | undefined,
   retrievedSchema?: S,
   heldPath?: FieldPathList,
+  shownData: T | undefined = formData,
 ): ValidationData<T> {
   const { schemaUtils, schema } = context;
   const { customValidate, transformErrors, uiSchema, formContext } = props;
@@ -802,11 +807,16 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
   // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
   // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
   // Falsy root values (`false`, `0`, `''`) are valid data, so only `undefined` skips the round trip (#5404).
-  const serializedFormData = JSON.stringify(formData);
-  const validationFormData = serializedFormData === undefined ? undefined : JSON.parse(serializedFormData);
-  // The committed registry's fields, not the props', since whether an option is hidden is a question of what renders
+  const validationFormData = jsonCopyOf(formData) as T | undefined;
+  // The committed registry's fields, not the props', since whether an option is hidden is a question of what renders.
+  // A selection holding for the data the form shows holds for the validated data and its copy too, as the ui:required
+  // walk reads the one and the defaults for `customValidate` are taken from the other
   const fieldState = fieldStateOf(
-    context.uiState,
+    withSelectionsHeldForValidated(
+      context.uiState,
+      (at) => getAt(shownData, at),
+      (at) => [getAt(formData, at), getAt(validationFormData, at)],
+    ),
     schemaUtils,
     heldPath,
     (fieldPath, fieldSchema, fieldUiSchema, data) =>
@@ -889,6 +899,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
  *          change does not, which is why the derivation passes it only when nothing that resolves it changed.
  * @param [heldPath] - The path whose field and the fields above it keep the options they show, see `heldPathOf()`
  * @param [isHidden] - Whether `liveErrors: 'field'` hides the validator's errors at a path, see `hiddenErrorsOf()`
+ * @param [shownData=formData] - The data the form shows, when `formData` is that data with extra data omitted
  * @returns - An object containing `errorSchema`, `errors`, `schemaValidationErrors` and `schemaValidationErrorSchema`
  */
 function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -899,8 +910,9 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
   retrievedSchema?: S,
   heldPath?: FieldPathList,
   isHidden?: (path: FieldPathList) => boolean,
+  shownData: T | undefined = formData,
 ) {
-  const schemaValidation = validateFormData(props, context, formData, retrievedSchema, heldPath);
+  const schemaValidation = validateFormData(props, context, formData, retrievedSchema, heldPath, shownData);
   const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = schemaValidation;
   const mergedErrors = mergeErrors(schemaValidation, props.extraErrors, customErrors, isHidden);
   return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
@@ -1806,6 +1818,7 @@ export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextTy
         retrievedSchema,
         undefined,
         hiddenErrorsOf(props, omitted),
+        current.formData,
       )
     : undefined;
   return { ...omitted, ...validation };
@@ -1817,16 +1830,18 @@ export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextTy
  * @param current - The state being validated
  * @param props - The current props
  * @param formData - The data to validate
+ * @param [shownData=formData] - The data the form shows, when `formData` is that data with extra data omitted
  * @returns - The blocking flag and the next state, which carries the errors to report
  */
 export function applyValidation<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
   formData: T | undefined,
+  shownData: T | undefined = formData,
 ): { hasError: boolean; next: FormState<T, S, F> } {
   const { extraErrors, extraErrorsAreWarnings } = props;
   const { errors: prevErrors, customErrors } = current;
-  const schemaValidation = validateFormData(props, current, formData);
+  const schemaValidation = validateFormData(props, current, formData, undefined, undefined, shownData);
   // Always merge extraErrors/customErrors so they remain visible in state regardless of extraErrorsAreWarnings. A
   // validation the form was asked for shows every error, so `liveErrors: 'field'` reveals them all from now on
   const { errors, errorSchema } = mergeErrors(schemaValidation, extraErrors, customErrors);
