@@ -1,5 +1,5 @@
 import { createRef, useState } from 'react';
-import type { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { buttonId, getByPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -73,6 +73,523 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     await user.selectOptions(elementOf(container, '#root_kind'), 't');
 
     expect(events[events.length - 1].formData).toEqual(expected);
+  });
+
+  describe('a property a conditional stops declaring, judged as an extra key (#5778)', () => {
+    interface KindData {
+      kind?: string;
+      a?: unknown;
+    }
+    const ifThen = (a: RJSFSchema = { type: 'string' }): RJSFSchema => ({
+      if: { properties: { kind: { const: 's' } } },
+      then: { properties: { a } },
+    });
+    const kindOf = (rest: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { kind: { type: 'string', enum: ['s', 't'] } },
+      ...rest,
+    });
+
+    async function selectT(
+      schema: RJSFSchema,
+      {
+        whenAbsent,
+        initialFormData = { kind: 's', a: 'x' },
+        uiSchema,
+        beforeSwitch,
+      }: {
+        whenAbsent?: 'allow';
+        uiSchema?: UiSchema<KindData>;
+        initialFormData?: KindData;
+        /** What the user does in the `s` branch before switching to `t` */
+        beforeSwitch?: (container: HTMLElement) => Promise<void>;
+      } = {},
+    ) {
+      const events: IChangeEvent<KindData>[] = [];
+      const { container } = render(
+        <Form<KindData>
+          schema={schema}
+          validator={validator}
+          additionalPropertiesWhenAbsent={whenAbsent}
+          initialFormData={initialFormData}
+          uiSchema={uiSchema}
+          onChange={(event) => events.push(event)}
+        />,
+      );
+      await beforeSwitch?.(container);
+      const hadField = container.querySelector('#root_a') !== null;
+      await user.selectOptions(elementOf(container, '#root_kind'), 't');
+      return { container, hadField, formData: events[events.length - 1].formData };
+    }
+
+    it.each<{ extras: string; schema: RJSFSchema; whenAbsent?: 'allow' }>([
+      { extras: 'true', schema: kindOf({ ...ifThen(), additionalProperties: true }) },
+      { extras: 'absent under allow', schema: kindOf(ifThen()), whenAbsent: 'allow' },
+      // A `title` constrains no value, so the extra key's type is still guessed from its data
+      { extras: 'an annotation alone', schema: kindOf({ ...ifThen(), additionalProperties: { title: 'Anything' } }) },
+      { extras: 'absent under allow, in an allOf', schema: kindOf({ allOf: [ifThen()] }), whenAbsent: 'allow' },
+      {
+        extras: 'true, under dependencies',
+        schema: kindOf({
+          dependencies: {
+            kind: {
+              oneOf: [
+                { properties: { kind: { const: 's' }, a: { type: 'string' } } },
+                { properties: { kind: { const: 't' } } },
+              ],
+            },
+          },
+          additionalProperties: true,
+        }),
+      },
+    ])('keeps a string when extra keys are $extras', async ({ schema, whenAbsent }) => {
+      const { container, formData } = await selectT(schema, { whenAbsent });
+
+      expect(formData).toEqual({ kind: 't', a: 'x' });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+      expect(input(container, 'root_a').value).toBe('x');
+    });
+
+    it('keeps a number, and a value the user typed over the default', async () => {
+      const schema = kindOf({ ...ifThen({ type: 'number', default: 1 }), additionalProperties: true });
+      const { container, formData } = await selectT(schema, { initialFormData: { kind: 's', a: 5 } });
+
+      expect(formData).toEqual({ kind: 't', a: 5 });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+      expect(input(container, 'root_a').value).toBe('5');
+    });
+
+    it('keeps an object whose keys its extra key renders, as extra keys of their own', async () => {
+      const schema = kindOf(ifThen({ type: 'object', properties: { b: { type: 'string' } } }));
+      const { container, formData } = await selectT(schema, {
+        whenAbsent: 'allow',
+        initialFormData: { kind: 's', a: { b: 'x' } },
+      });
+
+      expect(formData).toEqual({ kind: 't', a: { b: 'x' } });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+      expect(container.querySelector('#root_a_b__key')).not.toBeNull();
+      expect(input(container, 'root_a_b').value).toBe('x');
+    });
+
+    // An object whose every key drops holds what an empty one does, which is dropped as the defaults' fill
+    it.each([
+      { held: 'only an array, and the object it empties', a: { b: ['x'] }, expected: { kind: 't' }, rendersA: false },
+      {
+        held: 'an array beside a string, keeping the string',
+        a: { b: ['x'], c: 'y' },
+        expected: { kind: 't', a: { c: 'y' } },
+        rendersA: true,
+      },
+    ])('drops an array inside an object holding $held', async ({ a, expected, rendersA }) => {
+      const schema = kindOf(
+        ifThen({
+          type: 'object',
+          properties: { b: { type: 'array', items: { type: 'string' } }, c: { type: 'string' } },
+        }),
+      );
+      const { container, formData } = await selectT(schema, { whenAbsent: 'allow', initialFormData: { kind: 's', a } });
+
+      expect(formData).toEqual(expected);
+      expect(container.querySelector('#root_a__key') !== null).toBe(rendersA);
+      expect(container.querySelector('#root_a_b__key')).toBeNull();
+    });
+
+    it.each<{ extras: string; schema: RJSFSchema; initialFormData?: KindData }>([
+      { extras: '{ type: number }', schema: kindOf({ ...ifThen(), additionalProperties: { type: 'number' } }) },
+      { extras: 'false', schema: kindOf({ ...ifThen(), additionalProperties: false }) },
+      { extras: 'absent under forbid', schema: kindOf(ifThen()) },
+      // A guessed array stub declares no `items`, so it renders none of the items it would hold
+      {
+        extras: 'true, for an array',
+        schema: kindOf({ ...ifThen({ type: 'array', items: { type: 'string' } }), additionalProperties: true }),
+        initialFormData: { kind: 's', a: ['x', 'y'] },
+      },
+      // The guessed object stub takes no extra keys of its own under `'forbid'`, so it would render none of `b`
+      {
+        extras: 'true, for an object whose keys the stub forbids',
+        schema: kindOf({
+          ...ifThen({ type: 'object', properties: { b: { type: 'string' } } }),
+          additionalProperties: true,
+        }),
+        initialFormData: { kind: 's', a: { b: 'x' } },
+      },
+      // A type that `items` or `properties` only implies is judged as a declared one
+      {
+        extras: 'true, for an array whose type is implied',
+        schema: kindOf({ ...ifThen({ items: { type: 'string' } }), additionalProperties: true }),
+        initialFormData: { kind: 's', a: ['x', 'y'] },
+      },
+      {
+        extras: 'true, for an object whose type is implied',
+        schema: kindOf({ ...ifThen({ properties: { b: { type: 'string' } } }), additionalProperties: true }),
+        initialFormData: { kind: 's', a: { b: 'x' } },
+      },
+    ])('drops the value when extra keys are $extras', async ({ schema, initialFormData }) => {
+      const { container, formData } = await selectT(schema, { initialFormData });
+
+      expect(formData).toEqual({ kind: 't' });
+      expect(container.querySelector('#root_a__key')).toBeNull();
+    });
+
+    // The form fills these in by itself, so keeping them would leave extra-key rows the user never typed
+    it.each<{ filled: string; schema: RJSFSchema; initialFormData?: KindData; whenAbsent?: 'allow' }>([
+      {
+        filled: 'a default',
+        schema: kindOf({ ...ifThen({ type: 'string', default: 'd' }), additionalProperties: true }),
+      },
+      { filled: 'a const', schema: kindOf({ ...ifThen({ type: 'string', const: 'x' }), additionalProperties: true }) },
+      {
+        filled: "a required object's empty object",
+        schema: kindOf({
+          if: { properties: { kind: { const: 's' } } },
+          then: { properties: { a: { type: 'object', properties: { b: { type: 'string' } } } }, required: ['a'] },
+          additionalProperties: true,
+        }),
+      },
+      // The parent's `required` is what fills a boolean with `false`
+      {
+        filled: "a required boolean's false",
+        schema: kindOf({
+          if: { properties: { kind: { const: 's' } } },
+          then: { properties: { a: { type: 'boolean' } }, required: ['a'] },
+          additionalProperties: true,
+        }),
+      },
+      {
+        filled: "an object its properties' defaults fill",
+        schema: kindOf({
+          ...ifThen({ type: 'object', properties: { b: { type: 'string', default: 'q' } } }),
+          additionalProperties: true,
+        }),
+        // Under `'allow'` the stub takes `b`, so only what the defaults filled in can drop the object
+        whenAbsent: 'allow',
+      },
+      {
+        filled: "an object the parent's default and its own defaults fill together",
+        schema: kindOf({
+          ...ifThen({
+            type: 'object',
+            properties: { b: { type: 'string' }, c: { type: 'string', default: 'y' } },
+          }),
+          default: { a: { b: 'x' } },
+          additionalProperties: true,
+        }),
+        whenAbsent: 'allow',
+      },
+      // Equal data can't be told apart from what the defaults fill in, so an empty object the data held goes too
+      {
+        filled: 'an empty object',
+        schema: kindOf({
+          ...ifThen({ type: 'object', properties: { b: { type: 'string' } } }),
+          additionalProperties: true,
+        }),
+        initialFormData: { kind: 's', a: {} },
+      },
+      // The extra key's own `default` seeds a new extra key, so it doesn't take the old default's place
+      {
+        filled: "a default, where the extra key's stub has its own",
+        schema: kindOf({
+          ...ifThen({ type: 'string', default: 'd' }),
+          additionalProperties: { title: 'Any', default: 'z' },
+        }),
+      },
+      {
+        filled: "the parent's default, which both sides inherit",
+        schema: kindOf({
+          ...ifThen({ type: 'array', items: { type: 'string' } }),
+          default: { a: ['x'] },
+          additionalProperties: true,
+        }),
+        initialFormData: { kind: 's', a: ['x'] },
+      },
+    ])(
+      'drops $filled rather than keeping it as an extra key',
+      async ({ schema, initialFormData = { kind: 's' }, whenAbsent }) => {
+        const { container, hadField, formData } = await selectT(schema, { initialFormData, whenAbsent });
+
+        expect(hadField).toBe(true);
+        expect(formData).toEqual({ kind: 't' });
+        expect(container.querySelector('#root_a__key')).toBeNull();
+      },
+    );
+
+    it('keeps a required boolean the user checked', async () => {
+      const schema = kindOf({
+        if: { properties: { kind: { const: 's' } } },
+        then: { properties: { a: { type: 'boolean' } }, required: ['a'] },
+        additionalProperties: true,
+      });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's' },
+        beforeSwitch: (form) => user.click(input(form, 'root_a')),
+      });
+
+      expect(formData).toEqual({ kind: 't', a: true });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+    });
+
+    // The extra key is judged alone, so a limit the new branch puts on the object's keys can reject what it keeps
+    it.each<{ branch: string; otherwise: RJSFSchema; expected: KindData; isValid: boolean }>([
+      {
+        branch: 'propertyNames',
+        otherwise: { propertyNames: { enum: ['kind'] } },
+        expected: { kind: 't', a: 'x' },
+        isValid: false,
+      },
+      { branch: 'maxProperties', otherwise: { maxProperties: 1 }, expected: { kind: 't', a: 'x' }, isValid: false },
+      {
+        branch: 'additionalProperties: false',
+        // `else` declares `kind` too, since its `additionalProperties` sees only the keys it declares itself
+        otherwise: { properties: { kind: true }, additionalProperties: false },
+        expected: { kind: 't' },
+        isValid: true,
+      },
+    ])(
+      "judges a kept value by the extra key alone, whatever the new branch's $branch says",
+      async ({ otherwise, expected, isValid }) => {
+        const schema = kindOf({ ...ifThen(), else: otherwise, additionalProperties: true });
+        const { formData } = await selectT(schema);
+
+        expect(formData).toEqual(expected);
+        expect(validator.isValid(schema, formData, schema)).toBe(isValid);
+      },
+    );
+
+    it('judges a field inside an array item against what the defaults filled that item with', async () => {
+      interface ListData {
+        list?: KindData[];
+      }
+      // Only the form's fill, around the item, sees the `required` that fills the boolean with `false`
+      const item = kindOf({
+        if: { properties: { kind: { const: 's' } } },
+        then: { properties: { a: { type: 'boolean' } }, required: ['a'] },
+        additionalProperties: true,
+      });
+      const schema: RJSFSchema = { type: 'object', properties: { list: { type: 'array', items: item } } };
+      const events: IChangeEvent<ListData>[] = [];
+      const { container } = render(
+        <Form<ListData>
+          schema={schema}
+          validator={validator}
+          initialFormData={{ list: [{ kind: 's' }, { kind: 's' }] }}
+          onChange={(event) => events.push(event)}
+        />,
+      );
+
+      await user.click(input(container, 'root_list_0_a'));
+      await user.selectOptions(elementOf(container, '#root_list_0_kind'), 't');
+      await user.selectOptions(elementOf(container, '#root_list_1_kind'), 't');
+
+      expect(events[events.length - 1].formData).toEqual({ list: [{ kind: 't', a: true }, { kind: 't' }] });
+      expect(container.querySelector('#root_list_0_a__key')).not.toBeNull();
+      expect(container.querySelector('#root_list_1_a__key')).toBeNull();
+    });
+
+    it('drops what a default two levels up filled in beside what the user typed', async () => {
+      const schema = kindOf({
+        ...ifThen({ type: 'object', properties: { b: { type: 'string' }, c: { type: 'string' } } }),
+        default: { a: { c: 'y' } },
+        additionalProperties: true,
+      });
+      const { container, formData } = await selectT(schema, {
+        whenAbsent: 'allow',
+        initialFormData: { kind: 's' },
+        beforeSwitch: (form) => user.type(input(form, 'root_a_b'), 'x'),
+      });
+
+      expect(formData).toEqual({ kind: 't', a: { b: 'x' } });
+      expect(input(container, 'root_a_b').value).toBe('x');
+      expect(container.querySelector('#root_a_c__key')).toBeNull();
+    });
+
+    it("drops the const of the option the user selected, not the first option's default", async () => {
+      const schema = kindOf({
+        ...ifThen({
+          oneOf: [
+            { title: 'X', type: 'string', default: 'x' },
+            { title: 'Y', type: 'string', const: 'y' },
+          ],
+        }),
+        additionalProperties: true,
+      });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's' },
+        beforeSwitch: (form) => user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'Y'),
+      });
+
+      expect(formData).toEqual({ kind: 't' });
+      expect(container.querySelector('#root_a__key')).toBeNull();
+    });
+
+    it.each<{ filled: string; uiSchema: UiSchema<KindData>; expected: string }>([
+      { filled: 'ui:initialValue', uiSchema: { a: { 'ui:initialValue': 'd' } }, expected: 'd' },
+      { filled: 'ui:emptyValue', uiSchema: { a: { 'ui:emptyValue': '' } }, expected: '' },
+    ])('drops what the $filled of the uiSchema filled in', async ({ uiSchema, expected }) => {
+      const schema = kindOf({ ...ifThen(), additionalProperties: true });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's' },
+        uiSchema,
+        beforeSwitch: async (form) => expect(input(form, 'root_a').value).toBe(expected),
+      });
+
+      expect(formData).toEqual({ kind: 't' });
+      expect(container.querySelector('#root_a__key')).toBeNull();
+    });
+
+    it('keeps a value the user typed over the ui:initialValue', async () => {
+      const schema = kindOf({ ...ifThen(), additionalProperties: true });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's' },
+        uiSchema: { a: { 'ui:initialValue': 'd' } },
+        beforeSwitch: async (form) => {
+          await user.clear(input(form, 'root_a'));
+          await user.type(input(form, 'root_a'), 'x');
+        },
+      });
+
+      expect(formData).toEqual({ kind: 't', a: 'x' });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+    });
+
+    // A new schema and a new uiSchema can arrive together, and the old tree was filled under the old uiSchema
+    it.each<{ case: string; oldUi: UiSchema<KindData>; newUi: UiSchema<KindData>; typed?: string; expected: KindData }>(
+      [
+        {
+          case: 'drops what the old uiSchema filled in, when the new one fills nothing',
+          oldUi: { a: { 'ui:initialValue': 'init' } },
+          newUi: {},
+          expected: {},
+        },
+        {
+          case: 'keeps what the user typed, when only the new uiSchema fills it in',
+          oldUi: {},
+          newUi: { a: { 'ui:initialValue': 'x' } },
+          typed: 'x',
+          expected: { a: 'x' },
+        },
+      ],
+    )('$case', async ({ oldUi, newUi, typed, expected }) => {
+      const ref = createRef<FormRef<KindData>>();
+      const oldSchema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+      const newSchema: RJSFSchema = { type: 'object', additionalProperties: true };
+      const { container, rerender } = render(
+        <Form ref={ref} schema={oldSchema} uiSchema={oldUi} validator={validator} />,
+      );
+      if (typed !== undefined) {
+        await user.type(input(container, 'root_a'), typed);
+      }
+      expect(input(container, 'root_a').value).toBe(typed ?? 'init');
+
+      rerender(<Form ref={ref} schema={newSchema} uiSchema={newUi} validator={validator} />);
+
+      expect(ref.current?.getFormData()).toEqual(expected);
+      expect(container.querySelector('#root_a__key') !== null).toBe(typed !== undefined);
+    });
+
+    describe('the defaults filled under the option the old field showed', () => {
+      const optionA: RJSFSchema = { title: 'A', type: 'object', properties: { w: { type: 'string', default: 'q' } } };
+      const optionB: RJSFSchema = { title: 'B', type: 'object', properties: { x: { type: 'number' } } };
+      const unionOf = (b: RJSFSchema) => kindOf({ ...ifThen({ oneOf: [optionA, b] }), additionalProperties: true });
+      // Only the form's fill sees the uiSchema, so these are the fills of that one
+      const uiSchema: UiSchema<KindData> = { a: { x: { 'ui:emptyValue': 7 } } };
+      const closedB: RJSFSchema = { ...optionB, additionalProperties: false };
+
+      it('drops them under the option the user selected, not the first one', async () => {
+        const { container, formData } = await selectT(unionOf(closedB), {
+          whenAbsent: 'allow',
+          initialFormData: { kind: 's' },
+          uiSchema,
+          beforeSwitch: async (form) => {
+            await user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'B');
+            expect(input(form, 'root_a_x').value).toBe('7');
+          },
+        });
+
+        expect(formData).toEqual({ kind: 't' });
+        expect(container.querySelector('#root_a__key')).toBeNull();
+      });
+
+      // Without its value the field matches the first option, so the fill reads what the old tree showed instead
+      it('drops them under the option the data matched, not the one the field matches without it', async () => {
+        const { container, formData } = await selectT(unionOf(closedB), {
+          whenAbsent: 'allow',
+          initialFormData: { kind: 's', a: { x: 7 } },
+          uiSchema,
+          // Only `B` declares `x`
+          beforeSwitch: async (form) => expect(input(form, 'root_a_x').value).toBe('7'),
+        });
+
+        expect(formData).toEqual({ kind: 't' });
+        expect(container.querySelector('#root_a__key')).toBeNull();
+      });
+
+      // Without data the field matches its first option, whose defaults are what the form filled it with to start
+      it("drops another option's defaults, kept through the switch to the option shown", async () => {
+        const { container, formData } = await selectT(unionOf({ title: 'B', type: 'object' }), {
+          whenAbsent: 'allow',
+          initialFormData: { kind: 's' },
+          beforeSwitch: async (form) => {
+            await user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'B');
+            expect(input(form, 'root_a_w').value).toBe('q');
+          },
+        });
+
+        expect(formData).toEqual({ kind: 't' });
+        expect(container.querySelector('#root_a__key')).toBeNull();
+      });
+    });
+
+    // Without `a` the inner `else` fills `'e'`, and with it the `then` shows it, so `'e'` is what the defaults fill in,
+    // whether they filled it or the user typed it
+    it.each([
+      { start: 'the fill', initialFormData: { kind: 's' }, typed: undefined },
+      { start: "the user's", initialFormData: { kind: 's', a: 'x' }, typed: 'e' },
+    ])(
+      'drops a value the defaults fill in under another branch than the one that shows it, from $start',
+      async ({ initialFormData, typed }) => {
+        const schema = kindOf({
+          if: { properties: { kind: { const: 's' } } },
+          then: {
+            if: { required: ['a'] },
+            then: { properties: { a: { type: 'string', default: 'd' } } },
+            else: { properties: { a: { type: 'string', default: 'e' } } },
+          },
+          additionalProperties: true,
+        });
+        const { container, formData } = await selectT(schema, {
+          initialFormData,
+          beforeSwitch: async (form) => {
+            if (typed !== undefined) {
+              await user.clear(input(form, 'root_a'));
+              await user.type(input(form, 'root_a'), typed);
+            }
+            expect(input(form, 'root_a').value).toBe('e');
+          },
+        });
+
+        expect(formData).toEqual({ kind: 't' });
+        expect(container.querySelector('#root_a__key')).toBeNull();
+      },
+    );
+
+    // No data tells a value the user picked apart from the same value the default filled in
+    it.each([
+      { picked: 'd', expected: { kind: 't' }, isKept: false },
+      { picked: 'e', expected: { kind: 't', a: 'e' }, isKept: true },
+    ])('keeps the pick $picked only when it is not the default', async ({ picked, expected, isKept }) => {
+      const schema = kindOf({
+        ...ifThen({ type: 'string', enum: ['d', 'e'], default: 'd' }),
+        additionalProperties: true,
+      });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's', a: picked === 'd' ? 'e' : 'd' },
+        beforeSwitch: (form) => user.selectOptions(elementOf(form, '#root_a'), picked),
+      });
+
+      expect(formData).toEqual(expected);
+      expect(container.querySelector('#root_a__key') !== null).toBe(isKept);
+    });
   });
 
   it('judges each edit against the data before it when a parent stores what onChange reports (#5250)', async () => {
