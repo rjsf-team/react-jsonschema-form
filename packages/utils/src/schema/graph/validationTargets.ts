@@ -259,10 +259,10 @@ interface Member<S extends StrictRJSFSchema> {
 type Follow = 'unconditional' | 'conditional' | 'scored';
 
 /** Returns the nodes whose keywords apply wherever the node `id` applies: the node, what its `$ref` resolves to and its
- * `allOf` entries, and the conditional subschemas `follow` names. Each is followed the same way, at the place it is reached at from `place`: below it, or where a `$ref`
- * names. A place is listed once, so one object the root holds in two places of the scope is listed at each, as two
- * equal copies of it would be; a node with no place is listed once. An object reached again below itself, which only
- * a root holding itself through its own objects does, is not followed.
+ * `allOf` entries, and the conditional subschemas `follow` names. Each is followed the same way, at the place it is
+ * reached at from `place`: below it, or where a `$ref` names. A place is listed once, so one object the root holds in
+ * two places of the scope is listed at each, as two equal copies of it would be; a node with no place is listed once.
+ * An object reached again below itself, which only a root holding itself through its own objects does, is not followed.
  */
 function scopeAt<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -818,8 +818,9 @@ function derive<S extends StrictRJSFSchema>(
  * where something in its scope states a `required`, lists names under `dependencies`, holds a part leading to a
  * recursive choice, see `recursiveChoices()`, or, with `relax`, sets `additionalProperties: false`, the copy `derive()`
  * makes without them. A user who has yet to fill in a key the option requires is still matched to it. The `required`s
- * are kept where nothing in the scope declares `properties`: an option such as `{ required: ['email'] }` describes
- * nothing else for the data to fit, and is chosen by the keys it requires.
+ * are kept where nothing in the scope `holdsDeclaredKey()` reads, which leaves out `dependentSchemas` entries, declares
+ * `properties`: an option such as `{ required: ['email'] }` describes nothing else for the data to fit, and is chosen
+ * by the keys it requires, where no declared key it holds stands in for them.
  */
 function scoringTargetAt<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -832,7 +833,10 @@ function scoringTargetAt<S extends StrictRJSFSchema>(
     return targetOf(graph, id);
   }
   const scope = scopeOf(graph, id, 'scored');
-  const loosening = { required: scope.some((member) => isObject(member.raw.properties)), additionalProperties: relax };
+  const loosening = {
+    required: scopeOf(graph, id).some((member) => isObject(member.raw.properties)),
+    additionalProperties: relax,
+  };
   return place !== undefined && !scope.some((member) => loosens(graph, member, loosening))
     ? targetAt(graph, id, place)
     : derive(graph, node, place, loosening, new Set(), new Set(), 'parts');
@@ -951,8 +955,19 @@ export function holdsDeclaredKey<S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 }
 
+/** The subschemas `childrenOf()` lists, per graph, by node: the walk of `recursiveChoices()`, `evaluatorsOf()` and
+ * `childrenLeadingToTargets()` each read them for the same nodes
+ */
+const childrenMemo = new KeyedMemo<(readonly [string[], NodeId][])[]>();
+
 /** Returns the subschemas the node `id` holds, each with the unescaped pointer tokens leading to it */
-function childrenOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): [string[], NodeId][] {
+function childrenOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): readonly [string[], NodeId][] {
+  const held = childrenMemo.get([graph], () => []);
+  held[id] ??= readChildren(graph, id);
+  return held[id];
+}
+
+function readChildren<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): [string[], NodeId][] {
   const node = graph.node(id);
   if (node.kind !== 'schema') {
     return [];
@@ -990,8 +1005,8 @@ function uniteTypes(
   return types === undefined || others === undefined ? undefined : [...new Set([...types, ...others])];
 }
 
-/** The types `statedTypes()` reads each node of a graph as taking, per graph */
-const statedTypesMemo = new KeyedMemo<ReadonlyMap<NodeId, readonly string[] | undefined>>();
+/** The types `statedTypes()` has read the nodes of a graph as taking, per graph: those of every node it has reached */
+const statedTypesMemo = new KeyedMemo<Map<NodeId, readonly string[] | undefined>>();
 
 /** Returns whether `types` and `others` allow the same types, undefined allowing any */
 function sameTypes(types: readonly string[] | undefined, others: readonly string[] | undefined): boolean {
@@ -1003,80 +1018,96 @@ function sameTypes(types: readonly string[] | undefined, others: readonly string
 
 /** Returns the types of value the node `id` takes, an `integer` read as a `number`, as its `type`, which a `nullable:
  * true` beside it lets take `null` too, its `const` and its `enum` say, along with what its `$ref` and `allOf` apply on
- * top of it and the options of its `anyOf` and `oneOf` take, or undefined where none of them limits the type. Where these apply to the same value in a cycle, each node of the cycle
- * takes the most types the others let it, whichever of them is read first: every node starts out taking any, and is
- * read again whenever a node it applies changes, which, a node only ever losing types, ends. A graph extending another
- * adds nodes above the base's, which the base's never apply, so the base's types stand and are read from it.
+ * top of it and the options of its `anyOf` and `oneOf` take, or undefined where none of them limits the type. Where
+ * these apply to the same value in a cycle, each node of the cycle takes the most types the others let it, whichever of
+ * them is read first: every node starts out taking any, and is read again whenever a node it applies changes, which, a
+ * node only ever losing types, ends. A graph extending another adds nodes above the base's, which the base's never
+ * apply, so the base's types stand and are read from it.
  */
 function statedTypes<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): readonly string[] | undefined {
   const { base } = graph;
-  const start = base?.size ?? 0;
-  if (base !== undefined && id < start) {
+  if (base !== undefined && id < base.size) {
     return statedTypes(base, id);
   }
-  const typesOf = statedTypesMemo.get([graph], () => {
-    const known = new Map<NodeId, readonly string[] | undefined>();
-    const typesAt = (at: NodeId) => (base !== undefined && at < start ? statedTypes(base, at) : known.get(at));
-    const appliedBy = new Map<NodeId, NodeId[]>();
-    const reads: (() => readonly string[] | undefined)[] = [];
-    const pending: NodeId[] = [];
-    for (let at = start; at < graph.size; at += 1) {
-      const node = graph.node(at);
-      if (node.kind === 'schema') {
-        const { type, nullable, [CONST_KEY]: constant, [ENUM_KEY]: values } = node.raw as GenericObjectType;
-        // Each list is deduplicated: a `type` naming `integer` and `number`, or an `enum` of two strings, would
-        // otherwise hand a cut a `type` repeating an entry, which the meta-schema rejects. Ajv reads the OpenAPI
-        // `nullable: true` as letting the `type` beside it take `null` too, and a validator that ignores it accepts
-        // no less for the `null` a cut adds
-        const stated = [
-          ...(type === undefined
-            ? []
-            : [
-                [
-                  ...(Array.isArray(type) ? type : [type]).map((one) => (one === 'integer' ? 'number' : String(one))),
-                  ...(nullable === true ? ['null'] : []),
-                ],
-              ]),
-          ...(constant === undefined ? [] : [[guessType(constant)]]),
-          ...(Array.isArray(values) ? [values.map(guessType)] : []),
-        ].map((types) => [...new Set(types)]);
-        const conjuncts = [
-          ...(node.ref === undefined ? [] : [node.ref]),
-          ...graph.subschemas(at, ALL_OF_KEY).map(([, entry]) => entry),
-        ];
-        const choices = [ANY_OF_KEY, ONE_OF_KEY]
-          .map((keyword) => graph.subschemas(at, keyword).map(([, option]) => option))
-          .filter((options) => options.length > 0);
-        [...conjuncts, ...choices.flat()].forEach((child) => {
-          if (child < start) {
-            return;
-          }
-          const holders = appliedBy.get(child);
-          if (holders === undefined) {
-            appliedBy.set(child, [at]);
-          } else {
-            holders.push(at);
-          }
-        });
-        reads[at] = () =>
-          [
-            ...stated,
-            ...conjuncts.map(typesAt),
-            ...choices.map((options) => options.map(typesAt).reduce<readonly string[] | undefined>(uniteTypes, [])),
-          ].reduce<readonly string[] | undefined>(intersectTypes, undefined);
-        pending.push(at);
+  const known = statedTypesMemo.get([graph], () => new Map());
+  if (!known.has(id)) {
+    readTypesFrom(graph, id, known);
+  }
+  return known.get(id);
+}
+
+/** Reads into `known` the types of the node `id` and of every node it applies that no earlier read reached, see
+ * `statedTypes()`. What a node takes depends only on the nodes it applies, so the nodes an earlier read settled stand,
+ * and only the nodes reached here are read again as they change.
+ */
+function readTypesFrom<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  known: Map<NodeId, readonly string[] | undefined>,
+): void {
+  const { base } = graph;
+  const start = base?.size ?? 0;
+  const typesAt = (at: NodeId) => (base !== undefined && at < start ? statedTypes(base, at) : known.get(at));
+  const appliedBy = new Map<NodeId, NodeId[]>();
+  const reads: (() => readonly string[] | undefined)[] = [];
+  const pending: NodeId[] = [];
+  known.set(id, undefined);
+  const entering = [id];
+  for (let at = entering.pop(); at !== undefined; at = entering.pop()) {
+    const node = graph.node(at);
+    if (node.kind === 'schema') {
+      const { type, nullable, [CONST_KEY]: constant, [ENUM_KEY]: values } = node.raw as GenericObjectType;
+      // Each list is deduplicated: a `type` naming `integer` and `number`, or an `enum` of two strings, would
+      // otherwise hand a cut a `type` repeating an entry, which the meta-schema rejects. Ajv reads the OpenAPI
+      // `nullable: true` as letting the `type` beside it take `null` too, and a validator that ignores it accepts
+      // no less for the `null` a cut adds
+      const stated = [
+        ...(type === undefined
+          ? []
+          : [
+              [
+                ...(Array.isArray(type) ? type : [type]).map((one) => (one === 'integer' ? 'number' : String(one))),
+                ...(nullable === true ? ['null'] : []),
+              ],
+            ]),
+        ...(constant === undefined ? [] : [[guessType(constant)]]),
+        ...(Array.isArray(values) ? [values.map(guessType)] : []),
+      ].map((types) => [...new Set(types)]);
+      const conjuncts = [
+        ...(node.ref === undefined ? [] : [node.ref]),
+        ...graph.subschemas(at, ALL_OF_KEY).map(([, entry]) => entry),
+      ];
+      const choices = [ANY_OF_KEY, ONE_OF_KEY]
+        .map((keyword) => graph.subschemas(at, keyword).map(([, option]) => option))
+        .filter((options) => options.length > 0);
+      for (const child of [...conjuncts, ...choices.flat()].filter((applied) => applied >= start)) {
+        if (!known.has(child)) {
+          known.set(child, undefined);
+          entering.push(child);
+        }
+        const holders = appliedBy.get(child);
+        if (holders === undefined) {
+          appliedBy.set(child, [at]);
+        } else {
+          holders.push(at);
+        }
       }
+      reads[at] = () =>
+        [
+          ...stated,
+          ...conjuncts.map(typesAt),
+          ...choices.map((options) => options.map(typesAt).reduce<readonly string[] | undefined>(uniteTypes, [])),
+        ].reduce<readonly string[] | undefined>(intersectTypes, undefined);
+      pending.push(at);
     }
-    for (let at = pending.pop(); at !== undefined; at = pending.pop()) {
-      const types = reads[at]();
-      if (!sameTypes(types, known.get(at))) {
-        known.set(at, types);
-        pending.push(...(appliedBy.get(at) ?? []));
-      }
+  }
+  for (let at = pending.pop(); at !== undefined; at = pending.pop()) {
+    const types = reads[at]();
+    if (!sameTypes(types, known.get(at))) {
+      known.set(at, types);
+      pending.push(...(appliedBy.get(at) ?? []));
     }
-    return known;
-  });
-  return typesOf.get(id);
+  }
 }
 
 /** Returns whether a value can be of a type both `types` and `others` allow */
@@ -1306,7 +1337,7 @@ interface Frame {
   readonly id: NodeId;
   readonly order: number;
   low: number;
-  readonly held: [string[], NodeId][];
+  readonly held: readonly [string[], NodeId][];
   /** Its keywords, none for a boolean */
   readonly beside: GenericObjectType;
   readonly applied: NodeId[];
@@ -1506,8 +1537,8 @@ function walkFrom<S extends StrictRJSFSchema>(
  */
 function childrenLeadingToTargets<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
-): ReadonlyMap<NodeId, [string[], NodeId][]> {
-  const children = new Map<NodeId, [string[], NodeId][]>();
+): ReadonlyMap<NodeId, readonly [string[], NodeId][]> {
+  const children = new Map<NodeId, readonly [string[], NodeId][]>();
   const parents = new Map<NodeId, NodeId[]>();
   const leading: NodeId[] = [];
   for (let id = 0; id < graph.size; id += 1) {

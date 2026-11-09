@@ -612,6 +612,16 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
     expect(isValid.mock.calls.filter(([schema]) => JSON.stringify(named(schema)).includes('#/$defs/Expr'))).toEqual([]);
   });
 
+  it('keeps the required of an option whose only properties sit in a dependentSchemas entry', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', required: ['email'], dependentSchemas: { a: { properties: { b: { type: 'string' } } } } },
+      { type: 'object', required: ['phone'] },
+    ];
+    for (const matching of [validator, customizeValidator({ AjvClass: Ajv2020 })]) {
+      expect(getFirstMatchingOption({ validator: matching }, { phone: '1' }, options, { oneOf: options })).toBe(1);
+    }
+  });
+
   it('keeps the properties a then below a $ref declares for an unevaluatedProperties: false in the option, where they lead to a recursive choice', () => {
     const expression = (kind: string): RJSFSchema => ({
       properties: { kind: { const: kind }, next: { $ref: '#/$defs/Expr' } },
