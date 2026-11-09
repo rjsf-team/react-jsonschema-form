@@ -1215,6 +1215,48 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           list: [1, 'a'],
         });
       });
+      it('is cleared where the new items: false rejects it', () => {
+        const noItems = { type: 'array', items: false } as RJSFSchema;
+        expect(schemaUtils.sanitizeDataForNewSchema(noItems, {}, ['a'])).toBeUndefined();
+        expect(schemaUtils.sanitizeDataForNewSchema(listOf(noItems), listOf({}), { list: ['a'] })).toStrictEqual({
+          list: undefined,
+        });
+      });
+      it('is cleared where the new additionalItems: false beside a tuple rejects it', () => {
+        const pair = { type: 'array', items: [{ type: 'string' }], additionalItems: false } as RJSFSchema;
+        expect(schemaUtils.sanitizeDataForNewSchema(pair, {}, ['a', 'b'])).toBeUndefined();
+      });
+      it('gives an item that is not an object the new object const where it holds the old one', () => {
+        const oldList: RJSFSchema = { type: 'array', items: { const: 'a' } };
+        const newList: RJSFSchema = {
+          type: 'array',
+          items: { type: 'object', properties: { x: { type: 'string' } }, const: { x: 'b' } },
+        };
+        expect(schemaUtils.sanitizeDataForNewSchema(newList, oldList, ['a', 'c'])).toStrictEqual([{ x: 'b' }]);
+      });
+      it.each<[string, RJSFSchema]>([
+        ['declares no type', {}],
+        ['declares no items', { type: 'array' }],
+        ['declares untyped items', { type: 'array', items: {} }],
+      ])('drops the items that are not objects under new object items, where the old schema %s', (_, oldSchema) => {
+        const objectList: RJSFSchema = {
+          type: 'array',
+          items: { type: 'object', properties: { x: { type: 'string' } } },
+        };
+        expect(schemaUtils.sanitizeDataForNewSchema(objectList, oldSchema, ['a', null, { x: 'b' }])).toStrictEqual([
+          { x: 'b' },
+        ]);
+      });
+      it('drops the items that are not objects under new object items, as a nullable list written with anyOf', () => {
+        const nullableTags: RJSFSchema = { anyOf: [{ type: 'array', items: { type: 'string' } }, { type: 'null' }] };
+        const objectTags: RJSFSchema = {
+          type: 'array',
+          items: { type: 'object', properties: { x: { type: 'string' } } },
+        };
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(listOf(objectTags), listOf(nullableTags), { list: ['a', 'b'] }),
+        ).toStrictEqual({ list: [] });
+      });
       it('is sanitized against the new schema even where the old schema declares items', () => {
         const enumList: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a'] } };
         expect(

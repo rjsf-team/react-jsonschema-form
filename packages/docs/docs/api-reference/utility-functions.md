@@ -4210,7 +4210,7 @@ Due to the nature of schemas, this sanitization happens recursively for nested o
 Also, any properties in the old schema that are non-existent in the new schema, or that it declares with another type, are removed from the data at every level.
 An object property the data doesn't hold, or holds as `null` where neither its type list nor `nullable: true` allows `null`, is left out, for the defaults to fill in.
 An object or array equal to the new schema's `const` is kept as it is. One the new `const` rejects once sanitized takes the new `const` where it holds the old one, and is otherwise cleared, or dropped as an array item, unless the old schema declared the same `const`.
-An array whose old schema declares no type, or declares no `items` (or `items: true`) and no `prefixItems`, is sanitized against the new items. A typed old schema is cleared instead where its type was guessed from the data or the new schema declares a tuple `items` or `prefixItems`, and an untyped one keeps an array the new schema describes as a tuple or with `prefixItems` as it is.
+An array whose old schema declares no type, or declares no `items` (or `items: true`) and no `prefixItems`, is sanitized against the new items. A typed old schema is cleared instead where its type was guessed from the data or the new schema declares a tuple `items` or `prefixItems`, and an untyped one keeps an array the new schema describes as a tuple or with `prefixItems` as it is, unless the new schema declares `items: false`, or `additionalItems: false` beside a tuple `items`. An item that isn't an object is dropped where the new items declare `type: 'object'`.
 A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
 A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
 A value outside the new `enum` or constant options is replaced with the new `default` when that is an option, with the only option when there is one, or cleared; array items outside them are dropped.
@@ -4226,7 +4226,7 @@ A value outside the new `enum` or constant options is replaced with the new `def
 
 #### Returns
 
-- T: The new form data, without the fields uniquely associated with the old schema. Will return `undefined` if the new schema is not an object containing properties.
+- T: The new form data, without the fields uniquely associated with the old schema. Will return `undefined` if the new schema is not an object containing properties, or where its object or array `const` rejects the data, and a copy of that `const` where the data holds the old schema's.
 
 ## Schema utils creation function
 

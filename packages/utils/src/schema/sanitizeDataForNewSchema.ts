@@ -61,36 +61,33 @@ function oldListedValues<S extends StrictRJSFSchema = RJSFSchema>(oldSchema: S, 
     : undefined;
 }
 
-/** Whether `newSchema` declares an object or array `const` that `data` isn't, where `oldSchema` didn't declare the same
- * one. An object `const` is read as `constIsAjvDataReference()` reads it, as the defaults do. An array is compared with
- * an object `const` only where the schema declares `type: 'object'`, since an ajv `$data` reference is an object. A
- * `const` the old schema already declared was rejecting the data before the switch too, so the data is kept for
- * validation to report rather than dropped
- */
-function containerConstRejects<S extends StrictRJSFSchema = RJSFSchema>(
-  newSchema: S,
-  oldSchema: S | undefined,
-  data: unknown,
-) {
-  const newConst: unknown = newSchema.const;
-  const isValueConst =
-    Array.isArray(newConst) ||
-    ((!Array.isArray(data) || newSchema.type === 'object') &&
-      isPlainObject(newConst) &&
-      !constIsAjvDataReference<S>(newSchema));
-  return isValueConst && !deepEquals(newConst, data) && !deepEquals(oldSchema?.const, newConst);
-}
-
-/** What data the new `const` rejects is replaced with: a copy of the new `const` where the data holds the old one, as a
- * scalar property's is, and otherwise nothing, which clears a property and drops an array item. Copied as the defaults
- * copy it, so neither the schema nor another item replaced alike shares an object the caller may change
+/** What `data` is replaced with where `newSchema` declares an object or array `const` that `sanitized`, the data once
+ * sanitized, isn't, and `oldSchema` didn't declare the same one, or `NO_VALUE` where the `const` doesn't reject it. An
+ * object `const` is read as `constIsAjvDataReference()` reads it, as the defaults do. An array is compared with an
+ * object `const` only where the schema declares `type: 'object'`, since an ajv `$data` reference is an object. A `const`
+ * the old schema already declared was rejecting the data before the switch too, so the data is kept for validation to
+ * report rather than dropped.
+ *
+ * The replacement is a copy of the new `const` where `data` holds the old one, as a scalar property's is, and otherwise
+ * nothing, which clears a property and drops an array item. Copied as the defaults copy it, so neither the schema nor
+ * another item replaced alike shares an object the caller may change
  */
 function constReplacement<S extends StrictRJSFSchema = RJSFSchema>(
   newSchema: S,
   oldSchema: S | undefined,
+  sanitized: unknown,
   data: unknown,
-) {
-  return deepEquals(oldSchema?.const, data) ? ownValue(newSchema.const) : undefined;
+): unknown {
+  const newConst: unknown = newSchema.const;
+  const isValueConst =
+    Array.isArray(newConst) ||
+    ((!Array.isArray(sanitized) || newSchema.type === 'object') &&
+      isPlainObject(newConst) &&
+      !constIsAjvDataReference<S>(newSchema));
+  if (!isValueConst || deepEquals(newConst, sanitized) || deepEquals(oldSchema?.const, newConst)) {
+    return NO_VALUE;
+  }
+  return deepEquals(oldSchema?.const, data) ? ownValue(newConst) : undefined;
 }
 
 /** Whether two schemas' `type`s name the same types. A list is compared by what it names rather than by identity or
@@ -175,7 +172,7 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *   their `$ref`s resolved against `rootSchema`, where an old option whose `$ref` names nothing there lists no values,
  *   then:
  *   - An old schema declaring no type, or an array declaring no `items` or `items: true` and no `prefixItems`, has its
- *     `items` read as `{}`, which constrains nothing. An untyped one also describes a tuple, a boolean `items` or no
+ *     `items` read as `{}`, which constrains nothing. An untyped one also describes a tuple, `items: true` or no
  *     `items` alike
  *   - If the old and new schema `items` are both a single schema rather than a tuple or a boolean, and the new schema
  *     declares no `prefixItems` where the old schema declares no type:
@@ -187,7 +184,8 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *         - Retrieve the items schemas for that element, and keep an element that is one of the new items
  *           schema's `enum` or constant options as it is, dropping one that is none of them
  *         - Otherwise, an object element whose new items schema declares `properties` is recursively sanitized against
- *           them, and any other object element is kept as it is
+ *           them, and any other object element is kept as it is. A value that is not an object, other than `undefined`,
+ *           is dropped where the new items declare `type: 'object'`
  *         - Otherwise, an array element is recursively sanitized, and kept as it is when that returns `undefined`
  *         - An element the new items' `const` rejects once sanitized, as below, takes the new `const` where it holds
  *           the old one, and is dropped otherwise
@@ -196,8 +194,10 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *       - Otherwise, return the `data` without the items that are none of the new `enum` or constant options, removing
  *         any values after `maxItems` if it is set
  *   - Otherwise, if both schemas declare the same `items` and `prefixItems`, and the same `additionalItems` where
- *     either `items` is a tuple, as a tuple, a boolean `items` or an array declaring no `items` does, return the `data`,
- *     removing any values after the new `maxItems` if it is set
+ *     either `items` is a tuple, as a tuple, a boolean `items` or an array declaring no `items` does, or the old schema
+ *     declares no type and the new one declares neither `items: false` nor `additionalItems: false` beside a tuple
+ *     `items`, return the `data`, removing any values after the
+ *     new `maxItems` if it is set
  * - Otherwise return `undefined`, which clears an array the new schema's `enum` or constant options do not list, where
  *   the old schema declared a different list
  * - Last, if the new `const` is an object or array that the sanitized `data`, or the `data` where that is `undefined`,
@@ -292,10 +292,8 @@ export default function sanitizeDataForNewSchema<
           // for the defaults to fill, rather than replaced by an empty object that shows the object as added, unless it
           // is the old `const` the new one replaces. Only an object schema reaches here with it: a type list or
           // `nullable: true` allowing `null` keeps it as a scalar
-          const replacement = containerConstRejects<S>(newKeyedSchema, oldKeyedSchema, null)
-            ? constReplacement<S>(newKeyedSchema, oldKeyedSchema, null)
-            : undefined;
-          if (replacement === undefined) {
+          const replacement = constReplacement<S>(newKeyedSchema, oldKeyedSchema, null, null);
+          if (replacement === NO_VALUE || replacement === undefined) {
             discardedKeys.add(key);
           } else {
             nestedData[key] = replacement;
@@ -304,20 +302,20 @@ export default function sanitizeDataForNewSchema<
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. Data holding no object
           // has no properties to sanitize. Descending into it would sanitize the absent properties of every level a
           // recursive `$ref` reaches, without end
-          let itemData: unknown =
+          const sanitizedData: unknown =
             isArrayValue || isPlainObject(formValue)
               ? sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newKeyedSchema, oldKeyedSchema, formValue)
               : emptyObjectFor<S>(newKeyedSchema, formValue);
           // What the new `const` rejects, the empty object standing in for data of another type or the data itself
           // where there is none, takes the new `const` where the data holds the old one, and is otherwise cleared
-          const isRejected =
-            formValue !== undefined && containerConstRejects<S>(newKeyedSchema, oldKeyedSchema, itemData ?? formValue);
-          if (isRejected) {
-            itemData = constReplacement<S>(newKeyedSchema, oldKeyedSchema, formValue);
-          }
+          const replacement =
+            formValue === undefined
+              ? NO_VALUE
+              : constReplacement<S>(newKeyedSchema, oldKeyedSchema, sanitizedData ?? formValue, formValue);
+          const itemData = replacement === NO_VALUE ? sanitizedData : replacement;
           // `undefined` clears an array, and a value the new `const` rejects. For any other object it means the new
           // schema declares no `properties` to sanitize it by, and the object is kept as it is
-          if (itemData !== undefined || isArrayValue || isRejected) {
+          if (itemData !== undefined || isArrayValue || replacement !== NO_VALUE) {
             nestedData[key] = itemData;
           }
         } else {
@@ -452,14 +450,18 @@ export default function sanitizeDataForNewSchema<
               const oldItemSchema = sameRawItemsSchema
                 ? newItemSchema
                 : retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
+              // `type: 'object'` items can't hold a value that is no object, whatever the old items allowed, so it is
+              // dropped rather than given an empty object, a row the user never filled, unless it is the old `const`
+              const isObjectless = itemsType === 'object' && aValue !== undefined && !isPlainObject(aValue);
               // An array element whose items the two sides describe differently is kept as it is: the shared array
               // rule clears it even where the new items accept it. One a new `const` rejects once sanitized takes it or
               // is dropped, rather than kept for the `undefined` the recursion clears it with
-              const sanitizedItem =
-                sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newItemSchema, oldItemSchema, aValue) ?? aValue;
-              itemValue = containerConstRejects<S>(newItemSchema, oldItemSchema, sanitizedItem)
-                ? constReplacement<S>(newItemSchema, oldItemSchema, aValue)
-                : sanitizedItem;
+              const sanitizedItem = isObjectless
+                ? undefined
+                : (sanitizeDataForNewSchema<T, S, F>(context, rootSchema, newItemSchema, oldItemSchema, aValue) ??
+                  aValue);
+              const replacement = constReplacement<S>(newItemSchema, oldItemSchema, sanitizedItem ?? aValue, aValue);
+              itemValue = replacement === NO_VALUE ? sanitizedItem : replacement;
             } else if (isContainerItem) {
               // An object item declaring no `properties` has none to prune, so it is kept as it is
               itemValue = isPlainObject(aValue) ? aValue : undefined;
@@ -481,7 +483,11 @@ export default function sanitizeDataForNewSchema<
         }
       }
     } else if (
-      oldIsUntyped ||
+      // `items: false`, or `additionalItems: false` beside a tuple `items`, allows only the items the tuple or
+      // `prefixItems` describes, which an untyped old schema's data need not fit
+      (oldIsUntyped &&
+        newSchemaItems !== false &&
+        !(Array.isArray(newSchemaItems) && (newSchema as GenericObjectType).additionalItems === false)) ||
       // `additionalItems` describes nothing beside an `items` that is not a tuple, so it only counts beside one
       (Array.isArray(oldSchemaItems) || Array.isArray(newSchemaItems) ? TUPLE_KEYWORDS : ITEMS_KEYWORDS).every((key) =>
         deepEquals((oldSchema as GenericObjectType)[key], (newSchema as GenericObjectType)[key]),
@@ -496,12 +502,9 @@ export default function sanitizeDataForNewSchema<
   // Checked once sanitized, since removing what only the old schema declared can leave the `const`. Data the new `const`
   // still rejects takes the new `const` where it holds the old one, as a scalar does above, and is otherwise cleared:
   // below the top level, nothing refills a clear
-  if (
-    newSchema?.const !== undefined &&
-    isContainerValue(data) &&
-    containerConstRejects<S>(newSchema, oldSchema, newFormData ?? data)
-  ) {
-    return constReplacement<S>(newSchema, oldSchema, data) as T;
-  }
-  return newFormData as T;
+  const replacement =
+    newSchema?.const !== undefined && isContainerValue(data)
+      ? constReplacement<S>(newSchema, oldSchema, newFormData ?? data, data)
+      : NO_VALUE;
+  return (replacement === NO_VALUE ? newFormData : replacement) as T;
 }
