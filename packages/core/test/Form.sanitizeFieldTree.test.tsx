@@ -1,5 +1,5 @@
 import { createRef, useState } from 'react';
-import type { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { buttonId, getByPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -95,9 +95,11 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       {
         whenAbsent,
         initialFormData = { kind: 's', a: 'x' },
+        uiSchema,
         beforeSwitch,
       }: {
         whenAbsent?: 'allow';
+        uiSchema?: UiSchema<KindData>;
         initialFormData?: KindData;
         /** What the user does in the `s` branch before switching to `t` */
         beforeSwitch?: (container: HTMLElement) => Promise<void>;
@@ -110,6 +112,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
           validator={validator}
           additionalPropertiesWhenAbsent={whenAbsent}
           initialFormData={initialFormData}
+          uiSchema={uiSchema}
           onChange={(event) => events.push(event)}
         />,
       );
@@ -413,6 +416,93 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       const { container, formData } = await selectT(schema, {
         initialFormData: { kind: 's' },
         beforeSwitch: (form) => user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'Y'),
+      });
+
+      expect(formData).toEqual({ kind: 't' });
+      expect(container.querySelector('#root_a__key')).toBeNull();
+    });
+
+    it.each<{ filled: string; uiSchema: UiSchema<KindData>; expected: string }>([
+      { filled: 'ui:initialValue', uiSchema: { a: { 'ui:initialValue': 'd' } }, expected: 'd' },
+      { filled: 'ui:emptyValue', uiSchema: { a: { 'ui:emptyValue': '' } }, expected: '' },
+    ])('drops what the $filled of the uiSchema filled in', async ({ uiSchema, expected }) => {
+      const schema = kindOf({ ...ifThen(), additionalProperties: true });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's' },
+        uiSchema,
+        beforeSwitch: async (form) => expect(input(form, 'root_a').value).toBe(expected),
+      });
+
+      expect(formData).toEqual({ kind: 't' });
+      expect(container.querySelector('#root_a__key')).toBeNull();
+    });
+
+    describe('the defaults filled under the option the old field showed', () => {
+      const optionA: RJSFSchema = { title: 'A', type: 'object', properties: { w: { type: 'string', default: 'q' } } };
+      const optionB: RJSFSchema = { title: 'B', type: 'object', properties: { x: { type: 'number' } } };
+      const unionOf = (b: RJSFSchema) => kindOf({ ...ifThen({ oneOf: [optionA, b] }), additionalProperties: true });
+      // Only the form's fill sees the uiSchema, so these are the fills of that one
+      const uiSchema: UiSchema<KindData> = { a: { x: { 'ui:emptyValue': 7 } } };
+      const closedB: RJSFSchema = { ...optionB, additionalProperties: false };
+
+      it('drops them under the option the user selected, not the first one', async () => {
+        const { container, formData } = await selectT(unionOf(closedB), {
+          whenAbsent: 'allow',
+          initialFormData: { kind: 's' },
+          uiSchema,
+          beforeSwitch: async (form) => {
+            await user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'B');
+            expect(input(form, 'root_a_x').value).toBe('7');
+          },
+        });
+
+        expect(formData).toEqual({ kind: 't' });
+        expect(container.querySelector('#root_a__key')).toBeNull();
+      });
+
+      // Without its value the field matches the first option, so the fill reads what the old tree showed instead
+      it('drops them under the option the data matched, not the one the field matches without it', async () => {
+        const { container, hadField, formData } = await selectT(unionOf(closedB), {
+          whenAbsent: 'allow',
+          initialFormData: { kind: 's', a: { x: 7 } },
+          uiSchema,
+        });
+
+        expect(hadField).toBe(true);
+        expect(formData).toEqual({ kind: 't' });
+        expect(container.querySelector('#root_a__key')).toBeNull();
+      });
+
+      // Without data the field matches its first option, whose defaults are what the form filled it with to start
+      it("drops another option's defaults, kept through the switch to the option shown", async () => {
+        const { container, formData } = await selectT(unionOf({ title: 'B', type: 'object' }), {
+          whenAbsent: 'allow',
+          initialFormData: { kind: 's' },
+          beforeSwitch: async (form) => {
+            await user.selectOptions(elementOf(form, '#root_a__oneof_select'), 'B');
+            expect(input(form, 'root_a_w').value).toBe('q');
+          },
+        });
+
+        expect(formData).toEqual({ kind: 't' });
+        expect(container.querySelector('#root_a__key')).toBeNull();
+      });
+    });
+
+    // Without `a` the inner `else` fills `'e'`, and with it the `then` shows it, so `'e'` is what the defaults fill in
+    it('drops a value the defaults fill in under another branch than the one that shows it', async () => {
+      const schema = kindOf({
+        if: { properties: { kind: { const: 's' } } },
+        then: {
+          if: { required: ['a'] },
+          then: { properties: { a: { type: 'string', default: 'd' } } },
+          else: { properties: { a: { type: 'string', default: 'e' } } },
+        },
+        additionalProperties: true,
+      });
+      const { container, formData } = await selectT(schema, {
+        initialFormData: { kind: 's' },
+        beforeSwitch: async (form) => expect(input(form, 'root_a').value).toBe('e'),
       });
 
       expect(formData).toEqual({ kind: 't' });

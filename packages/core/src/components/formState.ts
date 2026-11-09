@@ -1223,7 +1223,7 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     let previous: FieldTree<T, S, F> = current;
     let roundEdit = edit;
     for (;;) {
-      const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, uiState, roundEdit));
+      const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, uiState, uiSchema, roundEdit));
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other. It ends filled, as every other pass
       // does, so a default the round dropped is there again
