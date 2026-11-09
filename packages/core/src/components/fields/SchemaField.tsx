@@ -66,6 +66,7 @@ import {
   UI_WIDGET_KEY,
   uiBooleanOption,
 } from '@rjsf/utils';
+import type { JSONSchema7TypeName } from 'json-schema';
 
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
@@ -73,8 +74,10 @@ import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf, shownOption as pickShownOption } from '../uiState.ts';
+import type { UiState } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
+import { fallbackUiType } from './FallbackField.tsx';
 import type { SelectSchemaInfo } from './fieldWidgetUtils.ts';
 import getFieldWidget, {
   booleanListsConstantOptions,
@@ -1090,24 +1093,28 @@ export function schemaFieldDrawsControlsBesideOptions<T, S extends StrictRJSFSch
   );
 }
 
-/** Whether the fallback UI renders the field for `schema`, whose selector picks the type its value is entered as
+/** The type the fallback UI's selector is on for the field for `schema`, where the fallback UI renders it
  *
  * @param registry - The registry from which fields are obtained
+ * @param uiState - The form's option selections, cycle expansions and fallback UI types
  * @param fieldPath - The path of the field
  * @param schema - The field's schema
  * @param uiSchema - The field's uiSchema
  * @param formData - The field's form data
- * @returns - True when the fallback UI renders the field
+ * @param depth - The selector's depth among the type selectors at the path, from 1 for the outermost
+ * @returns - The type the selector is on, or `undefined` where the fallback UI doesn't render the field
  */
-export function schemaFieldRendersFallbackUi<T, S extends StrictRJSFSchema, F extends FormContextType>(
+export function schemaFieldFallbackType<T, S extends StrictRJSFSchema, F extends FormContextType>(
   registry: Registry<T, S, F>,
+  uiState: Pick<UiState, 'fallbackType'>,
   fieldPath: FieldPath,
   schema: S,
   uiSchema: UiSchema<T, S, F>,
   formData: T | undefined,
-): boolean {
+  depth: number,
+): JSONSchema7TypeName | undefined {
   if (!registry.globalFormOptions.useFallbackUiForUnsupportedType) {
-    return false;
+    return undefined;
   }
   const resolved = createFieldWidgetResolver<T, S, F>().resolve(
     schema,
@@ -1118,7 +1125,9 @@ export function schemaFieldRendersFallbackUi<T, S extends StrictRJSFSchema, F ex
     false,
     false,
   );
-  return planFieldComponent<T, S, F>(resolved, registry)?.FieldComponent === registry.fields.FallbackField;
+  return planFieldComponent<T, S, F>(resolved, registry)?.FieldComponent === registry.fields.FallbackField
+    ? fallbackUiType<T, S, F>(registry, uiState, fieldPath, schema, uiSchema, formData, depth)
+    : undefined;
 }
 
 /** Gets a part of a field's plan with the field's own drawing of it taken away, so nothing draws a part the field was

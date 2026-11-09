@@ -19,7 +19,6 @@ import getUiOptions from '../getUiOptions.ts';
 import { getFieldTypeForUiSchema } from '../getWidget.tsx';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import type { XxxOfOptions } from '../getXxxOfOptions.ts';
-import guessType from '../guessType.ts';
 import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
@@ -155,23 +154,36 @@ function drawsControlsBesideOptions<T, S extends StrictRJSFSchema, F extends For
   );
 }
 
-/** Gets the type of the field on screen at `path`, whose children are the only ones that can be required of the user.
- * A selector for the type starts on the type of the value, whatever the list resolves to
+/** Gets the type the fallback UI's type selector is on for the field for `schema` at `path`, which the form keeps, or
+ * undefined where no type selector renders it. `depth` counts the type selectors at the path, from 1 for the outermost
+ */
+function fallbackTypeAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  { fieldState }: WalkContext<T, S, F>,
+  path: (string | number)[],
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+  formData: unknown,
+  depth = 1,
+): string | undefined {
+  return Array.isArray(schema.type)
+    ? fieldState?.fallbackType?.(fieldPathFromList(path), schema, uiSchema, formData, depth)
+    : undefined;
+}
+
+/** Gets the type of the field on screen at `path`, whose children are the only ones that can be required of the user:
+ * the one a fallback UI's type selector is on, which the form keeps, or the one the type list resolves to
  */
 function shownFieldType<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  { schemaContext, fieldState }: WalkContext<T, S, F>,
+  ctx: WalkContext<T, S, F>,
   path: (string | number)[],
   schema: S,
   uiSchema: UiSchema<T, S, F>,
   formData: unknown,
 ): string | undefined {
-  const hasSelector =
-    formData !== undefined &&
-    Array.isArray(schema.type) &&
-    fieldState?.rendersFallbackUi?.(fieldPathFromList(path), schema, uiSchema, formData);
-  return hasSelector
-    ? guessType(formData)
-    : getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, schemaContext.widgets, formData);
+  return (
+    fallbackTypeAt<T, S, F>(ctx, path, schema, uiSchema, formData) ??
+    getFieldTypeForUiSchema<T, S, F>(schema, uiSchema, ctx.schemaContext.widgets, formData)
+  );
 }
 
 /** Whether the field renders something the user can answer it with: not a `null`, which has no control, nor a schema with
@@ -187,7 +199,7 @@ function rendersAnswer<T, S extends StrictRJSFSchema, F extends FormContextType>
   return (
     (type !== undefined && type !== 'null') ||
     UI_FIELD_KEY in uiSchema ||
-    fieldState?.rendersFallbackUi?.(fieldPathFromList(path), schema, uiSchema, undefined) === true
+    fieldState?.fallbackType?.(fieldPathFromList(path), schema, uiSchema, undefined, 1) !== undefined
   );
 }
 
@@ -304,8 +316,27 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // Whatever the value, `ObjectField` renders its properties: a string under a `['null', 'object', 'string']` isn't an
   // object, yet the inputs for them are on screen unless the field for another type is
-  const shownType = shownFieldType<T, S, F>(ctx, path, retrieved, branchUiSchema, formData);
-  if (shownType === 'object') {
+  // An object beside its options renders its own properties in its own field and an option's in the option's field,
+  // each on the type its own type selector is on: the option's is numbered below the object's where the object has one
+  let shownType: string | undefined;
+  let optionShownType: string | undefined;
+  if (option) {
+    const listedType = getFieldTypeForUiSchema<T, S, F>(retrieved, branchUiSchema, schemaContext.widgets, formData);
+    const ownFallbackType = fallbackTypeAt<T, S, F>(ctx, path, resolvedSchema, uiSchema, formData);
+    const optionDepth = ownFallbackType === undefined ? 1 : 2;
+    const renderedOption = getRenderedOptionSchema<S>(resolvedSchema, option);
+    shownType = ownFallbackType ?? listedType;
+    optionShownType =
+      fallbackTypeAt<T, S, F>(ctx, path, renderedOption, branchUiSchema, formData, optionDepth) ?? listedType;
+  } else {
+    shownType = shownFieldType<T, S, F>(ctx, path, retrieved, branchUiSchema, formData);
+    optionShownType = shownType;
+  }
+  const ownProperties = resolvedSchema.properties ?? {};
+  const optionProperties = option?.properties ?? {};
+  const isKeyShown = (key: string) =>
+    (key in optionProperties && !(key in ownProperties) ? optionShownType : shownType) === 'object';
+  if (shownType === 'object' || optionShownType === 'object') {
     // Matches computeDefaults()'s own `isObject(rawFormData)` handling: when the schema resolves to an object here
     // but `formData` still holds a primitive (e.g. a leftover string from a previous oneOf/anyOf branch, or mismatched
     // caller data), indexing the primitive directly (`'abc'['0']` yields `'a'`, not `undefined`) can make a genuinely
@@ -313,7 +344,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const data = isObject(formData) ? formData : ({} as GenericObjectType);
     const childParentPresent = isObject(formData);
     Object.entries(retrieved.properties ?? {}).forEach(([key, propertySchema]) => {
-      if (typeof propertySchema === 'boolean') {
+      if (typeof propertySchema === 'boolean' || !isKeyShown(key)) {
         return;
       }
       const childUiSchema = getByPath<UiSchema<T, S, F> | undefined>(

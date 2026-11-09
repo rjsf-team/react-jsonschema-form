@@ -1,5 +1,14 @@
-import { use, useCallback, useMemo, useState } from 'react';
-import type { FallbackFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import { use, useLayoutEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import type {
+  FallbackFieldProps,
+  FieldPath,
+  FormContextType,
+  Registry,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  UIOptionsType,
+} from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -25,6 +34,8 @@ import {
 import type { JSONSchema7TypeName } from 'json-schema';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
+import useUiState from '../../hooks/useUiState.ts';
+import type { UiState } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import { fallbackValueKeepsWidget, getFallbackTypes, withoutUiWidget } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
@@ -142,6 +153,122 @@ function getInitialType(
     return defaultType;
   }
   return types.find((aType) => SCALAR_TYPES.includes(aType) && !keepsWidget(aType)) ?? defaultType;
+}
+
+/** What the type a fallback UI's selector is on is worked out from, see `fallbackTypeSetup()` */
+interface FallbackTypeSetup {
+  /** The types the selection offers */
+  types: JSONSchema7TypeName[];
+  /** The key the form keeps the selection under, beside the field's path: the selector's depth there and its types,
+   * since an option offering types of its own renders a selector below the field's at the same path
+   */
+  typeList: string;
+  /** The type the selection starts on when there is no form data */
+  defaultType: JSONSchema7TypeName;
+  /** Whether the value field keeps the widget when the selection is on a given type */
+  keepsWidget: (type: JSONSchema7TypeName) => boolean;
+}
+
+/**
+ * Gets what the type the selector is on is worked out from, for the field rendering and for `fallbackUiType()` alike,
+ * so the two can't disagree about it
+ * @param schema - The schema being rendered by the fallback UI.
+ * @param widget - The `ui:widget` for the field, if any
+ * @param widgets - The form's registered widgets
+ * @param depth - The selector's depth among the type selectors at the field's path, from 1 for the outermost
+ * @returns - The types on offer, the key the form keeps the selection under, the type with no data to go on, and
+ *        whether the value field keeps the widget for a given type
+ */
+function fallbackTypeSetup<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schema: S,
+  widget: UIOptionsType<T, S, F>['widget'],
+  widgets: Registry<T, S, F>['widgets'],
+  depth: number,
+): FallbackTypeSetup {
+  const types = getFallbackTypes<S>(schema);
+  return {
+    types,
+    typeList: `${depth}:${types.join(',')}`,
+    defaultType: getDefaultType<S>(schema, types, widget, widgets),
+    keepsWidget: (aType: JSONSchema7TypeName) => fallbackValueKeepsWidget<T, S, F>(schema, aType, widget, widgets),
+  };
+}
+
+/**
+ * Determines the type the selector is on: the one it was last on while the data is still what the field of that type
+ * shows, and otherwise the type the data starts it on. The types on offer change with the schema — a `dependencies` or
+ * `oneOf` branch switch can replace them wholesale — so a selection the schema no longer allows gives way to the type
+ * the current data fits. A selection the data no longer fits gives way too, since data replaced from outside the form
+ * arrives without going through the selector. Without this the selector would show one type while the field below it
+ * rendered another
+ * @param setup - What the type is worked out from, see `fallbackTypeSetup()`.
+ * @param formData - The form data being rendered.
+ * @param selectedType - The type the selector was last on, if any.
+ * @param isAdditionalEntry - Whether the field is the value of an additional property.
+ * @param emptyValue - The `ui:emptyValue` the field's input reports being cleared as.
+ */
+function getShownType(
+  { types, defaultType, keepsWidget }: FallbackTypeSetup,
+  formData: unknown,
+  selectedType: JSONSchema7TypeName | undefined,
+  isAdditionalEntry: boolean,
+  emptyValue: unknown,
+): JSONSchema7TypeName {
+  // Neither of the two ways a value reports being cleared says anything about the type it was cleared from, so both
+  // are read as the empty state of the type the selector is on rather than as data of the type they resemble. Both
+  // are the business of a type that empties to nothing: an `object` and an `array` start out as the empty one of
+  // their own, and a field for either never renders the widget a `ui:emptyValue` belongs to, so a value matching
+  // either convention under one of them arrived from outside the form and is data of its own type like any other
+  const emptiesToNothing = selectedType !== 'object' && selectedType !== 'array';
+  // An input reports being cleared as whatever `ui:emptyValue` names — a `null`, a `0`, a `false` — which is the empty
+  // value of the type being edited rather than a switch to that value's own type, so it must not swap the input out
+  // from under the user. Only the types that stand in for one another survive this on their own; every other one, a
+  // `false` among them, would otherwise take the selector with it the moment the user cleared the field
+  const isClearedInput = emptiesToNothing && emptyValue !== undefined && formData === emptyValue;
+  // An `additionalProperties` entry whose value is cleared holds the empty string rather than nothing, since dropping
+  // the value would take the key it is stored under with it. That is the cleared state of whichever type the selector
+  // is on, not evidence of a `string`, so a selection the user just made must survive it: reading it as data of
+  // another type would put the selector back on `string` and leave the other types out of reach from a cleared value
+  const isClearedProperty = emptiesToNothing && isAdditionalEntry && formData === '';
+  const isEmptyValue = formData === undefined || isClearedProperty;
+  const isSelectionUsable =
+    selectedType !== undefined &&
+    types.includes(selectedType) &&
+    (isEmptyValue || isClearedInput || canShowDataAsType(selectedType, guessType(formData)));
+  return isSelectionUsable ? selectedType : getInitialType(formData, types, defaultType, keepsWidget);
+}
+
+/**
+ * Gets the type the fallback UI's selector is on for the field at `fieldPath`, as the form keeps it in `uiState`, for
+ * the readers that walk the fields on screen without rendering them. Such a reader sees an additional property's value
+ * only by the marker on its schema, not by the entry a layout grid names
+ * @param registry - The registry the form renders with
+ * @param uiState - The form's option selections, cycle expansions and fallback UI types
+ * @param fieldPath - The path of the field
+ * @param schema - The field's schema
+ * @param uiSchema - The field's uiSchema
+ * @param formData - The field's form data
+ * @param depth - The selector's depth among the type selectors at the path, from 1 for the outermost
+ * @returns - The type the selector is on
+ */
+export function fallbackUiType<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  registry: Registry<T, S, F>,
+  uiState: Pick<UiState, 'fallbackType'>,
+  fieldPath: FieldPath,
+  schema: S,
+  uiSchema: UiSchema<T, S, F> | undefined,
+  formData: unknown,
+  depth: number,
+): JSONSchema7TypeName {
+  const { widget, emptyValue } = getUiOptions<T, S, F>(uiSchema);
+  const setup = fallbackTypeSetup<T, S, F>(schema, widget, registry.widgets, depth);
+  return getShownType(
+    setup,
+    formData,
+    uiState.fallbackType(fieldPath, setup.typeList)?.type,
+    hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG),
+    emptyValue,
+  );
 }
 
 /**
@@ -335,53 +462,37 @@ function FallbackUiField<
   const { translateString, fields, widgets, globalUiOptions } = registry;
   const isEntryPath = use(AdditionalEntryContext) === fieldPath;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
-  const defaultType = useMemo(
-    () => getDefaultType<S>(schema, types, uiOptions.widget, widgets),
-    [schema, types, uiOptions.widget, widgets],
+  // The value can offer types of its own, as an `anyOf` option listing several does, so its type selector is numbered by
+  // the type selectors above for this id
+  const selectorsAbove = useSelectorsAbove(id);
+  const typeSelectorDepth = selectorsAbove.type + 1;
+  const setup = useMemo(
+    () => fallbackTypeSetup<T, S, F>(schema, uiOptions.widget, widgets, typeSelectorDepth),
+    [schema, uiOptions.widget, widgets, typeSelectorDepth],
   );
+  const { types, typeList, defaultType, keepsWidget } = setup;
   // What `getUiOptions(uiSchema, globalUiOptions)` returns for the label, without reading the `uiSchema` a second time
   const { label } = { ...globalUiOptions, ...uiOptions };
-  const keepsWidget = useCallback(
-    (aType: JSONSchema7TypeName) => fallbackValueKeepsWidget<T, S, F>(schema, aType, uiOptions.widget, widgets),
-    [uiOptions.widget, schema, widgets],
-  );
-  const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() =>
-    getInitialType(formData, types, defaultType, keepsWidget),
-  );
-  // The types on offer change with the schema — a `dependencies` or `oneOf` branch switch can replace them
-  // wholesale — so a selection the schema no longer allows gives way to the type the current data fits. A selection
-  // the data no longer fits gives way too, since data replaced from outside the form arrives without going through
-  // the selector. Without this the selector would show one type while the field below it rendered another
-  // Neither of the two ways a value reports being cleared says anything about the type it was cleared from, so both
-  // are read as the empty state of the type the selector is on rather than as data of the type they resemble. Both
-  // are the business of a type that empties to nothing: an `object` and an `array` start out as the empty one of
-  // their own, and a field for either never renders the widget a `ui:emptyValue` belongs to, so a value matching
-  // either convention under one of them arrived from outside the form and is data of its own type like any other
-  const emptiesToNothing = selectedType !== 'object' && selectedType !== 'array';
-  // An input reports being cleared as whatever `ui:emptyValue` names — a `null`, a `0`, a `false` — which is the empty
-  // value of the type being edited rather than a switch to that value's own type, so it must not swap the input out
-  // from under the user. Only the types that stand in for one another survive this on their own; every other one, a
-  // `false` among them, would otherwise take the selector with it the moment the user cleared the field
-  const isClearedInput =
-    emptiesToNothing && uiOptions.emptyValue !== undefined && (formData as unknown) === uiOptions.emptyValue;
-  // An `additionalProperties` entry whose value is cleared holds the empty string rather than nothing, since dropping
-  // the value would take the key it is stored under with it. That is the cleared state of whichever type the selector
-  // is on, not evidence of a `string`, so a selection the user just made must survive it: reading it as data of
-  // another type would put the selector back on `string` and leave the other types out of reach from a cleared value
+  const { uiState } = useUiState();
   const isAdditionalEntry = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) || isEntryPath;
-  const isClearedProperty = emptiesToNothing && isAdditionalEntry && (formData as unknown) === '';
-  const isEmptyValue = formData === undefined || isClearedProperty;
-  const isSelectionUsable =
-    types.includes(selectedType) &&
-    (isEmptyValue || isClearedInput || canShowDataAsType(selectedType, guessType(formData)));
-  const type = isSelectionUsable ? selectedType : getInitialType(formData, types, defaultType, keepsWidget);
-  if (type !== selectedType) {
-    // Storing the type the selector is showing keeps a selection the user can no longer see from coming back: with the
-    // old one still in state, clearing the value would swap the field out for the type the data used to have. React
-    // takes a state update made while rendering as an adjustment of this component's own state and re-runs it at once
-    setSelectedType(type);
-  }
+  // Lives as long as this field does, an `<Activity>` hiding it included, so a field mounting at this path later starts
+  // on the type its data starts it on rather than on one kept for the field before it. The form's ui:required check
+  // reads the kept type whoever kept it, since a hidden field still holds its pick
+  // oxlint-disable-next-line react/hook-use-state
+  const [owner] = useState(() => ({}));
+  // The shown type rather than the kept one, which is the same once the effect below keeps it, so keeping it is no
+  // change of the store for React to render again for
+  const readShownType = () => {
+    const kept = uiState.fallbackType(fieldPath, typeList);
+    const selectedType = kept?.owner === owner ? kept.type : undefined;
+    return getShownType(setup, formData, selectedType, isAdditionalEntry, uiOptions.emptyValue);
+  };
+  const type = useSyncExternalStore(uiState.subscribe, readShownType, readShownType);
+  // Keeping the type the selector is showing stops a selection the user can no longer see from coming back: with the old
+  // one still kept, clearing the value would swap the field out for the type the data used to have
+  useLayoutEffect(() => {
+    uiState.keepFallbackType(fieldPath, typeList, type, owner);
+  });
 
   const typesOptionSchema = useMemo(
     () => getFallbackTypeSelectionSchema(types, translateString(TranslatableString.Type), defaultType),
@@ -417,10 +528,6 @@ function FallbackUiField<
 
   const { SchemaField } = fields;
   const valueField = <SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />;
-  // The value can offer types of its own, as an `anyOf` option listing several does, so its type selector is numbered by
-  // the type selectors above for this id
-  const selectorsAbove = useSelectorsAbove(id);
-  const typeSelectorDepth = selectorsAbove.type + 1;
   const selectorsBelow = useMemo(
     () => ({ ...selectorsAbove, type: typeSelectorDepth }),
     [selectorsAbove, typeSelectorDepth],
@@ -463,7 +570,7 @@ function FallbackUiField<
   const onTypeChange = (newType: T | undefined) => {
     const selected = types.find((aType) => aType === newType);
     if (selected) {
-      setSelectedType(selected);
+      uiState.selectFallbackType(fieldPath, typeList, selected, owner);
       // The errors raised against the old value describe a type it no longer has, so an empty raise takes them off:
       // passing none would leave them standing
       onChange(castToNewType(formData, selected), fieldPath, {}, id);

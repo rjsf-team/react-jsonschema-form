@@ -45,7 +45,7 @@ import isDevelopment from '../isDevelopment.ts';
 import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import { copyAlongPath, getAt, isPathPrefix, replaceErrorSchemaNode } from './dataPaths.ts';
-import { schemaFieldDrawsControlsBesideOptions, schemaFieldRendersFallbackUi } from './fields/SchemaField.tsx';
+import { schemaFieldDrawsControlsBesideOptions, schemaFieldFallbackType } from './fields/SchemaField.tsx';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
 import keepClears from './keepClears.ts';
@@ -828,14 +828,16 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
         fieldUiSchema as UiSchema<T, S, F>,
         asFieldValue<T>(data),
       ),
-    (fieldPath, fieldSchema, fieldUiSchema, data) =>
-      schemaFieldRendersFallbackUi<T, S, F>(
+    (fieldPath, fieldSchema, fieldUiSchema, data, depth) =>
+      schemaFieldFallbackType<T, S, F>(
         context.registry,
+        context.uiState,
         fieldPath,
         fieldSchema,
         // As above, `FormFieldState` hands back the `UiSchema<T, S, F>` `getUiRequiredErrorSchema()` gave it
         fieldUiSchema as UiSchema<T, S, F>,
         asFieldValue<T>(data),
+        depth,
       ),
   );
 

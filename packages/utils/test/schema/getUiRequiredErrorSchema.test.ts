@@ -157,12 +157,7 @@ describe('getUiRequiredErrorSchema()', () => {
   });
 
   describe('a type list under a type selector', () => {
-    const fieldState: FormFieldState = {
-      selectedOption: () => 0,
-      isExpanded: () => false,
-      rendersFallbackUi: () => true,
-    };
-    const walkOf = (type: RJSFSchema['type'], v: unknown) =>
+    const walkOf = (type: RJSFSchema['type'], v: unknown, shownType: string) =>
       toErrorList(
         getUiRequiredErrorSchema<GenericObjectType>(
           { validator: testValidator },
@@ -181,26 +176,59 @@ describe('getUiRequiredErrorSchema()', () => {
           undefined,
           undefined,
           undefined,
-          fieldState,
+          { selectedOption: () => 0, isExpanded: () => false, fallbackType: () => shownType },
         ),
       ).map((error) => error.property);
-    it.each<[RJSFSchema['type']]>([[['string', 'object']], [['object', 'string']]])(
-      'reports a missing property of an object held by %j, whose field the selector starts on',
-      (type) => {
-        expect(walkOf(type, {})).toEqual(['.v.a']);
+    it.each<[RJSFSchema['type'], unknown]>([
+      [['string', 'object'], {}],
+      [['object', 'string'], undefined],
+      [['object', 'string'], null],
+      [['object', 'string'], 5],
+    ])('reports a missing property of what %j holds as %j, under a selector on object', (type, v) => {
+      expect(walkOf(type, v, 'object')).toEqual(['.v.a']);
+    });
+    it.each<[unknown]>([[undefined], [{}], ['hello']])(
+      'requires no property of what the list holds as %j, under a selector on another type',
+      (v) => {
+        expect(walkOf(['object', 'number'], v, 'number')).toEqual([]);
       },
     );
-    it.each<[RJSFSchema['type'], unknown]>([
-      [['null', 'object', 'string'], 'hello'],
-      [['null', 'object', 'string'], null],
-    ])('requires no property of what %j holds as %j, whose own field is on screen', (type, v) => {
-      expect(walkOf(type, v)).toEqual([]);
+    it('walks the items of an array under a selector on array', () => {
+      expect(walkOf(['string', 'array'], [{}], 'array')).toEqual(['.v.0.a']);
     });
-    it('reports a missing property with no value, as the selector starts on the field the list resolves to', () => {
-      expect(walkOf(['object', 'string'], undefined)).toEqual(['.v.a']);
-    });
-    it('walks the items of an array under the selector, whichever type the list resolves to', () => {
-      expect(walkOf(['string', 'array'], [{}])).toEqual(['.v.0.a']);
+    it("gates the object's own properties by its selector and an option's by the option's, numbered below it", () => {
+      const depths: number[] = [];
+      const errors = toErrorList(
+        getUiRequiredErrorSchema<GenericObjectType>(
+          { validator: testValidator },
+          {
+            type: 'object',
+            properties: {
+              v: {
+                type: ['object', 'number'],
+                properties: { a: { type: 'string' } },
+                anyOf: [{ type: ['object', 'number'], properties: { b: { type: 'string' } } }, { minimum: 1 }],
+              },
+            },
+          },
+          { v: { a: { 'ui:required': true }, b: { 'ui:required': true } } },
+          { v: {} },
+          undefined,
+          undefined,
+          undefined,
+          {
+            selectedOption: () => 0,
+            isExpanded: () => false,
+            fallbackType: (_, schema, _uiSchema, _formData, depth) => {
+              depths.push(depth);
+              return 'anyOf' in schema ? 'number' : 'object';
+            },
+          },
+        ),
+      ).map((error) => error.property);
+
+      expect(errors).toEqual(['.v.b']);
+      expect(depths).toContain(2);
     });
   });
 
@@ -1556,7 +1584,7 @@ describe('getUiRequiredErrorSchema()', () => {
         'the fallback UI',
         { title: 'Anything' },
         { 'ui:required': true },
-        { selectedOption: () => 0, isExpanded: () => false, rendersFallbackUi: () => true },
+        { selectedOption: () => 0, isExpanded: () => false, fallbackType: () => 'object' },
       ],
     ])('reports an untyped option rendered through %s', (_, option, uiOption, fieldState) => {
       const schema: RJSFSchema = {

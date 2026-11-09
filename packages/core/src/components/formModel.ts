@@ -987,6 +987,12 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       // selections already hold for, which a render of the data before it would release
       if (from === shown) {
         uiState.rendered((at) => getAt(derived.formData, at));
+        // A field the schema no longer reaches has gone rather than been hidden, so its type selector's type goes too
+        uiState.dropFallbackTypes(
+          (at) =>
+            at.length > 0 &&
+            derived.schemaUtils.findFieldInSchema(derived.retrievedSchema, at, derived.formData).field === undefined,
+        );
       }
     },
     /** Warns, once, that the `formData` prop changed after mount to a value the form ignores: neither data it has held

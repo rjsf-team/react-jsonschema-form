@@ -1,4 +1,4 @@
-import { Suspense, forwardRef, lazy, memo } from 'react';
+import { Activity, Suspense, forwardRef, lazy, memo } from 'react';
 import type {
   ArrayFieldItemTemplateProps,
   CyclicSchemaExpandProps,
@@ -13,6 +13,7 @@ import type {
   FieldErrorProps,
   FieldHelpProps,
   FieldTemplateProps,
+  ObjectFieldTemplateProps,
   ThemePresentation,
   WidgetProps,
 } from '@rjsf/utils';
@@ -22,19 +23,29 @@ import {
   createSchemaUtils,
   englishStringTranslator,
   errorId,
+  fallbackTypeSelectorId,
   mergeThemePresentation,
   toFieldPath,
   toInputValue,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import BooleanField from '../src/components/fields/BooleanField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import Form, { generateTheme, generateWidgets } from '../src/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
-import { createFormComponent, elementOf, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
+import {
+  createFormComponent,
+  createFormRef,
+  elementOf,
+  getSelectedOptionValue,
+  handleOf,
+  renderInActivity,
+  setupConsoleWarnSuppression,
+  submitForm,
+} from './testUtils.tsx';
 import type { NoValFormProps } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -236,6 +247,10 @@ describe('SchemaField', () => {
         initialFormData: formData,
         ...more,
       });
+    const typeOf = (node: Element, id: string) =>
+      getSelectedOptionValue(elementOf(node, `#${fallbackTypeSelectorId(id)}`, HTMLSelectElement));
+    const pickType = (node: Element, id: string, type: string) =>
+      user.selectOptions(elementOf(node, `#${fallbackTypeSelectorId(id)}`), type);
 
     it.each<[string, RJSFSchema]>([
       ['object', objectList],
@@ -381,6 +396,301 @@ describe('SchemaField', () => {
         expect(hasInput).toBe(false);
         expect(onError).not.toHaveBeenCalled();
         expect(onSubmit).toHaveBeenCalled();
+      });
+
+      describe('as the type selector picks the type (#5729)', () => {
+        const fallbackForm = (type: RJSFSchema['type'], formData?: { val: unknown }) =>
+          listForm({ ...required, type }, formData, {
+            uiSchema,
+            noHtml5Validate: true,
+            useFallbackUiForUnsupportedType: true,
+          });
+        it('should submit once a number is picked, which takes the object field off screen', async () => {
+          const { node, onSubmit, onError } = fallbackForm(['object', 'number']);
+          expect(node.querySelector('#root_val_a')).toBeInTheDocument();
+
+          await pickType(node, 'root_val', 'number');
+          await submitForm(node, user);
+
+          expect(node.querySelector('#root_val_a')).not.toBeInTheDocument();
+          expect(onError).not.toHaveBeenCalled();
+          expect(onSubmit).toHaveBeenCalled();
+        });
+
+        it('should submit a string typed in and cleared again', async () => {
+          const { node, onSubmit, onError } = fallbackForm(['object', 'string']);
+
+          await pickType(node, 'root_val', 'string');
+          const input = elementOf(node, '#root_val');
+          await user.type(input, 'x');
+          await user.clear(input);
+          await submitForm(node, user);
+
+          expect(node.querySelector('#root_val_a')).not.toBeInTheDocument();
+          expect(onError).not.toHaveBeenCalled();
+          expect(onSubmit).toHaveBeenCalled();
+        });
+
+        it.each<[unknown]>([[null], [5]])(
+          'should report the missing property of an object field the selector starts on for %j',
+          async (val) => {
+            const { node, onSubmit, onError } = fallbackForm(['object', 'string'], { val });
+            await submitForm(node, user);
+
+            expect(node.querySelector('#root_val_a')).toBeInTheDocument();
+            expect(onError).toHaveBeenLastCalledWith(
+              expect.arrayContaining([expect.objectContaining({ property: '.val.a' })]),
+            );
+            expect(onSubmit).not.toHaveBeenCalled();
+          },
+        );
+      });
+    });
+
+    describe('once the selector picks a type (#5729)', () => {
+      it('should start a field that leaves the screen and comes back on the type its data starts it on', async () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { show: { type: 'boolean', default: true } },
+            dependencies: {
+              show: {
+                oneOf: [
+                  {
+                    properties: {
+                      show: { const: true },
+                      val: { type: ['object', 'number'], properties: { a: { type: 'string' } } },
+                    },
+                  },
+                  { properties: { show: { const: false } } },
+                ],
+              },
+            },
+          },
+          useFallbackUiForUnsupportedType: true,
+        });
+        await pickType(node, 'root_val', 'number');
+
+        await user.click(elementOf(node, '#root_show'));
+        expect(node.querySelector(`#${fallbackTypeSelectorId('root_val')}`)).not.toBeInTheDocument();
+        await user.click(elementOf(node, '#root_show'));
+
+        expect(typeOf(node, 'root_val')).toBe('object');
+      });
+
+      it('should keep the type picked through an <Activity> hiding the field and showing it again', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { val: { type: ['object', 'number'], properties: { a: { type: 'string' } } } },
+        };
+        const form = (uiSchema: UiSchema) => (
+          <Form schema={schema} uiSchema={uiSchema} validator={validator} useFallbackUiForUnsupportedType />
+        );
+        const { container, hide, show } = renderInActivity(form, {});
+        await pickType(container, 'root_val', 'number');
+
+        hide({});
+        // A changed uiSchema, so the field renders again as it is shown
+        show({ val: { 'ui:title': 'Value' } });
+
+        expect(typeOf(container, 'root_val')).toBe('number');
+      });
+
+      it('should start a type list the schema swaps in on the type its data starts it on', async () => {
+        const schemaOf = (type: RJSFSchema['type']): RJSFSchema => ({
+          type: 'object',
+          properties: { val: { type, properties: { a: { type: 'string' } } } },
+        });
+        const { node, rerender } = createFormComponent({
+          schema: schemaOf(['object', 'number']),
+          useFallbackUiForUnsupportedType: true,
+        });
+        await pickType(node, 'root_val', 'number');
+
+        rerender({ schema: schemaOf(['string', 'number', 'object']), useFallbackUiForUnsupportedType: true });
+
+        expect(typeOf(node, 'root_val')).toBe('string');
+      });
+
+      it('should require nothing of the object a picked number left while an <Activity> hides the field', async () => {
+        // A tab template's way of hiding a field without unmounting it, as `formContext.hidden` says
+        function TabTemplate({ properties, registry }: ObjectFieldTemplateProps) {
+          const { formContext } = registry;
+          const mode = 'hidden' in formContext && formContext.hidden === true ? 'hidden' : 'visible';
+          return properties.map(({ name, content }) => (
+            <Activity key={name} mode={mode}>
+              {content}
+            </Activity>
+          ));
+        }
+        const props = {
+          schema: {
+            type: 'object',
+            properties: { val: { type: ['object', 'number'], properties: { a: { type: 'string' } } } },
+          },
+          uiSchema: { val: { a: { 'ui:required': true } } },
+          templates: { ObjectFieldTemplate: TabTemplate },
+          useFallbackUiForUnsupportedType: true,
+          noHtml5Validate: true,
+        } satisfies NoValFormProps;
+        const { node, onSubmit, onError, rerender } = createFormComponent({ ...props, formContext: {} });
+        await pickType(node, 'root_val', 'number');
+
+        rerender({ ...props, formContext: { hidden: true } });
+        await submitForm(node, user);
+
+        expect(onError).not.toHaveBeenCalled();
+        expect(onSubmit).toHaveBeenCalled();
+      });
+
+      describe('with anyOf options that offer types of their own', () => {
+        const optionsForm = (anyOf: RJSFSchema[]) =>
+          createFormComponent({
+            schema: {
+              type: 'object',
+              properties: { val: { type: ['object', 'number'], properties: { a: { type: 'string' } }, anyOf } },
+            },
+            uiSchema: { val: { a: { 'ui:required': true } } },
+            useFallbackUiForUnsupportedType: true,
+            noHtml5Validate: true,
+          });
+
+        it.each<[string, RJSFSchema[], string]>([
+          [
+            "an option's own selector, the field's being on object",
+            [{ type: ['object', 'number'] }, { minimum: 1 }],
+            'root_val__internalTypeSelector2',
+          ],
+          [
+            'the only selector, within the option',
+            [
+              { title: 'One', type: ['object', 'number'] },
+              { title: 'Two', type: 'object' },
+            ],
+            'root_val__internalTypeSelector',
+          ],
+        ])(
+          'should block the submit after %s picks number, as the property is still on screen',
+          async (_, anyOf, id) => {
+            const { node, onSubmit, onError } = optionsForm(anyOf);
+            await user.selectOptions(elementOf(node, `#${id}`), 'number');
+            await submitForm(node, user);
+
+            expect(node.querySelector('#root_val_a')).toBeInTheDocument();
+            expect(onError).toHaveBeenLastCalledWith(
+              expect.arrayContaining([expect.objectContaining({ property: '.val.a' })]),
+            );
+            expect(onSubmit).not.toHaveBeenCalled();
+          },
+        );
+
+        it("should require an option's own property only while the option's selector is on object", async () => {
+          const { node, onSubmit, onError } = createFormComponent({
+            schema: {
+              type: 'object',
+              properties: {
+                val: {
+                  type: ['object', 'number'],
+                  properties: { a: { type: 'string' } },
+                  anyOf: [
+                    { title: 'One', type: ['object', 'number'], properties: { b: { type: 'string' } } },
+                    { title: 'Two', type: 'object' },
+                  ],
+                },
+              },
+            },
+            uiSchema: { val: { b: { 'ui:required': true } } },
+            useFallbackUiForUnsupportedType: true,
+            noHtml5Validate: true,
+          });
+          await submitForm(node, user);
+          expect(node.querySelector('#root_val_b')).toBeInTheDocument();
+          expect(onError).toHaveBeenLastCalledWith(
+            expect.arrayContaining([expect.objectContaining({ property: '.val.b' })]),
+          );
+
+          await pickType(node, 'root_val', 'number');
+          await submitForm(node, user);
+
+          expect(node.querySelector('#root_val_b')).not.toBeInTheDocument();
+          expect(node.querySelector('#root_val_a')).toBeInTheDocument();
+          expect(onSubmit).toHaveBeenCalled();
+        });
+      });
+
+      it('should report the property of a field shown again in the live validation that shows it', async () => {
+        const { node, onChange } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { show: { type: 'boolean', default: true } },
+            dependencies: {
+              show: {
+                oneOf: [
+                  {
+                    properties: {
+                      show: { const: true },
+                      val: { type: ['object', 'number'], properties: { a: { type: 'string' } } },
+                    },
+                  },
+                  { properties: { show: { const: false } } },
+                ],
+              },
+            },
+          },
+          uiSchema: { val: { a: { 'ui:required': true } } },
+          useFallbackUiForUnsupportedType: true,
+          liveValidate: 'onChange',
+        });
+        await pickType(node, 'root_val', 'number');
+        await user.click(elementOf(node, '#root_show'));
+
+        await user.click(elementOf(node, '#root_show'));
+
+        expect(typeOf(node, 'root_val')).toBe('object');
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ errors: [expect.objectContaining({ property: '.val.a' })] }),
+          'root_show',
+        );
+      });
+
+      it('should start an item added where data from outside removed one on the type its data starts it on', async () => {
+        const ref = createFormRef();
+        const { node, onChange } = createFormComponent({
+          schema: { type: 'array', items: { type: ['object', 'string'], properties: { a: { type: 'string' } } } },
+          uiSchema: { items: { a: { 'ui:required': true } } },
+          initialFormData: [{}, {}],
+          useFallbackUiForUnsupportedType: true,
+          liveValidate: 'onChange',
+          ref,
+        });
+        await pickType(node, 'root_1', 'string');
+        // Data from outside, which tells the form of no move, so the type kept at the removed item's path stays
+        act(() => handleOf(ref).setFieldValue([], [{}]));
+
+        await user.click(elementOf(node, '.rjsf-array-item-add'));
+
+        expect(typeOf(node, 'root_1')).toBe('object');
+        expect(node.querySelector('#root_1_a')).toBeInTheDocument();
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ errors: expect.arrayContaining([expect.objectContaining({ property: '.1.a' })]) }),
+          'root',
+        );
+      });
+
+      it('should keep the type each array item is on as the items move', async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'array', items: { type: ['string', 'number'] } },
+          initialFormData: ['1', '2'],
+          useFallbackUiForUnsupportedType: true,
+        });
+        await pickType(node, 'root_0', 'number');
+        // A number field holds the text of a number being typed, which a fresh selector would start on `string`
+        await user.type(elementOf(node, '#root_0'), '.');
+        expect(typeOf(node, 'root_0')).toBe('number');
+
+        await user.click(screen.getAllByTitle('Move down')[0]);
+
+        expect([typeOf(node, 'root_0'), typeOf(node, 'root_1')]).toEqual(['string', 'number']);
       });
     });
 
