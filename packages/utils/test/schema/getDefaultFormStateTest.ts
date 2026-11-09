@@ -2268,6 +2268,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe('an enum property written as an allOf', () => {
+        const definitions: RJSFSchema['definitions'] = {
+          Color: { type: 'string', enum: ['red', 'green', 'blue'] },
+        };
+        it.each<[string, RJSFSchema]>([
+          ['a $ref with a default', { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' }],
+          ['a $ref without a default', { allOf: [{ $ref: '#/definitions/Color' }] }],
+          [
+            'an inline enum with a default',
+            { allOf: [{ type: 'string', enum: ['red', 'green', 'blue'] }], default: 'red' },
+          ],
+        ])('keeps a value of the enum when the allOf holds %s', (_name, color) => {
+          const schema: RJSFSchema = { type: 'object', properties: { color }, definitions };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { color: 'green' } })).toEqual({
+            color: 'green',
+          });
+        });
+
+        it('replaces a value the enum does not hold with the default', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { color: { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' } },
+            definitions,
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { color: 'purple' } })).toEqual({
+            color: 'red',
+          });
+        });
+      });
+
       it("skips the constant default of a schema's anyOf under skipOneOf when it also has a oneOf", () => {
         const schema: RJSFSchema = {
           type: 'object',

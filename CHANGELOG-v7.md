@@ -1469,6 +1469,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Change `getFirstMatchingOption()` and `getClosestMatchingOption()` to ignore an option's `dependentRequired` and the `required` of its `dependentSchemas` entries, so an option whose dependent property is still empty matches ([#5756](https://github.com/rjsf-team/react-jsonschema-form/pull/5756))
 - Change `getClosestMatchingOption()` to loosen an `additionalProperties: false` inside an option's `dependentSchemas` entries, as it does inside its `dependencies` schemas ([#5756](https://github.com/rjsf-team/react-jsonschema-form/pull/5756))
 - Add the `ADDITIONAL_ITEMS_KEY`, `CONTAINS_KEY`, `DEPENDENT_REQUIRED_KEY`, `DEPENDENT_SCHEMAS_KEY`, `NOT_KEY`, `PREFIX_ITEMS_KEY` and `UNEVALUATED_ITEMS_KEY` constants ([#5756](https://github.com/rjsf-team/react-jsonschema-form/pull/5756))
+- Fix `getDefaultFormState()` replacing a valid value of an `enum` that only an `allOf` brings, as in `allOf: [{ $ref: '#/definitions/Color' }]`, with the field's `default`, or with nothing when it has none ([#5769](https://github.com/rjsf-team/react-jsonschema-form/issues/5769))
 
 ## @rjsf/validator-ajv8
 

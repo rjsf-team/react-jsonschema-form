@@ -2469,22 +2469,21 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
     return declaredIn;
   };
   // Without data there is nothing to check against the options of a select, so only data asks whether it is one. A
-  // schema with nothing left to merge is asked as it stands, which is what retrieving it would give
-  const isSelectField =
-    formData !== undefined &&
-    !isConstant<S>(schemaToMatch) &&
-    isConstantSelect<S>(
-      resolveDeclaredConstantOptions<S>(
-        MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
-          ? retrieveField<S, F>(context, field())
-          : schemaToMatch,
-        declarations,
-      ),
-      true,
-    );
+  // schema with nothing left to merge is asked as it stands, which is what retrieving it would give. Its options are
+  // read from the same schema, so an `enum` that only an `allOf` or a `$ref` brings is the list the data is checked
+  // against
+  const selectSchema =
+    formData !== undefined && !isConstant<S>(schemaToMatch)
+      ? resolveDeclaredConstantOptions<S>(
+          MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
+            ? retrieveField<S, F>(context, field())
+            : schemaToMatch,
+          declarations,
+        )
+      : undefined;
   let validFormData: unknown = formData;
-  if (isSelectField) {
-    const getOptionsList = optionsList<T, S, F>(resolveDeclaredConstantOptions<S>(schemaToMatch, declarations));
+  if (selectSchema !== undefined && isConstantSelect<S>(selectSchema, true)) {
+    const getOptionsList = optionsList<T, S, F>(selectSchema);
     // An empty option list has no value to check the data against, so the data is kept, as it is without the list. An
     // option of object data that declares the discriminator is valued by that property, as `optionsList()` values it
     // and `LayoutMultiSchemaField` matches a pick by
