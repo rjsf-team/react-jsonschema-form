@@ -2934,20 +2934,19 @@ An option is labelled with the first of its names. One with no name is labelled 
 Given a list of `properties` and an `order` list, returns a list that contains the `properties` ordered correctly.
 If `order` is not an array, then the untouched `properties` list is returned.
 Otherwise `properties` is ordered per the `order` list.
-If `order` contains a '_' then any `properties` that are not mentioned explicity in `order` will be places in the location of the `_`.
+If `order` contains a '\*' then any `properties` that are not mentioned explicitly in `order` will be placed in the location of the '\*'.
+Properties that `order` doesn't list are never dropped: without a '\*' they are placed at the end, as if the list ended with one, and when there is more than one '\*' the first one places them, as `ui:enumOrder` does.
+Both cases are logged once through [`logOnce()`](#logonce), naming the field when `fieldLabel` is given.
 
 #### Parameters
 
 - properties: string[] - The list of property keys to be ordered
 - [order]: string[] - An array of property keys to be ordered first, with an optional '\*' property
+- [fieldLabel]: string - The field the `order` belongs to, as `fieldLabelForLog()` names it, for the warnings
 
 #### Returns
 
 - string[]: A list with the `properties` ordered
-
-#### Throws
-
-- Error when the properties cannot be ordered correctly
 
 ### pad()
 

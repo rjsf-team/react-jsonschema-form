@@ -1,4 +1,6 @@
-import { orderProperties } from '../src/index.ts';
+import type { MockInstance } from 'vitest';
+
+import { noop, orderProperties } from '../src/index.ts';
 
 describe('orderProperties()', () => {
   it('returns properties when order array is not specified', () => {
@@ -29,34 +31,79 @@ describe('orderProperties()', () => {
     const order = ['quux', 'foo', '*', 'corge', 'baz'];
     expect(orderProperties(properties, order)).toEqual(['foo', 'qux', 'bar', 'baz']);
   });
-  it('throws error when * is missing and there is one more prop than ordered', () => {
-    const properties = ['foo', 'bar', 'baz'];
-    const order = ['foo', 'baz'];
-    expect(() => orderProperties(properties, order)).toThrow("uiSchema order list does not contain property 'bar'");
-  });
-  it('throws error when * is missing and there are a few more props than ordered', () => {
-    const properties = ['foo', 'bar', 'baz'];
-    const order = ['foo'];
-    expect(() => orderProperties(properties, order)).toThrow(
-      "uiSchema order list does not contain properties 'bar', 'baz'",
-    );
-  });
   it('places a property named __proto__ at the wildcard', () => {
     expect(orderProperties(['foo', '__proto__'], ['foo', '*'])).toEqual(['foo', '__proto__']);
   });
-  it('throws error when * is missing and a property named __proto__ is not ordered', () => {
-    expect(() => orderProperties(['foo', '__proto__'], ['foo'])).toThrow(
-      "uiSchema order list does not contain property '__proto__'",
-    );
-  });
+
   it('should remove from order an Object.prototype member that is not in properties', () => {
     expect(orderProperties(['foo'], ['toString', '*'])).toEqual(['foo']);
   });
-  it('throws error when there are multiple *s in order', () => {
-    const properties = ['foo', 'bar', 'baz'];
-    const order = ['*', 'foo', '*'];
-    expect(() => orderProperties(properties, order)).toThrow(
-      'uiSchema order list contains more than one wildcard item',
-    );
+
+  describe('an order that leaves properties out or repeats the wildcard', () => {
+    let consoleWarnSpy: MockInstance;
+
+    beforeEach(() => {
+      consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+    });
+
+    afterEach(() => {
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('places a property the order does not list at the end and warns, naming it', () => {
+      const properties = ['foo', 'bar', 'baz'];
+      const order = ['foo', 'baz'];
+      expect(orderProperties(properties, order)).toEqual(['foo', 'baz', 'bar']);
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        "A ui:order does not list property 'bar', so it is placed at the end",
+      );
+    });
+
+    it('places the properties the order does not list at the end, in their own order, and warns, naming them', () => {
+      const properties = ['foo', 'bar', 'baz'];
+      const order = ['foo'];
+      expect(orderProperties(properties, order)).toEqual(['foo', 'bar', 'baz']);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        "A ui:order does not list properties 'bar', 'baz', so they are placed at the end",
+      );
+    });
+
+    it('names the field in the warning when given its label', () => {
+      expect(orderProperties(['foo', 'bar'], ['bar'], '"root_address" (address)')).toEqual(['bar', 'foo']);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'The ui:order of "root_address" (address) does not list property \'foo\', so it is placed at the end',
+      );
+    });
+
+    it('places a property named __proto__ that the order does not list at the end', () => {
+      expect(orderProperties(['foo', '__proto__'], ['foo'])).toEqual(['foo', '__proto__']);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        "A ui:order does not list property '__proto__', so it is placed at the end",
+      );
+    });
+
+    it('does not warn when every property is listed', () => {
+      expect(orderProperties(['foo', 'bar'], ['bar', 'foo'])).toEqual(['bar', 'foo']);
+      expect(orderProperties(['foo', 'bar'], ['bar', '*'])).toEqual(['bar', 'foo']);
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+    });
+
+    it('lets the first * place the unlisted properties when there are several, dropping the others, and warns', () => {
+      const properties = ['foo', 'bar', 'baz'];
+      const order = ['*', 'foo', '*'];
+      expect(orderProperties(properties, order)).toEqual(['bar', 'baz', 'foo']);
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        "A ui:order has more than one '*', so only the first one places the properties it does not list",
+      );
+    });
+
+    it('names the field in the wildcard warning when given its label', () => {
+      expect(orderProperties(['foo', 'bar'], ['foo', '*', 'bar', '*'], '"root"')).toEqual(['foo', 'bar']);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'The ui:order of "root" has more than one \'*\', so only the first one places the properties it does not list',
+      );
+    });
   });
 });
