@@ -63,7 +63,7 @@ import {
   withoutSelections,
   withSelectionsAsOf,
   withSelectionsHeldFor,
-  withSelectionsHeldForJson,
+  withSelectionsHeldForValidated,
 } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
@@ -788,8 +788,8 @@ function mergeErrors<T>(
  * @param formData - The form data to validate
  * @param [retrievedSchema] - An optionally pre-resolved schema to validate against instead of the context's `schema`
  * @param [heldPath] - The path whose field and the fields above it keep the options they show, see `heldPathOf()`
- * @param [shownData=formData] - The data the form shows, which `formData` is with extra data omitted on a submit or
- *          `validateForm()`
+ * @param [shownData=formData] - The data the form shows, which `formData` is with extra data omitted on a submit,
+ *          `validateForm()` or a `liveOmit: 'onBlur'` blur
  */
 export function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
@@ -812,7 +812,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
   // A selection holding for the data the form shows holds for the validated data and its copy too, as the ui:required
   // walk reads the one and the defaults for `customValidate` are taken from the other
   const fieldState = fieldStateOf(
-    withSelectionsHeldForJson(
+    withSelectionsHeldForValidated(
       context.uiState,
       (at) => getAt(shownData, at),
       (at) => [getAt(formData, at), getAt(validationFormData, at)],

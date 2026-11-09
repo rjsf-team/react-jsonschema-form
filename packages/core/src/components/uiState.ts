@@ -465,12 +465,12 @@ export function jsonCopyOf(data: unknown): unknown {
  *
  * @param uiState - The form's option selections and cycle expansions
  * @param dataAt - The data the form shows at a field's path
- * @param copiesAt - The validated data at a field's path, with extra data omitted on a submit or `validateForm()` that
- *        asks for it, which the ui:required walk reads, and its JSON copy, which writes an array item holding
- *        `undefined` as the `null` a copy of the item alone would not
+ * @param copiesAt - The validated data at a field's path, with extra data omitted on a submit, `validateForm()` or a
+ *        `liveOmit: 'onBlur'` blur that asks for it, which the ui:required walk reads, and its JSON copy, which writes an
+ *        array item holding `undefined` as the `null` a copy of the item alone would not
  * @returns - The selections, each holding for its data and, where that is the form's, its validated copies
  */
-export function withSelectionsHeldForJson(
+export function withSelectionsHeldForValidated(
   uiState: UiStateReader,
   dataAt: (path: FieldPathList) => unknown,
   copiesAt: (path: FieldPathList) => readonly unknown[],
