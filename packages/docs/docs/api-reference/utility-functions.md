@@ -293,6 +293,23 @@ An `ObjectFieldTemplate` asks `registry.schemaUtils.canExpand(schema, uiSchema, 
 
 - boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, is not at the maxProperties limit and has a name its `propertyNames.enum` allows left to take
 
+### constrainsAlike&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Says whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as `oldSchema`, the `default` the schema holding a field declares for it standing in for its own, as it does for the defaults.
+A type guessed from the data (see `GUESSED_TYPE_FLAG`) describes the data rather than the schema, so it is read as no type.
+These are the constraints that decide whether a field the data holds as `undefined`, a clear, stays one across a schema change or gives way to the new schema's defaults, as `sanitizeDataForNewSchema()` and an `anyOf`/`oneOf` switch decide it.
+
+#### Parameters
+
+- oldSchema: S - The field's schema before the change
+- newSchema: S - The field's schema after the change
+- oldInheritedDefault: unknown - The default the schema holding `oldSchema` declares for it
+- newInheritedDefault: unknown - The default the schema holding `newSchema` declares for it
+
+#### Returns
+
+- boolean: Whether both schemas constrain the field alike
+
 ### constrainsValue()
 
 Says whether `keyword` of a schema constrains the value the schema describes, either directly, as `enum`, `minLength` or `required` do, or by way of other subschemas, as `allOf`, `not` or `$ref` do.
@@ -1477,6 +1494,21 @@ Using the `schema`, `defaultType` and `options`, extract out the props for the `
 
 - InputPropsType: The extracted `InputPropsType` object
 
+### getItemSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the schema an array schema declares for its item at `index`: the `prefixItems` or tuple `items` entry there, and past them its `items`, or the `additionalItems` beside a tuple.
+A position it declares nothing at, or something other than a schema at, constrains nothing and is `true`, as is one under an array `items` beside `prefixItems`, which mixes the two ways of writing a tuple.
+`sanitizeDataForNewSchema()` and `Form`'s sanitize of a schema change read an array's items position by position through it.
+
+#### Parameters
+
+- schema: S - The array schema
+- index: number - The index of the item
+
+#### Returns
+
+- S | boolean: The item's schema, as written: a schema, `true` where nothing constrains it, or `false` where no item is allowed there
+
 ### getItemUiSchemaForItem&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the `uiSchema` that applies to the array item at `index`, given that item's own form data.
@@ -1610,6 +1642,18 @@ Widgets should call this helper once and pass the result to `enumOptionsDomValue
 #### Returns
 
 - OptionValueFormat: The resolved `OptionValueFormat`, defaulting to `'indexed'` when not set
+
+### getPrefixLength&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the number of items an array schema describes by position, through `prefixItems` or a tuple `items`.
+
+#### Parameters
+
+- schema: S - The array schema
+
+#### Returns
+
+- number: The length of its `prefixItems` or tuple `items`, or 0 where it declares neither
 
 ### getPresentationDeclaration&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getpresentationdeclaration}
 
@@ -4216,11 +4260,11 @@ Due to the nature of schemas, this sanitization happens recursively for nested o
 Also, any properties in the old schema that are non-existent in the new schema, or that it declares with another type, are removed from the data at every level.
 An object property the data doesn't hold, or holds as `null` where neither its type list nor `nullable: true` allows `null`, is left out, for the defaults to fill in.
 An object or array equal to the new schema's `const` is kept as it is. One the new `const` rejects once sanitized takes the new `const` where it holds the old one, and is otherwise cleared, or dropped as an array item, unless the old schema declared the same `const`.
-An array whose old schema declares no type, or declares no `items` (or `items: true`) and no `prefixItems`, is sanitized against the new items. A typed old schema is cleared instead where its type was guessed from the data or the new schema declares a tuple `items` or `prefixItems`, and an untyped one keeps an array the new schema describes as a tuple or with `prefixItems` as it is, unless the new schema declares `items: false`, or `additionalItems: false` beside a tuple `items`. An item that isn't an object is dropped where the new items declare `type: 'object'`, unless it is a `null` that `nullable: true` allows.
+An array is sanitized item by item, each item against the schemas the two sides declare at its position: a `prefixItems` or tuple `items` entry, and past them `items`, or `additionalItems` beside a tuple. A position an old schema declares nothing, `true` or `false` at constrains nothing, since an old `false` shaped no item there, and an old schema declaring no type has its items read without the `type` they declare. The array is cleared where its old type was guessed from the data and the new schema describes its items otherwise, where an item reaches a position only the new side declares `false` at, or one the two sides declare different types at, or where an item the new `prefixItems` or tuple describes is dropped, which would move the items after it, unless the item is `undefined`, which stays a hole, or both sides constrain its position alike, as `constrainsAlike()` reads them, its `default` aside, which keeps it for validation to report. An item that isn't an object is dropped where the new items declare `type: 'object'`, unless it is a `null` that `nullable: true` allows, and one the new items' `const` rejects is dropped unless it holds the old `const`, which takes the new one.
 A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
 A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
 A value outside the new `enum` or constant options is replaced with the new `default` when that is an option, with the only option when there is one, or cleared; array items outside them are dropped.
-A property cleared this way, by the new `const` or a `readOnly` `default`, or as an array the new schema can't hold, is removed rather than set to `undefined`, for the defaults to fill in. A property the data already holds as `undefined` keeps it where the old schema declares the same type, `const`, `enum` or constant options, `maxItems` and `default` for it, the `default` the object declares for it included, and is otherwise removed too unless a value replaces it, as a top-level clear is when `anyOf`/`oneOf` options are switched.
+A property cleared this way, by the new `const`, its `enum` or a `readOnly` `default`, or as an array the new schema can't hold, is removed rather than set to `undefined`, for the defaults to fill in. A property the data already holds as `undefined` keeps it where the old schema declares the same type, `const`, `enum` or constant options, `maxItems` and `default` for it, the `default` the object declares for it included, and is otherwise removed too unless a value replaces it, as a top-level clear is when `anyOf`/`oneOf` options are switched.
 `Form` does not call this to sanitize its data: it diffs the field trees before and after a change and judges only the fields whose constraints the change altered.
 
 #### Parameters
@@ -4233,7 +4277,7 @@ A property cleared this way, by the new `const` or a `readOnly` `default`, or as
 
 #### Returns
 
-- T: The new form data, without the fields uniquely associated with the old schema. Will return `undefined` if the new schema is not an object containing properties, or where its object or array `const` rejects the data, and a copy of that `const` where the data holds the old schema's.
+- T: The new form data, without the fields uniquely associated with the old schema. Will return `undefined` if the new schema is not an object containing properties, or where its `const` rejects object or array data, and a copy of that `const` where the data holds the old schema's.
 
 ## Schema utils creation function
 

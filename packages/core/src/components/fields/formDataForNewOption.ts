@@ -9,6 +9,7 @@ import type {
   UiSchemaDefinitions,
 } from '@rjsf/utils';
 import {
+  constrainsAlike,
   CONST_KEY,
   deepEquals,
   DEFAULT_KEY,
@@ -22,7 +23,6 @@ import {
 } from '@rjsf/utils';
 
 import keepClears from '../keepClears.ts';
-import { hasSameConstraints } from '../sanitizeFieldTree.ts';
 import { asFieldValue } from '../uiState.ts';
 import { declaresProperty, withGlobalUiOptions } from './fieldWidgetUtils.ts';
 
@@ -122,7 +122,7 @@ function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType
   return (
     !isSchemaObject<S>(oldProperty) ||
     !isSchemaObject<S>(newProperty) ||
-    hasSameConstraints<S>(
+    constrainsAlike<S>(
       schemaUtils.retrieveSchema(oldProperty),
       schemaUtils.retrieveSchema(newProperty),
       optionDefaultFor<S>(oldOption, key),

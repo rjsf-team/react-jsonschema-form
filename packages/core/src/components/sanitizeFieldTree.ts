@@ -7,6 +7,7 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  constrainsAlike,
   CONST_KEY,
   deepEquals,
   DEFAULT_KEY,
@@ -14,6 +15,8 @@ import {
   fieldPathFromList,
   getByPath,
   getDiscriminatorFieldFromSchema,
+  getItemSchema,
+  getPrefixLength,
   getRenderedOptionSchema,
   getXxxOfOptions,
   GUESSED_TYPE_FLAG,
@@ -227,9 +230,14 @@ function turnsGuessed<S extends StrictRJSFSchema>(oldLayers: readonly S[], newLa
   return oldLayers.length > 0 && isGuessed(newLayers) && !isGuessed(oldLayers);
 }
 
-/** A type guessed from an extra key's data describes the data rather than the schema, so it is no type */
+/** A type guessed from an extra key's data describes the data rather than the schema, so it is no type. A list is read
+ * by what it names, whatever its order or repeats */
 function typeOf<S extends StrictRJSFSchema>(layers: readonly S[]): unknown {
-  return isGuessed(layers) ? undefined : keywordOf(layers, 'type');
+  if (isGuessed(layers)) {
+    return undefined;
+  }
+  const type = keywordOf(layers, 'type');
+  return Array.isArray(type) ? [...new Set(type.map(String))].sort() : type;
 }
 
 /** The values a field offers: its `enum`, or the constants of options that are all constants */
@@ -245,34 +253,6 @@ function offeredValues<S extends StrictRJSFSchema>(layers: readonly S[]): unknow
     return undefined;
   }
   return options.map((option) => toConstant<S>(option));
-}
-
-/** Whether two `type`s name the same types, a list by what it names */
-function isSameType(oldType: unknown, newType: unknown): boolean {
-  if (Array.isArray(oldType) && Array.isArray(newType)) {
-    return oldType.length === newType.length && oldType.every((type) => newType.includes(type));
-  }
-  return oldType === newType;
-}
-
-/** Whether `oldField` and `newField` hold the same values and declare the same default, as `judge()` compares them
- *
- * @param oldField - The field's schema before the change
- * @param newField - The field's schema after the change
- * @param oldInherited - The default the schema above `oldField` declares for it
- * @param newInherited - The default the schema above `newField` declares for it
- * @returns - Whether a value of the field keeps its standing
- */
-export function hasSameConstraints<S extends StrictRJSFSchema>(
-  oldField: S,
-  newField: S,
-  oldInherited: unknown,
-  newInherited: unknown,
-): boolean {
-  return deepEquals(
-    constraintsOf([oldField], oldField.default ?? oldInherited),
-    constraintsOf([newField], newField.default ?? newInherited),
-  );
 }
 
 /** What a field's value is judged by: the keywords whose change can make the value one the field no longer holds */
@@ -349,7 +329,7 @@ function judge<S extends StrictRJSFSchema>(
   if (isOldDefault && newDefault !== undefined) {
     return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
   }
-  if (before.type !== undefined && !isSameType(before.type, now.type)) {
+  if (before.type !== undefined && !deepEquals(before.type, now.type)) {
     return DROP;
   }
   if (now.const !== undefined && !deepEquals(now.const, value)) {
@@ -385,11 +365,49 @@ function propertiesOf<S extends StrictRJSFSchema>(layers: readonly S[]): Map<str
   return properties;
 }
 
-/** The subschema the item at `index` is rendered with */
-function itemOf<S extends StrictRJSFSchema>(layers: readonly S[], index: number): S | undefined {
-  const items = keywordOf(layers, 'items');
-  const item = Array.isArray(items) ? (items[index] ?? keywordOf(layers, 'additionalItems')) : items;
-  return isSchemaObject<S>(item) ? item : undefined;
+/** The keywords that describe an array's items */
+const ITEMS_KEYWORDS = ['items', 'prefixItems', 'additionalItems'];
+
+/** The innermost layer declaring a field's items, whose `prefixItems`, `items` and `additionalItems` describe them
+ * together, rather than one layer's `prefixItems` beside another's `items` */
+function itemsLayerOf<S extends StrictRJSFSchema>(layers: readonly S[]): S | undefined {
+  return layers.findLast((layer) => ITEMS_KEYWORDS.some((keyword) => Object.hasOwn(layer, keyword)));
+}
+
+/** The subschema the item at `index` is judged by, as `getItemSchema()` reads it: `true` where nothing constrains it,
+ * and `false` where no item is allowed. `ArrayField` renders a `prefixItems` array's items with `items`, and the default
+ * draft-07 validator ignores `prefixItems`, but a schema declaring it is written for a validator that reads it by
+ * position, as the Ajv 2019 and 2020 classes do, so its items are judged that way, as `sanitizeDataForNewSchema()`
+ * sanitizes them
+ */
+function itemOf<S extends StrictRJSFSchema>(itemsLayer: S | undefined, index: number): S | boolean {
+  return itemsLayer ? getItemSchema<S>(itemsLayer, index) : true;
+}
+
+/** Whether both trees constrain the item `value` at a position alike, as `constrainsAlike()` reads them, its `default`
+ * aside: a `default` decides no item's validity
+ *
+ * @param ctx - The diff's context
+ * @param oldItem - The position's schema in the previous tree
+ * @param newItem - The position's schema in the new tree
+ * @param value - The item
+ * @returns - Whether an item the new schema rejects there already failed the old one
+ */
+function constrainsItemAlike<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  oldItem: S,
+  newItem: S,
+  value: unknown,
+): boolean {
+  const data = asFieldValue<T>(value);
+  const oldSchema = ctx.oldSchemaUtils.retrieveSchema(oldItem, data);
+  const newSchema = ctx.schemaUtils.retrieveSchema(newItem, data);
+  return constrainsAlike<S>(
+    { ...oldSchema, default: undefined },
+    { ...newSchema, default: undefined },
+    undefined,
+    undefined,
+  );
 }
 
 /** One field of both trees: its subschema and value on each side, and the default its parent declares for it */
@@ -581,42 +599,83 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return isEmptied && !edited && turnsGuessed(oldLayers, newLayers) ? DROP : result;
   }
   if (Array.isArray(newValue)) {
-    const previousKeyOf = previousKeys(ctx, path, oldValue, {
-      items: newValue,
-      isTuple: Array.isArray(keywordOf(newLayers, 'items')),
-    });
+    const newItemsLayer = itemsLayerOf(newLayers);
+    const oldItemsLayer = itemsLayerOf(oldLayers);
+    const prefixLength = newItemsLayer ? getPrefixLength<S>(newItemsLayer) : 0;
+    const maxItems = keywordOf(newLayers, 'maxItems');
+    const isNewBound = !edited && !deepEquals(keywordOf(oldLayers, 'maxItems'), maxItems);
+    // No prefix item is dropped, so one at or past `maxItems` is past the items the array may hold. A new `maxItems`
+    // cuts it off with the items after it; an unchanged one leaves the array as it is, for validation to report
+    const limit = typeof maxItems === 'number' ? maxItems : Infinity;
+    const bound = isNewBound ? limit : Infinity;
+    // An item at a position the new schema allows none at, or a prefix item it rejects, clears the array, as
+    // `sanitizeDataForNewSchema()` clears it, unless it is at or past `maxItems`, where sanitize stops
+    let rejectsArray = false;
+    const previousKeyOf = previousKeys(ctx, path, oldValue, { items: newValue, isTuple: prefixLength > 0 });
     // Read slot by slot, so a hole a write past the array's end left keeps its place rather than being skipped
     const items = Array.from(newValue, (item: unknown, index) => {
-      const newItem = itemOf(newLayers, index);
+      // A cleared array keeps none of its items, so the rest need no walk
+      if (rejectsArray) {
+        return item;
+      }
+      const newItem = itemOf(newItemsLayer, index);
+      const oldItem = itemOf(oldItemsLayer, index);
+      if (newItem === false) {
+        // One the old schema allowed none at too is kept for validation to report, as is one of the array being
+        // edited, which is the user's, and an unfilled prefix item, which stays a hole
+        rejectsArray ||= oldItem !== false && !edited && index < limit && !(item === undefined && index < prefixLength);
+        return item;
+      }
+      if (newItem === true) {
+        return item;
+      }
       const previousIndex = previousKeyOf(String(index));
       const hasPrevious =
         Array.isArray(oldValue) && previousIndex !== undefined && Number(previousIndex) < oldValue.length;
       // An item no previous one moved to, such as a copy or a new row, is judged as holding what it holds now under
       // the old tree's item at its index, so a change that flips the constraints of the rows judges it as it judges them
-      return newItem === undefined
-        ? item
-        : walk(
-            ctx,
-            {
-              oldRaw: itemOf(oldLayers, index),
-              newRaw: newItem,
-              oldValue: hasPrevious ? valueAt(oldValue, previousIndex) : item,
-              newValue: item,
-              oldInherited: undefined,
-              newInherited: undefined,
-              isItem: true,
-              hasOld: Array.isArray(oldValue),
-              oldPath: oldPath && hasPrevious ? [...oldPath, Number(previousIndex)] : undefined,
-              shownAbove: shownHere,
-            },
-            [...path, index],
-          );
+      const judged = walk(
+        ctx,
+        {
+          // An old `false` allowed no item there, so it shaped none, and the item is kept as one no old schema held
+          oldRaw: typeof oldItem === 'boolean' ? undefined : oldItem,
+          newRaw: newItem,
+          oldValue: hasPrevious ? valueAt(oldValue, previousIndex) : item,
+          newValue: item,
+          oldInherited: undefined,
+          newInherited: undefined,
+          isItem: true,
+          hasOld: Array.isArray(oldValue),
+          oldPath: oldPath && hasPrevious ? [...oldPath, Number(previousIndex)] : undefined,
+          shownAbove: shownHere,
+        },
+        [...path, index],
+      );
+      if (judged !== DROP || index >= prefixLength) {
+        return judged;
+      }
+      // A prefix item dropped would move the items after it into positions describing others. An unfilled one stays a
+      // hole, one of the array being edited stays as the user wrote it, and one whose position both trees constrain
+      // alike, its `default` aside, already failed the old schema, so each stays for validation to report, as
+      // `sanitizeDataForNewSchema()` keeps it
+      if (
+        edited ||
+        item === undefined ||
+        index >= limit ||
+        (typeof oldItem === 'object' && constrainsItemAlike(ctx, oldItem, newItem, item))
+      ) {
+        return item;
+      }
+      rejectsArray = true;
+      return judged;
     });
+    // A cleared array is removed, or kept as it is where it is an item of another array, as `sanitizeDataForNewSchema()`
+    // keeps an inner array its sanitize clears
+    if (rejectsArray) {
+      return isItem ? newValue : DROP;
+    }
     const kept = items.filter((item) => item !== DROP);
-    const maxItems = keywordOf(newLayers, 'maxItems');
-    const isNewBound = !edited && !deepEquals(keywordOf(oldLayers, 'maxItems'), maxItems);
-    const bounded =
-      isNewBound && typeof maxItems === 'number' && kept.length > maxItems ? kept.slice(0, maxItems) : kept;
+    const bounded = kept.length > bound ? kept.slice(0, bound) : kept;
     return bounded.length === newValue.length && bounded.every((item, index) => item === newValue[index])
       ? newValue
       : bounded;
