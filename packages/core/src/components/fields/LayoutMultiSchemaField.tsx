@@ -179,7 +179,7 @@ export default function LayoutMultiSchemaField<
     selectSwitchedOption<T, S, F>(
       selectOption,
       schemaUtils,
-      { from: cellsOption, to: newOptionIndex, newOption },
+      { from: cellsOption, to: newOptionIndex, newOption: options?.[newOptionIndex] },
       formData,
       sentData,
       outcome,
