@@ -315,12 +315,8 @@ function scopeAt<S extends StrictRJSFSchema>(
 }
 
 /** Returns the nodes `scopeAt()` lists for the node `id` reached at no place in particular */
-function scopeOf<S extends StrictRJSFSchema>(
-  graph: SchemaGraph<S>,
-  id: NodeId,
-  follow: Follow = 'conditional',
-): ObjectNode<S>[] {
-  return scopeAt(graph, id, undefined, follow).map(({ node }) => node);
+function scopeOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): ObjectNode<S>[] {
+  return scopeAt(graph, id, undefined).map(({ node }) => node);
 }
 
 /** Returns the declarations of the property `key` in the scope of the option `id` reached at `place`, each at the place
@@ -736,8 +732,6 @@ function derive<S extends StrictRJSFSchema>(
   };
   const unplaced = (value: unknown, child: NodeId) =>
     pointerTo(graph, child) ?? sub(value, child, undefined, false, KEPT, 'none');
-  // A part in the cycle of the node holding it is a level of the data below the copy of that level, and recurs
-  const cycle = choices.cycleOf(id);
   const leading =
     cutting === 'none'
       ? undefined
@@ -745,6 +739,8 @@ function derive<S extends StrictRJSFSchema>(
           if (choices.leadOf(child) === undefined) {
             return undefined;
           }
+          // A part in the cycle of the node holding it is a level of the data below the copy of that level, and recurs
+          const cycle = choices.cycleOf(id);
           const kept =
             cycle !== undefined && choices.cycleOf(child) === cycle
               ? cutTo(graph, child)
@@ -1039,7 +1035,9 @@ function sameTypes(types: readonly string[] | undefined, others: readonly string
 
 /** Returns the types of value the node `id` takes, an `integer` read as a `number`, as its `type`, which a `nullable:
  * true` beside it lets take `null` too, its `const` and its `enum` say, along with what its `$ref` and `allOf` apply on
- * top of it and the options of its `anyOf` and `oneOf` take, or undefined where none of them limits the type. Where
+ * top of it and the options of its `anyOf` and `oneOf` take, or undefined where none of them limits the type. They are
+ * listed in alphabetical order, whatever order the keywords list them in, so the `type` `cutTo()` writes for a node, by
+ * which a precompiled validator finds the cut's validator, is the same however the node was reached. Where
  * these apply to the same value in a cycle, each node of the cycle takes the most types the others let it, whichever of
  * them is read first: every node starts out taking any, and is read again whenever a node it applies changes, which, a
  * node only ever losing types, ends. A graph extending another adds nodes above the base's, which the base's never
@@ -1123,7 +1121,7 @@ function readTypesFrom<S extends StrictRJSFSchema>(
     }
   }
   for (let at = pending.pop(); at !== undefined; at = pending.pop()) {
-    const types = reads[at]();
+    const types = reads[at]()?.toSorted();
     if (!sameTypes(types, known.get(at))) {
       known.set(at, types);
       pending.push(...(appliedBy.get(at) ?? []));

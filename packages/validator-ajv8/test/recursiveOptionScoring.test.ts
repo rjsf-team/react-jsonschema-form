@@ -688,4 +688,37 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
       }),
     ).toBe(1);
   });
+
+  it('keys a cut the same whichever node a precompiled validator and the form read its types from first', () => {
+    // Each call builds its own objects, so the compile and the form each read a graph they built themselves
+    const build = () => {
+      const options: RJSFSchema[] = [{ type: 'object', properties: { x: { $ref: '#/$defs/R' } } }, { type: 'string' }];
+      const root: RJSFSchema = {
+        $defs: {
+          C1: { type: ['object', 'null'] },
+          C2: { type: ['null', 'object'] },
+          R: {
+            allOf: [{ $ref: '#/$defs/C1' }, { $ref: '#/$defs/C2' }],
+            anyOf: [
+              { properties: { n: { allOf: [{ $ref: '#/$defs/R' }, { $ref: '#/$defs/C1' }] } } },
+              { properties: { n: { $ref: '#/$defs/R' } } },
+            ],
+          },
+        },
+        type: 'object',
+        properties: { p: { oneOf: options } },
+      };
+      return { options, root };
+    };
+    const validatorFns = evalValidatorCode(compileSchemaValidatorsCode(build().root, {}));
+    const { options, root } = build();
+    expect(
+      getFirstMatchingOption(
+        { validator: createPrecompiledValidator(validatorFns, root) },
+        { x: { n: null } },
+        options,
+        root,
+      ),
+    ).toBe(0);
+  });
 });

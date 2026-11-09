@@ -402,7 +402,7 @@ describe('scoringTarget()', () => {
         oneOf: [{ properties: { count: { $ref: '#/definitions/Count' }, untyped: { $ref: '#/definitions/Untyped' } } }],
       };
       expect(scored(schema, '/oneOf/0')).toEqual({
-        properties: { count: { allOf: [{ type: ['number', 'array', 'object'] }] }, untyped: {} },
+        properties: { count: { allOf: [{ type: ['array', 'number', 'object'] }] }, untyped: {} },
       });
     });
     it('keeps a part leading to a choice with one recurring option, which validates the data below it once', () => {
@@ -744,7 +744,7 @@ describe('scoringTarget()', () => {
       };
       expect(scored(schema, '/oneOf/0')).toEqual({
         properties: {
-          repeated: { allOf: [{ type: ['number', 'null', 'object'] }] },
+          repeated: { allOf: [{ type: ['null', 'number', 'object'] }] },
           strings: { allOf: [{ type: 'string' }] },
         },
       });
@@ -759,7 +759,7 @@ describe('scoringTarget()', () => {
         definitions: { Expr: { anyOf: [expression('p'), expression('q')] } },
         oneOf: [{ properties: { next: { $ref: '#/definitions/Expr' } } }],
       };
-      expect(scored(schema, '/oneOf/0')).toEqual({ properties: { next: { allOf: [{ type: ['object', 'null'] }] } } });
+      expect(scored(schema, '/oneOf/0')).toEqual({ properties: { next: { allOf: [{ type: ['null', 'object'] }] } } });
     });
     it('reads the dependentSchemas of an option the root holds as part of its scope, as it reads its dependencies', () => {
       const expression = (kind: string): RJSFSchema => ({
@@ -1230,7 +1230,7 @@ describe('scoringTarget()', () => {
       expect(scoringTarget(graph, node, false)).toEqual({
         properties: {
           v: { allOf: [{ $ref: '#/definitions/Plain' }, { allOf: [{ type: 'object' }] }] },
-          w: { type: ['object', 'null'] },
+          w: { type: ['null', 'object'] },
         },
       });
     });
