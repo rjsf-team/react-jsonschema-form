@@ -99,7 +99,8 @@ function layerRecords<Owner extends PartOwner>(
  * layer's `default` is layered beneath that layer's own entry for every widget key any layer declares, so it overrides
  * the parts it declares in the layers beneath it, even under a key one of them declares, and the layered `default`s
  * are what a widget no layer declares draws. The `fieldDefault`s are layered over one another only, since they sit
- * beneath the merged field entries. The top layer that declares a `selectedOptionDescription` gives it
+ * beneath the merged field entries. The top layer that declares a `selectedOptionDescription` gives it, as does the
+ * top layer that declares a `fieldTemplateOrder`
  *
  * @param layers - The presentations to merge, from the bottom; `undefined` entries are skipped
  * @returns - The merged presentation
@@ -112,6 +113,10 @@ export default function mergeThemePresentation(
     (placement, layer) => layer?.selectedOptionDescription ?? placement,
     undefined,
   );
+  const fieldTemplateOrder = layers.reduce<ThemePresentation['fieldTemplateOrder']>(
+    (order, layer) => layer?.fieldTemplateOrder ?? order,
+    undefined,
+  );
   return {
     default: layerDeclarations<Exclude<PartOwner, 'widget'>>(...defaults),
     widgets: layerRecords(
@@ -121,5 +126,6 @@ export default function mergeThemePresentation(
     fields: layerRecords(layers.map((layer) => layer?.fields)),
     fieldDefault: layerBlankets(...layers.map((layer) => layer?.fieldDefault)),
     ...(selectedOptionDescription && { selectedOptionDescription }),
+    ...(fieldTemplateOrder && { fieldTemplateOrder }),
   };
 }

@@ -1,5 +1,6 @@
 import type {
   FieldPresentation,
+  FieldTemplateOrder,
   MergedThemePresentation,
   Registry,
   ResolvedPresentationDeclaration,
@@ -231,15 +232,16 @@ describe('widgetAriaProps()', () => {
         ).toBe(`${presentation.description.id} root_color__selectedOptionDescription`);
       });
       describe('with a description and help of its own under a field above with its own', () => {
-        const fieldPlan = (declaration = TEMPLATE) =>
+        const fieldPlan = (declaration = TEMPLATE, templateOrder?: FieldTemplateOrder) =>
           resolveFieldPresentation({
             id: 'root_color',
             declaration,
             label: 'Color',
             description: 'Field',
             help: 'Field help',
+            templateOrder,
           });
-        const optionPlan = (inherited: FieldPresentation) =>
+        const optionPlan = (inherited: FieldPresentation, templateOrder?: FieldTemplateOrder) =>
           resolveFieldPresentation({
             id: 'root_color',
             declaration: TEMPLATE,
@@ -247,15 +249,29 @@ describe('widgetAriaProps()', () => {
             description: 'Own',
             help: 'Own help',
             inherited,
+            templateOrder,
           });
         const selected = 'root_color__selectedOptionDescription';
+        // Each placement under the template order of a theme that declares it, as the select draws inside the template
         it.each([
-          ['afterDescription', ['fieldDescription', 'ownDescription', selected, 'fieldHelp', 'ownHelp']],
-          ['beforeDescription', [selected, 'fieldDescription', 'fieldHelp', 'ownDescription', 'ownHelp']],
-          ['afterHelp', ['fieldDescription', 'fieldHelp', 'ownDescription', 'ownHelp', selected]],
-        ] as const)('lists it under %s around every level', (placement, expected) => {
-          const field = fieldPlan();
-          const presentation = optionPlan(field);
+          [
+            'afterDescription',
+            ['description', 'children', 'help'],
+            ['fieldDescription', 'ownDescription', selected, 'ownHelp', 'fieldHelp'],
+          ],
+          [
+            'beforeDescription',
+            ['children', 'description', 'help'],
+            [selected, 'ownDescription', 'ownHelp', 'fieldDescription', 'fieldHelp'],
+          ],
+          [
+            'afterHelp',
+            ['description', 'help', 'children'],
+            ['fieldDescription', 'fieldHelp', 'ownDescription', 'ownHelp', selected],
+          ],
+        ] as const)('lists it under %s around every level', (placement, templateOrder, expected) => {
+          const field = fieldPlan(TEMPLATE, templateOrder);
+          const presentation = optionPlan(field, templateOrder);
           const ids: Record<string, string> = {
             fieldDescription: field.description.id,
             fieldHelp: field.help.id,

@@ -6416,7 +6416,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                         class="ant-checkbox ant-wave-target css-dev-only-do-not-override-i19pbt ant-checkbox-checked"
                       >
                         <input
-                          aria-describedby="root__description root__help"
+                          aria-describedby="root__help root__description"
                           checked=""
                           class="ant-checkbox-input"
                           id="root__0"
@@ -6440,7 +6440,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                         class="ant-checkbox ant-wave-target css-dev-only-do-not-override-i19pbt"
                       >
                         <input
-                          aria-describedby="root__description root__help"
+                          aria-describedby="root__help root__description"
                           class="ant-checkbox-input"
                           id="root__1"
                           name="root"
@@ -6463,7 +6463,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                         class="ant-checkbox ant-wave-target css-dev-only-do-not-override-i19pbt"
                       >
                         <input
-                          aria-describedby="root__description root__help"
+                          aria-describedby="root__help root__description"
                           class="ant-checkbox-input"
                           id="root__2"
                           name="root"
@@ -17893,7 +17893,7 @@ exports[`single fields > string field > field with markdown help and description
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__description root__help"
+                    aria-describedby="root__help root__description"
                     class="ant-input css-dev-only-do-not-override-i19pbt"
                     id="root"
                     name="root"
@@ -18014,7 +18014,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__description root__help"
+                    aria-describedby="root__help root__description"
                     class="ant-input css-dev-only-do-not-override-i19pbt"
                     id="root"
                     name="root"
@@ -18126,7 +18126,7 @@ exports[`single fields > string field > field with markdown help text without a 
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__description root__help"
+                    aria-describedby="root__help root__description"
                     class="ant-input css-dev-only-do-not-override-i19pbt"
                     id="root"
                     name="root"
@@ -18457,7 +18457,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__description root__help"
+                    aria-describedby="root__help root__description"
                     class="ant-input css-dev-only-do-not-override-i19pbt"
                     id="root"
                     name="root"

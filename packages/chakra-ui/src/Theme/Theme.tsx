@@ -29,6 +29,7 @@ function createPresentation(): ThemePresentation {
     },
     // `FieldTemplate` draws the help above the widget, so the selected option's description follows it
     selectedOptionDescription: 'afterHelp',
+    fieldTemplateOrder: ['description', 'help', 'children'],
   };
 }
 

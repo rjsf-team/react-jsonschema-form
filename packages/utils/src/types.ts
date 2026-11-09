@@ -1072,7 +1072,16 @@ export interface ThemePresentation {
    * A form whose `SelectWidget` or `FieldTemplate` draws them elsewhere than its theme's declares its own
    */
   selectedOptionDescription?: SelectedOptionDescriptionPlacement;
+  /** The order the theme's `FieldTemplate` draws a field's description and help in around its `children`, so
+   * `resolveFieldPresentation()` lists them in the order they are drawn, `['description', 'children', 'help']` where no
+   * layer declares it. An `anyOf`/`oneOf` option's template draws inside its field's `children`, so a part listed after
+   * `'children'` is drawn after the option's parts, and one listed before it before them
+   */
+  fieldTemplateOrder?: FieldTemplateOrder;
 }
+
+/** The parts a `FieldTemplate` draws around its `children`, in the order it draws them */
+export type FieldTemplateOrder = readonly ('description' | 'help' | 'children')[];
 
 /** Where a `SelectWidget` draws the selected option's description: after the field's description and before its help,
  * before the field's description, or after the help, as a `FieldTemplate` drawing the help above the widget does
@@ -1081,10 +1090,13 @@ export type SelectedOptionDescriptionPlacement = 'afterDescription' | 'beforeDes
 
 /** A form's `ThemePresentation` once `mergeThemePresentation()` merged its layers: an entry in `widgets` for every key
  * any layer declares, with each layer's `default` beneath that layer's own entry, the layered `default` for a key no
- * layer declares, the layered `fieldDefault`, and the top layer's `selectedOptionDescription` that declares one
+ * layer declares, the layered `fieldDefault`, and the top layer's `selectedOptionDescription` and `fieldTemplateOrder`
+ * that declares one
  */
-export type MergedThemePresentation = Required<Omit<ThemePresentation, 'selectedOptionDescription'>> &
-  Pick<ThemePresentation, 'selectedOptionDescription'>;
+export type MergedThemePresentation = Required<
+  Omit<ThemePresentation, 'selectedOptionDescription' | 'fieldTemplateOrder'>
+> &
+  Pick<ThemePresentation, 'selectedOptionDescription' | 'fieldTemplateOrder'>;
 
 /** The class names a theme or a form gives the elements `@rjsf/core` renders, one key per element rather than per
  * concept, since CSS frameworks put a concept's class on different elements: Bootstrap 3 puts `checkbox` on the

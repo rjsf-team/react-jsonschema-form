@@ -29,6 +29,8 @@ function createPresentation(): ThemePresentation {
     },
     // `SelectWidget` draws the selected option's description before the field's description
     selectedOptionDescription: 'beforeDescription',
+    // `FieldTemplate` draws the description and help below the widget
+    fieldTemplateOrder: ['children', 'description', 'help'],
   };
 }
 

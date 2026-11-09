@@ -1580,7 +1580,7 @@ describe("mui's error and help elements carry the ids their field's plan describ
     expect(container.querySelectorAll(`#${helpId('root_pet')}`)).toHaveLength(1);
     expect(container.querySelector(`#${helpId('root_pet')}`)).toHaveTextContent('Pick a pet');
     expect(container.querySelector(`#${optionHelpId('root_pet')}`)).toHaveTextContent('Dogs bark');
-    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('Pick a pet Dogs bark');
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('Dogs bark Pick a pet');
   });
 
   test("renders an anyOf field's errors once, under the id its control is described by", () => {

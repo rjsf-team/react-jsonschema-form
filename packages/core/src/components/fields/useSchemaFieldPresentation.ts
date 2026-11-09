@@ -400,6 +400,7 @@ export default function useSchemaFieldPresentation<
     shownOptionField,
     holdsNoValue,
   ]);
+  const templateOrder = registry.presentation?.fieldTemplateOrder;
   const presentation = useMemo(() => {
     if (!declaration) {
       return undefined;
@@ -417,6 +418,7 @@ export default function useSchemaFieldPresentation<
       hasControl,
       required: controlRequired,
       inherited,
+      templateOrder,
     });
     // The label has no control to name and the field below draws it as its heading, so the description goes undrawn here
     // too, for the field below to draw beneath that heading rather than the template above it
@@ -440,6 +442,7 @@ export default function useSchemaFieldPresentation<
     hideError,
     hasControl,
     controlRequired,
+    templateOrder,
     inherited,
     handsLabelDown,
   ]);

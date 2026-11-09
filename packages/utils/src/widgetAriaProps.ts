@@ -36,8 +36,6 @@ function listSelectedOption(
   presentation: FieldPresentation,
   placement: SelectedOptionDescriptionPlacement,
 ) {
-  // shortcut: only this id is placed, as the plan's `describedBy` lists inherited parts first for every control; move
-  // the ordering into `resolveFieldPresentation()` if other controls' or parts' announced order needs to match too
   const above = new Set<string>();
   const below = new Set<string>();
   const isPart = (id: string) => above.has(id) || below.has(id);

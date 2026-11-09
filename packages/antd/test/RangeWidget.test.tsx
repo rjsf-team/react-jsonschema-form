@@ -27,13 +27,13 @@ describe('RangeWidget', () => {
 
     const handle = screen.getByRole('slider', { name: 'Volume' });
     expect(handle).toHaveAttribute('aria-invalid', 'true');
-    expect(handle).toHaveAttribute('aria-describedby', 'root_volume__error root_volume__description root_volume__help');
-    expect(handle).toHaveAccessibleDescription(/Too quiet.*How loud.*Drag it/);
+    expect(handle).toHaveAttribute('aria-describedby', 'root_volume__error root_volume__help root_volume__description');
+    expect(handle).toHaveAccessibleDescription(/Too quiet.*Drag it.*How loud/);
 
     rerender(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
 
     expect(handle).not.toHaveAttribute('aria-invalid');
-    expect(handle).toHaveAttribute('aria-describedby', 'root_volume__description root_volume__help');
+    expect(handle).toHaveAttribute('aria-describedby', 'root_volume__help root_volume__description');
   });
 
   it('keeps describing the handle while its tooltip opens and closes (#5560)', async () => {
@@ -43,16 +43,16 @@ describe('RangeWidget', () => {
     await user.tab();
     expect(handle).toHaveFocus();
     expect(handle.getAttribute('aria-describedby')).toMatch(
-      /^root_volume__error root_volume__description root_volume__help \S+$/,
+      /^root_volume__error root_volume__help root_volume__description \S+$/,
     );
-    expect(handle).toHaveAccessibleDescription(/Too quiet.*How loud.*Drag it/);
+    expect(handle).toHaveAccessibleDescription(/Too quiet.*Drag it.*How loud/);
 
     await user.tab();
     expect(handle).not.toHaveFocus();
     await waitFor(() =>
       expect(handle).toHaveAttribute(
         'aria-describedby',
-        'root_volume__error root_volume__description root_volume__help',
+        'root_volume__error root_volume__help root_volume__description',
       ),
     );
   });
@@ -82,7 +82,7 @@ describe('RangeWidget', () => {
     expect(handle).toHaveAttribute('aria-valuenow', '1');
     expect(handle).toHaveAttribute('aria-invalid', 'true');
     expect(handle.getAttribute('aria-describedby')).toMatch(
-      /^root_volume__error root_volume__description root_volume__help \S+$/,
+      /^root_volume__error root_volume__help root_volume__description \S+$/,
     );
     expect(handle).toHaveAccessibleDescription(/must be < 1/);
   });

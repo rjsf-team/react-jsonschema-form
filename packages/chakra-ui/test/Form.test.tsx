@@ -1257,6 +1257,21 @@ describe("chakra-ui's error and help elements carry the ids their field's plan d
     expect(screen.getByRole('textbox')).toHaveAccessibleDescription('Pick a pet Dogs bark');
   });
 
+  // #5720: the template draws the help above its children, where the checkbox draws its own description
+  test("describes a checkbox by the field's help before the description it draws itself, as they are drawn", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'boolean', title: 'Agree', description: 'Read the terms' }}
+        uiSchema={{ 'ui:help': 'Required to continue' }}
+        validator={validator}
+      />,
+    );
+
+    const help = screen.getByText('Required to continue');
+    expect(help.compareDocumentPosition(screen.getByText('Read the terms'))).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(container.querySelector('#root')).toHaveAccessibleDescription('Required to continue Read the terms');
+  });
+
   test("renders an anyOf field's errors once, under the id its control is described by", () => {
     const { container } = render(
       <WrappedForm

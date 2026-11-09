@@ -708,7 +708,7 @@ describe('mantine FieldHelpTemplate', () => {
     expect(help[0].tagName).toBe('DIV');
     expect(help[0]).toHaveTextContent('Pick a pet');
     expect(container.querySelector(`[id="${optionHelpId('root_pet')}"]`)).toHaveTextContent('Dogs bark');
-    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('Pick a pet Dogs bark');
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('Dogs bark Pick a pet');
   });
 });
 

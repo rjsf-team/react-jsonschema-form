@@ -139,4 +139,12 @@ describe('mergeThemePresentation()', () => {
       'afterHelp',
     );
   });
+
+  it("takes the field template's order from the top layer that declares one", () => {
+    const theme = { fieldTemplateOrder: ['children', 'description', 'help'] } as const;
+    expect(mergeThemePresentation(core, theme, {}).fieldTemplateOrder).toBe(theme.fieldTemplateOrder);
+    const top = { fieldTemplateOrder: ['description', 'help', 'children'] } as const;
+    expect(mergeThemePresentation(theme, top).fieldTemplateOrder).toBe(top.fieldTemplateOrder);
+    expect(mergeThemePresentation(core)).not.toHaveProperty('fieldTemplateOrder');
+  });
 });
