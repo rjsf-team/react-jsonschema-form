@@ -506,7 +506,12 @@ export function getSchemaDetailsForField<
   const parts: string[] = dottedPath.split('.');
   const leafPath: string | undefined = parts.pop(); // pop off the last element in the list as the leaf
   // An empty path names no field, so it finds no schema rather than the parent's, which a cell would render inside itself
-  let schema: S | undefined = dottedPath ? schemaUtils.retrieveSchema(rawSchema, formData) : undefined;
+  // Stubbed with the option shown beside the grid, as `SchemaField` stubs the grid's schema, so a key the option renders
+  // is left to it
+  const besideOption = shown?.beside?.fieldPath === initialFieldPath ? shown.beside.selectedOption : undefined;
+  let schema: S | undefined = dottedPath
+    ? schemaUtils.retrieveSchema(rawSchema, formData, false, besideOption)
+    : undefined;
   let innerData = formData;
   let isReadonly: boolean | undefined = schema?.readOnly;
 

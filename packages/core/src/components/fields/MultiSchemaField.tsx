@@ -2,14 +2,12 @@ import { use, useCallback, useMemo } from 'react';
 import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
   getSelectorPresentation,
   getTemplates,
   getUiOptions,
-  getValidationTarget,
   hasSchemaMarker,
   hasWidget,
   isFormDataAvailable,
@@ -23,7 +21,7 @@ import {
 
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import useOptionSelection from '../../hooks/useOptionSelection.ts';
-import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
+import useSendOptionSwitch, { selectSwitchedOption } from '../../hooks/useSendOptionSwitch.ts';
 import { retrievedOptionListOf } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
@@ -100,8 +98,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     [selectorsAbove, xxxOfKey, selectorDepth],
   );
 
-  const { widgets, fields, translateString, globalFormOptions, globalUiOptions, uiSchemaDefinitions, rootSchema } =
-    registry;
+  const { widgets, fields, translateString, globalFormOptions, globalUiOptions, uiSchemaDefinitions } = registry;
   const {
     widget = 'select',
     placeholder,
@@ -241,29 +238,18 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         formData,
         newFormData,
         (sent) => {
-          // oxlint-disable-next-line react/immutability -- `sentData` is local to this handler, not render state (https://github.com/oxc-project/oxc/issues/28401)
           sentData = sent;
           onChange(sent, fieldPath, undefined, fieldId);
         },
       );
-      // A switch the form refused changed nothing, so the option shown before is shown again, even where the data fits
-      // the one picked. One the form took holds for what it stored, which the form records as it takes it, and one no
-      // form answered for what it sent. One `transformChange` rewrote here holds while the data the form kept still fits
-      // the chosen option, so data several options fit keeps the explicit choice, and is otherwise matched again
-      if (outcome === undefined) {
-        selectOption(intOption, [sentData]);
-      } else if (outcome.kind === 'refused') {
-        selectOption(selectedOption, [formData]);
-      } else if (
-        outcome.kind === 'rewritten' &&
-        !deepEquals(outcome.kept, outcome.edited) &&
-        !(
-          newOption !== undefined &&
-          schemaUtils.getValidator().isValid(getValidationTarget<S>(newOption, rootSchema), outcome.kept, rootSchema)
-        )
-      ) {
-        selectOption(intOption, []);
-      }
+      selectSwitchedOption<T, S, F>(
+        selectOption,
+        schemaUtils,
+        { from: selectedOption, to: intOption, newOption },
+        formData,
+        sentData,
+        outcome,
+      );
     },
     [
       selectedOption,
@@ -284,7 +270,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       uiSchema,
       uiSchemaDefinitions,
       globalUiOptions,
-      rootSchema,
     ],
   );
 

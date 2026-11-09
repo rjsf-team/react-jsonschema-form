@@ -1016,6 +1016,105 @@ describe('a cell in options with no discriminator', () => {
     expect(screen.queryByLabelText('Other')).not.toBeInTheDocument();
   });
 
+  it('keeps the option shown as a user clears a cell in the options of the schema the grid is on', async () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { x: { type: 'string', title: 'X' } },
+        anyOf: [
+          { properties: { a: { type: 'string', title: 'A' } } },
+          { properties: { b: { type: 'string', title: 'B' } } },
+        ],
+      },
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:fieldReplacesAnyOrOneOf': true,
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['x', 'a', 'b'] }] },
+      },
+      initialFormData: { b: 'x' },
+    });
+    const input = screen.getByLabelText('B');
+
+    await user.clear(input);
+
+    expect(screen.getByLabelText('B')).toBe(input);
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+  });
+
+  const selectorSchema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      thing: {
+        type: 'object',
+        anyOf: [
+          {
+            title: 'Option A',
+            properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string', title: 'A' } },
+          },
+          {
+            title: 'Option B',
+            properties: { kind: { type: 'string', const: 'b' }, b: { type: 'string', title: 'B' } },
+          },
+        ],
+      },
+    },
+  };
+  const selectorCellUiSchema: UiSchema = {
+    'ui:field': 'LayoutMultiSchemaField',
+    'ui:fieldReplacesAnyOrOneOf': true,
+    'ui:options': { optionsSchemaSelector: 'kind' },
+  };
+  const selectorUiSchema: UiSchema = {
+    'ui:field': 'LayoutGridField',
+    'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing', 'thing.a', 'thing.b'] }] },
+    thing: selectorCellUiSchema,
+  };
+
+  it('shows the option a selector cell switches to after a cell edit kept another', async () => {
+    createFormComponent({
+      schema: selectorSchema,
+      uiSchema: selectorUiSchema,
+      initialFormData: { thing: { kind: 'a' } },
+    });
+    await user.type(screen.getByLabelText('A'), 'q');
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Option B');
+
+    expect(screen.getByLabelText('B')).toBeInTheDocument();
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+  });
+
+  it('keeps the option shown through a cell edit after transformChange refuses a switch from data naming no option', async () => {
+    let refuses = true;
+    createFormComponent({
+      schema: selectorSchema,
+      uiSchema: selectorUiSchema,
+      initialFormData: { thing: { kind: 'z', a: 'v' } },
+      transformChange: (next, previous) => (refuses ? previous : next),
+    });
+    await user.selectOptions(screen.getByRole('combobox'), 'Option B');
+    refuses = false;
+
+    await user.type(screen.getByLabelText('A'), 'x');
+
+    expect(screen.getByLabelText('A')).toHaveValue('vx');
+    expect(screen.queryByLabelText('B')).not.toBeInTheDocument();
+  });
+
+  it("shows none of the options' cells once a user clears the selector cell", async () => {
+    createFormComponent({
+      schema: selectorSchema,
+      uiSchema: { ...selectorUiSchema, thing: { ...selectorCellUiSchema, 'ui:placeholder': 'None' } },
+      initialFormData: { thing: { kind: 'a' } },
+    });
+    await user.type(screen.getByLabelText('A'), 'q');
+
+    await user.selectOptions(screen.getByRole('combobox'), 'None');
+
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('B')).not.toBeInTheDocument();
+  });
+
   it('renders the field a named render cell finds, rather than the render', () => {
     createFormComponent({
       schema: optionsSchema,
@@ -1070,6 +1169,27 @@ describe('a cell in options of the schema the grid is on, whose options render b
 
     expect(node.querySelector('#root_x')).toBeInTheDocument();
     expect(node.querySelectorAll('#root_a')).toHaveLength(1);
+  });
+
+  it('leaves an extra key to the option whose own options render it, so its input renders once', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        additionalProperties: { type: 'string' },
+        properties: { x: { type: 'string' } },
+        anyOf: [
+          {
+            properties: { a: { type: 'string' } },
+            anyOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'number' } } }],
+          },
+          { properties: { b: { type: 'number' } } },
+        ],
+      },
+      uiSchema: { ...besideUiSchema, 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['x', 'c'] }] } },
+      initialFormData: { a: 'q', c: 'z' },
+    });
+
+    expect(node.querySelectorAll('#root_c')).toHaveLength(1);
   });
 
   it('shows only the option the selector switches to', async () => {

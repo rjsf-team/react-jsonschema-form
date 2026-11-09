@@ -1,10 +1,11 @@
 import { use, useCallback } from 'react';
-import type { FieldPath, FormContextType, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import type { FieldPath, FormContextType, SchemaUtilsType, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
   deepEqualsUndefinedAsMissing,
   getRenderedOptionSchema,
+  getValidationTarget,
   getXxxOfKey,
   hasSchemaMarker,
   isConstant,
@@ -15,6 +16,8 @@ import {
 
 import AdditionalEntryContext from '../components/fields/AdditionalEntryContext.ts';
 import { declaresProperty, storedValue } from '../components/fields/fieldWidgetUtils.ts';
+import type { MoveOutcome } from '../components/keyMove.ts';
+import type { OptionSelectionState } from './useOptionSelection.ts';
 import useSendMove from './useSendMove.ts';
 
 /** The options of an `anyOf`/`oneOf` field a switch leaves and selects, each with the uiSchema its field renders with */
@@ -145,4 +148,35 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
     },
     [sendMove, fieldPath, isEntryPath],
   );
+}
+
+/** Records the option a switch from the option at `from` to the one at `to` leaves selected, once the form has answered
+ * it with `outcome`. A switch the form refused changed nothing, so the option shown before is shown again, even where
+ * the data fits the one picked. One the form took holds for what it stored, which the form records as it takes it, and
+ * one no form answered for `sent`, what was sent. One `transformChange` rewrote holds while the data the form kept
+ * still fits `newOption`, so data several options fit keeps the explicit choice, and is otherwise matched again
+ */
+export function selectSwitchedOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  selectOption: OptionSelectionState['selectOption'],
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  { from, to, newOption }: { from: number; to: number; newOption: S | undefined },
+  formData: unknown,
+  sent: unknown,
+  outcome: MoveOutcome | undefined,
+) {
+  const rootSchema = schemaUtils.getRootSchema();
+  if (outcome === undefined) {
+    selectOption(to, [sent]);
+  } else if (outcome.kind === 'refused') {
+    selectOption(from, [formData]);
+  } else if (
+    outcome.kind === 'rewritten' &&
+    !deepEquals(outcome.kept, outcome.edited) &&
+    !(
+      newOption !== undefined &&
+      schemaUtils.getValidator().isValid(getValidationTarget<S>(newOption, rootSchema), outcome.kept, rootSchema)
+    )
+  ) {
+    selectOption(to, []);
+  }
 }
