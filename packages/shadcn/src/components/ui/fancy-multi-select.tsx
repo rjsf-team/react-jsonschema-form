@@ -238,7 +238,7 @@ export function FancyMultiSelect({
       return;
     }
     e.preventDefault();
-    if (e.button === 0 && !(e.ctrlKey && /Mac/.test(navigator.userAgent))) {
+    if (e.button === 0 && !(e.ctrlKey && navigator.userAgent.includes('Mac'))) {
       inputRef.current?.focus();
       openList();
     }
