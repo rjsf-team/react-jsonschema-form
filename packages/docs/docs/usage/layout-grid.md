@@ -645,10 +645,10 @@ My Favorite Shape
 
 > NOTE: The `LayoutGridField` can't place the option selector of a root-level `anyOf` or `oneOf` object since it requires
 > that everything being displayed have a field id and the selector doesn't. The options render beside the grid, so a cell
-> for an option's property renders a second input with the same id, unless
+> for an option's property renders nothing, or its `render`, since the option renders it, unless
 > [`ui:fieldReplacesAnyOrOneOf`](../api-reference/uiSchema.md#uifieldreplacesanyoroneof) replaces the options, which
 > leaves no option selector. A cell for a property that only an option's own `anyOf` or `oneOf` declares renders
-> nothing, or an extra key's field where the object takes extra keys.
+> nothing, or an extra key's field where the object takes extra keys and the option shown doesn't render it.
 
 Now let's add a `uiSchema` that will allow us to create a much more pleasing UI where the dropdown contains the actual
 `oneOf` values and the fields all show up on the side of the dropdown:

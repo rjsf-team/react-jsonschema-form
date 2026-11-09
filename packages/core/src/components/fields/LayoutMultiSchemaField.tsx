@@ -1,9 +1,19 @@
 import { useMemo } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { getByPath, setByPath, getOptionUiSchema, fieldPathToName, getUiOptions, toFieldPath } from '@rjsf/utils';
+import {
+  getByPath,
+  getDiscriminatorFieldFromSchema,
+  setByPath,
+  getOptionUiSchema,
+  fieldPathToName,
+  getUiOptions,
+  toFieldPath,
+} from '@rjsf/utils';
 
+import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
-import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
+import useSendOptionSwitch, { selectSwitchedOption } from '../../hooks/useSendOptionSwitch.ts';
+import { retrievedOptionListOf } from '../uiState.ts';
 import { getWidgetErrorProps, getWidgetLabelProps, optionsKeywordOf } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import {
@@ -76,6 +86,18 @@ export default function LayoutMultiSchemaField<
   } = props;
   const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
+  const options = useMemo(
+    () => retrievedOptionListOf<T, S, F>(schemaUtils, schema, formData),
+    [schemaUtils, schema, formData],
+  );
+  // The selector names the option, but a cell of the grid shows the one the form selects for these options
+  const { selectedOption: cellsOption, selectOption } = useOptionSelection<T, S, F>(
+    registry,
+    fieldPath,
+    options,
+    formData,
+    getDiscriminatorFieldFromSchema<S>(schema),
+  );
   const uiSchema = useMemo(() => omitFieldDirectives<T, S, F>(namingUiSchema), [namingUiSchema]);
   const keyword = optionsKeywordOf<S>(schema);
   const enumOptions = useMemo(
@@ -140,13 +162,27 @@ export default function LayoutMultiSchemaField<
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);
     }
-    // Pass the component name in the path
-    sendOptionSwitch(
+    // Selected before the switch is sent, so the change's sanitize and live omit read the option it switches to
+    selectOption(newOptionIndex);
+    let sentData: unknown;
+    const outcome = sendOptionSwitch(
       schema,
       { oldOption, newOption, oldUiSchema: oldOptionUiSchema, newUiSchema: newOptionUiSchema },
       formData,
       newFormData,
-      (sent) => onChange(sent, fieldPath, undefined, id),
+      (sent) => {
+        sentData = sent;
+        // Pass the component name in the path
+        onChange(sent, fieldPath, undefined, id);
+      },
+    );
+    selectSwitchedOption<T, S, F>(
+      selectOption,
+      schemaUtils,
+      { from: cellsOption, to: newOptionIndex, newOption: options?.[newOptionIndex] },
+      formData,
+      sentData,
+      outcome,
     );
   };
 

@@ -1,12 +1,12 @@
 import type { FieldProps, FieldTemplateProps, GenericObjectType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { ADDITIONAL_PROPERTY_FLAG } from '@rjsf/utils';
-import { cleanup, screen, within } from '@testing-library/react';
+import { act, cleanup, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import FieldTemplate from '../src/components/templates/FieldTemplate/index.ts';
 import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
 import { SIMPLE_ONEOF, SIMPLE_ONEOF_SCHEMAS, withTypelessSelector } from './testData/layoutData.ts';
-import { createFormComponent, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
+import { createFormComponent, createFormRef, handleOf, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -833,6 +833,48 @@ describe('a discriminated cell of a layout grid', () => {
     expect(screen.getByRole('textbox')).not.toHaveFocus();
     screen.getAllByRole('radio').forEach((radio) => expect(radio).not.toHaveFocus());
   });
+  it('keeps the option the discriminator names after transformChange refuses a switch, and switches after it', async () => {
+    let refuses = true;
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          thing: {
+            type: 'object',
+            discriminator: { propertyName: 'kind' },
+            oneOf: [
+              {
+                title: 'Option A',
+                properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string', title: 'A' } },
+              },
+              {
+                title: 'Option B',
+                properties: { kind: { type: 'string', const: 'b' }, b: { type: 'string', title: 'B' } },
+              },
+            ],
+          },
+        },
+      },
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing', 'thing.a', 'thing.b'] }] },
+      },
+      initialFormData: { thing: { kind: 'a', a: 'v' } },
+      transformChange: (next, previous) => (refuses ? previous : next),
+    });
+    await user.click(screen.getByRole('radio', { name: 'Option B' }));
+    refuses = false;
+
+    await user.type(screen.getByLabelText('A'), 'x');
+
+    expect(screen.getByLabelText('A')).toHaveValue('vx');
+    expect(screen.queryByLabelText('B')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('radio', { name: 'Option B' }));
+
+    expect(screen.getByLabelText('B')).toBeInTheDocument();
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+  });
 });
 
 describe('a cell in options with no discriminator', () => {
@@ -862,6 +904,259 @@ describe('a cell in options with no discriminator', () => {
     expect(screen.getByLabelText('A')).toHaveValue('typed');
   });
 
+  it('keeps the option shown, and the focus, as a user clears a property only that option declares', async () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          thing: {
+            type: 'object',
+            anyOf: [
+              { type: 'object', properties: { a: { type: 'string', title: 'A' } } },
+              { type: 'object', properties: { b: { type: 'string', title: 'B' } } },
+            ],
+          },
+        },
+      },
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing.a', 'thing.b'] }] },
+      },
+      initialFormData: { thing: { b: 'x' } },
+    });
+    const input = screen.getByLabelText('B');
+
+    await user.clear(input);
+
+    expect(screen.getByLabelText('B')).toBe(input);
+    expect(input).toHaveFocus();
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+  });
+
+  it("keeps the option shown as a user types a value only another option's constraints accept", async () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          thing: {
+            type: 'object',
+            anyOf: [
+              { type: 'object', properties: { s: { type: 'string', title: 'Short', maxLength: 3 } } },
+              { type: 'object', properties: { s: { type: 'string', title: 'Long', minLength: 4 } } },
+            ],
+          },
+        },
+      },
+      uiSchema: { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing.s'] }] } },
+      initialFormData: { thing: { s: 'ab' } },
+    });
+
+    await user.type(screen.getByLabelText('Short'), 'cd');
+
+    expect(screen.getByLabelText('Short')).toHaveValue('abcd');
+    expect(screen.queryByLabelText('Long')).not.toBeInTheDocument();
+  });
+
+  it('matches the data again as a user edits a property of the object the options disagree about', async () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          thing: {
+            type: 'object',
+            properties: { x: { type: 'string', title: 'X' } },
+            anyOf: [
+              { properties: { x: { const: 'one' }, a: { type: 'string', title: 'A' } } },
+              { properties: { x: { const: 'two' }, b: { type: 'string', title: 'B' } } },
+            ],
+          },
+        },
+      },
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing.x', 'thing.a', 'thing.b'] }] },
+      },
+      initialFormData: { thing: { x: 'one' } },
+    });
+    await user.type(screen.getByLabelText('A'), 'q');
+
+    await user.clear(screen.getByLabelText('X'));
+    await user.type(screen.getByLabelText('X'), 'two');
+
+    expect(screen.getByLabelText('B')).toBeInTheDocument();
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+  });
+
+  it('keeps the option shown as a user edits a property of the object the options agree about', async () => {
+    const ref = createFormRef();
+    createFormComponent({
+      ref,
+      schema: {
+        type: 'object',
+        properties: {
+          thing: {
+            type: 'object',
+            properties: { y: { type: 'string', title: 'Y' } },
+            anyOf: [
+              { properties: { s: { type: 'string', title: 'Short', maxLength: 3 } } },
+              { properties: { s: { type: 'string', title: 'Long', minLength: 4 } } },
+            ],
+          },
+        },
+      },
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing.y', 'thing.s'] }] },
+      },
+      initialFormData: { thing: { s: 'abcd' } },
+    });
+    await user.type(screen.getByLabelText('Y'), 'z');
+
+    // Data from outside that both options fit as well is matched again with the kept option preferred
+    act(() => handleOf(ref).setFieldValue('thing', { y: 'z' }));
+
+    expect(screen.getByLabelText('Long')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Short')).not.toBeInTheDocument();
+  });
+
+  it('keeps the option shown at each level of options a cell is read through', async () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          thing: {
+            type: 'object',
+            anyOf: [
+              {
+                properties: {
+                  inner: {
+                    type: 'object',
+                    anyOf: [
+                      { properties: { a: { type: 'string', title: 'A' } } },
+                      { properties: { b: { type: 'string', title: 'B' } } },
+                    ],
+                  },
+                },
+              },
+              { properties: { other: { type: 'string', title: 'Other' } } },
+            ],
+          },
+        },
+      },
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing.inner.a', 'thing.inner.b', 'thing.other'] }] },
+      },
+      initialFormData: { thing: { inner: { b: 'x' } } },
+    });
+    const input = screen.getByLabelText('B');
+
+    await user.clear(input);
+
+    expect(screen.getByLabelText('B')).toBe(input);
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Other')).not.toBeInTheDocument();
+  });
+
+  it('keeps the option shown as a user clears a cell in the options of the schema the grid is on', async () => {
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { x: { type: 'string', title: 'X' } },
+        anyOf: [
+          { properties: { a: { type: 'string', title: 'A' } } },
+          { properties: { b: { type: 'string', title: 'B' } } },
+        ],
+      },
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:fieldReplacesAnyOrOneOf': true,
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['x', 'a', 'b'] }] },
+      },
+      initialFormData: { b: 'x' },
+    });
+    const input = screen.getByLabelText('B');
+
+    await user.clear(input);
+
+    expect(screen.getByLabelText('B')).toBe(input);
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+  });
+
+  const selectorSchema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      thing: {
+        type: 'object',
+        anyOf: [
+          {
+            title: 'Option A',
+            properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string', title: 'A' } },
+          },
+          {
+            title: 'Option B',
+            properties: { kind: { type: 'string', const: 'b' }, b: { type: 'string', title: 'B' } },
+          },
+        ],
+      },
+    },
+  };
+  const selectorCellUiSchema: UiSchema = {
+    'ui:field': 'LayoutMultiSchemaField',
+    'ui:fieldReplacesAnyOrOneOf': true,
+    'ui:options': { optionsSchemaSelector: 'kind' },
+  };
+  const selectorUiSchema: UiSchema = {
+    'ui:field': 'LayoutGridField',
+    'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing', 'thing.a', 'thing.b'] }] },
+    thing: selectorCellUiSchema,
+  };
+
+  it('shows the option a selector cell switches to after a cell edit kept another', async () => {
+    createFormComponent({
+      schema: selectorSchema,
+      uiSchema: selectorUiSchema,
+      initialFormData: { thing: { kind: 'a' } },
+    });
+    await user.type(screen.getByLabelText('A'), 'q');
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Option B');
+
+    expect(screen.getByLabelText('B')).toBeInTheDocument();
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+  });
+
+  it('keeps the option shown through a cell edit after transformChange refuses a switch from data naming no option', async () => {
+    let refuses = true;
+    createFormComponent({
+      schema: selectorSchema,
+      uiSchema: selectorUiSchema,
+      initialFormData: { thing: { kind: 'z', a: 'v' } },
+      transformChange: (next, previous) => (refuses ? previous : next),
+    });
+    await user.selectOptions(screen.getByRole('combobox'), 'Option B');
+    refuses = false;
+
+    await user.type(screen.getByLabelText('A'), 'x');
+
+    expect(screen.getByLabelText('A')).toHaveValue('vx');
+    expect(screen.queryByLabelText('B')).not.toBeInTheDocument();
+  });
+
+  it("shows none of the options' cells once a user clears the selector cell", async () => {
+    createFormComponent({
+      schema: selectorSchema,
+      uiSchema: { ...selectorUiSchema, thing: { ...selectorCellUiSchema, 'ui:placeholder': 'None' } },
+      initialFormData: { thing: { kind: 'a' } },
+    });
+    await user.type(screen.getByLabelText('A'), 'q');
+
+    await user.selectOptions(screen.getByRole('combobox'), 'None');
+
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('B')).not.toBeInTheDocument();
+  });
+
   it('renders the field a named render cell finds, rather than the render', () => {
     createFormComponent({
       schema: optionsSchema,
@@ -882,6 +1177,84 @@ describe('a cell in options with no discriminator', () => {
         'ui:field': 'LayoutGridField',
         'ui:layoutGrid': { 'ui:row': [{ 'ui:col': [{ name: '', render: CustomField }] }] },
       },
+    });
+
+    expect(screen.getByTestId('custom-field')).toBeInTheDocument();
+  });
+});
+
+describe('a cell in options of the schema the grid is on, whose options render beside the grid', () => {
+  const besideSchema: RJSFSchema = {
+    type: 'object',
+    properties: { x: { type: 'string' } },
+    anyOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'number' } } }],
+  };
+  const discriminatedSchema: RJSFSchema = {
+    type: 'object',
+    discriminator: { propertyName: 'kind' },
+    properties: { x: { type: 'string' } },
+    oneOf: [
+      { properties: { kind: { const: 'a' }, a: { type: 'string' } } },
+      { properties: { kind: { const: 'b' }, b: { type: 'number' } } },
+    ],
+  };
+  const besideUiSchema: UiSchema = {
+    'ui:field': 'LayoutGridField',
+    'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['x', 'a'] }] },
+  };
+
+  it.each<[string, RJSFSchema, GenericObjectType]>([
+    ['with no discriminator', besideSchema, { a: 'q' }],
+    ['with a discriminator', discriminatedSchema, { kind: 'a', a: 'q' }],
+  ])("leaves the option's property to the option, so its input renders once, %s", (_, schema, initialFormData) => {
+    const { node } = createFormComponent({ schema, uiSchema: besideUiSchema, initialFormData });
+
+    expect(node.querySelector('#root_x')).toBeInTheDocument();
+    expect(node.querySelectorAll('#root_a')).toHaveLength(1);
+  });
+
+  it('leaves an extra key to the option whose own options render it, so its input renders once', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        additionalProperties: { type: 'string' },
+        properties: { x: { type: 'string' } },
+        anyOf: [
+          {
+            properties: { a: { type: 'string' } },
+            anyOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'number' } } }],
+          },
+          { properties: { b: { type: 'number' } } },
+        ],
+      },
+      uiSchema: { ...besideUiSchema, 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['x', 'c'] }] } },
+      initialFormData: { a: 'q', c: 'z' },
+    });
+
+    expect(node.querySelectorAll('#root_c')).toHaveLength(1);
+  });
+
+  it('shows only the option the selector switches to', async () => {
+    const { node } = createFormComponent({
+      schema: besideSchema,
+      uiSchema: besideUiSchema,
+      initialFormData: { a: 'q' },
+    });
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Option 2');
+
+    expect(node.querySelectorAll('#root_b')).toHaveLength(1);
+    expect(node.querySelector('#root_a')).not.toBeInTheDocument();
+  });
+
+  it("shows a named render cell's render in place of the option's property", () => {
+    createFormComponent({
+      schema: discriminatedSchema,
+      uiSchema: {
+        'ui:field': 'LayoutGridField',
+        'ui:layoutGrid': { 'ui:row': [{ 'ui:col': [{ name: 'a', render: CustomField }] }] },
+      },
+      initialFormData: { kind: 'a', a: 'q' },
     });
 
     expect(screen.getByTestId('custom-field')).toBeInTheDocument();
