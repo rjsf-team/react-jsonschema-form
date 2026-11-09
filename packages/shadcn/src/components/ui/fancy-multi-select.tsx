@@ -196,12 +196,14 @@ export function FancyMultiSelect({
       if (disabled || !input || e.target !== input) {
         return;
       }
-      const opens = e.key === 'ArrowDown' || e.key === 'ArrowUp' || (e.key === 'Enter' && !e.nativeEvent.isComposing);
+      // oxlint-disable-next-line typescript/no-deprecated -- Safari marks a key ending an IME composition only so
+      const composing = e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229;
+      const opens = !composing && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter');
       if (opens && !listShown) {
         const lastMatch = selectables.findLast((item) => !item.disabled);
         setMovedTo(e.key === 'ArrowUp' && lastMatch ? { value: String(lastMatch.index), byCmdk: false } : undefined);
         openList();
-      } else if (e.key === 'Escape' && listShown && !e.nativeEvent.isComposing) {
+      } else if (e.key === 'Escape' && listShown && !composing) {
         setOpen(false);
         e.preventDefault();
         e.stopPropagation();
@@ -236,7 +238,7 @@ export function FancyMultiSelect({
       return;
     }
     e.preventDefault();
-    if (e.button === 0 && !e.ctrlKey) {
+    if (e.button === 0 && !(e.ctrlKey && /Mac/.test(navigator.userAgent))) {
       inputRef.current?.focus();
       openList();
     }

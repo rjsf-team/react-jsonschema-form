@@ -153,7 +153,9 @@ export function useEscapeKeptFromDialog(active: boolean, control: RefObject<HTML
   useEffect(() => {
     const view = control.current?.ownerDocument.defaultView;
     const keep = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && !event.isComposing && event.composedPath()[0] === control.current) {
+      // oxlint-disable-next-line typescript/no-deprecated -- Safari marks a key ending an IME composition only so
+      const composing = event.isComposing || event.keyCode === 229;
+      if (event.key === 'Escape' && !composing && event.composedPath()[0] === control.current) {
         event.preventDefault();
       }
     };
