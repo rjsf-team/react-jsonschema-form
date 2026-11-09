@@ -114,6 +114,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     it.each<{ extras: string; schema: RJSFSchema; whenAbsent?: 'allow' }>([
       { extras: 'true', schema: kindOf({ ...ifThen(), additionalProperties: true }) },
       { extras: 'absent under allow', schema: kindOf(ifThen()), whenAbsent: 'allow' },
+      // A `title` constrains no value, so the extra key's type is still guessed from its data
       { extras: 'an annotation alone', schema: kindOf({ ...ifThen(), additionalProperties: { title: 'Anything' } }) },
       { extras: 'absent under allow, in an allOf', schema: kindOf({ allOf: [ifThen()] }), whenAbsent: 'allow' },
       {
@@ -138,6 +139,26 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(input(container, 'root_a').value).toBe('x');
     });
 
+    it('keeps a number, and a value the user typed over the default', async () => {
+      const schema = kindOf({ ...ifThen({ type: 'number', default: 1 }), additionalProperties: true });
+      const { container, formData } = await selectT(schema, { initialFormData: { kind: 's', a: 5 } });
+
+      expect(formData).toEqual({ kind: 't', a: 5 });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+      expect(input(container, 'root_a').value).toBe('5');
+    });
+
+    it('keeps an empty object, which leaves nothing for the stub to render', async () => {
+      const schema = kindOf({
+        ...ifThen({ type: 'object', properties: { b: { type: 'string' } } }),
+        additionalProperties: true,
+      });
+      const { container, formData } = await selectT(schema, { initialFormData: { kind: 's', a: {} } });
+
+      expect(formData).toEqual({ kind: 't', a: {} });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+    });
+
     it('keeps an object whose keys its extra key renders, as extra keys of their own', async () => {
       const schema = kindOf(ifThen({ type: 'object', properties: { b: { type: 'string' } } }));
       const { container, formData } = await selectT(schema, {
@@ -149,6 +170,20 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(container.querySelector('#root_a__key')).not.toBeNull();
       expect(container.querySelector('#root_a_b__key')).not.toBeNull();
       expect(input(container, 'root_a_b').value).toBe('x');
+    });
+
+    it('drops an array inside a kept object, leaving the object its extra key renders', async () => {
+      const schema = kindOf(
+        ifThen({ type: 'object', properties: { b: { type: 'array', items: { type: 'string' } } } }),
+      );
+      const { container, formData } = await selectT(schema, {
+        whenAbsent: 'allow',
+        initialFormData: { kind: 's', a: { b: ['x'] } },
+      });
+
+      expect(formData).toEqual({ kind: 't', a: {} });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+      expect(container.querySelector('#root_a_b__key')).toBeNull();
     });
 
     it.each<{ extras: string; schema: RJSFSchema; initialFormData?: KindData }>([
@@ -170,11 +205,22 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         }),
         initialFormData: { kind: 's', a: { b: 'x' } },
       },
+      // A type that `items` or `properties` only implies is judged as a declared one
+      {
+        extras: 'true, for an array whose type is implied',
+        schema: kindOf({ ...ifThen({ items: { type: 'string' } }), additionalProperties: true }),
+        initialFormData: { kind: 's', a: ['x', 'y'] },
+      },
+      {
+        extras: 'true, for an object whose type is implied',
+        schema: kindOf({ ...ifThen({ properties: { b: { type: 'string' } } }), additionalProperties: true }),
+        initialFormData: { kind: 's', a: { b: 'x' } },
+      },
     ])('drops the value when extra keys are $extras', async ({ schema, initialFormData }) => {
       const { container, formData } = await selectT(schema, { initialFormData });
 
       expect(formData).toEqual({ kind: 't' });
-      expect(container.querySelector('#root_a')).toBeNull();
+      expect(container.querySelector('#root_a__key')).toBeNull();
     });
 
     it("drops the old branch's default rather than keeping it as an extra key", async () => {
@@ -182,7 +228,7 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       const { container, formData } = await selectT(schema, { initialFormData: { kind: 's' } });
 
       expect(formData).toEqual({ kind: 't' });
-      expect(container.querySelector('#root_a')).toBeNull();
+      expect(container.querySelector('#root_a__key')).toBeNull();
     });
   });
 
