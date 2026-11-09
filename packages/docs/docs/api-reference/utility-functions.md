@@ -1250,7 +1250,7 @@ Given date & time information with optional yearRange & format, returns props fo
 
 ### getDateTimeLocalValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Computes whether a date-time field's `schema.format` is `iso-date-time`, and the `value` to use for display accordingly. When `isIsoDateTime`, a stored value that happens to carry a timezone offset (legal, since that format's timezone is optional) is stripped, so it displays as the naive wall-clock time it represents instead of being converted to another timezone by a date/time picker that parses the offset as real. To be used by theme specific `DateTimeWidget` implementations.
+Computes whether a date-time field's `schema.format` is `iso-date-time`, and the `value` to use for display accordingly. When `isIsoDateTime`, a stored value that happens to carry a timezone offset (legal, since that format's timezone is optional) is stripped, so it displays as the naive wall-clock time it represents instead of being converted to another timezone by a date/time picker that parses the offset as real. A bare `YYYY-MM-DD` day reads as the start of that day. To be used by theme specific `DateTimeWidget` implementations.
 
 A finite epoch number or a valid `Date` is an exact instant. It is converted to its UTC ISO string when `schema.format` requires an offset (`date-time`/`datetime`), to the day it names when `schema.format` is `date` and the instant is a UTC midnight, and to local wall-clock time for any other format. The `date` and local wall-clock results need a four-digit year the pickers can parse, so a year outside 1-9999 gives `undefined` there; the UTC ISO string keeps any year.
 
@@ -2855,7 +2855,8 @@ A function that does nothing and returns `undefined`, useful as a placeholder fo
 
 ### offsetTimeToLocalTime()
 
-Strips a trailing timezone offset (`Z` or `+HH:MM`/`-HH:MM`) from a `time` string, returning the bare `HH:MM:SS` portion suitable for a native `<input type="time">`, which does not understand offsets.
+Strips a trailing timezone offset (`Z` or `+HH:MM`/`+HH`/`-HH:MM`/`-HH`) from a `time` string, returning the bare `HH:MM:SS` portion suitable for a native `<input type="time">`, which does not understand offsets.
+An offset is only stripped after a time or a full `YYYY-MM-DD` day, so a bare day is returned unchanged.
 
 #### Parameters
 

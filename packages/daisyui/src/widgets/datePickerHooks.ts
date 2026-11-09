@@ -177,9 +177,8 @@ function readStoredDate(raw: unknown, shape: KnownFormat) {
   switch (shape) {
     case 'date':
       return readDay(raw, text);
-    // That format's timezone is optional, so an offset is stripped rather than converted. The bare day is read above
-    // because the offset pattern also matches the `-DD` it ends in, and again once stripped, since a day that carried
-    // only an offset is left bare
+    // That format's timezone is optional, so an offset is stripped rather than converted. A day that carried only an
+    // offset is left bare once stripped, so it is read as a day again
     case 'iso-date-time': {
       const naive = text === undefined ? undefined : offsetTimeToLocalTime(text);
       return readDateOnly(naive) ?? readInstant(naive ?? raw);

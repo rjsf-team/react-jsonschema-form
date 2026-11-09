@@ -4,8 +4,10 @@ import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import pinTimeZone from '../../../testing/pinTimeZone.ts';
 import Templates from '../src/templates/index.ts';
 import DateTimeWidget from '../src/widgets/DateTime/DateTimeWidget.tsx';
+import DateWidget from '../src/widgets/DateTime/DateWidget.tsx';
 
 const user = userEvent.setup();
 const schema: RJSFSchema = { type: 'string', format: 'date-time' };
@@ -64,6 +66,26 @@ describe('DateTimeWidget', () => {
       await user.paste('2024-01-01T10:30:00');
 
       expect(onChange).toHaveBeenCalledWith('2024-01-01T10:30:00');
+    });
+  });
+
+  describe('with a bare day stored for iso-date-time', () => {
+    // West of UTC, a day read as UTC midnight shows as the day before
+    pinTimeZone('America/Los_Angeles');
+
+    describe.each([
+      { Widget: DateTimeWidget, expected: '2020-05-03T00:00:00' },
+      { Widget: DateWidget, expected: '2020-05-03' },
+    ])('$Widget.name', ({ Widget, expected }) => {
+      test.each(['2020-05-03', '2020-05-03+02:00'])(`displays %s as ${expected}`, (value) => {
+        const { container } = render(
+          <MantineProvider>
+            <Widget {...makeProps({ value, schema: { type: 'string', format: 'iso-date-time' } })} />
+          </MantineProvider>,
+        );
+
+        expect(container.querySelector<HTMLInputElement>('input#root')).toHaveValue(expected);
+      });
     });
   });
 
