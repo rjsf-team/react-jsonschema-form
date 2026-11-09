@@ -90,6 +90,26 @@ function constReplacement<S extends StrictRJSFSchema = RJSFSchema>(
   return deepEquals(oldSchema?.const, data) ? ownValue(newConst) : undefined;
 }
 
+/** Whether `newSchema` declares the same type, `const`, `enum` or constant options, `maxItems` and `default` as
+ * `oldSchema`, a `default` the schema holding it declares for it standing in for its own as it does for the defaults.
+ * These are the constraints `formDataForNewOption()` compares to decide whether a top-level clear gives way to the new
+ * defaults
+ */
+function constrainsAlike<S extends StrictRJSFSchema = RJSFSchema>(
+  oldSchema: S,
+  newSchema: S,
+  oldInheritedDefault: unknown,
+  newInheritedDefault: unknown,
+) {
+  return (
+    isSameType(oldSchema.type, newSchema.type) &&
+    deepEquals(oldSchema.const, newSchema.const) &&
+    oldSchema.maxItems === newSchema.maxItems &&
+    deepEquals(oldSchema.default ?? oldInheritedDefault, newSchema.default ?? newInheritedDefault) &&
+    deepEquals(enumValuesForSchema<S>(oldSchema), enumValuesForSchema<S>(newSchema))
+  );
+}
+
 /** Whether two schemas' `type`s name the same types. A list is compared by what it names rather than by identity or
  * order, since the two schemas declaring it are usually separate objects and `['null', 'string']` allows what
  * `['string', 'null']` does
@@ -132,7 +152,9 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  * schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the nature
  * of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the old schema
  * that are non-existent in the new schema, or that it declares with another type, are removed from the data at every
- * level. The data sanitization process has the following flow:
+ * level, as is a property whose value the new schema rejects. A property the data holds as `undefined` stays so where
+ * both schemas constrain it alike, and is otherwise removed unless a value replaces it. The data sanitization process
+ * has the following flow:
  *
  * - If the `data` is an object or array equal to the new schema's `const`, return it as it is
  * - If the new schema is an object that contains a `properties` object then:
@@ -163,7 +185,11 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *             - Replace `replacements[key]` with the new `const`
  *             - Otherwise, replace `replacements[key]` with undefined
  *         - If the form value is none of the new `enum` or constant options, replace it with the new `default` when that
- *           is an option, the only option when there is one, or undefined
+ *           is an option, the only option when there is one, or undefined, unless the data holds it as `undefined` and
+ *           both schemas constrain it alike
+ *   - A key replaced with `undefined` is removed, for the defaults to fill. A key the data holds as `undefined` stays
+ *     so where both schemas constrain it alike (see `constrainsAlike()`), and is otherwise removed unless a value
+ *     replaces it
  *   - Once all keys have been processed, return `{ ...data, ...replacements, ...nestedData }` without the keys
  *     left in `discardedKeys`
  * - If the new schema type, read through `getSchemaType()` so that a type list also allowing `null` counts, is array,
@@ -246,6 +272,10 @@ export default function sanitizeDataForNewSchema<
     const keys: string[] = Object.keys(newProperties);
     // Create a place to store nested data that will be a side-effect of the filter
     const nestedData: GenericObjectType = Object.create(null);
+    // The keys the data holds as `undefined`, kept where both schemas constrain them alike, and otherwise removed unless
+    // a value replaces them, so the new defaults reach them as a top-level clear's do in `formDataForNewOption()`
+    const keptClears = new Set<string>();
+    const changedClears = new Set<string>();
     keys.forEach((key) => {
       const formValue = getByPath(data, key);
       const isNewProperty = !hasByPath(oldSchema, [PROPERTIES_KEY, key]);
@@ -273,6 +303,15 @@ export default function sanitizeDataForNewSchema<
       // Check if the old option has the same key with the same type
       if (!oldSchemaTypeForKey || isSameType(oldSchemaTypeForKey, newSchemaTypeForKey)) {
         discardedKeys.delete(key);
+        if (formValue === undefined && hasByPath(data, key)) {
+          const isAlike = constrainsAlike<S>(
+            oldKeyedSchema,
+            newKeyedSchema,
+            getByPath(oldSchema?.[DEFAULT_KEY], key),
+            getByPath(newSchema[DEFAULT_KEY], key),
+          );
+          (isAlike ? keptClears : changedClears).add(key);
+        }
         // If it is an object, we'll recurse and store the resulting sanitized data for the key. A select over object or
         // array constants holds one of them as a whole, so it's checked against its options like any other select
         // A container is read through `getSchemaType()`, as the array branch below reads it, so one whose type list also
@@ -341,7 +380,8 @@ export default function sanitizeDataForNewSchema<
             replacements[key] = deepEquals(oldOptionConst, formValue) ? ownValue(newOptionConst) : undefined;
           }
 
-          if (hasByPath(data, key)) {
+          // A clear the same constraints held stays one, even where the enum offers a `default` or a single option
+          if (hasByPath(data, key) && !keptClears.has(key)) {
             const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
             if (enumReplacement !== NO_VALUE) {
               replacements[key] = enumReplacement;
@@ -350,12 +390,30 @@ export default function sanitizeDataForNewSchema<
         }
       }
     });
+    // A value cleared to `undefined` is removed instead, so the defaults reach the key as they do on mount. A key the
+    // data holds as `undefined` is a clear of its own, which stays unless its constraints changed, as a top-level clear
+    // gives way to the new option's defaults in `formDataForNewOption()`
+    for (const store of [replacements, nestedData]) {
+      for (const key of Object.keys(store)) {
+        if (store[key] === undefined) {
+          delete store[key];
+          if (getByPath(data, key) !== undefined) {
+            discardedKeys.add(key);
+          }
+        }
+      }
+    }
 
     const sanitized: GenericObjectType = {
       ...(isObject(data) ? data : undefined),
       ...replacements,
       ...nestedData,
     };
+    changedClears.forEach((key) => {
+      if (sanitized[key] === undefined) {
+        discardedKeys.add(key);
+      }
+    });
     discardedKeys.forEach((key) => delete sanitized[key]);
     newFormData = sanitized;
   } else if (

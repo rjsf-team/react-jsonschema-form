@@ -415,6 +415,45 @@ describe('oneOf', () => {
     );
   });
 
+  const optionFor = (title: string, k: RJSFSchema): RJSFSchema => ({
+    title,
+    type: 'object',
+    properties: { nested: { type: 'object', properties: { k }, required: ['k'] } },
+  });
+  const nestedKSchema: RJSFSchema = {
+    oneOf: [optionFor('free', { type: 'string' }), optionFor('pinned', { type: 'string', const: 'x' })],
+  };
+
+  it("should fill a nested key holding a value the new option's const rejects with that const (#5777)", async () => {
+    const { node, onChange } = createFormComponent({
+      schema: nestedKSchema,
+      initialFormData: { nested: { k: 'y' } },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { nested: { k: 'x' } } }),
+      'root__oneof_select',
+    );
+  });
+
+  it("should fill a nested key the user cleared with the new option's const (#5777)", async () => {
+    const { node, onChange } = createFormComponent({
+      schema: nestedKSchema,
+    });
+    const input = node.querySelector<HTMLInputElement>('#root_nested_k')!;
+    await user.type(input, 'y');
+    await user.clear(input);
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { nested: { k: 'x' } } }),
+      'root__oneof_select',
+    );
+  });
+
   it("should apply the new option's default when the two options declare the property differently", async () => {
     // Sanitize rewrites the carried-over value when the options' nested shapes differ, dropping a property the new
     // option does not declare and injecting a leaf default it does, so staleness has to be judged against the data

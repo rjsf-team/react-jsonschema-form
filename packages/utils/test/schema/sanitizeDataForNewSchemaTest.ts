@@ -552,9 +552,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
           enumField: 'oldData',
         }),
-      ).toEqual({
-        enumField: undefined,
-      });
+      ).toStrictEqual({});
     });
     it('replaces invalid oneOf const and enum data', () => {
       const oldSchema: RJSFSchema = {
@@ -660,9 +658,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
           enumField: 'oldData',
         }),
-      ).toEqual({
-        enumField: undefined,
-      });
+      ).toStrictEqual({});
     });
     it('keeps data when the options offer no value at all', () => {
       const oldSchema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
@@ -1157,15 +1153,11 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         });
       });
       it('is cleared when the new array const rejects it', () => {
-        expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), listOf({}), { list: ['a'] })).toEqual({
-          list: undefined,
-        });
+        expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), listOf({}), { list: ['a'] })).toStrictEqual({});
       });
       it('is cleared, as a property new to the new schema, when the new array const rejects it', () => {
         const oldSchema: RJSFSchema = { type: 'object', properties: {} };
-        expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), oldSchema, { list: ['a'] })).toEqual({
-          list: undefined,
-        });
+        expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), oldSchema, { list: ['a'] })).toStrictEqual({});
       });
       it('is kept when it equals the new array const', () => {
         expect(schemaUtils.sanitizeDataForNewSchema(listOf(constList), listOf({}), { list: ['z'] })).toEqual({
@@ -1174,9 +1166,9 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       });
       it('is still cleared when its old type was only guessed and the new schema declares items', () => {
         const guessed: RJSFMarkedSchema = { type: 'array', [GUESSED_TYPE_FLAG]: true };
-        expect(schemaUtils.sanitizeDataForNewSchema(listOf(stringList), listOf(guessed), { list: ['a'] })).toEqual({
-          list: undefined,
-        });
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(listOf(stringList), listOf(guessed), { list: ['a'] }),
+        ).toStrictEqual({});
       });
       describe('holding inner arrays', () => {
         const constRows: RJSFSchema = { type: 'array', items: { type: 'array', const: [1] } };
@@ -1218,9 +1210,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       it('is cleared where the new items: false rejects it', () => {
         const noItems = { type: 'array', items: false } as RJSFSchema;
         expect(schemaUtils.sanitizeDataForNewSchema(noItems, {}, ['a'])).toBeUndefined();
-        expect(schemaUtils.sanitizeDataForNewSchema(listOf(noItems), listOf({}), { list: ['a'] })).toStrictEqual({
-          list: undefined,
-        });
+        expect(schemaUtils.sanitizeDataForNewSchema(listOf(noItems), listOf({}), { list: ['a'] })).toStrictEqual({});
       });
       it('is cleared where the new additionalItems: false beside a tuple rejects it', () => {
         const pair = { type: 'array', items: [{ type: 'string' }], additionalItems: false } as RJSFSchema;
@@ -1550,7 +1540,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         const constObject: RJSFSchema = { type: 'object', const: { a: 2 }, properties: { a: { type: 'number' } } };
         expect(
           schemaUtils.sanitizeDataForNewSchema(objectWith(constObject), objectWith({}), { p: value }),
-        ).toStrictEqual({ p: undefined });
+        ).toStrictEqual({});
       });
       it('gets an empty object the const accepts', () => {
         const emptyConst: RJSFSchema = { type: 'object', const: {}, properties: { a: { type: 'number' } } };
@@ -1561,7 +1551,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       it('is cleared where the object schema declares no properties', () => {
         const constObject: RJSFSchema = { type: 'object', const: { a: 2 } };
         expect(schemaUtils.sanitizeDataForNewSchema(objectWith(constObject), objectWith({}), { p: 'x' })).toStrictEqual(
-          { p: undefined },
+          {},
         );
       });
     });
@@ -1580,7 +1570,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       it('is cleared as a property where it holds neither const', () => {
         expect(
           schemaUtils.sanitizeDataForNewSchema(objectWith(constObject(2)), objectWith(constObject(1)), { o: { a: 3 } }),
-        ).toStrictEqual({ o: undefined });
+        ).toStrictEqual({});
       });
       it('takes the new const when sanitized directly where it holds the old one, and is cleared otherwise', () => {
         expect(schemaUtils.sanitizeDataForNewSchema(constObject(2), constObject(1), { a: 1 })).toStrictEqual({ a: 2 });
@@ -1654,6 +1644,100 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         expect(
           schemaUtils.sanitizeDataForNewSchema(objectWith(dataConst), objectWith(constObject(1)), { o: { a: 1 } }),
         ).toStrictEqual({ o: { $data: '1/other' } });
+      });
+    });
+    describe('a value the new schema rejects under a property', () => {
+      const objectWith = (k: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { k } });
+      it.each<[string, RJSFSchema, RJSFSchema, unknown]>([
+        [
+          'an object const',
+          { type: 'object', properties: { a: { type: 'number' } } },
+          { type: 'object', const: { a: 1 }, properties: { a: { type: 'number' } } },
+          { a: 2 },
+        ],
+        ['a scalar const', { type: 'string' }, { type: 'string', const: 'x' }, 'y'],
+        ['an enum', { type: 'string' }, { type: 'string', enum: ['a', 'b'] }, 'z'],
+        ['a readOnly default', { type: 'string', default: 'o' }, { type: 'string', default: 'n', readOnly: true }, 'u'],
+        [
+          'items of another type',
+          { type: 'array', items: { type: 'number' } },
+          { type: 'array', items: { type: 'string' } },
+          [1],
+        ],
+      ])('is removed, for the defaults to fill, where it is rejected by %s', (_, oldK, newK, value) => {
+        expect(schemaUtils.sanitizeDataForNewSchema(objectWith(newK), objectWith(oldK), { k: value })).toStrictEqual(
+          {},
+        );
+      });
+      it.each<[string, RJSFSchema, RJSFSchema]>([
+        ['a type', { const: 'x' }, { type: 'string', const: 'x' }],
+        ['a const', { type: 'string' }, { type: 'string', const: 'x' }],
+        ['a default', { type: 'string', const: 'x', default: 'o' }, { type: 'string', const: 'x', default: 'n' }],
+        ['an enum', { type: 'string', enum: ['a', 'b'] }, { type: 'string', enum: ['c', 'd'] }],
+        ['a default nothing rejects it by', { type: 'string', default: 'a' }, { type: 'string', default: 'b' }],
+        [
+          'a maxItems',
+          { type: 'array', items: { type: 'string' }, maxItems: 2 },
+          { type: 'array', items: { type: 'string' }, maxItems: 3 },
+        ],
+        [
+          'the default of an array',
+          { type: 'array', items: { type: 'string' } },
+          { type: 'array', items: { type: 'string' }, default: ['x'] },
+        ],
+      ])('is removed where the data holds it as undefined and the new schema changes %s', (_, oldK, newK) => {
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(objectWith(newK), objectWith(oldK), { k: undefined }),
+        ).toStrictEqual({});
+      });
+      it.each<[string, RJSFSchema, RJSFSchema]>([
+        ['const', { type: 'string', const: 'x' }, { type: 'string', const: 'x' }],
+        [
+          'readOnly default',
+          { type: 'string', default: 'n', readOnly: true },
+          { type: 'string', default: 'n', readOnly: true },
+        ],
+        ['enum', { type: 'string', enum: ['a', 'b'] }, { type: 'string', enum: ['a', 'b'] }],
+        [
+          'enum holding its default',
+          { type: 'string', enum: ['a', 'b'], default: 'a' },
+          { type: 'string', enum: ['a', 'b'], default: 'a' },
+        ],
+        ['single-value enum', { type: 'string', enum: ['a'] }, { type: 'string', enum: ['a'] }],
+        ['default made readOnly', { type: 'string', default: 'n' }, { type: 'string', default: 'n', readOnly: true }],
+      ])('stays held as undefined where the same %s rejects it on both sides', (_, oldK, newK) => {
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(objectWith(newK), objectWith(oldK), { k: undefined }),
+        ).toStrictEqual({ k: undefined });
+      });
+      it('is replaced where the data holds it as undefined and the new enum offers one value', () => {
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            objectWith({ type: 'string', enum: ['c'] }),
+            objectWith({ type: 'string', enum: ['a', 'b'] }),
+            { k: undefined },
+          ),
+        ).toStrictEqual({ k: 'c' });
+      });
+      it.each<[string, string, unknown]>([
+        ['is removed', 'b', {}],
+        ['stays held as undefined', 'a', { k: undefined }],
+      ])(
+        '%s where the data holds it as undefined and the parent default for it goes from a to %s',
+        (_, newDefault, expected) => {
+          const withDefault = (k: string): RJSFSchema => ({
+            type: 'object',
+            default: { k },
+            properties: { k: { type: 'string', enum: ['a', 'b'] } },
+          });
+          expect(
+            schemaUtils.sanitizeDataForNewSchema(withDefault(newDefault), withDefault('a'), { k: undefined }),
+          ).toStrictEqual(expected);
+        },
+      );
+      it('stays left out where the data holds none', () => {
+        const constK: RJSFSchema = { type: 'string', const: 'x' };
+        expect(schemaUtils.sanitizeDataForNewSchema(objectWith(constK), objectWith({}), {})).toStrictEqual({});
       });
     });
     describe('an object equal to its const', () => {
@@ -2092,7 +2176,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
         expect(Object.hasOwn(result as object, '__proto__')).toBe(false);
       });
-      it('clears a __proto__ property whose new default is readOnly', () => {
+      it('removes a __proto__ property whose new default is readOnly', () => {
         const oldSchema = JSON.parse(
           '{"type": "object", "properties": {"__proto__": {"type": "string", "default": "o"}}}',
         ) as RJSFSchema;
@@ -2101,9 +2185,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         ) as RJSFSchema;
         const data = JSON.parse('{"__proto__": "user"}');
         const result = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data);
-        expect(Object.getOwnPropertyDescriptor(result, '__proto__')).toEqual(
-          expect.objectContaining({ value: undefined }),
-        );
+        expect(Object.hasOwn(result as object, '__proto__')).toBe(false);
       });
       it('replaces the old const of a __proto__ property with the new one', () => {
         const oldSchema = JSON.parse(

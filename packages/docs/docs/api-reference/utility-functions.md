@@ -4220,6 +4220,7 @@ An array whose old schema declares no type, or declares no `items` (or `items: t
 A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
 A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
 A value outside the new `enum` or constant options is replaced with the new `default` when that is an option, with the only option when there is one, or cleared; array items outside them are dropped.
+A property cleared this way, by the new `const` or a `readOnly` `default`, or as an array the new schema can't hold, is removed rather than set to `undefined`, for the defaults to fill in. A property the data already holds as `undefined` keeps it where the old schema declares the same type, `const`, `enum` or constant options, `maxItems` and `default` for it, the `default` the object declares for it included, and is otherwise removed too unless a value replaces it, as a top-level clear is when `anyOf`/`oneOf` options are switched.
 `Form` does not call this to sanitize its data: it diffs the field trees before and after a change and judges only the fields whose constraints the change altered.
 
 #### Parameters
