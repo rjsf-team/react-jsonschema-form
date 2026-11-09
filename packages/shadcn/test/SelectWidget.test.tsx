@@ -1931,6 +1931,8 @@ describe("the multiple select's combobox input", () => {
   });
 
   test('neither takes focus nor opens on a Ctrl+click on a selected item, which opens the context menu on a Mac', async () => {
+    const userAgent = vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Macintosh');
+    onTestFinished(() => userAgent.mockRestore());
     const user = userEvent.setup();
     render(
       <Form
