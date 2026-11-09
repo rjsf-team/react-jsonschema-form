@@ -76,24 +76,34 @@ describe('sanitize as a diff of the field trees before and after a change', () =
   });
 
   describe('a property a conditional stops declaring, judged as an extra key (#5778)', () => {
-    const ifThen: RJSFSchema = {
+    interface KindData {
+      kind?: string;
+      a?: unknown;
+    }
+    const ifThen = (a: RJSFSchema = { type: 'string' }): RJSFSchema => ({
       if: { properties: { kind: { const: 's' } } },
-      then: { properties: { a: { type: 'string' } } },
-    };
+      then: { properties: { a } },
+    });
     const kindOf = (rest: RJSFSchema): RJSFSchema => ({
       type: 'object',
       properties: { kind: { type: 'string', enum: ['s', 't'] } },
       ...rest,
     });
 
-    async function selectT(schema: RJSFSchema, whenAbsent?: 'allow') {
-      const events: IChangeEvent<{ kind?: string; a?: unknown }>[] = [];
+    async function selectT(
+      schema: RJSFSchema,
+      {
+        whenAbsent,
+        initialFormData = { kind: 's', a: 'x' },
+      }: { whenAbsent?: 'allow'; initialFormData?: KindData } = {},
+    ) {
+      const events: IChangeEvent<KindData>[] = [];
       const { container } = render(
-        <Form<{ kind?: string; a?: unknown }>
+        <Form<KindData>
           schema={schema}
           validator={validator}
           additionalPropertiesWhenAbsent={whenAbsent}
-          initialFormData={{ kind: 's', a: 'x' }}
+          initialFormData={initialFormData}
           onChange={(event) => events.push(event)}
         />,
       );
@@ -102,10 +112,10 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     }
 
     it.each<{ extras: string; schema: RJSFSchema; whenAbsent?: 'allow' }>([
-      { extras: 'true', schema: kindOf({ ...ifThen, additionalProperties: true }) },
-      { extras: 'absent under allow', schema: kindOf(ifThen), whenAbsent: 'allow' },
-      { extras: 'an annotation alone', schema: kindOf({ ...ifThen, additionalProperties: { title: 'Anything' } }) },
-      { extras: 'absent under allow, in an allOf', schema: kindOf({ allOf: [ifThen] }), whenAbsent: 'allow' },
+      { extras: 'true', schema: kindOf({ ...ifThen(), additionalProperties: true }) },
+      { extras: 'absent under allow', schema: kindOf(ifThen()), whenAbsent: 'allow' },
+      { extras: 'an annotation alone', schema: kindOf({ ...ifThen(), additionalProperties: { title: 'Anything' } }) },
+      { extras: 'absent under allow, in an allOf', schema: kindOf({ allOf: [ifThen()] }), whenAbsent: 'allow' },
       {
         extras: 'true, under dependencies',
         schema: kindOf({
@@ -120,72 +130,60 @@ describe('sanitize as a diff of the field trees before and after a change', () =
           additionalProperties: true,
         }),
       },
-    ])('keeps the value when extra keys are $extras', async ({ schema, whenAbsent }) => {
-      const { container, formData } = await selectT(schema, whenAbsent);
+    ])('keeps a string when extra keys are $extras', async ({ schema, whenAbsent }) => {
+      const { container, formData } = await selectT(schema, { whenAbsent });
 
       expect(formData).toEqual({ kind: 't', a: 'x' });
       expect(container.querySelector('#root_a__key')).not.toBeNull();
       expect(input(container, 'root_a').value).toBe('x');
     });
 
-    it.each<{ extras: string; schema: RJSFSchema }>([
-      { extras: '{ type: number }', schema: kindOf({ ...ifThen, additionalProperties: { type: 'number' } }) },
-      { extras: 'false', schema: kindOf({ ...ifThen, additionalProperties: false }) },
-      { extras: 'absent under forbid', schema: kindOf(ifThen) },
-    ])('drops the value when extra keys are $extras', async ({ schema }) => {
-      const { container, formData } = await selectT(schema);
+    it('keeps an object whose keys its extra key renders, as extra keys of their own', async () => {
+      const schema = kindOf(ifThen({ type: 'object', properties: { b: { type: 'string' } } }));
+      const { container, formData } = await selectT(schema, {
+        whenAbsent: 'allow',
+        initialFormData: { kind: 's', a: { b: 'x' } },
+      });
+
+      expect(formData).toEqual({ kind: 't', a: { b: 'x' } });
+      expect(container.querySelector('#root_a__key')).not.toBeNull();
+      expect(container.querySelector('#root_a_b__key')).not.toBeNull();
+      expect(input(container, 'root_a_b').value).toBe('x');
+    });
+
+    it.each<{ extras: string; schema: RJSFSchema; initialFormData?: KindData }>([
+      { extras: '{ type: number }', schema: kindOf({ ...ifThen(), additionalProperties: { type: 'number' } }) },
+      { extras: 'false', schema: kindOf({ ...ifThen(), additionalProperties: false }) },
+      { extras: 'absent under forbid', schema: kindOf(ifThen()) },
+      // A guessed array stub declares no `items`, so it renders none of the items it would hold
+      {
+        extras: 'true, for an array',
+        schema: kindOf({ ...ifThen({ type: 'array', items: { type: 'string' } }), additionalProperties: true }),
+        initialFormData: { kind: 's', a: ['x', 'y'] },
+      },
+      // The guessed object stub takes no extra keys of its own under `'forbid'`, so it would render none of `b`
+      {
+        extras: 'true, for an object whose keys the stub forbids',
+        schema: kindOf({
+          ...ifThen({ type: 'object', properties: { b: { type: 'string' } } }),
+          additionalProperties: true,
+        }),
+        initialFormData: { kind: 's', a: { b: 'x' } },
+      },
+    ])('drops the value when extra keys are $extras', async ({ schema, initialFormData }) => {
+      const { container, formData } = await selectT(schema, { initialFormData });
 
       expect(formData).toEqual({ kind: 't' });
       expect(container.querySelector('#root_a')).toBeNull();
     });
-  });
 
-  it('keeps an array a conditional stops declaring as an extra key that holds any value (#5778)', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: { kind: { type: 'string', enum: ['s', 't'] } },
-      if: { properties: { kind: { const: 's' } } },
-      then: { properties: { a: { type: 'array', items: { type: 'string' } } } },
-      additionalProperties: true,
-    };
-    const events: IChangeEvent<{ kind?: string; a?: unknown }>[] = [];
-    const { container } = render(
-      <Form<{ kind?: string; a?: unknown }>
-        schema={schema}
-        validator={validator}
-        initialFormData={{ kind: 's', a: ['x', 'y'] }}
-        onChange={(event) => events.push(event)}
-      />,
-    );
+    it("drops the old branch's default rather than keeping it as an extra key", async () => {
+      const schema = kindOf({ ...ifThen({ type: 'string', default: 'd' }), additionalProperties: true });
+      const { container, formData } = await selectT(schema, { initialFormData: { kind: 's' } });
 
-    await user.selectOptions(elementOf(container, '#root_kind'), 't');
-
-    expect(events[events.length - 1].formData).toEqual({ kind: 't', a: ['x', 'y'] });
-    expect(container.querySelector('#root_a__key')).not.toBeNull();
-  });
-
-  it('keeps an object a conditional stops declaring as an extra key that holds any value (#5778)', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: { kind: { type: 'string', enum: ['s', 't'] } },
-      if: { properties: { kind: { const: 's' } } },
-      then: { properties: { a: { type: 'object', properties: { b: { type: 'string' } } } } },
-      additionalProperties: true,
-    };
-    const events: IChangeEvent<{ kind?: string; a?: unknown }>[] = [];
-    const { container } = render(
-      <Form<{ kind?: string; a?: unknown }>
-        schema={schema}
-        validator={validator}
-        initialFormData={{ kind: 's', a: { b: 'x' } }}
-        onChange={(event) => events.push(event)}
-      />,
-    );
-
-    await user.selectOptions(elementOf(container, '#root_kind'), 't');
-
-    expect(events[events.length - 1].formData).toEqual({ kind: 't', a: { b: 'x' } });
-    expect(container.querySelector('#root_a__key')).not.toBeNull();
+      expect(formData).toEqual({ kind: 't' });
+      expect(container.querySelector('#root_a')).toBeNull();
+    });
   });
 
   it('judges each edit against the data before it when a parent stores what onChange reports (#5250)', async () => {

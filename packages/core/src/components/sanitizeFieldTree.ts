@@ -246,10 +246,26 @@ function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declare
   };
 }
 
+/** Whether the stub of an extra key whose schema is guessed from its data renders `value`, so keeping a value of another
+ * type there leaves no data the form does not show: a scalar renders, an object renders where the stub takes each of
+ * its keys as an extra key of its own, and an array never does, since the stub declares no `items`
+ */
+function rendersAsGuessed<S extends StrictRJSFSchema>(value: unknown, layers: readonly S[]): boolean {
+  if (Array.isArray(value)) {
+    return false;
+  }
+  if (!isPlainObject(value)) {
+    return true;
+  }
+  const properties = propertiesOf(layers);
+  return Object.keys(value).every((key) => properties.has(key));
+}
+
 /** Re-judges a value whose field's constraints changed. A cleared property is dropped, for the defaults to fill. A value
  * equal to the default the old schema declared for it is that schema's, so it becomes the new schema's default; a value
  * of another type, or one the new `const` or `enum` rejects, is replaced as `sanitizeDataForNewSchema()` replaces it,
- * or dropped. An extra key whose schema is guessed from its data declares no type, so it holds a value of any type.
+ * or dropped. An extra key whose schema is guessed from its data declares no type, so it holds a value of another type
+ * where its stub renders that value, see `rendersAsGuessed()`, and drops a value the old schema's default filled in.
  *
  * @param acceptsNull - Whether the field's new schema holds `null`, asked only of a `null` item
  * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
@@ -281,8 +297,15 @@ function judge<S extends StrictRJSFSchema>(
   if (oldDefault !== undefined && newDefault !== undefined && deepEquals(oldDefault, value)) {
     return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
   }
-  // An extra key that constrains nothing holds any value, so a property that left the tree keeps its value as one
-  if (before.type !== undefined && !isGuessed(newLayers) && !isSameType(before.type, now.type)) {
+  if (isGuessed(newLayers)) {
+    // A default the old schema filled in is that schema's, and an extra key declares none to take its place
+    if (oldDefault !== undefined && deepEquals(oldDefault, value)) {
+      return DROP;
+    }
+    if (before.type !== undefined && !rendersAsGuessed(value, newLayers)) {
+      return DROP;
+    }
+  } else if (before.type !== undefined && !isSameType(before.type, now.type)) {
     return DROP;
   }
   if (now.const !== undefined && !deepEquals(now.const, value)) {
@@ -379,8 +402,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       return judged === UNSET ? undefined : judged;
     }
   }
-  // Nothing below a guessed extra key constrains what it holds, so the properties the old field declared stay with it
-  if (isGuessed(newLayers) || newLayers.some((layer) => isWholeValueSelect<S>(layer))) {
+  if (newLayers.some((layer) => isWholeValueSelect<S>(layer))) {
     return newValue;
   }
   if (isPlainObject(newValue)) {
@@ -470,7 +492,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Sanitizes `data` for the field tree it builds, against the tree `previous` built: the diff of the two trees, field
  * by field, as each is rendered (the selected option, the expanded `$ref` cycles). A field that left the tree loses its
- * value, unless the object holds it as an extra key that constrains nothing. A field whose constraints changed (`type`,
+ * value, unless the object holds it as an extra key that constrains nothing and renders it. A field whose constraints changed (`type`,
  * `const`, `enum`, `maxItems`, or the default declared for it on its own schema or on its parent's) has its value
  * judged again, see `judge()`: a value still holding the default the old schema declared takes the new one, written in
  * place. A field whose constraints did not change keeps its value, so an edit elsewhere never re-judges it. The value
