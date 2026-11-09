@@ -87,6 +87,8 @@ const uiSchema: UiSchema = {
 };
 ```
 
+A property the list leaves out is never hidden. Without a `"*"`, the properties the list doesn't name are rendered after the ones it does, as if the list ended with `"*"`; this also covers a key held under `additionalProperties`, which an order written for the declared properties can't know about. When the list has more than one `"*"`, the first one places the unlisted properties and the others are ignored, as with [`ui:enumOrder`](../api-reference/uiSchema.md#enumorder). Both cases are reported with a warning, logged once per field through [`logOnce()`](../api-reference/utility-functions.md#logonce), so an incomplete `ui:order` shows up in the console rather than in the form. A name in the list that the object doesn't have is skipped.
+
 ## Additional and pattern properties
 
 The `additionalProperties` keyword allows the user to add properties with arbitrary key names. Set this keyword equal to a schema object:

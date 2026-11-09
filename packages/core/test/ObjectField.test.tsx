@@ -33,6 +33,7 @@ import {
   fieldErrorsById,
   handleOf,
   input,
+  setupConsoleWarnSuppression,
   submitForm,
 } from './testUtils.tsx';
 import { TextWidgetTest } from './TextWidgetTest.tsx';
@@ -876,26 +877,72 @@ describe('ObjectField', () => {
       expect(labels).toEqual(['baz', 'qux', 'bar', 'foo']);
     });
 
-    it('should throw when order list misses an existing property', () => {
-      const { node } = createFormComponent({
-        schema,
-        uiSchema: {
-          'ui:order': ['baz', 'bar'],
-        },
+    describe('an order that leaves properties out or repeats the wildcard', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      it('renders the properties the order leaves out at the end, and warns once naming the field', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            'ui:order': ['baz', 'bar'],
+          },
+        });
+        const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l: Element) => l.textContent);
+
+        expect(labels).toEqual(['baz', 'bar', 'foo', 'qux']);
+        expect(node.querySelector('.rjsf-config-error')).toBeNull();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `The ui:order of "root" does not list properties 'foo', 'qux', so they are placed at the end`,
+        );
       });
 
-      expect(node.querySelector('.rjsf-config-error')).toHaveTextContent(/does not contain properties 'foo', 'qux'/);
-    });
+      it('lets the first wildcard place the unordered properties when there is more than one, and warns once', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            'ui:order': ['baz', '*', 'bar', '*'],
+          },
+        });
+        const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l: Element) => l.textContent);
 
-    it('should throw when more than one wildcard is present', () => {
-      const { node } = createFormComponent({
-        schema,
-        uiSchema: {
-          'ui:order': ['baz', '*', 'bar', '*'],
-        },
+        expect(labels).toEqual(['baz', 'foo', 'qux', 'bar']);
+        expect(node.querySelector('.rjsf-config-error')).toBeNull();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `The ui:order of "root" has more than one '*', so only the first one places the properties it does not list`,
+        );
       });
 
-      expect(node.querySelector('.rjsf-config-error')).toHaveTextContent(/contains more than one wildcard/);
+      it('names a nested field by its id and path in the warning', () => {
+        createFormComponent({
+          schema: { type: 'object', properties: { nested: schema } },
+          uiSchema: { nested: { 'ui:order': ['qux'] } },
+        });
+
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `The ui:order of "root_nested" (nested) does not list properties 'foo', 'bar', 'baz', so they are placed at the end`,
+        );
+      });
+
+      it('keeps rendering an additionalProperties object whose data holds a key the order does not list', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+            additionalProperties: { type: 'string' },
+          },
+          uiSchema: {
+            'ui:order': ['bar', 'foo'],
+          },
+          initialFormData: { foo: 'a', bar: 'b', extra: 'c' },
+        });
+        const inputIds = [].map.call(node.querySelectorAll('input'), (i: HTMLInputElement) => i.id);
+
+        expect(inputIds).toEqual(['root_bar', 'root_foo', 'root_extra__key', 'root_extra']);
+        expect(node.querySelector('.rjsf-config-error')).toBeNull();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `The ui:order of "root" does not list property 'extra', so it is placed at the end`,
+        );
+      });
     });
 
     it('should order referenced schema definitions', () => {
