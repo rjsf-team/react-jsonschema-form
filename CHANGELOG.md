@@ -16,6 +16,20 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.12.0
+
+## @rjsf/core
+
+- Added the `ConfigErrorTemplate`, which `ObjectField` now renders instead of a hard-coded red error when a field's `ui:order` is invalid, so the error can be customized via the `templates` prop or `ui:ConfigErrorTemplate` in the `uiSchema`; the default template keeps the previous markup, fixing [#4316](https://github.com/rjsf-team/react-jsonschema-form/issues/4316) ([#5788](https://github.com/rjsf-team/react-jsonschema-form/pull/5788))
+
+## @rjsf/utils
+
+- Added `ConfigErrorTemplate` to `TemplatesType` along with its `ConfigErrorTemplateProps` type, and allowed it to be overridden per field through `ui:ConfigErrorTemplate` ([#5788](https://github.com/rjsf-team/react-jsonschema-form/pull/5788))
+
+## Dev / docs / playground
+
+- Documented the `ConfigErrorTemplate` in the custom templates guide and added a `Custom Config Error` playground sample ([#5788](https://github.com/rjsf-team/react-jsonschema-form/pull/5788))
+
 # 6.11.1
 
 ## @rjsf/core

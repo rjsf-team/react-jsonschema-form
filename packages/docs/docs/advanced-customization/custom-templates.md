@@ -27,6 +27,7 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [ArrayFieldItemButtonsTemplate](#arrayfielditembuttonstemplate)     | ArrayFieldItemButtonsTemplateProps | ui:ArrayFieldItemButonsTemplate  | Formerly an internal class for `ArrayFieldItemTemplate`s in all themes, refactored as a template in the `core`, used in all `ArrayFieldItemTemplate` implementations |
 | [ArrayFieldTitleTemplate](#arrayfieldtitletemplate)                 | ArrayFieldTitleProps               | ui:ArrayFieldTitleTemplate       | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations.                                                |
 | [BaseInputTemplate](#baseinputtemplate)                             | WidgetProps                        | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                                 |
+| [ConfigErrorTemplate](#configerrortemplate)                         | ConfigErrorTemplateProps           | ui:ConfigErrorTemplate           | Added in RJSF v6 to customize the error rendered for a field with an invalid configuration, such as an incomplete `ui:order`                                         |
 | [CyclicSchemaExpandTemplate](#cyclicschemaexpandtemplate)           | CyclicSchemaExpandProps            | ui:CyclicSchemaExpandTemplate    | Added in RJSF v6 to support circular `$ref` cycle detection                                                                                                          |
 | [DescriptionFieldTemplate](#descriptionfieldtemplate)               | DescriptionFieldProps              | ui:DescriptionFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                            |
 | [ErrorListTemplate](#errorlisttemplate)                             | ErrorListProps                     | ui:ErrorListTemplate             | Formerly `Form.ErrorList` moved to `templates` with the `Templates` suffix. Previously implemented in each theme.                                                    |
@@ -484,6 +485,54 @@ The following props are passed to the `BaseInputTemplate`:
 - `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
 - `registry`: The `registry` object
+
+## ConfigErrorTemplate
+
+The `ConfigErrorTemplate` is rendered in place of a field whose configuration is invalid.
+Today `ObjectField` uses it when the `ui:order` in the `uiSchema` is incomplete or has more than one wildcard, i.e. whenever `orderProperties()` throws.
+The default implementation renders the translated `InvalidObjectField` message in a `<p class="rjsf-config-error">` followed by the JSON of the schema.
+If your schemas or uiSchemas are user-defined, or you simply want the error to match your application, you can replace it:
+
+```tsx
+import { ConfigErrorTemplateProps, RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+    age: { type: 'number' },
+  },
+};
+
+// `age` is missing from the order, so the field can't be rendered
+const uiSchema: UiSchema = {
+  'ui:order': ['name'],
+};
+
+function ConfigErrorTemplate(props: ConfigErrorTemplateProps) {
+  const { name, error } = props;
+  return (
+    <div className='alert alert-warning' role='alert'>
+      The &quot;{name || 'root'}&quot; field is misconfigured: {error.message}
+    </div>
+  );
+}
+
+render(
+  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ ConfigErrorTemplate }} />,
+  document.getElementById('app'),
+);
+```
+
+The following props are passed to the `ConfigErrorTemplate`:
+
+- `schema`: The schema object for the field whose configuration is invalid.
+- `uiSchema`: The uiSchema object for the field whose configuration is invalid.
+- `fieldPathId`: The `FieldPathId` of the field in the hierarchy.
+- `name`: The name of the field whose configuration is invalid, an empty string for the root field.
+- `error`: The `Error` thrown while applying the field's configuration, e.g. by `orderProperties()` for an invalid `ui:order`.
+- `registry`: The `registry` object.
 
 ## CyclicSchemaExpandTemplate
 

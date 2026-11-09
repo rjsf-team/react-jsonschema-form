@@ -415,6 +415,8 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   ArrayFieldTitleTemplate: ComponentType<ArrayFieldTitleProps<T, S, F>>;
   /** The template to use while rendering the standard html input */
   BaseInputTemplate: ComponentType<BaseInputTemplateProps<T, S, F>>;
+  /** The template to use for rendering a field whose configuration (such as its `ui:order`) is invalid */
+  ConfigErrorTemplate: ComponentType<ConfigErrorTemplateProps<T, S, F>>;
   /** The template to use while rendering the cyclic schema expand controls */
   CyclicSchemaExpandTemplate: ComponentType<CyclicSchemaExpandProps<T, S, F>>;
   /** The template to use for rendering the description of a field */
@@ -707,6 +709,20 @@ export type FallbackFieldTemplateProps<
   typeSelector: ReactNode;
   /** A ReactNode that renders the field with the present formData and matches the selected type */
   schemaField: ReactNode;
+};
+
+/** The properties that are passed to the `ConfigErrorTemplate` implementation */
+export type ConfigErrorTemplateProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = RJSFBaseProps<T, S, F> & {
+  /** The FieldPathId of the field whose configuration is invalid */
+  fieldPathId: FieldPathId;
+  /** The name of the field whose configuration is invalid, an empty string for the root field */
+  name: string;
+  /** The error thrown while applying the field's configuration, e.g. by `orderProperties()` for a bad `ui:order` */
+  error: Error;
 };
 
 /** The properties that are passed to the `UnsupportedFieldTemplate` implementation */
@@ -1137,6 +1153,7 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     | 'ArrayFieldTemplate'
     | 'ArrayFieldTitleTemplate'
     | 'BaseInputTemplate'
+    | 'ConfigErrorTemplate'
     | 'DescriptionFieldTemplate'
     | 'ErrorListTemplate'
     | 'FieldErrorTemplate'

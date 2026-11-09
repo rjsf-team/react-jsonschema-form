@@ -6,6 +6,7 @@ import arrays from './arrays.ts';
 import bundledSchema from './bundledSchema.ts';
 import custom from './custom.ts';
 import customArray from './customArray.tsx';
+import customConfigError from './customConfigError.tsx';
 import customField from './customField.ts';
 import customFieldAnyOf from './customFieldAnyOf.tsx';
 import customObject from './customObject.tsx';
@@ -58,6 +59,7 @@ const samplesList: Record<string, Sample> = {
   Single: single,
   'Custom Array': customArray,
   'Custom Object': customObject,
+  'Custom Config Error': customConfigError,
   Alternatives: alternatives,
   'Property dependencies': propertyDependencies,
   'Schema dependencies': schemaDependencies,

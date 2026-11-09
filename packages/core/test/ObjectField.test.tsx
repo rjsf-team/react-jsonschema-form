@@ -1,12 +1,14 @@
 import { createRef } from 'react';
 import type {
   RJSFSchema,
+  ConfigErrorTemplateProps,
   FieldProps,
   FieldPathList,
   ErrorSchema,
   TitleFieldProps,
   DescriptionFieldProps,
   GenericObjectType,
+  UIOptionsType,
 } from '@rjsf/utils';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import { act } from '@testing-library/react';
@@ -569,6 +571,113 @@ describe('ObjectField', () => {
       });
 
       expect(node.querySelector('.rjsf-config-error')).toHaveTextContent(/contains more than one wildcard/);
+    });
+
+    describe('invalid order with a custom ConfigErrorTemplate', () => {
+      const CustomConfigErrorTemplate = vi.fn((props: ConfigErrorTemplateProps) => {
+        const { name, error } = props;
+        return (
+          <div id='custom-config-error'>
+            {name || 'root'}: {error.message}
+          </div>
+        );
+      });
+
+      beforeEach(() => {
+        CustomConfigErrorTemplate.mockClear();
+      });
+
+      it('should render the template from the registry instead of the default markup', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            'ui:order': ['baz', 'bar'],
+          },
+          templates: { ConfigErrorTemplate: CustomConfigErrorTemplate },
+        });
+
+        expect(node.querySelector('.rjsf-config-error')).toBeNull();
+        expect(node.querySelector('#custom-config-error')).toHaveTextContent(
+          /^root: uiSchema order list does not contain properties 'foo', 'qux'$/,
+        );
+        expect(node.querySelectorAll('.rjsf-field > label')).toHaveLength(0);
+      });
+
+      it('should pass the schema, uiSchema, fieldPathId, name, error and registry to the template', () => {
+        const uiSchema = {
+          'ui:order': ['baz', '*', 'bar', '*'],
+        };
+        createFormComponent({
+          schema,
+          uiSchema,
+          templates: { ConfigErrorTemplate: CustomConfigErrorTemplate },
+        });
+
+        expect(CustomConfigErrorTemplate).toHaveBeenCalledTimes(1);
+        const props: ConfigErrorTemplateProps = CustomConfigErrorTemplate.mock.calls[0][0];
+        expect(props.schema).toEqual(schema);
+        expect(props.uiSchema).toEqual(uiSchema);
+        expect(props.fieldPathId).toEqual({ $id: 'root', path: [] });
+        expect(props.name).toBe('');
+        expect(props.error).toBeInstanceOf(Error);
+        expect(props.error.message).toMatch(/contains more than one wildcard/);
+        expect(props.registry.templates.ConfigErrorTemplate).toBe(CustomConfigErrorTemplate);
+      });
+
+      it('should pass the name and fieldPathId of a nested object field', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              nested: schema,
+            },
+          },
+          uiSchema: {
+            nested: {
+              'ui:order': ['qux'],
+            },
+          },
+          templates: { ConfigErrorTemplate: CustomConfigErrorTemplate },
+        });
+
+        expect(node.querySelector('#custom-config-error')).toHaveTextContent(
+          /^nested: uiSchema order list does not contain properties 'foo', 'bar', 'baz'$/,
+        );
+        const props: ConfigErrorTemplateProps = CustomConfigErrorTemplate.mock.calls[0][0];
+        expect(props.name).toBe('nested');
+        expect(props.fieldPathId).toEqual({ $id: 'root_nested', path: ['nested'] });
+      });
+
+      it('should use the template given in the uiSchema via `ui:ConfigErrorTemplate`', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            'ui:order': ['baz', 'bar'],
+            'ui:ConfigErrorTemplate': CustomConfigErrorTemplate,
+          },
+        });
+
+        expect(node.querySelector('.rjsf-config-error')).toBeNull();
+        expect(node.querySelector('#custom-config-error')).toHaveTextContent(
+          /does not contain properties 'foo', 'qux'/,
+        );
+      });
+
+      it('should look up a template registered under a custom name via `ui:ConfigErrorTemplate`', () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: {
+            'ui:order': ['baz', 'bar'],
+            'ui:ConfigErrorTemplate': 'MyConfigError' as unknown as UIOptionsType['ConfigErrorTemplate'],
+          },
+          templates: { MyConfigError: CustomConfigErrorTemplate },
+        });
+
+        expect(node.querySelector('.rjsf-config-error')).toBeNull();
+        expect(node.querySelector('#custom-config-error')).toHaveTextContent(
+          /does not contain properties 'foo', 'qux'/,
+        );
+      });
     });
 
     it('should order referenced schema definitions', () => {

@@ -32,7 +32,6 @@ import {
   isObject,
   TranslatableString,
 } from '@rjsf/utils';
-import { Markdown } from 'markdown-to-jsx/react';
 
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants.ts';
 
@@ -394,15 +393,20 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       );
       orderedProperties = orderProperties([...definedPropertyOrder, ...currentAdditionalProperties], uiOptions.order);
     } catch (err) {
+      const ConfigErrorTemplate = getTemplate<'ConfigErrorTemplate', T, S, F>(
+        'ConfigErrorTemplate',
+        registry,
+        uiOptions,
+      );
       return (
-        <div>
-          <p className='rjsf-config-error' style={{ color: 'red' }}>
-            <Markdown options={{ disableParsingRawHTML: true }}>
-              {translateString(TranslatableString.InvalidObjectField, [name || 'root', (err as Error).message])}
-            </Markdown>
-          </p>
-          <pre>{JSON.stringify(schema)}</pre>
-        </div>
+        <ConfigErrorTemplate
+          schema={schema}
+          uiSchema={uiSchema}
+          fieldPathId={fieldPathId}
+          name={name}
+          error={err as Error}
+          registry={registry}
+        />
       );
     }
   }

@@ -7,6 +7,7 @@ import ArrayFieldTemplate from './ArrayFieldTemplate.tsx';
 import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate.tsx';
 import BaseInputTemplate from './BaseInputTemplate.tsx';
 import ButtonTemplates from './ButtonTemplates/index.ts';
+import ConfigErrorTemplate from './ConfigErrorTemplate.tsx';
 import CyclicSchemaExpandTemplate from './CyclicSchemaExpandTemplate.tsx';
 import DescriptionField from './DescriptionField.tsx';
 import ErrorList from './ErrorList.tsx';
@@ -35,6 +36,7 @@ function templates<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
     ArrayFieldTitleTemplate,
     ButtonTemplates: ButtonTemplates<T, S, F>(),
     BaseInputTemplate,
+    ConfigErrorTemplate,
     CyclicSchemaExpandTemplate,
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
