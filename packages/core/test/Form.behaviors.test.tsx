@@ -2802,6 +2802,100 @@ describe('optionalDataControls', () => {
     expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: { rows: [[{ k: 'ok', opt: {} }]] } });
   });
 
+  it('keeps an optional object added in an array item after a switch both drops an item before it and cuts to maxItems (#5768)', async () => {
+    const row: RJSFSchema = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { k: { type: 'string' }, opt: { type: 'object', properties: { level: { type: 'string' } } } },
+      },
+    };
+    const rowDroppingBad: RJSFSchema = { ...row, oneOf: [{ enum: [[{ k: 'ok', opt: {} }], [{ k: 'z' }]] }] };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        job: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { rows: { type: 'array', items: row } } },
+            { title: 'B', properties: { rows: { type: 'array', items: rowDroppingBad, maxItems: 2 } } },
+          ],
+        },
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      uiSchema: objectOnUiSchema,
+      initialFormData: { job: { rows: [[{ k: 'bad' }], [{ k: 'ok', opt: {} }], [{ k: 'z' }]] } },
+    });
+
+    await user.selectOptions(elementOf(node, '#root_job__oneof_select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: { rows: [[{ k: 'ok', opt: {} }], [{ k: 'z' }]] } });
+  });
+
+  it('leaves out an optional object the user never added in an array item after a switch drops another item (#5768)', async () => {
+    const row: RJSFSchema = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { k: { type: 'string' }, opt: { type: 'object', properties: { level: { type: 'string' } } } },
+      },
+    };
+    // Only a row holding 'bad' resolves to the `enum`, which doesn't list it, so only that row is dropped
+    const rowDroppingBad: RJSFSchema = {
+      ...row,
+      if: { contains: { type: 'object', properties: { k: { const: 'bad' } }, required: ['k'] } },
+      then: { enum: [[]] },
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        job: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { rows: { type: 'array', items: row } } },
+            { title: 'B', properties: { rows: { type: 'array', items: rowDroppingBad } } },
+          ],
+        },
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      uiSchema: objectOnUiSchema,
+      initialFormData: { job: { rows: [[{ k: 'bad' }], [{ k: 'a' }]] } },
+    });
+
+    await user.selectOptions(elementOf(node, '#root_job__oneof_select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: { rows: [[{ k: 'a' }]] } });
+  });
+
+  it('leaves out an optional object holding null after a switch, rather than showing it added (#5768)', async () => {
+    const o: RJSFSchema = { type: 'object', required: ['x'], properties: { x: { type: 'string' } } };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        job: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { o, a: { type: 'string' } } },
+            { title: 'B', properties: { o, b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      uiSchema: objectOnUiSchema,
+      initialFormData: { job: { o: null, a: 'v' } },
+    });
+
+    await user.selectOptions(elementOf(node, '#root_job__oneof_select'), 'B');
+
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ job: {} });
+  });
+
   it('leaves out an optional object in an array item kept after a switch cuts the array to maxItems', async () => {
     const row: RJSFSchema = {
       type: 'object',

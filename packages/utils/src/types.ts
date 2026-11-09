@@ -2775,13 +2775,15 @@ export interface SchemaUtilsType<
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
    * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
    * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the
-   * old schema that are non-existent in the new schema are set to `undefined`.
+   * old schema that are non-existent in the new schema, or that it declares with another type, are removed from the
+   * data at every level.
    *
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
-   * @returns - The new form data, with all of the fields uniquely associated with the old schema set
-   *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
+   * @returns - The new form data, without the fields uniquely associated with the old schema. Will return `undefined`
+   *      if the new schema is not an object containing properties, or where its object or array `const` rejects the
+   *      data, and a copy of that `const` where the data holds the old schema's
    */
   sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: unknown): T;
 }

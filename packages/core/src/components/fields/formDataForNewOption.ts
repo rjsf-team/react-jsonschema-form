@@ -9,22 +9,16 @@ import type {
   UiSchemaDefinitions,
 } from '@rjsf/utils';
 import {
-  ADDITIONAL_PROPERTIES_KEY,
-  ADDITIONAL_PROPERTY_FLAG,
   CONST_KEY,
   deepEquals,
   DEFAULT_KEY,
   getByPath,
   getPropertySchema,
   getRenderedOptionSchema,
-  getStaticItemsUiSchema,
   getXxxOfKey,
-  hasSchemaMarker,
-  isCollapsedByOptionalDataControls,
   isPlainObject,
   isSchemaObject,
   mergeSchemas,
-  resolveUiSchema,
 } from '@rjsf/utils';
 
 import keepClears from '../keepClears.ts';
@@ -137,12 +131,13 @@ function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType
   );
 }
 
-/** Builds the function that returns data without each key the switch discarded: one the old option declares and neither
- * the new option nor the schema holding the options declares, which `sanitizeDataForNewSchema()` leaves holding
- * `undefined`. Left in place, such a key is an extra key of the object holding the options, which renders it as an
- * additional property holding nothing and counts it against its `maxProperties` and its `propertyNames`. A key both
- * options declare under different constraints goes too: the `undefined` it holds is a clear of the old option's field,
- * which gives way to the new one's defaults.
+/** Builds the function that returns data without each key the switch discarded that holds `undefined`: one both options
+ * declare under different constraints, whose `undefined` is a clear of the old option's field that gives way to the new
+ * one's defaults, and one the old option declares and neither the new option's `properties` nor the schema holding the
+ * options declares. `sanitizeDataForNewSchema()` removes the second kind itself, but the defaults filled in afterwards
+ * add one back where the new option declares it through `allOf` or a condition. Left in place, such a key is an extra
+ * key of the object holding the options, which renders it as an additional property holding nothing and counts it
+ * against its `maxProperties` and its `propertyNames`.
  *
  * A switch asks this before and after the defaults are filled in, so each key's answer is kept: comparing two options'
  * fields retrieves both schemas, and a retrieval can call the validator.
@@ -189,168 +184,6 @@ function discardedKeysRemover<T, S extends StrictRJSFSchema = RJSFSchema, F exte
   };
 }
 
-type WalkUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
-  OptionUiSchemas<T, S, F>,
-  'uiSchemaDefinitions' | 'globalUiOptions'
->;
-
-/** Returns `value`, an object or array `sanitizeDataForNewSchema()` returned where the old data held one too, without
- * the empty objects it wrote for optional objects beneath it, see `withoutAddedOptionalObjects()`. Sanitize descends
- * only into what the old data held, so nothing else holds one. An array item's uiSchema is read as the form's defaults
- * read it, without a function-form `uiSchema.items`, which needs a `formContext` this has none of. An array whose length
- * sanitize changed other than by cutting it to its `maxItems` is returned as it is: an item it dropped shifts
- * the ones after it off their old ones, where an object the user added would read as one sanitize wrote, and be
- * removed.
- *
- * @param schemaUtils - The `SchemaUtilsType` implementation to resolve each schema with
- * @param value - The sanitized value
- * @param oldValue - The old data at the same place
- * @param rawSchema - The schema of `value` as its parent declares it
- * @param uiSchema - The uiSchema of `value`
- * @param uiSchemas - The registry's `ui:definitions` and the form's global UI options
- * @returns - `value`, or a copy of it without those objects
- */
-function withoutAddedOptionalObjectsWithin<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  value: unknown,
-  oldValue: unknown,
-  rawSchema: S,
-  uiSchema: UiSchema<T, S, F> | undefined,
-  uiSchemas: WalkUiSchemas<T, S, F>,
-): unknown {
-  const isObjectValue = isPlainObject(value) && isPlainObject(oldValue);
-  const isArrayPair = Array.isArray(value) && Array.isArray(oldValue);
-  // A value sanitize carried over as it was holds only what the old data held
-  if (value === oldValue || (!isObjectValue && !isArrayPair)) {
-    return value;
-  }
-  // An array's schema is resolved against the old data, as sanitize resolved the one whose `maxItems` it cut to: a
-  // `$ref`, `allOf` or `if`/`then` can supply it, and a condition on the items reads differently after the cut
-  const schema = schemaUtils.retrieveSchema(rawSchema, asFieldValue<T>(isObjectValue ? value : oldValue));
-  if (isArrayPair && value.length !== Math.min(oldValue.length, schema.maxItems ?? Infinity)) {
-    return value;
-  }
-  const { uiSchemaDefinitions } = uiSchemas;
-  const fieldUiSchema = uiSchemaDefinitions
-    ? resolveUiSchema<T, S, F>(rawSchema, uiSchema, { rootSchema: schemaUtils.getRootSchema(), uiSchemaDefinitions })
-    : uiSchema;
-  if (isObjectValue) {
-    return withoutAddedOptionalObjects<GenericObjectType, T, S, F>(
-      schemaUtils,
-      value,
-      oldValue,
-      schema,
-      fieldUiSchema,
-      uiSchemas,
-    );
-  }
-  const { items, additionalItems } = schema;
-  let kept: unknown[] | undefined;
-  (value as unknown[]).forEach((item, index) => {
-    const isPastTuple = Array.isArray(items) && index >= items.length;
-    const itemSchema: unknown = Array.isArray(items) ? (items[index] ?? additionalItems) : items;
-    if (!isPlainObject(itemSchema)) {
-      return;
-    }
-    const itemUiSchema = isPastTuple
-      ? (fieldUiSchema?.additionalItems as UiSchema<T, S, F> | undefined)
-      : getStaticItemsUiSchema<T, S, F>(fieldUiSchema, index);
-    const keptItem = withoutAddedOptionalObjectsWithin<T, S, F>(
-      schemaUtils,
-      item,
-      (oldValue as unknown[])[index],
-      itemSchema as S,
-      itemUiSchema,
-      uiSchemas,
-    );
-    if (keptItem !== item) {
-      kept ??= [...(value as unknown[])];
-      kept[index] = keptItem;
-    }
-  });
-  return kept ?? value;
-}
-
-/** Returns `data` without each empty object `sanitizeDataForNewSchema()` wrote, where the old data held nothing, for an
- * optional object the Optional Data Controls render collapsed. The form's own defaults leave such an object out, so
- * after a switch it shows its Add button, as it does when the form mounts on the option. Sanitize writes one for every
- * absent object property of each object the old data held, array items included, so this walks down each of those, as
- * options sharing a nested object or an array of them do.
- *
- * @param schemaUtils - The `SchemaUtilsType` implementation to resolve each property's schema with
- * @param data - The data `sanitizeDataForNewSchema()` returned, or an object within it
- * @param formData - The old data at the same place
- * @param schema - The schema of `data`: the option switched to, with the `required` of the schema holding the options
- * @param uiSchema - The uiSchema of `data`
- * @param uiSchemas - The registry's `ui:definitions` and the form's global UI options
- * @returns - `data`, or a copy of it without those objects
- */
-function withoutAddedOptionalObjects<
-  D extends GenericObjectType,
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  data: D,
-  formData: unknown,
-  schema: S,
-  uiSchema: UiSchema<T, S, F> | undefined,
-  uiSchemas: WalkUiSchemas<T, S, F>,
-): D {
-  const { uiSchemaDefinitions, globalUiOptions } = uiSchemas;
-  let kept: D | undefined;
-  Object.keys(data).forEach((key) => {
-    const value: unknown = data[key];
-    const oldValue: unknown = getByPath(formData, key);
-    const rawPropertySchema = getPropertySchema<S>(schema, key);
-    // An extra key `retrieveSchema()` stubbed reads `uiSchema.additionalProperties`, as its field does
-    const propertyUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
-      uiSchema,
-      hasSchemaMarker(rawPropertySchema, ADDITIONAL_PROPERTY_FLAG) ? ADDITIONAL_PROPERTIES_KEY : key,
-    );
-    let keptValue: unknown = value;
-    if (isPlainObject(value) && Object.keys(value).length === 0) {
-      // Sanitize writes an empty object only where the old data held nothing, which the collapse check reads too
-      if (
-        isCollapsedByOptionalDataControls<T, S, F>(
-          () => schemaUtils.retrieveSchema(rawPropertySchema),
-          rawPropertySchema,
-          propertyUiSchema,
-          {
-            uiSchemaDefinitions,
-            globalUiOptions,
-            rootSchema: schemaUtils.getRootSchema(),
-            required: schema.required?.includes(key) === true,
-            formData: oldValue,
-          },
-        )
-      ) {
-        keptValue = undefined;
-      }
-    } else {
-      keptValue = withoutAddedOptionalObjectsWithin<T, S, F>(
-        schemaUtils,
-        value,
-        oldValue,
-        rawPropertySchema,
-        propertyUiSchema,
-        uiSchemas,
-      );
-    }
-    if (keptValue !== value) {
-      // Copy rather than delete from what `sanitizeDataForNewSchema()` returned, as above
-      kept ??= { ...data };
-      if (keptValue === undefined) {
-        delete kept[key];
-      } else {
-        (kept as GenericObjectType)[key] = keptValue;
-      }
-    }
-  });
-  return kept ?? data;
-}
-
 /** The field holding the options with `option` as its only one, and the field's uiSchema with the option's as its
  * only one and the form's global UI options, which is how the field's own defaults for that option are computed;
  * undefined when there is no field holding options
@@ -390,7 +223,8 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  * declares, but neither lets the new option's `default` reach a key that already holds something, so a value the old
  * option's `default` put there outlasts the switch and switching back does not restore it
  * ([#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476)). The same is true of a key whose value
- * sanitize discarded, because it clears by assigning `undefined` rather than by removing the key, and
+ * sanitize cleared, as it does one the new option's `const`, `enum` or read-only `default` rejects, because it clears
+ * by assigning `undefined` rather than by removing the key, and
  * `getDefaultFormState()` populates an absent key but leaves one explicitly set to `undefined` alone, unless it is the
  * field of a `null` schema, whose one value it fills in. Deleting either kind of key outright is what lets the fill
  * below reach it.
@@ -407,13 +241,13 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  *   What an option declares and what `computeDefaults()` acts on are not the same set: a `default` reached through
  *   `allOf` or `if`/`then` resolves here but is not filled, and a `const` is skipped entirely under
  *   `constAsDefaults: 'never'`. Deleting on the declaration alone would empty those keys for good.
- * - Sanitize discarded the value, or the old option declares one and the key still holds it. Only the second of
+ * - Sanitize cleared the value, or the old option declares one and the key still holds it. Only the second of
  *   those compares anything, so only it needs the old option's declaration: a value sanitize threw away is gone
  *   no matter who declared it, and leaving the key holding `undefined` only blocks the fill.
  *
  * Staleness is judged against `formData` as it arrived, not against the sanitized copy: sanitize rewrites a nested
- * value whenever the two options declare different properties for it, adding an `undefined` key for one the new
- * option drops and a leaf default for one it adds, and the rewritten value no longer resembles the default it came
+ * value whenever the two options declare different properties for it, removing a key the new option drops and adding
+ * a leaf default for one it adds, and the rewritten value no longer resembles the default it came
  * from. Both sets of defaults use `excludeObjectChildren`, the flag the fill below uses, so all three describe the
  * same thing; computing them any other way makes them disagree under a `defaultFormStateBehavior`
  * that suppresses object defaults. They describe what an earlier switch through here wrote rather than every default
@@ -424,9 +258,7 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  * what `sanitizeDataForNewSchema()` made of nothing for the option, its `undefined` keys left out, filled with the
  * defaults of the field with that option as its only one, so a `default` the field itself declares is restored with
  * the option's own, a `default` an ancestor declares for the field fills the keys they leave
- * ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)), and an object property gets the empty
- * object a switch from another object option gives it, unless it is an optional object the Optional Data Controls
- * show collapsed, which is left out, see `withoutAddedOptionalObjects()`.
+ * ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)), as they do on mount.
  *
  * Values are matched whole, per top-level key of the option: editing one leaf of a nested object leaves the whole
  * subtree in place, so its other leaves keep the old option's defaults.
@@ -473,16 +305,6 @@ export default function formDataForNewOption<
   }
   const newOptionForDefaults = withParentRequired<S>(parentSchema, newOption);
   if (newOptionForDefaults) {
-    if (isPlainObject(newFormData)) {
-      newFormData = withoutAddedOptionalObjects<GenericObjectType & T, T, S, F>(
-        schemaUtils,
-        newFormData,
-        formData,
-        newOptionForDefaults,
-        uiSchemas.newOptionUiSchema,
-        uiSchemas,
-      );
-    }
     const oldOptionForDefaults = withParentRequired<S>(parentSchema, oldOption);
     let oldDefaults: unknown;
     let oldDefaultsComputed = false;
@@ -555,9 +377,7 @@ export default function formDataForNewOption<
      * what `sanitizeDataForNewSchema()` made of nothing for the option, filled with the defaults of the field holding
      * the options with the new option as its only one, so the field's own `default`, which a `null` option switched
      * away from had replaced, lies beneath the option's, as it does on mount
-     * ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)), and the empty objects sanitize gives
-     * the option's object properties are written as a switch from another object option writes them. Undefined for any
-     * other option */
+     * ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)). Undefined for any other option */
     const fieldDefaultsForNewOption = (sanitized: T | undefined) => {
       const field = fieldWithOnlyOption<T, S, F>(parentSchema, newOption, uiSchemas.newOptionUiSchema, globalUiOptions);
       if (!field || !isPlainObject(defaultsForNewOption())) {
@@ -601,8 +421,8 @@ export default function formDataForNewOption<
             const computed = defaultsForOldOption();
             return isPlainObject(computed) && deepEquals(computed[key], oldData[key]);
           };
-          // Copy rather than delete from what `sanitizeDataForNewSchema()` returned: it builds a fresh object today,
-          // but nothing in its contract promises that, and mutating it would reach the `formData` held in state
+          // Copy rather than delete from what `sanitizeDataForNewSchema()` returned: it can hand back `formData` itself,
+          // as it does an object equal to the new `const`, and mutating it would reach the `formData` held in state
           const withoutBlockedKeys = { ...sanitizedData };
           refillableKeys.forEach((key) => {
             if (sanitizedData[key] === undefined || holdsOldDefault(key)) {
