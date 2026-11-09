@@ -7,6 +7,7 @@ import {
   CONST_KEY,
   CONTAINS_KEY,
   DEPENDENCIES_KEY,
+  DEPENDENT_REQUIRED_KEY,
   DEPENDENT_SCHEMAS_KEY,
   DISCRIMINATOR_PATH,
   ELSE_KEY,
@@ -245,16 +246,19 @@ export function targetOf<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaG
   return node.kind === 'schema' ? node.raw : booleanSchema(node, graph.rawRoot);
 }
 
-/** A subschema in an option's scope, and the place the walk of the scope reached it at */
+/** A subschema in an option's scope, the place the walk of the scope reached it at, and whether it reached it through a
+ * `dependentSchemas` entry
+ */
 interface Member<S extends StrictRJSFSchema> {
   readonly node: ObjectNode<S>;
   readonly place: Place;
+  readonly dependent: boolean;
 }
 
 /** Which subschemas `scopeAt()` follows besides a `$ref` and the `allOf` entries: `unconditional` none, `conditional`
  * the `then`/`else` and the `dependencies` schemas, which apply only for some data, and `scored` the `dependentSchemas`
  * entries as well. Only scoring reads those, as it copies them, see `derive()`: what the form reads of a scope, such as
- * the declarations of a discriminator, it reads as v7 did.
+ * the declarations of a discriminator, is the `conditional` scope, which leaves the `dependentSchemas` entries out.
  */
 type Follow = 'unconditional' | 'conditional' | 'scored';
 
@@ -262,7 +266,9 @@ type Follow = 'unconditional' | 'conditional' | 'scored';
  * `allOf` entries, and the conditional subschemas `follow` names. Each is followed the same way, at the place it is
  * reached at from `place`: below it, or where a `$ref` names. A place is listed once, so one object the root holds in
  * two places of the scope is listed at each, as two equal copies of it would be; a node with no place is listed once.
- * An object reached again below itself, which only a root holding itself through its own objects does, is not followed.
+ * One reached both through a `dependentSchemas` entry and outside one is listed for each, so the members reached
+ * outside one are the `conditional` scope. An object reached again below itself, which only a root holding itself
+ * through its own objects does, is not followed.
  */
 function scopeAt<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -272,33 +278,39 @@ function scopeAt<S extends StrictRJSFSchema>(
 ): Member<S>[] {
   const seen = new Set<string>();
   const members: Member<S>[] = [];
-  const visit = (next: NodeId | undefined, at: Place, above: ReadonlySet<NodeId>) => {
-    if (next === undefined || above.has(next) || seen.has(placeKey(next, at))) {
+  const visit = (next: NodeId | undefined, at: Place, above: ReadonlySet<NodeId>, dependent: boolean) => {
+    if (next === undefined || above.has(next)) {
       return;
     }
-    seen.add(placeKey(next, at));
+    const key = dependent ? `${placeKey(next, at)} dependent` : placeKey(next, at);
+    if (seen.has(key)) {
+      return;
+    }
+    seen.add(key);
     const node = graph.node(next);
     if (node.kind !== 'schema') {
       return;
     }
-    members.push({ node, place: at });
+    members.push({ node, place: at, dependent });
     const inner = new Set(above).add(next);
-    visit(node.ref, refPlace(node), new Set());
+    visit(node.ref, refPlace(node), new Set(), dependent);
     graph
       .subschemas(next, ALL_OF_KEY)
-      .forEach(([index, member]) => visit(member, placeBelow(at, [ALL_OF_KEY, index]), inner));
+      .forEach(([index, member]) => visit(member, placeBelow(at, [ALL_OF_KEY, index]), inner, dependent));
     if (follow === 'unconditional') {
       return;
     }
-    visit(graph.child(next, THEN_KEY), placeBelow(at, [THEN_KEY]), inner);
-    visit(graph.child(next, ELSE_KEY), placeBelow(at, [ELSE_KEY]), inner);
+    visit(graph.child(next, THEN_KEY), placeBelow(at, [THEN_KEY]), inner, dependent);
+    visit(graph.child(next, ELSE_KEY), placeBelow(at, [ELSE_KEY]), inner, dependent);
     (follow === 'scored' ? [DEPENDENCIES_KEY, DEPENDENT_SCHEMAS_KEY] : [DEPENDENCIES_KEY]).forEach((keyword) =>
       graph
         .subschemas(next, keyword)
-        .forEach(([key, dependency]) => visit(dependency, placeBelow(at, [keyword, key]), inner)),
+        .forEach(([entry, dependency]) =>
+          visit(dependency, placeBelow(at, [keyword, entry]), inner, dependent || keyword === DEPENDENT_SCHEMAS_KEY),
+        ),
     );
   };
-  visit(id, place, new Set());
+  visit(id, place, new Set(), false);
   return members;
 }
 
@@ -609,6 +621,7 @@ function loosens<S extends StrictRJSFSchema>(
   return (
     (loosening.required &&
       (REQUIRED_KEY in raw ||
+        DEPENDENT_REQUIRED_KEY in raw ||
         Object.values(isObject(raw[DEPENDENCIES_KEY]) ? raw[DEPENDENCIES_KEY] : {}).some(Array.isArray))) ||
     (loosening.additionalProperties && raw[ADDITIONAL_PROPERTIES_KEY] === false) ||
     recursiveChoices(graph).holds(node.id)
@@ -744,6 +757,7 @@ function derive<S extends StrictRJSFSchema>(
   const {
     [ID_KEY]: _id,
     [REQUIRED_KEY]: required,
+    [DEPENDENT_REQUIRED_KEY]: dependentRequired,
     [REF_KEY]: ref,
     [ALL_OF_KEY]: allOf,
     [THEN_KEY]: then,
@@ -760,6 +774,9 @@ function derive<S extends StrictRJSFSchema>(
   );
   if (!loosening.required && required !== undefined) {
     copy[REQUIRED_KEY] = required;
+  }
+  if (!loosening.required && dependentRequired !== undefined) {
+    copy[DEPENDENT_REQUIRED_KEY] = dependentRequired;
   }
   const target = node.ref === undefined ? undefined : graph.node(node.ref);
   const resolved = target?.kind === 'invalid' ? undefined : target;
@@ -832,12 +849,12 @@ function scoringTargetAt<S extends StrictRJSFSchema>(
   if (node.kind !== 'schema') {
     return targetOf(graph, id);
   }
-  const scope = scopeOf(graph, id, 'scored');
+  const scope = scopeAt(graph, id, undefined, 'scored');
   const loosening = {
-    required: scopeOf(graph, id).some((member) => isObject(member.raw.properties)),
+    required: scope.some(({ node: member, dependent }) => !dependent && isObject(member.raw.properties)),
     additionalProperties: relax,
   };
-  return place !== undefined && !scope.some((member) => loosens(graph, member, loosening))
+  return place !== undefined && !scope.some(({ node: member }) => loosens(graph, member, loosening))
     ? targetAt(graph, id, place)
     : derive(graph, node, place, loosening, new Set(), new Set(), 'parts');
 }
@@ -962,6 +979,10 @@ const childrenMemo = new KeyedMemo<(readonly [string[], NodeId][])[]>();
 
 /** Returns the subschemas the node `id` holds, each with the unescaped pointer tokens leading to it */
 function childrenOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): readonly [string[], NodeId][] {
+  // A graph extending another holds the base's nodes as the base does, so their lists are the base's
+  if (graph.base !== undefined && id < graph.base.size) {
+    return childrenOf(graph.base, id);
+  }
   const held = childrenMemo.get([graph], () => []);
   held[id] ??= readChildren(graph, id);
   return held[id];
@@ -1219,14 +1240,14 @@ interface Recurrence {
 }
 
 /** Returns the nodes of the cycle `cycle`, each with the subschemas it holds, that validate a value with two or more
- * subschemas that hold the cycle again through the same part of the value, so validating data walks that part more
- * than once at every level it recurs at, which grows exponentially with the depth of the data. Its `allOf` entries,
- * `$ref`, `not`, `if`, `dependencies` schemas and each of its own parts apply to the value together, its `then` or its
- * `else` with them, and its `anyOf`/`oneOf` options do where they can take a value of the same type: the array and the
- * object of a JSON value written as an `anyOf` of a string, an array of values and an object of values fail on `type`
- * alone. Subschemas recurring through different parts, as an `allOf` of a base holding the node again as a `parent`
- * and an object holding it as `children` does, or a property and a pattern that cannot match its name, walk each part
- * of the data once.
+ * subschemas that hold the cycle again through the same part of the value, so validating data walks that part more than
+ * once at every level it recurs at, which grows exponentially with the depth of the data. Its `allOf` entries, `$ref`,
+ * `not`, `if`, `dependencies` and `dependentSchemas` schemas and each of its own parts apply to the value together, its
+ * `then` or its `else` with them, and its `anyOf`/`oneOf` options do where they can take a value of the same type: the
+ * array and the object of a JSON value written as an `anyOf` of a string, an array of values and an object of values
+ * fail on `type` alone. Subschemas recurring through different parts, as an `allOf` of a base holding the node again as
+ * a `parent` and an object holding it as `children` does, or a property and a pattern that cannot match its name, walk
+ * each part of the data once.
  */
 function branchingNodes<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
@@ -1342,8 +1363,10 @@ interface Frame {
   readonly beside: GenericObjectType;
   readonly applied: NodeId[];
   readonly next: NodeId[];
-  /** The subschemas applied on top of it whose evaluated parts an `unevaluatedProperties` or `unevaluatedItems` it
-   * holds sees: its `$ref`, `allOf` entries, `then`, `else` and `dependencies` schemas, or none where it holds neither
+  /** The subschemas applied on top of it, see `conjunctsOf()` */
+  readonly conjuncts: NodeId[];
+  /** Its `conjuncts`, whose evaluated parts an `unevaluatedProperties` or `unevaluatedItems` it holds sees, or none
+   * where it holds neither
    */
   readonly evaluated: NodeId[];
 }
@@ -1362,6 +1385,11 @@ interface RecursiveChoices {
   cycleOf(id: NodeId): NodeId | undefined;
   /** Returns whether the node `id` holds a part of the data, see `PART_KEYWORDS`, that leads to a recursive choice */
   holds(id: NodeId): boolean;
+  /** Returns whether a copy of the node `id` below a part evaluates fewer parts of the data than the node does: where
+   * it is `cut`, or a subschema applied on top of it is, however deep, which an `unevaluatedProperties` or
+   * `unevaluatedItems` above it would then see less of
+   */
+  narrows(id: NodeId): boolean;
 }
 
 /** The `RecursiveChoices` of each graph */
@@ -1391,6 +1419,7 @@ function recursiveChoices<S extends StrictRJSFSchema = RJSFSchema>(graph: Schema
       leadOf: (id) => (id < start ? base?.leadOf(id) : walk(id).leads.get(id)),
       cycleOf: (id) => (id < start ? base?.cycleOf(id) : walk(id).cycles.get(id)),
       holds: (id) => (id < start ? base?.holds(id) === true : walk(id).holders.has(id)),
+      narrows: (id) => (id < start ? base?.narrows(id) === true : walk(id).narrowing.has(id)),
     };
   });
 }
@@ -1402,6 +1431,7 @@ interface FoundChoices {
   readonly leads: Map<NodeId, Lead>;
   readonly cycles: Map<NodeId, NodeId>;
   readonly holders: Set<NodeId>;
+  readonly narrowing: Set<NodeId>;
   readonly walked: Set<NodeId>;
 }
 
@@ -1416,7 +1446,13 @@ function recursiveChoicesWalk<S extends StrictRJSFSchema>(
   start: number,
   base: RecursiveChoices | undefined,
 ): (id: NodeId) => Readonly<FoundChoices> {
-  const found: FoundChoices = { leads: new Map(), cycles: new Map(), holders: new Set(), walked: new Set() };
+  const found: FoundChoices = {
+    leads: new Map(),
+    cycles: new Map(),
+    holders: new Set(),
+    narrowing: new Set(),
+    walked: new Set(),
+  };
   return (root) => {
     if (!found.walked.has(root)) {
       walkFrom(graph, start, base, root, found);
@@ -1439,9 +1475,10 @@ function walkFrom<S extends StrictRJSFSchema>(
   root: NodeId,
   found: FoundChoices,
 ): void {
-  const { leads, cycles, holders, walked } = found;
+  const { leads, cycles, holders, narrowing, walked } = found;
   // A node closes once every subschema it applies has been entered, so what those lead to is known by then
   const leadOf = (id: NodeId) => (id < start ? base?.leadOf(id) : leads.get(id));
+  const narrows = (id: NodeId) => (id < start ? base?.narrows(id) === true : narrowing.has(id));
   const open = new Map<NodeId, number>();
   const stack: Frame[] = [];
   const frames: Frame[] = [];
@@ -1456,10 +1493,9 @@ function walkFrom<S extends StrictRJSFSchema>(
       ...held.filter(([[keyword]]) => !DEFINITIONS_KEYWORDS.has(keyword)).map(([, child]) => child),
       ...(node.kind === 'schema' ? [node.ref, node.conjunction].filter((ref) => ref !== undefined) : []),
     ];
+    const conjuncts = node.kind === 'schema' ? conjunctsOf(held, node.ref) : [];
     const evaluated =
-      node.kind === 'schema' && EVALUATING_KEYWORDS.some((keyword) => keyword in node.raw)
-        ? conjunctsOf(held, node.ref)
-        : [];
+      node.kind === 'schema' && EVALUATING_KEYWORDS.some((keyword) => keyword in node.raw) ? conjuncts : [];
     const frame = {
       id,
       order,
@@ -1468,6 +1504,7 @@ function walkFrom<S extends StrictRJSFSchema>(
       beside: isObject(raw) ? raw : {},
       applied,
       next: applied.filter((child) => child >= start),
+      conjuncts,
       evaluated,
     };
     open.set(id, order);
@@ -1495,24 +1532,35 @@ function walkFrom<S extends StrictRJSFSchema>(
       ? branchingNodes(graph, new Map(members.map(({ id, held, beside }) => [id, { held, beside }])))
       : new Set();
     if (branching.size > 0 || members.some(({ applied }) => applied.some((child) => leadOf(child) !== undefined))) {
-      members.forEach(({ id, held, evaluated }) => {
-        // A part a cut below a conjunct declares no longer counts as evaluated for the `unevaluatedProperties` or
-        // `unevaluatedItems` beside it, which would reject what the node accepts, so such a node is cut as a whole
-        const evaluatesCut = evaluated.some((child) => leadOf(child) !== undefined || inComponent(child));
-        const copied =
-          !evaluatesCut &&
-          held.every(
-            ([[keyword], child]) =>
-              (leadOf(child) === undefined && !inComponent(child)) ||
-              PART_KEYWORDS.has(keyword) ||
-              CONJUNCT_KEYWORDS.has(keyword) ||
-              DEFINITIONS_KEYWORDS.has(keyword),
-          );
+      members.forEach(({ id, held }) => {
+        const copied = held.every(
+          ([[keyword], child]) =>
+            (leadOf(child) === undefined && !inComponent(child)) ||
+            PART_KEYWORDS.has(keyword) ||
+            CONJUNCT_KEYWORDS.has(keyword) ||
+            DEFINITIONS_KEYWORDS.has(keyword),
+        );
         leads.set(id, copied && !branching.has(id) ? 'copied' : 'cut');
         if (recurs) {
           cycles.set(id, frame.id);
         }
       });
+      // A part a cut conjunct declares no longer counts as evaluated for the `unevaluatedProperties` or
+      // `unevaluatedItems` beside it, which would then reject what the node accepts, so such a node is cut as a whole.
+      // Which members narrow depends on which others do, so it is read until nothing changes; each pass only adds
+      for (let changed = true; changed;) {
+        changed = false;
+        for (const { id, conjuncts, evaluated } of members) {
+          if (leads.get(id) === 'copied' && evaluated.some(narrows)) {
+            leads.set(id, 'cut');
+            changed = true;
+          }
+          if (!narrowing.has(id) && (leads.get(id) === 'cut' || conjuncts.some(narrows))) {
+            narrowing.add(id);
+            changed = true;
+          }
+        }
+      }
     }
     members
       .filter(({ held }) => held.some(([[keyword], child]) => PART_KEYWORDS.has(keyword) && leadOf(child)))

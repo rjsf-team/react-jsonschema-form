@@ -18,6 +18,7 @@ export const CONTAINS_KEY = 'contains';
 export const DEFAULT_KEY = 'default';
 export const DEFINITIONS_KEY = 'definitions';
 export const DEPENDENCIES_KEY = 'dependencies';
+export const DEPENDENT_REQUIRED_KEY = 'dependentRequired';
 export const DEPENDENT_SCHEMAS_KEY = 'dependentSchemas';
 export const ELSE_KEY = 'else';
 export const ENUM_KEY = 'enum';

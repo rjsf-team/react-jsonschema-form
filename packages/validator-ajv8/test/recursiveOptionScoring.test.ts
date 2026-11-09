@@ -650,4 +650,42 @@ describe('scoring an option whose property leads to a choice that recurs (#4990)
       ),
     ).toBe(1);
   });
+  it("copies a node whose unevaluatedProperties sees a conjunct that only leads to a recursive choice, keeping the node's own discriminator", () => {
+    const branch = (kind: string): RJSFSchema => ({
+      type: 'object',
+      $ref: '#/$defs/Base',
+      properties: { k: { const: kind } },
+      unevaluatedProperties: false,
+    });
+    const root: RJSFSchema = {
+      $defs: {
+        C: { oneOf: [{ type: 'null' }, { $ref: '#/$defs/A' }, { $ref: '#/$defs/B' }] },
+        Base: { properties: { child: { $ref: '#/$defs/C' } } },
+        A: branch('a'),
+        B: branch('b'),
+      },
+    };
+    const options: RJSFSchema[] = [
+      { properties: { w: { $ref: '#/$defs/A' } } },
+      { properties: { w: { $ref: '#/$defs/B' } } },
+    ];
+    const counting = customizeValidator({ AjvClass: Ajv2020 });
+    const isValid = vi.spyOn(counting, 'isValid');
+    // `Base`'s copy still declares `child`, so the `unevaluatedProperties` beside it sees what it did, and `k` is checked
+    expect(getFirstMatchingOption({ validator: counting }, { w: { k: 'b', child: null } }, options, root)).toBe(1);
+    expect(isValid).toHaveBeenCalled();
+    expect(isValid.mock.calls.filter(([schema]) => JSON.stringify(schema).includes('#/$defs/C'))).toEqual([]);
+  });
+
+  it('drops a dependentRequired in an option, as it drops the names a dependencies entry lists', () => {
+    const options: RJSFSchema[] = [
+      { properties: { c: { type: 'string' } } },
+      { properties: { a: { type: 'string' }, b: { type: 'string' } }, dependentRequired: { a: ['b'] } },
+    ];
+    expect(
+      getFirstMatchingOption({ validator: customizeValidator({ AjvClass: Ajv2020 }) }, { a: 'x' }, options, {
+        oneOf: options,
+      }),
+    ).toBe(1);
+  });
 });

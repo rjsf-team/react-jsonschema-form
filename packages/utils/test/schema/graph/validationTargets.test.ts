@@ -830,6 +830,119 @@ describe('scoringTarget()', () => {
         properties: { node: { allOf: [{ type: 'object' }] }, items: { allOf: [{ type: 'array' }] } },
       });
     });
+    it('copies a node whose unevaluatedProperties sees a conjunct whose copy keeps every part it evaluates', () => {
+      const branch = (kind: string): RJSFSchema => ({
+        type: 'object',
+        $ref: '#/$defs/Base',
+        properties: { k: { const: kind } },
+        unevaluatedProperties: false,
+      });
+      const schema: RJSFSchema = {
+        $defs: {
+          C: { oneOf: [{ type: 'null' }, { $ref: '#/$defs/A' }, { $ref: '#/$defs/B' }] },
+          Base: { properties: { child: { $ref: '#/$defs/C' } } },
+          A: branch('a'),
+          B: branch('b'),
+        },
+        oneOf: [{ properties: { w: { $ref: '#/$defs/A' } } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: {
+          w: {
+            allOf: [
+              {
+                type: 'object',
+                properties: { k: { $ref: '#/$defs/A/properties/k' } },
+                unevaluatedProperties: false,
+                allOf: [{ properties: { child: { type: ['null', 'object'] } } }],
+              },
+            ],
+          },
+        },
+      });
+    });
+    it('cuts as a whole a node whose unevaluatedProperties sees a conjunct holding a cut conjunct', () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          Node: { allOf: [{ $ref: '#/definitions/Wrapped' }], unevaluatedProperties: false },
+          Wrapped: { allOf: [{ $ref: '#/definitions/Base' }] },
+          Base: {
+            type: 'object',
+            anyOf: [
+              { properties: { c: { $ref: '#/definitions/Node' } } },
+              { properties: { c: { $ref: '#/definitions/Node' } } },
+            ],
+          },
+        },
+        oneOf: [{ properties: { node: { $ref: '#/definitions/Node' } } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({ properties: { node: { allOf: [{ type: 'object' }] } } });
+    });
+    it('drops a dependentRequired from the copy, as it drops the names a dependencies entry lists', () => {
+      const schema: RJSFSchema = {
+        oneOf: [{ properties: { a: { type: 'string' }, b: { type: 'string' } }, dependentRequired: { a: ['b'] } }],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: { a: { $ref: '#/oneOf/0/properties/a' }, b: { $ref: '#/oneOf/0/properties/b' } },
+      });
+    });
+    it('keeps a dependentRequired below a part of the data, which scoring loosens only in the option', () => {
+      const schema: RJSFSchema = {
+        definitions: { Choice: NESTED },
+        oneOf: [
+          {
+            properties: {
+              w: { properties: { t: { $ref: '#/definitions/Choice' } }, dependentRequired: { t: ['u'] } },
+            },
+          },
+        ],
+      };
+      expect(scored(schema, '/oneOf/0')).toEqual({
+        properties: { w: { properties: { t: { allOf: [{ type: 'object' }] } }, dependentRequired: { t: ['u'] } } },
+      });
+    });
+    it('checks a node of an adopted schema whose unevaluatedProperties sees the properties a subschema of the root declares', () => {
+      const root: RJSFSchema = {
+        $id: 'urn:root',
+        definitions: { Base: { type: 'object', properties: { a: { type: 'string' } } } },
+      };
+      const { graph, node } = parseSchemaGraph(root).adopt({
+        $id: 'urn:adopted',
+        $defs: {
+          X: {
+            allOf: [{ $ref: 'urn:root#/definitions/Base' }],
+            properties: { c: { $ref: '#/$defs/X' } },
+            unevaluatedProperties: { $ref: '#/$defs/X' },
+          },
+        },
+        properties: { v: { $ref: '#/$defs/X' } },
+      });
+      // `c` and the properties neither `X` nor `Base` declares are different parts, so `X` walks each once
+      expect(scoringTarget(graph, node, false)).toMatchObject({
+        properties: {
+          v: { allOf: [{ properties: { c: expect.anything() }, unevaluatedProperties: expect.anything() }] },
+        },
+      });
+    });
+    it('cuts as a whole a node adopted twice over whose unevaluatedProperties sees a cut conjunct of the root', () => {
+      const root: RJSFSchema = {
+        definitions: {
+          Base: {
+            type: 'object',
+            anyOf: [
+              { properties: { c: { $ref: '#/definitions/Base' } } },
+              { properties: { c: { $ref: '#/definitions/Base' } } },
+            ],
+          },
+        },
+      };
+      const { graph: adopted } = parseSchemaGraph(root).adopt({ properties: { u: { type: 'string' } } });
+      const { graph, node } = adopted.adopt({
+        properties: { v: { allOf: [{ $ref: '#/definitions/Base' }], unevaluatedProperties: false } },
+      });
+      expect(graph.base).toBe(adopted);
+      expect(scoringTarget(graph, node, false)).toEqual({ properties: { v: { type: 'object' } } });
+    });
     it('copies a node whose unevaluatedProperties sees only conjuncts leading to no recursive choice', () => {
       const schema: RJSFSchema = {
         definitions: { Choice: NESTED },
