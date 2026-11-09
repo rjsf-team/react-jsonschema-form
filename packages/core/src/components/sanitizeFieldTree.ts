@@ -264,9 +264,12 @@ function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: 
  * equal to the default the old schema declared for it is that schema's, so it becomes the new schema's default; a value
  * of another type, or one the new `const` or `enum` rejects, is replaced as `sanitizeDataForNewSchema()` replaces it,
  * or dropped. A field the new schema only holds as an extra key whose schema is guessed from its data keeps a value
- * its stub renders, see `guessedStubRenders()`, unless the old schema's default filled it in.
+ * its stub renders, see `guessedStubRenders()`, unless the value equals what the old field's defaults fill in (its
+ * `default`, its `const`, an empty object), which no data can tell apart from a value the user chose.
  *
  * @param acceptsNull - Whether the field's new schema holds `null`, asked only of a `null` item
+ * @param oldFill - What the defaults fill the old field with when it holds nothing, asked only of a field that turns
+ *   into a guessed extra key
  * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
  *   judge what it holds
  */
@@ -278,12 +281,14 @@ function judge<S extends StrictRJSFSchema>(
   newDefault: unknown,
   isItem: boolean,
   acceptsNull: () => boolean,
+  oldFill: () => unknown,
 ): unknown {
   const before = constraintsOf(oldLayers, oldDefault);
   const now = constraintsOf(newLayers, newDefault);
   // A guessed stub reads as having no constraints, so an old schema that only implies its type, through `items` or
-  // `properties`, would compare equal to it and keep a value the stub cannot render
-  const becomesGuessed = isGuessed(newLayers) && !isGuessed(oldLayers);
+  // `properties`, would compare equal to it and keep a value the stub cannot render. A field with no old layers, a
+  // collapsed `$ref` cycle, rendered nothing to compare with
+  const becomesGuessed = oldLayers.length > 0 && isGuessed(newLayers) && !isGuessed(oldLayers);
   if (!becomesGuessed && deepEquals(before, now)) {
     return undefined;
   }
@@ -296,16 +301,17 @@ function judge<S extends StrictRJSFSchema>(
   if (value === null && isItem && newDefault !== undefined && !acceptsNull()) {
     return UNSET;
   }
-  if (oldDefault !== undefined && newDefault !== undefined && deepEquals(oldDefault, value)) {
+  const isOldDefault = oldDefault !== undefined && deepEquals(oldDefault, value);
+  // A guessed stub declares no `const` or `enum`, and its `default` seeds a new extra key rather than standing in for
+  // the old field's, so what the old field's defaults filled in leaves with that field
+  if (becomesGuessed) {
+    const isFilled = isOldDefault || deepEquals(oldFill(), value);
+    return isFilled || !guessedStubRenders(value, newLayers) ? DROP : undefined;
+  }
+  if (isOldDefault && newDefault !== undefined) {
     return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
   }
-  if (becomesGuessed) {
-    // A default the old schema filled in is that schema's, and an extra key declares none to take its place
-    const isOldDefault = oldDefault !== undefined && deepEquals(oldDefault, value);
-    if (isOldDefault || !guessedStubRenders(value, newLayers)) {
-      return DROP;
-    }
-  } else if (before.type !== undefined && !isSameType(before.type, now.type)) {
+  if (before.type !== undefined && !isSameType(before.type, now.type)) {
     return DROP;
   }
   if (now.const !== undefined && !deepEquals(now.const, value)) {
@@ -397,7 +403,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The edited value and the values holding it are the user's
   if (!edited) {
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
-    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull);
+    const oldFill = () => ctx.oldSchemaUtils.getDefaultFormState(oldRaw, undefined);
+    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, oldFill);
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
     }

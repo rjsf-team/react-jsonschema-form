@@ -148,17 +148,6 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(input(container, 'root_a').value).toBe('5');
     });
 
-    it('keeps an empty object, which leaves nothing for the stub to render', async () => {
-      const schema = kindOf({
-        ...ifThen({ type: 'object', properties: { b: { type: 'string' } } }),
-        additionalProperties: true,
-      });
-      const { container, formData } = await selectT(schema, { initialFormData: { kind: 's', a: {} } });
-
-      expect(formData).toEqual({ kind: 't', a: {} });
-      expect(container.querySelector('#root_a__key')).not.toBeNull();
-    });
-
     it('keeps an object whose keys its extra key renders, as extra keys of their own', async () => {
       const schema = kindOf(ifThen({ type: 'object', properties: { b: { type: 'string' } } }));
       const { container, formData } = await selectT(schema, {
@@ -223,12 +212,62 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(container.querySelector('#root_a__key')).toBeNull();
     });
 
-    it("drops the old branch's default rather than keeping it as an extra key", async () => {
-      const schema = kindOf({ ...ifThen({ type: 'string', default: 'd' }), additionalProperties: true });
-      const { container, formData } = await selectT(schema, { initialFormData: { kind: 's' } });
+    // The form fills these in by itself, so keeping them would leave extra-key rows the user never typed
+    it.each<{ filled: string; schema: RJSFSchema; initialFormData?: KindData }>([
+      {
+        filled: 'a default',
+        schema: kindOf({ ...ifThen({ type: 'string', default: 'd' }), additionalProperties: true }),
+      },
+      { filled: 'a const', schema: kindOf({ ...ifThen({ type: 'string', const: 'x' }), additionalProperties: true }) },
+      {
+        filled: "a required object's empty object",
+        schema: kindOf({
+          ...ifThen({ type: 'object', properties: { b: { type: 'string' } } }),
+          required: ['a'],
+          additionalProperties: true,
+        }),
+      },
+      // Equal data can't be told apart from what the defaults fill in, so an empty object the data held goes too
+      {
+        filled: 'an empty object',
+        schema: kindOf({
+          ...ifThen({ type: 'object', properties: { b: { type: 'string' } } }),
+          additionalProperties: true,
+        }),
+        initialFormData: { kind: 's', a: {} },
+      },
+      // The extra key's own `default` seeds a new extra key, so it doesn't take the old default's place
+      {
+        filled: "a default, where the extra key's stub has its own",
+        schema: kindOf({
+          ...ifThen({ type: 'string', default: 'd' }),
+          additionalProperties: { title: 'Any', default: 'z' },
+        }),
+      },
+      {
+        filled: "the parent's default, which both sides inherit",
+        schema: kindOf({
+          ...ifThen({ type: 'array', items: { type: 'string' } }),
+          default: { a: ['x'] },
+          additionalProperties: true,
+        }),
+        initialFormData: { kind: 's', a: ['x'] },
+      },
+    ])('drops $filled rather than keeping it as an extra key', async ({ schema, initialFormData = { kind: 's' } }) => {
+      const { container, formData } = await selectT(schema, { initialFormData });
 
       expect(formData).toEqual({ kind: 't' });
       expect(container.querySelector('#root_a__key')).toBeNull();
+    });
+
+    it('drops a value the user chose that equals the default, which no data tells apart from the default', async () => {
+      const schema = kindOf({
+        ...ifThen({ type: 'string', enum: ['d', 'e'], default: 'd' }),
+        additionalProperties: true,
+      });
+      const { formData } = await selectT(schema, { initialFormData: { kind: 's', a: 'd' } });
+
+      expect(formData).toEqual({ kind: 't' });
     });
   });
 
