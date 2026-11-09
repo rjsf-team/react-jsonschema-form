@@ -41,6 +41,8 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   editedPath?: FieldPathList;
   /** Where the change moved the keys of the array or object at `editedPath`, if it moved any */
   newKeyOf?: KeyMove;
+  /** The data the previous tree is built for */
+  oldData: unknown;
 }
 
 /** A field tree's schema utilities, its data, and the root schema they retrieve for that data */
@@ -187,6 +189,13 @@ function isGuessed<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
   return layers.some((layer) => hasSchemaMarker(layer, GUESSED_TYPE_FLAG));
 }
 
+/** Whether a field the old tree rendered a schema for is held by the new one only as a guessed extra key. A field with
+ * no old layers, a collapsed `$ref` cycle, rendered nothing to compare with
+ */
+function turnsGuessed<S extends StrictRJSFSchema>(oldLayers: readonly S[], newLayers: readonly S[]): boolean {
+  return oldLayers.length > 0 && isGuessed(newLayers) && !isGuessed(oldLayers);
+}
+
 /** A type guessed from an extra key's data describes the data rather than the schema, so it is no type */
 function typeOf<S extends StrictRJSFSchema>(layers: readonly S[]): unknown {
   return isGuessed(layers) ? undefined : keywordOf(layers, 'type');
@@ -268,8 +277,8 @@ function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: 
  * its `default`, its `const` or an empty object, which no data can tell apart from a value the user chose.
  *
  * @param acceptsNull - Whether the field's new schema holds `null`, asked only of a `null` item
- * @param oldDefaultFill - What the old field holds when it holds nothing of the user's, asked only of a field that
- *   turns into a guessed extra key
+ * @param isFilledByOldDefaults - Whether a value is what the defaults filled the old field with, asked only of a field
+ *   that turns into a guessed extra key
  * @returns - The value to hold, `DROP` to remove it, `UNSET` to leave it without a value, or `undefined` to keep it and
  *   judge what it holds
  */
@@ -281,14 +290,13 @@ function judge<S extends StrictRJSFSchema>(
   newDefault: unknown,
   isItem: boolean,
   acceptsNull: () => boolean,
-  oldDefaultFill: () => unknown,
+  isFilledByOldDefaults: (value: unknown) => boolean,
 ): unknown {
   const before = constraintsOf(oldLayers, oldDefault);
   const now = constraintsOf(newLayers, newDefault);
   // A guessed stub reads as having no constraints, so an old schema that only implies its type, through `items` or
-  // `properties`, would compare equal to it and keep a value the stub cannot render. A field with no old layers, a
-  // collapsed `$ref` cycle, rendered nothing to compare with
-  const becomesGuessed = oldLayers.length > 0 && isGuessed(newLayers) && !isGuessed(oldLayers);
+  // `properties`, would compare equal to it and keep a value the stub cannot render
+  const becomesGuessed = turnsGuessed(oldLayers, newLayers);
   if (!becomesGuessed && deepEquals(before, now)) {
     return undefined;
   }
@@ -305,7 +313,7 @@ function judge<S extends StrictRJSFSchema>(
   // A guessed stub declares no `const` or `enum`, and its `default` seeds a new extra key rather than standing in for
   // the old field's, so what the old field's defaults filled in leaves with that field
   if (becomesGuessed) {
-    const isFilled = isOldDefault || deepEquals(oldDefaultFill(), value);
+    const isFilled = isOldDefault || isFilledByOldDefaults(value);
     return isFilled || !guessedStubRenders(value, newLayers) ? DROP : undefined;
   }
   if (isOldDefault && newDefault !== undefined) {
@@ -371,6 +379,48 @@ interface FieldPair<S> {
   newRetrieved?: S;
 }
 
+/** `data` without the value at `path`, copying only the arrays and objects along it */
+function withoutValueAt(data: unknown, path: FieldPathList): unknown {
+  if (path.length === 0 || !(isPlainObject(data) || Array.isArray(data))) {
+    return data;
+  }
+  const [key, ...rest] = path;
+  const copy: unknown[] | Record<string, unknown> = Array.isArray(data) ? [...data] : { ...data };
+  if (rest.length === 0) {
+    Reflect.deleteProperty(copy, key);
+  } else {
+    Reflect.set(copy, key, withoutValueAt(Reflect.get(copy, key), rest));
+  }
+  return copy;
+}
+
+/** Whether `value` is what the defaults filled the old field at `path` with. Two fills are asked, since neither sees all
+ * of what decides it: the field's own, from the option it showed outward and around the default it or its parent
+ * declares, and the form's, from the root around the old data without the field's value, which sees the `required`
+ * and the defaults of the schemas above it but picks options by the data rather than by what the field showed
+ */
+function isOldFill<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  oldLayers: readonly S[],
+  oldDefault: unknown,
+  path: FieldPathList,
+  value: unknown,
+): boolean {
+  const { oldSchemaUtils } = ctx;
+  const ownFill = oldLayers.reduceRight<unknown>(
+    (filled, layer) => oldSchemaUtils.getDefaultFormState(layer, asFieldValue<T>(filled)),
+    oldDefault,
+  );
+  if (deepEquals(ownFill, value)) {
+    return true;
+  }
+  const formFill = oldSchemaUtils.getDefaultFormState(
+    oldSchemaUtils.getRootSchema(),
+    asFieldValue<T>(withoutValueAt(ctx.oldData, path)),
+  );
+  return deepEquals(getByPath(formFill, path), value);
+}
+
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   pair: FieldPair<S>,
@@ -403,14 +453,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // The edited value and the values holding it are the user's
   if (!edited) {
     const acceptsNull = () => ctx.schemaUtils.getValidator().isValid(newRaw, null, ctx.schemaUtils.getRootSchema());
-    // Filled from the shown option outward, so the option the field showed decides what it was filled with, and from
-    // the default the field or its parent declares, which the field's own defaults fill around
-    const oldDefaultFill = () =>
-      oldLayers.reduceRight<unknown>(
-        (filled, layer) => ctx.oldSchemaUtils.getDefaultFormState(layer, asFieldValue<T>(filled)),
-        oldDefault,
-      );
-    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, oldDefaultFill);
+    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem, acceptsNull, (value) =>
+      isOldFill(ctx, oldLayers, oldDefault, path, value),
+    );
     if (judged !== undefined) {
       return judged === UNSET ? undefined : judged;
     }
@@ -459,7 +504,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         }
       }
     }
-    return result;
+    // An object kept as a guessed extra key whose keys all dropped holds what an empty one does, which is dropped
+    const isEmptied = result !== newValue && Object.keys(result).length === 0;
+    return isEmptied && !edited && turnsGuessed(oldLayers, newLayers) ? DROP : result;
   }
   if (Array.isArray(newValue)) {
     const previousKeyOf = previousKeys(ctx, path, oldValue, {
@@ -534,6 +581,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       uiState,
       editedPath: edit?.path,
       newKeyOf: edit?.newKeyOf,
+      oldData: previous.formData,
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),

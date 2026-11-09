@@ -169,17 +169,21 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       expect(input(container, 'root_a_b').value).toBe('x');
     });
 
-    it('drops an array inside a kept object, leaving the object its extra key renders', async () => {
+    // An object whose every key drops holds what an empty one does, which is dropped as the defaults' fill
+    it.each([
+      { held: 'only an array', a: { b: ['x'] }, expected: { kind: 't' } },
+      { held: 'an array beside a string', a: { b: ['x'], c: 'y' }, expected: { kind: 't', a: { c: 'y' } } },
+    ])('drops an array inside a kept object holding $held', async ({ a, expected }) => {
       const schema = kindOf(
-        ifThen({ type: 'object', properties: { b: { type: 'array', items: { type: 'string' } } } }),
+        ifThen({
+          type: 'object',
+          properties: { b: { type: 'array', items: { type: 'string' } }, c: { type: 'string' } },
+        }),
       );
-      const { container, formData } = await selectT(schema, {
-        whenAbsent: 'allow',
-        initialFormData: { kind: 's', a: { b: ['x'] } },
-      });
+      const { container, formData } = await selectT(schema, { whenAbsent: 'allow', initialFormData: { kind: 's', a } });
 
-      expect(formData).toEqual({ kind: 't', a: {} });
-      expect(container.querySelector('#root_a__key')).not.toBeNull();
+      expect(formData).toEqual(expected);
+      expect(container.querySelector('#root_a__key') !== null).toBe('a' in expected);
       expect(container.querySelector('#root_a_b__key')).toBeNull();
     });
 
@@ -232,6 +236,15 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         schema: kindOf({
           if: { properties: { kind: { const: 's' } } },
           then: { properties: { a: { type: 'object', properties: { b: { type: 'string' } } } }, required: ['a'] },
+          additionalProperties: true,
+        }),
+      },
+      // The parent's `required` is what fills a boolean with `false`
+      {
+        filled: "a required boolean's false",
+        schema: kindOf({
+          if: { properties: { kind: { const: 's' } } },
+          then: { properties: { a: { type: 'boolean' } }, required: ['a'] },
           additionalProperties: true,
         }),
       },
@@ -292,6 +305,23 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         expect(container.querySelector('#root_a__key')).toBeNull();
       },
     );
+
+    it('drops what a default two levels up filled in beside what the user typed', async () => {
+      const schema = kindOf({
+        ...ifThen({ type: 'object', properties: { b: { type: 'string' }, c: { type: 'string' } } }),
+        default: { a: { c: 'y' } },
+        additionalProperties: true,
+      });
+      const { container, formData } = await selectT(schema, {
+        whenAbsent: 'allow',
+        initialFormData: { kind: 's' },
+        beforeSwitch: (form) => user.type(input(form, 'root_a_b'), 'x'),
+      });
+
+      expect(formData).toEqual({ kind: 't', a: { b: 'x' } });
+      expect(input(container, 'root_a_b').value).toBe('x');
+      expect(container.querySelector('#root_a_c__key')).toBeNull();
+    });
 
     it("drops the const of the option the user selected, not the first option's default", async () => {
       const schema = kindOf({
