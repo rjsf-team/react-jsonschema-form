@@ -419,6 +419,15 @@ describe('ObjectFieldTemplate colSpan map', () => {
       ]);
     });
 
+    it.each<[string, RJSFSchema]>([
+      ['a string with anyOf options', { type: 'string', anyOf: [{ minLength: 1 }, { maxLength: 5 }] }],
+      ['an untyped anyOf', { anyOf: [{ type: 'string' }, { type: 'number' }] }],
+    ])('keys %s by the textarea its option renders, and spans it full width by default', (_name, property) => {
+      const uiSchema = { property: { 'ui:widget': 'textarea' } };
+      expect(getColClasses(uiSchema, { textarea: 3, string: 8 }, formSchemaOf(property))[0]).toContain('ant-col-3');
+      expect(getColClasses(uiSchema, { number: 5 }, formSchemaOf(property))[0]).toContain('ant-col-24');
+    });
+
     it('keys a property by the field its $id names', () => {
       const MyField = () => <div />;
       const classes = getColClasses({}, { MyField: 3, string: 8 }, formSchemaOf({ type: 'string', $id: 'MyField' }), {

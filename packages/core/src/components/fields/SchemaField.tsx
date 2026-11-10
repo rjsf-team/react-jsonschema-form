@@ -71,7 +71,7 @@ import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useUiState from '../../hooks/useUiState.ts';
-import { retrievedOptionsOf } from '../uiState.ts';
+import { retrievedOptionsOf, shownOption as pickShownOption } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import type { SelectSchemaInfo } from './fieldWidgetUtils.ts';
@@ -532,7 +532,8 @@ export function createIsSchemaFieldHidden<
 /** Creates the function a container works out by what the `SchemaField` it hands `schema`, `uiSchema` and `formData`
  * renders its field as, for a field it lays out before rendering it. The field is resolved and planned as
  * `useSchemaFieldPlan()` does, for a field nothing above it names, and a `$ref` cycle as the field it expands to, as in
- * `createIsSchemaFieldHidden()`. It models core's `SchemaField`, not a replacement registered in `registry.fields`
+ * `createIsSchemaFieldHidden()`. A field that leaves its control to its `anyOf`/`oneOf` option renders the widget of the
+ * option shown. It models core's `SchemaField`, not a replacement registered in `registry.fields`
  *
  * @returns - The function, which keeps each step's last result, so a caller keeps one per field it lays out
  */
@@ -551,19 +552,28 @@ export function createSchemaFieldRenderedAs<
       uiSchema: FieldWidgetPlan<T, S, F>['uiSchema'],
       ownUiOptions: FieldWidgetPlan<T, S, F>['ownUiOptions'],
       registry: Registry<T, S, F>,
-    ): ObjectFieldPropertyRendering => {
+    ): { rendering: ObjectFieldPropertyRendering; rendersOption: boolean } => {
       const plan = planFieldComponent<T, S, F>({ selectSchemaInfo, uiField, ownUiOptions }, registry);
       // A field written for the schema is handed its `uiSchema` as given, so its own widget is the one it renders by
       const widget =
         plan &&
         (getFieldWidget<T, S, F>(plan.FieldComponent, selectSchemaInfo.schema, uiSchema, registry) ??
           (plan.rendersNamedField ? ownUiOptions.widget : undefined));
-      return {
+      const rendering: ObjectFieldPropertyRendering = {
         field: uiField?.namedFieldKey,
         widget: typeof widget === 'string' ? widget : undefined,
         type: plan?.fieldType,
       };
+      return { rendering, rendersOption: plan?.isWithheld === true };
     },
+  );
+  // A withheld field leaves its control to the option shown, so it is planned only for a field rendering one
+  let planShownOption: ReturnType<typeof createShownOptionPlanner<T, S, F>> | undefined;
+  // Keeps the options' identity while the data is unchanged, which the planner keys the option shown on
+  const retrieveOptions = memoizeLast(retrievedOptionsOf<T, S, F>);
+  const withOptionWidget = memoizeLast(
+    (rendering: ObjectFieldPropertyRendering, widget: unknown): ObjectFieldPropertyRendering =>
+      typeof widget === 'string' ? { ...rendering, widget } : rendering,
   );
   /** Works out what the field renders as
    *
@@ -586,7 +596,41 @@ export function createSchemaFieldRenderedAs<
       : schema;
     // An expansion carries no cycle flag, and nothing above the field names one for it
     const resolved = resolve(fieldSchema, uiSchema, formData, fieldPath, registry, false, false);
-    return renderedAs(resolved.selectSchemaInfo, resolved.uiField, resolved.uiSchema, resolved.ownUiOptions, registry);
+    const { selectSchemaInfo } = resolved;
+    const { rendering, rendersOption } = renderedAs(
+      selectSchemaInfo,
+      resolved.uiField,
+      resolved.uiSchema,
+      resolved.ownUiOptions,
+      registry,
+    );
+    const { schema: shownSchema, xxxOfKey } = selectSchemaInfo;
+    const options = rendersOption && retrieveOptions(registry.schemaUtils, shownSchema, formData);
+    if (!options || xxxOfKey === undefined) {
+      return rendering;
+    }
+    // shortcut: picks the option the data matches, not one the user selected that the data fits no better, since the
+    // selection is the form's state, which a container laying the field out can't read; read it if a theme keys by it
+    const index = pickShownOption<T, S, F>(
+      registry.schemaUtils,
+      undefined,
+      options,
+      formData,
+      getDiscriminatorFieldFromSchema<S>(shownSchema),
+    );
+    planShownOption ??= createShownOptionPlanner<T, S, F>();
+    const option = planShownOption(
+      shownSchema,
+      resolved.uiSchema,
+      xxxOfKey,
+      options[index],
+      index,
+      formData,
+      fieldPath,
+      registry,
+      false,
+    );
+    return withOptionWidget(rendering, option?.widget);
   };
 }
 

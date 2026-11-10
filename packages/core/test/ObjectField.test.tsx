@@ -161,9 +161,23 @@ describe('ObjectField', () => {
             notes: { type: 'string' },
             named: { type: 'number', $id: 'NamedField' },
             choice: { type: 'object', enum: [{ a: 1 }, { a: 2 }] },
+            story: { type: 'string', anyOf: [{ minLength: 1 }, { maxLength: 5 }] },
+            union: { anyOf: [{ type: 'string' }, { type: 'number' }] },
+            contact: {
+              type: 'string',
+              oneOf: [
+                { title: 'Email', format: 'email' },
+                { title: 'Link', format: 'uri' },
+              ],
+            },
           },
         },
-        uiSchema: { notes: { 'ui:widget': 'textarea' }, named: { 'ui:widget': 'updown' } },
+        uiSchema: {
+          notes: { 'ui:widget': 'textarea' },
+          named: { 'ui:widget': 'updown' },
+          story: { 'ui:widget': 'textarea' },
+          union: { 'ui:widget': 'textarea' },
+        },
         fields: { NamedField },
         templates: { ObjectFieldTemplate },
       });
@@ -173,7 +187,14 @@ describe('ObjectField', () => {
         notes: { widget: 'textarea', type: 'string' },
         named: { field: 'NamedField', widget: 'updown', type: 'number' },
         choice: { widget: 'select', type: 'object' },
+        // The option shown renders the control, by the field's own `ui:widget` or its own format
+        story: { widget: 'textarea', type: 'string' },
+        union: { widget: 'textarea' },
+        contact: { widget: 'email', type: 'string' },
       });
+      expect(node.querySelector('textarea#root_story')).toBeInTheDocument();
+      expect(node.querySelector('textarea#root_union')).toBeInTheDocument();
+      expect(node.querySelector('#root_contact')).toHaveAttribute('type', 'email');
       expect(node.querySelector('#root_yesNo')).toHaveRole('combobox');
       expect(node.querySelector('.rjsf-field-boolean #root_yesNo')).toBeInTheDocument();
     });
