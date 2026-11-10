@@ -1726,6 +1726,30 @@ describe('oneOf', () => {
     expect(Object.keys(onChange.mock.lastCall?.[0].formData.x)).toEqual([]);
   });
 
+  it('drops a cleared key only the old option declares when a condition of the new one fills it back in', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: true,
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        {
+          title: 'B',
+          properties: { k: { type: 'string', default: 'x' } },
+          if: { properties: { k: { const: 'x' } }, required: ['k'] },
+          then: { properties: { a: { type: 'number' } } },
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema });
+    const input = elementOf(node, 'input#root_a');
+    await user.type(input, 'v');
+    await user.clear(input);
+
+    await user.selectOptions(elementOf(node, 'select'), 'B');
+
+    expect(Object.keys(onChange.mock.lastCall?.[0].formData)).toEqual(['k']);
+  });
+
   describe('Arrays', () => {
     it('should correctly render mixed types for oneOf inside array items', async () => {
       const schema: RJSFSchema = {
