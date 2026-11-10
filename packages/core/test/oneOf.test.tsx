@@ -5519,19 +5519,69 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
     });
 
     // The sanitize has no `properties` to sanitize by, so it carries nothing over
-    it.each<{ declares: string; t: RJSFSchema }>([
-      { declares: 'only its type', t: { title: 'T', type: 'object' } },
-      { declares: 'nothing', t: { title: 'T' } },
-    ])('keeps a string when the new option declares $declares', async ({ t }) => {
+    it.each<{ declares: string; t: RJSFSchema; a: RJSFSchema; initial: unknown; expected?: KindData }>([
+      {
+        declares: 'only its type',
+        t: { title: 'T', type: 'object' },
+        a: { type: 'string' },
+        initial: 'x',
+        expected: { a: 'x' },
+      },
+      { declares: 'nothing', t: { title: 'T' }, a: { type: 'string' }, initial: 'x', expected: { a: 'x' } },
+      // What the old option's default filled in still drops, leaving the field as the sanitize left it
+      {
+        declares: 'nothing, for a default',
+        t: { title: 'T' },
+        a: { type: 'string', default: 'd' },
+        initial: 'd',
+        expected: undefined,
+      },
+    ])('judges a value as an extra key when the new option declares $declares', async ({ t, a, initial, expected }) => {
       const schema: RJSFSchema = {
         type: 'object',
-        [keyword]: [{ title: 'S', properties: { a: { type: 'string' } } }, t],
+        [keyword]: [{ title: 'S', properties: { a } }, t],
+        additionalProperties: true,
+      };
+      const { node, formData } = await selectT(schema, { initialFormData: { a: initial } });
+
+      expect(formData).toEqual(expected);
+      expect(node.querySelector('#root_a__key') !== null).toBe(expected?.a !== undefined);
+    });
+
+    // The sanitize clears data the new option's object `const` rejects, which the `const` then fills
+    it('leaves the data an object const clears to the const, keeping no extra key beside it', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        [keyword]: [
+          { title: 'S', properties: { a: { type: 'string' } } },
+          { title: 'T', properties: { b: {} }, const: { b: 1 } },
+        ],
         additionalProperties: true,
       };
       const { node, formData } = await selectT(schema, { initialFormData: { a: 'x' } });
 
-      expect(formData).toEqual({ a: 'x' });
-      expect(node.querySelector('#root_a__key')).not.toBeNull();
+      expect(formData).toEqual({ b: 1 });
+      expect(node.querySelector('#root_a__key')).toBeNull();
+    });
+
+    // Without `a` the `if` holds vacuously and fills `n`; with `kind: 'B'` beside it nothing fills `n`
+    it('judges a nested value by the fill made with its siblings in place', async () => {
+      const schema = unionOf(
+        {},
+        {
+          type: 'object',
+          properties: { kind: { type: 'string' }, n: { type: 'number' } },
+          if: { properties: { kind: { const: 'A' } } },
+          then: { properties: { n: { default: 1 } } },
+        },
+      );
+      const { node, formData } = await selectT(schema, {
+        whenAbsent: 'allow',
+        initialFormData: { kind: 's', a: { kind: 'B', n: 1 } },
+      });
+
+      expect(formData).toEqual({ kind: 't', a: { kind: 'B', n: 1 } });
+      expect(node.querySelector('#root_a_n__key')).not.toBeNull();
     });
 
     it('keeps an object whose keys its extra key renders, as extra keys of their own', async () => {
