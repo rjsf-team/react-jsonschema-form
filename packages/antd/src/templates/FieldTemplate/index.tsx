@@ -12,11 +12,10 @@ import {
 } from '@rjsf/utils';
 import { Form } from 'antd';
 
+import { DEFAULT_LABEL_COL, DEFAULT_WRAPPER_COL } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
 import stripTrailingColon from '../stripTrailingColon.ts';
 
-const VERTICAL_LABEL_COL = { span: 24 };
-const VERTICAL_WRAPPER_COL = { span: 24 };
 const TOOLTIP_ICON = <QuestionCircleOutlined aria-hidden />;
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
@@ -48,8 +47,9 @@ export default function FieldTemplate<
   const { formContext } = registry;
   const {
     colon,
-    labelCol = VERTICAL_LABEL_COL,
-    wrapperCol = VERTICAL_WRAPPER_COL,
+    labelAlign,
+    labelCol,
+    wrapperCol = DEFAULT_WRAPPER_COL,
     wrapperStyle,
     descriptionLocation = 'below',
   }: AntdFormContext = formContext;
@@ -110,7 +110,8 @@ export default function FieldTemplate<
         help={explainNode}
         htmlFor={templateLabelFor<T, S, F>(props)}
         label={labelNode}
-        labelCol={labelCol}
+        labelAlign={labelAlign}
+        labelCol={labelCol ?? DEFAULT_LABEL_COL}
         required={templateMarksRequired<T, S, F>(props)}
         style={wrapperStyle}
         validateStatus={hasError ? 'error' : undefined}

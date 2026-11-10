@@ -1,6 +1,8 @@
+import type { ComponentType, PropsWithChildren } from 'react';
 import type { RegistryFieldsType, RegistryWidgetsType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
+import { Form as AntdForm } from 'antd';
 
 import Form from '../src/index.ts';
 
@@ -377,6 +379,161 @@ describe('ObjectFieldTemplate colSpan map', () => {
       };
       expect(getSpan(formSchema, {})).toContain('ant-col-4');
       expect(document.querySelector('#root_constructor')).toHaveAttribute('role', 'spinbutton');
+    });
+  });
+});
+
+describe('heading alignment', () => {
+  const headedSchema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      plain: { title: 'Plain object', type: 'object', properties: { x: { type: 'string' } } },
+      list: { title: 'List', type: 'array', items: { type: 'string' } },
+    },
+  };
+
+  function getHeadingClasses(formContext?: Record<string, unknown>) {
+    const { container } = render(<Form schema={headedSchema} validator={validator} formContext={formContext} />);
+    return Array.from(container.querySelectorAll('fieldset > .ant-row > .ant-form-item-label')).map(
+      (col) => col.className,
+    );
+  }
+
+  it.each([
+    ['by default', undefined],
+    ['for a labelAlign of start', { labelAlign: 'start' }],
+    ['for a labelAlign of left', { labelAlign: 'left' }],
+    ['for a labelCol of 24 columns', { labelCol: { span: 24 } }],
+    ['for a labelCol that is 24 columns at xl', { labelCol: { span: 8, xl: 24 } }],
+    ['for a labelCol of "24" columns', { labelCol: { span: '24' } }],
+    ['for a labelCol that is "24" columns at xl as an object', { labelCol: { span: 8, xl: { span: '24' } } }],
+    ['for a labelCol that is 24 columns at xl as an object', { labelCol: { span: 8, xl: { span: 24 } } }],
+    ['for a labelAlign of start beside a narrower labelCol', { labelAlign: 'start', labelCol: { span: 8 } }],
+    ['for a null xl beside a labelCol of 24 columns', { labelCol: { span: 24, xl: null } }],
+    ['for an empty labelAlign beside a labelCol of 24 columns', { labelAlign: '', labelCol: { span: 24 } }],
+    ['for a null labelAlign', { labelAlign: null }],
+    ['for a 0 labelAlign', { labelAlign: 0 }],
+    ['for a false labelAlign', { labelAlign: false }],
+    ['for a null labelCol', { labelCol: null }],
+  ])('starts an object and an array heading %s', (_, formContext) => {
+    const classes = getHeadingClasses(formContext);
+    expect(classes).toHaveLength(2);
+    classes.forEach((c) => {
+      expect(c).toContain('ant-form-item-label-start');
+      expect(c).toContain('ant-form-item-label-left');
+    });
+  });
+
+  it.each([
+    ['for a labelAlign of end', { labelAlign: 'end' }],
+    ['for a labelAlign of end beside a labelCol of 24 columns', { labelAlign: 'end', labelCol: { span: 24 } }],
+    ['for a labelCol of 24 columns at xs only', { labelCol: { span: 8, xs: 24 } }],
+    ['for a horizontal labelCol without a labelAlign', { labelCol: { span: 8 }, wrapperCol: { span: 16 } }],
+    ['for a labelCol that is "24" columns at xl', { labelCol: { span: 8, xl: '24' } }],
+    ['for a labelCol of "024" columns', { labelCol: { span: '024' } }],
+    ['for a labelCol of "24.0" columns', { labelCol: { span: '24.0' } }],
+    ['for a labelCol of " 24 " columns', { labelCol: { span: ' 24 ' } }],
+    ['for a labelCol that is "024" columns at xl as an object', { labelCol: { span: 8, xl: { span: '024' } } }],
+    ['for a labelCol that is " 24 " columns at xl as an object', { labelCol: { span: 8, xl: { span: ' 24 ' } } }],
+    ['for an empty labelAlign beside a labelCol of 8 columns', { labelAlign: '', labelCol: { span: 8 } }],
+    ['for a null labelAlign beside a labelCol of 8 columns', { labelAlign: null, labelCol: { span: 8 } }],
+    ['for a 0 labelAlign beside a labelCol of 8 columns', { labelAlign: 0, labelCol: { span: 8 } }],
+    ['for a false labelAlign beside a labelCol of 8 columns', { labelAlign: false, labelCol: { span: 8 } }],
+    ['for a null xl beside a labelCol of 8 columns', { labelCol: { span: 8, xl: null } }],
+  ])('ends an object and an array heading %s', (_, formContext) => {
+    const classes = getHeadingClasses(formContext);
+    expect(classes).toHaveLength(2);
+    classes.forEach((c) => {
+      expect(c).not.toContain('ant-form-item-label-start');
+      expect(c).not.toContain('ant-form-item-label-left');
+    });
+  });
+
+  it('gives a heading the className of the labelCol, as antd gives it to a field label', () => {
+    const classes = getHeadingClasses({ labelCol: { span: 24, className: 'my-label' } });
+    expect(classes).toHaveLength(2);
+    classes.forEach((c) => {
+      expect(c.split(' ')).toContain('my-label');
+      expect(c.split(' ').indexOf('my-label')).toBeLessThan(c.split(' ').indexOf('ant-form-item-label-start'));
+    });
+  });
+
+  function getFieldLabelClasses(formContext: Record<string, unknown>, wrapper?: ComponentType<PropsWithChildren>) {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { name: { type: 'string' } }, additionalProperties: { type: 'string' } }}
+        initialFormData={{ extra: 'x' }}
+        validator={validator}
+        formContext={formContext}
+      />,
+      { wrapper },
+    );
+    const labelClass = (forId: string) =>
+      container.querySelector(`label[for="${forId}"]`)?.closest('.ant-form-item-label')?.className;
+    return { field: labelClass('root_name'), key: labelClass('root_extra__key') };
+  }
+
+  it.each(['start', 'left'])(
+    'starts a field label and an additional property key label for a labelAlign of %s',
+    (labelAlign) => {
+      const { field, key } = getFieldLabelClasses({ labelAlign, labelCol: { span: 8 } });
+      [field, key].forEach((c) => {
+        expect(c).toContain('ant-form-item-label-start');
+        expect(c).toContain('ant-form-item-label-left');
+      });
+    },
+  );
+
+  it('leaves a field label and an additional property key label to antd when labelAlign is unset', () => {
+    const { field, key } = getFieldLabelClasses({ labelCol: { span: 8 } });
+    [field, key].forEach((c) => {
+      expect(c).toContain('ant-form-item-label');
+      expect(c).not.toContain('ant-form-item-label-start');
+    });
+  });
+
+  function StartingAntdForm({ children }: PropsWithChildren) {
+    return (
+      <AntdForm component={false} labelAlign='start'>
+        {children}
+      </AntdForm>
+    );
+  }
+
+  it('ends a field label and an additional property key label for a labelAlign of end inside a Form that starts them', () => {
+    const { field, key } = getFieldLabelClasses({ labelAlign: 'end', labelCol: { span: 8 } }, StartingAntdForm);
+    [field, key].forEach((c) => {
+      expect(c).toContain('ant-form-item-label');
+      expect(c).not.toContain('ant-form-item-label-start');
+    });
+  });
+
+  it('starts a field label and an additional property key label with no labelAlign inside a Form that starts them', () => {
+    const { field, key } = getFieldLabelClasses({ labelCol: { span: 8 } }, StartingAntdForm);
+    [field, key].forEach((c) => {
+      expect(c).toContain('ant-form-item-label-start');
+    });
+  });
+
+  it('reads a null labelCol as the default for a field label and an additional property key label inside a Form that starts them', () => {
+    const { field, key } = getFieldLabelClasses({ labelCol: null }, StartingAntdForm);
+    [field, key].forEach((c) => {
+      expect(c).toContain('ant-form-item-label-start');
+    });
+  });
+
+  it('gives a field label and an additional property key label the default labelCol for a null labelCol inside a Form with a narrower labelCol', () => {
+    function NarrowAntdForm({ children }: PropsWithChildren) {
+      return (
+        <AntdForm component={false} labelCol={{ span: 8 }}>
+          {children}
+        </AntdForm>
+      );
+    }
+    const { field, key } = getFieldLabelClasses({ labelCol: null }, NarrowAntdForm);
+    [field, key].forEach((c) => {
+      expect(c).toContain('ant-col-24');
+      expect(c).not.toContain('ant-col-8');
     });
   });
 });

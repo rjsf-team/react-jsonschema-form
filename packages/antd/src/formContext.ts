@@ -4,6 +4,12 @@ import type { ColProps, FormProps, RowProps } from 'antd';
 /** The `rowGutter` a row takes when the formContext sets none */
 export const DEFAULT_ROW_GUTTER = 24;
 
+/** The `labelCol` a field's label takes when the formContext sets none, which puts the label above its control */
+export const DEFAULT_LABEL_COL = { span: 24 };
+
+/** The `wrapperCol` a field's control takes when the formContext sets none, which puts the control below its label */
+export const DEFAULT_WRAPPER_COL = { span: 24 };
+
 /** The `formContext` options the antd theme reads. A form's `formContext` can hold anything, so the templates read it
  * through this type, which names the options they look for
  */
@@ -16,7 +22,10 @@ export interface AntdFormContext {
   colSpan?: number | Record<string, number>;
   /** Where a field's description is shown */
   descriptionLocation?: 'below' | 'tooltip';
-  /** The alignment of the labels of objects and arrays */
+  /** The alignment of a field's label and of the headings of objects and arrays. Unset, antd aligns a field's label and
+   * a heading follows it, starting its column under the default `labelCol` or one with a `span` or an `xl` of 24 and
+   * ending it under any other
+   */
   labelAlign?: FormProps['labelAlign'];
   /** The `Col` props of a field's label */
   labelCol?: ColProps;

@@ -20,11 +20,8 @@ import {
 import { Col, Row, Form, Input } from 'antd';
 
 import useControlState from '../../controlState.ts';
-import { DEFAULT_ROW_GUTTER } from '../../formContext.ts';
+import { DEFAULT_LABEL_COL, DEFAULT_ROW_GUTTER, DEFAULT_WRAPPER_COL } from '../../formContext.ts';
 import type { AntdFormContext } from '../../formContext.ts';
-
-const VERTICAL_LABEL_COL = { span: 24 };
-const VERTICAL_WRAPPER_COL = { span: 24 };
 
 const INPUT_STYLE = {
   width: '100%',
@@ -63,10 +60,11 @@ export default function WrapIfAdditionalTemplate<
   const keyAttributes = getAdditionalKeyAttributes<T, S, F>(props);
   const {
     colon,
-    labelCol = VERTICAL_LABEL_COL,
+    labelAlign,
+    labelCol,
     rowGutter = DEFAULT_ROW_GUTTER,
     toolbarAlign = 'top',
-    wrapperCol = VERTICAL_WRAPPER_COL,
+    wrapperCol = DEFAULT_WRAPPER_COL,
     wrapperStyle,
   }: AntdFormContext = registry.formContext;
   const { templates, translateString } = registry;
@@ -103,7 +101,8 @@ export default function WrapIfAdditionalTemplate<
               hasFeedback
               htmlFor={keyId}
               label={hasKeyLabel ? keyLabel : undefined}
-              labelCol={labelCol}
+              labelAlign={labelAlign}
+              labelCol={labelCol ?? DEFAULT_LABEL_COL}
               required={required}
               style={wrapperStyle}
               validateStatus={keyAttributes['aria-invalid'] ? 'error' : undefined}
