@@ -536,7 +536,11 @@ export function createIsSchemaFieldHidden<
  *
  * @returns - The function, which keeps each step's last result, so a caller keeps one per field it lays out
  */
-export function createSchemaFieldRenderedAs<T, S extends StrictRJSFSchema, F extends FormContextType>() {
+export function createSchemaFieldRenderedAs<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>() {
   const expandCycle = memoizeLast(expandRefCycle<S>);
   const { resolve } = createFieldWidgetResolver<T, S, F>();
   // Keyed on the resolver's parts rather than its result, a new object with every change of the data

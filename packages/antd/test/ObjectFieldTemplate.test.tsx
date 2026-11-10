@@ -1,5 +1,15 @@
 import type { ComponentType, PropsWithChildren } from 'react';
-import type { RegistryFieldsType, RegistryWidgetsType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { createSchemaFieldRenderedAs } from '@rjsf/core';
+import type {
+  FieldProps,
+  ObjectFieldTemplatePropertyType,
+  RegistryFieldsType,
+  RegistryWidgetsType,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
+import { fallbackTypeSelectorId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import { Form as AntdForm } from 'antd';
@@ -430,6 +440,97 @@ describe('ObjectFieldTemplate colSpan map', () => {
       });
       expect(classes[0]).toContain('ant-col-3');
       expect(classes[1]).toContain('ant-col-8');
+    });
+
+    it.each(['data-url', 'hostname'])(
+      'keys a string with format %s by the format name, not the widget it renders',
+      (format) => {
+        const classes = getColClasses(
+          {},
+          { [format]: 3, text: 5, file: 6, string: 8 },
+          formSchemaOf({ type: 'string', format }),
+        );
+        expect(classes[0]).toContain('ant-col-3');
+      },
+    );
+
+    it('keys the fallback UI on a type list by its first type, with no field, whichever type its data holds', () => {
+      const { container } = render(
+        <Form
+          schema={formSchemaOf({ type: ['string', 'number'] })}
+          validator={validator}
+          useFallbackUiForUnsupportedType
+          initialFormData={{ property: 3 }}
+          formContext={{ colSpan: { FallbackField: 2, number: 4, string: 8 } }}
+        />,
+      );
+      expect(container.querySelector(`#${fallbackTypeSelectorId('root_property')}`)).toBeInTheDocument();
+      expect(container.querySelector('fieldset > .ant-row > .ant-col')).toHaveClass('ant-col-8');
+    });
+
+    it('keys the properties of a custom field that sets renderedAs with createSchemaFieldRenderedAs', () => {
+      const MyObjectField = ({
+        schema,
+        uiSchema,
+        formData,
+        fieldPath,
+        id,
+        registry,
+        onChange,
+        onBlur,
+        onFocus,
+      }: FieldProps) => {
+        const { SchemaField } = registry.fields;
+        const { ObjectFieldTemplate } = registry.templates;
+        const data = formData as Record<string, unknown> | undefined;
+        const uiSchemaOf = (name: string) => uiSchema?.[name] as UiSchema | undefined;
+        const properties: ObjectFieldTemplatePropertyType[] = Object.entries(schema.properties ?? {}).map(
+          ([name, property]) => {
+            const propertySchema = property as RJSFSchema;
+            const propertyPath = toFieldPath(name, fieldPath);
+            return {
+              content: (
+                <SchemaField
+                  key={name}
+                  name={name}
+                  id={`${id}_${name}`}
+                  schema={propertySchema}
+                  uiSchema={uiSchemaOf(name)}
+                  formData={data?.[name]}
+                  fieldPath={propertyPath}
+                  registry={registry}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  onFocus={onFocus}
+                />
+              ),
+              name,
+              hidden: false,
+              renderedAs: () =>
+                createSchemaFieldRenderedAs()(propertySchema, uiSchemaOf(name), data?.[name], propertyPath, registry),
+            };
+          },
+        );
+        return (
+          <ObjectFieldTemplate
+            id={id}
+            title=''
+            schema={schema}
+            uiSchema={uiSchema}
+            formData={formData}
+            registry={registry}
+            properties={properties}
+            onAddProperty={() => {}}
+          />
+        );
+      };
+      const classes = getColClasses(
+        { 'ui:field': 'MyObjectField', secret: { 'ui:widget': 'textarea' } },
+        { text: 3 },
+        schema,
+        { MyObjectField },
+      );
+      expect(classes).toEqual([expect.stringContaining('ant-col-3'), expect.stringContaining('ant-col-24')]);
     });
   });
 });
