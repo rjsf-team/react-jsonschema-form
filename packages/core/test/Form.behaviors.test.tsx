@@ -4212,6 +4212,45 @@ describe('clearing a field with a schema default does not re-apply the default (
       expect(onChange.mock.lastCall?.[0].formData).toEqual({ mode: 'b', x: 'X' });
     });
 
+    describe('when a schema change gives an ancestor a default for the field (#5717)', () => {
+      const properties: RJSFSchema['properties'] = { o: { type: 'object', properties: { x: { type: 'string' } } } };
+      const schema: RJSFSchema = { type: 'object', properties };
+      const withAncestorDefault: RJSFSchema = { ...schema, default: { o: { x: 'X' } } };
+
+      it.each<[string, unknown, (ref: ReturnType<typeof createFormRef>) => void]>([
+        ['in the seed', { o: { x: undefined } }, () => undefined],
+        ['by setFieldValue()', { o: { x: 'q' } }, (ref) => handleOf(ref).setFieldValue('o.x', undefined)],
+      ])('fills an undefined the user did not clear, %s', (_, initialFormData, write) => {
+        const ref = createFormRef();
+        const { rerender, getFormData } = createFormComponent({
+          ref,
+          schema,
+          defaultFormStateBehavior,
+          initialFormData,
+        });
+        act(() => write(ref));
+
+        rerender({ ref, schema: withAncestorDefault, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ o: { x: 'X' } });
+      });
+
+      it('keeps a field the user cleared empty', async () => {
+        const ref = createFormRef();
+        const { node, rerender, getFormData } = createFormComponent({
+          ref,
+          schema,
+          defaultFormStateBehavior,
+          initialFormData: { o: { x: 'q' } },
+        });
+        await user.clear(elementOf(node, 'input#root_o_x'));
+
+        rerender({ ref, schema: withAncestorDefault, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ o: { x: undefined } });
+      });
+    });
+
     it('keeps a cleared scalar array item empty', async () => {
       const schema: RJSFSchema = { type: 'array', items: { type: 'string', default: 'x' } };
       const { node, onChange } = createFormComponent({ schema, defaultFormStateBehavior, initialFormData: ['a'] });
