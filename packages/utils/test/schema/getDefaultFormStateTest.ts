@@ -91,6 +91,68 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(forbidding.getDefaultFormState(dependent, { b: 'x' })).toEqual({ b: 'x', c: 'filled' });
       });
     });
+    describe('an object const naming keys no property declares', () => {
+      const constProperty: RJSFSchema = { type: 'object', const: { a: 2 } };
+      const withParentDefault: RJSFSchema = {
+        type: 'object',
+        default: { x: { a: 2 } },
+        properties: { x: constProperty },
+      };
+      const withoutParentDefault: RJSFSchema = { type: 'object', properties: { x: constProperty } };
+      const bare: RJSFSchema = { type: 'object', const: { a: 1 } };
+      describe.each([
+        ['forbids', {}],
+        ['allows', { additionalPropertiesWhenAbsent: 'allow' as const }],
+      ])('where the context %s extra keys', (_, absent) => {
+        const utils = (schema: RJSFSchema, defaultFormStateBehavior?: DefaultFormStateBehavior) =>
+          createSchemaUtils({ validator: testValidator, defaultFormStateBehavior, ...absent }, schema);
+        it('defaults a property to its const, beside a parent default and without one', () => {
+          expect(utils(withParentDefault).getDefaultFormState(withParentDefault)).toEqual({ x: { a: 2 } });
+          expect(utils(withoutParentDefault).getDefaultFormState(withoutParentDefault)).toEqual({ x: { a: 2 } });
+        });
+        it('defaults a bare object const to its value', () => {
+          expect(utils(bare).getDefaultFormState(bare)).toEqual({ a: 1 });
+          expect(utils(bare, { constAsDefaults: 'skipOneOf' }).getDefaultFormState(bare)).toEqual({ a: 1 });
+          const prototypeNamed: RJSFSchema = { type: 'object', const: { toString: 1 } };
+          expect(utils(prototypeNamed).getDefaultFormState(prototypeNamed, {})).toEqual({ toString: 1 });
+        });
+        it('fills the const into empty object data, and keeps the keys the data holds', () => {
+          expect(utils(withoutParentDefault).getDefaultFormState(withoutParentDefault, { x: {} })).toEqual({
+            x: { a: 2 },
+          });
+          expect(utils(bare).getDefaultFormState(bare, { a: 3 })).toEqual({ a: 3 });
+        });
+        it('keeps a nested object of the const whole', () => {
+          const nested: RJSFSchema = { type: 'object', const: { a: { b: 1 } } };
+          expect(utils(nested).getDefaultFormState(nested)).toEqual({ a: { b: 1 } });
+        });
+        it('fills the keys no property declares beside the ones its properties compute', () => {
+          const declared: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'number' } },
+            const: { a: 1, b: 2 },
+          };
+          expect(utils(declared).getDefaultFormState(declared)).toEqual({ a: 1, b: 2 });
+        });
+        it('keeps what its properties and additionalProperties compute for a key, as their own defaults win', () => {
+          const ownDefaults: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'number', default: 5 } },
+            additionalProperties: { type: 'number', default: 6 },
+            const: { a: 1, b: 2 },
+          };
+          expect(utils(ownDefaults).getDefaultFormState(ownDefaults)).toEqual({ a: 5, b: 6 });
+        });
+        it('defaults to none of it when constants are never defaults', () => {
+          const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
+          expect(utils(withoutParentDefault, never).getDefaultFormState(withoutParentDefault)).toEqual({});
+          expect(utils(bare, never).getDefaultFormState(bare)).toEqual({});
+        });
+      });
+      test('computeDefaults gives the const without data, which getDefaultFormState merges in', () => {
+        expect(computeDefaults({ validator: testValidator }, bare, { rawFormData: { a: 3 } })).toEqual({ a: 1 });
+      });
+    });
     describe('an explicitly undefined property schema', () => {
       // A JS-authored schema can conditionally omit a property with `{ properties: { foo: cond ? {...} : undefined } }`
       const schema = {

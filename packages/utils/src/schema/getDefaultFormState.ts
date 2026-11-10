@@ -1821,6 +1821,22 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         }
       });
   }
+  // An object `const` is the object's value as a whole, so a key it names that no property declares and nothing above
+  // computed takes the const's value, as a declared key takes it through its own field, unless the data holds a value
+  // for it, which is kept below
+  if (
+    isObjectData(parentConst) &&
+    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    !constIsAjvDataReference(schema)
+  ) {
+    for (const [key, value] of Object.entries(parentConst)) {
+      const declared = isObject(schema.properties) && Object.hasOwn(schema.properties, key);
+      const heldByData = shouldMergeDefaultsIntoFormData && Object.hasOwn(formData, key) && formData[key] !== undefined;
+      if (!declared && !heldByData && !Object.hasOwn(computed, key)) {
+        setOwn(computed, key, ownValue(value));
+      }
+    }
+  }
   // The data is the user's: a key it holds as `undefined` stays so unless `mergeDefaultsIntoFormData` says a default
   // replaces that and one does, and one no property names and no additional property was computed for is kept as it
   // is. A `null` it holds was kept or replaced by the field of the key, as in any other container
