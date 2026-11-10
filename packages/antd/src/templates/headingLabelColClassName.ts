@@ -27,11 +27,8 @@ function breakpointSpansFullRow(breakpoint: unknown): boolean {
  * @param formContext - The `formContext` of the form
  * @returns - The class name of the heading's column
  */
-export default function headingLabelColClassName(
-  prefixCls: string,
-  { labelAlign, labelCol = DEFAULT_LABEL_COL }: AntdFormContext,
-): string {
-  const { className, span, xl }: ColProps = labelCol ?? {};
+export default function headingLabelColClassName(prefixCls: string, { labelAlign, labelCol }: AntdFormContext): string {
+  const { className, span, xl }: ColProps = labelCol ?? DEFAULT_LABEL_COL;
   const labelClsBasic = `${prefixCls}-item-label`;
   const startAligns = labelAlign
     ? labelAlign === 'left' || labelAlign === 'start'

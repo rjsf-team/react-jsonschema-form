@@ -48,7 +48,7 @@ export default function FieldTemplate<
   const {
     colon,
     labelAlign,
-    labelCol = DEFAULT_LABEL_COL,
+    labelCol,
     wrapperCol = DEFAULT_WRAPPER_COL,
     wrapperStyle,
     descriptionLocation = 'below',
@@ -111,7 +111,7 @@ export default function FieldTemplate<
         htmlFor={templateLabelFor<T, S, F>(props)}
         label={labelNode}
         labelAlign={labelAlign}
-        labelCol={labelCol}
+        labelCol={labelCol ?? DEFAULT_LABEL_COL}
         required={templateMarksRequired<T, S, F>(props)}
         style={wrapperStyle}
         validateStatus={hasError ? 'error' : undefined}

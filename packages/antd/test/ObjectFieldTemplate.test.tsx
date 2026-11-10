@@ -414,6 +414,7 @@ describe('heading alignment', () => {
     ['for a null labelAlign', { labelAlign: null }],
     ['for a 0 labelAlign', { labelAlign: 0 }],
     ['for a false labelAlign', { labelAlign: false }],
+    ['for a null labelCol', { labelCol: null }],
   ])('starts an object and an array heading %s', (_, formContext) => {
     const classes = getHeadingClasses(formContext);
     expect(classes).toHaveLength(2);
@@ -439,7 +440,6 @@ describe('heading alignment', () => {
     ['for a 0 labelAlign beside a labelCol of 8 columns', { labelAlign: 0, labelCol: { span: 8 } }],
     ['for a false labelAlign beside a labelCol of 8 columns', { labelAlign: false, labelCol: { span: 8 } }],
     ['for a null xl beside a labelCol of 8 columns', { labelCol: { span: 8, xl: null } }],
-    ['for a null labelCol', { labelCol: null }],
   ])('ends an object and an array heading %s', (_, formContext) => {
     const classes = getHeadingClasses(formContext);
     expect(classes).toHaveLength(2);
@@ -512,6 +512,28 @@ describe('heading alignment', () => {
     const { field, key } = getFieldLabelClasses({ labelCol: { span: 8 } }, StartingAntdForm);
     [field, key].forEach((c) => {
       expect(c).toContain('ant-form-item-label-start');
+    });
+  });
+
+  it('reads a null labelCol as the default for a field label and an additional property key label inside a Form that starts them', () => {
+    const { field, key } = getFieldLabelClasses({ labelCol: null }, StartingAntdForm);
+    [field, key].forEach((c) => {
+      expect(c).toContain('ant-form-item-label-start');
+    });
+  });
+
+  it('gives a field label and an additional property key label the default labelCol for a null labelCol inside a Form with a narrower labelCol', () => {
+    function NarrowAntdForm({ children }: PropsWithChildren) {
+      return (
+        <AntdForm component={false} labelCol={{ span: 8 }}>
+          {children}
+        </AntdForm>
+      );
+    }
+    const { field, key } = getFieldLabelClasses({ labelCol: null }, NarrowAntdForm);
+    [field, key].forEach((c) => {
+      expect(c).toContain('ant-col-24');
+      expect(c).not.toContain('ant-col-8');
     });
   });
 });

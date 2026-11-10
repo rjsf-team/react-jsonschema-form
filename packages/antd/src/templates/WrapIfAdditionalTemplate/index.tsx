@@ -61,7 +61,7 @@ export default function WrapIfAdditionalTemplate<
   const {
     colon,
     labelAlign,
-    labelCol = DEFAULT_LABEL_COL,
+    labelCol,
     rowGutter = DEFAULT_ROW_GUTTER,
     toolbarAlign = 'top',
     wrapperCol = DEFAULT_WRAPPER_COL,
@@ -102,7 +102,7 @@ export default function WrapIfAdditionalTemplate<
               htmlFor={keyId}
               label={hasKeyLabel ? keyLabel : undefined}
               labelAlign={labelAlign}
-              labelCol={labelCol}
+              labelCol={labelCol ?? DEFAULT_LABEL_COL}
               required={required}
               style={wrapperStyle}
               validateStatus={keyAttributes['aria-invalid'] ? 'error' : undefined}
