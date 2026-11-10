@@ -5551,11 +5551,11 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
     });
 
     // The sanitize clears data the new option's object `const` or `enum` rejects, which the switch leaves as v7 does
-    it.each<{ t: string; option: RJSFSchema; expected: unknown }>([
-      { t: 'a const beside properties', option: { properties: { b: {} }, const: { b: 1 } }, expected: { b: 1 } },
-      { t: 'a const alone', option: { const: { b: 1 } }, expected: {} },
-      { t: 'an enum alone', option: { enum: [{ b: 1 }] }, expected: undefined },
-    ])('leaves the data $t clears as it was, keeping no extra key', async ({ option, expected }) => {
+    it.each<{ declares: string; option: RJSFSchema; expected: unknown }>([
+      { declares: 'a const beside properties', option: { properties: { b: {} }, const: { b: 1 } }, expected: { b: 1 } },
+      { declares: 'a const alone', option: { const: { b: 1 } }, expected: {} },
+      { declares: 'an enum alone', option: { enum: [{ b: 1 }] }, expected: undefined },
+    ])('leaves the data $declares clears as it was, keeping no extra key', async ({ option, expected }) => {
       const schema: RJSFSchema = {
         type: 'object',
         [keyword]: [
@@ -5570,19 +5570,32 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(node.querySelector('#root_a__key')).toBeNull();
     });
 
-    // As when the new option declares a property, which the sanitize keeps the object's own keys beside
-    it("keeps the object's own fields and extra keys beside the kept key when the new option declares nothing", async () => {
+    // As when the new option declares a property, which the sanitize keeps the object's own keys beside. Where no key is
+    // kept, the switch leaves the sanitize's clear of the whole object, as v7 does
+    it.each<{ case: string; a: RJSFSchema; initial: string; expected?: KindData }>([
+      {
+        case: "keeps the object's own fields and extra keys beside the kept key",
+        a: { type: 'string' },
+        initial: 'x',
+        expected: { name: 'N', a: 'x', foo: 'y' },
+      },
+      {
+        case: "leaves the sanitize's clear where the key drops",
+        a: { type: 'string', default: 'd' },
+        initial: 'd',
+        expected: undefined,
+      },
+    ])('$case, when the new option declares nothing', async ({ a, initial, expected }) => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: { name: { type: 'string' } },
-        [keyword]: [{ title: 'S', properties: { a: { type: 'string' } } }, { title: 'T' }],
+        [keyword]: [{ title: 'S', properties: { a } }, { title: 'T' }],
         additionalProperties: true,
       };
-      const { node, formData } = await selectT(schema, { initialFormData: { name: 'N', a: 'x', foo: 'y' } });
+      const { node, formData } = await selectT(schema, { initialFormData: { name: 'N', a: initial, foo: 'y' } });
 
-      expect(formData).toEqual({ name: 'N', a: 'x', foo: 'y' });
-      expect(node.querySelector('#root_a__key')).not.toBeNull();
-      expect(node.querySelector('#root_foo__key')).not.toBeNull();
+      expect(formData).toEqual(expected);
+      expect(node.querySelector('#root_a__key') !== null).toBe(expected !== undefined);
     });
 
     // Without `a` the `if` holds vacuously and fills `n`; with `kind: 'B'` beside it nothing fills `n`
