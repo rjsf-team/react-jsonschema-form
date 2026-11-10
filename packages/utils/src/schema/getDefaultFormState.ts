@@ -2453,26 +2453,25 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
     return declaredIn;
   };
   // Without data there is nothing to check against the options of a select, so only data asks whether it is one. A
-  // schema with nothing left to merge is asked as it stands, which is what retrieving it would give
-  const isSelectField =
-    formData !== undefined &&
-    !isConstant<S>(schemaToMatch) &&
-    isConstantSelect<S>(
-      resolveDeclaredConstantOptions<S>(
-        MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
-          ? retrieveField<S, F>(context, field())
-          : schemaToMatch,
-        declarations,
-      ),
-      true,
-    );
+  // schema with nothing left to merge is asked as it stands, which is what retrieving it would give. The options are
+  // read from that merged schema too, since an `allOf` or `$ref` holds them in its subschemas, retrieved with the data
+  // so that a condition on the value picks the options that value is checked against
+  const selectSchema =
+    formData === undefined || isConstant<S>(schemaToMatch)
+      ? undefined
+      : resolveDeclaredConstantOptions<S>(
+          MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
+            ? retrieveField<S, F>(context, field(), formData)
+            : schemaToMatch,
+          declarations,
+        );
   let validFormData: unknown = formData;
-  if (isSelectField) {
-    const getOptionsList = optionsList<T, S, F>(resolveDeclaredConstantOptions<S>(schemaToMatch, declarations));
+  if (selectSchema !== undefined && isConstantSelect<S>(selectSchema, true)) {
+    const getOptionsList = optionsList<T, S, F>(selectSchema);
     // An empty option list has no value to check the data against, so the data is kept, as it is without the list. An
     // option of object data that declares the discriminator is valued by that property, as `optionsList()` values it
     // and `LayoutMultiSchemaField` matches a pick by
-    const selectorField = getDiscriminatorFieldFromSchema<S>(schemaToMatch);
+    const selectorField = getDiscriminatorFieldFromSchema<S>(selectSchema);
     const selected = selectorField && isObjectData(formData) ? getByPath(formData, selectorField) : undefined;
     if (getOptionsList?.length !== 0) {
       validFormData = getOptionsList?.some(
