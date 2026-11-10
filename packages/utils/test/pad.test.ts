@@ -1,4 +1,4 @@
-import { pad } from '../src/index.ts';
+import pad from '../src/pad.ts';
 
 describe('pad()', () => {
   it('doesn`t pad a string with 0s when unnecessary', () => {

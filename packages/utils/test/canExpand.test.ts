@@ -1,5 +1,5 @@
+import canExpand from '../src/canExpand.ts';
 import type { RJSFSchema, SchemaContext } from '../src/index.ts';
-import { canExpand } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
 const context: SchemaContext = { validator: getTestValidator({}) };

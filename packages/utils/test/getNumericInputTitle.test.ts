@@ -1,4 +1,6 @@
-import { englishStringTranslator, getInputProps, getNumericInputTitle, TranslatableString } from '../src/index.ts';
+import getInputProps from '../src/getInputProps.ts';
+import getNumericInputTitle from '../src/getNumericInputTitle.ts';
+import { englishStringTranslator, TranslatableString } from '../src/index.ts';
 
 describe('getNumericInputTitle()', () => {
   it('returns undefined for an input with no pattern to explain', () => {

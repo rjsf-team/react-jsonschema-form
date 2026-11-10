@@ -1579,14 +1579,14 @@ const uiSchema: UiSchema = { 'ui:ArrayFieldTemplate': 'CustomArrayFieldTemplate'
 
 ### Reading a custom template back
 
-RJSF doesn't know the props of a template you register under your own name, so one read back from `registry.templates`, `getTemplate()` or `getTemplates()` under that name has props of type `never` and can't be rendered as it is. Name its props with `isComponentType()`, which also checks that it is a component:
+RJSF doesn't know the props of a template you register under your own name, so one read back from `registry.templates` or `getTemplates()` under that name has props of type `never` and can't be rendered as it is. Name its props with `isComponentType()`, which also checks that it is a component:
 
 ```tsx
-import { getTemplate, isComponentType, Registry } from '@rjsf/utils';
+import { isComponentType, Registry } from '@rjsf/utils';
 import { MyTemplateProps } from './MyTemplate';
 
 function renderMyTemplate(registry: Registry, props: MyTemplateProps) {
-  const MyTemplate = getTemplate('MyTemplate', registry);
+  const { MyTemplate } = registry.templates;
   if (!isComponentType<MyTemplateProps>(MyTemplate)) {
     return null;
   }
@@ -1597,7 +1597,7 @@ function renderMyTemplate(registry: Registry, props: MyTemplateProps) {
 For a template in a group of your own, narrow the group first, since `isComponentType()` is false for it, then name the props on the member. A `typeof` check alone isn't enough to find the group, because what `memo()`, `forwardRef()` and `lazy()` return is an object too:
 
 ```tsx
-const MyGroup = getTemplate('MyGroup', registry);
+const { MyGroup } = registry.templates;
 if (typeof MyGroup !== 'object' || isComponentType(MyGroup)) {
   return null;
 }

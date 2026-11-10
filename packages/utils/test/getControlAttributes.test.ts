@@ -1,5 +1,6 @@
+import { ariaDescribedByIds } from '../src/idGenerators.ts';
 import type { FieldPresentation, ResolvedPresentationDeclaration } from '../src/index.ts';
-import { ariaDescribedByIds, examplesId, getControlAttributes, resolveFieldPresentation } from '../src/index.ts';
+import { examplesId, getControlAttributes, resolveFieldPresentation } from '../src/index.ts';
 
 const ID = 'root_foo';
 const TEMPLATE: ResolvedPresentationDeclaration = {

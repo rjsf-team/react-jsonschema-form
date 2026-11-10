@@ -1,5 +1,4 @@
-import getDateElementProps from '../src/getDateElementProps.ts';
-import { isDateElementFormat, normalizeYearsRange } from '../src/index.ts';
+import getDateElementProps, { isDateElementFormat, normalizeYearsRange } from '../src/getDateElementProps.ts';
 
 describe('getDateElementProps', () => {
   const monthRange = [1, 12];

@@ -1,4 +1,4 @@
-import { localTimeToOffsetTime } from '../src/index.ts';
+import localTimeToOffsetTime from '../src/localTimeToOffsetTime.ts';
 
 describe('localTimeToOffsetTime()', () => {
   afterEach(() => {

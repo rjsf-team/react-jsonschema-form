@@ -459,7 +459,7 @@ function ownRefNode<S extends StrictRJSFSchema>(rootGraph: SchemaGraph<S>, schem
 }
 
 /** A schema's own `$ref` resolved, as `resolveOwnRef()` returns it, with the subschema the reference names */
-export interface ResolvedOwnRef<S extends StrictRJSFSchema = RJSFSchema> {
+interface ResolvedOwnRef<S extends StrictRJSFSchema = RJSFSchema> {
   /** The schema with its own `$ref` resolved, or the schema itself when it holds none */
   readonly resolved: S;
   /** The subschema the `$ref` names, as the root holds it: the same object for every reference to it, from the root or
@@ -472,7 +472,7 @@ export interface ResolvedOwnRef<S extends StrictRJSFSchema = RJSFSchema> {
 /** A schema's own `$ref` as `findOwnRef()` finds it: resolved, or, for a reference that resolves to nothing or a chain
  * of references that loops, the `error` `resolveOwnRef()` throws for it
  */
-export type OwnRef<S extends StrictRJSFSchema = RJSFSchema> = ResolvedOwnRef<S> | { readonly error: string };
+type OwnRef<S extends StrictRJSFSchema = RJSFSchema> = ResolvedOwnRef<S> | { readonly error: string };
 
 /** The references `findOwnRef()` resolved, by graph, `customMergeAllOf` and the schema holding the reference, and
  * those `resolveMergedOwnRef()` resolved, by graph, `customMergeAllOf`, the node declaring the reference and the schema
@@ -499,7 +499,7 @@ const ownRefs = new KeyedMemo<ResolvedOwnRef<StrictRJSFSchema>>();
  * @returns - The schema with its own reference resolved and the subschema it names, or the error for a reference
  *          that cannot be resolved
  */
-export function findOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
+function findOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   rootSchema: S,
   customMergeAllOf?: CustomMergeAllOf<S>,
@@ -555,7 +555,7 @@ function ownRefAt<S extends StrictRJSFSchema>(
  * @returns - The schema with its own reference resolved and the subschema it names
  * @throws - An error for a reference that resolves to nothing or a chain of references that loops
  */
-export function requireOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
+function requireOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   rootSchema: S,
   customMergeAllOf?: CustomMergeAllOf<S>,

@@ -1,5 +1,5 @@
 /* oxlint-disable typescript/no-deprecated -- this file tests the deprecated `getVisibleErrors()` */
-import { getVisibleErrors } from '../src/index.ts';
+import getVisibleErrors from '../src/getVisibleErrors.ts';
 
 describe('getVisibleErrors()', () => {
   it('returns the errors when they are not being hidden', () => {

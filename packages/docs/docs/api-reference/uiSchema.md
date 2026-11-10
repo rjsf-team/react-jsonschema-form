@@ -86,7 +86,7 @@ function DensityWidget({ options }: WidgetProps) {
 <Form schema={schema} uiSchema={uiSchema} validator={validator} globalUiOptionsKeys={['density']} />;
 ```
 
-[`getGlobalUiOptions()`](utility-functions.md#getglobaluioptions) reads them off the registry typed with the extension.
+A component reads them from `registry.globalUiOptions`, which doesn't carry the extension's types, so check each option's value before use, as `DensityWidget` does with `options`.
 A theme that reads options of its own globally declares their keys itself and exports a type for them, which takes your `UserExtensions` too, such as `@rjsf/mui`'s `MuiGlobalUISchemaOptions`, and a `UiSchema` type whose `ui:globalOptions` take them inline.
 
 ### `ui:definitions` {#ui-definitions}

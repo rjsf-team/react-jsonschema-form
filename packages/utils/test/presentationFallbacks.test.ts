@@ -1,9 +1,9 @@
+import getControlAriaLabel from '../src/getControlAriaLabel.ts';
 /* oxlint-disable typescript/no-deprecated -- this file tests the helpers' fallbacks to the deprecated props */
 import type { FieldPresentation, Registry, ResolvedPresentationDeclaration } from '../src/index.ts';
 import {
   englishStringTranslator,
   fieldShowsOwnErrors,
-  getControlAriaLabel,
   getControlFallbackName,
   getErrorsToDraw,
   hasWidgetErrors,

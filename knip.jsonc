@@ -1,5 +1,14 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  "tags": ["-internal"],
+  // The types @rjsf/utils exports cost no bundle size and name the parameters, results and parts of its public exports,
+  // so they stay public whether or not another package imports one. jsonSchemaAugmentation.ts extends `json-schema`'s
+  // `JSONSchema7`, which has to be exported to merge.
+  "ignoreIssues": {
+    "packages/utils/src/index.ts": ["types"],
+    "packages/utils/src/types.ts": ["types"],
+    "packages/utils/src/jsonSchemaAugmentation.ts": ["types"],
+  },
   "workspaces": {
     ".": {
       // .github/size-limit/report.mjs: invoked with `node` from
@@ -25,6 +34,16 @@
     "packages/shadcn": {
       // src/index.ts: see packages/chakra-ui.
       "ignore": ["src/index.ts"],
+    },
+    "packages/utils": {
+      // Its own tests aren't analyzed, so an export only they import counts as unused: the index exports only what other
+      // packages import. A module export kept for those tests is tagged @internal.
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "vitest": false,
+      "includeEntryExports": true,
+      // deep-freeze-es6: imported only by the tests left out above.
+      "ignoreDependencies": ["deep-freeze-es6"],
     },
     "packages/docs": {
       // Docusaurus scaffold kept for the homepage. It is also the only

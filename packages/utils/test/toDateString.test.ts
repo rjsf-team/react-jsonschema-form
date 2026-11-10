@@ -1,4 +1,4 @@
-import { toDateString } from '../src/index.ts';
+import toDateString from '../src/toDateString.ts';
 
 describe('toDateString()', () => {
   it('should transform an object to a valid json datetime if time=true', () => {

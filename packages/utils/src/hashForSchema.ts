@@ -8,6 +8,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  *
  * @param string - The string for which to get the hash
  * @returns - The resulting hash of the string in hex format
+ * @internal
  */
 export function hashString(string: string): string {
   let hash = 0;
@@ -26,6 +27,7 @@ export function hashString(string: string): string {
  *
  * @param object - The object for which the sorted stringify is desired
  * @returns - The stringified object with keys sorted in a consistent order
+ * @internal
  */
 export function sortedJSONStringify(object: unknown): string {
   function shouldIncludeValue(value: unknown) {

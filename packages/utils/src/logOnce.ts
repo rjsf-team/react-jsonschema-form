@@ -14,6 +14,7 @@ export type LogOnceLevel = 'warn' | 'error';
  * arbitrary text, and a plain-object or array `error` is held as its whole JSON. Two full generations of the warnings
  * raised inside this library, which run a few hundred bytes each, stay under a megabyte. The cap is a ceiling rather
  * than an allocation, so a form warning about a handful of fields holds a handful of strings.
+ * @internal
  */
 export const LOG_ONCE_MAX_MESSAGES = 2000;
 

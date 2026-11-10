@@ -9,8 +9,7 @@ import getUiRequiredErrorSchema from './getUiRequiredErrorSchema.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
-import omitExtraData, { isValueEmpty } from './omitExtraData.ts';
-import resolveConstantOptions from './resolveConstantOptions.ts';
+import omitExtraData from './omitExtraData.ts';
 import retrieveSchema, { expandRefCycle, getAdditionalPropertyType, getValidationTarget } from './retrieveSchema.ts';
 import sanitizeDataForNewSchema, {
   constrainsAlike,
@@ -40,10 +39,8 @@ export {
   isFilesArray,
   isMultiSelect,
   isSelect,
-  isValueEmpty,
   namesEveryType,
   omitExtraData,
-  resolveConstantOptions,
   retrieveSchema,
   sanitizeDataForNewSchema,
 };

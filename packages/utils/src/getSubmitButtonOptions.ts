@@ -4,6 +4,7 @@ import isObject from './isObject.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonOptions, UiSchema } from './types.ts';
 
 /** The default submit button options, exported for testing purposes
+ * @internal
  */
 export const DEFAULT_OPTIONS: SubmitButtonOptions = {
   props: {

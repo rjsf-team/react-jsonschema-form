@@ -20,7 +20,6 @@ import type {
 import {
   englishStringTranslator,
   fieldLabelId,
-  getVisibleErrors,
   isPlainObject,
   noop,
   toInputValue,
@@ -3843,8 +3842,8 @@ describe('ArrayField', () => {
           <div>
             {props.items}
             <ul className='array-template-errors'>
-              {/* oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated helper a component without a plan reads */}
-              {getVisibleErrors(props).map((error) => (
+              {/* oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated props a component without a plan reads */}
+              {(props.hideError ? [] : (props.rawErrors ?? [])).map((error) => (
                 <li key={error}>{error}</li>
               ))}
             </ul>

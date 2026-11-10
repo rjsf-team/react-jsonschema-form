@@ -93,6 +93,7 @@ function extraKeyJudgeOf<S extends StrictRJSFSchema>(schema: S, option?: S): Ext
  *
  * @param value - The value to check
  * @returns - True if the value is considered empty, false otherwise
+ * @internal
  */
 export function isValueEmpty(value: unknown): boolean {
   if (value == null || value === '') {

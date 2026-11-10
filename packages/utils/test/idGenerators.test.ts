@@ -1,9 +1,8 @@
+import { ariaDescribedByIds, dateElementId, optionLabelId } from '../src/idGenerators.ts';
 import {
   additionalKeyId,
-  ariaDescribedByIds,
   besideOptionsId,
   buttonId,
-  dateElementId,
   expandButtonId,
   descriptionId,
   fallbackTypeSelectorId,
@@ -14,7 +13,6 @@ import {
   optionalControlsId,
   optionDescriptionId,
   optionHelpId,
-  optionLabelId,
   optionId,
   optionSelectorId,
   partId,

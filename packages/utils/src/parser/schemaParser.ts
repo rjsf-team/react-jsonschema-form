@@ -35,13 +35,3 @@ export function getValidationSchemas<S extends StrictRJSFSchema = RJSFSchema>(ro
   }
   return schemaMap;
 }
-
-/** `getValidationSchemas()` under the name 6.x exported it as, returning the same list
- *
- * @param rootSchema - The root schema to list the validated schemas of
- * @returns - The `SchemaMap` of the schemas
- * @deprecated Call `getValidationSchemas()`, which this is another name for
- */
-export function schemaParser<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): SchemaMap<S> {
-  return getValidationSchemas<S>(rootSchema);
-}

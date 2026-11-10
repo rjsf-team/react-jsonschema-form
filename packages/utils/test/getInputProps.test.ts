@@ -1,5 +1,5 @@
+import getInputProps from '../src/getInputProps.ts';
 import type { InputPropsType, RJSFSchema, UIOptionsType } from '../src/index.ts';
-import { getInputProps } from '../src/index.ts';
 
 const EXPONENT = '([eE][+\\-]?[0-9]+)?';
 const INTEGER_EXPONENT = '[eE]\\+?[0-9]+';

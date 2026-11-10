@@ -21,7 +21,6 @@ import {
   ONE_OF_KEY,
   PROPERTIES_KEY,
   retrieveSchema,
-  sortedJSONStringify,
   toFieldPath,
   fieldPathToId,
   fieldPathToList,
@@ -662,7 +661,11 @@ const DEFAULT_ID = 'test-id';
 function stringifyProps(props: Pick<Partial<FieldProps>, 'uiSchema' | 'registry'> & Record<string, unknown>) {
   const { uiSchema, registry, ...otherProps } = props;
   const { ...otherUIOptions } = getUiOptions(uiSchema);
-  return sortedJSONStringify({ ...otherProps, otherUIOptions });
+  return JSON.stringify({ ...otherProps, otherUIOptions }, (_key, value: unknown) =>
+    value && typeof value === 'object' && !Array.isArray(value)
+      ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => (a < b ? -1 : 1)))
+      : value,
+  );
 }
 
 // Render a strong with the props stringified
