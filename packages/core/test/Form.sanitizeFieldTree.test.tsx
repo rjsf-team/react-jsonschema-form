@@ -1,6 +1,6 @@
 import { createRef, useState } from 'react';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
-import { buttonId, getByPath } from '@rjsf/utils';
+import { buttonId, createSchemaUtils, getByPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -2121,5 +2121,215 @@ describe('sanitize as a diff of the field trees before and after a change', () =
         expect(Object.getPrototypeOf(p)).toBe(Object.prototype);
       },
     );
+  });
+});
+
+describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () => {
+  const ABSENT = Symbol('absent');
+  const typedItems = (type: 'string' | 'number' | 'integer'): RJSFSchema => ({ type: 'array', items: { type } });
+  const prefix = (...prefixItems: (RJSFSchema | boolean)[]): RJSFSchema => ({ type: 'array', prefixItems });
+  it.each<{
+    name: string;
+    from: RJSFSchema;
+    to: RJSFSchema;
+    data: unknown[];
+    expected: unknown;
+    formExpected?: unknown;
+  }>([
+    {
+      name: 'keeps the items at a position that now declares nothing',
+      from: typedItems('string'),
+      to: { type: 'array' },
+      data: ['a', 'b'],
+      expected: ['a', 'b'],
+    },
+    {
+      name: 'keeps the items past a prefix with no items after it',
+      from: typedItems('string'),
+      to: prefix({ type: 'string' }),
+      data: ['a', 'b'],
+      expected: ['a', 'b'],
+    },
+    {
+      name: 'keeps the items whose position now also allows null',
+      from: typedItems('string'),
+      to: { type: 'array', items: { type: ['string', 'null'] } },
+      data: ['a', 'b'],
+      expected: ['a', 'b'],
+    },
+    {
+      name: 'keeps the items whose type widens from integer to number',
+      from: typedItems('integer'),
+      to: typedItems('number'),
+      data: [1, 2],
+      expected: [1, 2],
+    },
+    {
+      name: 'keeps a prefix item whose type widens from integer to number',
+      from: prefix({ type: 'integer' }),
+      to: prefix({ type: 'number' }),
+      data: [1],
+      expected: [1],
+    },
+    {
+      name: 'keeps the items whose type widens from integer to a list naming number',
+      from: typedItems('integer'),
+      to: { type: 'array', items: { type: ['number', 'null'] } },
+      data: [1],
+      expected: [1],
+    },
+    {
+      name: 'drops the items whose type narrows from number to integer, as any type change does',
+      from: typedItems('number'),
+      to: typedItems('integer'),
+      data: [1, 1.5],
+      expected: [],
+    },
+    {
+      name: 'drops each item past the prefix whose type changed, keeping the array',
+      from: typedItems('number'),
+      to: typedItems('string'),
+      data: [1, 2],
+      expected: [],
+    },
+    {
+      name: 'drops the items past the prefix whose type changed, keeping the prefix',
+      from: { type: 'array', prefixItems: [{ type: 'string' }], items: { type: 'number' } },
+      to: { type: 'array', prefixItems: [{ type: 'string' }], items: { type: 'string' } },
+      data: ['a', 1, 2],
+      expected: ['a'],
+    },
+    {
+      // `Form` renders an array declaring no type as unsupported, so it doesn't read the old items without their types
+      name: 'differs on an old array declaring no type: utils keeps the items, Form removes the array',
+      from: { prefixItems: [{ type: 'number', enum: ['a'] }] },
+      to: prefix({ type: 'string', enum: ['a'] }),
+      data: ['b'],
+      expected: ['b'],
+      formExpected: ABSENT,
+    },
+    {
+      // `Form` judges no field whose constraints didn't change, and utils checks a scalar item as a scalar property is
+      name: 'differs on an unchanged scalar const: Form keeps the item it rejects, utils drops it',
+      from: { type: 'array', title: 'Old', items: { type: 'string', const: 'a' } },
+      to: { type: 'array', title: 'New', items: { type: 'string', const: 'a' } },
+      data: ['b', 'a'],
+      expected: ['a'],
+      formExpected: ['b', 'a'],
+    },
+    {
+      name: 'keeps a prefix item whose position becomes true',
+      from: prefix({ type: 'string' }),
+      to: prefix(true),
+      data: ['a'],
+      expected: ['a'],
+    },
+    {
+      name: 'keeps a prefix item whose position becomes {}',
+      from: prefix({ type: 'string' }),
+      to: prefix({}),
+      data: ['a'],
+      expected: ['a'],
+    },
+    {
+      name: 'clears the array where the new schema rejects a prefix item an old false position held',
+      from: prefix(false),
+      to: prefix({ enum: ['x'] }),
+      data: ['y'],
+      expected: ABSENT,
+    },
+    {
+      name: 'keeps a prefix item whose selected option changed, which neither looks inside',
+      from: prefix({ anyOf: [{ type: 'string', enum: ['a'] }, { type: 'number' }] }),
+      to: prefix({ anyOf: [{ type: 'string', enum: ['b'] }, { type: 'number' }] }),
+      data: ['a'],
+      expected: ['a'],
+    },
+    {
+      name: 'keeps the items past an unchanged maxItems, for validation to report',
+      from: { type: 'array', title: 'Old', maxItems: 1, items: { type: 'string' } },
+      to: { type: 'array', title: 'New', maxItems: 1, items: { type: 'string' } },
+      data: ['a', 'b'],
+      expected: ['a', 'b'],
+    },
+    {
+      name: 'keeps a prefix item past an unchanged maxItems the new schema rejects, for validation to report',
+      from: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }, { type: 'string', enum: ['b'] }] },
+      to: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }, { type: 'string', enum: ['a'] }] },
+      data: ['x', 'b'],
+      expected: ['x', 'b'],
+    },
+    {
+      name: 'keeps a prefix item past an unchanged maxItems whose position changes type, for validation to report',
+      from: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }, { type: 'string' }] },
+      to: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }, { type: 'number' }] },
+      data: ['x', 'b'],
+      expected: ['x', 'b'],
+    },
+    {
+      name: 'keeps an item past an unchanged maxItems at a position the new schema closes, for validation to report',
+      from: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }], items: { type: 'string' } },
+      to: { type: 'array', maxItems: 1, prefixItems: [{ type: 'string' }], items: false },
+      data: ['x', 'b'],
+      expected: ['x', 'b'],
+    },
+    {
+      name: 'clears the array where the new schema rejects a prefix item the old one declared no items for',
+      from: { type: 'array' },
+      to: prefix({ type: 'string', enum: ['a'] }),
+      data: ['b', 'c'],
+      expected: ABSENT,
+    },
+    {
+      name: 'clears the array where the new schema rejects a tuple item an old true items held',
+      from: { type: 'array', items: true },
+      to: { type: 'array', items: [{ enum: ['a'] }] },
+      data: ['b'],
+      expected: ABSENT,
+      // The defaults fill the cleared tuple with a hole at each position
+      formExpected: [undefined],
+    },
+    {
+      name: 'drops an item past the prefix the new schema rejects where the old one declared no items',
+      from: { type: 'array' },
+      to: { type: 'array', items: { enum: ['a'] } },
+      data: ['b', 'a'],
+      expected: ['a'],
+    },
+    {
+      // utils leaves the row for the defaults, which `Form` and an option switch fill
+      name: 'empties a null item for the new default to fill, where its position changes and allows no null',
+      from: typedItems('number'),
+      to: { type: 'array', items: { type: 'string', default: 'x' } },
+      data: [null],
+      expected: [undefined],
+      formExpected: ['x'],
+    },
+    {
+      name: 'prunes an object item whose new type list names object beside another type',
+      from: { type: 'array', items: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } } },
+      to: { type: 'array', items: { type: ['string', 'object'], properties: { a: { type: 'number' } } } },
+      data: [{ a: 1, b: 2 }],
+      expected: [{ a: 1 }],
+    },
+    {
+      name: 'prunes an object prefix item whose new type list names object beside another type',
+      from: prefix({ type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } }),
+      to: prefix({ type: ['string', 'object'], properties: { a: { type: 'number' } } }),
+      data: [{ a: 1, b: 2 }],
+      expected: [{ a: 1 }],
+    },
+  ])('$name', ({ from, to, data, expected, formExpected = expected }) => {
+    const wrap = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
+    const ref = createRef<FormRef<{ list?: unknown }>>();
+    const props = { validator, initialFormData: { list: data } };
+    const { rerender } = render(<Form ref={ref} schema={wrap(from)} {...props} />);
+
+    rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
+
+    const formData = handleOf(ref).getFormData();
+    expect(Object.hasOwn(formData, 'list') ? formData.list : ABSENT).toEqual(formExpected);
+    const sanitized = createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, from, data);
+    expect(sanitized === undefined ? ABSENT : sanitized).toEqual(expected);
   });
 });
