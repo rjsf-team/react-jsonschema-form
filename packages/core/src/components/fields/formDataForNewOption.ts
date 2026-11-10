@@ -1,4 +1,5 @@
 import type {
+  FieldPathList,
   FormContextType,
   GenericObjectType,
   GlobalUISchemaOptions,
@@ -17,11 +18,15 @@ import {
   getPropertySchema,
   getRenderedOptionSchema,
   getXxxOfKey,
+  GUESSED_TYPE_FLAG,
+  hasSchemaMarker,
   isPlainObject,
   isSchemaObject,
   mergeSchemas,
+  unsetByPath,
 } from '@rjsf/utils';
 
+import { copyAlongPath } from '../dataPaths.ts';
 import keepClears from '../keepClears.ts';
 import { asFieldValue } from '../uiState.ts';
 import { declaresProperty, withGlobalUiOptions } from './fieldWidgetUtils.ts';
@@ -196,6 +201,152 @@ function fieldWithOnlyOption<T, S extends StrictRJSFSchema, F extends FormContex
   };
 }
 
+/** A value `keptAsGuessedExtraKey()` drops */
+const DROP = Symbol('drop');
+
+/** Whether `schema` is the stub of an extra key whose schema is guessed from its data, which constrains nothing */
+function isGuessedStub<S extends StrictRJSFSchema>(schema: unknown): schema is S {
+  return isSchemaObject<S>(schema) && hasSchemaMarker(schema, GUESSED_TYPE_FLAG);
+}
+
+/** What a key the switch discards keeps as an extra key whose schema is guessed from its data, or `DROP`. The same rules
+ * `sanitizeFieldTree()` applies to a field a conditional stops declaring
+ * ([#5778](https://github.com/rjsf-team/react-jsonschema-form/issues/5778)): a scalar is kept, and so is an object
+ * whose every key its stub takes as an extra key of its own, each judged the same way, unless all of them drop. An
+ * array is dropped, since a guessed stub declares no `items` to render it with, and so is a value equal to what the
+ * old option's defaults fill in, which no data can tell apart from a value the user chose.
+ *
+ * @param schemaUtils - The schema utilities, to retrieve the stubs of an object's own extra keys and fill the old field
+ * @param stub - The schema the object holding the options renders the value with, which keeps it only as a guessed stub
+ * @param oldField - The schema the old option rendered the value with, if it declared one
+ * @param value - The value the key holds
+ * @param path - The value's path within the data of the field holding the options
+ * @param isFieldFill - Whether a value is what the old option's field holding the options fills in at a path
+ * @returns - The value to keep, or `DROP`
+ */
+function keptAsGuessedExtraKey<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  stub: unknown,
+  oldField: S | undefined,
+  value: unknown,
+  path: FieldPathList,
+  isFieldFill: (value: unknown, path: FieldPathList) => boolean,
+): unknown {
+  const data = asFieldValue<T>(value);
+  const retrievedOldField = oldField && schemaUtils.retrieveSchema(oldField, data);
+  // The old field's own fill is what holds an object's `{}`, which the fill around it leaves out
+  const isOwnFill =
+    retrievedOldField !== undefined && deepEquals(schemaUtils.getDefaultFormState(retrievedOldField), value);
+  if (!isGuessedStub<S>(stub) || Array.isArray(value) || isOwnFill || isFieldFill(value, path)) {
+    return DROP;
+  }
+  if (!isPlainObject(value)) {
+    return value;
+  }
+  const stubProperties: GenericObjectType = schemaUtils.retrieveSchema(stub, data).properties ?? {};
+  const oldProperties: GenericObjectType = retrievedOldField?.properties ?? {};
+  const keys = Object.keys(value);
+  if (!keys.every((key) => Object.hasOwn(stubProperties, key) && isGuessedStub<S>(stubProperties[key]))) {
+    return DROP;
+  }
+  const kept: GenericObjectType = {};
+  for (const key of keys) {
+    const oldChild =
+      Object.hasOwn(oldProperties, key) && isSchemaObject<S>(oldProperties[key]) ? oldProperties[key] : undefined;
+    const child = keptAsGuessedExtraKey(
+      schemaUtils,
+      stubProperties[key],
+      oldChild,
+      value[key],
+      [...path, key],
+      isFieldFill,
+    );
+    if (child !== DROP) {
+      kept[key] = child;
+    }
+  }
+  return keys.length > 0 && Object.keys(kept).length === 0 ? DROP : kept;
+}
+
+/** Returns `sanitized`, what `sanitizeDataForNewSchema()` made of `formData` for the new option, with each key back that
+ * it discarded and that the object holding the options, with the new option selected, renders as an extra key whose
+ * schema is guessed from its data, as under `additionalProperties: true`, keeping what `keptAsGuessedExtraKey()` keeps
+ * of its value. The extra keys are stubbed with the new option's own `additionalProperties` joined to the object's, as
+ * the field renders them, and a key the new option declares, through `allOf` or a condition, is its field's.
+ *
+ * @param schemaUtils - The schema utilities, to stub the extra keys and compute the old option's defaults
+ * @param formData - The form data associated with the old option
+ * @param sanitized - What the sanitize made of `formData` for the new option
+ * @param options - The options switched between, and the old one as it is rendered
+ * @param parentSchema - The schema holding the options, its extra keys stubbed among its `properties`
+ * @param uiSchemas - The old option's uiSchema, the registry's `ui:definitions` and global UI options
+ * @returns - `sanitized` with the kept keys, or `sanitized` itself when it keeps none
+ */
+function withGuessedExtraKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  formData: unknown,
+  sanitized: GenericObjectType,
+  { oldOption, renderedOldOption, newOption }: { oldOption?: S; renderedOldOption?: S; newOption?: S },
+  parentSchema: S | undefined,
+  { oldOptionUiSchema, uiSchemaDefinitions, globalUiOptions }: OptionUiSchemas<T, S, F>,
+): GenericObjectType {
+  const xxxOfKey = parentSchema && getXxxOfKey<S>(parentSchema);
+  if (!isPlainObject(formData) || !oldOption || !newOption || !parentSchema || !xxxOfKey) {
+    return sanitized;
+  }
+  const oldProperties: GenericObjectType = renderedOldOption?.properties ?? {};
+  const discarded = Object.keys(oldProperties).filter(
+    (key) => formData[key] !== undefined && !Object.hasOwn(sanitized, key),
+  );
+  if (discarded.length === 0) {
+    return sanitized;
+  }
+  // The object arrives with the extra keys of its data stubbed for the old option, which a retrieval would read as
+  // declared, and a fill as fields of their own
+  const parentProperties = parentSchema.properties ?? {};
+  const declaredOnly: S = {
+    ...parentSchema,
+    properties: Object.fromEntries(
+      Object.entries(parentProperties).filter(([key]) => declaresProperty<S>(parentProperties, key)),
+    ),
+  };
+  const stubs: GenericObjectType =
+    schemaUtils.retrieveSchema({ ...declaredOnly, [xxxOfKey]: [newOption] }, asFieldValue<T>(formData), false, 0)
+      .properties ?? {};
+  const extraKeys = discarded.filter((key) => Object.hasOwn(stubs, key) && isGuessedStub<S>(stubs[key]));
+  if (extraKeys.length === 0) {
+    return sanitized;
+  }
+  // The field with the old option as its only one is filled as the form filled it, under the field's own `default`
+  // and `required` and the option's `ui:initialValue`
+  const field = fieldWithOnlyOption<T, S, F>(declaredOnly, oldOption, oldOptionUiSchema, globalUiOptions);
+  if (!field) {
+    return sanitized;
+  }
+  const isFieldFill = (value: unknown, path: FieldPathList) => {
+    const withoutValue = copyAlongPath(formData, path);
+    unsetByPath(withoutValue, path);
+    const fill = schemaUtils.getDefaultFormState(
+      field.schema,
+      asFieldValue<T>(withoutValue),
+      false,
+      undefined,
+      field.uiSchema,
+      uiSchemaDefinitions,
+    );
+    return deepEquals(getByPath(fill, path), value);
+  };
+  let result = sanitized;
+  for (const key of extraKeys) {
+    const oldField = isSchemaObject<S>(oldProperties[key]) ? oldProperties[key] : undefined;
+    const kept = keptAsGuessedExtraKey(schemaUtils, stubs[key], oldField, formData[key], [key], isFieldFill);
+    if (kept !== DROP) {
+      result = { ...result, [key]: kept };
+    }
+  }
+  return result;
+}
+
 /** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped, and
  * the form's global UI options, which say where the Optional Data Controls leave an optional object out of the defaults
  */
@@ -277,6 +428,16 @@ export default function formDataForNewOption<
   const renderedNewOption = renderedOption<S>(parentSchema, newOption);
   const renderedOldOption = renderedOption<S>(parentSchema, oldOption);
   let newFormData: T | undefined = schemaUtils.sanitizeDataForNewSchema(renderedNewOption, renderedOldOption, formData);
+  if (isPlainObject(newFormData)) {
+    newFormData = withGuessedExtraKeys<T, S, F>(
+      schemaUtils,
+      formData,
+      newFormData,
+      { oldOption, renderedOldOption, newOption },
+      parentSchema,
+      uiSchemas,
+    ) as T;
+  }
   // A `null` option renders no field, so the switch leaves the data as the sanitize did, rather than the `null` the
   // option's defaults fill in for a field that renders one
   if (newOption?.type === 'null') {
