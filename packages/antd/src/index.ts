@@ -20,7 +20,7 @@ function createPresentation(): ThemePresentation {
     // `SelectWidget` draws the selected option's description before the field's description
     selectedOptionDescription: 'beforeDescription',
     // `FieldTemplate` draws the help in antd's explain slot below the widget, then the description in its extra slot.
-    // shortcut: a description `descriptionLocation: 'tooltip'` puts beside the label is still listed last; make the
+    // shortcut: a description `descriptionLocation: 'tooltip'` puts beside the label is listed last; make the
     // order a field's own if announcing it before the widget matters
     fieldTemplateOrder: ['children', 'help', 'description'],
   };

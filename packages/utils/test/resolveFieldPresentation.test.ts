@@ -19,6 +19,7 @@ const TEMPLATE: ResolvedPresentationDeclaration = {
 };
 const WIDGET_LABEL: ResolvedPresentationDeclaration = { ...TEMPLATE, label: 'self' };
 const fieldText = { description: 'Describes the field', help: 'Helps with the field' };
+const optionText = { description: 'Describes the option', help: 'Helps with the option' };
 
 function resolve(inputs: Partial<FieldPresentationInputs> = {}): FieldPresentation {
   return resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo', ...inputs });
@@ -405,9 +406,8 @@ describe('resolveFieldPresentation()', () => {
     });
 
     it('lists the description and help in the order the template draws them around its children', () => {
-      const own = { description: 'Describes the option', help: 'Helps with the option' };
       const order = (templateOrder: FieldTemplateOrder) =>
-        resolve({ ...own, templateOrder, inherited: resolve({ ...fieldText, templateOrder }) }).describedBy;
+        resolve({ ...optionText, templateOrder, inherited: resolve({ ...fieldText, templateOrder }) }).describedBy;
       expect(order(['children', 'help', 'description'])).toEqual([
         `${ID}__optionHelp`,
         `${ID}__optionDescription`,
@@ -432,8 +432,7 @@ describe('resolveFieldPresentation()', () => {
     it('lists a part a field above draws itself before the parts of the levels beneath it', () => {
       const selector = resolve({ ...fieldText, declaration: { ...TEMPLATE, description: 'self' } });
       const plan = resolve({
-        description: 'Describes the option',
-        help: 'Helps with the option',
+        ...optionText,
         declaration: { ...TEMPLATE, help: 'self' },
         inherited: selector,
         templateOrder: ['children', 'description', 'help'],
