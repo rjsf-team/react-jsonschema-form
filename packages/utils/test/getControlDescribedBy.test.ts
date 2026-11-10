@@ -14,7 +14,7 @@ const TEMPLATE: ResolvedPresentationDeclaration = {
 describe('getControlDescribedBy()', () => {
   it('describes a widget rendered without a plan by every part id, then its own', () => {
     expect(getControlDescribedBy({ id: ID })).toBe(ariaDescribedByIds(ID));
-    expect(getControlDescribedBy({ id: ID }, [examplesId(ID)])).toBe(ariaDescribedByIds(ID, true));
+    expect(getControlDescribedBy({ id: ID }, [examplesId(ID)])).toBe(`${ariaDescribedByIds(ID)} ${examplesId(ID)}`);
   });
 
   it("follows the plan's describers with the widget's own, once each", () => {

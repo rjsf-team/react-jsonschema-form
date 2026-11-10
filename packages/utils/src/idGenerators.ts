@@ -117,12 +117,10 @@ export function titleId(id: string) {
  * element.
  *
  * @param id - The id of the field
- * @param [includeExamples=false] - Optional flag, if true, will add the `examplesId` into the list
  * @returns - The string containing the list of ids for use in an `aria-describedBy` attribute
  */
-export function ariaDescribedByIds(id: string, includeExamples = false) {
-  const examples = includeExamples ? ` ${examplesId(id)}` : '';
-  return `${errorId(id)} ${descriptionId(id)} ${helpId(id)}${examples}`;
+export function ariaDescribedByIds(id: string) {
+  return `${errorId(id)} ${descriptionId(id)} ${helpId(id)}`;
 }
 
 /** Return a consistent `id` for the label a theme's `FieldTemplate` renders above a field's control, so a widget that

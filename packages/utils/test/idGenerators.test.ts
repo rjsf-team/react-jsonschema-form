@@ -66,11 +66,6 @@ describe('idGenerators', () => {
   it('ariaDescribedBy ids are generated for simple id', () => {
     expect(ariaDescribedByIds(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help`);
   });
-  it('ariaDescribedBy ids are generated for simple id with examples', () => {
-    expect(ariaDescribedByIds(SIMPLE_ID, true)).toEqual(
-      `${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help ${SIMPLE_ID}__examples`,
-    );
-  });
   it('optionId generates the proper id for an option', () => {
     expect(optionId(SIMPLE_ID, 1)).toEqual(`${SIMPLE_ID}__1`);
   });

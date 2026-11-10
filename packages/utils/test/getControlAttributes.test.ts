@@ -19,7 +19,7 @@ describe('getControlAttributes()', () => {
   it('describes a widget rendered without a plan by every part id, then its own', () => {
     expect(getControlAttributes({ id: ID })).toEqual({ 'aria-describedby': ariaDescribedByIds(ID) });
     expect(getControlAttributes({ id: ID }, [examplesId(ID)])).toEqual({
-      'aria-describedby': ariaDescribedByIds(ID, true),
+      'aria-describedby': `${ariaDescribedByIds(ID)} ${examplesId(ID)}`,
     });
   });
 
