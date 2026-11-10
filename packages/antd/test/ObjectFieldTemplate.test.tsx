@@ -1,5 +1,15 @@
 import type { ComponentType, PropsWithChildren } from 'react';
-import type { RegistryFieldsType, RegistryWidgetsType, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { createSchemaFieldRenderedAs } from '@rjsf/core';
+import type {
+  FieldProps,
+  ObjectFieldTemplatePropertyType,
+  RegistryFieldsType,
+  RegistryWidgetsType,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
+import { fallbackTypeSelectorId, fieldPathToId, getByPath, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import { Form as AntdForm } from 'antd';
@@ -379,6 +389,142 @@ describe('ObjectFieldTemplate colSpan map', () => {
       };
       expect(getSpan(formSchema, {})).toContain('ant-col-4');
       expect(document.querySelector('#root_constructor')).toHaveAttribute('role', 'spinbutton');
+    });
+  });
+
+  describe('a property keyed by what SchemaField renders it as (#5516)', () => {
+    const yesNo = [
+      { const: true, title: 'Yes' },
+      { const: false, title: 'No' },
+    ];
+    const formSchemaOf = (property: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { property, other: { type: 'string' } },
+    });
+
+    it.each<[string, RJSFSchema, string]>([
+      ['a typeless oneOf of labelled booleans', { oneOf: yesNo }, 'boolean'],
+      ['a boolean with labelled options', { type: 'boolean', oneOf: yesNo }, 'boolean'],
+      ['a select over object constants', { type: 'object', enum: [{ a: 1 }, { a: 2 }] }, 'object'],
+    ])('keys %s by the select SchemaField renders for it, not its type', (_name, property, type) => {
+      const classes = getColClasses({}, { select: 4, [type]: 5, string: 8 }, formSchemaOf(property));
+      expect(classes[0]).toContain('ant-col-4');
+      expect(document.querySelector('#root_property')).toHaveRole('combobox');
+    });
+
+    it('keys a property with no ui:widget by the widget it renders before its type', () => {
+      expect(getColClasses({}, { text: 3, string: 8 })).toEqual([
+        expect.stringContaining('ant-col-3'),
+        expect.stringContaining('ant-col-3'),
+      ]);
+    });
+
+    it.each<[string, RJSFSchema]>([
+      ['a string with anyOf options', { type: 'string', anyOf: [{ minLength: 1 }, { maxLength: 5 }] }],
+      ['an untyped anyOf', { anyOf: [{ type: 'string' }, { type: 'number' }] }],
+    ])('keys %s by the textarea its option renders, and spans it full width by default', (_name, property) => {
+      const uiSchema = { property: { 'ui:widget': 'textarea' } };
+      expect(getColClasses(uiSchema, { textarea: 3, string: 8 }, formSchemaOf(property))[0]).toContain('ant-col-3');
+      expect(getColClasses(uiSchema, { number: 5 }, formSchemaOf(property))[0]).toContain('ant-col-24');
+    });
+
+    it('keys an untyped anyOf of objects by the object its option renders, and spans it full width by default', () => {
+      const property: RJSFSchema = {
+        anyOf: [
+          { type: 'object', properties: { a: { type: 'string' } } },
+          { type: 'object', properties: { b: { type: 'number' } } },
+        ],
+      };
+      expect(getColClasses({}, { object: 6, string: 8 }, formSchemaOf(property))[0]).toContain('ant-col-6');
+      expect(getColClasses({}, { string: 8 }, formSchemaOf(property))[0]).toContain('ant-col-24');
+    });
+
+    it('keys a property by the field its $id names', () => {
+      const MyField = () => <div />;
+      const classes = getColClasses({}, { MyField: 3, string: 8 }, formSchemaOf({ type: 'string', $id: 'MyField' }), {
+        MyField,
+      });
+      expect(classes[0]).toContain('ant-col-3');
+      expect(classes[1]).toContain('ant-col-8');
+    });
+
+    it.each(['data-url', 'hostname'])(
+      'keys a string with format %s by the format name, not the widget it renders',
+      (format) => {
+        const classes = getColClasses(
+          {},
+          { [format]: 3, text: 5, file: 6, string: 8 },
+          formSchemaOf({ type: 'string', format }),
+        );
+        expect(classes[0]).toContain('ant-col-3');
+      },
+    );
+
+    it('keys the fallback UI on a type list by its first type, with no field, whichever type its data holds', () => {
+      const { container } = render(
+        <Form
+          schema={formSchemaOf({ type: ['string', 'number'] })}
+          validator={validator}
+          useFallbackUiForUnsupportedType
+          initialFormData={{ property: 3 }}
+          formContext={{ colSpan: { FallbackField: 2, number: 4, string: 8 } }}
+        />,
+      );
+      expect(container.querySelector(`#${fallbackTypeSelectorId('root_property')}`)).toBeInTheDocument();
+      expect(container.querySelector('fieldset > .ant-row > .ant-col')).toHaveClass('ant-col-8');
+    });
+
+    it('keys the properties of a custom field that sets renderedAs with createSchemaFieldRenderedAs', () => {
+      const MyObjectField = (props: FieldProps) => {
+        const { schema, uiSchema, formData, fieldPath, id, registry } = props;
+        const { SchemaField } = registry.fields;
+        const { ObjectFieldTemplate } = registry.templates;
+        const properties: ObjectFieldTemplatePropertyType[] = Object.entries(schema.properties ?? {}).map(
+          ([name, property]) => {
+            const propertySchema = property as RJSFSchema;
+            const propertyUiSchema = uiSchema?.[name] as UiSchema | undefined;
+            const propertyData = getByPath(formData, name);
+            const propertyPath = toFieldPath(name, fieldPath);
+            return {
+              content: (
+                <SchemaField
+                  {...props}
+                  key={name}
+                  name={name}
+                  id={fieldPathToId(propertyPath, registry.globalFormOptions)}
+                  schema={propertySchema}
+                  uiSchema={propertyUiSchema}
+                  formData={propertyData}
+                  fieldPath={propertyPath}
+                />
+              ),
+              name,
+              hidden: false,
+              renderedAs: () =>
+                createSchemaFieldRenderedAs()(propertySchema, propertyUiSchema, propertyData, propertyPath, registry),
+            };
+          },
+        );
+        return (
+          <ObjectFieldTemplate
+            id={id}
+            title=''
+            schema={schema}
+            uiSchema={uiSchema}
+            formData={formData}
+            registry={registry}
+            properties={properties}
+            onAddProperty={() => {}}
+          />
+        );
+      };
+      const classes = getColClasses(
+        { 'ui:field': 'MyObjectField', secret: { 'ui:widget': 'textarea' } },
+        { text: 3 },
+        schema,
+        { MyObjectField },
+      );
+      expect(classes).toEqual([expect.stringContaining('ant-col-3'), expect.stringContaining('ant-col-24')]);
     });
   });
 });

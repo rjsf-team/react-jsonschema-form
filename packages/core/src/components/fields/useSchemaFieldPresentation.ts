@@ -4,6 +4,7 @@ import type {
   Field,
   FieldPresentation,
   FormContextType,
+  ObjectFieldPropertyRendering,
   ONE_OF_KEY,
   Registry,
   ResolvedPresentationDeclaration,
@@ -99,6 +100,8 @@ export interface ShownOptionField<
   field: Field<T, S, F>;
   /** The registry key that named it, if one did */
   fieldKey: string | undefined;
+  /** What it renders as, as `createSchemaFieldRenderedAs()` reports a field */
+  rendering: ObjectFieldPropertyRendering;
   /** The schema it renders */
   schema: S;
   /** The uiSchema it renders */

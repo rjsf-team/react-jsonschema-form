@@ -134,6 +134,116 @@ describe('ObjectField', () => {
       ]);
     });
 
+    /** A template recording what each property renders as, by name, on every render */
+    const captureRenderedAs = () => {
+      const capture = vi.fn();
+      const ObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => {
+        capture(Object.fromEntries(properties.map(({ name, renderedAs }) => [name, renderedAs?.()])));
+        return <>{properties.map(({ content }) => content)}</>;
+      };
+      return { capture, ObjectFieldTemplate };
+    };
+
+    it('should hand the template what each property renders as', () => {
+      const { capture, ObjectFieldTemplate } = captureRenderedAs();
+      const NamedField = () => <div />;
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            plain: { type: 'string' },
+            yesNo: {
+              oneOf: [
+                { const: true, title: 'Yes' },
+                { const: false, title: 'No' },
+              ],
+            },
+            notes: { type: 'string' },
+            named: { type: 'number', $id: 'NamedField' },
+            choice: { type: 'object', enum: [{ a: 1 }, { a: 2 }] },
+            story: { type: 'string', anyOf: [{ minLength: 1 }, { maxLength: 5 }] },
+            union: { anyOf: [{ type: 'string' }, { type: 'number' }] },
+            contact: {
+              type: 'string',
+              oneOf: [
+                { title: 'Email', format: 'email' },
+                { title: 'Link', format: 'uri' },
+              ],
+            },
+          },
+        },
+        uiSchema: {
+          notes: { 'ui:widget': 'textarea' },
+          named: { 'ui:widget': 'updown' },
+          story: { 'ui:widget': 'textarea' },
+          union: { 'ui:widget': 'textarea' },
+        },
+        fields: { NamedField },
+        templates: { ObjectFieldTemplate },
+      });
+      expect(capture).toHaveBeenLastCalledWith({
+        plain: { widget: 'text', type: 'string' },
+        yesNo: { widget: 'select', type: 'boolean' },
+        notes: { widget: 'textarea', type: 'string' },
+        named: { field: 'NamedField', widget: 'updown', type: 'number' },
+        choice: { widget: 'select', type: 'object' },
+        // The option shown renders the control, by the field's own `ui:widget` or its own format
+        story: { widget: 'textarea', type: 'string' },
+        union: { widget: 'textarea', type: 'string' },
+        contact: { widget: 'email', type: 'string' },
+      });
+      expect(node.querySelector('textarea#root_story')).toBeInTheDocument();
+      expect(node.querySelector('textarea#root_union')).toBeInTheDocument();
+      expect(node.querySelector('#root_contact')).toHaveAttribute('type', 'email');
+      expect(node.querySelector('#root_yesNo')).toHaveRole('combobox');
+      expect(node.querySelector('.rjsf-field-boolean #root_yesNo')).toBeInTheDocument();
+    });
+
+    it("should hand the template the field and type of an untyped anyOf's option shown", () => {
+      const { capture, ObjectFieldTemplate } = captureRenderedAs();
+      const NamedField = () => <div />;
+      createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            shape: {
+              anyOf: [
+                { type: 'object', properties: { a: { type: 'string' } } },
+                { type: 'object', properties: { b: { type: 'number' } } },
+              ],
+            },
+            list: { anyOf: [{ type: 'array', items: { type: 'string' } }, { type: 'number' }] },
+            amount: { anyOf: [{ type: 'string' }, { type: 'number' }] },
+            named: { anyOf: [{ type: 'string' }, { type: 'number' }] },
+          },
+        },
+        uiSchema: { named: { anyOf: [{ 'ui:field': 'NamedField', 'ui:widget': 'textarea' }, {}] } },
+        initialFormData: { list: [], amount: 3 },
+        fields: { NamedField },
+        templates: { ObjectFieldTemplate },
+      });
+      // The object option's own template renders after the root's
+      expect(capture.mock.calls.findLast(([rendered]) => 'shape' in rendered)?.[0]).toEqual({
+        shape: { type: 'object' },
+        list: { type: 'array' },
+        amount: { widget: 'text', type: 'number' },
+        named: { field: 'NamedField', widget: 'textarea', type: 'string' },
+      });
+    });
+
+    it('should keep what an unchanged property renders as while another property is edited', async () => {
+      const { capture, ObjectFieldTemplate } = captureRenderedAs();
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { edited: { type: 'string' }, kept: { type: 'string' } } },
+        templates: { ObjectFieldTemplate },
+      });
+      const first = capture.mock.lastCall?.[0];
+      await user.type(node.querySelector('#root_edited')!, 'x');
+      const last = capture.mock.lastCall?.[0];
+      expect(capture.mock.calls.length).toBeGreaterThan(1);
+      expect(last.kept).toBe(first.kept);
+    });
+
     const HiddenFlagObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => (
       <>
         {properties.map(({ name, hidden, content }) => (

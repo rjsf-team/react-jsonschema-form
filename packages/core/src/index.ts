@@ -43,6 +43,7 @@ export * from './components/fields/index.ts';
 export * from './components/templates/index.ts';
 export * from './components/widgets/index.ts';
 export { buildRegistry, generateTheme } from './Theme.ts';
+export { createSchemaFieldRenderedAs } from './components/fields/SchemaField.tsx';
 export {
   GridType,
   LAYOUT_GRID_OPTION,

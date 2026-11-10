@@ -1648,6 +1648,20 @@ export type ArrayFieldTemplateProps<
   onAddClick: (event?: SyntheticEvent<HTMLElement>) => void;
 };
 
+/** What an object property's `SchemaField` renders the property as. A property whose `anyOf`/`oneOf` option renders its
+ * control is reported by the widget of the option shown, and by that option's field and type where it names none of
+ * its own, as an untyped `anyOf` does. Only that outer option is read, so an option that is itself an untyped
+ * `anyOf`/`oneOf` reports nothing of the option it shows
+ */
+export interface ObjectFieldPropertyRendering {
+  /** The registry key of the field a `ui:field` or the schema's `$id` names, if one does */
+  field?: string;
+  /** The widget the field renders, when it renders a single widget named by string */
+  widget?: string;
+  /** The type of the field rendered, the one its `rjsf-field-<type>` class names */
+  type?: string;
+}
+
 /** The properties of each element in the ObjectFieldTemplateProps.properties array */
 export interface ObjectFieldTemplatePropertyType<
   T = unknown,
@@ -1667,6 +1681,11 @@ export interface ObjectFieldTemplatePropertyType<
   readonly?: boolean;
   /** A boolean value stating if the property should be hidden */
   hidden: boolean;
+  /** Works out what the property's `SchemaField` renders it as, for a template laying the property out by that, as
+   * antd's keys its column span. Worked out only when called, since it resolves the property's schema again. Core's
+   * `ObjectField` sets it; a custom field building `properties` itself may leave it out
+   */
+  renderedAs?: () => ObjectFieldPropertyRendering;
 }
 
 /** The properties that are passed to an ObjectFieldTemplate implementation */

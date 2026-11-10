@@ -11,12 +11,14 @@ import type {
   FormContextType,
   GlobalFormOptions,
   GlobalUISchemaOptions,
+  ObjectFieldPropertyRendering,
   Registry,
   RJSFSchema,
   SchemaUtilsType,
   StrictRJSFSchema,
   UIOptionsType,
   UiSchema,
+  Widget,
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
@@ -70,7 +72,7 @@ import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useUiState from '../../hooks/useUiState.ts';
-import { retrievedOptionsOf } from '../uiState.ts';
+import { retrievedOptionsOf, shownOption as pickShownOption } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
 import AdditionalPropertyDepthsContext from './AdditionalPropertyDepthsContext.ts';
 import type { SelectSchemaInfo } from './fieldWidgetUtils.ts';
@@ -528,6 +530,114 @@ export function createIsSchemaFieldHidden<
   };
 }
 
+/** Creates the function a container works out by what the `SchemaField` it hands `schema`, `uiSchema` and `formData`
+ * renders its field as, for a field it lays out before rendering it. The field is resolved and planned as
+ * `useSchemaFieldPlan()` does, for a field nothing above it names, and a `$ref` cycle as the field it expands to, as in
+ * `createIsSchemaFieldHidden()`. A field that leaves its control to its `anyOf`/`oneOf` option renders the widget of the
+ * option shown, and takes that option's field and type where it names none of its own. It models core's `SchemaField`,
+ * not a replacement registered in `registry.fields`
+ *
+ * @returns - The function, which keeps each step's last result, so a caller keeps one per field it lays out
+ */
+export function createSchemaFieldRenderedAs<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>() {
+  const expandCycle = memoizeLast(expandRefCycle<S>);
+  const { resolve } = createFieldWidgetResolver<T, S, F>();
+  // Keyed on the resolver's parts rather than its result, a new object with every change of the data
+  const renderedAs = memoizeLast(
+    (
+      selectSchemaInfo: FieldWidgetPlan<T, S, F>['selectSchemaInfo'],
+      uiField: FieldWidgetPlan<T, S, F>['uiField'],
+      uiSchema: FieldWidgetPlan<T, S, F>['uiSchema'],
+      ownUiOptions: FieldWidgetPlan<T, S, F>['ownUiOptions'],
+      registry: Registry<T, S, F>,
+    ): { rendering: ObjectFieldPropertyRendering; rendersOption: boolean } => {
+      const plan = planFieldComponent<T, S, F>({ selectSchemaInfo, uiField, ownUiOptions }, registry);
+      const widget = plan && getFieldWidget<T, S, F>(plan.FieldComponent, selectSchemaInfo.schema, uiSchema, registry);
+      return {
+        rendering: renderingOf<T, S, F>(plan, uiField, widget, ownUiOptions),
+        rendersOption: plan?.isWithheld === true,
+      };
+    },
+  );
+  // A withheld field leaves its control to the option shown, so it is planned only for a field rendering one
+  let planShownOption: ReturnType<typeof createShownOptionPlanner<T, S, F>> | undefined;
+  // Keeps the options' identity while the data is unchanged, which the planner keys the option shown on
+  const retrieveOptions = memoizeLast(retrievedOptionsOf<T, S, F>);
+  // Matching the data against the options validates it, so it is not repeated while the options and data are unchanged
+  const pickOption = memoizeLast(pickShownOption<T, S, F>);
+  // The field's own name and type win, but an untyped `anyOf`/`oneOf` has only its option's to be keyed by
+  const withOption = memoizeLast(
+    (rendering: ObjectFieldPropertyRendering, option: ObjectFieldPropertyRendering): ObjectFieldPropertyRendering => ({
+      field: rendering.field ?? option.field,
+      widget: option.widget ?? rendering.widget,
+      type: rendering.type ?? option.type,
+    }),
+  );
+  /** Works out what the field renders as
+   *
+   * @param schema - The field's schema, as handed to its `SchemaField`
+   * @param uiSchema - The field's uiSchema, as handed to its `SchemaField`
+   * @param formData - The field's data
+   * @param fieldPath - The field's path
+   * @param registry - The registry
+   * @returns - The field named for it, the widget it renders and the type of the field rendered
+   */
+  return (
+    schema: S,
+    uiSchema: UiSchema<T, S, F> | undefined,
+    formData: T | undefined,
+    fieldPath: FieldPath,
+    registry: Registry<T, S, F>,
+  ): ObjectFieldPropertyRendering => {
+    const fieldSchema = hasSchemaMarker(schema, RJSF_REF_CYCLE_KEY)
+      ? expandCycle(schema, registry.schemaUtils.getRootSchema())
+      : schema;
+    // An expansion carries no cycle flag, and nothing above the field names one for it
+    const resolved = resolve(fieldSchema, uiSchema, formData, fieldPath, registry, false, false);
+    const { selectSchemaInfo } = resolved;
+    const { rendering, rendersOption } = renderedAs(
+      selectSchemaInfo,
+      resolved.uiField,
+      resolved.uiSchema,
+      resolved.ownUiOptions,
+      registry,
+    );
+    const { schema: shownSchema, xxxOfKey } = selectSchemaInfo;
+    const options = rendersOption && retrieveOptions(registry.schemaUtils, shownSchema, formData);
+    if (!options || xxxOfKey === undefined) {
+      return rendering;
+    }
+    // shortcut: picks the option the data matches, not one the user selected that the data fits no better, since the
+    // selection is the form's state, which a container laying the field out can't read; read it if a theme keys by it
+    const index = pickOption(
+      registry.schemaUtils,
+      undefined,
+      options,
+      formData,
+      getDiscriminatorFieldFromSchema<S>(shownSchema),
+    );
+    // shortcut: plans the outer option only, so an option that is itself an untyped anyOf/oneOf reports none of its own
+    // option; recurse while the option is withheld if nested unions need keying
+    planShownOption ??= createShownOptionPlanner<T, S, F>();
+    const option = planShownOption(
+      shownSchema,
+      resolved.uiSchema,
+      xxxOfKey,
+      options[index],
+      index,
+      formData,
+      fieldPath,
+      registry,
+      false,
+    );
+    return option ? withOption(rendering, option.rendering) : rendering;
+  };
+}
+
 const RenderNothing = () => null;
 
 /** Whether the `anyOf`/`oneOf` of a schema listing several types leaves the choice of type to its options, so the
@@ -791,6 +901,29 @@ function planFieldComponent<T, S extends StrictRJSFSchema, F extends FormContext
   );
 }
 
+/** What a field planned as `plan` renders as, for `createSchemaFieldRenderedAs()`
+ *
+ * @param plan - The field's plan, undefined for a `$ref` cycle
+ * @param uiField - The field `createFieldWidgetResolver()` resolved it to
+ * @param widget - The widget `getFieldWidget()` found for the planned field
+ * @param ownUiOptions - The field's own `ui:options`
+ * @returns - The field named for it, the widget it renders and the type of the field rendered
+ */
+function renderingOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  plan: ReturnType<typeof planFieldComponent<T, S, F>>,
+  uiField: FieldWidgetPlan<T, S, F>['uiField'],
+  widget: Widget<T, S, F> | string | undefined,
+  ownUiOptions: FieldWidgetPlan<T, S, F>['ownUiOptions'],
+): ObjectFieldPropertyRendering {
+  // A field written for the schema is handed its `uiSchema` as given, so its own widget is the one it renders by
+  const rendered = plan && (widget ?? (plan.rendersNamedField ? ownUiOptions.widget : undefined));
+  return {
+    field: uiField?.namedFieldKey,
+    widget: typeof rendered === 'string' ? rendered : undefined,
+    type: plan?.fieldType,
+  };
+}
+
 /** Creates the function a field rendering its `anyOf`/`oneOf` options plans the option shown by, from the schema and
  * `uiSchema` `AnyOfField` hands the option's `SchemaField`, so the field's label is drawn for the control the option
  * renders (#5709). As `useMemo()`s would, each step runs again only once its own inputs change: the option keeps its
@@ -839,12 +972,14 @@ function createShownOptionPlanner<T, S extends StrictRJSFSchema, F extends FormC
       if (!plan) {
         return undefined;
       }
+      const widget = getFieldWidget<T, S, F>(plan.FieldComponent, selectSchemaInfo.schema, uiSchema, registry);
       return {
         field: plan.FieldComponent,
         fieldKey: plan.fieldKey,
+        rendering: renderingOf<T, S, F>(plan, uiField, widget, ownUiOptions),
         schema: selectSchemaInfo.schema,
         uiSchema,
-        widget: getFieldWidget<T, S, F>(plan.FieldComponent, selectSchemaInfo.schema, uiSchema, registry),
+        widget,
         hidden,
         rendersOptionSelector: plan.rendersOptionSelector && !plan.rendersOptionsItself,
       };
