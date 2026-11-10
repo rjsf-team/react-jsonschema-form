@@ -441,7 +441,6 @@ exports[`array fields > checkboxes 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_6_"
             id="radix-_r_5_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -1495,7 +1494,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
         >
           <label
             cmdk-label=""
-            for="radix-_r_1i_"
             id="radix-_r_1h_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -4120,7 +4118,6 @@ exports[`with title and description > checkboxes 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_e_"
             id="radix-_r_d_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -4879,7 +4876,6 @@ exports[`with title and description from both > checkboxes 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_u_"
             id="radix-_r_t_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -5638,7 +5634,6 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_m_"
             id="radix-_r_l_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />
@@ -6283,7 +6278,6 @@ exports[`with title and description with global label off > checkboxes 1`] = `
         >
           <label
             cmdk-label=""
-            for="radix-_r_16_"
             id="radix-_r_15_"
             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
           />

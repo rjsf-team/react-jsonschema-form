@@ -12,6 +12,7 @@ import {
   enumOptionsDomValues,
   enumOptionsValueForIndex,
   flattenGroupedOptions,
+  getControlFallbackName,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
@@ -118,6 +119,10 @@ export default function SelectWidget<
     'aria-invalid': ariaInvalid,
   } = widgetAriaProps(props);
 
+  // A `<label for>` naming the combobox can't name the listbox, so it is named by the field's label text, else the
+  // placeholder, else the prompt
+  const listLabel = ariaLabel ?? getControlFallbackName<T, S, F>(props);
+
   const cnClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className);
 
   const placeholderText = placeholder || registry.translateString(TranslatableString.SelectPlaceholder);
@@ -139,6 +144,7 @@ export default function SelectWidget<
           placeholder={placeholderText}
           ariaLabel={ariaLabel}
           ariaLabelledby={ariaLabelledby}
+          listLabel={listLabel}
           ariaInvalid={ariaInvalid}
           className={cnClassName}
           onFocus={handleFancyFocus}
@@ -150,6 +156,7 @@ export default function SelectWidget<
           id={id}
           ariaLabel={ariaLabel}
           ariaLabelledby={ariaLabelledby}
+          listLabel={listLabel}
           placeholder={placeholderText}
           removeItemLabel={(label) => registry.translateString(TranslatableString.RemoveItemButton, [label])}
           autoFocus={autofocus}

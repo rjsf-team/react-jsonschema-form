@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import type { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
@@ -9,6 +9,7 @@ import { userEvent } from '@testing-library/user-event';
 import Form from '../src/index.ts';
 import SelectWidget from '../src/SelectWidget/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
+import { expectReferencesResolve } from './helpers/expectReferencesResolve.ts';
 
 const translateToFrench = (stringToTranslate: TranslatableString) =>
   stringToTranslate === TranslatableString.SelectPlaceholder ? 'Choisir ...' : stringToTranslate;
@@ -540,6 +541,52 @@ describe('SelectWidget', () => {
     expect(ungrouped).toEqual(['a', 'c', 'b']);
     expect(grouped).toEqual(ungrouped);
   });
+
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['titled single', { type: 'string', title: 'Color', enum: ['a', 'b'] }, {}, 'Color'],
+    ['untitled single', { type: 'string', enum: ['a', 'b'] }, { 'ui:placeholder': 'Pick one' }, 'Pick one'],
+    ['unnamed single', { type: 'string', enum: ['a', 'b'] }, {}, 'Select ...'],
+    [
+      'titled multiple',
+      { type: 'array', title: 'Colors', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
+      {},
+      'Colors',
+    ],
+    ['grouped single', { type: 'string', title: 'Color', enum: ['a', 'b'] }, { 'ui:optgroups': { G: ['a'] } }, 'Color'],
+    [
+      'grouped multiple',
+      { type: 'array', title: 'Colors', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
+      { 'ui:optgroups': { G: ['a'] } },
+      'Colors',
+    ],
+    [
+      'oneOf option',
+      {
+        title: 'Shape',
+        oneOf: [
+          { title: 'Circle', type: 'object', properties: { radius: { type: 'number' } } },
+          { title: 'Square', type: 'object', properties: { side: { type: 'number' } } },
+        ],
+      },
+      {},
+      'Shape',
+    ],
+  ])(
+    "%s select references only elements on the page and names its listbox by the field's label, else its placeholder, else the prompt",
+    async (_, schema, uiSchema, name) => {
+      const user = userEvent.setup();
+      render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+      expectReferencesResolve(document.body);
+      expect(screen.getByRole('combobox')).toHaveAccessibleName(name);
+
+      await user.click(screen.getByRole('combobox'));
+
+      expectReferencesResolve(document.body);
+      expect(screen.getByRole('combobox')).toHaveAccessibleName(name);
+      expect(screen.getByRole('listbox')).toHaveAccessibleName(name);
+    },
+  );
 });
 
 describe('multiple SelectWidget options', () => {

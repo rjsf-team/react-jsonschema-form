@@ -1,6 +1,7 @@
 'use client';
 
 import type { ComponentProps } from 'react';
+import { useCallback, useImperativeHandle, useRef } from 'react';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 
@@ -13,17 +14,41 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
  * @returns A command menu component
  */
 
-const Command = ({ className, ref, ...props }: ComponentProps<typeof CommandPrimitive>) => (
-  <CommandPrimitive
-    ref={ref}
-    data-slot='command'
-    className={cn(
-      'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
-      className,
-    )}
-    {...props}
-  />
-);
+const Command = ({
+  className,
+  ref,
+  withoutInput = false,
+  ...props
+}: ComponentProps<typeof CommandPrimitive> & {
+  /** Whether the menu renders no `CommandInput`, so the hidden label cmdk renders for one would name nothing. A menu
+   * with a `CommandInput` leaves the label alone, as that input is named through it */
+  withoutInput?: boolean;
+}) => {
+  // cmdk always renders a label for its own input, with no prop to omit it. Its `for` is cmdk's stable generated id, so
+  // React never sets it again once it is removed, and the label itself stays where React put it
+  const root = useRef<HTMLDivElement>(null);
+  useImperativeHandle(ref, () => root.current as HTMLDivElement, []);
+  const rootRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      if (withoutInput) {
+        element?.querySelector(':scope > label[cmdk-label]')?.removeAttribute('for');
+      }
+      root.current = element;
+    },
+    [withoutInput],
+  );
+  return (
+    <CommandPrimitive
+      ref={rootRef}
+      data-slot='command'
+      className={cn(
+        'bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md',
+        className,
+      )}
+      {...props}
+    />
+  );
+};
 
 /**
  * A dialog wrapper for the Command component to display it in a modal

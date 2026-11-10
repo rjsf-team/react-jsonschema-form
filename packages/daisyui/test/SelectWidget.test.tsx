@@ -1,4 +1,4 @@
-import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
@@ -1066,4 +1066,44 @@ describe('SelectWidget', () => {
       expect(onChange).not.toHaveBeenCalled();
     },
   );
+});
+
+describe('SelectWidget listbox name', () => {
+  const oneOfSchema: RJSFSchema = {
+    title: 'Shape',
+    oneOf: [
+      { title: 'Circle', type: 'object', properties: { radius: { type: 'number' } } },
+      { title: 'Square', type: 'object', properties: { side: { type: 'number' } } },
+    ],
+  };
+
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['the field label', { type: 'string', title: 'Color', enum: ['a', 'b'] }, {}, 'Color'],
+    ['the placeholder', { type: 'string', enum: ['a', 'b'] }, { 'ui:placeholder': 'Pick one' }, 'Pick one'],
+    ['the prompt', { type: 'string', enum: ['a', 'b'] }, {}, 'Select ...'],
+    [
+      'the label of a multiple select',
+      { type: 'array', title: 'Colors', uniqueItems: true, items: { type: 'string', enum: ['a', 'b'] } },
+      {},
+      'Colors',
+    ],
+    ['the label of a oneOf option selector', oneOfSchema, {}, 'Shape'],
+  ])('is %s while shown, and none while closed', async (_, schema, uiSchema, name) => {
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+    const combobox = screen.getByRole('combobox');
+    const listbox = screen.getByRole('listbox', { hidden: true });
+
+    expect(combobox).toHaveAccessibleName(name);
+    expect(listbox).toHaveAccessibleName('');
+
+    await user.click(combobox);
+
+    expect(combobox).toHaveAttribute('aria-expanded', 'true');
+    expect(combobox).toHaveAccessibleName(name);
+    expect(listbox).toHaveAccessibleName(name);
+
+    await user.keyboard('{Escape}');
+
+    expect(listbox).toHaveAccessibleName('');
+  });
 });

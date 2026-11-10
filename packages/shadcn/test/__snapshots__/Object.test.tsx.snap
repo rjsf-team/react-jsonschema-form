@@ -1856,7 +1856,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_8_"
                     id="radix-_r_7_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -2799,7 +2798,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_4_"
                     id="radix-_r_3_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -3005,7 +3003,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                 >
                   <label
                     cmdk-label=""
-                    for="radix-_r_c_"
                     id="radix-_r_b_"
                     style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                   />
@@ -3577,7 +3574,6 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
             >
               <label
                 cmdk-label=""
-                for="radix-_r_g_"
                 id="radix-_r_f_"
                 style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
               />
