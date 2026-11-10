@@ -17,7 +17,6 @@ import {
   ANY_OF_KEY,
   getFieldTypeForUiSchema,
   getPresentationDeclaration,
-  getSchemaOwnTypes,
   getUiOptions,
   guessType,
   ITEMS_KEY,
@@ -30,6 +29,7 @@ import getFieldWidget, {
   displaysLabel,
   fallbackValueKeepsWidget,
   getBooleanFieldWidget,
+  getFallbackTypes,
   withoutDescribers,
 } from './fieldWidgetUtils.ts';
 
@@ -76,6 +76,8 @@ export interface SchemaFieldPresentationInputs<
   hideError?: boolean;
   /** Whether no control is on screen however the field renders: a hidden field, or an opted-out optional one */
   hidden: boolean;
+  /** Whether the field renders hidden, so nothing points at the parts its `FieldTemplate` would otherwise draw */
+  concealed: boolean;
   /** Whether the field is required */
   required: boolean;
   /** The plan of the field above rendering the same id */
@@ -178,7 +180,7 @@ function rendersControl<
     // The fallback UI labels its value from outside when the value is a control, and otherwise leaves the value field to
     // draw its own heading or label
     const valueSchema =
-      headingType && getSchemaOwnTypes<S>(schema)?.includes(headingType) ? { ...schema, type: headingType } : schema;
+      headingType && getFallbackTypes<S>(schema).includes(headingType) ? { ...schema, type: headingType } : schema;
     // A boolean's widget decides by its declaration, so every name it goes by gets the same answer. Only a boolean: a
     // text input declared as labelling itself keeps its description with the field around the type selector
     if (getFieldTypeForUiSchema<T, S, F>(valueSchema, uiSchema) !== 'boolean') {
@@ -278,6 +280,7 @@ export default function useSchemaFieldPresentation<
     errors,
     hideError,
     hidden,
+    concealed,
     required,
     inherited,
     shownOptionField,
@@ -295,10 +298,10 @@ export default function useSchemaFieldPresentation<
     () => (field && xxxOfKey === undefined ? getFieldWidget<T, S, F>(field, schema, uiSchema, registry) : undefined),
     [field, xxxOfKey, schema, uiSchema, registry],
   );
-  // A type selector within an `anyOf`/`oneOf` option renders below the option's selector, so an option holding an object
-  // or an array draws its description under its heading, below that selector, as it does beneath a selector around them
+  // The fallback UI's value holding an object or an array draws its own heading below the type selector, whichever type
+  // its schema names first, if any, so the title and description go below the selector with it
   const heldType = guessType(formData);
-  const headingType = inherited && (heldType === 'object' || heldType === 'array') ? heldType : undefined;
+  const headingType = heldType === 'object' || heldType === 'array' ? heldType : undefined;
   // Memoized, since a `FallbackField` asks `getDisplayLabel()` or looks up its boolean's widget
   const hasControl = useMemo(
     () =>
@@ -422,13 +425,19 @@ export default function useSchemaFieldPresentation<
     });
     // The label has no control to name and the field below draws it as its heading, so the description goes undrawn here
     // too, for the field below to draw beneath that heading rather than the template above it
-    if (!handsLabelDown || plan.description.by !== 'template') {
+    const handsDescriptionDown = handsLabelDown && plan.description.by === 'template';
+    // Nothing points at a part a hidden template doesn't draw, though a custom one is still handed it, and a container's
+    // own template still draws the parts it draws itself
+    const unreferenced = [plan.description, plan.help, plan.errors].filter(
+      (part) => part.by === 'template' && (concealed || (handsDescriptionDown && part === plan.description)),
+    );
+    if (unreferenced.length === 0) {
       return plan;
     }
     return {
       ...plan,
-      description: { ...plan.description, by: 'none' as const },
-      ...withoutDescribers(plan, new Set([plan.description.id])),
+      ...(handsDescriptionDown && { description: { ...plan.description, by: 'none' as const } }),
+      ...withoutDescribers(plan, new Set(unreferenced.map((part) => part.id))),
     };
   }, [
     id,
@@ -445,6 +454,7 @@ export default function useSchemaFieldPresentation<
     templateOrder,
     inherited,
     handsLabelDown,
+    concealed,
   ]);
   return { presentation, labelPlacement: declaration?.labelPlacement, drawnByField: declaration?.drawnByField };
 }

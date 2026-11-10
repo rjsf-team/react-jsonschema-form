@@ -2,6 +2,7 @@ import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFS
 import {
   buttonId,
   descriptionId,
+  getContainerAttributes,
   getTemplates,
   getUiOptions,
   titleDrawsOptionalDataControl,
@@ -39,7 +40,7 @@ export default function ObjectFieldTemplate<
   } = registry.templates;
   const { schemaUtils } = registry;
   return (
-    <>
+    <div id={id} role='group' {...getContainerAttributes(presentation, id, title)}>
       {title && (
         <TitleFieldTemplate
           id={titleId(id)}
@@ -86,6 +87,6 @@ export default function ObjectFieldTemplate<
           </Row>
         ) : null}
       </Container>
-    </>
+    </div>
   );
 }

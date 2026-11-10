@@ -87,6 +87,42 @@ describe('the plan SchemaField builds', () => {
     expect(plan?.control).toBeUndefined();
   });
 
+  it.each<[string, RJSFSchema, unknown]>([
+    ['an object', { type: 'object', properties: { a: { type: 'string' } } }, { a: 'q' }],
+    ['an array', { type: 'array', items: { type: 'string' } }, ['q']],
+  ])("describes %s's group by none of the parts a hidden field's template leaves undrawn", (_, schema, formData) => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { x: { ...schema, title: 'X', description: 'D' } } },
+      uiSchema: { x: { 'ui:widget': 'hidden', 'ui:help': 'H' } },
+      initialFormData: { x: formData },
+      extraErrors: { x: { __errors: ['E'] } },
+    });
+
+    // Its own template still draws its description inside the hidden wrapper
+    expect(node.querySelector('fieldset#root_x')).toHaveAttribute('aria-describedby', 'root_x__description');
+  });
+
+  it("still hands a hidden field's description, help and errors to a FieldTemplate, which may draw them", () => {
+    const hiddenTemplates: FieldTemplateProps[] = [];
+    function FieldTemplate(templateProps: FieldTemplateProps) {
+      if (templateProps.id === 'root_x') {
+        hiddenTemplates.push(templateProps);
+      }
+      return <CoreFieldTemplate {...templateProps} />;
+    }
+    createFormComponent({
+      schema: { type: 'object', properties: { x: { type: 'string', description: 'D' } } },
+      uiSchema: { x: { 'ui:widget': 'hidden', 'ui:help': 'H' } },
+      templates: { FieldTemplate },
+      extraErrors: { x: { __errors: ['E'] } },
+    });
+
+    const { rawDescription, rawHelp, errors } = hiddenTemplates[hiddenTemplates.length - 1];
+    expect(rawDescription).toBe('D');
+    expect(rawHelp).toBe('H');
+    expect(errors).toBeTruthy();
+  });
+
   it("plans a field by the declarations the Form's presentation prop layers over core's", () => {
     const { templatePlans } = renderPlans(
       { type: 'object', properties: { foo: { type: 'string', title: 'Foo' } } },

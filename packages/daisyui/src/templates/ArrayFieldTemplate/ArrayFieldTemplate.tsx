@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import type { ArrayFieldTemplateProps, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
   getArrayDescription,
+  getContainerAttributes,
   getTemplates,
   getUiOptions,
   TranslatableString,
@@ -68,7 +69,12 @@ export default function ArrayFieldTemplate<
   );
 
   return (
-    <div className={`array-field-template ${className}`}>
+    <div
+      className={`array-field-template ${className}`}
+      id={id}
+      role='group'
+      {...getContainerAttributes(presentation, id, title)}
+    >
       <ArrayFieldTitleTemplate
         id={id}
         title={title}

@@ -1,8 +1,9 @@
-import { Grid, GridItem } from '@chakra-ui/react';
+import { Box, Grid, GridItem } from '@chakra-ui/react';
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   buttonId,
   descriptionId,
+  getContainerAttributes,
   getTemplates,
   getUiOptions,
   titleDrawsOptionalDataControl,
@@ -40,7 +41,15 @@ export default function ObjectFieldTemplate<
   const { schemaUtils } = registry;
 
   return (
-    <>
+    // Spaces its parts as the `FieldTemplate`'s `Fieldset.Content` around it spaces its own children
+    <Box
+      id={id}
+      role='group'
+      display='flex'
+      flexDirection='column'
+      gap={4}
+      {...getContainerAttributes(presentation, id, title)}
+    >
       {title && (
         <TitleFieldTemplate
           id={titleId(id)}
@@ -81,6 +90,6 @@ export default function ObjectFieldTemplate<
           </GridItem>
         )}
       </Grid>
-    </>
+    </Box>
   );
 }

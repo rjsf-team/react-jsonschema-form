@@ -248,7 +248,87 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       });
 
       expect(screen.getAllByText('XTitle')).toHaveLength(1);
-      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
+      // A `for` can't label the `<fieldset>` an object or an array renders, which its legend names instead
+      const headsGroup = type === 'object' || type === 'array';
+      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(headsGroup ? 0 : 1);
+      expect(node.querySelectorAll('legend #root_x__title')).toHaveLength(headsGroup ? 1 : 0);
+    });
+
+    describe.each<[string, RJSFSchema['type']]>([
+      ['string', ['string', 'object']],
+      ['object', ['object', 'string']],
+    ])('an object in a %s-first type list', (_, type) => {
+      const renderObject = (props: Partial<NoValFormProps> = {}) =>
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              x: { title: 'XTitle', description: 'XDesc', type, properties: { a: { type: 'string' } } },
+            },
+          },
+          initialFormData: { x: { a: 'q' } },
+          useFallbackUiForUnsupportedType: true,
+          ...props,
+        });
+
+      it('draws the type selector, then the title as the legend, then the description', () => {
+        const { node } = renderObject();
+
+        const typeSelector = elementOf(node, '#root_x__internalTypeSelector');
+        const legend = elementOf(node, 'legend');
+        expect(legend).toHaveTextContent('XTitle');
+        expect(typeSelector.compareDocumentPosition(legend)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+        expect(legend.compareDocumentPosition(screen.getByText('XDesc'))).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+        expect(screen.queryByText('Value')).not.toBeInTheDocument();
+      });
+
+      it("describes the type selector and the object's group by the field's errors, marking only the selector invalid", () => {
+        const { node } = renderObject({
+          extraErrors: { x: { __errors: ['E'] } },
+          uiSchema: { x: { 'ui:help': 'H' } },
+        });
+
+        const typeSelector = elementOf(node, '#root_x__internalTypeSelector');
+        expect(typeSelector).toHaveAttribute('aria-describedby', 'root_x__error root_x__help');
+        expect(typeSelector).toHaveAttribute('aria-invalid', 'true');
+        const group = elementOf(node, 'fieldset#root_x');
+        expect(group).toHaveAttribute('aria-describedby', 'root_x__error root_x__help root_x__description');
+        expect(group).not.toHaveAttribute('aria-invalid');
+      });
+    });
+
+    it.each<[string, unknown]>([
+      ['an object', { a: 'q' }],
+      ['an array', ['q']],
+    ])('titles %s held by a schema naming no type by its legend, below the type selector', (_, value) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { x: { title: 'XTitle', description: 'XDesc' } } },
+        initialFormData: { x: value },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(0);
+      const legend = elementOf(node, 'legend');
+      expect(legend).toHaveTextContent('XTitle');
+      expect(elementOf(node, '#root_x__internalTypeSelector').compareDocumentPosition(legend)).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+      expect(legend.compareDocumentPosition(screen.getByText('XDesc'))).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
+
+    it("leaves the type selector beside a string undescribed by the field's errors when its label is hidden", () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { x: { type: ['string', 'object'] } } },
+        initialFormData: { x: 'q' },
+        uiSchema: { x: { 'ui:label': false } },
+        extraErrors: { x: { __errors: ['E'] } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelector = elementOf(node, '#root_x__internalTypeSelector');
+      expect(typeSelector).not.toHaveAttribute('aria-describedby');
+      expect(typeSelector).not.toHaveAttribute('aria-invalid');
+      expect(elementOf(node, 'input#root_x')).toHaveAttribute('aria-invalid', 'true');
     });
 
     it('renders the first type when useFallbackUiForUnsupportedType is false', () => {

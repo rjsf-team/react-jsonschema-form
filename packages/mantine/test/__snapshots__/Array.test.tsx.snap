@@ -808,6 +808,7 @@ exports[`array fields > empty errors array 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -1180,6 +1181,7 @@ exports[`array fields > has errors 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -1292,6 +1294,7 @@ exports[`array fields > no errors 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -1414,6 +1417,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     data-fluid="true"
                     data-strategy="block"
                     id="root_0"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
@@ -1696,6 +1700,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     data-fluid="true"
                     data-strategy="block"
                     id="root_1"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
@@ -4028,6 +4033,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     data-fluid="true"
                     data-strategy="block"
                     id="root_0"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
@@ -4310,6 +4316,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     data-fluid="true"
                     data-strategy="block"
                     id="root_1"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
@@ -5096,6 +5103,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                     data-fluid="true"
                     data-strategy="block"
                     id="root_0"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
@@ -5324,6 +5332,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                     data-fluid="true"
                     data-strategy="block"
                     id="root_1"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
@@ -5621,6 +5630,8 @@ exports[`with title and description > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -5739,6 +5750,8 @@ exports[`with title and description > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -6536,6 +6549,8 @@ exports[`with title and description > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -6812,6 +6827,8 @@ exports[`with title and description from both > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -6930,6 +6947,8 @@ exports[`with title and description from both > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -7727,6 +7746,8 @@ exports[`with title and description from both > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -8003,6 +8024,8 @@ exports[`with title and description from uiSchema > array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -8121,6 +8144,8 @@ exports[`with title and description from uiSchema > array icons 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"
@@ -8918,6 +8943,8 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47 mantine-Fieldset-root"
         data-variant="default"
         id="root"

@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
 import { generateWidgets } from '@rjsf/core';
 import type { RegistryWidgetsType, RJSFSchema, UiSchema } from '@rjsf/utils';
+import { besideOptionsId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { isInaccessible, render, screen } from '@testing-library/react';
 
@@ -25,6 +26,9 @@ const CONTROLS = [
   '[role="spinbutton"]',
   '[role="switch"]',
 ].join(', ');
+const GROUP = 'fieldset, [role="group"]';
+/** The ids the group of the field each case renders, a container, may carry: its own, or the one beside its options */
+const CONTAINER_IDS = new Set(['root_field', besideOptionsId('root_field')]);
 const LABELABLE = 'button, input:not([type="hidden"]), meter, output, progress, select, textarea';
 const REFERENCES = [
   'aria-labelledby',
@@ -77,7 +81,10 @@ function expectContract(container: HTMLElement, { presentsNothing }: ContractCas
     for (const id of REFERENCES.flatMap((attribute) => idsIn(element, attribute))) {
       expect(container.querySelector(`[id="${id}"]`), `the element ${id} names`).toBeInTheDocument();
     }
-    if (idsIn(element, 'aria-describedby').some((id) => id.endsWith('__error'))) {
+    if (element.matches(GROUP) && CONTAINER_IDS.has(element.id)) {
+      // A container's group is described by its errors but not marked invalid, which ARIA doesn't allow on a `group`
+      expect(element, `${element.outerHTML} is not invalid`).not.toHaveAttribute('aria-invalid');
+    } else if (idsIn(element, 'aria-describedby').some((id) => id.endsWith('__error'))) {
       // A theme may mark a radio group invalid rather than each radio in it, but no other ancestor stands in
       expect(
         element.matches('[aria-invalid="true"]') || element.closest('[role="radiogroup"][aria-invalid="true"]'),
@@ -100,6 +107,12 @@ function expectContract(container: HTMLElement, { presentsNothing }: ContractCas
   expect(screen.queryAllByText(DESCRIPTION)).toHaveLength(shown);
   expect(screen.queryAllByText(HELP)).toHaveLength(shown);
   expect(screen.queryAllByText(ERROR)).toHaveLength(errored ? shown : 0);
+  if (errored && !presentsNothing) {
+    // Whoever draws the error, it is drawn under an error id, and some element is described by it
+    const errorId = screen.getByText(ERROR).closest('[id$="__error"]')?.id;
+    expect(errorId, 'the id the error is drawn under').toBeDefined();
+    expect(checked(`[aria-describedby~="${errorId}"]`), `the elements ${errorId} describes`).not.toEqual([]);
+  }
 }
 
 /** Pins the presentation contract every theme's fields keep, the same way in core and every theme: an accessible name
@@ -179,7 +192,18 @@ export function presentationContractTests(
         formData: ['north'],
       },
     ],
+    ['an object', { schema: { ...presented, type: 'object', properties: { a: { type: 'string' } } }, formData: {} }],
     ['a fallback value', { schema: presented, formData: 'a' }],
+    // The value draws its own heading below the type selector, whichever type the list names first
+    ...(
+      [
+        ['string', 'object'],
+        ['object', 'string'],
+      ] as const
+    ).map((type): [string, ContractCase] => [
+      `a type list naming ${type[0]} first, holding an object`,
+      { schema: { ...presented, type: [...type], properties: { a: { type: 'string' } } }, formData: { a: 'x' } },
+    ]),
   ];
 
   describe('every field keeps the presentation contract', () => {

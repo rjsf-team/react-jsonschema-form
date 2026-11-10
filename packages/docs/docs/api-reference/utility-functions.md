@@ -1174,6 +1174,23 @@ Returns `undefined` when a valid discriminator is not present.
 
 - string | undefined: The `discriminator.propertyName` if it exists in the schema, otherwise `undefined`
 
+### getContainerAttributes()
+
+Gets the attributes a container's template spreads onto the group around its title, description and contents, such as an array's or an object's `<fieldset>`, which has no control for its field's errors, description and help to describe: an `aria-labelledby` naming the group by the title the template draws, and an `aria-describedby` listing the ids of those parts that render.
+It never carries `aria-invalid`, which ARIA doesn't allow on a `group`.
+A template whose group isn't a `<fieldset>` also gives it `role="group"`.
+The `aria-labelledby` names the element the title is drawn under, so a custom title template must draw it under [titleId()](#titleid) of the `id` it is given.
+
+#### Parameters
+
+- presentation: FieldPresentation | undefined - The plan of the container's field, if it has one
+- id: string - The id of the container's field, which its title is drawn under
+- [title]: string | undefined - The title the template draws, if any
+
+#### Returns
+
+- Pick&lt;ControlAttributes, 'aria-labelledby' | 'aria-describedby'>: The `aria-labelledby` and `aria-describedby`, each left out when there is nothing to say
+
 ### getControlAriaLabel()
 
 Gets the `aria-label` of a control that takes no name from what it displays, such as a combobox trigger: the `aria-label` its caller or its field's plan gives it, else none where a label names it, either the one the widget draws itself, as [widgetDrawsLabelText()](#widgetdrawslabeltext) says, or one the `FieldTemplate` draws, as [isNamedByTemplateLabel()](#isnamedbytemplatelabel) says, else the name [getControlFallbackName()](#getcontrolfallbackname) gives it.

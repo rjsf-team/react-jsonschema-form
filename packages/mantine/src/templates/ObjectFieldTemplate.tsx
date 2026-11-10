@@ -15,6 +15,7 @@ import {
   getUiOptions,
   titleDrawsOptionalDataControl,
   titleId,
+  getContainerAttributes,
 } from '@rjsf/utils';
 
 import { renderErrors } from '../utils.tsx';
@@ -60,7 +61,7 @@ export default function ObjectFieldTemplate<
   const errors = renderErrors(id, getErrorsToDraw<T, S, F>(props));
 
   return (
-    <Container id={id} p={0} fluid>
+    <Container id={id} role='group' {...getContainerAttributes(presentation, id, title)} p={0} fluid>
       {title && (
         <TitleFieldTemplate
           id={titleId(id)}

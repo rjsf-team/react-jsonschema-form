@@ -159,6 +159,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -177,6 +178,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_tasks__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-object m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_tasks"
@@ -215,10 +217,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                           class="rjsf-field rjsf-field-object"
                         >
                           <div
+                            aria-labelledby="root_tasks_0__title"
                             class="m_7485cace mantine-Container-root"
                             data-fluid="true"
                             data-strategy="block"
                             id="root_tasks_0"
+                            role="group"
                             style="padding: 0rem;"
                           >
                             <h3
@@ -478,10 +482,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                           class="rjsf-field rjsf-field-object"
                         >
                           <div
+                            aria-labelledby="root_tasks_1__title"
                             class="m_7485cace mantine-Container-root"
                             data-fluid="true"
                             data-strategy="block"
                             id="root_tasks_1"
+                            role="group"
                             style="padding: 0rem;"
                           >
                             <h3
@@ -824,6 +830,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -842,6 +849,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_tags__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_tags"
@@ -1305,6 +1313,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -1543,6 +1552,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -1561,10 +1571,12 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_person__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_person"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -1670,10 +1682,12 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_person_address__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_person_address"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -1830,6 +1844,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -2014,6 +2029,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -2236,6 +2252,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -2482,6 +2499,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -2579,6 +2597,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -2597,6 +2616,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_tasks__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-object m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_tasks"
@@ -2635,10 +2655,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                           class="rjsf-field rjsf-field-object"
                         >
                           <div
+                            aria-labelledby="root_tasks_0__title"
                             class="m_7485cace mantine-Container-root"
                             data-fluid="true"
                             data-strategy="block"
                             id="root_tasks_0"
+                            role="group"
                             style="padding: 0rem;"
                           >
                             <h3
@@ -2898,10 +2920,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                           class="rjsf-field rjsf-field-object"
                         >
                           <div
+                            aria-labelledby="root_tasks_1__title"
                             class="m_7485cace mantine-Container-root"
                             data-fluid="true"
                             data-strategy="block"
                             id="root_tasks_1"
+                            role="group"
                             style="padding: 0rem;"
                           >
                             <h3
@@ -3244,6 +3268,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -3262,6 +3287,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_tags__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_tags"
@@ -3725,6 +3751,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -3743,10 +3770,12 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_person__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_person"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -3852,10 +3881,12 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_person_address__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_person_address"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -4012,6 +4043,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -4234,6 +4266,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -4640,6 +4673,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -6188,10 +6222,13 @@ exports[`single fields > Cyclic schema 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -6229,10 +6266,13 @@ exports[`single fields > Cyclic schema 1`] = `
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-describedby="root_child__description"
+                aria-labelledby="root_child__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_child"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -7608,6 +7648,7 @@ exports[`single fields > field with description 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -7723,6 +7764,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -7838,6 +7880,7 @@ exports[`single fields > field with markdown description 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -7959,6 +8002,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -8531,6 +8575,7 @@ exports[`single fields > hidden field 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -8929,10 +8974,12 @@ exports[`single fields > optional data controls > does not show optional control
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -8962,10 +9009,12 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObjectOptional__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -9033,10 +9082,12 @@ exports[`single fields > optional data controls > does not show optional control
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObjectOptional"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -9108,10 +9159,12 @@ exports[`single fields > optional data controls > does not show optional control
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_nestedObjectOptional_deepObject__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObject"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -9190,6 +9243,7 @@ exports[`single fields > optional data controls > does not show optional control
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArrayOptional"
@@ -9265,6 +9319,7 @@ exports[`single fields > optional data controls > does not show optional control
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArrayOptional2"
@@ -9340,6 +9395,7 @@ exports[`single fields > optional data controls > does not show optional control
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArray__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArray"
@@ -9426,6 +9482,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArrayOptional__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArrayOptional"
@@ -9501,10 +9558,12 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObject__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -9583,6 +9642,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArray__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArray"
@@ -9844,6 +9904,7 @@ exports[`single fields > optional data controls > does not show optional control
                     data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
@@ -10185,10 +10246,12 @@ exports[`single fields > optional data controls > does not show optional control
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -10218,10 +10281,12 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObjectOptional__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -10292,10 +10357,12 @@ exports[`single fields > optional data controls > does not show optional control
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObjectOptional"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -10370,10 +10437,12 @@ exports[`single fields > optional data controls > does not show optional control
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_nestedObjectOptional_deepObject__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObject"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -10455,6 +10524,7 @@ exports[`single fields > optional data controls > does not show optional control
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArrayOptional"
@@ -10532,6 +10602,7 @@ exports[`single fields > optional data controls > does not show optional control
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArrayOptional2"
@@ -10609,6 +10680,7 @@ exports[`single fields > optional data controls > does not show optional control
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArray__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArray"
@@ -10697,6 +10769,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArrayOptional__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArrayOptional"
@@ -10774,10 +10847,12 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObject__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -10859,6 +10934,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArray__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArray"
@@ -11127,6 +11203,7 @@ exports[`single fields > optional data controls > does not show optional control
                     data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
@@ -11475,10 +11552,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -11508,10 +11587,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObjectOptional__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
+                role="group"
                 style="padding: 0rem;"
               >
                 <style
@@ -11648,10 +11729,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObjectOptional"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <style
@@ -11753,10 +11836,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_nestedObjectOptional_deepObject__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObject"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -11835,6 +11920,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArrayOptional"
@@ -11910,6 +11996,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArrayOptional2"
@@ -12011,6 +12098,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArray__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArray"
@@ -12097,6 +12185,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArrayOptional__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArrayOptional"
@@ -12342,10 +12431,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObject__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -12424,6 +12515,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArray__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArray"
@@ -12513,10 +12605,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-field rjsf-field-object"
                 >
                   <div
+                    aria-labelledby="root_optionalObjectWithOneofs__title"
                     class="m_7485cace mantine-Container-root"
                     data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
@@ -12627,6 +12721,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-field rjsf-field-array"
                 >
                   <fieldset
+                    aria-labelledby="root_optionalArrayWithAnyofs__title"
                     class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field m_e9408a47 mantine-Fieldset-root"
                     data-variant="default"
                     id="root_optionalArrayWithAnyofs"
@@ -12769,10 +12864,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -12802,10 +12899,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObjectOptional__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -12876,10 +12975,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_nestedObjectOptional_deepObjectOptional__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObjectOptional"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -12918,10 +13019,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="rjsf-field rjsf-field-object"
                     >
                       <div
+                        aria-labelledby="root_nestedObjectOptional_deepObject__title"
                         class="m_7485cace mantine-Container-root"
                         data-fluid="true"
                         data-strategy="block"
                         id="root_nestedObjectOptional_deepObject"
+                        role="group"
                         style="padding: 0rem;"
                       >
                         <h3
@@ -13003,6 +13106,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArrayOptional__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArrayOptional"
@@ -13080,6 +13184,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArrayOptional2__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArrayOptional2"
@@ -13118,6 +13223,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       class="rjsf-field rjsf-field-array"
                     >
                       <fieldset
+                        aria-labelledby="root_nestedObjectOptional_deepArray__title"
                         class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                         data-variant="default"
                         id="root_nestedObjectOptional_deepArray"
@@ -13206,6 +13312,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArrayOptional__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArrayOptional"
@@ -13389,10 +13496,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObject__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -13474,6 +13583,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArray__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArray"
@@ -13565,10 +13675,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-field rjsf-field-object"
                 >
                   <div
+                    aria-labelledby="root_optionalObjectWithOneofs__title"
                     class="m_7485cace mantine-Container-root"
                     data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <h3
@@ -13616,6 +13728,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   class="rjsf-field rjsf-field-array"
                 >
                   <fieldset
+                    aria-labelledby="root_optionalArrayWithAnyofs__title"
                     class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field m_e9408a47 mantine-Fieldset-root"
                     data-variant="default"
                     id="root_optionalArrayWithAnyofs"
@@ -13695,10 +13808,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -13728,10 +13843,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObjectOptional__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
+                role="group"
                 style="padding: 0rem;"
               >
                 <style
@@ -13833,6 +13950,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArrayOptional__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArrayOptional"
@@ -13934,10 +14052,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObject__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -14016,6 +14136,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArray__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArray"
@@ -14105,10 +14226,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   class="rjsf-field rjsf-field-object"
                 >
                   <div
+                    aria-labelledby="root_optionalObjectWithOneofs__title"
                     class="m_7485cace mantine-Container-root"
                     data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <style
@@ -14219,6 +14342,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   class="rjsf-field rjsf-field-array"
                 >
                   <fieldset
+                    aria-labelledby="root_optionalArrayWithAnyofs__title"
                     class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field m_e9408a47 mantine-Fieldset-root"
                     data-variant="default"
                     id="root_optionalArrayWithAnyofs"
@@ -14361,10 +14485,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -14394,10 +14520,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObjectOptional__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObjectOptional"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -14436,6 +14564,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArrayOptional__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArrayOptional"
@@ -14474,10 +14603,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-field rjsf-field-object"
             >
               <div
+                aria-labelledby="root_nestedObject__title"
                 class="m_7485cace mantine-Container-root"
                 data-fluid="true"
                 data-strategy="block"
                 id="root_nestedObject"
+                role="group"
                 style="padding: 0rem;"
               >
                 <h3
@@ -14559,6 +14690,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               class="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="root_nestedArray__title"
                 class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47 mantine-Fieldset-root"
                 data-variant="default"
                 id="root_nestedArray"
@@ -14650,10 +14782,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   class="rjsf-field rjsf-field-object"
                 >
                   <div
+                    aria-labelledby="root_optionalObjectWithOneofs__title"
                     class="m_7485cace mantine-Container-root"
                     data-fluid="true"
                     data-strategy="block"
                     id="root_optionalObjectWithOneofs"
+                    role="group"
                     style="padding: 0rem;"
                   >
                     <h3
@@ -14701,6 +14835,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   class="rjsf-field rjsf-field-array"
                 >
                   <fieldset
+                    aria-labelledby="root_optionalArrayWithAnyofs__title"
                     class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field m_e9408a47 mantine-Fieldset-root"
                     data-variant="default"
                     id="root_optionalArrayWithAnyofs"
@@ -15234,6 +15369,7 @@ exports[`single fields > required checkbox field 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -15350,6 +15486,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style
@@ -20247,10 +20384,12 @@ exports[`single fields > title field 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <div
+        aria-labelledby="root__title"
         class="m_7485cace mantine-Container-root"
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <h3
@@ -20661,6 +20800,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
         data-fluid="true"
         data-strategy="block"
         id="root"
+        role="group"
         style="padding: 0rem;"
       >
         <style

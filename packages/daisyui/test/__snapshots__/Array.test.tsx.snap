@@ -13,6 +13,8 @@ exports[`array fields > array 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -82,6 +84,8 @@ exports[`array fields > array icons 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -520,6 +524,8 @@ exports[`array fields > empty errors array 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -587,6 +593,8 @@ exports[`array fields > fixed array 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -687,6 +695,8 @@ exports[`array fields > has errors 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -768,6 +778,8 @@ exports[`array fields > no errors 1`] = `
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
+          id="root"
+          role="group"
         >
           <div
             class="grid grid-cols-1 gap-4 "
@@ -835,6 +847,8 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -853,6 +867,8 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   >
                     <div
                       class="form-control "
+                      id="root_0"
+                      role="group"
                     >
                       <div
                         class="grid grid-cols-1 gap-4 mb-4"
@@ -1022,6 +1038,8 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   >
                     <div
                       class="form-control "
+                      id="root_1"
+                      role="group"
                     >
                       <div
                         class="grid grid-cols-1 gap-4 mb-4"
@@ -1237,6 +1255,8 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -1629,6 +1649,8 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -1734,6 +1756,8 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-array"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -1752,6 +1776,8 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   >
                     <div
                       class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                      id="root_0"
+                      role="group"
                     >
                       <div
                         class="flex flex-col gap-4"
@@ -2079,6 +2105,8 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   >
                     <div
                       class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                      id="root_1"
+                      role="group"
                     >
                       <div
                         class="flex flex-col gap-4"
@@ -2452,6 +2480,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -2470,6 +2500,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   >
                     <div
                       class="form-control "
+                      id="root_0"
+                      role="group"
                     >
                       <div
                         class="grid grid-cols-1 gap-4 mb-4"
@@ -2639,6 +2671,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   >
                     <div
                       class="form-control "
+                      id="root_1"
+                      role="group"
                     >
                       <div
                         class="grid grid-cols-1 gap-4 mb-4"
@@ -2854,6 +2888,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -3116,6 +3152,8 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -3134,6 +3172,8 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                   >
                     <div
                       class="form-control "
+                      id="root_0"
+                      role="group"
                     >
                       <div
                         class="grid grid-cols-1 gap-4 mb-4"
@@ -3289,6 +3329,8 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                   >
                     <div
                       class="form-control "
+                      id="root_1"
+                      role="group"
                     >
                       <div
                         class="grid grid-cols-1 gap-4 mb-4"
@@ -3489,7 +3531,11 @@ exports[`with title and description > array 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <h3
             class="text-2xl font-bold"
@@ -3573,7 +3619,11 @@ exports[`with title and description > array icons 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <h3
             class="text-2xl font-bold"
@@ -4102,7 +4152,11 @@ exports[`with title and description > fixed array 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
+          id="root"
+          role="group"
         >
           <h3
             class="text-2xl font-bold"
@@ -4255,7 +4309,11 @@ exports[`with title and description from both > array 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <h3
             class="text-2xl font-bold"
@@ -4339,7 +4397,11 @@ exports[`with title and description from both > array icons 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <h3
             class="text-2xl font-bold"
@@ -4868,7 +4930,11 @@ exports[`with title and description from both > fixed array 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
+          id="root"
+          role="group"
         >
           <h3
             class="text-2xl font-bold"
@@ -5021,7 +5087,11 @@ exports[`with title and description from uiSchema > array 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <h3
             class="text-2xl font-bold"
@@ -5105,7 +5175,11 @@ exports[`with title and description from uiSchema > array icons 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <h3
             class="text-2xl font-bold"
@@ -5634,7 +5708,11 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
         class="field-template mb-3"
       >
         <div
+          aria-describedby="root__description"
+          aria-labelledby="root__title"
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
+          id="root"
+          role="group"
         >
           <h3
             class="text-2xl font-bold"
@@ -5788,6 +5866,8 @@ exports[`with title and description with global label off > array 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -5857,6 +5937,8 @@ exports[`with title and description with global label off > array icons 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"
@@ -6299,6 +6381,8 @@ exports[`with title and description with global label off > fixed array 1`] = `
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
+          id="root"
+          role="group"
         >
           <div
             class="flex flex-col gap-4"

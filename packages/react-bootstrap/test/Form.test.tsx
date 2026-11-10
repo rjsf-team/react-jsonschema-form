@@ -12,7 +12,7 @@ import {
 import type { FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { bracketNameGenerator, errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { ThemeProvider } from 'react-bootstrap';
 
@@ -455,7 +455,9 @@ describe('react-bootstrap names a control whose label ui:label false hides', () 
     );
 
     expect(screen.queryByText('Pet')).toBeNull();
-    expect(screen.getByRole(role)).toHaveAccessibleName('Pet');
+    // The root object is a group of its own, the first in the form, which holds the field
+    const rootGroup = elementOf(container, '[role="group"]', HTMLElement);
+    expect(within(rootGroup).getByRole(role)).toHaveAccessibleName('Pet');
     expectReferencesResolve(container);
   });
 });

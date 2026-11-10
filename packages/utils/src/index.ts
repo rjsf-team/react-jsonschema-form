@@ -50,6 +50,7 @@ import getAdditionalKeyAttributes from './getAdditionalKeyAttributes.ts';
 import getArrayDescription from './getArrayDescription.ts';
 import getBaseInputProps from './getBaseInputProps.ts';
 import getChangedFields from './getChangedFields.ts';
+import getContainerAttributes from './getContainerAttributes.ts';
 import getControlAriaLabel from './getControlAriaLabel.ts';
 import getControlAttributes from './getControlAttributes.ts';
 import getControlDescribedBy from './getControlDescribedBy.ts';
@@ -325,6 +326,7 @@ export {
   getArrayDescription,
   getBaseInputProps,
   getChangedFields,
+  getContainerAttributes,
   getControlAriaLabel,
   getControlAttributes,
   getControlDescribedBy,

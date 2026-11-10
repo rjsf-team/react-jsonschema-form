@@ -1,7 +1,14 @@
 import { makeStyles } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getArrayDescription, getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
+import {
+  getArrayDescription,
+  getContainerAttributes,
+  getTemplates,
+  getUiOptions,
+  buttonId,
+  titleDrawsOptionalDataControl,
+} from '@rjsf/utils';
 
 const useStyles = makeStyles({
   arrayItemList: {
@@ -43,7 +50,8 @@ export default function ArrayFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-    <>
+    // A column, as the `Field` around it lays out its parts, so their margins don't collapse into one another
+    <Flex column id={id} role='group' {...getContainerAttributes(presentation, id, title)}>
       <ArrayFieldTitleTemplate
         id={id}
         title={title}
@@ -77,6 +85,6 @@ export default function ArrayFieldTemplate<
           </Flex>
         )}
       </Flex>
-    </>
+    </Flex>
   );
 }

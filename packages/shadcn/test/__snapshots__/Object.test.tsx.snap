@@ -16,6 +16,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_person__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_person"
           >
@@ -69,6 +70,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_person_address__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_person_address"
               >
@@ -516,6 +518,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_tags__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_tags"
           >
@@ -979,6 +982,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root_person__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root_person"
           >
@@ -1032,6 +1036,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               class="flex flex-col gap-2 rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="root_person_address__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_person_address"
               >
@@ -1200,6 +1205,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
           class="flex flex-col gap-2 rjsf-field rjsf-field-array"
         >
           <fieldset
+            aria-labelledby="root_items__title"
             class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
             id="root_items"
           >
@@ -2068,6 +2074,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
               class="rjsf-additional-property-value col-span-6 row-span-full grid grid-cols-1 items-start gap-2 pr-0.5 [&>.rjsf-field-label]:[overflow-wrap:anywhere] has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description])]:[&>:not(:last-child)]:mb-2"
             >
               <fieldset
+                aria-labelledby="root_foo__title"
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string min-w-0 [&>.rjsf-array-item-add]:mt-2 [&>.rjsf-array-item-add]:ms-auto"
                 id="root_foo"
               >
@@ -2604,6 +2611,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
               class="rjsf-additional-property-value col-span-6 row-span-full grid grid-cols-1 items-start gap-2 pr-0.5 [&>.rjsf-field-label]:[overflow-wrap:anywhere] has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description])]:grid-rows-subgrid has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description])]:gap-y-0 has-[>:first-child:is(.rjsf-field-label,.rjsf-field-description,[id$=\\_\\_description])]:[&>:not(:last-child)]:mb-2"
             >
               <fieldset
+                aria-labelledby="root_foo__title"
                 class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
                 id="root_foo"
               >
@@ -3617,6 +3625,7 @@ exports[`object fields > pure anyOf union, with no frame of its own beside the o
           class="flex flex-col gap-2 rjsf-field rjsf-field-object"
         >
           <fieldset
+            aria-labelledby="root__title"
             class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
             id="root"
           >
@@ -3856,6 +3865,8 @@ exports[`object fields > with title and description > additionalProperties 1`] =
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -4045,6 +4056,8 @@ exports[`object fields > with title and description > object 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -4168,6 +4181,8 @@ exports[`object fields > with title and description > show add button and fields
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -4357,6 +4372,8 @@ exports[`object fields > with title and description from both > additionalProper
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -4546,6 +4563,8 @@ exports[`object fields > with title and description from both > object 1`] = `
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -4669,6 +4688,8 @@ exports[`object fields > with title and description from uiSchema > additionalPr
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -4858,6 +4879,8 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >
@@ -4981,6 +5004,8 @@ exports[`object fields > with title and description from uiSchema > show add but
       class="flex flex-col gap-2 rjsf-field rjsf-field-object"
     >
       <fieldset
+        aria-describedby="root__description"
+        aria-labelledby="root__title"
         class="flex min-w-0 flex-col gap-2 [&>.rjsf-object-property-expand]:mt-2 [&>.rjsf-object-property-expand]:ms-auto"
         id="root"
       >

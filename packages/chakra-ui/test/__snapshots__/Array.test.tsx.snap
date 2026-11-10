@@ -150,7 +150,10 @@ exports[`array fields > array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -592,7 +595,10 @@ exports[`array fields > array icons 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -1723,17 +1729,28 @@ exports[`array fields > empty errors array 1`] = `
 }
 
 .emotion-2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: var(--chakra-spacing-4);
+}
+
+.emotion-3 {
   display: grid;
   gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-5 {
+.emotion-6 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1752,7 +1769,7 @@ exports[`array fields > empty errors array 1`] = `
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1772,13 +1789,13 @@ exports[`array fields > empty errors array 1`] = `
     user-select: none;
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-7 {
+  .emotion-8 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -1803,17 +1820,17 @@ exports[`array fields > empty errors array 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-7:is(:focus-visible, [data-focus-visible]) {
+  .emotion-8:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -1822,12 +1839,12 @@ exports[`array fields > empty errors array 1`] = `
   }
 }
 
-.emotion-8 {
+.emotion-9 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -1875,19 +1892,19 @@ exports[`array fields > empty errors array 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-9:is(:focus-visible, [data-focus-visible]) {
+  .emotion-10:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-9 :where(svg) {
+  .emotion-10 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -1895,14 +1912,14 @@ exports[`array fields > empty errors array 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-10:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-9:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-10:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -1927,49 +1944,55 @@ exports[`array fields > empty errors array 1`] = `
         >
           <div
             class="emotion-2"
+            id="root"
+            role="group"
           >
-            <div>
-              <div
-                class="rjsf-field rjsf-field-string"
-              >
-                <fieldset
-                  aria-labelledby=""
-                  class="fieldset__root emotion-0"
-                  data-part="root"
-                  data-scope="fieldset"
+            <div
+              class="emotion-3"
+            >
+              <div>
+                <div
+                  class="rjsf-field rjsf-field-string"
                 >
-                  <div
-                    class="fieldset__content emotion-1"
+                  <fieldset
+                    aria-labelledby=""
+                    class="fieldset__root emotion-0"
+                    data-part="root"
+                    data-scope="fieldset"
                   >
                     <div
-                      class="chakra-field__root emotion-5"
-                      data-part="root"
-                      data-scope="field"
-                      id="field::root_name"
-                      role="group"
+                      class="fieldset__content emotion-1"
                     >
-                      <label
-                        class="chakra-field__label emotion-6"
-                        data-part="label"
+                      <div
+                        class="chakra-field__root emotion-6"
+                        data-part="root"
                         data-scope="field"
-                        for="root_name"
-                        id="field::root_name::label"
+                        id="field::root_name"
+                        role="group"
                       >
-                        name
-                      </label>
-                      <input
-                        class="chakra-input emotion-7"
-                        data-part="input"
-                        data-scope="field"
-                        id="root_name"
-                        name="root_name"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
+                        <label
+                          class="chakra-field__label emotion-7"
+                          data-part="label"
+                          data-scope="field"
+                          for="root_name"
+                          id="field::root_name::label"
+                        >
+                          name
+                        </label>
+                        <input
+                          class="chakra-input emotion-8"
+                          data-part="input"
+                          data-scope="field"
+                          id="root_name"
+                          name="root_name"
+                          placeholder=""
+                          type="text"
+                          value=""
+                        />
+                      </div>
                     </div>
-                  </div>
-                </fieldset>
+                  </fieldset>
+                </div>
               </div>
             </div>
           </div>
@@ -1977,10 +2000,10 @@ exports[`array fields > empty errors array 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-8"
+      class="emotion-9"
     >
       <button
-        class="chakra-button emotion-9"
+        class="chakra-button emotion-10"
         type="submit"
       >
         Submit
@@ -2223,7 +2246,10 @@ exports[`array fields > fixed array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -2522,17 +2548,28 @@ exports[`array fields > has errors 1`] = `
 }
 
 .emotion-10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: var(--chakra-spacing-4);
+}
+
+.emotion-11 {
   display: grid;
   gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-13 {
+.emotion-14 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-14 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2551,7 +2588,7 @@ exports[`array fields > has errors 1`] = `
 }
 
 @layer recipes {
-  .emotion-14 {
+  .emotion-15 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2571,13 +2608,13 @@ exports[`array fields > has errors 1`] = `
     user-select: none;
   }
 
-  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-16 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -2602,17 +2639,17 @@ exports[`array fields > has errors 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-15:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-16:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+  .emotion-16:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -2621,13 +2658,13 @@ exports[`array fields > has errors 1`] = `
   }
 }
 
-.emotion-16 {
+.emotion-17 {
   margin-top: 0;
   display: block;
 }
 
 @layer recipes {
-  .emotion-16 {
+  .emotion-17 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -2644,16 +2681,16 @@ exports[`array fields > has errors 1`] = `
   }
 }
 
-.emotion-17 {
+.emotion-18 {
   display: block;
 }
 
-.emotion-18 {
+.emotion-19 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-19 {
+  .emotion-20 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -2701,19 +2738,19 @@ exports[`array fields > has errors 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-19:is(:focus-visible, [data-focus-visible]) {
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-19 :where(svg) {
+  .emotion-20 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -2721,14 +2758,14 @@ exports[`array fields > has errors 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -2792,68 +2829,74 @@ exports[`array fields > has errors 1`] = `
         >
           <div
             class="emotion-10"
+            id="root"
+            role="group"
           >
-            <div>
-              <div
-                class="rjsf-field rjsf-field-string rjsf-field-error"
-              >
-                <fieldset
-                  aria-labelledby=""
-                  class="fieldset__root emotion-8"
-                  data-invalid=""
-                  data-part="root"
-                  data-scope="fieldset"
+            <div
+              class="emotion-11"
+            >
+              <div>
+                <div
+                  class="rjsf-field rjsf-field-string rjsf-field-error"
                 >
-                  <div
-                    class="fieldset__content emotion-9"
+                  <fieldset
+                    aria-labelledby=""
+                    class="fieldset__root emotion-8"
+                    data-invalid=""
+                    data-part="root"
+                    data-scope="fieldset"
                   >
                     <div
-                      class="chakra-field__root emotion-13"
-                      data-invalid=""
-                      data-part="root"
-                      data-scope="field"
-                      id="field::root_name"
-                      role="group"
+                      class="fieldset__content emotion-9"
                     >
-                      <label
-                        class="chakra-field__label emotion-14"
+                      <div
+                        class="chakra-field__root emotion-14"
                         data-invalid=""
-                        data-part="label"
+                        data-part="root"
                         data-scope="field"
-                        for="root_name"
-                        id="field::root_name::label"
+                        id="field::root_name"
+                        role="group"
                       >
-                        name
-                      </label>
-                      <input
-                        aria-describedby="root_name__error"
-                        aria-invalid="true"
-                        class="chakra-input emotion-15"
-                        data-invalid=""
-                        data-part="input"
-                        data-scope="field"
-                        id="root_name"
-                        name="root_name"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
+                        <label
+                          class="chakra-field__label emotion-15"
+                          data-invalid=""
+                          data-part="label"
+                          data-scope="field"
+                          for="root_name"
+                          id="field::root_name::label"
+                        >
+                          name
+                        </label>
+                        <input
+                          aria-describedby="root_name__error"
+                          aria-invalid="true"
+                          class="chakra-input emotion-16"
+                          data-invalid=""
+                          data-part="input"
+                          data-scope="field"
+                          id="root_name"
+                          name="root_name"
+                          placeholder=""
+                          type="text"
+                          value=""
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <span
-                    aria-live="polite"
-                    class="fieldset__errorText emotion-16"
-                    data-part="error-text"
-                    data-scope="fieldset"
-                    id="root_name__error"
-                  >
                     <span
-                      class="emotion-17"
+                      aria-live="polite"
+                      class="fieldset__errorText emotion-17"
+                      data-part="error-text"
+                      data-scope="fieldset"
+                      id="root_name__error"
                     >
-                      Bad input
+                      <span
+                        class="emotion-18"
+                      >
+                        Bad input
+                      </span>
                     </span>
-                  </span>
-                </fieldset>
+                  </fieldset>
+                </div>
               </div>
             </div>
           </div>
@@ -2861,10 +2904,10 @@ exports[`array fields > has errors 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-18"
+      class="emotion-19"
     >
       <button
-        class="chakra-button emotion-19"
+        class="chakra-button emotion-20"
         type="submit"
       >
         Submit
@@ -2913,17 +2956,28 @@ exports[`array fields > no errors 1`] = `
 }
 
 .emotion-2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: var(--chakra-spacing-4);
+}
+
+.emotion-3 {
   display: grid;
   gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-5 {
+.emotion-6 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-5 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2942,7 +2996,7 @@ exports[`array fields > no errors 1`] = `
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-7 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2962,13 +3016,13 @@ exports[`array fields > no errors 1`] = `
     user-select: none;
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-7 {
+  .emotion-8 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -2993,17 +3047,17 @@ exports[`array fields > no errors 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-7:is(:focus-visible, [data-focus-visible]) {
+  .emotion-8:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -3012,12 +3066,12 @@ exports[`array fields > no errors 1`] = `
   }
 }
 
-.emotion-8 {
+.emotion-9 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-10 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -3065,19 +3119,19 @@ exports[`array fields > no errors 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-9:is(:focus-visible, [data-focus-visible]) {
+  .emotion-10:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-9 :where(svg) {
+  .emotion-10 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -3085,14 +3139,14 @@ exports[`array fields > no errors 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-10:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-9:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-10:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -3117,49 +3171,55 @@ exports[`array fields > no errors 1`] = `
         >
           <div
             class="emotion-2"
+            id="root"
+            role="group"
           >
-            <div>
-              <div
-                class="rjsf-field rjsf-field-string"
-              >
-                <fieldset
-                  aria-labelledby=""
-                  class="fieldset__root emotion-0"
-                  data-part="root"
-                  data-scope="fieldset"
+            <div
+              class="emotion-3"
+            >
+              <div>
+                <div
+                  class="rjsf-field rjsf-field-string"
                 >
-                  <div
-                    class="fieldset__content emotion-1"
+                  <fieldset
+                    aria-labelledby=""
+                    class="fieldset__root emotion-0"
+                    data-part="root"
+                    data-scope="fieldset"
                   >
                     <div
-                      class="chakra-field__root emotion-5"
-                      data-part="root"
-                      data-scope="field"
-                      id="field::root_name"
-                      role="group"
+                      class="fieldset__content emotion-1"
                     >
-                      <label
-                        class="chakra-field__label emotion-6"
-                        data-part="label"
+                      <div
+                        class="chakra-field__root emotion-6"
+                        data-part="root"
                         data-scope="field"
-                        for="root_name"
-                        id="field::root_name::label"
+                        id="field::root_name"
+                        role="group"
                       >
-                        name
-                      </label>
-                      <input
-                        class="chakra-input emotion-7"
-                        data-part="input"
-                        data-scope="field"
-                        id="root_name"
-                        name="root_name"
-                        placeholder=""
-                        type="text"
-                        value=""
-                      />
+                        <label
+                          class="chakra-field__label emotion-7"
+                          data-part="label"
+                          data-scope="field"
+                          for="root_name"
+                          id="field::root_name::label"
+                        >
+                          name
+                        </label>
+                        <input
+                          class="chakra-input emotion-8"
+                          data-part="input"
+                          data-scope="field"
+                          id="root_name"
+                          name="root_name"
+                          placeholder=""
+                          type="text"
+                          value=""
+                        />
+                      </div>
                     </div>
-                  </div>
-                </fieldset>
+                  </fieldset>
+                </div>
               </div>
             </div>
           </div>
@@ -3167,10 +3227,10 @@ exports[`array fields > no errors 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-8"
+      class="emotion-9"
     >
       <button
-        class="chakra-button emotion-9"
+        class="chakra-button emotion-10"
         type="submit"
       >
         Submit
@@ -3243,17 +3303,28 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 }
 
 .emotion-7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: var(--chakra-spacing-4);
+}
+
+.emotion-8 {
   display: grid;
   gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-10 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -3272,7 +3343,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-12 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -3292,13 +3363,13 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     user-select: none;
   }
 
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-13 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -3323,17 +3394,17 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -3342,7 +3413,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
   }
 }
 
-.emotion-18 {
+.emotion-19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -3355,7 +3426,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 }
 
 @layer recipes {
-  .emotion-18 {
+  .emotion-19 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -3368,36 +3439,36 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     flex-direction: row;
   }
 
-  .emotion-18 [data-group-item]:is(:focus-visible, [data-focus-visible]) {
+  .emotion-19 [data-group-item]:is(:focus-visible, [data-focus-visible]) {
     z-index: 1;
   }
 
-  .emotion-18>*[data-first] {
+  .emotion-19>*[data-first] {
     border-start-end-radius: 0!important;
     border-end-end-radius: 0!important;
     -webkit-margin-end: -1px;
     margin-inline-end: -1px;
   }
 
-  .emotion-18>*[data-between] {
+  .emotion-19>*[data-between] {
     border-radius: 0!important;
     -webkit-margin-end: -1px;
     margin-inline-end: -1px;
   }
 
-  .emotion-18>*[data-last] {
+  .emotion-19>*[data-last] {
     border-start-start-radius: 0!important;
     border-end-start-radius: 0!important;
   }
 }
 
-.emotion-19 {
+.emotion-20 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-19 {
+  .emotion-20 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -3445,19 +3516,19 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-19:is(:focus-visible, [data-focus-visible]) {
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-19 :where(svg) {
+  .emotion-20 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -3465,14 +3536,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -3480,20 +3551,20 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
   }
 }
 
-.emotion-19 :where(svg) {
+.emotion-20 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-41 {
+.emotion-43 {
   justify-self: flex-end;
 }
 
-.emotion-42 {
+.emotion-44 {
   margin-top: var(--chakra-spacing-2);
 }
 
 @layer recipes {
-  .emotion-43 {
+  .emotion-45 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -3541,19 +3612,19 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-43:is(:focus-visible, [data-focus-visible]) {
+  .emotion-45:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-43:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-45:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-43 :where(svg) {
+  .emotion-45 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -3561,14 +3632,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-43:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-45:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-43:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-45:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -3576,7 +3647,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
   }
 }
 
-.emotion-44 {
+.emotion-46 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -3595,7 +3666,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -3620,96 +3694,102 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="emotion-7"
+                            id="root_0"
+                            role="group"
                           >
-                            <div>
-                              <div
-                                class="rjsf-field rjsf-field-string"
-                              >
-                                <fieldset
-                                  aria-labelledby=""
-                                  class="fieldset__root emotion-0"
-                                  data-part="root"
-                                  data-scope="fieldset"
+                            <div
+                              class="emotion-8"
+                            >
+                              <div>
+                                <div
+                                  class="rjsf-field rjsf-field-string"
                                 >
-                                  <div
-                                    class="fieldset__content emotion-1"
+                                  <fieldset
+                                    aria-labelledby=""
+                                    class="fieldset__root emotion-0"
+                                    data-part="root"
+                                    data-scope="fieldset"
                                   >
                                     <div
-                                      class="chakra-field__root emotion-10"
-                                      data-part="root"
-                                      data-scope="field"
-                                      id="field::root_0_name"
-                                      role="group"
+                                      class="fieldset__content emotion-1"
                                     >
-                                      <label
-                                        class="chakra-field__label emotion-11"
-                                        data-part="label"
+                                      <div
+                                        class="chakra-field__root emotion-11"
+                                        data-part="root"
                                         data-scope="field"
-                                        for="root_0_name"
-                                        id="field::root_0_name::label"
+                                        id="field::root_0_name"
+                                        role="group"
                                       >
-                                        name
-                                      </label>
-                                      <input
-                                        class="chakra-input emotion-12"
-                                        data-part="input"
-                                        data-scope="field"
-                                        id="root_0_name"
-                                        name="root[0][name]"
-                                        placeholder=""
-                                        type="text"
-                                        value="Item 1"
-                                      />
+                                        <label
+                                          class="chakra-field__label emotion-12"
+                                          data-part="label"
+                                          data-scope="field"
+                                          for="root_0_name"
+                                          id="field::root_0_name::label"
+                                        >
+                                          name
+                                        </label>
+                                        <input
+                                          class="chakra-input emotion-13"
+                                          data-part="input"
+                                          data-scope="field"
+                                          id="root_0_name"
+                                          name="root[0][name]"
+                                          placeholder=""
+                                          type="text"
+                                          value="Item 1"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                </div>
                               </div>
-                            </div>
-                            <div>
-                              <div
-                                class="rjsf-field rjsf-field-number"
-                              >
-                                <fieldset
-                                  aria-labelledby=""
-                                  class="fieldset__root emotion-0"
-                                  data-part="root"
-                                  data-scope="fieldset"
+                              <div>
+                                <div
+                                  class="rjsf-field rjsf-field-number"
                                 >
-                                  <div
-                                    class="fieldset__content emotion-1"
+                                  <fieldset
+                                    aria-labelledby=""
+                                    class="fieldset__root emotion-0"
+                                    data-part="root"
+                                    data-scope="fieldset"
                                   >
                                     <div
-                                      class="chakra-field__root emotion-10"
-                                      data-part="root"
-                                      data-scope="field"
-                                      id="field::root_0_value"
-                                      role="group"
+                                      class="fieldset__content emotion-1"
                                     >
-                                      <label
-                                        class="chakra-field__label emotion-11"
-                                        data-part="label"
+                                      <div
+                                        class="chakra-field__root emotion-11"
+                                        data-part="root"
                                         data-scope="field"
-                                        for="root_0_value"
-                                        id="field::root_0_value::label"
+                                        id="field::root_0_value"
+                                        role="group"
                                       >
-                                        value
-                                      </label>
-                                      <input
-                                        class="chakra-input emotion-12"
-                                        data-part="input"
-                                        data-scope="field"
-                                        id="root_0_value"
-                                        inputmode="decimal"
-                                        name="root[0][value]"
-                                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                                        placeholder=""
-                                        title="Enter a number"
-                                        type="text"
-                                        value="10"
-                                      />
+                                        <label
+                                          class="chakra-field__label emotion-12"
+                                          data-part="label"
+                                          data-scope="field"
+                                          for="root_0_value"
+                                          id="field::root_0_value::label"
+                                        >
+                                          value
+                                        </label>
+                                        <input
+                                          class="chakra-input emotion-13"
+                                          data-part="input"
+                                          data-scope="field"
+                                          id="root_0_value"
+                                          inputmode="decimal"
+                                          name="root[0][value]"
+                                          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                                          placeholder=""
+                                          title="Enter a number"
+                                          type="text"
+                                          value="10"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -3719,11 +3799,11 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   </div>
                   <div>
                     <div
-                      class="chakra-group emotion-18"
+                      class="chakra-group emotion-19"
                     >
                       <button
                         aria-label="Move up"
-                        class="chakra-button rjsf-array-item-move-up emotion-19"
+                        class="chakra-button rjsf-array-item-move-up emotion-20"
                         disabled=""
                         id="root_0__moveUp"
                         title="Move up"
@@ -3752,7 +3832,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       </button>
                       <button
                         aria-label="Move down"
-                        class="chakra-button rjsf-array-item-move-down emotion-19"
+                        class="chakra-button rjsf-array-item-move-down emotion-20"
                         id="root_0__moveDown"
                         title="Move down"
                         type="button"
@@ -3780,7 +3860,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       </button>
                       <button
                         aria-label="Remove"
-                        class="chakra-button rjsf-array-item-remove emotion-19"
+                        class="chakra-button rjsf-array-item-remove emotion-20"
                         id="root_0__remove"
                         title="Remove"
                         type="button"
@@ -3832,96 +3912,102 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="emotion-7"
+                            id="root_1"
+                            role="group"
                           >
-                            <div>
-                              <div
-                                class="rjsf-field rjsf-field-string"
-                              >
-                                <fieldset
-                                  aria-labelledby=""
-                                  class="fieldset__root emotion-0"
-                                  data-part="root"
-                                  data-scope="fieldset"
+                            <div
+                              class="emotion-8"
+                            >
+                              <div>
+                                <div
+                                  class="rjsf-field rjsf-field-string"
                                 >
-                                  <div
-                                    class="fieldset__content emotion-1"
+                                  <fieldset
+                                    aria-labelledby=""
+                                    class="fieldset__root emotion-0"
+                                    data-part="root"
+                                    data-scope="fieldset"
                                   >
                                     <div
-                                      class="chakra-field__root emotion-10"
-                                      data-part="root"
-                                      data-scope="field"
-                                      id="field::root_1_name"
-                                      role="group"
+                                      class="fieldset__content emotion-1"
                                     >
-                                      <label
-                                        class="chakra-field__label emotion-11"
-                                        data-part="label"
+                                      <div
+                                        class="chakra-field__root emotion-11"
+                                        data-part="root"
                                         data-scope="field"
-                                        for="root_1_name"
-                                        id="field::root_1_name::label"
+                                        id="field::root_1_name"
+                                        role="group"
                                       >
-                                        name
-                                      </label>
-                                      <input
-                                        class="chakra-input emotion-12"
-                                        data-part="input"
-                                        data-scope="field"
-                                        id="root_1_name"
-                                        name="root[1][name]"
-                                        placeholder=""
-                                        type="text"
-                                        value="Item 2"
-                                      />
+                                        <label
+                                          class="chakra-field__label emotion-12"
+                                          data-part="label"
+                                          data-scope="field"
+                                          for="root_1_name"
+                                          id="field::root_1_name::label"
+                                        >
+                                          name
+                                        </label>
+                                        <input
+                                          class="chakra-input emotion-13"
+                                          data-part="input"
+                                          data-scope="field"
+                                          id="root_1_name"
+                                          name="root[1][name]"
+                                          placeholder=""
+                                          type="text"
+                                          value="Item 2"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                </div>
                               </div>
-                            </div>
-                            <div>
-                              <div
-                                class="rjsf-field rjsf-field-number"
-                              >
-                                <fieldset
-                                  aria-labelledby=""
-                                  class="fieldset__root emotion-0"
-                                  data-part="root"
-                                  data-scope="fieldset"
+                              <div>
+                                <div
+                                  class="rjsf-field rjsf-field-number"
                                 >
-                                  <div
-                                    class="fieldset__content emotion-1"
+                                  <fieldset
+                                    aria-labelledby=""
+                                    class="fieldset__root emotion-0"
+                                    data-part="root"
+                                    data-scope="fieldset"
                                   >
                                     <div
-                                      class="chakra-field__root emotion-10"
-                                      data-part="root"
-                                      data-scope="field"
-                                      id="field::root_1_value"
-                                      role="group"
+                                      class="fieldset__content emotion-1"
                                     >
-                                      <label
-                                        class="chakra-field__label emotion-11"
-                                        data-part="label"
+                                      <div
+                                        class="chakra-field__root emotion-11"
+                                        data-part="root"
                                         data-scope="field"
-                                        for="root_1_value"
-                                        id="field::root_1_value::label"
+                                        id="field::root_1_value"
+                                        role="group"
                                       >
-                                        value
-                                      </label>
-                                      <input
-                                        class="chakra-input emotion-12"
-                                        data-part="input"
-                                        data-scope="field"
-                                        id="root_1_value"
-                                        inputmode="decimal"
-                                        name="root[1][value]"
-                                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                                        placeholder=""
-                                        title="Enter a number"
-                                        type="text"
-                                        value="20"
-                                      />
+                                        <label
+                                          class="chakra-field__label emotion-12"
+                                          data-part="label"
+                                          data-scope="field"
+                                          for="root_1_value"
+                                          id="field::root_1_value::label"
+                                        >
+                                          value
+                                        </label>
+                                        <input
+                                          class="chakra-input emotion-13"
+                                          data-part="input"
+                                          data-scope="field"
+                                          id="root_1_value"
+                                          inputmode="decimal"
+                                          name="root[1][value]"
+                                          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                                          placeholder=""
+                                          title="Enter a number"
+                                          type="text"
+                                          value="20"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -3931,11 +4017,11 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   </div>
                   <div>
                     <div
-                      class="chakra-group emotion-18"
+                      class="chakra-group emotion-19"
                     >
                       <button
                         aria-label="Move up"
-                        class="chakra-button rjsf-array-item-move-up emotion-19"
+                        class="chakra-button rjsf-array-item-move-up emotion-20"
                         id="root_1__moveUp"
                         title="Move up"
                         type="button"
@@ -3963,7 +4049,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       </button>
                       <button
                         aria-label="Move down"
-                        class="chakra-button rjsf-array-item-move-down emotion-19"
+                        class="chakra-button rjsf-array-item-move-down emotion-20"
                         disabled=""
                         id="root_1__moveDown"
                         title="Move down"
@@ -3992,7 +4078,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       </button>
                       <button
                         aria-label="Remove"
-                        class="chakra-button rjsf-array-item-remove emotion-19"
+                        class="chakra-button rjsf-array-item-remove emotion-20"
                         id="root_1__remove"
                         title="Remove"
                         type="button"
@@ -4026,13 +4112,13 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                 </div>
               </div>
               <div
-                class="emotion-41"
+                class="emotion-43"
               >
                 <div
-                  class="emotion-42"
+                  class="emotion-44"
                 >
                   <button
-                    class="chakra-button rjsf-array-item-add emotion-43"
+                    class="chakra-button rjsf-array-item-add emotion-45"
                     id="root__add"
                     type="button"
                   >
@@ -4066,10 +4152,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-44"
+      class="emotion-46"
     >
       <button
-        class="chakra-button emotion-43"
+        class="chakra-button emotion-45"
         type="submit"
       >
         Submit
@@ -4462,7 +4548,10 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -5821,7 +5910,10 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -6388,7 +6480,10 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -6411,7 +6506,10 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         <div
                           class="fieldset__content emotion-1"
                         >
-                          <div>
+                          <div
+                            id="root_0"
+                            role="group"
+                          >
                             <div
                               class="emotion-2"
                             >
@@ -6845,7 +6943,10 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                         <div
                           class="fieldset__content emotion-1"
                         >
-                          <div>
+                          <div
+                            id="root_1"
+                            role="group"
+                          >
                             <div
                               class="emotion-2"
                             >
@@ -7379,17 +7480,28 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
 }
 
 .emotion-7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: var(--chakra-spacing-4);
+}
+
+.emotion-8 {
   display: grid;
   gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-10 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -7408,7 +7520,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-12 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -7428,13 +7540,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     user-select: none;
   }
 
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-13 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -7459,17 +7571,17 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -7478,7 +7590,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
   }
 }
 
-.emotion-18 {
+.emotion-19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -7491,7 +7603,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
 }
 
 @layer recipes {
-  .emotion-18 {
+  .emotion-19 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -7504,36 +7616,36 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     flex-direction: row;
   }
 
-  .emotion-18 [data-group-item]:is(:focus-visible, [data-focus-visible]) {
+  .emotion-19 [data-group-item]:is(:focus-visible, [data-focus-visible]) {
     z-index: 1;
   }
 
-  .emotion-18>*[data-first] {
+  .emotion-19>*[data-first] {
     border-start-end-radius: 0!important;
     border-end-end-radius: 0!important;
     -webkit-margin-end: -1px;
     margin-inline-end: -1px;
   }
 
-  .emotion-18>*[data-between] {
+  .emotion-19>*[data-between] {
     border-radius: 0!important;
     -webkit-margin-end: -1px;
     margin-inline-end: -1px;
   }
 
-  .emotion-18>*[data-last] {
+  .emotion-19>*[data-last] {
     border-start-start-radius: 0!important;
     border-end-start-radius: 0!important;
   }
 }
 
-.emotion-19 {
+.emotion-20 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-19 {
+  .emotion-20 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -7581,19 +7693,19 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-19:is(:focus-visible, [data-focus-visible]) {
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-19 :where(svg) {
+  .emotion-20 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -7601,14 +7713,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -7616,20 +7728,20 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
   }
 }
 
-.emotion-19 :where(svg) {
+.emotion-20 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-41 {
+.emotion-43 {
   justify-self: flex-end;
 }
 
-.emotion-42 {
+.emotion-44 {
   margin-top: var(--chakra-spacing-2);
 }
 
 @layer recipes {
-  .emotion-43 {
+  .emotion-45 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -7677,19 +7789,19 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-43:is(:focus-visible, [data-focus-visible]) {
+  .emotion-45:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-43:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-45:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-43 :where(svg) {
+  .emotion-45 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -7697,14 +7809,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-43:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-45:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-43:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-45:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -7712,7 +7824,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
   }
 }
 
-.emotion-44 {
+.emotion-46 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -7731,7 +7843,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -7756,96 +7871,102 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="emotion-7"
+                            id="root_0"
+                            role="group"
                           >
-                            <div>
-                              <div
-                                class="rjsf-field rjsf-field-string"
-                              >
-                                <fieldset
-                                  aria-labelledby=""
-                                  class="fieldset__root emotion-0"
-                                  data-part="root"
-                                  data-scope="fieldset"
+                            <div
+                              class="emotion-8"
+                            >
+                              <div>
+                                <div
+                                  class="rjsf-field rjsf-field-string"
                                 >
-                                  <div
-                                    class="fieldset__content emotion-1"
+                                  <fieldset
+                                    aria-labelledby=""
+                                    class="fieldset__root emotion-0"
+                                    data-part="root"
+                                    data-scope="fieldset"
                                   >
                                     <div
-                                      class="chakra-field__root emotion-10"
-                                      data-part="root"
-                                      data-scope="field"
-                                      id="field::root_0_name"
-                                      role="group"
+                                      class="fieldset__content emotion-1"
                                     >
-                                      <label
-                                        class="chakra-field__label emotion-11"
-                                        data-part="label"
+                                      <div
+                                        class="chakra-field__root emotion-11"
+                                        data-part="root"
                                         data-scope="field"
-                                        for="root_0_name"
-                                        id="field::root_0_name::label"
+                                        id="field::root_0_name"
+                                        role="group"
                                       >
-                                        name
-                                      </label>
-                                      <input
-                                        class="chakra-input emotion-12"
-                                        data-part="input"
-                                        data-scope="field"
-                                        id="root_0_name"
-                                        name="root.0.name"
-                                        placeholder=""
-                                        type="text"
-                                        value="Item 1"
-                                      />
+                                        <label
+                                          class="chakra-field__label emotion-12"
+                                          data-part="label"
+                                          data-scope="field"
+                                          for="root_0_name"
+                                          id="field::root_0_name::label"
+                                        >
+                                          name
+                                        </label>
+                                        <input
+                                          class="chakra-input emotion-13"
+                                          data-part="input"
+                                          data-scope="field"
+                                          id="root_0_name"
+                                          name="root.0.name"
+                                          placeholder=""
+                                          type="text"
+                                          value="Item 1"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                </div>
                               </div>
-                            </div>
-                            <div>
-                              <div
-                                class="rjsf-field rjsf-field-number"
-                              >
-                                <fieldset
-                                  aria-labelledby=""
-                                  class="fieldset__root emotion-0"
-                                  data-part="root"
-                                  data-scope="fieldset"
+                              <div>
+                                <div
+                                  class="rjsf-field rjsf-field-number"
                                 >
-                                  <div
-                                    class="fieldset__content emotion-1"
+                                  <fieldset
+                                    aria-labelledby=""
+                                    class="fieldset__root emotion-0"
+                                    data-part="root"
+                                    data-scope="fieldset"
                                   >
                                     <div
-                                      class="chakra-field__root emotion-10"
-                                      data-part="root"
-                                      data-scope="field"
-                                      id="field::root_0_value"
-                                      role="group"
+                                      class="fieldset__content emotion-1"
                                     >
-                                      <label
-                                        class="chakra-field__label emotion-11"
-                                        data-part="label"
+                                      <div
+                                        class="chakra-field__root emotion-11"
+                                        data-part="root"
                                         data-scope="field"
-                                        for="root_0_value"
-                                        id="field::root_0_value::label"
+                                        id="field::root_0_value"
+                                        role="group"
                                       >
-                                        value
-                                      </label>
-                                      <input
-                                        class="chakra-input emotion-12"
-                                        data-part="input"
-                                        data-scope="field"
-                                        id="root_0_value"
-                                        inputmode="decimal"
-                                        name="root.0.value"
-                                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                                        placeholder=""
-                                        title="Enter a number"
-                                        type="text"
-                                        value="10"
-                                      />
+                                        <label
+                                          class="chakra-field__label emotion-12"
+                                          data-part="label"
+                                          data-scope="field"
+                                          for="root_0_value"
+                                          id="field::root_0_value::label"
+                                        >
+                                          value
+                                        </label>
+                                        <input
+                                          class="chakra-input emotion-13"
+                                          data-part="input"
+                                          data-scope="field"
+                                          id="root_0_value"
+                                          inputmode="decimal"
+                                          name="root.0.value"
+                                          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                                          placeholder=""
+                                          title="Enter a number"
+                                          type="text"
+                                          value="10"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -7855,11 +7976,11 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   </div>
                   <div>
                     <div
-                      class="chakra-group emotion-18"
+                      class="chakra-group emotion-19"
                     >
                       <button
                         aria-label="Move up"
-                        class="chakra-button rjsf-array-item-move-up emotion-19"
+                        class="chakra-button rjsf-array-item-move-up emotion-20"
                         disabled=""
                         id="root_0__moveUp"
                         title="Move up"
@@ -7888,7 +8009,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       </button>
                       <button
                         aria-label="Move down"
-                        class="chakra-button rjsf-array-item-move-down emotion-19"
+                        class="chakra-button rjsf-array-item-move-down emotion-20"
                         id="root_0__moveDown"
                         title="Move down"
                         type="button"
@@ -7916,7 +8037,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       </button>
                       <button
                         aria-label="Remove"
-                        class="chakra-button rjsf-array-item-remove emotion-19"
+                        class="chakra-button rjsf-array-item-remove emotion-20"
                         id="root_0__remove"
                         title="Remove"
                         type="button"
@@ -7968,96 +8089,102 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="emotion-7"
+                            id="root_1"
+                            role="group"
                           >
-                            <div>
-                              <div
-                                class="rjsf-field rjsf-field-string"
-                              >
-                                <fieldset
-                                  aria-labelledby=""
-                                  class="fieldset__root emotion-0"
-                                  data-part="root"
-                                  data-scope="fieldset"
+                            <div
+                              class="emotion-8"
+                            >
+                              <div>
+                                <div
+                                  class="rjsf-field rjsf-field-string"
                                 >
-                                  <div
-                                    class="fieldset__content emotion-1"
+                                  <fieldset
+                                    aria-labelledby=""
+                                    class="fieldset__root emotion-0"
+                                    data-part="root"
+                                    data-scope="fieldset"
                                   >
                                     <div
-                                      class="chakra-field__root emotion-10"
-                                      data-part="root"
-                                      data-scope="field"
-                                      id="field::root_1_name"
-                                      role="group"
+                                      class="fieldset__content emotion-1"
                                     >
-                                      <label
-                                        class="chakra-field__label emotion-11"
-                                        data-part="label"
+                                      <div
+                                        class="chakra-field__root emotion-11"
+                                        data-part="root"
                                         data-scope="field"
-                                        for="root_1_name"
-                                        id="field::root_1_name::label"
+                                        id="field::root_1_name"
+                                        role="group"
                                       >
-                                        name
-                                      </label>
-                                      <input
-                                        class="chakra-input emotion-12"
-                                        data-part="input"
-                                        data-scope="field"
-                                        id="root_1_name"
-                                        name="root.1.name"
-                                        placeholder=""
-                                        type="text"
-                                        value="Item 2"
-                                      />
+                                        <label
+                                          class="chakra-field__label emotion-12"
+                                          data-part="label"
+                                          data-scope="field"
+                                          for="root_1_name"
+                                          id="field::root_1_name::label"
+                                        >
+                                          name
+                                        </label>
+                                        <input
+                                          class="chakra-input emotion-13"
+                                          data-part="input"
+                                          data-scope="field"
+                                          id="root_1_name"
+                                          name="root.1.name"
+                                          placeholder=""
+                                          type="text"
+                                          value="Item 2"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                </div>
                               </div>
-                            </div>
-                            <div>
-                              <div
-                                class="rjsf-field rjsf-field-number"
-                              >
-                                <fieldset
-                                  aria-labelledby=""
-                                  class="fieldset__root emotion-0"
-                                  data-part="root"
-                                  data-scope="fieldset"
+                              <div>
+                                <div
+                                  class="rjsf-field rjsf-field-number"
                                 >
-                                  <div
-                                    class="fieldset__content emotion-1"
+                                  <fieldset
+                                    aria-labelledby=""
+                                    class="fieldset__root emotion-0"
+                                    data-part="root"
+                                    data-scope="fieldset"
                                   >
                                     <div
-                                      class="chakra-field__root emotion-10"
-                                      data-part="root"
-                                      data-scope="field"
-                                      id="field::root_1_value"
-                                      role="group"
+                                      class="fieldset__content emotion-1"
                                     >
-                                      <label
-                                        class="chakra-field__label emotion-11"
-                                        data-part="label"
+                                      <div
+                                        class="chakra-field__root emotion-11"
+                                        data-part="root"
                                         data-scope="field"
-                                        for="root_1_value"
-                                        id="field::root_1_value::label"
+                                        id="field::root_1_value"
+                                        role="group"
                                       >
-                                        value
-                                      </label>
-                                      <input
-                                        class="chakra-input emotion-12"
-                                        data-part="input"
-                                        data-scope="field"
-                                        id="root_1_value"
-                                        inputmode="decimal"
-                                        name="root.1.value"
-                                        pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
-                                        placeholder=""
-                                        title="Enter a number"
-                                        type="text"
-                                        value="20"
-                                      />
+                                        <label
+                                          class="chakra-field__label emotion-12"
+                                          data-part="label"
+                                          data-scope="field"
+                                          for="root_1_value"
+                                          id="field::root_1_value::label"
+                                        >
+                                          value
+                                        </label>
+                                        <input
+                                          class="chakra-input emotion-13"
+                                          data-part="input"
+                                          data-scope="field"
+                                          id="root_1_value"
+                                          inputmode="decimal"
+                                          name="root.1.value"
+                                          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
+                                          placeholder=""
+                                          title="Enter a number"
+                                          type="text"
+                                          value="20"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -8067,11 +8194,11 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   </div>
                   <div>
                     <div
-                      class="chakra-group emotion-18"
+                      class="chakra-group emotion-19"
                     >
                       <button
                         aria-label="Move up"
-                        class="chakra-button rjsf-array-item-move-up emotion-19"
+                        class="chakra-button rjsf-array-item-move-up emotion-20"
                         id="root_1__moveUp"
                         title="Move up"
                         type="button"
@@ -8099,7 +8226,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       </button>
                       <button
                         aria-label="Move down"
-                        class="chakra-button rjsf-array-item-move-down emotion-19"
+                        class="chakra-button rjsf-array-item-move-down emotion-20"
                         disabled=""
                         id="root_1__moveDown"
                         title="Move down"
@@ -8128,7 +8255,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       </button>
                       <button
                         aria-label="Remove"
-                        class="chakra-button rjsf-array-item-remove emotion-19"
+                        class="chakra-button rjsf-array-item-remove emotion-20"
                         id="root_1__remove"
                         title="Remove"
                         type="button"
@@ -8162,13 +8289,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                 </div>
               </div>
               <div
-                class="emotion-41"
+                class="emotion-43"
               >
                 <div
-                  class="emotion-42"
+                  class="emotion-44"
                 >
                   <button
-                    class="chakra-button rjsf-array-item-add emotion-43"
+                    class="chakra-button rjsf-array-item-add emotion-45"
                     id="root__add"
                     type="button"
                   >
@@ -8202,10 +8329,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-44"
+      class="emotion-46"
     >
       <button
-        class="chakra-button emotion-43"
+        class="chakra-button emotion-45"
         type="submit"
       >
         Submit
@@ -8598,7 +8725,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -8995,17 +9125,28 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
 }
 
 .emotion-7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: var(--chakra-spacing-4);
+}
+
+.emotion-8 {
   display: grid;
   gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-10 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-11 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -9024,7 +9165,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-12 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -9044,13 +9185,13 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
     user-select: none;
   }
 
-  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-13 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -9075,17 +9216,17 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -9094,7 +9235,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
   }
 }
 
-.emotion-13 {
+.emotion-14 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -9107,7 +9248,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-14 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -9120,36 +9261,36 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
     flex-direction: row;
   }
 
-  .emotion-13 [data-group-item]:is(:focus-visible, [data-focus-visible]) {
+  .emotion-14 [data-group-item]:is(:focus-visible, [data-focus-visible]) {
     z-index: 1;
   }
 
-  .emotion-13>*[data-first] {
+  .emotion-14>*[data-first] {
     border-start-end-radius: 0!important;
     border-end-end-radius: 0!important;
     -webkit-margin-end: -1px;
     margin-inline-end: -1px;
   }
 
-  .emotion-13>*[data-between] {
+  .emotion-14>*[data-between] {
     border-radius: 0!important;
     -webkit-margin-end: -1px;
     margin-inline-end: -1px;
   }
 
-  .emotion-13>*[data-last] {
+  .emotion-14>*[data-last] {
     border-start-start-radius: 0!important;
     border-end-start-radius: 0!important;
   }
 }
 
-.emotion-14 {
+.emotion-15 {
   padding-inline: 0;
   padding-block: 0;
 }
 
 @layer recipes {
-  .emotion-14 {
+  .emotion-15 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -9197,19 +9338,19 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-14 :where(svg) {
+  .emotion-15 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -9217,14 +9358,14 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-14:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-14:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -9232,20 +9373,20 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
   }
 }
 
-.emotion-14 :where(svg) {
+.emotion-15 :where(svg) {
   font-size: 1.2em;
 }
 
-.emotion-33 {
+.emotion-35 {
   justify-self: flex-end;
 }
 
-.emotion-34 {
+.emotion-36 {
   margin-top: var(--chakra-spacing-2);
 }
 
 @layer recipes {
-  .emotion-35 {
+  .emotion-37 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -9293,19 +9434,19 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-35:is(:focus-visible, [data-focus-visible]) {
+  .emotion-37:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-35:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-37:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-35 :where(svg) {
+  .emotion-37 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -9313,14 +9454,14 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-35:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-37:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-35:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-37:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -9328,7 +9469,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
   }
 }
 
-.emotion-36 {
+.emotion-38 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -9347,7 +9488,10 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -9372,49 +9516,55 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                         >
                           <div
                             class="emotion-7"
+                            id="root_0"
+                            role="group"
                           >
-                            <div>
-                              <div
-                                class="rjsf-field rjsf-field-string"
-                              >
-                                <fieldset
-                                  aria-labelledby=""
-                                  class="fieldset__root emotion-0"
-                                  data-part="root"
-                                  data-scope="fieldset"
+                            <div
+                              class="emotion-8"
+                            >
+                              <div>
+                                <div
+                                  class="rjsf-field rjsf-field-string"
                                 >
-                                  <div
-                                    class="fieldset__content emotion-1"
+                                  <fieldset
+                                    aria-labelledby=""
+                                    class="fieldset__root emotion-0"
+                                    data-part="root"
+                                    data-scope="fieldset"
                                   >
                                     <div
-                                      class="chakra-field__root emotion-10"
-                                      data-part="root"
-                                      data-scope="field"
-                                      id="field::root_0_name"
-                                      role="group"
+                                      class="fieldset__content emotion-1"
                                     >
-                                      <label
-                                        class="chakra-field__label emotion-11"
-                                        data-part="label"
+                                      <div
+                                        class="chakra-field__root emotion-11"
+                                        data-part="root"
                                         data-scope="field"
-                                        for="root_0_name"
-                                        id="field::root_0_name::label"
+                                        id="field::root_0_name"
+                                        role="group"
                                       >
-                                        name
-                                      </label>
-                                      <input
-                                        class="chakra-input emotion-12"
-                                        data-part="input"
-                                        data-scope="field"
-                                        id="root_0_name"
-                                        name="root_0_name"
-                                        placeholder=""
-                                        type="text"
-                                        value="report.pdf"
-                                      />
+                                        <label
+                                          class="chakra-field__label emotion-12"
+                                          data-part="label"
+                                          data-scope="field"
+                                          for="root_0_name"
+                                          id="field::root_0_name::label"
+                                        >
+                                          name
+                                        </label>
+                                        <input
+                                          class="chakra-input emotion-13"
+                                          data-part="input"
+                                          data-scope="field"
+                                          id="root_0_name"
+                                          name="root_0_name"
+                                          placeholder=""
+                                          type="text"
+                                          value="report.pdf"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -9424,11 +9574,11 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                   </div>
                   <div>
                     <div
-                      class="chakra-group emotion-13"
+                      class="chakra-group emotion-14"
                     >
                       <button
                         aria-label="Move report.pdf up"
-                        class="chakra-button rjsf-array-item-move-up emotion-14"
+                        class="chakra-button rjsf-array-item-move-up emotion-15"
                         disabled=""
                         id="root_0__moveUp"
                         title="Move report.pdf up"
@@ -9457,7 +9607,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                       </button>
                       <button
                         aria-label="Move report.pdf down"
-                        class="chakra-button rjsf-array-item-move-down emotion-14"
+                        class="chakra-button rjsf-array-item-move-down emotion-15"
                         id="root_0__moveDown"
                         title="Move report.pdf down"
                         type="button"
@@ -9485,7 +9635,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                       </button>
                       <button
                         aria-label="Copy report.pdf"
-                        class="chakra-button rjsf-array-item-copy emotion-14"
+                        class="chakra-button rjsf-array-item-copy emotion-15"
                         id="root_0__copy"
                         title="Copy report.pdf"
                         type="button"
@@ -9518,7 +9668,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                       </button>
                       <button
                         aria-label="Remove report.pdf"
-                        class="chakra-button rjsf-array-item-remove emotion-14"
+                        class="chakra-button rjsf-array-item-remove emotion-15"
                         id="root_0__remove"
                         title="Remove report.pdf"
                         type="button"
@@ -9570,49 +9720,55 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                         >
                           <div
                             class="emotion-7"
+                            id="root_1"
+                            role="group"
                           >
-                            <div>
-                              <div
-                                class="rjsf-field rjsf-field-string"
-                              >
-                                <fieldset
-                                  aria-labelledby=""
-                                  class="fieldset__root emotion-0"
-                                  data-part="root"
-                                  data-scope="fieldset"
+                            <div
+                              class="emotion-8"
+                            >
+                              <div>
+                                <div
+                                  class="rjsf-field rjsf-field-string"
                                 >
-                                  <div
-                                    class="fieldset__content emotion-1"
+                                  <fieldset
+                                    aria-labelledby=""
+                                    class="fieldset__root emotion-0"
+                                    data-part="root"
+                                    data-scope="fieldset"
                                   >
                                     <div
-                                      class="chakra-field__root emotion-10"
-                                      data-part="root"
-                                      data-scope="field"
-                                      id="field::root_1_name"
-                                      role="group"
+                                      class="fieldset__content emotion-1"
                                     >
-                                      <label
-                                        class="chakra-field__label emotion-11"
-                                        data-part="label"
+                                      <div
+                                        class="chakra-field__root emotion-11"
+                                        data-part="root"
                                         data-scope="field"
-                                        for="root_1_name"
-                                        id="field::root_1_name::label"
+                                        id="field::root_1_name"
+                                        role="group"
                                       >
-                                        name
-                                      </label>
-                                      <input
-                                        class="chakra-input emotion-12"
-                                        data-part="input"
-                                        data-scope="field"
-                                        id="root_1_name"
-                                        name="root_1_name"
-                                        placeholder=""
-                                        type="text"
-                                        value="invoice.pdf"
-                                      />
+                                        <label
+                                          class="chakra-field__label emotion-12"
+                                          data-part="label"
+                                          data-scope="field"
+                                          for="root_1_name"
+                                          id="field::root_1_name::label"
+                                        >
+                                          name
+                                        </label>
+                                        <input
+                                          class="chakra-input emotion-13"
+                                          data-part="input"
+                                          data-scope="field"
+                                          id="root_1_name"
+                                          name="root_1_name"
+                                          placeholder=""
+                                          type="text"
+                                          value="invoice.pdf"
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -9622,11 +9778,11 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                   </div>
                   <div>
                     <div
-                      class="chakra-group emotion-13"
+                      class="chakra-group emotion-14"
                     >
                       <button
                         aria-label="Move invoice.pdf up"
-                        class="chakra-button rjsf-array-item-move-up emotion-14"
+                        class="chakra-button rjsf-array-item-move-up emotion-15"
                         id="root_1__moveUp"
                         title="Move invoice.pdf up"
                         type="button"
@@ -9654,7 +9810,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                       </button>
                       <button
                         aria-label="Move invoice.pdf down"
-                        class="chakra-button rjsf-array-item-move-down emotion-14"
+                        class="chakra-button rjsf-array-item-move-down emotion-15"
                         disabled=""
                         id="root_1__moveDown"
                         title="Move invoice.pdf down"
@@ -9683,7 +9839,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                       </button>
                       <button
                         aria-label="Copy invoice.pdf"
-                        class="chakra-button rjsf-array-item-copy emotion-14"
+                        class="chakra-button rjsf-array-item-copy emotion-15"
                         id="root_1__copy"
                         title="Copy invoice.pdf"
                         type="button"
@@ -9716,7 +9872,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                       </button>
                       <button
                         aria-label="Remove invoice.pdf"
-                        class="chakra-button rjsf-array-item-remove emotion-14"
+                        class="chakra-button rjsf-array-item-remove emotion-15"
                         id="root_1__remove"
                         title="Remove invoice.pdf"
                         type="button"
@@ -9750,13 +9906,13 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                 </div>
               </div>
               <div
-                class="emotion-33"
+                class="emotion-35"
               >
                 <div
-                  class="emotion-34"
+                  class="emotion-36"
                 >
                   <button
-                    class="chakra-button rjsf-array-item-add emotion-35"
+                    class="chakra-button rjsf-array-item-add emotion-37"
                     id="root__add"
                     type="button"
                   >
@@ -9790,10 +9946,10 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-36"
+      class="emotion-38"
     >
       <button
-        class="chakra-button emotion-35"
+        class="chakra-button emotion-37"
         type="submit"
       >
         Submit
@@ -9984,7 +10140,12 @@ exports[`with title and description > array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            aria-describedby="root__description"
+            aria-labelledby="root__title"
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -10528,7 +10689,12 @@ exports[`with title and description > array icons 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            aria-describedby="root__description"
+            aria-labelledby="root__title"
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -12082,7 +12248,12 @@ exports[`with title and description > fixed array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            aria-describedby="root__description"
+            aria-labelledby="root__title"
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -12461,7 +12632,12 @@ exports[`with title and description from both > array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            aria-describedby="root__description"
+            aria-labelledby="root__title"
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -13005,7 +13181,12 @@ exports[`with title and description from both > array icons 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            aria-describedby="root__description"
+            aria-labelledby="root__title"
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -14559,7 +14740,12 @@ exports[`with title and description from both > fixed array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            aria-describedby="root__description"
+            aria-labelledby="root__title"
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -14938,7 +15124,12 @@ exports[`with title and description from uiSchema > array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            aria-describedby="root__description"
+            aria-labelledby="root__title"
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -15482,7 +15673,12 @@ exports[`with title and description from uiSchema > array icons 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            aria-describedby="root__description"
+            aria-labelledby="root__title"
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -17036,7 +17232,12 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            aria-describedby="root__description"
+            aria-labelledby="root__title"
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -17387,7 +17588,10 @@ exports[`with title and description with global label off > array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -17829,7 +18033,10 @@ exports[`with title and description with global label off > array icons 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
@@ -19156,7 +19363,10 @@ exports[`with title and description with global label off > fixed array 1`] = `
         <div
           class="fieldset__content emotion-1"
         >
-          <div>
+          <div
+            id="root"
+            role="group"
+          >
             <div
               class="emotion-2"
             >
