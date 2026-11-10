@@ -1,5 +1,9 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  // The root `knip` script deletes packages/*/lib first: knip resolves an `@rjsf/*` import through the package's
+  // `default` export condition, so a built lib/ would stand in for src/ and every export of src/index.ts would look
+  // unused. knip has no option for the `@rjsf/source` condition, and a tsconfig.json per package to map lib/ back to
+  // src/ would add a type-check program per package.
   "ignoreIssues": {
     // Public types cost no bundle size and name the parameters and results of the public exports.
     "packages/utils/src/index.ts": ["types"],

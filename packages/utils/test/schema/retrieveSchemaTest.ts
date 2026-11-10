@@ -3577,7 +3577,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(GUESSED_TYPE_FLAG in stub).toBe(true);
         expect(stub.type).toBe('string');
         // The `$ref` that would reach into a container is dropped, so copying the container into every property
-        // would hand each of them an unreachable copy for `hashForSchema()` and `deepEquals()` to walk
+        // would hand each of them an unreachable copy for `hashObject()` and `deepEquals()` to walk
         expect('$defs' in stub).toBe(false);
         expect(stub.contentMediaType).toBe('text/plain');
       });

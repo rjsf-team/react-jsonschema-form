@@ -1,4 +1,4 @@
-import hashForSchema, { hashString, sortedJSONStringify } from '../src/hashForSchema.ts';
+import { hashString, sortedJSONStringify } from '../src/hashForSchema.ts';
 import type { RJSFSchema } from '../src/index.ts';
 import { hashObject, RJSF_REF_CYCLE_KEY, RJSF_REF_KEY } from '../src/index.ts';
 import { RECURSIVE_REF } from './testUtils/testData.ts';
@@ -21,25 +21,6 @@ const IN_ORDER_SCHEMA: RJSFSchema = {
 };
 
 const STRINGIFIED_IN_ORDER = JSON.stringify(IN_ORDER_SCHEMA);
-
-describe('hashForSchema', () => {
-  it('returns a hash for a tiny schema', () => {
-    expect(hashForSchema(TINY_SCHEMA)).toMatchSnapshot();
-  });
-  it('returns a hash for a more complex schema', () => {
-    expect(hashForSchema(RECURSIVE_REF)).toMatchSnapshot();
-  });
-  it('returns same hash for two schemas but fields are different order', () => {
-    const schema1: RJSFSchema = { type: 'string', title: 'order' };
-    const schema2: RJSFSchema = { title: 'order', type: 'string' };
-    expect(hashForSchema(schema1)).toBe(hashForSchema(schema2));
-  });
-  it('ignores Symbol keys (RJSF_REF_KEY, RJSF_REF_CYCLE_KEY) when computing the hash', () => {
-    const schema: RJSFSchema = { type: 'object', title: 'test' };
-    const schemaWithSymbols = { ...schema, [RJSF_REF_KEY]: '#/foo', [RJSF_REF_CYCLE_KEY]: true };
-    expect(hashForSchema(schema)).toBe(hashForSchema(schemaWithSymbols as unknown as RJSFSchema));
-  });
-});
 
 const TEST_OBJECT_WITH_IGNORED_PROPERTIES = { a: 1, b: undefined, f: () => {} };
 
@@ -75,6 +56,17 @@ const TEST_ARRAY_3 = ['foo', TEST_ARRAY_2];
 const TEST_ARRAY_4 = [(name: string) => ({ name })];
 
 describe('hashObject', () => {
+  it('returns a hash for a tiny schema', () => {
+    expect(hashObject(TINY_SCHEMA)).toMatchSnapshot();
+  });
+  it('returns a hash for a more complex schema', () => {
+    expect(hashObject(RECURSIVE_REF)).toMatchSnapshot();
+  });
+  it('ignores Symbol keys (RJSF_REF_KEY, RJSF_REF_CYCLE_KEY) when computing the hash', () => {
+    const schema: RJSFSchema = { type: 'object', title: 'test' };
+    const schemaWithSymbols = { ...schema, [RJSF_REF_KEY]: '#/foo', [RJSF_REF_CYCLE_KEY]: true };
+    expect(hashObject(schema)).toBe(hashObject(schemaWithSymbols));
+  });
   it('returns hash of zero for an empty object', () => {
     expect(hashObject({})).toEqual(EMPTY_OBJECT_HASH);
   });

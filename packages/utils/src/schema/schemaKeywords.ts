@@ -64,7 +64,7 @@ export const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor'
 
 /** The keywords that hold other subschemas for a `$ref` to name rather than describe a value. The stub drops the
  * `$ref` that would reach them, so copying them into every property would hand each one an unreachable copy that
- * `hashForSchema()` and `deepEquals()` then walk on every render.
+ * `hashObject()` and `deepEquals()` then walk on every render.
  */
 export const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
 

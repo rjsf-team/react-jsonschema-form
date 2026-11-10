@@ -29,7 +29,7 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
 import guessType from '../../guessType.ts';
-import hashForSchema, { hashString, sortedJSONStringify } from '../../hashForSchema.ts';
+import { hashObject, hashString, sortedJSONStringify } from '../../hashForSchema.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import { getByPath } from '../../pathUtils.ts';
 import { keywordShape } from '../../schemaUri.ts';
@@ -56,7 +56,7 @@ const VARIANT_ID_SUFFIX = /\?rjsf=[^?]*$/;
  */
 function variantId(id: unknown, content: object): string {
   const base = String(id).replace(VARIANT_ID_SUFFIX, '').replace(/#$/, '');
-  return `${base}?rjsf=${hashForSchema(content)}`;
+  return `${base}?rjsf=${hashObject(content)}`;
 }
 
 /** Returns the `schema` with any `$id` it carries replaced by one derived from it and from the schema's own content. A
