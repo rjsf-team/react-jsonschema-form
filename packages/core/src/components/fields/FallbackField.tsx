@@ -37,7 +37,7 @@ import useSendBlur from '../../hooks/useSendBlur.ts';
 import useUiState from '../../hooks/useUiState.ts';
 import type { KeptFallbackType, UiState } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
-import { fallbackValueKeepsWidget, getFallbackTypes, withoutUiWidget } from './fieldWidgetUtils.ts';
+import { fallbackValueKeepsWidget, getFallbackTypes, storedValue, withoutUiWidget } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
 import type { InheritedPresentation } from './PresentationContext.ts';
 import PresentationContext from './PresentationContext.ts';
@@ -214,14 +214,14 @@ function keptTypeIn(setup: FallbackTypeSetup, kept: KeptFallbackType | undefined
  * @param setup - What the type is worked out from, see `fallbackTypeSetup()`.
  * @param formData - The form data being rendered.
  * @param selectedType - The type the selector was last on, if any.
- * @param isAdditionalEntry - Whether the field is the value of an additional property.
+ * @param clearedValue - What the field's container stores the field's value as once it is cleared, see `storedValue()`.
  * @param emptyValue - The `ui:emptyValue` the field's input reports being cleared as.
  */
 function getShownType(
   { types, defaultType, keepsWidget }: FallbackTypeSetup,
   formData: unknown,
   selectedType: JSONSchema7TypeName | undefined,
-  isAdditionalEntry: boolean,
+  clearedValue: unknown,
   emptyValue: unknown,
 ): JSONSchema7TypeName {
   // Neither of the two ways a value reports being cleared says anything about the type it was cleared from, so both
@@ -235,12 +235,12 @@ function getShownType(
   // from under the user. Only the types that stand in for one another survive this on their own; every other one, a
   // `false` among them, would otherwise take the selector with it the moment the user cleared the field
   const isClearedInput = emptiesToNothing && emptyValue !== undefined && formData === emptyValue;
-  // An `additionalProperties` entry whose value is cleared holds the empty string rather than nothing, since dropping
-  // the value would take the key it is stored under with it. That is the cleared state of whichever type the selector
-  // is on, not evidence of a `string`, so a selection the user just made must survive it: reading it as data of
-  // another type would put the selector back on `string` and leave the other types out of reach from a cleared value
-  const isClearedProperty = emptiesToNothing && isAdditionalEntry && formData === '';
-  const isEmptyValue = formData === undefined || isClearedProperty;
+  // A container stores a cleared value as `storedValue()` says: `''` in an `additionalProperties` entry, whose key would
+  // go with nothing, and `null` in an array item, where a hole would not survive validation. That is the cleared state
+  // of whichever type the selector is on, not data of the type it resembles, so a selection the user just made must
+  // survive it rather than send the selector back to `string`, `null` or its default
+  const isClearedValue = emptiesToNothing && (formData === null || formData === '') && formData === clearedValue;
+  const isEmptyValue = formData === undefined || isClearedValue;
   const isSelectionUsable =
     selectedType !== undefined &&
     types.includes(selectedType) &&
@@ -276,7 +276,7 @@ export function fallbackUiType<T, S extends StrictRJSFSchema, F extends FormCont
     setup,
     formData,
     keptTypeIn(setup, uiState.fallbackType(fieldPath, setup.selector)),
-    hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG),
+    storedValue<unknown>(undefined, fieldPath, hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG)),
     emptyValue,
   );
 }
@@ -485,6 +485,7 @@ function FallbackUiField<
   const { label } = { ...globalUiOptions, ...uiOptions };
   const { uiState } = useUiState();
   const isAdditionalEntry = hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG) || isEntryPath;
+  const clearedValue = storedValue<unknown>(undefined, fieldPath, isAdditionalEntry);
   // Lives as long as this field does, an `<Activity>` hiding it included, so a field mounting at this path later starts
   // on the type its data starts it on rather than on one kept for the field before it. The form's ui:required check
   // reads the kept type whoever kept it, since a hidden field still holds its pick
@@ -495,7 +496,7 @@ function FallbackUiField<
   const readShownType = () => {
     const kept = uiState.fallbackType(fieldPath, selector);
     const selectedType = kept?.owner === owner ? keptTypeIn(setup, kept) : undefined;
-    return getShownType(setup, formData, selectedType, isAdditionalEntry, uiOptions.emptyValue);
+    return getShownType(setup, formData, selectedType, clearedValue, uiOptions.emptyValue);
   };
   const type = useSyncExternalStore(uiState.subscribe, readShownType, readShownType);
   // Keeping the type the selector is showing stops a selection the user can no longer see from coming back: with the old

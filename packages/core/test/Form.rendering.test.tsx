@@ -18,6 +18,7 @@ import {
 } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import type { JSONSchema7TypeName } from 'json-schema';
 
 import FallbackField from '../src/components/fields/FallbackField.tsx';
 import Form from '../src/index.ts';
@@ -29,6 +30,7 @@ import {
   handleOf,
   createFormComponent as createDirectFormComponent,
   expectToHaveBeenCalledWithFormData,
+  getSelectedOptionValue,
   setupConsoleErrorSuppression,
   describeRepeated,
 } from './testUtils.tsx';
@@ -1276,6 +1278,76 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('boolean');
       expect(node.querySelector<HTMLInputElement>('input[type=checkbox]')).toBeInTheDocument();
       expect(node.querySelector<HTMLInputElement>('#root_aKey__key')).toHaveAttribute('value', 'aKey');
+    });
+
+    describe('on an array item holding null', () => {
+      it.each<[JSONSchema7TypeName[]]>([[['object', 'number']], [['null', 'object', 'number']]])(
+        'keeps the type picked under %j',
+        async (types) => {
+          const { node } = createFormComponent({
+            schema: { type: 'array', items: { type: types, properties: { a: { type: 'string' } } } },
+            useFallbackUiForUnsupportedType: true,
+            initialFormData: [{}, {}],
+          });
+          const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+          expect(getSelectedOptionValue(select)).toBe('object');
+
+          await user.selectOptions(select, 'number');
+
+          expect(getSelectedOptionValue(select)).toBe('number');
+          expect(elementOf(node, '#root_0', HTMLInputElement)).toHaveValue('');
+          expect(getSelectedOptionValue(elementOf(node, '#root_1__internalTypeSelector', HTMLSelectElement))).toBe(
+            'object',
+          );
+        },
+      );
+
+      it('keeps the type picked for text that has no form in it', async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'array', items: { type: ['string', 'number'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: ['abc'],
+        });
+        const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+
+        await user.selectOptions(select, 'number');
+
+        expect(getSelectedOptionValue(select)).toBe('number');
+        expect(elementOf(node, '#root_0', HTMLInputElement)).toHaveValue('');
+      });
+
+      it.each<[JSONSchema7TypeName[]]>([[['object', 'number']], [['null', 'object', 'number']]])(
+        'keeps the type an item is on when its input is cleared under %j',
+        async (types) => {
+          const { node } = createFormComponent({
+            schema: { type: 'array', items: { type: types } },
+            useFallbackUiForUnsupportedType: true,
+            initialFormData: [3],
+          });
+          const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+          expect(getSelectedOptionValue(select)).toBe('number');
+
+          await user.clear(elementOf(node, '#root_0', HTMLInputElement));
+
+          expect(getSelectedOptionValue(select)).toBe('number');
+          expect(elementOf(node, '#root_0', HTMLInputElement)).toHaveValue('');
+        },
+      );
+
+      it('starts a null item on null where the list names it', () => {
+        const { node } = createFormComponent({
+          schema: { type: 'array', items: { type: ['object', 'null', 'number'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: [null, 3],
+        });
+
+        expect(getSelectedOptionValue(elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement))).toBe(
+          'null',
+        );
+        expect(getSelectedOptionValue(elementOf(node, '#root_1__internalTypeSelector', HTMLSelectElement))).toBe(
+          'number',
+        );
+      });
     });
 
     it('renders the title and description of a union whose field renders no label of its own', () => {
