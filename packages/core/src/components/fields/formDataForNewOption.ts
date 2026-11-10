@@ -228,6 +228,11 @@ function keptAsGuessedExtraKey<T, S extends StrictRJSFSchema, F extends FormCont
     return DROP;
   }
   const data = asFieldValue<T>(value);
+  // What the stub can't render drops whatever the fills say, so it is asked before them
+  const retrievedStub = isPlainObject(value) ? schemaUtils.retrieveSchema(stub, data) : stub;
+  if (!guessedStubRenders(value, [retrievedStub])) {
+    return DROP;
+  }
   const retrievedOldField = isSchemaObject<S>(oldField) ? schemaUtils.retrieveSchema(oldField, data) : undefined;
   // The old field's own fill holds an object's `{}`, which the fill around it leaves out
   const isOwnFill =
@@ -238,11 +243,7 @@ function keptAsGuessedExtraKey<T, S extends StrictRJSFSchema, F extends FormCont
   if (!isPlainObject(value)) {
     return value;
   }
-  const retrieved = schemaUtils.retrieveSchema(stub, data);
-  if (!guessedStubRenders(value, [retrieved])) {
-    return DROP;
-  }
-  const stubProperties: GenericObjectType = retrieved.properties ?? {};
+  const stubProperties: GenericObjectType = retrievedStub.properties ?? {};
   const oldProperties: GenericObjectType = retrievedOldField?.properties ?? {};
   const keys = Object.keys(value);
   const kept: GenericObjectType = {};
@@ -267,8 +268,10 @@ function keptAsGuessedExtraKey<T, S extends StrictRJSFSchema, F extends FormCont
  * schema is guessed from its data, as under `additionalProperties: true`, keeping what `keptAsGuessedExtraKey()` keeps
  * of its value. The extra keys are stubbed with the new option's own `additionalProperties` joined to the object's, as
  * the field renders them, and a key the new option declares, through `allOf` or a condition, is its field's. A new
- * option declaring no `properties` gets nothing from the sanitize, and is handed the kept keys alone; any other
- * `undefined` the sanitize returns, as for an object `const` the data fails, is a clear and stays one.
+ * option declaring no `properties`, `const` or `enum` gets nothing from the sanitize, and is handed the data without the
+ * keys the old option declares, as the sanitize hands an option declaring properties, so the object's own fields and
+ * extra keys stay beside the kept ones; any other `undefined` the sanitize returns, as for an object `const` the data
+ * fails, is a clear and stays one.
  *
  * @param schemaUtils - The schema utilities, to stub the extra keys and compute the old option's defaults
  * @param formData - The form data associated with the old option
@@ -292,15 +295,28 @@ function withGuessedExtraKeys<T, S extends StrictRJSFSchema, F extends FormConte
   { oldOptionUiSchema, uiSchemaDefinitions, globalUiOptions }: OptionUiSchemas<T, S, F>,
 ): unknown {
   const xxxOfKey = parentSchema && getXxxOfKey<S>(parentSchema);
-  const declaresNoProperties =
-    renderedNewOption !== undefined &&
-    renderedNewOption.properties === undefined &&
-    getSchemaType<S>(renderedNewOption) === 'object';
-  const base = sanitized === undefined && declaresNoProperties ? {} : sanitized;
-  if (!isPlainObject(formData) || !isPlainObject(base) || !oldOption || !newOption || !parentSchema || !xxxOfKey) {
+  if (!isPlainObject(formData) || !oldOption || !newOption || !parentSchema || !xxxOfKey) {
+    return sanitized;
+  }
+  // Only an object taking keys its `properties` don't name can hold a guessed extra key, and the option's
+  // `additionalProperties` joins the object's
+  if (!schemaUtils.allowsAdditionalProperties(parentSchema) && !schemaUtils.allowsAdditionalProperties(newOption)) {
     return sanitized;
   }
   const oldProperties: GenericObjectType = renderedOldOption?.properties ?? {};
+  const declaresNoProperties =
+    renderedNewOption !== undefined &&
+    renderedNewOption.properties === undefined &&
+    !(CONST_KEY in renderedNewOption) &&
+    renderedNewOption.enum === undefined &&
+    getSchemaType<S>(renderedNewOption) === 'object';
+  const base =
+    sanitized === undefined && declaresNoProperties
+      ? Object.fromEntries(Object.entries(formData).filter(([key]) => !Object.hasOwn(oldProperties, key)))
+      : sanitized;
+  if (!isPlainObject(base)) {
+    return sanitized;
+  }
   const discarded = Object.keys(oldProperties).filter(
     (key) => formData[key] !== undefined && !Object.hasOwn(base, key),
   );
@@ -346,7 +362,7 @@ function withGuessedExtraKeys<T, S extends StrictRJSFSchema, F extends FormConte
       result = { ...result, [key]: kept };
     }
   }
-  return result === base && sanitized === undefined ? sanitized : result;
+  return result === base ? sanitized : result;
 }
 
 /** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped, and
