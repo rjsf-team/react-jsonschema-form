@@ -1,4 +1,5 @@
-import { ENUM_OPTION_INDEX_PREFIX, enumOptionValueDecoder } from '../src/index.ts';
+import { ENUM_OPTION_INDEX_PREFIX } from '../src/constants.ts';
+import { enumOptionValueDecoder } from '../src/index.ts';
 import type { EnumOptionsType } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [

@@ -9,11 +9,10 @@ There is also a helper [function](#schema-utils-creation-function) used to creat
 ## Constants
 
 The `@rjsf/utils` package exports a set of constants that represent all the keys into various elements of a RJSFSchema or UiSchema that are used by the various utility functions.
-In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility, and the `EXTRA_KEYS_ELSEWHERE_FLAG` flag that [`getRenderedOptionSchema()`](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema) adds.
+In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and `GUESSED_TYPE_FLAG` flags that are added to a schema under certain conditions by the `retrieveSchema()` utility.
 `GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or a schema with no keyword that asserts something about the value, such as `enum`, `const`, `format`, a length, a range, `properties`, `items` or a subschema keyword like `allOf` or `not`: its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all when the schema it is compared against is equally unconstrained, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it.
 An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
-`RJSF_PROVENANCE_KEY` is the Symbol `retrieveSchema()` adds to every subschema it hands out, recording where the subschema came from. Only `retrieveSchema()` writes or reads what it holds; it is exported for a comparison that should see a stamped schema as the same schema without it.
 `UNEVALUATED_PROPERTIES_KEY` is the `unevaluatedProperties` keyword, which an object naming no `additionalProperties` is read through in its place.
 `WIDGET_FIELD_PRESENTATION` is the `PresentationDeclaration` of a field that renders its value with a single widget and leaves every part to whoever that widget says draws it, for a theme or `@rjsf/core` to declare such a field with (see [getPresentationDeclaration()](#getpresentationdeclaration)). It is defined in [getPresentationDeclaration.ts](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getPresentationDeclaration.ts) rather than with the other constants.
 `DEFAULT_BOOLEAN_WIDGET` is the registry key the `checkbox` alias of a `boolean` resolves to (`CheckboxWidget`), so a theme can read that widget from its registry, as `registry.widgets[DEFAULT_BOOLEAN_WIDGET]`, without copying the key. It is defined next to the widget map in [getWidget.tsx](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getWidget.tsx) rather than with the other constants.
@@ -102,7 +101,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - [label]: string - Optional label of the field, which leads the element's accessible name
 - [elementLabel]: string - Optional translated name of the element, for a caller that already translated it to display it; defaults to the part's `TranslatableString`, such as `YearLabel`
 - [presentation]: FieldPresentation - Optional plan of the field, whose parts that render describe the element, and whose errors mark it `aria-invalid` while they show
-- [attributes]: Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'> - Optional `aria-describedby` and `aria-invalid` for the element, such as those with the id of a message the theme renders around the field, each one left out defaulting to what the element would take without them: that of `presentation`'s control, or without a `presentation`, `ariaDescribedByIds(rootId)` and no `aria-invalid`
+- [attributes]: Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'> - Optional `aria-describedby` and `aria-invalid` for the element, such as those with the id of a message the theme renders around the field, each one left out defaulting to what the element would take without them: that of `presentation`'s control, or without a `presentation`, `getControlDescribedBy({ id: rootId })` and no `aria-invalid`
 - [elementOptions]: UIOptionsType&lt;T, S, F> - Optional further options for the `SelectWidget`, such as the props of a theme's own select, beside the element's `enumOptions`, which they can't replace; the `SelectWidget` also receives them, with those `enumOptions`, as its `uiSchema`'s `ui:options`
 
 ### SelectedOptionDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#selectedoptiondescription}
@@ -403,7 +402,7 @@ Encodes every option of `enumOptions` for its DOM value attribute, in a single p
 A widget reads an option's value at its position, and `enumOptionValueDecoder()` and `enumOptionSelectedValue()` encode against the same list, so they agree with it.
 When `format` is `'indexed'` (the default), each option's value is its index as a string.
 When `format` is `'realValue'`, primitive values are converted via `String()`.
-Non-primitive values (objects, arrays) fall back to their index, prefixed with `ENUM_OPTION_INDEX_PREFIX` (`__rjsf_index:`), since `String()` would produce `"[object Object]"`.
+Non-primitive values (objects, arrays) fall back to their index, prefixed with `__rjsf_index:`, since `String()` would produce `"[object Object]"`.
 So do `null` and the empty string, since the empty string is the value of a select's empty placeholder.
 The prefix keeps that index from sharing a value with a primitive option spelled as the same number, and a string that itself starts with the prefix is encoded as its index too, so it can't share a value with the option at the index it spells.
 Options whose `String()` is the same, such as `1` and `'1'`, are each encoded as their index too, so every option keeps a DOM value of its own.
@@ -1462,7 +1461,7 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 
 Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
 An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
-That field also stubs the extra keys of the data, for the parent and the selected option together (see [`retrieveSchema()`](#retrieveschemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype)), so the option is rendered without its own `additionalProperties`, `patternProperties` and `unevaluatedProperties`, and marked with `EXTRA_KEYS_ELSEWHERE_FLAG`, so its own field offers no extra key beside the parent's, even in a form that reads an absent `additionalProperties` as taking any key. The marker says nothing to a validator, and an option offering options of its own still takes the extra keys one of them names.
+That field also stubs the extra keys of the data, for the parent and the selected option together (see [`retrieveSchema()`](#retrieveschemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype)), so the option is rendered without its own `additionalProperties`, `patternProperties` and `unevaluatedProperties`, and marked with a flag, so its own field offers no extra key beside the parent's, even in a form that reads an absent `additionalProperties` as taking any key. The marker says nothing to a validator, and an option offering options of its own still takes the extra keys one of them names.
 An option that offers options of its own renders a field of its own beside them, which takes the extra keys in the parent's field's place, so that they render once: it keeps its own extra-key keywords, joined with the parent's as the parent's field would join them, so that a key is still judged by each of them apart, and is not marked. It also carries the names of the properties the parent and the fields above it declare, which its field leaves to them rather than rendering them as extra keys, and the parent's bounds on the object's keys, which its add button now answers to: the stricter `maxProperties` of the two, and both `propertyNames`. Its uiSchema takes the parent's say over the extra keys likewise, see [`getRenderedOptionUiSchema()`](#getrenderedoptionuischema). A `ui:field` the option's uiSchema names renders it all the same, handed the extra keys in its `schema` and `formData`, so the field renders them where it renders the option's schema.
 Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
 It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
@@ -1603,8 +1602,6 @@ Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto t
 
 - SubmitButtonOptions: The merging of the `DEFAULT_OPTIONS` with any custom ones, always with `props`
 
-  called only when an override is invalid. It is read once per function while the override stays the same, so pass a
-  new function when the label changes
 ### getTemplates&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns every template in the `registry`, with each one that `uiOptions` overrides resolved in its place. Only templates the registry already holds are resolved: an override for a name the registry lacks is
@@ -1615,7 +1612,8 @@ left out. Destructure the templates a component renders from the result, e.g.
 
 - registry: Registry&lt;T, S, F> - The `Registry` from which to read the templates
 - [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read alternate templates
-- [entryLabel]: () => string - Names the uiSchema entry in the warning an invalid override logs
+- [entryLabel]: () => string - Names the uiSchema entry in the warning an invalid override logs. It is read once
+  while the override stays the same, so pass a new function when the label changes
 
 #### Returns
 
@@ -1846,18 +1844,6 @@ create a schema, it is useful to know what type to use based on the data we are 
 
 - string: The best guess for the object type
 
-### hashForSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Stringifies the schema and returns the hash of the resulting string.
-
-#### Parameters
-
-- schema: S - The schema for which the hash is desired
-
-#### Returns
-
-- string: The string obtained from the hash of the stringified schema
-
 ### hasAdditionalKeyLabel()
 
 Whether a `WrapIfAdditionalTemplate` labels the key input of an `additionalProperties` entry, which it does wherever the entry's value is labelled, whether the template or the value's own component draws that label, so the key lines up with it.
@@ -1892,12 +1878,12 @@ One with neither renders as the field holding its options, which leaves the cont
 
 Whether `schema` carries the flag `marker` the schema utilities set on the schemas they build, such as the `ADDITIONAL_PROPERTY_FLAG` `retrieveSchema()` sets on a property an `additionalProperties` adds.
 A boolean subschema, which can stand wherever a schema can, carries none.
-It takes only the markers that hold a flag: `ADDITIONAL_PROPERTY_FLAG`, `EXTRA_KEYS_ELSEWHERE_FLAG`, `GUESSED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`. A flag set to `undefined` or `false` reads as unset.
+It takes only the markers that hold a flag: `ADDITIONAL_PROPERTY_FLAG`, `GUESSED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`. A flag set to `undefined` or `false` reads as unset.
 
 #### Parameters
 
 - schema: unknown - The schema to check, which may be a boolean subschema
-- marker: SchemaFlagMarker - The symbol of the flag marker, the exported union `typeof ADDITIONAL_PROPERTY_FLAG | typeof EXTRA_KEYS_ELSEWHERE_FLAG | typeof GUESSED_TYPE_FLAG | typeof RJSF_REF_CYCLE_KEY`
+- marker: SchemaFlagMarker - The symbol of the flag marker, one of `ADDITIONAL_PROPERTY_FLAG`, `GUESSED_TYPE_FLAG` and `RJSF_REF_CYCLE_KEY`
 
 #### Returns
 
@@ -2611,7 +2597,7 @@ partId('root_when', 'time'); // 'root_when__time'
 
 ### pickGlobalUiOptions() {#pickglobaluioptions}
 
-Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which `GLOBAL_UI_OPTIONS_KEYS` lists, and the extension keys the form's theme and the `Form` itself declare.
+Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which `GlobalUISchemaOptionsKeys` names, and the extension keys the form's theme and the `Form` itself declare.
 Every other key is left out, so a global option RJSF reads only per field, such as `widget` or `placeholder`, reaches no field.
 Such an option is warned about once, since a form that set one, such as a global `readonly`, would otherwise change with no sign of why.
 An extension key that `RESERVED_UI_OPTION_NAMES` lists is left out too, with a warning: one of those per-field names, which every field would otherwise read as its own option, or `definitions` or `globalOptions`, which only the root uiSchema's `ui:` keys set.
@@ -3333,7 +3319,7 @@ Return the `aria-label`, `aria-labelledby`, `aria-describedby` and `aria-invalid
 A select its field's plan reaches takes the attributes [getControlAttributes()](#getcontrolattributes) gives its control, with the ids its caller passed, then the selected option's description id, added to the plan's describers, each id once, and the caller's `aria-label` over the plan's unless it is empty.
 A select shows its value rather than a name, so where neither gives one, it takes a name as `widgetAriaProps()` gives it: none where a label names it, whether the select draws it, as [widgetDrawsLabelText()](#widgetdrawslabeltext) says, or the template does, else the field's label, its `placeholder` or the translated `TranslatableString.SelectPlaceholder`.
 A select rendered inside another widget, such as each date part of an `AltDateWidget`, has an id of its own that no help or error element is rendered for, so `DateElement` gives it a plan of its own, through which it is described by its field's parts.
-Without a plan, the caller's ids, even an empty `aria-describedby`, replace the `ariaDescribedByIds(props.id)` a select rendered without one falls back to, whose ids no element may have.
+Without a plan, the caller's ids, even an empty `aria-describedby`, replace the `getControlDescribedBy({ id: props.id })` a select rendered without one falls back to, whose ids no element may have.
 The selected option's description id, [selectedOptionDescriptionId()](#selectedoptiondescriptionid) under its field's plan and `descriptionId(props.id)` without one, is added only while the select shows that description, the one element it renders itself: a date part, a `multiple` select, one whose label is hidden and one whose selected option has no description render none, and its id may be another field's description id.
 Under a plan it is listed where it is drawn, so a screen reader announces it in the order it is shown, among the description and help of its plan and of the plans above it. The select sits in its template's `children`, so it is listed after the parts the registry's `presentation.fieldTemplateOrder` draws before them and before those it draws after them, at every level. Of the parts the select draws itself, it is listed before the help, and after the description unless `presentation.selectedOptionDescription` is `'beforeDescription'`. With none of them it is listed last.
 A part a field above draws itself, as an `anyOf`/`oneOf` field's selector does above the select, is listed before it whatever the placement.
@@ -3645,7 +3631,7 @@ A key the option declares is left to the option, which renders it.
 The field takes the option's extra-key keywords beside its own: `additionalProperties` and `unevaluatedProperties` become the `allOf` of the two, one side's where the other declares none or allows any key, and `false` where either is, and the option's `patternProperties` join the field's, a pattern both declare becoming the `allOf` of its two subschemas.
 Every other key is stubbed as the field's keywords and the option's describe it, each side read on its own and the two `allOf`ed, so a key either side forbids is stubbed as `{ type: 'null' }` whatever the other allows.
 The options of an object field are handed out without stubs; a field of any other type renders no field of its own beside the option, so it leaves the option to stub its own extra keys.
-A selected option that offers options of its own renders a field of its own beside them, which takes the extra keys of the field, the option and the option it selects in turn (see [`getRenderedOptionSchema()`](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema)), so the field stubs none and is handed out without its `additionalProperties`, `patternProperties` and `unevaluatedProperties`, marked with `EXTRA_KEYS_ELSEWHERE_FLAG`.
+A selected option that offers options of its own renders a field of its own beside them, which takes the extra keys of the field, the option and the option it selects in turn (see [`getRenderedOptionSchema()`](#getrenderedoptionschemas-extends-strictrjsfschema--rjsfschema)), so the field stubs none and is handed out without its `additionalProperties`, `patternProperties` and `unevaluatedProperties`, marked with a flag.
 Without a `selectedOption`, the extra keys are stubbed for the field alone, a key an option declares included.
 
 #### Parameters

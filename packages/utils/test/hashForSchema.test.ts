@@ -1,6 +1,6 @@
-import { hashString, sortedJSONStringify } from '../src/hashForSchema.ts';
+import hashForSchema, { hashString, sortedJSONStringify } from '../src/hashForSchema.ts';
 import type { RJSFSchema } from '../src/index.ts';
-import { hashForSchema, hashObject, RJSF_REF_CYCLE_KEY, RJSF_REF_KEY } from '../src/index.ts';
+import { hashObject, RJSF_REF_CYCLE_KEY, RJSF_REF_KEY } from '../src/index.ts';
 import { RECURSIVE_REF } from './testUtils/testData.ts';
 
 const TINY_SCHEMA: RJSFSchema = {

@@ -1,4 +1,5 @@
-import { ENUM_OPTION_INDEX_PREFIX, enumOptionSelectedValue, enumOptionsDomValues } from '../src/index.ts';
+import { ENUM_OPTION_INDEX_PREFIX } from '../src/constants.ts';
+import { enumOptionSelectedValue, enumOptionsDomValues } from '../src/index.ts';
 import type { EnumOptionsType, RJSFSchema } from '../src/index.ts';
 
 const stringOptions: EnumOptionsType[] = [

@@ -1,7 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
-  // Module exports tagged @testSeam exist for utils' own tests, which the utils workspace leaves out below.
-  "tags": ["-testSeam"],
   "ignoreExportsUsedInFile": { "interface": true, "type": true },
   "ignoreIssues": {
     // Public types cost no bundle size and name the parameters and results of the public exports.
@@ -36,12 +34,11 @@
       "ignore": ["src/index.ts"],
     },
     "packages/utils": {
-      // Leave out utils' own tests, so the index has to be imported by another package to count as used.
-      "project": ["src/**/*.{ts,tsx}"],
-      "vitest": false,
+      // `knip --production` leaves out utils' own tests, so there the index has to be imported by another package's
+      // source to count as used; the plain `knip` run still checks the tests. The production run skips module exports
+      // tagged @testSeam, which exist for those tests.
+      "project": ["src/**/*.{ts,tsx}!", "test/**/*.{ts,tsx}"],
       "includeEntryExports": true,
-      // Imported only by the tests left out above.
-      "ignoreDependencies": ["deep-freeze-es6"],
     },
     "packages/docs": {
       // Docusaurus scaffold kept for the homepage. It is also the only

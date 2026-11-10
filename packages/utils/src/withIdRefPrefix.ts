@@ -113,7 +113,7 @@ function prefixSubschemas(key: string, value: unknown, rewrite: RefRewrite, scop
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
  * `prefixRefs` for any other elements. Only a keyword holding subschemas is read as schemas: any other, such as `const`,
  * `enum`, `default` or `examples`, holds data, where a `$ref` key is part of a value, so only a local one is prefixed
- * there, as `withIdRefPrefix()` prefixes every local one
+ * there
  *
  * @param node - The copy of `holder` to which the `base` is added when a REF_KEY is part of it
  * @param holder - The object node `node` copies, by which the graph knows it

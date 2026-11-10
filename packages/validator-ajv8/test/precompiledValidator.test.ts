@@ -1,5 +1,5 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, hashForSchema, isObject, mergeSchemas, noop, retrieveSchema } from '@rjsf/utils';
+import { ErrorSchemaBuilder, hashObject, isObject, mergeSchemas, noop, retrieveSchema } from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
 import ajvI18n from 'ajv-i18n';
 import type { Mock } from 'vitest';
@@ -84,13 +84,13 @@ describe('AJV8PrecompiledValidator', () => {
         const schema: RJSFSchema = { $ref: '#/definitions/notListed' };
         expect(() => validator.isValid(schema, {}, rootSchema)).toThrow(
           new Error(
-            `No precompiled validator function was found for the given schema for "${hashForSchema(schema)}" (the subschema at "#/definitions/notListed")`,
+            `No precompiled validator function was found for the given schema for "${hashObject(schema)}" (the subschema at "#/definitions/notListed")`,
           ),
         );
       });
       it('should throw if the schema is not recognized', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
-        const hash = hashForSchema(schema);
+        const hash = hashObject(schema);
         expect(() => validator.isValid(schema, { name: 'bar' }, rootSchema)).toThrow(
           new Error(`No precompiled validator function was found for the given schema for "${hash}"`),
         );

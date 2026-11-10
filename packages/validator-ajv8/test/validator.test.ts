@@ -516,7 +516,7 @@ describe('AJV8Validator', () => {
         const result = v.isValid(schema, 'hello', rootSchema);
         expect(result).toBe(false);
 
-        // $id is preserved by withIdRefPrefix, so schemaId === schema.$id.
+        // $id is preserved by withRootIdRefPrefix, so schemaId === schema.$id.
         expect(v.ajv.getSchema('test-exec-throw-isvalid')).toBeDefined();
 
         warnSpy.mockRestore();

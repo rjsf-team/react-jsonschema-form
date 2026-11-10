@@ -1,5 +1,6 @@
+import { DEFINITIONS_KEY } from '../../src/constants.ts';
 import type { RJSFSchema } from '../../src/index.ts';
-import { DEFINITIONS_KEY, PROPERTIES_KEY, createSchemaUtils, getByPath } from '../../src/index.ts';
+import { PROPERTIES_KEY, createSchemaUtils, getByPath } from '../../src/index.ts';
 import type { TestValidatorType } from './types.ts';
 
 const rawSchema = {

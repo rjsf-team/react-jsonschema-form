@@ -1,9 +1,9 @@
 import type { MockInstance } from 'vitest';
 
+import { EXTRA_KEYS_ELSEWHERE_FLAG, RJSF_PROVENANCE_KEY } from '../../src/constants.ts';
 import type { RJSFMarkedSchema, RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  EXTRA_KEYS_ELSEWHERE_FLAG,
   GUESSED_TYPE_FLAG,
   getAdditionalPropertySchema,
   createSchemaUtils,
@@ -13,7 +13,6 @@ import {
   isSchemaObject,
   PROPERTIES_KEY,
   retrieveSchema,
-  RJSF_PROVENANCE_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
   noop,

@@ -207,12 +207,76 @@ import widgetDrawsLabelText from './widgetDrawsLabelText.ts';
 import { rootSchemaIdOf, withRootIdRefPrefix } from './withIdRefPrefix.ts';
 
 export type * from './types.ts';
-export * from './enums.ts';
+export { TranslatableString } from './enums.ts';
 
-export * from './constants.ts';
-export * from './globalUiOptionsKeys.ts';
-export * from './parser/index.ts';
-export * from './schema/index.ts';
+export {
+  ADDITIONAL_PROPERTY_FLAG,
+  ADDITIONAL_PROPERTIES_KEY,
+  ALL_OF_KEY,
+  ANY_OF_KEY,
+  CONST_KEY,
+  DEFAULT_KEY,
+  ELSE_KEY,
+  ERRORS_KEY,
+  GUESSED_TYPE_FLAG,
+  ID_KEY,
+  ITEMS_KEY,
+  ONE_OF_KEY,
+  PATTERN_PROPERTIES_KEY,
+  PROPERTIES_KEY,
+  READONLY_KEY,
+  REQUIRED_KEY,
+  SUBMIT_BTN_OPTIONS_KEY,
+  REF_KEY,
+  THEN_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
+  RJSF_REF_KEY,
+  RJSF_REF_CYCLE_KEY,
+  SCHEMA_KEY,
+  DEFAULT_ID_PREFIX,
+  DEFAULT_ID_SEPARATOR,
+  LOOKUP_MAP_NAME,
+  RJSF_ADDITIONAL_PROPERTIES_FLAG,
+  ROOT_SCHEMA_PREFIX,
+  UI_FIELD_KEY,
+  UI_WIDGET_KEY,
+  UI_OPTIONS_KEY,
+  UI_GLOBAL_OPTIONS_KEY,
+  UI_DEFINITIONS_KEY,
+  JSON_SCHEMA_DRAFT_2019_09,
+  JSON_SCHEMA_DRAFT_2020_12,
+  JSON_SCHEMA_TYPES,
+} from './constants.ts';
+export { RESERVED_UI_OPTION_NAMES } from './globalUiOptionsKeys.ts';
+export type { SchemaMap } from './parser/schemaParser.ts';
+export { getValidationSchemas } from './parser/schemaParser.ts';
+export {
+  constrainsAlike,
+  constrainsValue,
+  expandRefCycle,
+  getAdditionalPropertyType,
+  getDefaultFormState,
+  getItemSchema,
+  getPrefixLength,
+  getValidationTarget,
+} from './schema/index.ts';
+/** @public The validator-based API that `createSchemaUtils()` binds, which consumers call directly with a validator */
+export {
+  findFieldInSchema,
+  findSelectedOptionInXxxOf,
+  getClosestMatchingOption,
+  // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
+  getDisplayLabel,
+  getFirstMatchingOption,
+  getFromSchema,
+  getUiRequiredErrorSchema,
+  isFilesArray,
+  isMultiSelect,
+  isSelect,
+  omitExtraData,
+  retrieveSchema,
+  sanitizeDataForNewSchema,
+} from './schema/index.ts';
 
 export type {
   AdditionalPropertyKeySelectProps,
@@ -446,7 +510,5 @@ export {
   dotNotationNameGenerator,
 };
 
-/** @public Only other packages' tests import these, to find the ids and hashes RJSF generates */
-export { default as hashForSchema } from './hashForSchema.ts';
-/** @public */
+/** @public Only other packages' tests import these, to find the ids RJSF generates */
 export { optionDescriptionId, optionHelpId, selectedOptionDescriptionId } from './idGenerators.ts';

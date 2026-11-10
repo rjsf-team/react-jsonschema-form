@@ -11,7 +11,6 @@ import type {
 import {
   ANY_OF_KEY,
   DEFAULT_KEY,
-  DEFINITIONS_KEY,
   ERRORS_KEY,
   getByPath,
   ErrorSchemaBuilder,
@@ -927,12 +926,12 @@ describe('LayoutMultiSchemaField', () => {
         {
           schema: option1,
           label: getByPath(oneOfSchema, [ONE_OF_KEY, 0, 'title']),
-          value: getByPath(oneOfSchema, [DEFINITIONS_KEY, 'first_option_def', PROPERTIES_KEY, 'name', DEFAULT_KEY]),
+          value: getByPath(oneOfSchema, ['definitions', 'first_option_def', PROPERTIES_KEY, 'name', DEFAULT_KEY]),
         },
         {
           schema: option2,
           label: getByPath(oneOfSchema, [ONE_OF_KEY, 1, 'title']),
-          value: getByPath(oneOfSchema, [DEFINITIONS_KEY, 'second_option_def', PROPERTIES_KEY, 'name', DEFAULT_KEY]),
+          value: getByPath(oneOfSchema, ['definitions', 'second_option_def', PROPERTIES_KEY, 'name', DEFAULT_KEY]),
         },
       ]);
     });

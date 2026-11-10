@@ -1,9 +1,8 @@
+import { EXTRA_KEYS_ELSEWHERE_FLAG, RJSF_PROVENANCE_KEY } from '../src/constants.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  EXTRA_KEYS_ELSEWHERE_FLAG,
   GUESSED_TYPE_FLAG,
   hasSchemaMarker,
-  RJSF_PROVENANCE_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
 } from '../src/index.ts';

@@ -1,4 +1,5 @@
-import { ENUM_OPTION_INDEX_PREFIX, enumOptionsDomValues } from '../src/index.ts';
+import { ENUM_OPTION_INDEX_PREFIX } from '../src/constants.ts';
+import { enumOptionsDomValues } from '../src/index.ts';
 import type { EnumOptionsType } from '../src/index.ts';
 
 const toOptions = (...values: unknown[]): EnumOptionsType[] => values.map((value) => ({ value, label: String(value) }));
