@@ -1,54 +1,65 @@
-import type { GenericObjectType } from '@rjsf/utils';
-import { isPlainObject, setOwn } from '@rjsf/utils';
+import type { FieldPath, FieldPathList } from '@rjsf/utils';
+import { fieldPathFromList, fieldPathToList, isPlainObject, setByPath } from '@rjsf/utils';
 
-/** Whether `container` holds `key` as its own, without a value */
-function holdsUndefined(container: GenericObjectType, key: string): boolean {
-  return Object.hasOwn(container, key) && container[key] === undefined;
+import { copyAlongPath, getAt } from './dataPaths.ts';
+
+/** Whether `container` holds a clear under `key`: an object's own key holding `undefined`, or a `null` array item, as a
+ * cleared item is written
+ */
+export function holdsClear(container: unknown, key: string | number): boolean {
+  if (Array.isArray(container)) {
+    return Number(key) < container.length && container[Number(key)] === null;
+  }
+  return isPlainObject(container) && Object.hasOwn(container, key) && container[key] === undefined;
 }
 
-/** `derived` with each clear that both `written` and `cleared` hold kept: a field cleared, in this change or an earlier
- * one, stays cleared whatever defaults the derivation merged in (#5125), such as under
- * `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'`. A cleared property is an own key holding `undefined`,
- * and a cleared array item is `null`, as a cleared item is written. Only the containers whose references differ are
- * walked, and an array index by index, as `written` holds it in the order the change left it
+/** Whether `data` holds a clear at `path`, see `holdsClear()`. The root holds none: it is no key of a container */
+export function holdsClearAt(data: unknown, path: FieldPathList): boolean {
+  return path.length > 0 && holdsClear(getAt<unknown>(data, path.slice(0, -1)), path[path.length - 1]);
+}
+
+/** Whether `container` holds a value under `key` that a clear there would replace */
+export function holdsValue(container: unknown, key: string | number): boolean {
+  if (Array.isArray(container)) {
+    return Number(key) < container.length && container[Number(key)] !== null;
+  }
+  return isPlainObject(container) && Object.hasOwn(container, key) && container[key] !== undefined;
+}
+
+/** `derived` with each clear at `clearedPaths` that `written` still holds kept: a field the user cleared, in this change
+ * or an earlier one, stays cleared whatever defaults the derivation merged in (#5125), such as under
+ * `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'`. A clear holds only while `written` holds it, see
+ * `holdsClear()`, so a key dropped or given a value gives way to its defaults
  *
  * @param derived - The data the derivation filled
  * @param written - The data the derivation filled it from
- * @param cleared - The data whose clears are kept, laid out as `written` is
- * @returns - `derived`, sharing every subtree the walk cleared nothing in
+ * @param clearedPaths - The paths of the clears to keep
+ * @returns - `derived`, sharing every subtree that holds no kept clear
  */
-export default function keepClears<V>(derived: V, written: unknown, cleared: unknown): V;
-export default function keepClears(derived: unknown, written: unknown, cleared: unknown): unknown {
-  if (derived === written) {
-    return derived;
+export function keepRecordedClears<V>(derived: V, written: unknown, clearedPaths: Iterable<FieldPath>): V {
+  let kept = derived;
+  if (Object.is(derived, written)) {
+    return kept;
   }
-  if (Array.isArray(derived) && Array.isArray(written)) {
-    const items: readonly unknown[] = derived;
-    const writtenItems: readonly unknown[] = written;
-    const clearedItems: readonly unknown[] = Array.isArray(cleared) ? cleared : [];
-    let kept: unknown[] | undefined;
-    items.forEach((item, index) => {
-      const wasCleared = writtenItems[index] === null && clearedItems[index] === null;
-      const next = wasCleared ? null : keepClears(item, writtenItems[index], clearedItems[index]);
-      if (next !== item) {
-        kept ??= [...items];
-        kept[index] = next;
-      }
-    });
-    return kept ?? items;
-  }
-  if (isPlainObject(derived) && isPlainObject(written)) {
-    const clearedKeys = isPlainObject(cleared) ? cleared : {};
-    let kept: GenericObjectType | undefined;
-    for (const [key, value] of Object.entries(derived)) {
-      const wasCleared = holdsUndefined(written, key) && holdsUndefined(clearedKeys, key);
-      const next = wasCleared ? undefined : keepClears(value, written[key], clearedKeys[key]);
-      if (next !== value) {
-        kept ??= { ...derived };
-        setOwn(kept, key, next);
-      }
+  for (const fieldPath of clearedPaths) {
+    const path: FieldPathList = fieldPathToList(fieldPath);
+    const container = getAt<unknown>(kept, path.slice(0, -1));
+    if (holdsClearAt(written, path) && holdsValue(container, path[path.length - 1])) {
+      kept = setByPath(copyAlongPath(kept, path), path, Array.isArray(container) ? null : undefined);
     }
-    return kept ?? derived;
   }
-  return derived;
+  return kept;
+}
+
+/** The paths of the clears in `value`, at `path`: each of its own keys holding `undefined` and each `null` item, the
+ * items and the values of its keys included
+ */
+export function clearsIn(value: unknown, path: FieldPathList): FieldPath[] {
+  if (!Array.isArray(value) && !isPlainObject(value)) {
+    return [];
+  }
+  return Object.keys(value).flatMap((key) => {
+    const at = [...path, Array.isArray(value) ? Number(key) : key];
+    return holdsClear(value, key) ? [fieldPathFromList(at)] : clearsIn(Reflect.get(value, key), at);
+  });
 }

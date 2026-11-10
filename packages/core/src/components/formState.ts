@@ -24,6 +24,7 @@ import {
   deepEquals,
   deepEqualsUndefinedAsMissing,
   errorSchemaChild,
+  fieldPathFromList,
   getChangedFields,
   getUiOptions,
   hashObject,
@@ -48,7 +49,7 @@ import { copyAlongPath, getAt, isPathPrefix, replaceErrorSchemaNode } from './da
 import { schemaFieldDrawsControlsBesideOptions, schemaFieldFallbackType } from './fields/SchemaField.tsx';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent, NestedBooleans, RJSFFormStatus } from './IChangeEvent.ts';
-import keepClears from './keepClears.ts';
+import { clearsIn, holdsClear, holdsClearAt, holdsValue, keepRecordedClears } from './keepClears.ts';
 import { keyMoveOf, moveErrorKeys, moveErrorSchemaKeys, movedPaths, withKeysMoved } from './keyMove.ts';
 import type { ContainerKeyMove, KeyMove, MoveFate } from './keyMove.ts';
 import type { FieldTree, FirstRenderFill } from './sanitizeFieldTree.ts';
@@ -291,6 +292,9 @@ export function toFormStatus<T>(
  */
 export type TouchedPaths = ReadonlySet<FieldPath>;
 
+/** The fields the user cleared, see `FormState.clearedPaths` */
+export type ClearedPaths = ReadonlySet<FieldPath>;
+
 /** Where `liveValidate`'s trigger fired, for `liveErrors: 'field'`: `fields`, the fields that fired, whose errors show
  * along with those of every array and object holding them, and `containers`, the arrays and objects whose keys a move
  * announced moved, or whose option selector was blurred, whose own errors show, along with those of the containers
@@ -426,17 +430,42 @@ function isRevealedByField<T, S extends StrictRJSFSchema, F extends FormContextT
   return props.liveErrors === 'field' && (isLiveValidated(props) || isBlurValidated(props));
 }
 
-/** The touched fields and the revealed ones once the data went from `current`'s to `formData`: both follow the keys
- * `move` moved, and lose those dropped without a move, see `withoutDroppedPaths()`
+/** The marks that follow the data: the touched fields, the revealed ones and the recorded clears */
+type DataMarks<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
+  FormState<T, S, F>,
+  'touchedPaths' | 'revealed' | 'clearedPaths'
+>;
+
+/** `paths` without the clears `formData` no longer holds, see `holdsClear()`: a clear holds only while the key is there
+ * holding `undefined`, or the item `null`, so a key dropped or given a value starts again from its defaults
+ */
+function heldClears(paths: ReadonlySet<FieldPath>, formData: unknown): ReadonlySet<FieldPath> {
+  if (paths.size === 0) {
+    return paths;
+  }
+  const kept = [...paths].filter((fieldPath) => holdsClearAt(formData, fieldPathToList(fieldPath)));
+  return kept.length === paths.size ? paths : new Set(kept);
+}
+
+/** The touched fields, the revealed ones and the recorded clears once the data went from `current`'s to `formData`:
+ * each follows the keys `move` moved. The touched and revealed fields lose those dropped without a move, see
+ * `withoutDroppedPaths()`, and the clears those `formData` no longer holds, see `heldClears()`
+ *
+ * @param current - The state before the change
+ * @param formData - The data after it
+ * @param [move] - Where the change moved the keys of a container
+ * @param [clearedPaths] - The clears recorded through the change, already moved, in place of `current`'s
  */
 function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   formData: T | undefined,
   move?: ContainerKeyMove,
-): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
+  clearedPaths = withPathsMoved(current.clearedPaths, move),
+): DataMarks<T, S, F> {
   const { touchedPaths, revealed } = current;
+  const clears = heldClears(clearedPaths, formData);
   if (touchedPaths.size === 0 && revealed.fields.size === 0 && revealed.containers.size === 0) {
-    return { touchedPaths, revealed };
+    return { touchedPaths, revealed, clearedPaths: clears };
   }
   // The moved paths are checked against the earlier data with the same keys moved, so a path a move re-keyed is checked
   // against the value that moved with it
@@ -448,11 +477,20 @@ function marksFollowingData<T, S extends StrictRJSFSchema, F extends FormContext
   return {
     touchedPaths: follow(touchedPaths),
     revealed: withRevealed(revealed, follow(revealed.fields), follow(revealed.containers)),
+    clearedPaths: clears,
   };
 }
 
-/** The touched fields and the revealed ones after `change`, which left `formData`: both follow the keys it moved, and
- * lose those it dropped without a move, see `withoutDroppedPaths()`. Under `liveErrors: 'field'`, a change that moved
+/** Where `change` moved the keys of a container, as the data went. The marks belong to the data, so they go where the
+ * data went, as the validator's errors do, not where the fields' own errors go: a field both options of a switch
+ * declare keeps its value, and its marks with it
+ */
+function dataMoveOf<T>(change: FieldChange<T>): ContainerKeyMove | undefined {
+  return keyMoveOf({ ...change, newOwnKeyOf: undefined });
+}
+
+/** The marks after `change`, which left `formData`, with `clearedPaths`, the clears recorded through it: each follows
+ * the keys it moved, see `marksFollowingData()`. Under `liveErrors: 'field'`, a change that moved
  * keys, or that a field announced as a move, as an added property is, reveals the container's own errors, and a
  * field's edit under `liveValidate: 'onChange'` reveals the field's. A root write standing for an edit reveals nothing
  * more: the edit revealed what it reached
@@ -462,11 +500,10 @@ function marksAfterChange<T, S extends StrictRJSFSchema, F extends FormContextTy
   change: FieldChange<T>,
   formData: T | undefined,
   props: FormProps<T, S, F>,
-): Pick<FormState<T, S, F>, 'touchedPaths' | 'revealed'> {
-  // The marks belong to the data, so they go where the data went, as the validator's errors do, not where the fields'
-  // own errors go: a field both options of a switch declare keeps its value, and its marks with it
-  const move = keyMoveOf({ ...change, newOwnKeyOf: undefined });
-  const followed = marksFollowingData(current, formData, move);
+  clearedPaths: ReadonlySet<FieldPath>,
+): DataMarks<T, S, F> {
+  const move = dataMoveOf(change);
+  const followed = marksFollowingData(current, formData, move, clearedPaths);
   let { revealed } = followed;
   if (isRevealedByField(props) && !change.editedPath) {
     const container = move?.container ?? (change.isAnnouncedMove ? change.fieldPath : undefined);
@@ -621,11 +658,6 @@ export interface FieldChange<T> {
    * writes over an edit, says nothing of what any field raised
    */
   keepsOwnErrors?: boolean;
-  /** For a root write over an edit, such as `transformChange`'s, the data the edit left: a field it left cleared that
-   * the root write leaves without a value too stays cleared whatever defaults the root write merges in, as it did under
-   * the edit
-   */
-  editedData?: T;
   /** For a root write that stands for an edit, as the data a `transformChange` writes over one does, the path of the
    * field the edit changed: the write is sanitized for a schema its data switches as the edit would be, with the value
    * at that path the user's. Any other root write, such as `setFieldValue('', data)`, is taken as written
@@ -1151,11 +1183,11 @@ interface DeriveDataOptions {
   isReset?: boolean;
   /** The option selections to settle under, in place of the state's own, as for the baseline, see `baselineUiState` */
   uiState?: UiStateReader;
-  /** The data holding the clears this pass keeps, laid out as the data it settles, see `keepClears()`. They are kept
-   * by every fill, so the schema each round resolves describes the data with its clears. A disabled or read-only form
-   * keeps none: it isn't sanitized, and only the sanitize lets a clear give way once its field changes
+  /** The paths of the clears this pass keeps, see `keepRecordedClears()`. They are kept by every fill, so the schema
+   * each round resolves describes the data with its clears. A disabled or read-only form keeps none: it isn't
+   * sanitized, and only the sanitize lets a clear give way once its field changes
    */
-  clears?: unknown;
+  clears?: ReadonlySet<FieldPath>;
 }
 
 /** Settles the data for `props` and `inputFormData`: any missing required defaults are filled in, then, when asked,
@@ -1217,12 +1249,12 @@ function settleFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   ) => utils.getDefaultFormState(utils.getRootSchema(), data, false, areInitialDefaultsGenerated, ui, undefined, state);
   const fillAsFirstRender: FirstRenderFill<T, S, F> = (tree, data, state) =>
     defaultsOf(tree.schemaUtils, tree.uiSchema, data, false, state);
-  const fill = (data: T | undefined, clears: unknown) => {
+  const fill = (data: T | undefined, clears: ReadonlySet<FieldPath> | undefined) => {
     const filled = replaceEqualDeep(
       shareBase,
       asFilledFormData<T>(defaultsOf(schemaUtils, uiSchema, data, initialDefaultsGenerated, fieldState)),
     );
-    return clears === undefined ? filled : keepClears(filled, data, clears);
+    return clears === undefined ? filled : keepRecordedClears(filled, data, clears);
   };
   let formData = fill(inputFormData, options.clears);
   const treeOf = (data: T | undefined): FieldTree<T, S, F> => ({
@@ -1438,7 +1470,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // A schema change sanitizes the data for the new schema's tree, as an edit does for the tree it leads to, and leaves
   // the data of a disabled or read-only form as it is, as an edit there does
   const isSanitized = !props.disabled && !props.readonly;
-  const options = { isSanitized, clears: fillsOverClears(props) && isSanitized ? current?.formData : undefined };
+  const options = { isSanitized, clears: fillsOverClears(props) && isSanitized ? current?.clearedPaths : undefined };
   const { formData, context, areSchemaUtilsReused } = deriveFormData(current, inputFormData, options, props);
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   const baseline = current ? rederiveBaseline(current, formData, options, props, context.schemaUtils) : formData;
@@ -1447,7 +1479,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const isDataPassed = current ? current.isDataPassed : inputFormData !== undefined;
   const marks = current
     ? marksFollowingData(current, formData)
-    : { touchedPaths: NO_PATHS, revealed: NOTHING_REVEALED };
+    : { touchedPaths: NO_PATHS, revealed: NOTHING_REVEALED, clearedPaths: NO_PATHS };
   const errors = reconcileErrors(current, props, context, formData, {
     isSchemaChanged,
     revealed: marks.revealed,
@@ -1540,8 +1572,8 @@ function heldPathOf<T>(change: FieldChange<T>): FieldPathList | undefined {
   return change.isFieldEdit ? (change.editedPath ?? fieldPathToList(change.fieldPath)) : undefined;
 }
 
-/** Whether the form's defaults can replace an own `undefined`: only this mode's fill does, so under the others there is
- * no clear to keep and nothing has to be walked
+/** Whether the form's defaults can replace an own `undefined`: only this mode's fill does, so under the others the
+ * fill has no recorded clear to keep. The clears are recorded under every mode, so a switch to this one keeps them
  *
  * @param props - The current props
  * @returns - True if the fill replaces a clear
@@ -1550,39 +1582,88 @@ function fillsOverClears<T, S extends StrictRJSFSchema, F extends FormContextTyp
   return props.defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
 }
 
-/** The data whose clears `change` keeps, laid out as `written`, the data it wrote; see `keepClears()`. A field's own
- * edit keeps the committed data's clears and its own: a container it writes, as an option switch writes one, keeps
- * only the clears the committed data held there, under the keys the edit moved them to, since the `undefined` a switch
- * leaves is for the defaults to fill. A switch that leaves the field itself without a value, as one between scalar
- * options does, and data written from outside, as `setFieldValue()` writes it, are left to their defaults, and the
- * clears elsewhere stay. A `transformChange` rewrite keeps those its edit kept
+/** `paths` without the path `prefix` and those under it */
+function withoutPathsUnder(paths: ReadonlySet<FieldPath>, prefix: FieldPathList): ReadonlySet<FieldPath> {
+  const kept = [...paths].filter((fieldPath) => !isPathPrefix(prefix, fieldPathToList(fieldPath)));
+  return kept.length === paths.size ? paths : new Set(kept);
+}
+
+/** The paths of the clears `written`, the array or object a field wrote at `path`, makes over `held`, the one it
+ * replaced: each key or item it leaves without a value that held one there
+ */
+function clearsWrittenOver(written: unknown, held: unknown, path: FieldPathList): FieldPath[] {
+  const isArrayPair = Array.isArray(written) && Array.isArray(held);
+  if (Object.is(written, held) || !(isArrayPair || (isPlainObject(written) && isPlainObject(held)))) {
+    return [];
+  }
+  return Object.keys(written).flatMap((key) => {
+    const at = [...path, isArrayPair ? Number(key) : key];
+    if (holdsClear(written, key)) {
+      return holdsValue(held, key) ? [fieldPathFromList(at)] : [];
+    }
+    return clearsWrittenOver(Reflect.get(written, key), Reflect.get(held, key), at);
+  });
+}
+
+/** The paths of the clears in the items a key move added to the array at `path`, such as a copy: an item no item the
+ * array held before moved to holds what the field put there, its clears included
+ */
+function clearsInAddedItems(committed: unknown, written: unknown, path: FieldPathList, newKeyOf: KeyMove): FieldPath[] {
+  const held = getAt<unknown>(committed, path);
+  const items = getAt<unknown>(written, path);
+  if (!Array.isArray(held) || !Array.isArray(items)) {
+    return [];
+  }
+  const movedTo = new Set(held.map((_, index) => newKeyOf(String(index))));
+  return items.flatMap((item, index) => {
+    if (movedTo.has(String(index))) {
+      return [];
+    }
+    return item === null ? [fieldPathFromList([...path, index])] : clearsIn(item, [...path, index]);
+  });
+}
+
+/** The clears the form records once `change` wrote `written` over `committed`, before any defaults merge in: those
+ * recorded before, moved with the keys the change moved, and the ones the change made. A field's edit that leaves its
+ * field without a value, `undefined` or a `null` item, is a clear, and so is each key or item a field's write of an
+ * array or object leaves without a value where the data held one. A key move records only the clears in the items it added, as a copy, and drops the
+ * clear of the field it rewrites, as an option switch leaving a scalar field without a value does, whose `undefined`
+ * is for the defaults to fill. Data written from outside, as `setFieldValue()` writes it, drops the clears at and
+ * under its path, so it is left to its defaults, while those elsewhere stay. A `transformChange` rewrite records none
+ * of its own: it keeps those of the edit it stands for, while its data still holds them
  *
+ * @param recorded - The clears recorded before the change
  * @param change - The change
  * @param committed - The data before the change
  * @param written - The data the change wrote, before any defaults
  * @param path - The path of the change
- * @returns - The data holding the clears to keep, or `undefined` for none
+ * @returns - The clears recorded through the change, before those the derived data no longer holds are dropped
  */
-function clearsOf<T>(change: FieldChange<T>, committed: T | undefined, written: T, path: FieldPathList): unknown {
-  if (change.editedPath) {
-    return change.editedData;
+function clearsAfterChange<T>(
+  recorded: ReadonlySet<FieldPath>,
+  change: FieldChange<T>,
+  committed: T | undefined,
+  written: T | undefined,
+  path: FieldPathList,
+): ReadonlySet<FieldPath> {
+  const moved = withPathsMoved(recorded, dataMoveOf(change));
+  const { newValue, newKeyOf, isFieldEdit, editedPath } = change;
+  if (editedPath) {
+    return moved;
   }
-  const { newValue, newKeyOf } = change;
-  const writesContainer = isObject(newValue) || Array.isArray(newValue);
-  if (!change.isFieldEdit || (newKeyOf && !writesContainer)) {
-    if (path.length === 0) {
-      return undefined;
-    }
-    const elsewhere = copyAlongPath(written, path);
-    unsetByPath(elsewhere, path);
-    return elsewhere;
+  if (!isFieldEdit) {
+    return withoutPathsUnder(moved, path);
   }
-  if (!writesContainer) {
-    return written;
+  const fieldPath = fieldPathFromList(path);
+  if (newKeyOf) {
+    const kept = new Set(moved);
+    kept.delete(fieldPath);
+    return withPaths(kept, ...clearsInAddedItems(committed, written, path, newKeyOf));
   }
-  // An array also keeps what the change added, so a copied item keeps the clears of the row it copies
-  const before = getAt<unknown>(newKeyOf ? withKeysMoved(committed, written, path, newKeyOf) : committed, path);
-  return path.length === 0 ? before : setByPath(copyAlongPath(written, path), path, before);
+  if (isObject(newValue) || Array.isArray(newValue)) {
+    return withPaths(moved, ...clearsWrittenOver(newValue, getAt<unknown>(committed, path), path));
+  }
+  return holdsClearAt(written, path) ? withPaths(moved, fieldPath) : moved;
 }
 
 /** Applies the data of one `change` to `current`, returning the next state with `current`'s errors. The `newValue` is
@@ -1624,7 +1705,8 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     formData = (typeof path[0] === 'number' ? [] : {}) as T;
   }
 
-  if (isObject(formData) || Array.isArray(formData)) {
+  const isContainer = isObject(formData) || Array.isArray(formData);
+  if (isContainer) {
     if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
       // For additional properties, this key was explicitly removed, so unset it
       unsetByPath(formData, path);
@@ -1633,6 +1715,10 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
       const isArrayItem = typeof path[path.length - 1] === 'number';
       setByPath(formData, path, newValue === undefined && isArrayItem ? null : newValue);
     }
+  }
+  const clearedPaths = clearsAfterChange(current.clearedPaths, change, oldFormData, formData, path);
+
+  if (isContainer) {
     // Only the data and its context are derived here; the errors are reconciled below. A root write is sanitized only
     // where it stands for an edit, as the data a `transformChange` writes over one does. The `undefined` a clear leaves
     // is stripped from the copy the validator gets, so AJV never sees `{ [key]: undefined }` for a `string` field
@@ -1645,8 +1731,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
         isSanitized: editedPath !== undefined && !disabled && !readonly,
         edit: editedPath && { path: editedPath, newKeyOf: change.editedPath ? undefined : change.newKeyOf },
         heldPath: heldPathOf(change),
-        clears:
-          fillsOverClears(props) && !disabled && !readonly ? clearsOf(change, oldFormData, formData, path) : undefined,
+        clears: fillsOverClears(props) && !disabled && !readonly ? clearedPaths : undefined,
       },
       props,
     );
@@ -1663,7 +1748,7 @@ export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormC
     ...current,
     ...context,
     ...omitted,
-    ...marksAfterChange(current, change, omitted.formData, props),
+    ...marksAfterChange(current, change, omitted.formData, props, clearedPaths),
     // An edit is data the user made, whose errors they have earned, so a prop change live-validates it from now on
     isDataPassed: true,
   };
@@ -1753,6 +1838,7 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     baselineUiState: withSelectionsAsOf(context.uiState, (at) => getAt(formData, at)),
     touchedPaths: NO_PATHS,
     revealed: NOTHING_REVEALED,
+    clearedPaths: NO_PATHS,
     isDataPassed: seed !== undefined,
     ...extraErrorsAlone(props.extraErrors),
     // The reset pass has generated the initial defaults, so the next unrelated recompute is not an initial pass and

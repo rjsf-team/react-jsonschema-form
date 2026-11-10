@@ -3930,6 +3930,40 @@ describe('clearing a field with a schema default does not re-apply the default (
 
         expect(onChange.mock.lastCall?.[0].formData.group).toBe(group);
       });
+
+      it('keeps a clear a custom ui:field makes inside the object it writes (#5717)', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            o: { type: 'object', properties: { a: { type: 'string', default: 'A' }, b: { type: 'string' } } },
+            c: { type: 'string' },
+          },
+        };
+        function ClearingField({ formData, onChange, fieldPath }: FieldProps) {
+          return (
+            <button
+              type='button'
+              onClick={() => onChange(isPlainObject(formData) ? { ...formData, a: undefined } : formData, fieldPath)}
+            >
+              clear a
+            </button>
+          );
+        }
+        const { node, onChange } = createFormComponent({
+          schema,
+          defaultFormStateBehavior,
+          uiSchema: { o: { 'ui:field': ClearingField } },
+          initialFormData: { o: { a: 'old', b: 'x' } },
+        });
+
+        await user.click(elementOf(node, 'button[type=button]'));
+
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ o: { a: undefined, b: 'x' } });
+
+        await user.type(elementOf(node, 'input#root_c'), 'z');
+
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ o: { a: undefined, b: 'x' }, c: 'z' });
+      });
     });
 
     it('keeps an earlier cleared field empty while other fields change, until the user fills it', async () => {

@@ -26,7 +26,7 @@ import {
 } from '@rjsf/utils';
 
 import { copyAlongPath } from '../dataPaths.ts';
-import keepClears from '../keepClears.ts';
+import { clearsIn, keepRecordedClears } from '../keepClears.ts';
 import { DROP, guessedStubRenders, isGuessed } from '../sanitizeFieldTree.ts';
 import { asFieldValue } from '../uiState.ts';
 import { declaresProperty, withGlobalUiOptions } from './fieldWidgetUtils.ts';
@@ -629,12 +629,14 @@ export default function formDataForNewOption<
             uiSchemaDefinitions,
           ) as T);
     // The defaults add a key back for each property the option declares, which would read as the clear carried over,
-    // and `useDefaultIfFormDataUndefined` fills a clear that was carried over, which `Form` can no longer tell was one
+    // and `useDefaultIfFormDataUndefined` fills each `undefined` carried over. `Form` keeps a clear it recorded only
+    // while the data it is handed holds it, so the switch hands back every `undefined` it carried, for `Form` to keep
+    // the clears among them and fill the rest
     if (isPlainObject(newFormData)) {
-      newFormData = keepClears(
+      newFormData = keepRecordedClears(
         removeDiscardedKeys(schemaUtils, newFormData, renderedOldOption, renderedNewOption, parentSchema),
         carriedOver,
-        carriedOver,
+        clearsIn(carriedOver, []),
       );
     }
   }

@@ -313,7 +313,8 @@ function judge<S extends StrictRJSFSchema>(
     return undefined;
   }
   // A clear is the user's for the field as it was, so once the field changes it gives way to the new field's defaults,
-  // as a field that never held a value takes them
+  // as a field that never held a value takes them. Dropping the key ends the clear the form recorded for it, and under
+  // the default merge mode, where nothing is recorded to keep, the key holding `undefined` is what kept it empty
   if (value === undefined && !isItem) {
     return DROP;
   }

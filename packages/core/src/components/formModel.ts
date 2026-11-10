@@ -550,8 +550,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       keepsOwnErrors: true,
       editedPath: path,
       isFieldEdit: change.isFieldEdit,
-      // The edit's clears outlive the defaults the rewrite merges in, as they outlive those the edit does (#5125)
-      editedData: edited.formData,
     };
     // Unvalidated, the change still moves its errors with the keys it moved and settles the fields' own errors, which
     // the rewrite then carries through its one validation
