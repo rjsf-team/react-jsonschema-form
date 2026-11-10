@@ -427,6 +427,13 @@ describe('resolveFieldPresentation()', () => {
         `${ID}__optionHelp`,
         `${ID}__help`,
       ]);
+      // An order that leaves out the children draws them after every part it lists
+      expect(order(['help', 'description'])).toEqual([
+        `${ID}__help`,
+        `${ID}__description`,
+        `${ID}__optionHelp`,
+        `${ID}__optionDescription`,
+      ]);
     });
 
     it('lists a part a field above draws itself before the parts of the levels beneath it', () => {

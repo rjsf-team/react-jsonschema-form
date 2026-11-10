@@ -1075,7 +1075,8 @@ export interface ThemePresentation {
   /** The order the theme's `FieldTemplate` draws a field's description and help in around its `children`, so
    * `resolveFieldPresentation()` lists them in the order they are drawn, `['description', 'children', 'help']` where no
    * layer declares it. An `anyOf`/`oneOf` option's template draws inside its field's `children`, so a part listed after
-   * `'children'` is drawn after the option's parts, and one listed before it before them
+   * `'children'` is drawn after the option's parts, and one listed before it before them. A part it leaves out is taken
+   * as drawn before `children`, and an order that leaves out `'children'` as drawing it after every part it lists
    */
   fieldTemplateOrder?: FieldTemplateOrder;
 }
