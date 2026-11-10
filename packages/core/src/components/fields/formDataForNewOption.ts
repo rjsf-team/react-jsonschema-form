@@ -232,12 +232,15 @@ function keptAsGuessedExtraKey<T, S extends StrictRJSFSchema, F extends FormCont
   path: FieldPathList,
   isFieldFill: (value: unknown, path: FieldPathList) => boolean,
 ): unknown {
+  if (!isGuessedStub<S>(stub) || Array.isArray(value)) {
+    return DROP;
+  }
   const data = asFieldValue<T>(value);
   const retrievedOldField = oldField && schemaUtils.retrieveSchema(oldField, data);
   // The old field's own fill is what holds an object's `{}`, which the fill around it leaves out
   const isOwnFill =
     retrievedOldField !== undefined && deepEquals(schemaUtils.getDefaultFormState(retrievedOldField), value);
-  if (!isGuessedStub<S>(stub) || Array.isArray(value) || isOwnFill || isFieldFill(value, path)) {
+  if (isOwnFill || isFieldFill(value, path)) {
     return DROP;
   }
   if (!isPlainObject(value)) {

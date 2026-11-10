@@ -5451,17 +5451,17 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
         beforeSwitch?: (node: Element) => Promise<void>;
       } = {},
     ) {
-      const { node, onChange } = createFormComponent({
+      const { node, onChange, getFormData } = createFormComponent({
         schema,
         initialFormData,
         uiSchema,
         additionalPropertiesWhenAbsent: whenAbsent,
       });
       await beforeSwitch?.(node);
-      const hadField = node.querySelector('#root_a') !== null;
+      const before = getFormData();
       await user.selectOptions(elementOf(node, selectorId), 'T');
       const formData: unknown = onChange.mock.lastCall?.[0].formData;
-      return { node, hadField, formData };
+      return { node, before, formData };
     }
 
     it.each<{ extras: string; schema: RJSFSchema; whenAbsent?: 'allow' }>([
@@ -5482,10 +5482,40 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
 
     it('keeps a number the user typed over the default', async () => {
       const schema = unionOf({ additionalProperties: true }, { type: 'number', default: 1 });
-      const { node, formData } = await selectT(schema, { initialFormData: { kind: 's', a: 5 } });
+      const { node, formData } = await selectT(schema, {
+        initialFormData: { kind: 's' },
+        beforeSwitch: async (form) => {
+          await user.clear(input(form, 'root_a'));
+          await user.type(input(form, 'root_a'), '5');
+        },
+      });
 
       expect(formData).toEqual({ kind: 't', a: 5 });
       expect(input(node, 'root_a').value).toBe('5');
+    });
+
+    // The key is the new option's field rather than an extra key, so it is judged as that field
+    it('leaves a key the new option declares through allOf to its field', async () => {
+      const schema = unionOf(
+        { additionalProperties: true },
+        undefined,
+        {},
+        { allOf: [{ properties: { a: { type: 'number' } } }] },
+      );
+      const { node, formData } = await selectT(schema);
+
+      expect(formData).toEqual({ kind: 't' });
+      expect(node.querySelector('#root_a__key')).toBeNull();
+    });
+
+    it('keeps a string as an extra key of an option field below the root', async () => {
+      const schema: RJSFSchema = { type: 'object', properties: { pet: unionOf({ additionalProperties: true }) } };
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { pet: { kind: 's', a: 'x' } } });
+
+      await user.selectOptions(elementOf(node, `#root_pet__${keyword.toLowerCase()}_select`), 'T');
+
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ pet: { kind: 't', a: 'x' } });
+      expect(node.querySelector('#root_pet_a__key')).not.toBeNull();
     });
 
     it('keeps an object whose keys its extra key renders, as extra keys of their own', async () => {
@@ -5549,9 +5579,23 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
     });
 
     // The form fills these in by itself, so keeping them would leave extra-key rows the user never typed
-    it.each<{ filled: string; schema: RJSFSchema; initialFormData?: KindData; whenAbsent?: 'allow' }>([
-      { filled: 'a default', schema: unionOf({ additionalProperties: true }, { type: 'string', default: 'd' }) },
-      { filled: 'a const', schema: unionOf({ additionalProperties: true }, { type: 'string', const: 'x' }) },
+    it.each<{
+      filled: string;
+      schema: RJSFSchema;
+      held: unknown;
+      initialFormData?: KindData;
+      whenAbsent?: 'allow';
+    }>([
+      {
+        filled: 'a default',
+        schema: unionOf({ additionalProperties: true }, { type: 'string', default: 'd' }),
+        held: 'd',
+      },
+      {
+        filled: 'a const',
+        schema: unionOf({ additionalProperties: true }, { type: 'string', const: 'x' }),
+        held: 'x',
+      },
       {
         filled: "a required object's empty object",
         schema: unionOf(
@@ -5559,40 +5603,47 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
           { type: 'object', properties: { b: { type: 'string' } } },
           { required: ['a'] },
         ),
+        held: {},
       },
       {
         filled: "a required boolean's false",
         schema: unionOf({ additionalProperties: true }, { type: 'boolean' }, { required: ['a'] }),
+        held: false,
       },
       // Required on the schema holding the options, which the option inherits
       {
         filled: "a boolean's false the parent's required fills",
         schema: unionOf({ additionalProperties: true, required: ['a'] }, { type: 'boolean' }),
+        held: false,
       },
       {
         filled: "an object its properties' defaults fill",
         schema: unionOf({}, { type: 'object', properties: { b: { type: 'string', default: 'q' } } }),
+        held: { b: 'q' },
         whenAbsent: 'allow',
       },
       {
         filled: "the option's own default",
         schema: unionOf({ additionalProperties: true }, { type: 'string' }, { default: { a: 'o' } }),
+        held: 'o',
       },
       {
         filled: "the parent's default",
         schema: unionOf({ additionalProperties: true, default: { kind: 's', a: 'p' } }),
+        held: 'p',
       },
       {
         filled: 'an empty object',
         schema: unionOf({ additionalProperties: true }, { type: 'object', properties: { b: { type: 'string' } } }),
+        held: {},
         initialFormData: { kind: 's', a: {} },
       },
     ])(
       'drops $filled rather than keeping it as an extra key',
-      async ({ schema, initialFormData = { kind: 's' }, whenAbsent }) => {
-        const { node, hadField, formData } = await selectT(schema, { initialFormData, whenAbsent });
+      async ({ schema, held, initialFormData = { kind: 's' }, whenAbsent }) => {
+        const { node, before, formData } = await selectT(schema, { initialFormData, whenAbsent });
 
-        expect(hadField).toBe(true);
+        expect(before).toEqual({ kind: 's', a: held });
         expect(formData).toEqual({ kind: 't' });
         expect(node.querySelector('#root_a__key')).toBeNull();
       },
