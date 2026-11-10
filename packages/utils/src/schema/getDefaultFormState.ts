@@ -1594,14 +1594,10 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
   const parentConst = schema[CONST_KEY];
+  const objectConst = isObjectData(parentConst) && !constIsAjvDataReference(schema) ? parentConst : undefined;
   // Under `constAsDefaults: 'always'` an object `const` takes precedence over the data, so an extra key it doesn't name
   // is dropped, whether the object stubs it among its properties or computes it from its `additionalProperties`
-  const pinnedKeys =
-    defaultFormStateBehavior?.constAsDefaults === 'always' &&
-    isObjectData(parentConst) &&
-    !constIsAjvDataReference(schema)
-      ? parentConst
-      : undefined;
+  const pinnedKeys = defaultFormStateBehavior?.constAsDefaults === 'always' ? objectConst : undefined;
   const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
@@ -1824,12 +1820,8 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   // An object `const` is the object's value as a whole, so a key it names that no property declares and nothing above
   // computed takes the const's value, as a declared key takes it through its own field, unless the data holds a value
   // for it, which is kept below
-  if (
-    isObjectData(parentConst) &&
-    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
-    !constIsAjvDataReference(schema)
-  ) {
-    for (const [key, value] of Object.entries(parentConst)) {
+  if (objectConst && defaultFormStateBehavior?.constAsDefaults !== 'never') {
+    for (const [key, value] of Object.entries(objectConst)) {
       const declared = isObject(schema.properties) && Object.hasOwn(schema.properties, key);
       const heldByData = shouldMergeDefaultsIntoFormData && Object.hasOwn(formData, key) && formData[key] !== undefined;
       if (!declared && !heldByData && !Object.hasOwn(computed, key)) {
