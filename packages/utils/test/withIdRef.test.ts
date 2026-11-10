@@ -52,6 +52,18 @@ describe('withRootIdRefPrefix()', () => {
   it('prefixes a local $ref with ROOT_SCHEMA_PREFIX for a root without an $id', () => {
     expect(withRootIdRefPrefix({ $ref: '#/a' }, {})).toEqual({ $ref: `${ROOT_SCHEMA_PREFIX}#/a` });
   });
+  it('returns a copy, leaving the schema it is handed as it was', () => {
+    const schema: RJSFSchema = { anyOf: [{ $ref: '#/defs/foo' }] };
+    withRootIdRefPrefix(schema, {});
+    expect(schema).toEqual({ anyOf: [{ $ref: '#/defs/foo' }] });
+  });
+  it('reads a property named `$ref` as a property, not a reference', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { $ref: { type: 'string', title: 'First name', default: 'Chuck' } },
+    };
+    expect(withRootIdRefPrefix(schema, {})).toEqual(schema);
+  });
   it('should leave the empty fragment an id ends in out of the prefix', () => {
     expect(withRootIdRefPrefix({ $ref: '#/if' }, { $id: 'http://example.com/root.json#' })).toEqual({
       $ref: 'http://example.com/root.json#/if',

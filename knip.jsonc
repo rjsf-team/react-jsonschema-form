@@ -35,8 +35,8 @@
     },
     "packages/utils": {
       // `knip --production` leaves out utils' own tests, so there the index has to be imported by another package's
-      // source to count as used; the plain `knip` run still checks the tests. The production run skips module exports
-      // tagged @testSeam, which exist for those tests.
+      // source to count as used; the plain `knip` run still checks the tests. The production run skips exports
+      // tagged @testSeam, which exist only for tests, utils' own or another package's.
       "project": ["src/**/*.{ts,tsx}!", "test/**/*.{ts,tsx}"],
       "includeEntryExports": true,
     },
