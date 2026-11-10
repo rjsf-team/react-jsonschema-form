@@ -46,8 +46,8 @@ export const TranslatableString = {
    * ArrayField
    */
   MoveUpItemButton: 'Move %1 up',
-  /** Remove button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by
-   * ArrayField
+  /** Remove button title for an array item named through `ui:options.itemLabel`, or for a selected item of a multiple
+   * select, where %1 is its name; used by ArrayField and by the SelectWidget of @rjsf/shadcn
    */
   RemoveItemButton: 'Remove %1',
   /** The name of an array item named through `ui:options.itemLabel` when another item has the same name, or of a thumb

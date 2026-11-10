@@ -151,6 +151,7 @@ export default function SelectWidget<
           ariaLabel={ariaLabel}
           ariaLabelledby={ariaLabelledby}
           placeholder={placeholderText}
+          removeItemLabel={(label) => registry.translateString(TranslatableString.RemoveItemButton, [label])}
           autoFocus={autofocus}
           disabled={disabled || readonly}
           required={required}

@@ -26,6 +26,13 @@ const CONTROLS = [
   '[role="switch"]',
 ].join(', ');
 const LABELABLE = 'button, input:not([type="hidden"]), meter, output, progress, select, textarea';
+const REFERENCES = [
+  'aria-labelledby',
+  'aria-describedby',
+  'aria-controls',
+  'aria-activedescendant',
+  'aria-errormessage',
+];
 
 interface ContractCase {
   schema: RJSFSchema;
@@ -66,15 +73,20 @@ function expectContract(container: HTMLElement, { presentsNothing }: ContractCas
     const target = label.getAttribute('for');
     expect(container.querySelector(`[id="${target}"]`)?.matches(LABELABLE), `label for="${target}"`).toBe(true);
   }
-  for (const element of checked('[aria-labelledby], [aria-describedby]')) {
-    const describedBy = idsIn(element, 'aria-describedby');
-    for (const id of [...idsIn(element, 'aria-labelledby'), ...describedBy]) {
+  for (const element of checked(REFERENCES.map((attribute) => `[${attribute}]`).join(', '))) {
+    for (const id of REFERENCES.flatMap((attribute) => idsIn(element, attribute))) {
       expect(container.querySelector(`[id="${id}"]`), `the element ${id} names`).toBeInTheDocument();
     }
-    if (describedBy.some((id) => id.endsWith('__error'))) {
-      // A theme marking a group invalid rather than each radio in it still marks the control the error describes
-      expect(element.closest('[aria-invalid="true"]'), `${element.outerHTML} is invalid`).toBeInTheDocument();
+    if (idsIn(element, 'aria-describedby').some((id) => id.endsWith('__error'))) {
+      // A theme may mark a radio group invalid rather than each radio in it, but no other ancestor stands in
+      expect(
+        element.matches('[aria-invalid="true"]') || element.closest('[role="radiogroup"][aria-invalid="true"]'),
+        `${element.outerHTML} is invalid`,
+      ).toBeTruthy();
     }
+  }
+  if (!errored) {
+    expect(checked('[aria-invalid="true"]').map(({ outerHTML }) => outerHTML)).toEqual([]);
   }
 
   for (const control of checked(CONTROLS).filter((element) => !isInaccessible(element))) {
@@ -157,6 +169,15 @@ export function presentationContractTests(
       },
     ],
     ['an array', { schema: { ...presented, type: 'array', items: { type: 'string' } }, formData: ['a'] }],
+    // Most themes draw a multiple select with a component of their own (#5478, #5492)
+    [
+      'a multiple select',
+      {
+        schema: { ...presented, type: 'array', uniqueItems: true, items: { type: 'string', enum: ['north', 'south'] } },
+        uiSchema: { 'ui:widget': 'SelectWidget' },
+        formData: ['north'],
+      },
+    ],
     ['a fallback value', { schema: presented, formData: 'a' }],
   ];
 
