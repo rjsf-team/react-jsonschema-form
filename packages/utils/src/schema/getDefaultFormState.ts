@@ -32,6 +32,7 @@ import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isConstantSelect from '../isConstantSelect.ts';
+import isContainerValue from '../isContainerValue.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
@@ -1156,18 +1157,22 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       // data of an object field is not: each of its properties was computed with its data already, its `allOf` merged
       // or not, so the data is matched once, by the field of each property, rather than again by every object it is
       // nested in. The data of an untyped field wins over its defaults, except where its `allOf` was merged: what its
-      // properties were computed as from that wins, as an `if`/`then` `const` does
-      defaultsWithFormData = mergeDefaultsWithFormData(
-        defaultsWithFormData,
-        viewFormDataMatching<unknown, S, F>(context, view, rawFormData),
-        mergeExtraDefaults,
-        // A value missing or `NaN` takes the defaults, as does a `null` the whole form data is; a `null` the user left in
-        // an object or array, and a key of object data the user left `undefined`, keep it unless
-        // `mergeDefaultsIntoFormData` says a default replaces it
-        (!isObject(rawFormData) && (rawFormData !== null || props.requiredAsRoot === true)) ||
-          defaultReplacesUndefined(defaultFormStateBehavior),
-        isObject(rawFormData) && mergedAllOf,
-      );
+      // properties were computed as from that wins, as an `if`/`then` `const` does. Object data the untyped field can't
+      // take is no value of it, so its defaults stand, as a typed field's do above
+      const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
+      if (matching !== undefined || !isObject(rawFormData)) {
+        defaultsWithFormData = mergeDefaultsWithFormData(
+          defaultsWithFormData,
+          matching,
+          mergeExtraDefaults,
+          // A value missing or `NaN` takes the defaults, as does a `null` the whole form data is; a `null` the user left
+          // in an object or array, and a key of object data the user left `undefined`, keep it unless
+          // `mergeDefaultsIntoFormData` says a default replaces it
+          (!isObject(rawFormData) && (rawFormData !== null || props.requiredAsRoot === true)) ||
+            defaultReplacesUndefined(defaultFormStateBehavior),
+          isObject(rawFormData) && mergedAllOf,
+        );
+      }
     }
   }
 
@@ -2452,19 +2457,19 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
     declaredIn ??= { graph: field().graph, chains: chains() };
     return declaredIn;
   };
-  // Without data there is nothing to check against the options of a select, so only data asks whether it is one. A
-  // schema with nothing left to merge is asked as it stands, which is what retrieving it would give. The options are
-  // read from that merged schema too, since an `allOf` or `$ref` holds them in its subschemas, retrieved with the data
-  // so that a condition on the value picks the options that value is checked against
+  // Without data there is nothing to check, so only data asks for the merged schema. A schema with nothing left to
+  // merge is read as it stands, which is what retrieving it would give. An `allOf` or `$ref` holds the options, types
+  // and `const` the data is checked against in its subschemas, so all three are read from the merged schema. A value
+  // that is no object or array is retrieved with, so that a condition on it picks the options it is checked against;
+  // the plan is kept by the identity of the data, so retrieving with an object or array would rebuild it on every call
+  const readSchema =
+    formData !== undefined && MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
+      ? retrieveField<S, F>(context, field(), isContainerValue(formData) ? undefined : formData)
+      : schemaToMatch;
   const selectSchema =
-    formData === undefined || isConstant<S>(schemaToMatch)
+    formData === undefined || isConstant<S>(readSchema)
       ? undefined
-      : resolveDeclaredConstantOptions<S>(
-          MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
-            ? retrieveField<S, F>(context, field(), formData)
-            : schemaToMatch,
-          declarations,
-        );
+      : resolveDeclaredConstantOptions<S>(readSchema, declarations);
   let validFormData: unknown = formData;
   if (selectSchema !== undefined && isConstantSelect<S>(selectSchema, true)) {
     const getOptionsList = optionsList<T, S, F>(selectSchema);
@@ -2481,15 +2486,15 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
         ? formData
         : undefined;
     }
-  } else if (isObjectData(formData) && !takesValueOf<S>(schemaToMatch, formData)) {
+  } else if (isObjectData(formData) && !takesValueOf<S>(readSchema, formData)) {
     // Object data can never validate against a schema whose types leave out `object`, so it is no value of the field
     validFormData = undefined;
   }
 
   // Override the formData with the const if the constAsDefaults is set to always
-  const constTakesPrecedence = schemaToMatch[CONST_KEY] && defaultFormStateBehavior?.constAsDefaults === 'always';
+  const constTakesPrecedence = readSchema[CONST_KEY] && defaultFormStateBehavior?.constAsDefaults === 'always';
   if (constTakesPrecedence) {
-    validFormData = schemaToMatch.const;
+    validFormData = readSchema.const;
   } else if (isObject(validFormData) && isObject(schemaToMatch.properties)) {
     const matched: GenericObjectType = { ...validFormData };
     const rootGraph = parseSchemaGraph<S>(rootSchema);

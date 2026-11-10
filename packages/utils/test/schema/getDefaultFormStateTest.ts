@@ -2269,7 +2269,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
       describe('an enum property wrapped in allOf', () => {
         const COLOR: RJSFSchema = { type: 'string', enum: ['red', 'green', 'blue'] };
-        it.each<[string, RJSFSchema, string, string]>([
+        const SHAPE: RJSFSchema = { oneOf: [{ const: { k: 'a' } }, { const: { k: 'b' } }] };
+        const KIND: RJSFSchema = {
+          discriminator: { propertyName: 'kind' },
+          oneOf: [
+            { const: { kind: 'a', v: 1 }, properties: { kind: { const: 'a' } } },
+            { const: { kind: 'b', v: 1 }, properties: { kind: { const: 'b' } } },
+          ],
+        };
+        const definitions = { Color: COLOR, Shape: SHAPE, Kind: KIND };
+        it.each<[string, RJSFSchema, unknown, unknown]>([
           ['keeps a valid value of a $ref', { allOf: [{ $ref: '#/definitions/Color' }] }, 'green', 'green'],
           [
             'keeps a valid value of a $ref with a default',
@@ -2308,11 +2317,71 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             'blue',
             'red',
           ],
+          [
+            'replaces object data outside the enum with the default',
+            { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' },
+            { x: 1 },
+            'red',
+          ],
+          [
+            'leaves a null the enum leaves out cleared rather than filled with the default',
+            { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' },
+            null,
+            undefined,
+          ],
+          [
+            'keeps a null the enum offers',
+            { allOf: [{ type: ['string', 'null'], enum: ['red', null] }], default: 'red' },
+            null,
+            null,
+          ],
+          [
+            'replaces a value outside a oneOf of constants with the default',
+            { allOf: [{ oneOf: [{ const: 'red' }, { const: 'green' }] }], default: 'red' },
+            'blue',
+            'red',
+          ],
+          ['keeps a valid value of an inline object-valued select', { allOf: [SHAPE] }, { k: 'b' }, { k: 'b' }],
+          [
+            'keeps a valid value of an object-valued select through a $ref',
+            { allOf: [{ $ref: '#/definitions/Shape' }] },
+            { k: 'b' },
+            { k: 'b' },
+          ],
+          [
+            'replaces an invalid value of an inline object-valued select with the default',
+            { allOf: [SHAPE], default: { k: 'a' } },
+            { k: 'z' },
+            { k: 'a' },
+          ],
+          [
+            'replaces an invalid value of an object-valued select through a $ref with the default',
+            { allOf: [{ $ref: '#/definitions/Shape' }], default: { k: 'a' } },
+            { k: 'z' },
+            { k: 'a' },
+          ],
+          [
+            'keeps a value of an object-valued select its discriminator names',
+            { allOf: [{ $ref: '#/definitions/Kind' }] },
+            { kind: 'b', v: 9 },
+            { kind: 'b', v: 9 },
+          ],
+          ['drops object data an allOf types as a string', { allOf: [{ type: 'string' }] }, { x: 1 }, undefined],
         ])('%s', (_name, color, value, expected) => {
-          const schema: RJSFSchema = { type: 'object', properties: { color }, definitions: { Color: COLOR } };
+          const schema: RJSFSchema = { type: 'object', properties: { color }, definitions };
           expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { color: value } })).toEqual({
             color: expected,
           });
+        });
+
+        it('replaces the data with the const an allOf holds under constAsDefaults always', () => {
+          const schema: RJSFSchema = { type: 'object', properties: { color: { allOf: [{ const: 'red' }] } } };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { color: 'blue' } },
+            ),
+          ).toEqual({ color: 'red' });
         });
       });
 
