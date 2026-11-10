@@ -32,7 +32,6 @@ import hasSchemaMarker from '../hasSchemaMarker.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isConstantSelect from '../isConstantSelect.ts';
-import isContainerValue from '../isContainerValue.ts';
 import isFixedItems from '../isFixedItems.ts';
 import isFormDataAvailable from '../isFormDataAvailable.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
@@ -2459,12 +2458,12 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   };
   // Without data there is nothing to check, so only data asks for the merged schema. A schema with nothing left to
   // merge is read as it stands, which is what retrieving it would give. An `allOf` or `$ref` holds the options, types
-  // and `const` the data is checked against in its subschemas, so all three are read from the merged schema. A value
-  // that is no object or array is retrieved with, so that a condition on it picks the options it is checked against;
-  // the plan is kept by the identity of the data, so retrieving with an object or array would rebuild it on every call
+  // and `const` the data is checked against in its subschemas, so all three are read from the merged schema, retrieved
+  // with the data so that a condition on it picks what it is checked against. A merge that reads no data is kept for
+  // any data, so only one whose result depends on the data is planned again for it
   const readSchema =
     formData !== undefined && MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
-      ? retrieveField<S, F>(context, field(), isContainerValue(formData) ? undefined : formData)
+      ? retrieveField<S, F>(context, field(), formData)
       : schemaToMatch;
   const selectSchema =
     formData === undefined || isConstant<S>(readSchema)

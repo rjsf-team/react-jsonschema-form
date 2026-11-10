@@ -2367,6 +2367,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             { kind: 'b', v: 9 },
           ],
           ['drops object data an allOf types as a string', { allOf: [{ type: 'string' }] }, { x: 1 }, undefined],
+          [
+            'keeps object data a condition in the allOf types as an object',
+            {
+              allOf: [
+                {
+                  if: { required: ['kind'] },
+                  then: { type: 'object', properties: { kind: { type: 'string' } } },
+                  else: { type: 'string' },
+                },
+              ],
+            },
+            { kind: 'a' },
+            { kind: 'a' },
+          ],
+          [
+            'keeps a valid value of an object-valued select a condition in the allOf picks',
+            {
+              allOf: [
+                {
+                  if: { properties: { k: { const: 'a' } }, required: ['k'] },
+                  then: { oneOf: [{ const: { k: 'a' } }] },
+                  else: { oneOf: [{ const: { k: 'b' } }] },
+                },
+              ],
+            },
+            { k: 'a' },
+            { k: 'a' },
+          ],
         ])('%s', (_name, color, value, expected) => {
           const schema: RJSFSchema = { type: 'object', properties: { color }, definitions };
           expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { color: value } })).toEqual({
