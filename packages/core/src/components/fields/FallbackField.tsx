@@ -35,7 +35,7 @@ import type { JSONSchema7TypeName } from 'json-schema';
 
 import useSendBlur from '../../hooks/useSendBlur.ts';
 import useUiState from '../../hooks/useUiState.ts';
-import type { UiState } from '../uiState.ts';
+import type { KeptFallbackType, UiState } from '../uiState.ts';
 import AdditionalEntryContext from './AdditionalEntryContext.ts';
 import { fallbackValueKeepsWidget, getFallbackTypes, withoutUiWidget } from './fieldWidgetUtils.ts';
 import OwnTitleAndDescription from './OwnTitleAndDescription.tsx';
@@ -159,8 +159,12 @@ function getInitialType(
 interface FallbackTypeSetup {
   /** The types the selection offers */
   types: JSONSchema7TypeName[];
-  /** The key the form keeps the selection under, beside the field's path: the selector's depth there and its types,
-   * since an option offering types of its own renders a selector below the field's at the same path
+  /** The key the form keeps the selection under, beside the field's path: the selector's depth there, since an option
+   * offering types of its own renders a selector below the field's at the same path
+   */
+  selector: string;
+  /** The types the selection offers, as the form records them with the selection: one kept under another list is the
+   * schema's previous choice of types, not this one's, so it gives way like a type the list doesn't offer
    */
   typeList: string;
   /** The type the selection starts on when there is no form data */
@@ -176,7 +180,7 @@ interface FallbackTypeSetup {
  * @param widget - The `ui:widget` for the field, if any
  * @param widgets - The form's registered widgets
  * @param depth - The selector's depth among the type selectors at the field's path, from 1 for the outermost
- * @returns - The types on offer, the key the form keeps the selection under, the type with no data to go on, and
+ * @returns - The types on offer, the keys the form keeps the selection under, the type with no data to go on, and
  *        whether the value field keeps the widget for a given type
  */
 function fallbackTypeSetup<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -188,10 +192,16 @@ function fallbackTypeSetup<T, S extends StrictRJSFSchema, F extends FormContextT
   const types = getFallbackTypes<S>(schema);
   return {
     types,
-    typeList: `${depth}:${types.join(',')}`,
+    selector: String(depth),
+    typeList: types.join(','),
     defaultType: getDefaultType<S>(schema, types, widget, widgets),
     keepsWidget: (aType: JSONSchema7TypeName) => fallbackValueKeepsWidget<T, S, F>(schema, aType, widget, widgets),
   };
+}
+
+/** The type `kept` holds, if it was kept under the types `setup` offers */
+function keptTypeIn(setup: FallbackTypeSetup, kept: KeptFallbackType | undefined) {
+  return kept?.typeList === setup.typeList ? kept.type : undefined;
 }
 
 /**
@@ -265,7 +275,7 @@ export function fallbackUiType<T, S extends StrictRJSFSchema, F extends FormCont
   return getShownType(
     setup,
     formData,
-    uiState.fallbackType(fieldPath, setup.typeList)?.type,
+    keptTypeIn(setup, uiState.fallbackType(fieldPath, setup.selector)),
     hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG),
     emptyValue,
   );
@@ -470,7 +480,7 @@ function FallbackUiField<
     () => fallbackTypeSetup<T, S, F>(schema, uiOptions.widget, widgets, typeSelectorDepth),
     [schema, uiOptions.widget, widgets, typeSelectorDepth],
   );
-  const { types, typeList, defaultType, keepsWidget } = setup;
+  const { types, selector, typeList, defaultType, keepsWidget } = setup;
   // What `getUiOptions(uiSchema, globalUiOptions)` returns for the label, without reading the `uiSchema` a second time
   const { label } = { ...globalUiOptions, ...uiOptions };
   const { uiState } = useUiState();
@@ -483,15 +493,15 @@ function FallbackUiField<
   // The shown type rather than the kept one, which is the same once the effect below keeps it, so keeping it is no
   // change of the store for React to render again for
   const readShownType = () => {
-    const kept = uiState.fallbackType(fieldPath, typeList);
-    const selectedType = kept?.owner === owner ? kept.type : undefined;
+    const kept = uiState.fallbackType(fieldPath, selector);
+    const selectedType = kept?.owner === owner ? keptTypeIn(setup, kept) : undefined;
     return getShownType(setup, formData, selectedType, isAdditionalEntry, uiOptions.emptyValue);
   };
   const type = useSyncExternalStore(uiState.subscribe, readShownType, readShownType);
   // Keeping the type the selector is showing stops a selection the user can no longer see from coming back: with the old
   // one still kept, clearing the value would swap the field out for the type the data used to have
   useLayoutEffect(() => {
-    uiState.keepFallbackType(fieldPath, typeList, type, owner);
+    uiState.keepFallbackType(fieldPath, selector, { type, typeList, owner });
   });
 
   const typesOptionSchema = useMemo(
@@ -570,7 +580,7 @@ function FallbackUiField<
   const onTypeChange = (newType: T | undefined) => {
     const selected = types.find((aType) => aType === newType);
     if (selected) {
-      uiState.selectFallbackType(fieldPath, typeList, selected, owner);
+      uiState.selectFallbackType(fieldPath, selector, { type: selected, typeList, owner });
       // The errors raised against the old value describe a type it no longer has, so an empty raise takes them off:
       // passing none would leave them standing
       onChange(castToNewType(formData, selected), fieldPath, {}, id);

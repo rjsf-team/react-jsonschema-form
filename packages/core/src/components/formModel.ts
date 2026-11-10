@@ -48,7 +48,7 @@ import {
 import type { RJSFFormStatus } from './IChangeEvent.ts';
 import { keyMoveOf, moveFateOf } from './keyMove.ts';
 import type { AnnouncedMove, MoveOutcome } from './keyMove.ts';
-import { asFieldValue, fieldStateOf, rendersFieldAt } from './uiState.ts';
+import { asFieldValue, fieldStateOf, fieldsRendered } from './uiState.ts';
 
 /** How many of a scalar root's latest values the development warning about an ignored `formData` remembers */
 const HELD_SCALARS_LIMIT = 100;
@@ -988,11 +988,13 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       if (from === shown) {
         uiState.rendered((at) => getAt(derived.formData, at));
         // A field the schema no longer reaches has gone rather than been hidden, so its type selector's type goes too
-        uiState.dropFallbackTypes(
-          (at) =>
-            at.length > 0 &&
-            !rendersFieldAt<T, S, F>(uiState, derived.schemaUtils, derived.retrievedSchema, at, derived.formData),
+        const rendersField = fieldsRendered<T, S, F>(
+          uiState,
+          derived.schemaUtils,
+          derived.retrievedSchema,
+          derived.formData,
         );
+        uiState.dropFallbackTypes((at) => at.length > 0 && !rendersField(at));
       }
     },
     /** Warns, once, that the `formData` prop changed after mount to a value the form ignores: neither data it has held

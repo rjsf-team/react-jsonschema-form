@@ -512,6 +512,26 @@ describe('SchemaField', () => {
         expect(typeOf(node, 'root_val')).toBe('string');
       });
 
+      it('should drop the type picked once the schema switches the type list away and back', async () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { kind: { type: 'boolean' }, val: { properties: { a: { type: 'string' } } } },
+            if: { properties: { kind: { const: true } }, required: ['kind'] },
+            then: { properties: { val: { type: ['object', 'string'] } } },
+            else: { properties: { val: { type: ['object', 'number'] } } },
+          },
+          useFallbackUiForUnsupportedType: true,
+        });
+        await pickType(node, 'root_val', 'number');
+
+        await user.click(elementOf(node, '#root_kind'));
+        expect(typeOf(node, 'root_val')).toBe('object');
+        await user.click(elementOf(node, '#root_kind'));
+
+        expect(typeOf(node, 'root_val')).toBe('object');
+      });
+
       it('should require nothing of the object a picked number left while an <Activity> hides the field', async () => {
         // A tab template's way of hiding a field without unmounting it, as `formContext.hidden` says
         function TabTemplate({ properties, registry }: ObjectFieldTemplateProps) {
@@ -787,6 +807,22 @@ describe('SchemaField', () => {
         expect(typeOf(node, 'root_choice_val')).toBe('number');
         expect(onError).not.toHaveBeenCalled();
         expect(onSubmit).toHaveBeenCalled();
+      });
+
+      it('should keep the type picked for an entry additionalProperties: true lets in, through an edit of another field', async () => {
+        const props = {
+          schema: { type: 'object', properties: { name: { type: 'string' } }, additionalProperties: true },
+          initialFormData: { extra: '5' },
+          useFallbackUiForUnsupportedType: true,
+        } satisfies NoValFormProps;
+        const { node, rerender } = createFormComponent(props);
+        // `5` reads as a `number`, so only the kept pick keeps the selector on `integer`
+        await pickType(node, 'root_extra', 'integer');
+        await user.type(elementOf(node, '#root_name'), 'x');
+
+        rerender({ ...props, uiSchema: { name: { 'ui:title': 'Name' } } });
+
+        expect(typeOf(node, 'root_extra')).toBe('integer');
       });
 
       it('should require nothing of the options of a field on number whose options list no types', async () => {

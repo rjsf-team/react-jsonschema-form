@@ -39,23 +39,24 @@ describe('fallback UI types', () => {
 
   it('follow the array items they were picked for as the items move, and come back on restore()', () => {
     const uiState = createUiState();
-    uiState.selectFallbackType(at(0), 'object,number', 'number', owner);
+    const kept = { type: 'number', typeList: 'object,number', owner } as const;
+    uiState.selectFallbackType(at(0), '1', kept);
     const before = uiState.save();
 
     uiState.move(fieldPathFromList(['pets']), (key) => String(1 - Number(key)));
-    expect(uiState.fallbackType(at(0), 'object,number')).toBeUndefined();
-    expect(uiState.fallbackType(at(1), 'object,number')).toEqual({ type: 'number', owner });
+    expect(uiState.fallbackType(at(0), '1')).toBeUndefined();
+    expect(uiState.fallbackType(at(1), '1')).toEqual(kept);
 
     uiState.restore(before);
-    expect(uiState.fallbackType(at(0), 'object,number')).toEqual({ type: 'number', owner });
+    expect(uiState.fallbackType(at(0), '1')).toEqual(kept);
   });
 
-  it('keep the type of each type list at a path apart', () => {
+  it('keep the type of each selector at a path apart', () => {
     const uiState = createUiState();
-    uiState.selectFallbackType(at(0), 'object,number', 'number', owner);
-    uiState.keepFallbackType(at(0), 'string,boolean', 'boolean', owner);
+    uiState.selectFallbackType(at(0), '1', { type: 'number', typeList: 'object,number', owner });
+    uiState.keepFallbackType(at(0), '2', { type: 'boolean', typeList: 'string,boolean', owner });
 
-    expect(uiState.fallbackType(at(0), 'object,number')?.type).toBe('number');
-    expect(uiState.fallbackType(at(0), 'string,boolean')?.type).toBe('boolean');
+    expect(uiState.fallbackType(at(0), '1')?.type).toBe('number');
+    expect(uiState.fallbackType(at(0), '2')?.type).toBe('boolean');
   });
 });

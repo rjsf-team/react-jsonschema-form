@@ -9,7 +9,6 @@ import type {
 import {
   constrainsValue,
   deepEquals,
-  fieldPathFromList,
   fieldPathToList,
   getByPath,
   getDiscriminatorFieldFromSchema,
@@ -20,6 +19,8 @@ import {
   isSchemaObject,
   PROPERTIES_KEY,
   REQUIRED_KEY,
+  ROOT_FIELD_PATH,
+  toFieldPath,
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
@@ -238,50 +239,59 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
   };
 }
 
-/** Whether the form still renders a field at `path` for `formData`, shown or hidden. Under an `anyOf`/`oneOf`, the
+/** Whether the form still renders a field at a path for `formData`, shown or hidden. Under an `anyOf`/`oneOf`, the
  * option followed is the one the field shows, the user's pick among them, where `findFieldInSchema()` alone would take
- * the one the data matches best
+ * the one the data matches best. Each path prefix is walked once, however many of the paths asked about share it
  *
  * @param uiState - The form's option selections and cycle expansions
  * @param schemaUtils - The schema utilities the form renders with
  * @param schema - The retrieved root schema
- * @param path - The path of the field
  * @param formData - The form's data
- * @returns - Whether a field is rendered at `path`
+ * @returns - Whether a field is rendered at a given path
  */
-export function rendersFieldAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
+export function fieldsRendered<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiState: UiStateReader,
   schemaUtils: SchemaUtilsType<T, S, F>,
   schema: S,
-  path: FieldPathList,
   formData: T | undefined,
-): boolean {
+): (path: FieldPathList) => boolean {
   const fieldState = fieldStateOf<T, S, F>(uiState, schemaUtils);
-  let parent: S | undefined = schema;
-  let data: unknown = formData;
-  for (const [depth, key] of path.entries()) {
-    if (!isSchemaObject<S>(parent)) {
-      return false;
+  // The schema and data found at each path prefix walked
+  const reached = new Map<FieldPath, { parent: S | undefined; data: unknown }>();
+  return (path) => {
+    let parent: S | undefined = schema;
+    let data: unknown = formData;
+    let at = ROOT_FIELD_PATH;
+    for (const key of path) {
+      const next = toFieldPath(key, at);
+      const known = reached.get(next);
+      if (known) {
+        ({ parent, data } = known);
+      } else if (isSchemaObject<S>(parent)) {
+        const fieldData = asFieldValue<T>(data);
+        let holder = schemaUtils.retrieveSchema(parent, fieldData);
+        const xxxOf = getXxxOfOptions<S>(holder);
+        const options = xxxOf && retrievedOptionsOf<T, S, F>(schemaUtils, holder, fieldData);
+        if (xxxOf && options) {
+          const shown = fieldState.selectedOption(at, options, data, getDiscriminatorFieldFromSchema<S>(holder));
+          // The shown option alone, which `findFieldInSchema()` then can't match the data against another for
+          holder = { ...holder, [xxxOf.key]: [options[shown]] };
+          Reflect.deleteProperty(holder, 'discriminator');
+        }
+        // A key `additionalProperties: true` lets in is no field to `findFieldInSchema()`, yet the form renders it, from
+        // the stub retrieving put in `properties`
+        const stub = holder.properties?.[key];
+        parent =
+          schemaUtils.findFieldInSchema(holder, [key], fieldData).field ?? (isSchemaObject<S>(stub) ? stub : undefined);
+        data = getByPath(data, [key]);
+        reached.set(next, { parent, data });
+      } else {
+        return false;
+      }
+      at = next;
     }
-    const fieldData = asFieldValue<T>(data);
-    let holder = schemaUtils.retrieveSchema(parent, fieldData);
-    const xxxOf = getXxxOfOptions<S>(holder);
-    const options = xxxOf && retrievedOptionsOf<T, S, F>(schemaUtils, holder, fieldData);
-    if (xxxOf && options) {
-      const shown = fieldState.selectedOption(
-        fieldPathFromList(path.slice(0, depth)),
-        options,
-        data,
-        getDiscriminatorFieldFromSchema<S>(holder),
-      );
-      // The shown option alone, which `findFieldInSchema()` then can't match the data against another for
-      holder = { ...holder, [xxxOf.key]: [options[shown]] };
-      Reflect.deleteProperty(holder, 'discriminator');
-    }
-    parent = schemaUtils.findFieldInSchema(holder, [key], fieldData).field;
-    data = getByPath(data, [key]);
-  }
-  return parent !== undefined;
+    return parent !== undefined;
+  };
 }
 
 /** The entries, kept by path, that hold after a move at `container` that `transformChange` rewrote, key by key as
@@ -332,6 +342,8 @@ function holdForRendered(
  */
 export interface KeptFallbackType {
   readonly type: JSONSchema7TypeName;
+  /** The types the selector offered, so a schema that swaps them for others and back doesn't bring the type back */
+  readonly typeList: string;
   readonly owner: object;
 }
 
@@ -370,8 +382,8 @@ function copyOfLists<V>(entries: Map<FieldPath, Map<string, V>>): Map<FieldPath,
 export function createUiState() {
   // Read only through the methods below, never handed out, so the maps are written in place
   let selections = new Map<FieldPath, Map<string, OptionSelection>>();
-  // The type each fallback UI's selector is on, by its field's path and the types it offers: a field's value can offer
-  // a type list of its own, whose selector sits at the same path
+  // The type each fallback UI's selector is on, by its field's path and its depth there: a field's value can offer a
+  // type list of its own, whose selector sits at the same path
   let fallbackTypes = new Map<FieldPath, Map<string, KeptFallbackType>>();
   let expanded = new Set<FieldPath>();
   let picks = 0;
@@ -391,8 +403,8 @@ export function createUiState() {
   /** Records the type the fallback UI's selector showed as React commits, where nothing may render, so it tells no
    * field
    */
-  const keepFallbackType = (path: FieldPath, list: string, type: JSONSchema7TypeName, owner: object) =>
-    setIn(fallbackTypes, path, list, { type, owner });
+  const keepFallbackType = (path: FieldPath, selector: string, kept: KeptFallbackType) =>
+    setIn(fallbackTypes, path, selector, kept);
   return {
     subscribe: (listener: () => void) => {
       listeners.add(listener);
@@ -463,11 +475,11 @@ export function createUiState() {
      * it changes no option a field shows for the data it rendered and tells no field
      */
     rendered: (dataAt: (path: FieldPathList) => unknown) => holdForRendered(selections, dataAt),
-    /** The type the fallback UI's selector offering the types `list` names at `path` was last on, and its field */
-    fallbackType: (path: FieldPath, list: string) => fallbackTypes.get(path)?.get(list),
-    /** Puts the fallback UI's selector offering the types `list` names at `path` on `type`, as the user picked it */
-    selectFallbackType: (path: FieldPath, list: string, type: JSONSchema7TypeName, owner: object) => {
-      keepFallbackType(path, list, type, owner);
+    /** The type the fallback UI's selector at depth `selector` of `path` was last on, its types and its field */
+    fallbackType: (path: FieldPath, selector: string) => fallbackTypes.get(path)?.get(selector),
+    /** Puts the fallback UI's selector at depth `selector` of `path` on the type `kept` holds, as the user picked it */
+    selectFallbackType: (path: FieldPath, selector: string, kept: KeptFallbackType) => {
+      keepFallbackType(path, selector, kept);
       notify();
     },
     keepFallbackType,
