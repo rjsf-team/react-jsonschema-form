@@ -11,6 +11,7 @@ import type {
   FormValidation,
   FieldTemplateProps,
   ObjectFieldTemplateProps,
+  ArrayFieldTemplateProps,
   PartPlacement,
   Registry,
   UiSchema,
@@ -1554,6 +1555,35 @@ describe('ObjectField', () => {
 
         expect(elementOf(node, firstControl)).toHaveFocus();
       });
+
+      it.each<[string, RJSFSchema, unknown, string]>([
+        ['object', { type: 'object', properties: { inner: { type: 'string' } } }, { inner: 'one' }, '#root_end_inner'],
+        ['array', { type: 'array', items: { type: 'string' } }, ['one'], '#root_end_0'],
+      ])(
+        "should move focus to the first control of a declared %s field whose group isn't a fieldset",
+        async (_, value, data, firstControl) => {
+          // As a theme's group that is no `<fieldset>` renders it, carrying the field's id
+          const DivObject = ({ id, properties }: ObjectFieldTemplateProps) => (
+            <div id={id} role='group'>
+              {properties.map((property) => property.content)}
+            </div>
+          );
+          const DivArray = ({ id, items }: ArrayFieldTemplateProps) => (
+            <div id={id} role='group'>
+              {items}
+            </div>
+          );
+          const { node } = createFormComponent({
+            schema: { type: 'object', properties: { end: value }, additionalProperties: value },
+            templates: { ObjectFieldTemplate: DivObject, ArrayFieldTemplate: DivArray },
+            initialFormData: { start: data },
+          });
+
+          await renameKey(node, 'start', 'end');
+
+          expect(elementOf(node, firstControl)).toHaveFocus();
+        },
+      );
 
       it('should move focus to a declared field a template remounts by keying its rows by name', async () => {
         const { node } = createFormComponent({

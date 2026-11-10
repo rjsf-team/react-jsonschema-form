@@ -4,6 +4,7 @@ import type {
   ErrorSchema,
   FieldProps,
   FormValidation,
+  ObjectFieldTemplateProps,
   RJSFSchema,
   RJSFValidationError,
   WidgetProps,
@@ -481,6 +482,36 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await submitForm(node, user, true);
 
         expect(node.querySelector('#root_pet__optionalRemove')).not.toHaveFocus();
+        expect(document.body).toHaveFocus();
+      });
+
+      it("focuses nothing inside an object's group that isn't a fieldset for its own minProperties error", async () => {
+        // As a theme's group that is no `<fieldset>` renders it, carrying the field's id
+        const DivObject = ({ id, properties }: ObjectFieldTemplateProps) => (
+          <div id={id} role='group'>
+            {properties.map((property) => property.content)}
+          </div>
+        );
+        const { node } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              pet: {
+                type: 'object',
+                minProperties: 2,
+                properties: { name: { type: 'string' }, age: { type: 'number' } },
+              },
+            },
+          },
+          templates: { ObjectFieldTemplate: DivObject },
+          initialFormData: { pet: { name: 'Rex' } },
+          focusOnFirstError: true,
+        });
+
+        // Submitting without clicking the button, which would take focus itself, so focus left in place stays on the body
+        await submitForm(node, user, true);
+
+        expect(node.querySelector('#root_pet_name')).not.toHaveFocus();
         expect(document.body).toHaveFocus();
       });
 

@@ -4,7 +4,7 @@ import { generateWidgets } from '@rjsf/core';
 import type { RegistryWidgetsType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { besideOptionsId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { isInaccessible, render, screen } from '@testing-library/react';
+import { act, isInaccessible, render, screen, waitFor } from '@testing-library/react';
 
 import { WIDGET_FIXTURES } from './widgetFixtures.ts';
 
@@ -236,6 +236,34 @@ export function presentationContractTests(
 
         expectContract(container, contractCase, errored, exempt);
       });
+    });
+  });
+
+  // An object's or an array's own error is about none of the fields in it, so focus doesn't go into them
+  describe("a container's own error focuses none of its fields", () => {
+    test.each<[string, RJSFSchema, unknown]>([
+      [
+        'an object',
+        { type: 'object', minProperties: 2, properties: { a: { type: 'string' }, b: { type: 'string' } } },
+        { a: 'x' },
+      ],
+      ['an array', { type: 'array', minItems: 2, items: { type: 'string' } }, ['x']],
+      ['an empty array', { type: 'array', minItems: 1, items: { type: 'string' } }, []],
+    ])('%s', async (_, schema, formData) => {
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { field: { ...schema, title: TITLE } } }}
+          initialFormData={{ field: formData }}
+          validator={validator}
+          focusOnFirstError
+        />,
+      );
+      // A DOM click, as user-event isn't among this package's peer dependencies
+      act(() => container.querySelector<HTMLElement>('[type="submit"]')!.click());
+
+      await waitFor(() => expect(container.querySelector('[id$="__error"]')).toBeInTheDocument());
+      // Neither one of its fields nor a part of it, such as its add button
+      expect(document.activeElement?.id ?? '').not.toMatch(/^root_field_/);
     });
   });
 }

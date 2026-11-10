@@ -8,6 +8,7 @@ import type {
   RJSFValidationError,
 } from '@rjsf/utils';
 import {
+  buttonId,
   callWithDeferredThrow,
   deepEqualsUndefinedAsMissing,
   propertyToPath,
@@ -133,36 +134,46 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
 
 /** Focuses what an error leads to where neither the element carrying its field's id nor a form control named after the
  * field takes focus: the first element that takes focus inside a widget's wrapper carrying the id, such as a slider's
- * root around its thumb, but none inside a container's `<fieldset>` unless `entersContainer` says to, since an object's
- * or an array's own error is about none of the controls in it; and where no element carries the id, the first native
- * input or button standing in for one whose id is a part of the field's, as radio buttons' and checkboxes' are. A
- * part's id, unlike any id that merely starts with the field's, can't be a sibling field's, such as `root_when_year`
- * beside `root_when`
+ * root around its thumb, but none inside a container unless `entersContainer` says to, since an object's or an array's
+ * own error is about none of the controls in it. A container is a `<fieldset>`, or any element holding another field,
+ * whose id starts with `childPrefix` and isn't one of this field's parts, or holding its own add button, as a theme's
+ * `div` group does, empty or not, and a widget's group, holding only other parts, doesn't; and where no element carries
+ * the id, the first native input or button standing in for one whose id is a part of the field's, as radio buttons' and
+ * checkboxes' are. A part's id, unlike any id that merely starts with the field's, can't be a sibling field's, such as
+ * `root_when_year` beside `root_when`
  *
  * @param formElement - The form searched
  * @param exact - The element carrying the field's id, if any
  * @param elementId - The field's id
+ * @param childPrefix - What the id of a field inside this one starts with: its id and the `idSeparator`
  * @param tried - The elements already tried, which aren't tried again
  * @param view - The window of the form
- * @param entersContainer - Whether a container's `<fieldset>` is searched too, for focus on its way into the field
+ * @param entersContainer - Whether a container is searched too, for focus on its way into the field
  *   rather than an error about the container itself
  */
 function focusForId(
   formElement: Element,
   exact: Element | undefined,
   elementId: string,
+  childPrefix: string,
   tried: ReadonlySet<Node | null | undefined>,
   view: Window & typeof globalThis,
   entersContainer: boolean,
 ): void {
-  if (exact instanceof view.HTMLFieldSetElement && !entersContainer) {
-    return;
-  }
-  if (exact) {
-    findElement(exact.querySelectorAll('*'), (element) => !tried.has(element) && takesFocus(element, view));
-    return;
-  }
   const partPrefix = partId(elementId, '');
+  if (exact) {
+    const addId = buttonId(elementId, 'add');
+    const isContainer = () =>
+      exact instanceof view.HTMLFieldSetElement ||
+      findElement(
+        exact.querySelectorAll('[id]'),
+        ({ id }) => id === addId || (id.startsWith(childPrefix) && !id.startsWith(partPrefix)),
+      );
+    if (entersContainer || !isContainer()) {
+      findElement(exact.querySelectorAll('*'), (element) => !tried.has(element) && takesFocus(element, view));
+    }
+    return;
+  }
   findElement(
     formElement.querySelectorAll('input[id], button[id]'),
     (element) => element.id.startsWith(partPrefix) && !tried.has(element) && takesFocus(element, view),
@@ -369,7 +380,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * @param [entersContainer=false] - Whether a container's controls are focused as well, see `focusForId()`
    */
   const focusField = (fieldPath: FieldPath, entersContainer = false) => {
-    const elementId = fieldPathToId(fieldPath, current().registry.globalFormOptions);
+    const { globalFormOptions } = current().registry;
+    const elementId = fieldPathToId(fieldPath, globalFormOptions);
     const view = formWindow();
     if (!formElement || !view) {
       return;
@@ -391,7 +403,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const namedControls = named instanceof view.RadioNodeList ? Array.from(named) : [named];
     const candidates = new Set([exact, ...namedControls]);
     if (![...candidates].some((element) => takesFocus(element, view))) {
-      focusForId(formElement, exact, elementId, candidates, view, entersContainer);
+      focusForId(
+        formElement,
+        exact,
+        elementId,
+        `${elementId}${globalFormOptions.idSeparator}`,
+        candidates,
+        view,
+        entersContainer,
+      );
     }
   };
 

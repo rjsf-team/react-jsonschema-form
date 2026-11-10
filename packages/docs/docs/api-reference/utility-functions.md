@@ -1178,7 +1178,7 @@ Returns `undefined` when a valid discriminator is not present.
 
 Gets the attributes a container's template spreads onto the group around its title, description and contents, such as an array's or an object's `<fieldset>`, which has no control for its field's errors, description and help to describe: an `aria-labelledby` naming the group by the title the template draws, and an `aria-describedby` listing the ids of those parts that render.
 It never carries `aria-invalid`, which ARIA doesn't allow on a `group`.
-A template whose group isn't a `<fieldset>` also gives it `role="group"`.
+A template whose group isn't a `<fieldset>` also gives it `role="group"`, and, as a `<fieldset>` does, the field's `id`, which `focusOnFirstError` reads to keep a container's own error from moving focus into its fields.
 The `aria-labelledby` names the element the title is drawn under, so a custom title template must draw it under [titleId()](#titleid) of the `id` it is given.
 
 #### Parameters
