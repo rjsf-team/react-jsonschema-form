@@ -9,6 +9,7 @@ import pointerValidationTests, {
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
+import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { compiledSchemas as compiled } from '../src/compileSchemaValidatorsCode.ts';
 import createAjvInstance from '../src/createAjvInstance.ts';
@@ -111,6 +112,9 @@ describe('compileSchemaValidatorsCode()', () => {
   );
   sharedSubschemaValidationTests((compiledFrom, runWith) =>
     createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(compiledFrom)), runWith),
+  );
+  sharedCopyScoringTests((rootSchema) =>
+    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
   const precompiledFor = (rootSchema: RJSFSchema) => {
     const options = String(rootSchema.$schema).includes('2020-12') ? { AjvClass: Ajv2020 } : {};

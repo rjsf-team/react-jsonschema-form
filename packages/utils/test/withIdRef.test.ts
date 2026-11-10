@@ -115,6 +115,54 @@ describe('withRootIdRefPrefix()', () => {
     const notASchema: RJSFSchema = JSON.parse('"root"');
     expect(withRootIdRefPrefix({ $ref: '#/a' }, notASchema)).toEqual({ $ref: `${ROOT_SCHEMA_PREFIX}#/a` });
   });
+  it('leaves a $ref naming a resource the schema handed over holds below its top as written, and names the root by a local one inside it', () => {
+    const root: RJSFSchema = { $id: 'https://example.com/schemas/root.json' };
+    const schema: RJSFSchema = {
+      $id: 'top.json',
+      allOf: [
+        {
+          properties: {
+            a: { $ref: '?rjsf-copy=1' },
+            b: { $ref: '?rjsf-copy=1#/properties/x' },
+            c: { $ref: 'top.json' },
+          },
+        },
+        true,
+      ],
+      definitions: {
+        one: {
+          $id: '?rjsf-copy=1',
+          properties: { x: { $ref: '#/definitions/X' }, again: { $ref: '?rjsf-copy=1' } },
+          not: { $id: '#anchor', $ref: '#/definitions/Y' },
+        },
+      },
+      const: { $ref: '?rjsf-copy=1' },
+    };
+    expect(withRootIdRefPrefix(schema, root)).toEqual({
+      $id: 'top.json',
+      allOf: [
+        {
+          properties: {
+            a: { $ref: '?rjsf-copy=1' },
+            b: { $ref: '?rjsf-copy=1#/properties/x' },
+            c: { $ref: 'https://example.com/schemas/top.json' },
+          },
+        },
+        true,
+      ],
+      definitions: {
+        one: {
+          $id: '?rjsf-copy=1',
+          properties: {
+            x: { $ref: 'https://example.com/schemas/root.json#/definitions/X' },
+            again: { $ref: '?rjsf-copy=1' },
+          },
+          not: { $id: '#anchor', $ref: 'https://example.com/schemas/root.json#/definitions/Y' },
+        },
+      },
+      const: { $ref: '?rjsf-copy=1' },
+    });
+  });
   describe('a $ref the root holds below an $id of its own', () => {
     const kind: RJSFSchema = { $ref: '#/$defs/kind' };
     const relative: RJSFSchema = { $ref: 'kinds.json#/$defs/cat' };

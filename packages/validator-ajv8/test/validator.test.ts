@@ -35,6 +35,7 @@ import pointerValidationTests, {
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
+import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import * as pkg from '../src/index.ts';
@@ -3686,6 +3687,7 @@ pointerValidationTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());
+sharedCopyScoringTests(() => customizeValidator());
 
 describe('AJV8Validator', () => {
   const validatorFor = (rootSchema: RJSFSchema) =>

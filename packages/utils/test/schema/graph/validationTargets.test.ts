@@ -1,4 +1,5 @@
 import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
+import { isObject } from '../../../src/index.ts';
 import parseSchemaGraph from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import {
@@ -12,6 +13,7 @@ import {
   withVariantId,
 } from '../../../src/schema/graph/validationTargets.ts';
 import getTestValidator from '../../testUtils/getTestValidator.ts';
+import { chainedDefinitions, DEEP_CHAIN } from '../../testUtils/sharedCopyScoringTests.ts';
 
 function nodeAt(graph: SchemaGraph, pointer: string): number {
   const id = graph.byPointer(pointer);
@@ -917,12 +919,14 @@ describe('scoringTarget()', () => {
         },
         properties: { v: { $ref: '#/$defs/X' } },
       });
-      // `c` and the properties neither `X` nor `Base` declares are different parts, so `X` walks each once
-      expect(scoringTarget(graph, node, false)).toMatchObject({
-        properties: {
-          v: { allOf: [{ properties: { c: expect.anything() }, unevaluatedProperties: expect.anything() }] },
-        },
-      });
+      // `c` and the properties neither `X` nor `Base` declares are different parts, so `X` walks each once. Its copy
+      // is held both under `v` and under the copied `$defs`, so it is written once
+      const target = scoringTarget(graph, node, false);
+      const copyOfX = { $ref: expect.stringMatching(/^\?rjsf-copy=/) };
+      expect(target).toMatchObject({ allOf: [{ properties: { v: { allOf: [copyOfX] } }, $defs: { X: copyOfX } }] });
+      expect(Object.values(target.definitions ?? {})).toEqual([
+        expect.objectContaining({ properties: { c: expect.anything() }, unevaluatedProperties: expect.anything() }),
+      ]);
     });
     it('cuts as a whole a node adopted twice over whose unevaluatedProperties sees a cut conjunct of the root', () => {
       const root: RJSFSchema = {
@@ -1233,6 +1237,93 @@ describe('scoringTarget()', () => {
           w: { type: ['null', 'object'] },
         },
       });
+    });
+  });
+  describe('a part reached along several paths (#5771)', () => {
+    /** Returns the number of values `value` holds however deep, itself included */
+    const sizeOf = (value: unknown): number =>
+      isObject(value) || Array.isArray(value)
+        ? Object.values(value).reduce<number>((size, held) => size + sizeOf(held), 1)
+        : 1;
+    const option = (levels: number) => {
+      const { root } = chainedDefinitions(levels);
+      return scored(root, '/oneOf/0');
+    };
+    it('writes the copy of a part the option reaches along two paths once, under its own $id', () => {
+      expect(option(1)).toEqual({
+        allOf: [
+          {
+            properties: {
+              v: {
+                allOf: [
+                  {
+                    type: 'object',
+                    properties: {
+                      a: { allOf: [{ $ref: '?rjsf-copy=-2633cdea' }] },
+                      b: { allOf: [{ $ref: '?rjsf-copy=-2633cdea' }] },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        definitions: {
+          '-2633cdea': {
+            $id: '?rjsf-copy=-2633cdea',
+            type: 'object',
+            properties: { leaf: { $ref: '#/definitions/L1/properties/leaf' }, c: { allOf: [{ type: 'object' }] } },
+          },
+        },
+      });
+    });
+    it(`grows by the same size with each level of definitions naming the next twice, up to ${DEEP_CHAIN} levels`, () => {
+      const sizes = Array.from({ length: DEEP_CHAIN }, (_, level) => sizeOf(option(level + 1)));
+      const growth = sizes.slice(1).map((size, level) => size - sizes[level]);
+      expect(new Set(growth)).toEqual(new Set([growth[0]]));
+      expect(sizes[DEEP_CHAIN - 1]).toBeLessThan(20 * DEEP_CHAIN);
+    });
+    it('tells apart the copies of two parts that hash alike', () => {
+      // `Aa` and `BB` hash alike, so the copies of the two definitions, which differ only in naming them, do too
+      const part: RJSFSchema = {
+        type: 'object',
+        properties: { n: { type: 'string' }, c: { $ref: '#/definitions/Choice' } },
+      };
+      const refTo = (name: string) => ({ $ref: `#/definitions/${name}` });
+      const choice: RJSFSchema = {
+        oneOf: [
+          { type: 'object', properties: { child: refTo('Choice'), a: { type: 'string' } } },
+          { type: 'object', properties: { child: refTo('Choice'), b: { type: 'number' } } },
+        ],
+      };
+      const schema: RJSFSchema = {
+        definitions: { Choice: choice, Aa: part, BB: part },
+        oneOf: [{ properties: { a1: refTo('Aa'), a2: refTo('Aa'), b1: refTo('BB'), b2: refTo('BB') } }],
+      };
+      const target = scored(schema, '/oneOf/0');
+      const copied = (name: string) => ({
+        $id: expect.any(String),
+        type: 'object',
+        properties: { n: { $ref: `#/definitions/${name}/properties/n` }, c: { allOf: [{ type: 'object' }] } },
+      });
+      const definitions = Object.entries(target.definitions ?? {});
+      expect(definitions).toEqual([
+        [expect.any(String), copied('Aa')],
+        [expect.stringMatching(/-1$/), copied('BB')],
+      ]);
+      const [[aa, first], [bb, second]] = definitions;
+      expect(bb).toBe(`${aa}-1`);
+      expect(target).toMatchObject({
+        allOf: [
+          {
+            properties: {
+              a1: { allOf: [{ $ref: `?rjsf-copy=${aa}` }] },
+              b1: { allOf: [{ $ref: `?rjsf-copy=${bb}` }] },
+            },
+          },
+        ],
+      });
+      expect([first, second]).toMatchObject([{ $id: `?rjsf-copy=${aa}` }, { $id: `?rjsf-copy=${bb}` }]);
     });
   });
 });

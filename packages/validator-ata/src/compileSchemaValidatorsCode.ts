@@ -228,6 +228,41 @@ function locate(resource: Resource, fragment: string, laterDialect: boolean): [u
   return [node, base];
 }
 
+/** A resource a schema `getValidationSchemas()` lists holds that no resource of the root has the URI of, which only a
+ * part a scoring target names once is, and the resource around it, which its `$ref`s are read against, as
+ * `withRootIdRefPrefix()` reads those of a subschema the root does not hold. A scoring target names such a part whole.
+ */
+interface OwnResource {
+  readonly schema: unknown;
+  readonly around: Resource;
+}
+
+/** Returns the resources `schema` holds below its top that no resource of the root has the URI of, by `documentKey()`
+ * of their URI, each read in the resource around it, see `OwnResource`
+ */
+function ownResourcesOf(
+  schema: unknown,
+  start: Resource,
+  { resources, laterDialect }: Pick<RootReading, 'resources' | 'laterDialect'>,
+): Map<string, OwnResource> {
+  const own = new Map<string, OwnResource>();
+  const visit = (node: unknown, around: Resource) => {
+    if (!isObject(node)) {
+      return;
+    }
+    const resource = node === schema ? undefined : resourceAt(node, around.base, laterDialect);
+    const key = resource === undefined ? undefined : documentKey(resource.base);
+    const isOwn = key !== undefined && !resources.has(key);
+    if (isOwn && !own.has(key)) {
+      own.set(key, { schema: node, around });
+    }
+    const inner = isOwn ? around : (resource ?? around);
+    subschemasOf(node).forEach((subschema) => visit(subschema, inner));
+  };
+  visit(schema, start);
+  return own;
+}
+
 /** Returns `schema` as an object schema asserting what it says, since ata compiles no boolean schema, and no schema
  * holding no assertion it knows, such as `{ title: 'By email' }`. A `not` is an assertion it knows, so one that always
  * holds is added where the schema has none, unless it holds a `$ref`, which ata compiles only on its own.
@@ -329,10 +364,11 @@ function readRoot(rootSchema: object, extras: ReadonlyMap<string, object>): Root
  * carried in a single container of the document under a generated name the `$ref` is renamed to. A `$ref` is read
  * against the innermost resource around it, an option with an `$id` of its own included, as the schema graph reads the
  * root's resources: its document part is resolved against that resource's base URI and names whichever resource of the
- * root has that URI, however it is spelled. One into another document is given that resolved URI, its fragment kept as
- * written, for ata to resolve against the extra schemas compiled into the module beside it, since the document holding
- * it is compiled under an `$id` of its own, unless only the `$ref` as written names one of them, which ata falls back
- * to, as for an extra under a relative `$id`. One that names nothing there or in them leaves ata nothing to
+ * root has that URI, however it is spelled, or else the resource of its own `schema` holds there, see `OwnResource`,
+ * which is carried in the container too, once however many `$ref`s name it. One into another document is given that
+ * resolved URI, its fragment kept as written, for ata to resolve against the extra schemas compiled into the module
+ * beside it, since the document holding it is compiled under an `$id` of its own, unless only the `$ref` as written
+ * names one of them, which ata falls back to, as for an extra under a relative `$id`. One that names nothing there or in them leaves ata nothing to
  * compile and the module reporting it when the schema is first validated against. No subschema of the document keeps
  * an `$id` or a container, which only the renamed `$ref`s could need. Only the keywords holding subschemas are
  * rewritten, never the data a `const` or a `default` holds.
@@ -350,10 +386,28 @@ function standalone(
   const names = new Map<unknown, Map<string, string>>();
   const pending: [string, unknown, Resource][] = [];
   let count = 0;
+  const own = ownResourcesOf(schema, start, { resources, laterDialect });
+  const ownSchemas = new Set([...own.values()].map((resource) => resource.schema));
+  const nameOf = (holder: unknown, fragment: string, subschema: unknown, base: Resource): string => {
+    const known = names.get(holder) ?? new Map<string, string>();
+    names.set(holder, known);
+    let name = known.get(fragment);
+    if (name === undefined) {
+      name = `rjsf:${count}`;
+      count += 1;
+      known.set(fragment, name);
+      pending.push([name, subschema, base]);
+    }
+    return `#/${container}/${name}`;
+  };
   const renamed = (ref: string, around: Resource): string => {
+    const [document] = ref.split('#', 1);
+    const ownTarget = document === '' ? undefined : own.get(documentKey(resolveUri(around.base, document)));
+    if (ownTarget !== undefined) {
+      return nameOf(ownTarget.schema, '#', ownTarget.schema, ownTarget.around);
+    }
     const target = referenced(ref, around, { id, resources });
     if (target === undefined) {
-      const [document] = ref.split('#', 1);
       const resolved = resolveUri(around.base, document);
       const asWritten = around.base === '' || (extras.has(documentKey(document)) && !extras.has(documentKey(resolved)));
       return asWritten ? ref : `${resolved}${ref.slice(document.length)}`;
@@ -363,22 +417,14 @@ function standalone(
     if (subschema === undefined) {
       return ref;
     }
-    const known = names.get(resource.schema) ?? new Map<string, string>();
-    names.set(resource.schema, known);
-    let name = known.get(fragment);
-    if (name === undefined) {
-      name = `rjsf:${count}`;
-      count += 1;
-      known.set(fragment, name);
-      pending.push([name, subschema, subschemaBase]);
-    }
-    return `#/${container}/${name}`;
+    return nameOf(resource.schema, fragment, subschema, subschemaBase);
   };
   const rewrite = (value: unknown, around: Resource): unknown => {
     if (!isObject(value)) {
       return value;
     }
-    const resource = value === around.schema ? undefined : resourceAt(value, around.base, laterDialect);
+    const resource =
+      value === around.schema || ownSchemas.has(value) ? undefined : resourceAt(value, around.base, laterDialect);
     const inner = resource ?? around;
     const copy = Object.fromEntries(
       Object.entries(value).flatMap(([key, child]) =>

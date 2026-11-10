@@ -11,6 +11,7 @@ import pointerValidationTests, {
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
+import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import type { CustomValidatorOptionsType } from '../src/index.ts';
 import { createPrecompiledValidator, customizeValidator } from '../src/index.ts';
@@ -1042,6 +1043,9 @@ describe('compileSchemaValidatorsCode', () => {
   );
   sharedSubschemaValidationTests((compiledFrom, runWith) =>
     createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(compiledFrom)), runWith),
+  );
+  sharedCopyScoringTests((rootSchema) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
   test('compiles an option whose $ref leads to a boolean schema as what the boolean says', () => {
     for (const value of [true, false]) {
