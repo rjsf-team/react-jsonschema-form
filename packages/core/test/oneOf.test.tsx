@@ -5518,6 +5518,22 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
       expect(node.querySelector('#root_pet_a__key')).not.toBeNull();
     });
 
+    // The sanitize has no `properties` to sanitize by, so it carries nothing over
+    it.each<{ declares: string; t: RJSFSchema }>([
+      { declares: 'only its type', t: { title: 'T', type: 'object' } },
+      { declares: 'nothing', t: { title: 'T' } },
+    ])('keeps a string when the new option declares $declares', async ({ t }) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        [keyword]: [{ title: 'S', properties: { a: { type: 'string' } } }, t],
+        additionalProperties: true,
+      };
+      const { node, formData } = await selectT(schema, { initialFormData: { a: 'x' } });
+
+      expect(formData).toEqual({ a: 'x' });
+      expect(node.querySelector('#root_a__key')).not.toBeNull();
+    });
+
     it('keeps an object whose keys its extra key renders, as extra keys of their own', async () => {
       const schema = unionOf({}, { type: 'object', properties: { b: { type: 'string' } } });
       const { node, formData } = await selectT(schema, {

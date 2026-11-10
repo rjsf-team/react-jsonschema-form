@@ -149,8 +149,8 @@ function valueAt(container: unknown, key: string | undefined): unknown {
   return key === undefined ? undefined : getByPath(container, key);
 }
 
-/** A value the diff removes from the data */
-const DROP = Symbol('drop');
+/** A value the diff removes from the data, and that `formDataForNewOption()` drops from what a switch carries */
+export const DROP = Symbol('drop');
 
 /** A value the diff leaves without a value, for the defaults to fill */
 const UNSET = Symbol('unset');
@@ -219,7 +219,7 @@ function keywordOf<S extends StrictRJSFSchema>(layers: readonly S[], keyword: st
 }
 
 /** Whether a field is an extra key whose schema is guessed from its data, which constrains nothing */
-function isGuessed<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
+export function isGuessed<S extends StrictRJSFSchema>(layers: readonly S[]): boolean {
   return layers.some((layer) => hasSchemaMarker(layer, GUESSED_TYPE_FLAG));
 }
 
@@ -267,9 +267,10 @@ function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declare
 }
 
 /** Whether a guessed extra key's stub renders `value`: a scalar, or an object whose every key the stub takes as an
- * extra key of its own. Not an array, since the stub declares no `items`
+ * extra key of its own. Not an array, since the stub declares no `items`. An option switch keeps a value its old option
+ * declared by the same rule, see `formDataForNewOption()`
  */
-function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: readonly S[]): boolean {
+export function guessedStubRenders<S extends StrictRJSFSchema>(value: unknown, layers: readonly S[]): boolean {
   if (Array.isArray(value)) {
     return false;
   }
