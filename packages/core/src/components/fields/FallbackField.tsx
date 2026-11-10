@@ -495,24 +495,24 @@ function FallbackUiField<
   // a cleared value as `null` in an array item and as `''` in an `additionalProperties` entry. The same `null` or `''`
   // put there from outside the field, by `setFieldValue()`, `reset()` or a container keeping it as data, is data like
   // any other, which the selector follows
-  const [ownValue, setOwnValue] = useState<{ stored: unknown }>();
+  const [ownValue, setOwnValue] = useState<unknown>();
   const [lastFormData, setLastFormData] = useState(formData);
   if (formData !== lastFormData) {
     setLastFormData(formData);
-    if (ownValue !== undefined && formData !== ownValue.stored) {
+    if (ownValue !== undefined && formData !== ownValue) {
       setOwnValue(undefined);
     }
   }
   const sendOwnValue = useCallback(
     (value: unknown, changedFieldPath: FieldPath, errorSchema?: ErrorSchema<T>, changedId?: string) => {
       if (changedFieldPath === fieldPath) {
-        setOwnValue({ stored: storedValue<unknown>(value, fieldPath, isAdditionalEntry) });
+        setOwnValue(storedValue<unknown>(value, fieldPath, isAdditionalEntry));
       }
       onChange(value, changedFieldPath, errorSchema, changedId);
     },
     [fieldPath, isAdditionalEntry, onChange],
   );
-  const isOwnValue = ownValue !== undefined && (formData as unknown) === ownValue.stored;
+  const isOwnValue = ownValue !== undefined && formData === ownValue;
   // Lives as long as this field does, an `<Activity>` hiding it included, so a field mounting at this path later starts
   // on the type its data starts it on rather than on one kept for the field before it. The form's ui:required check
   // reads the kept type whoever kept it, since a hidden field still holds its pick
