@@ -71,7 +71,7 @@ function itemSchemaAt<S extends StrictRJSFSchema = RJSFSchema>(schema: S, index:
 /** How the items at one position of an array are sanitized: the raw and resolved schemas each side declares there, or
  * `false` where both reject any item there, which keeps one for validation to report */
 type ItemPosition<S> =
-  | { newRaw: S; oldRaw: S; newItems: S; itemsType: string | undefined; isContainer: boolean }
+  | { newRaw: S; oldRaw: S; newItems: S; schemaType: string | undefined; listedTypes: string[]; isWholeSelect: boolean }
   | false;
 
 function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): unknown[] | undefined {
@@ -210,9 +210,15 @@ function isSameType(oldType: unknown, newType: unknown): boolean {
   return oldTypes.size === newTypes.size && oldType.every((type) => newTypes.has(type));
 }
 
-/** Whether `newType` names every type `oldType` names, so that it allows any value of the old type. A `number` names
- * `integer` too, since it allows every integer */
-function namesEveryType(oldType: unknown, newType: unknown): boolean {
+/** Says whether `newType` names every type `oldType` names, so that it allows any value of the old type. A `number`
+ * names `integer` too, since it allows every integer. This is how `sanitizeDataForNewSchema()` and `Form` decide that an
+ * array item's type didn't change
+ *
+ * @param oldType - The `type` a schema declared before the change, a type name or a list of them
+ * @param newType - The `type` it declares after the change, a type name or a list of them
+ * @returns - Whether `newType` allows every type `oldType` allows
+ */
+export function namesEveryType(oldType: unknown, newType: unknown): boolean {
   const newTypes = new Set<unknown>(Array.isArray(newType) ? newType : [newType]);
   return (Array.isArray(oldType) ? oldType : [oldType]).every(
     (type) => newTypes.has(type) || (type === 'integer' && newTypes.has('number')),
@@ -601,15 +607,13 @@ export default function sanitizeDataForNewSchema<
       if (oldType !== undefined && newItems.type !== undefined && !namesEveryType(oldType, newItems.type)) {
         return undefined;
       }
-      // Items whose type list also allows `null` are read through `getSchemaType()`, as a property is above, so an
-      // object one holds is sanitized as an object item is and a `null` it allows stays as it is. An item picked from
-      // object constants is one of them as a whole, so it's checked against the options rather than sanitized property
-      // by property, which would find no properties and drop it. A list naming `object` beside another type holds an
-      // object item as an object, as `Form` walks it, whichever type `getSchemaType()` renders the list as
+      // An item a type list allows is read by what it holds, see `sanitizeItem`, so an object one holds is sanitized as
+      // an object item is and a `null` it allows stays as it is. An item picked from object constants is one of them as
+      // a whole, so it's checked against the options rather than sanitized property by property, which would find no
+      // properties and drop it
       const schemaType = newItems.type === undefined ? undefined : getSchemaType<S>(newItems);
-      const itemsType = schemaType !== 'array' && getKnownTypes<S>(newItems).includes('object') ? 'object' : schemaType;
-      const isContainer = (itemsType === 'object' || itemsType === 'array') && !isWholeValueSelect<S>(newItems);
-      return { newRaw, oldRaw, newItems, itemsType, isContainer };
+      const listedTypes = getKnownTypes<S>(newItems);
+      return { newRaw, oldRaw, newItems, schemaType, listedTypes, isWholeSelect: isWholeValueSelect<S>(newItems) };
     };
     /** What `aValue` is sanitized to at `position`, or `NO_VALUE` where it is dropped. A prefix item dropped would move
      * the items after it into positions that describe others, so where `isPrefix` it is `NO_VALUE` only where the array
@@ -623,7 +627,16 @@ export default function sanitizeDataForNewSchema<
       if (!position || position.newRaw === ANY_ITEM) {
         return aValue;
       }
-      const { newRaw, oldRaw, newItems, itemsType, isContainer } = position;
+      const { newRaw, oldRaw, newItems, schemaType, listedTypes, isWholeSelect } = position;
+      // A type list holds an object item as an object and an array item as an array where it names that type, as `Form`
+      // walks them, whichever type `getSchemaType()` renders the list as. Any other item, a hole included, is a scalar
+      let itemsType = schemaType;
+      if (listedTypes.length > 0) {
+        const itemType = Array.isArray(aValue) ? 'array' : 'object';
+        itemsType =
+          (itemType === 'array' || isPlainObject(aValue)) && listedTypes.includes(itemType) ? itemType : undefined;
+      }
+      const isContainer = (itemsType === 'object' || itemsType === 'array') && !isWholeSelect;
       // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional nested inside
       // `items` picks the branch that matches this element rather than the whole array (#5250), the `const` and options
       // a scalar item is checked by included

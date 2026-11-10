@@ -2319,6 +2319,45 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: [{ a: 1, b: 2 }],
       expected: [{ a: 1 }],
     },
+    {
+      name: 'prunes an object item whose new type list names object after array',
+      from: { type: 'array', items: { type: 'object', properties: { a: {}, b: {} } } },
+      to: { type: 'array', items: { type: ['array', 'object'], properties: { a: {} } } },
+      data: [{ a: 1, b: 2 }],
+      expected: [{ a: 1 }],
+    },
+    {
+      // utils leaves the hole for the defaults, which `Form` and an option switch fill
+      name: 'keeps a hole under a type list naming object beside a type it renders first',
+      from: {
+        type: 'array',
+        title: 'Old',
+        items: { type: ['string', 'object'], properties: { a: { type: 'number' } } },
+      },
+      to: {
+        type: 'array',
+        title: 'New',
+        items: { type: ['string', 'object'], properties: { a: { type: 'number' } }, default: 'z' },
+      },
+      data: ['a', undefined, 'b'],
+      expected: ['a', undefined, 'b'],
+      formExpected: ['a', 'z', 'b'],
+    },
+    {
+      name: 'keeps a hole under a type list it renders as an object',
+      from: { type: 'array', items: { type: ['object', 'string'], properties: { a: {}, b: {} } } },
+      to: { type: 'array', items: { type: ['object', 'string'], properties: { a: {} } } },
+      data: ['a', undefined, 'b'],
+      expected: ['a', undefined, 'b'],
+      formExpected: ['a', {}, 'b'],
+    },
+    {
+      name: 'keeps a hole under a type list it renders as an array',
+      from: { type: 'array', items: { type: ['array', 'string'], items: { type: 'number' } } },
+      to: { type: 'array', items: { type: ['array', 'string'], items: { type: 'number' }, title: 'New' } },
+      data: ['a', undefined, 'b'],
+      expected: ['a', undefined, 'b'],
+    },
   ])('$name', ({ from, to, data, expected, formExpected = expected }) => {
     const wrap = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
     const ref = createRef<FormRef<{ list?: unknown }>>();

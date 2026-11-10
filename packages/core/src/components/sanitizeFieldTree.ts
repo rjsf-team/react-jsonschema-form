@@ -26,6 +26,7 @@ import {
   isPlainObject,
   isSchemaObject,
   isWholeValueSelect,
+  namesEveryType,
   rendersOwnFieldBesideOption,
   RJSF_REF_CYCLE_KEY,
   setOwn,
@@ -238,15 +239,6 @@ function typeOf<S extends StrictRJSFSchema>(layers: readonly S[]): unknown {
   }
   const type = keywordOf(layers, 'type');
   return Array.isArray(type) ? [...new Set(type.map(String))].sort() : type;
-}
-
-/** Whether `newType` names every type `oldType` names, so that it allows any value of the old type. A `number` names
- * `integer` too, since it allows every integer */
-function namesEveryType(oldType: unknown, newType: unknown): boolean {
-  const newTypes = new Set<unknown>(Array.isArray(newType) ? newType : [newType]);
-  return (Array.isArray(oldType) ? oldType : [oldType]).every(
-    (type) => newTypes.has(type) || (type === 'integer' && newTypes.has('number')),
-  );
 }
 
 /** The values a field offers: its `enum`, or the constants of options that are all constants */
