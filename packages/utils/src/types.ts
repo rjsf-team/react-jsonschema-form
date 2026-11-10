@@ -1067,27 +1067,33 @@ export interface ThemePresentation {
    * `default` declaring `labelledBy` is what every widget declares, so it beats this one for a field rendering a widget
    */
   fieldDefault?: BlanketPresentationDeclaration;
-  /** Where the theme's `SelectWidget` draws the selected option's description among the field's description and help,
-   * so `widgetAriaProps()` announces them in the order they are drawn, `'afterDescription'` where no layer declares it.
-   * A form whose `SelectWidget` or `FieldTemplate` draws them elsewhere than its theme's declares its own
+  /** Where the theme's `SelectWidget` draws the selected option's description beside a description it draws itself, so
+   * `widgetAriaProps()` announces them in the order they are drawn, `'afterDescription'` where no layer declares it.
+   * Among the parts the `FieldTemplate` draws, the select and its option's description sit in `children`, so
+   * `fieldTemplateOrder` places them. A form whose `SelectWidget` draws them elsewhere than its theme's declares its own
    */
   selectedOptionDescription?: SelectedOptionDescriptionPlacement;
   /** The order the theme's `FieldTemplate` draws a field's description and help in around its `children`, so
    * `resolveFieldPresentation()` lists them in the order they are drawn, `['description', 'children', 'help']` where no
    * layer declares it. An `anyOf`/`oneOf` option's template draws inside its field's `children`, so a part listed after
-   * `'children'` is drawn after the option's parts, and one listed before it before them. A part it leaves out is taken
-   * as drawn before `children`, and an order that leaves out `'children'` as drawing it after every part it lists
+   * `'children'` is drawn after the option's parts, and one listed before it before them
    */
   fieldTemplateOrder?: FieldTemplateOrder;
 }
 
 /** The parts a `FieldTemplate` draws around its `children`, in the order it draws them */
-export type FieldTemplateOrder = readonly ('description' | 'help' | 'children')[];
+export type FieldTemplateOrder =
+  | readonly ['description', 'children', 'help']
+  | readonly ['description', 'help', 'children']
+  | readonly ['help', 'description', 'children']
+  | readonly ['help', 'children', 'description']
+  | readonly ['children', 'description', 'help']
+  | readonly ['children', 'help', 'description'];
 
-/** Where a `SelectWidget` draws the selected option's description: after the field's description and before its help,
- * before the field's description, or after the help, as a `FieldTemplate` drawing the help above the widget does
+/** Where a `SelectWidget` draws the selected option's description beside a description it draws itself: after it, or
+ * before it
  */
-export type SelectedOptionDescriptionPlacement = 'afterDescription' | 'beforeDescription' | 'afterHelp';
+export type SelectedOptionDescriptionPlacement = 'afterDescription' | 'beforeDescription';
 
 /** A form's `ThemePresentation` once `mergeThemePresentation()` merged its layers: an entry in `widgets` for every key
  * any layer declares, with each layer's `default` beneath that layer's own entry, the layered `default` for a key no

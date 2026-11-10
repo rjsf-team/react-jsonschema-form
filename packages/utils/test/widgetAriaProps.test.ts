@@ -4,7 +4,6 @@ import type {
   MergedThemePresentation,
   Registry,
   ResolvedPresentationDeclaration,
-  SelectedOptionDescriptionPlacement,
   WidgetAriaPropsInput,
 } from '../src/index.ts';
 import {
@@ -141,40 +140,56 @@ describe('widgetAriaProps()', () => {
         help: 'Pick one',
       });
       const describedProps = { ...colorProps, presentation: describedPlan };
-      const declaring = (selectedOptionDescription: SelectedOptionDescriptionPlacement) =>
-        ({
-          ...colorProps.registry,
-          presentation: { selectedOptionDescription } as MergedThemePresentation,
-        }) as Registry;
+      const declaring = (
+        presentation: Pick<MergedThemePresentation, 'selectedOptionDescription' | 'fieldTemplateOrder'>,
+      ) => ({ ...colorProps.registry, presentation: presentation as MergedThemePresentation }) as Registry;
+      const beforeOwnDescription = declaring({ selectedOptionDescription: 'beforeDescription' });
+      const childrenFirst: FieldTemplateOrder = ['children', 'description', 'help'];
+      const helpAbove: FieldTemplateOrder = ['description', 'help', 'children'];
       const plan = (description?: string, help?: string) =>
         resolveFieldPresentation({ id: 'root_color', declaration: TEMPLATE, label: 'Color', description, help });
+      // The select sits in the template's children, so the template's order places it among the parts the template draws
       it.each([
         [
-          'afterDescription',
+          'the default order',
+          undefined,
           'description and help',
           plan('Pick a color', 'Pick one'),
           'description selectedOptionDescription help',
         ],
         [
-          'beforeDescription',
+          'a children-first order',
+          childrenFirst,
           'description and help',
           plan('Pick a color', 'Pick one'),
           'selectedOptionDescription description help',
         ],
         [
-          'afterHelp',
+          'a children-last order',
+          helpAbove,
           'description and help',
           plan('Pick a color', 'Pick one'),
           'description help selectedOptionDescription',
         ],
-        ['afterDescription', 'help alone', plan(undefined, 'Pick one'), 'selectedOptionDescription help'],
-        ['beforeDescription', 'help alone', plan(undefined, 'Pick one'), 'selectedOptionDescription help'],
-        ['afterHelp', 'help alone', plan(undefined, 'Pick one'), 'help selectedOptionDescription'],
-        ['afterHelp', 'description alone', plan('Pick a color'), 'description selectedOptionDescription'],
-        ['afterDescription', 'neither', plan(), 'selectedOptionDescription'],
-        ['afterHelp', 'neither', plan(), 'selectedOptionDescription'],
-      ] as const)('under %s, with %s, lists it as %s', (placement, _, presentation, expected) => {
-        const registry = declaring(placement);
+        ['the default order', undefined, 'help alone', plan(undefined, 'Pick one'), 'selectedOptionDescription help'],
+        [
+          'a children-last order',
+          helpAbove,
+          'help alone',
+          plan(undefined, 'Pick one'),
+          'help selectedOptionDescription',
+        ],
+        [
+          'a children-last order',
+          helpAbove,
+          'description alone',
+          plan('Pick a color'),
+          'description selectedOptionDescription',
+        ],
+        ['the default order', undefined, 'neither', plan(), 'selectedOptionDescription'],
+        ['a children-last order', helpAbove, 'neither', plan(), 'selectedOptionDescription'],
+      ] as const)('under %s, with %s, lists it as %s', (_, fieldTemplateOrder, __, presentation, expected) => {
+        const registry = declaring({ fieldTemplateOrder });
         expect(
           widgetAriaProps({ ...colorProps, 'aria-describedby': undefined, presentation, registry })['aria-describedby'],
         ).toBe(
@@ -184,18 +199,25 @@ describe('widgetAriaProps()', () => {
             .join(' '),
         );
       });
+      it("leaves the parts the template draws to its order under 'beforeDescription'", () => {
+        expect(
+          widgetAriaProps({ ...describedProps, 'aria-describedby': undefined, registry: beforeOwnDescription })[
+            'aria-describedby'
+          ],
+        ).toBe('root_color__description root_color__selectedOptionDescription root_color__help');
+      });
       it('lists it once, though the caller passed it elsewhere', () => {
         const props = {
           ...describedProps,
           'aria-describedby': 'root_color__selectedOptionDescription',
-          registry: declaring('beforeDescription'),
+          registry: declaring({ fieldTemplateOrder: childrenFirst }),
         };
         expect(widgetAriaProps(props)['aria-describedby']).toBe(
           'root_color__selectedOptionDescription root_color__description root_color__help',
         );
       });
       it('leaves the ids alone when no option description is shown, or there is no plan', () => {
-        const registry = declaring('beforeDescription');
+        const registry = declaring({ fieldTemplateOrder: childrenFirst });
         expect(widgetAriaProps({ ...describedProps, value: 'b', registry })['aria-describedby']).toBe(
           'root_color__description root_color__help ext',
         );
@@ -215,7 +237,7 @@ describe('widgetAriaProps()', () => {
           inherited: above,
         });
         const props = { ...colorProps, 'aria-describedby': undefined, presentation };
-        expect(widgetAriaProps({ ...props, registry: declaring('beforeDescription') })['aria-describedby']).toBe(
+        expect(widgetAriaProps({ ...props, registry: beforeOwnDescription })['aria-describedby']).toBe(
           `${presentation.description.id} root_color__selectedOptionDescription`,
         );
         // A nested anyOf field passes the description down through a level that is `above` itself
@@ -226,9 +248,7 @@ describe('widgetAriaProps()', () => {
           inherited: presentation,
         });
         expect(
-          widgetAriaProps({ ...props, presentation: nested, registry: declaring('beforeDescription') })[
-            'aria-describedby'
-          ],
+          widgetAriaProps({ ...props, presentation: nested, registry: beforeOwnDescription })['aria-describedby'],
         ).toBe(`${presentation.description.id} root_color__selectedOptionDescription`);
       });
       describe('with a description and help of its own under a field above with its own', () => {
@@ -252,24 +272,25 @@ describe('widgetAriaProps()', () => {
             templateOrder,
           });
         const selected = 'root_color__selectedOptionDescription';
-        // Each placement under the template order of a theme that declares it, as the select draws inside the template
         it.each([
           [
-            'afterDescription',
             ['description', 'children', 'help'],
             ['fieldDescription', 'ownDescription', selected, 'ownHelp', 'fieldHelp'],
           ],
           [
-            'beforeDescription',
             ['children', 'description', 'help'],
             [selected, 'ownDescription', 'ownHelp', 'fieldDescription', 'fieldHelp'],
           ],
           [
-            'afterHelp',
+            ['children', 'help', 'description'],
+            [selected, 'ownHelp', 'ownDescription', 'fieldHelp', 'fieldDescription'],
+          ],
+          [
             ['description', 'help', 'children'],
             ['fieldDescription', 'fieldHelp', 'ownDescription', 'ownHelp', selected],
           ],
-        ] as const)('lists it under %s around every level', (placement, templateOrder, expected) => {
+        ] as const)('lists it under the template order %j around every level', (fieldTemplateOrder, expected) => {
+          const templateOrder: FieldTemplateOrder = fieldTemplateOrder;
           const field = fieldPlan(TEMPLATE, templateOrder);
           const presentation = optionPlan(field, templateOrder);
           const ids: Record<string, string> = {
@@ -279,18 +300,20 @@ describe('widgetAriaProps()', () => {
             ownHelp: presentation.help.id,
           };
           expect(
-            widgetAriaProps({ ...colorProps, presentation, registry: declaring(placement) })['aria-describedby'],
+            widgetAriaProps({ ...colorProps, presentation, registry: declaring({ fieldTemplateOrder }) })[
+              'aria-describedby'
+            ],
           ).toBe([...expected.map((part) => ids[part] ?? part), 'ext'].join(' '));
         });
         it('lists it after the parts a field above draws itself, and before those the option draws', () => {
           const field = fieldPlan({ ...TEMPLATE, description: 'self', help: 'self' });
-          const presentation = optionPlan(field);
+          const presentation = optionPlan(field, childrenFirst);
           expect(
             widgetAriaProps({
               ...colorProps,
               'aria-describedby': undefined,
               presentation,
-              registry: declaring('beforeDescription'),
+              registry: declaring({ fieldTemplateOrder: childrenFirst }),
             })['aria-describedby'],
           ).toBe(
             [field.description.id, field.help.id, selected, presentation.description.id, presentation.help.id].join(
@@ -302,7 +325,6 @@ describe('widgetAriaProps()', () => {
         it.each([
           ['afterDescription', ['description', 'option', 'help']],
           ['beforeDescription', ['option', 'description', 'help']],
-          ['afterHelp', ['description', 'help', 'option']],
         ] as const)('lists it once among the parts a selector draws itself under %s', (placement, expected) => {
           const field = fieldPlan({ ...TEMPLATE, description: 'self', help: 'self' });
           const presentation = getSelectorPresentation(field, 'root_color');
@@ -312,7 +334,7 @@ describe('widgetAriaProps()', () => {
               ...colorProps,
               'aria-describedby': undefined,
               presentation,
-              registry: declaring(placement),
+              registry: declaring({ selectedOptionDescription: placement }),
             })['aria-describedby'],
           ).toBe(expected.map((part) => ids[part]).join(' '));
         });

@@ -76,6 +76,11 @@ export function rendersHere(by: PartPlacement) {
   return by === 'template' || by === 'self';
 }
 
+/** Whether a `FieldTemplate` drawing in `templateOrder` draws `part` after its `children` */
+export function drawnAfterChildren(part: 'description' | 'help', templateOrder = DEFAULT_TEMPLATE_ORDER) {
+  return templateOrder.indexOf(part) > templateOrder.indexOf('children');
+}
+
 /** The id a part of this level's own takes: `ownId`, or, when a field above already renders that part under it, the
  * option id numbered by how many fields above render one, so each level's own part has an id of its own
  *
@@ -246,20 +251,16 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
 
   // This level draws inside the `children` of the fields above, so their parts drawn after `children` follow its own
   const ownParts = { description: descriptionPlacement, help: helpPlacement };
-  // An order that leaves out `children` draws every part it lists above them, as one that leaves out a part does that part
-  const drawnAfterChildren = (part: 'description' | 'help') =>
-    templateOrder.includes('children') && templateOrder.indexOf(part) > templateOrder.indexOf('children');
-  // Sorted rather than read off `templateOrder`, so a part the order leaves out is still listed
-  const drawnOrder = [...DESCRIBING_PARTS].sort((a, b) => templateOrder.indexOf(a) - templateOrder.indexOf(b));
+  const drawnOrder = templateOrder.filter((part) => part !== 'children');
   const templateIds = (after: boolean) =>
     drawnOrder
-      .filter((part) => ownParts[part].by === 'template' && drawnAfterChildren(part) === after)
+      .filter((part) => ownParts[part].by === 'template' && drawnAfterChildren(part, templateOrder) === after)
       .map((part) => ownParts[part].id);
   // Only a template draws around `children`: a part a field above draws itself, as an `anyOf`/`oneOf` field's selector
   // does, is drawn inside them, and an `above` part repeats the id of the part a plan further up draws
   const afterIdsAbove = new Set(
     plansAbove.flatMap((plan) =>
-      DESCRIBING_PARTS.filter((part) => plan[part].by === 'template' && drawnAfterChildren(part)).map(
+      DESCRIBING_PARTS.filter((part) => plan[part].by === 'template' && drawnAfterChildren(part, templateOrder)).map(
         (part) => plan[part].id,
       ),
     ),

@@ -135,9 +135,9 @@ describe('mergeThemePresentation()', () => {
   it("takes the selected option description's placement from the top layer that declares one", () => {
     const theme = { selectedOptionDescription: 'beforeDescription' } as const;
     expect(mergeThemePresentation(core, theme, {}).selectedOptionDescription).toBe('beforeDescription');
-    expect(mergeThemePresentation(theme, { selectedOptionDescription: 'afterHelp' }).selectedOptionDescription).toBe(
-      'afterHelp',
-    );
+    expect(
+      mergeThemePresentation(theme, { selectedOptionDescription: 'afterDescription' }).selectedOptionDescription,
+    ).toBe('afterDescription');
   });
 
   it("takes the field template's order from the top layer that declares one", () => {
