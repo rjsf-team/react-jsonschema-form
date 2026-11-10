@@ -10,15 +10,16 @@ import type {
   StrictRJSFSchema,
 } from './types.ts';
 
-/** The props a theme's `BaseInputTemplate` puts on its input: the ones `getInputProps()` derives from the schema and
- * options, overridden by those `callerInputProps()` picks from the widget's props, and the `title` that names the
- * derived numeric `pattern`, which is left out when the widget replaces that pattern so it doesn't describe a rule no
- * longer in force. The widget's `multiple` is kept only for a file input, and set to undefined for any other so it also
- * overrides one spread from the template's other props: `ArrayField` passes it to any widget of a multi-select, and the
- * template can't tell that one from a `multiple` a widget means for an `email` input
+/** The props a theme's `BaseInputTemplate` puts on its input: the ones derived from the schema and options, overridden
+ * by those `callerInputProps()` picks from the widget's props, and the `title` that names the derived numeric
+ * `pattern`, which is left out when the widget replaces that pattern so it doesn't describe a rule no longer in force.
+ * The widget's `multiple` is kept only for a file input, and set to undefined for any other so it also overrides one
+ * spread from the template's other props: `ArrayField` passes it to any widget of a multi-select, and the template
+ * can't tell that one from a `multiple` a widget means for an `email` input
  *
  * @param props - The props of the `BaseInputTemplate`
- * @param [plainNativeInput=true] - Passed on to `getInputProps()`
+ * @param [plainNativeInput=true] - Whether the theme renders a plain native `<input>` for a number, which then gets a
+ *        text input with a numeric `inputMode` and `pattern`
  * @returns - The input props, with the `title` to put before them so a `title` the caller sets wins
  */
 export default function getBaseInputProps<

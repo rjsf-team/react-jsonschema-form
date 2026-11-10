@@ -62,7 +62,7 @@ CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the 
 A package's public API is what its root exports, plus the subpaths its `package.json` `exports` lists: `@rjsf/core/markdown`, `@rjsf/core/testing`, core's two stylesheets, `compileSchemaValidators` in `@rjsf/validator-ajv8` and `@rjsf/validator-ata`, and `@rjsf/snapshot-tests/setup`.
 Nothing under `lib/` can be imported on its own, so a new module is internal until the package root exports something from it, and every name the root exports has to keep working until the next major.
 To make something public, export it from the package root and add a changelog entry; add a subpath to `exports` only for an entry point that has to load separately, as `@rjsf/core/markdown` does.
-`@rjsf/utils` exports only what another RJSF package's source imports, which `pnpm run knip` checks: its `src/index.ts` names every value it exports rather than re-exporting a module with `export *`, and an export only tests import is tagged `@testSeam`.
+`@rjsf/utils` exports only what another RJSF package's source imports, which `pnpm run knip` checks: its `src/index.ts` names every value it exports rather than re-exporting a module with `export *`, and an export only tests import is tagged `@testSeam`. The one exception is tagged `@public`, which knip never reports: the validator-based schema functions, which consumers call on their own though RJSF reaches them through `createSchemaUtils()`.
 
 ## Changelog
 

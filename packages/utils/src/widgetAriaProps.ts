@@ -79,12 +79,12 @@ function listSelectedOption(
  * a screen reader focuses, all of which belong on that element. A select its field's plan reaches takes the attributes
  * `getControlAttributes()` gives its control, with the ids its caller passed, then the selected option's description
  * id, added to the plan's describers, each id once, and the caller's `aria-label` over the plan's unless it is empty,
- * else, since a select shows its value rather than a name, the name `getControlAriaLabel()` gives it where no label
- * names it. A select rendered inside another widget, such as each date part of an
+ * else, since a select shows its value rather than a name, the field's label, its `placeholder` or the translated
+ * `SelectPlaceholder` where no label names it. A select rendered inside another widget, such as each date part of an
  * `AltDateWidget`, has an id of its own that no help or error element is rendered for, so it is given a plan of its
  * own, through which it is described by its field's parts. Without a plan, the caller's ids, even an empty
- * `aria-describedby`, replace the `ariaDescribedByIds()` a widget rendered without one falls back to, whose ids no
- * element may have.
+ * `aria-describedby`, replace the error, description and help ids a widget rendered without one falls back to, which
+ * no element may have.
  *
  * The selected option's description id is added only while `SelectedOptionDescription` renders it, the one element the
  * widget renders itself, so the description of the selected option is still announced. Otherwise the id is left out,

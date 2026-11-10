@@ -1,9 +1,10 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
-  "ignoreExportsUsedInFile": { "interface": true, "type": true },
   "ignoreIssues": {
     // Public types cost no bundle size and name the parameters and results of the public exports.
     "packages/utils/src/index.ts": ["types"],
+    // The index re-exports every type here with `export type *`, so each one is public.
+    "packages/utils/src/types.ts": ["types"],
     // A module augmentation has to export the interface it merges into.
     "packages/utils/src/jsonSchemaAugmentation.ts": ["types"],
   },

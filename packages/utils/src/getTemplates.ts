@@ -1,17 +1,17 @@
 import getTemplate from './getTemplate.ts';
 import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
-/** Returns every template in the `registry`, with each one that `uiOptions` overrides resolved the way `getTemplate`
- * resolves it. Only templates the registry already holds are resolved: an override for a name the registry lacks is
- * left out, since `uiOptions` also holds non-template options. Destructure the templates a component renders from the
- * result: React's static-components rule doesn't follow a destructure, so it accepts them where it reports the result
- * of a `getTemplate()` call. It can't check them either, so this relies on the registry and `uiOptions` holding
- * components defined at module scope.
+/** Returns every template in the `registry`, with each one that `uiOptions` overrides resolved in its place. Only
+ * templates the registry already holds are resolved: an override for a name the registry lacks is left out, since
+ * `uiOptions` also holds non-template options. Destructure the templates a component renders from the result: React's
+ * static-components rule doesn't follow a destructure, so it accepts them where it reports the result of a function
+ * call. It can't check them either, so this relies on the registry and `uiOptions` holding components defined at
+ * module scope.
  *
  * @param registry - The `Registry` from which to read the templates
  * @param [uiOptions={}] - The `UIOptionsType` from which to read alternate templates
- * @param [entryLabel] - Builds the label of the uiSchema entry the field is rendered from, for the override
- * warnings, as in `getTemplate()`; omitted by callers that only resolve, which stay silent
+ * @param [entryLabel] - Builds the label of the uiSchema entry the field is rendered from, for the warning an invalid
+ * override logs; omitted by callers that only resolve, which stay silent
  * @returns - The templates from either the `uiSchema` or `registry`
  */
 export default function getTemplates<

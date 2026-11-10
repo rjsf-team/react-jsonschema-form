@@ -5,7 +5,7 @@ import uniqueIds from './uniqueIds.ts';
 /** Gets the `aria-describedby` a widget gives the focusable element that carries its `id`: the ids its field's plan
  * describes its control by, followed by the ids of the elements the widget renders to describe that control itself,
  * such as its examples list, each once. A widget rendered without a plan, as a `SchemaField`-less caller renders one, is
- * described by `ariaDescribedByIds()`
+ * described by the ids of its errors, description and help
  *
  * @param props - The widget's `id` and `presentation`
  * @param [ownDescribedBy=[]] - The ids of the elements the widget renders to describe its control
