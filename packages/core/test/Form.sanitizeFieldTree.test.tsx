@@ -1855,6 +1855,31 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     },
   );
 
+  it('keeps a prefix item an edit elsewhere in its array leads its new entry to reject, rather than shifting the rest', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        list: { type: 'array', prefixItems: [{ type: 'string', enum: ['a', 'b'] }], items: { type: 'string' } },
+      },
+      if: { properties: { list: { contains: { const: 'x' } } } },
+      then: { properties: { list: { prefixItems: [{ type: 'string', enum: ['a'] }] } } },
+    };
+    const events: IChangeEvent[] = [];
+    const { container } = render(
+      <Form
+        schema={schema}
+        validator={validator}
+        initialFormData={{ list: ['b', 'y', 'z'] }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+
+    await user.clear(input(container, 'root_list_2'));
+    await user.type(input(container, 'root_list_2'), 'x');
+
+    expect(events[events.length - 1].formData).toEqual({ list: ['b', 'y', 'x'] });
+  });
+
   describe('a schema change', () => {
     const colorSchema = (colors: string[]): RJSFSchema => ({
       type: 'object',
@@ -1883,6 +1908,196 @@ describe('sanitize as a diff of the field trees before and after a change', () =
       rerender(<Form ref={ref} schema={colorSchema(['a'])} {...props} />);
 
       expect(ref.current?.getFormData()).toEqual({ color: 'b' });
+    });
+
+    it.each([
+      { from: ['string', 'number'], to: ['number', 'string', 'number'], expected: { v: 'a' }, outcome: 'keeps' },
+      { from: ['string', 'string'], to: ['string', 'number'], expected: {}, outcome: 'drops' },
+    ])('$outcome a value whose type list changes from $from to $to', ({ from, to, expected }) => {
+      const typed = (type: string[]): RJSFSchema => ({ type: 'object', properties: { v: { type } as RJSFSchema } });
+      const ref = createRef<FormRef>();
+      const props = { validator, initialFormData: { v: 'a' } };
+      const { rerender } = render(<Form ref={ref} schema={typed(from)} {...props} />);
+
+      rerender(<Form ref={ref} schema={typed(to)} {...props} />);
+
+      expect(ref.current?.getFormData()).toStrictEqual(expected);
+    });
+
+    it('keeps a clear whose type list is only reordered, rather than refilling its default', () => {
+      const typed = (type: string[]): RJSFSchema => ({
+        type: 'object',
+        properties: { v: { type, default: 'd' } as RJSFSchema },
+      });
+      const ref = createRef<FormRef>();
+      const props = { validator, initialFormData: { v: undefined } };
+      const { rerender } = render(<Form ref={ref} schema={typed(['string', 'null'])} {...props} />);
+
+      rerender(<Form ref={ref} schema={typed(['null', 'string'])} {...props} />);
+
+      expect(ref.current?.getFormData()).toStrictEqual({ v: undefined });
+    });
+
+    describe('of an array whose items prefixItems describe by position', () => {
+      const listSchema = (prefix: RJSFSchema, rest: string[]): RJSFSchema => ({
+        type: 'object',
+        properties: { list: { type: 'array', prefixItems: [prefix], items: { type: 'string', enum: rest } } },
+      });
+
+      it('judges a prefix item by its own prefixItems entry, rather than dropping it and shifting the next', () => {
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: [1, 'a', 'b'] } };
+        const { rerender } = render(<Form ref={ref} schema={listSchema({ type: 'number' }, ['a', 'b'])} {...props} />);
+
+        rerender(<Form ref={ref} schema={listSchema({ type: 'number' }, ['a'])} {...props} />);
+
+        expect(ref.current?.getFormData()).toEqual({ list: [1, 'a'] });
+      });
+
+      it.each([
+        { data: ['b', 'a'], expected: {}, outcome: 'drops the array holding' },
+        { data: [undefined, 'a'], expected: { list: [undefined, 'a'] }, outcome: 'keeps an unfilled' },
+      ])('$outcome a prefix item the new entry rejects', ({ data, expected }) => {
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: data } };
+        const prefix = (values: string[]): RJSFSchema => ({ type: 'string', enum: values });
+        const { rerender } = render(<Form ref={ref} schema={listSchema(prefix(['a', 'b']), ['a'])} {...props} />);
+
+        rerender(<Form ref={ref} schema={listSchema(prefix(['a']), ['a'])} {...props} />);
+
+        expect(ref.current?.getFormData()).toStrictEqual(expected);
+      });
+
+      it.each([
+        { data: ['a', 'b'], expected: {}, outcome: 'drops the array where an item' },
+        { data: ['a'], expected: { list: ['a'] }, outcome: 'keeps the array where no item' },
+      ])('$outcome reaches the new false, as sanitizeDataForNewSchema() does', ({ data, expected }) => {
+        const closed = (rest: RJSFSchema | false): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', prefixItems: [{ type: 'string' }], items: rest } },
+        });
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: data } };
+        const { rerender } = render(<Form ref={ref} schema={closed({ type: 'string' })} {...props} />);
+
+        rerender(<Form ref={ref} schema={closed(false)} {...props} />);
+
+        expect(ref.current?.getFormData()).toStrictEqual(expected);
+      });
+
+      it('keeps an unfilled prefix item at a position the new prefixItems close, as sanitizeDataForNewSchema() does', () => {
+        const prefixed = (second: RJSFSchema | false): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', prefixItems: [{ type: 'string' }, second] } },
+        });
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: ['a', undefined] } };
+        const { rerender } = render(<Form ref={ref} schema={prefixed({ type: 'string' })} {...props} />);
+
+        rerender(<Form ref={ref} schema={prefixed(false)} {...props} />);
+
+        expect(ref.current?.getFormData()).toStrictEqual({ list: ['a', undefined] });
+      });
+
+      it.each([
+        { rest: { type: 'string' } as RJSFSchema, cutOff: 'a rejected prefix item' },
+        { rest: false as const, cutOff: 'an item past a closed tuple' },
+      ])('trims $cutOff that a new maxItems cuts off, as sanitizeDataForNewSchema() does', ({ rest }) => {
+        const bounded = (maxItems: number | undefined, values: string[], items: RJSFSchema | false): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              maxItems,
+              prefixItems: [{ type: 'string' }, { type: 'string', enum: values }],
+              items,
+            },
+          },
+        });
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: ['x', 'b', 'c'] } };
+        const { rerender } = render(
+          <Form ref={ref} schema={bounded(undefined, ['b'], { type: 'string' })} {...props} />,
+        );
+
+        rerender(<Form ref={ref} schema={bounded(1, ['a'], rest)} {...props} />);
+
+        expect(ref.current?.getFormData()).toStrictEqual({ list: ['x'] });
+      });
+
+      it('keeps an array already longer than an unchanged maxItems whose item past it is rejected', () => {
+        const bounded = (values: string[]): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              maxItems: 1,
+              prefixItems: [{ type: 'string' }, { type: 'string', enum: values }],
+              items: { type: 'string' },
+            },
+          },
+        });
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: ['x', 'b'] } };
+        const { rerender } = render(<Form ref={ref} schema={bounded(['b'])} {...props} />);
+
+        rerender(<Form ref={ref} schema={bounded(['a'])} {...props} />);
+
+        expect(ref.current?.getFormData()).toStrictEqual({ list: ['x', 'b'] });
+      });
+
+      it('keeps the items past a closed tuple the new schema opens', () => {
+        const tuple = (rest: RJSFSchema | false): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', prefixItems: [{ type: 'string' }], items: rest } },
+        });
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: ['a', 'b'] } };
+        const { rerender } = render(<Form ref={ref} schema={tuple(false)} {...props} />);
+
+        rerender(<Form ref={ref} schema={tuple({ type: 'string' })} {...props} />);
+
+        expect(ref.current?.getFormData()).toStrictEqual({ list: ['a', 'b'] });
+      });
+
+      it('keeps a prefix item both schemas reject alike where only its default changes, rather than clearing the array', () => {
+        const withDefault = (value: string): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              prefixItems: [{ type: 'string', enum: ['a', 'b'], default: value }],
+              items: { type: 'string' },
+            },
+          },
+        });
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: ['x', 'y'] } };
+        const { rerender } = render(<Form ref={ref} schema={withDefault('a')} {...props} />);
+
+        rerender(<Form ref={ref} schema={withDefault('b')} {...props} />);
+
+        expect(ref.current?.getFormData()).toStrictEqual({ list: ['x', 'y'] });
+      });
+
+      it('keeps an inner array as it is where the new entry rejects its prefix item, as sanitizeDataForNewSchema() does', () => {
+        const nested = (values: string[]): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              prefixItems: [{ type: 'array', prefixItems: [{ type: 'string', enum: values }] }],
+            },
+          },
+        });
+        const ref = createRef<FormRef>();
+        const props = { validator, initialFormData: { list: [['b']] } };
+        const { rerender } = render(<Form ref={ref} schema={nested(['a', 'b'])} {...props} />);
+
+        rerender(<Form ref={ref} schema={nested(['a'])} {...props} />);
+
+        expect(ref.current?.getFormData()).toStrictEqual({ list: [['b']] });
+      });
     });
 
     it.each(['__proto__', 'toString'])(

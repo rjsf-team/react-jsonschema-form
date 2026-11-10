@@ -9,6 +9,7 @@ import type {
   UiSchemaDefinitions,
 } from '@rjsf/utils';
 import {
+  constrainsAlike,
   CONST_KEY,
   deepEquals,
   DEFAULT_KEY,
@@ -22,7 +23,6 @@ import {
 } from '@rjsf/utils';
 
 import keepClears from '../keepClears.ts';
-import { hasSameConstraints } from '../sanitizeFieldTree.ts';
 import { asFieldValue } from '../uiState.ts';
 import { declaresProperty, withGlobalUiOptions } from './fieldWidgetUtils.ts';
 
@@ -122,7 +122,7 @@ function holdsSameField<T, S extends StrictRJSFSchema, F extends FormContextType
   return (
     !isSchemaObject<S>(oldProperty) ||
     !isSchemaObject<S>(newProperty) ||
-    hasSameConstraints<S>(
+    constrainsAlike<S>(
       schemaUtils.retrieveSchema(oldProperty),
       schemaUtils.retrieveSchema(newProperty),
       optionDefaultFor<S>(oldOption, key),
@@ -222,12 +222,8 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  * `sanitizeDataForNewSchema()` drops what the new option cannot hold, and `getDefaultFormState()` fills in what it
  * declares, but neither lets the new option's `default` reach a key that already holds something, so a value the old
  * option's `default` put there outlasts the switch and switching back does not restore it
- * ([#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476)). The same is true of a key whose value
- * sanitize cleared, as it does one the new option's `const`, `enum` or read-only `default` rejects, because it clears
- * by assigning `undefined` rather than by removing the key, and
- * `getDefaultFormState()` populates an absent key but leaves one explicitly set to `undefined` alone, unless it is the
- * field of a `null` schema, whose one value it fills in. Deleting either kind of key outright is what lets the fill
- * below reach it.
+ * ([#4476](https://github.com/rjsf-team/react-jsonschema-form/issues/4476)). Deleting such a key outright is what lets
+ * the fill below reach it, as it reaches a key sanitize removed.
  *
  * A key qualifies only when all of the following hold, which between them keep the deletion from stranding data the
  * user or the caller supplied:
@@ -241,9 +237,7 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  *   What an option declares and what `computeDefaults()` acts on are not the same set: a `default` reached through
  *   `allOf` or `if`/`then` resolves here but is not filled, and a `const` is skipped entirely under
  *   `constAsDefaults: 'never'`. Deleting on the declaration alone would empty those keys for good.
- * - Sanitize cleared the value, or the old option declares one and the key still holds it. Only the second of
- *   those compares anything, so only it needs the old option's declaration: a value sanitize threw away is gone
- *   no matter who declared it, and leaving the key holding `undefined` only blocks the fill.
+ * - The old option declares a value for it, and the key still holds it.
  *
  * Staleness is judged against `formData` as it arrived, not against the sanitized copy: sanitize rewrites a nested
  * value whenever the two options declare different properties for it, removing a key the new option drops and adding
@@ -255,7 +249,7 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  * qualifying, so the worst it costs is that the replacement does not happen.
  *
  * A field that held nothing, as after a `null` option, and switches to an option whose defaults are an object gets
- * what `sanitizeDataForNewSchema()` made of nothing for the option, its `undefined` keys left out, filled with the
+ * what `sanitizeDataForNewSchema()` made of nothing for the option, filled with the
  * defaults of the field with that option as its only one, so a `default` the field itself declares is restored with
  * the option's own, a `default` an ancestor declares for the field fills the keys they leave
  * ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)), as they do on mount.
@@ -383,11 +377,7 @@ export default function formDataForNewOption<
       if (!field || !isPlainObject(defaultsForNewOption())) {
         return undefined;
       }
-      // A field that held nothing has no key a user cleared, so it holds no `undefined` key either: one would keep the
-      // `default` an ancestor declares for that key from reaching it when `Form` fills the data in
-      const held = isPlainObject(sanitized)
-        ? Object.fromEntries(Object.entries(sanitized).filter(([, value]) => value !== undefined))
-        : {};
+      const held = isPlainObject(sanitized) ? sanitized : {};
       const fieldDefaults = schemaUtils.getDefaultFormState(
         field.schema,
         asFieldValue<T>(held),
@@ -425,7 +415,7 @@ export default function formDataForNewOption<
           // as it does an object equal to the new `const`, and mutating it would reach the `formData` held in state
           const withoutBlockedKeys = { ...sanitizedData };
           refillableKeys.forEach((key) => {
-            if (sanitizedData[key] === undefined || holdsOldDefault(key)) {
+            if (holdsOldDefault(key)) {
               delete withoutBlockedKeys[key];
             }
           });

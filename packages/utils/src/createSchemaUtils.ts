@@ -402,7 +402,8 @@ class SchemaUtils<
    * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
    * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the
    * old schemas that are non-existent in the new schema, or that it declares with another type, are removed from the
-   * data at every level.
+   * data at every level, as is a property whose value the new schema rejects. A property the data holds as `undefined`
+   * stays so where both schemas constrain it alike, and is otherwise removed unless a value replaces it.
    *
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
