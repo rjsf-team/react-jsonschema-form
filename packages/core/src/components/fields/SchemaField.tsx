@@ -567,6 +567,8 @@ export function createSchemaFieldRenderedAs<
   let planShownOption: ReturnType<typeof createShownOptionPlanner<T, S, F>> | undefined;
   // Keeps the options' identity while the data is unchanged, which the planner keys the option shown on
   const retrieveOptions = memoizeLast(retrievedOptionsOf<T, S, F>);
+  // Matching the data against the options validates it, so it is not repeated while the options and data are unchanged
+  const pickOption = memoizeLast(pickShownOption<T, S, F>);
   // The field's own name and type win, but an untyped `anyOf`/`oneOf` has only its option's to be keyed by
   const withOption = memoizeLast(
     (rendering: ObjectFieldPropertyRendering, option: ObjectFieldPropertyRendering): ObjectFieldPropertyRendering => ({
@@ -611,13 +613,15 @@ export function createSchemaFieldRenderedAs<
     }
     // shortcut: picks the option the data matches, not one the user selected that the data fits no better, since the
     // selection is the form's state, which a container laying the field out can't read; read it if a theme keys by it
-    const index = pickShownOption<T, S, F>(
+    const index = pickOption(
       registry.schemaUtils,
       undefined,
       options,
       formData,
       getDiscriminatorFieldFromSchema<S>(shownSchema),
     );
+    // shortcut: plans the outer option only, so an option that is itself an untyped anyOf/oneOf reports none of its own
+    // option; recurse while the option is withheld if nested unions need keying
     planShownOption ??= createShownOptionPlanner<T, S, F>();
     const option = planShownOption(
       shownSchema,

@@ -1650,7 +1650,8 @@ export type ArrayFieldTemplateProps<
 
 /** What an object property's `SchemaField` renders the property as. A property whose `anyOf`/`oneOf` option renders its
  * control is reported by the widget of the option shown, and by that option's field and type where it names none of
- * its own, as an untyped `anyOf` does
+ * its own, as an untyped `anyOf` does. Only that outer option is read, so an option that is itself an untyped
+ * `anyOf`/`oneOf` reports nothing of the option it shows
  */
 export interface ObjectFieldPropertyRendering {
   /** The registry key of the field a `ui:field` or the schema's `$id` names, if one does */

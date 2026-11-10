@@ -95,10 +95,18 @@ function createPropertyLayouts<
     const kept = layouts;
     layouts = new Map();
     return properties.map((property) => {
-      const layout = kept.get(property) ?? {
-        isHidden: createIsSchemaFieldHidden<T, S, F>(),
-        renderedAs: createSchemaFieldRenderedAs<T, S, F>(),
-      };
+      let layout = kept.get(property);
+      if (!layout) {
+        let renderedAs: Layout['renderedAs'] | undefined;
+        layout = {
+          isHidden: createIsSchemaFieldHidden<T, S, F>(),
+          // Created on its first call, since only a template laying properties out by it, as antd's, makes one
+          renderedAs: (...args) => {
+            renderedAs ??= createSchemaFieldRenderedAs<T, S, F>();
+            return renderedAs(...args);
+          },
+        };
+      }
       layouts.set(property, layout);
       return layout;
     });
