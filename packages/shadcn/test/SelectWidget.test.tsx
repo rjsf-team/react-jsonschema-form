@@ -6,10 +6,10 @@ import validator from '@rjsf/validator-ajv8';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
 import Form from '../src/index.ts';
 import SelectWidget from '../src/SelectWidget/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
-import { expectReferencesResolve } from './helpers/expectReferencesResolve.ts';
 
 const translateToFrench = (stringToTranslate: TranslatableString) =>
   stringToTranslate === TranslatableString.SelectPlaceholder ? 'Choisir ...' : stringToTranslate;

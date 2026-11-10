@@ -21,22 +21,31 @@ const Command = ({
   ...props
 }: ComponentProps<typeof CommandPrimitive> & {
   /** Whether the menu renders no `CommandInput`, so the hidden label cmdk renders for one would name nothing. A menu
-   * with a `CommandInput` leaves the label alone, as that input is named through it */
+   * with a `CommandInput` keeps the label's `for`, as that input is named through it */
   withoutInput?: boolean;
 }) => {
-  // cmdk always renders a label for its own input, with no prop to omit it. Its `for` is cmdk's stable generated id, so
-  // React never sets it again once it is removed, and the label itself stays where React put it
+  // cmdk always renders a label for its own input, with no prop to omit it or its `for`, so where no `CommandInput` is
+  // rendered the `for` is removed from the DOM React rendered, and put back once `withoutInput` turns false. It is cmdk's
+  // stable generated id, so React never sets it again by itself. Server-rendered markup keeps it until hydration
   const root = useRef<HTMLDivElement>(null);
+  const removedFor = useRef<string | null>(null);
   useImperativeHandle(ref, () => root.current as HTMLDivElement, []);
   const rootRef = useCallback(
     (element: HTMLDivElement | null) => {
-      if (withoutInput) {
-        element?.querySelector(':scope > label[cmdk-label]')?.removeAttribute('for');
+      const label = element?.querySelector(':scope > label[cmdk-label]');
+      const labelFor = label?.getAttribute('for');
+      if (withoutInput && labelFor) {
+        removedFor.current = labelFor;
+        label?.removeAttribute('for');
+      } else if (!withoutInput && label && removedFor.current) {
+        label.setAttribute('for', removedFor.current);
+        removedFor.current = null;
       }
       root.current = element;
     },
     [withoutInput],
   );
+
   return (
     <CommandPrimitive
       ref={rootRef}

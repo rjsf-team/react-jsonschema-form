@@ -60,8 +60,8 @@ interface FancySelectInterface {
   ariaLabel?: string;
   /** The ids of the elements naming the combobox, for a select whose label's `for` names another element */
   ariaLabelledby?: string;
-  /** The name of the listbox, where `ariaLabelledby` doesn't name it */
-  listLabel: string;
+  /** The `aria-labelledby` or the `aria-label` naming the listbox, from `listboxAriaProps()` */
+  listName: { 'aria-labelledby'?: string; 'aria-label'?: string };
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
   /** Whether the select is invalid, which the combobox says through `aria-invalid` */
@@ -184,7 +184,7 @@ export function FancySelect({
   placeholder,
   ariaLabel,
   ariaLabelledby,
-  listLabel,
+  listName,
   ariaDescribedby,
   ariaInvalid,
   ariaPlaceholder,
@@ -310,6 +310,10 @@ export function FancySelect({
     );
   }
 
+  // cmdk writes the listbox's `label` as its `aria-label`, defaulting to "Suggestions", so a listbox `aria-labelledby`
+  // names gets an empty one, which its accessible name ignores
+  const listProps = { label: listName['aria-label'] ?? '', 'aria-labelledby': listName['aria-labelledby'] };
+
   return (
     <Command
       ref={containerRef}
@@ -398,12 +402,7 @@ export function FancySelect({
             className='absolute w-full z-10 rounded-md border bg-popover text-popover-foreground shadow-md outline-none'
           >
             {sections ? (
-              <CommandList
-                ref={listboxRef}
-                label={listLabel}
-                aria-labelledby={ariaLabelledby}
-                className='h-full overflow-auto'
-              >
+              <CommandList ref={listboxRef} {...listProps} className='h-full overflow-auto'>
                 {sections.map((section) => (
                   <CommandGroup
                     key={section.label === undefined ? UNGROUPED_SECTION_KEY : `optgroup-${section.label}`}
@@ -415,7 +414,7 @@ export function FancySelect({
               </CommandList>
             ) : (
               <CommandGroup className='h-full overflow-auto'>
-                <CommandList ref={listboxRef} label={listLabel} aria-labelledby={ariaLabelledby}>
+                <CommandList ref={listboxRef} {...listProps}>
                   {items.map(renderItem)}
                 </CommandList>
               </CommandGroup>

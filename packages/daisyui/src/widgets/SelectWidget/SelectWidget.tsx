@@ -18,6 +18,7 @@ import {
   getControlFallbackName,
   groupEnumOptions,
   isEnumOptionsGroup,
+  listboxAriaProps,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
@@ -205,7 +206,6 @@ export default function SelectWidget<
   // which leaves focus on the trigger and so closes the dropdown through `dropdown-close` rather than by moving focus
   const [expanded, setExpanded] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const listShown = expanded && !dismissed;
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listboxRef = useRef<HTMLUListElement>(null);
   // daisyUI hides a `dropdown-close` dropdown's content, and a browser won't focus a hidden element, so an option a key
@@ -270,7 +270,7 @@ export default function SelectWidget<
         return;
       }
       if (key === 'Escape') {
-        if (listShown) {
+        if (expanded && !dismissed) {
           event.preventDefault();
           setDismissed(true);
           triggerRef.current?.focus();
@@ -317,7 +317,7 @@ export default function SelectWidget<
         moveTo(option);
       }
     },
-    [listShown, dismissed],
+    [expanded, dismissed],
   );
 
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
@@ -431,7 +431,7 @@ export default function SelectWidget<
              and announces the option it displays as its value */
           role='combobox'
           aria-haspopup='listbox'
-          aria-expanded={listShown}
+          aria-expanded={expanded && !dismissed}
           aria-controls={listboxId}
           {...ariaProps}
           aria-disabled={disabled || readonly || undefined}
@@ -457,12 +457,8 @@ export default function SelectWidget<
           onKeyDown={handleKeyDown}
           // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
           role='listbox'
-          // Named by the field's label, else the placeholder, else the prompt, as a `<label for>` naming the combobox can't
-          // name a `ul`. Only while shown, so the closed listbox, which is always rendered, isn't found by the label too
-          aria-labelledby={listShown ? ariaProps['aria-labelledby'] : undefined}
-          aria-label={
-            listShown && !ariaProps['aria-labelledby'] ? (ariaProps['aria-label'] ?? fallbackName) : undefined
-          }
+          // Named only while shown, so the closed listbox, which is always rendered, isn't found by the field's name too
+          {...(expanded && !dismissed ? listboxAriaProps<T, S, F>(props, ariaProps) : undefined)}
           aria-multiselectable={isMultiple || undefined}
           className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'
         >

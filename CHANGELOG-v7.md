@@ -1504,6 +1504,7 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `getItemSchema()` and `getPrefixLength()`, which read the schema an array declares for each position, through `prefixItems` or a tuple `items` ([#5790](https://github.com/rjsf-team/react-jsonschema-form/pull/5790), [#5777](https://github.com/rjsf-team/react-jsonschema-form/issues/5777))
 - Add the optional `renderedAs` to `ObjectFieldTemplatePropertyType` and the `ObjectFieldPropertyRendering` type it returns ([#5791](https://github.com/rjsf-team/react-jsonschema-form/pull/5791), [#5516](https://github.com/rjsf-team/react-jsonschema-form/issues/5516))
 - Add `getContainerAttributes()`, the `aria-labelledby` and `aria-describedby` a container's template gives the group around its title, description and contents ([#5795](https://github.com/rjsf-team/react-jsonschema-form/pull/5795), [#5723](https://github.com/rjsf-team/react-jsonschema-form/issues/5723))
+- Add `listboxAriaProps()`, which names the list of options a `SelectWidget` shows, used by those of `@rjsf/daisyui` and `@rjsf/shadcn` ([#5807](https://github.com/rjsf-team/react-jsonschema-form/pull/5807), [#5792](https://github.com/rjsf-team/react-jsonschema-form/issues/5792))
 
 ## @rjsf/validator-ajv8
 

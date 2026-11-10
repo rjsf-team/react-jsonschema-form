@@ -17,11 +17,11 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { elementOf } from '../../../testing/elementOf.ts';
+import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
 import CheckboxWidget from '../src/CheckboxWidget/index.ts';
 import { Slider } from '../src/components/ui/slider.tsx';
 import Form, { generateClassMap, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
-import { expectReferencesResolve } from './helpers/expectReferencesResolve.ts';
 
 const user = userEvent.setup();
 

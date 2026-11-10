@@ -22,8 +22,8 @@ interface FancyMultiSelectProps {
   ariaLabel?: string;
   /** The ids of the elements naming the combobox input, for a select whose label's `for` names another element */
   ariaLabelledby?: string;
-  /** The name of the listbox, where `ariaLabelledby` doesn't name it */
-  listLabel: string;
+  /** The `aria-labelledby` or the `aria-label` naming the listbox, from `listboxAriaProps()` */
+  listName: { 'aria-labelledby'?: string; 'aria-label'?: string };
   /** Whether multiple items can be selected */
   multiple: boolean;
   /** Array of items to display in the dropdown */
@@ -87,7 +87,7 @@ export function FancyMultiSelect({
   multiple,
   ariaLabel,
   ariaLabelledby,
-  listLabel,
+  listName,
   items = NO_ITEMS,
   sections,
   selected,
@@ -267,6 +267,10 @@ export function FancyMultiSelect({
     );
   }
 
+  // cmdk writes the listbox's `label` as its `aria-label`, defaulting to "Suggestions", so a listbox `aria-labelledby`
+  // names gets an empty one, which its accessible name ignores
+  const listProps = { label: listName['aria-label'] ?? '', 'aria-labelledby': listName['aria-labelledby'] };
+
   return (
     // The options are filtered here, as the search is typed in an input cmdk doesn't own
     <Command
@@ -347,12 +351,7 @@ export function FancyMultiSelect({
         {listShown && (
           <div className='absolute w-full z-10 top-0 mt-2 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in'>
             {selectableSections ? (
-              <CommandList
-                ref={listboxRef}
-                label={listLabel}
-                aria-labelledby={ariaLabelledby}
-                className='h-full overflow-auto'
-              >
+              <CommandList ref={listboxRef} {...listProps} className='h-full overflow-auto'>
                 {selectableSections.map((section) => (
                   <CommandGroup
                     key={section.label === undefined ? UNGROUPED_SECTION_KEY : `optgroup-${section.label}`}
@@ -364,7 +363,7 @@ export function FancyMultiSelect({
               </CommandList>
             ) : (
               <CommandGroup className='h-full overflow-auto'>
-                <CommandList ref={listboxRef} label={listLabel} aria-labelledby={ariaLabelledby}>
+                <CommandList ref={listboxRef} {...listProps}>
                   {selectables.map(renderItem)}
                 </CommandList>
               </CommandGroup>

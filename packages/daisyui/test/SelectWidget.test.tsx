@@ -4,6 +4,7 @@ import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
 import Form from '../src/index.ts';
 import SelectWidget from '../src/widgets/SelectWidget/SelectWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
@@ -1093,11 +1094,13 @@ describe('SelectWidget listbox name', () => {
     const combobox = screen.getByRole('combobox');
     const listbox = screen.getByRole('listbox', { hidden: true });
 
+    expectReferencesResolve(document.body);
     expect(combobox).toHaveAccessibleName(name);
     expect(listbox).toHaveAccessibleName('');
 
     await user.click(combobox);
 
+    expectReferencesResolve(document.body);
     expect(combobox).toHaveAttribute('aria-expanded', 'true');
     expect(combobox).toHaveAccessibleName(name);
     expect(listbox).toHaveAccessibleName(name);

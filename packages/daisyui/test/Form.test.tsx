@@ -15,6 +15,7 @@ import validator from '@rjsf/validator-ajv8';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { expectReferencesResolve } from '../../../testing/expectReferencesResolve.ts';
 import Form, { generateClassMap, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
 const user = userEvent.setup();
@@ -33,22 +34,6 @@ const pet: RJSFSchema = {
 /** The element an option selector is named by, through its `aria-labelledby` */
 function selectorLabel(selector: HTMLElement) {
   return document.getElementById(selector.getAttribute('aria-labelledby')!);
-}
-
-/** Checks that every id a `for`, an `aria-labelledby` or an `aria-describedby` in `container` names belongs to an element
- * there
- */
-function expectReferencesResolve(container: HTMLElement) {
-  container.querySelectorAll('label[for]').forEach((label) => {
-    expect(container.querySelector(`[id="${label.getAttribute('for')}"]`)).toBeInTheDocument();
-  });
-  container.querySelectorAll('[aria-labelledby], [aria-describedby]').forEach((element) => {
-    [element.getAttribute('aria-labelledby'), element.getAttribute('aria-describedby')]
-      .join(' ')
-      .split(/\s+/)
-      .filter(Boolean)
-      .forEach((referencedId) => expect(container.querySelector(`[id="${referencedId}"]`)).toBeInTheDocument());
-  });
 }
 
 formTests(Form);

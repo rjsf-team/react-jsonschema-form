@@ -159,6 +159,7 @@ import isPlainObject from './isPlainObject.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
 import joinClassNames from './joinClassNames.ts';
 import labelValue from './labelValue.ts';
+import listboxAriaProps from './listboxAriaProps.ts';
 import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
 import localToUTC from './localToUTC.ts';
 import logGridSpanWarning from './logGridSpanWarning.ts';
@@ -417,6 +418,7 @@ export {
   isWholeValueSelect,
   joinClassNames,
   labelValue,
+  listboxAriaProps,
   localTimeToOffsetTime,
   localToUTC,
   logGridSpanWarning,
