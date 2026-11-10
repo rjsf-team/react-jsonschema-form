@@ -247,8 +247,8 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   // This level draws inside the `children` of the fields above, so their parts drawn after `children` follow its own
   const ownParts = { description: descriptionPlacement, help: helpPlacement };
   // An order that leaves out `children` draws every part it lists above them, as one that leaves out a part does that part
-  const childrenAt = templateOrder.includes('children') ? templateOrder.indexOf('children') : templateOrder.length;
-  const drawnAfterChildren = (part: 'description' | 'help') => templateOrder.indexOf(part) > childrenAt;
+  const drawnAfterChildren = (part: 'description' | 'help') =>
+    templateOrder.includes('children') && templateOrder.indexOf(part) > templateOrder.indexOf('children');
   // Sorted rather than read off `templateOrder`, so a part the order leaves out is still listed
   const drawnOrder = [...DESCRIBING_PARTS].sort((a, b) => templateOrder.indexOf(a) - templateOrder.indexOf(b));
   const templateIds = (after: boolean) =>
