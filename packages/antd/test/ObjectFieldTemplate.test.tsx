@@ -9,7 +9,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { fallbackTypeSelectorId, toFieldPath } from '@rjsf/utils';
+import { fallbackTypeSelectorId, fieldPathToId, getByPath, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 import { Form as AntdForm } from 'antd';
@@ -402,19 +402,14 @@ describe('ObjectFieldTemplate colSpan map', () => {
       properties: { property, other: { type: 'string' } },
     });
 
-    it('keys a typeless oneOf of labelled booleans by the select SchemaField infers for it', () => {
-      const classes = getColClasses({}, { select: 4, boolean: 5, string: 8 }, formSchemaOf({ oneOf: yesNo }));
+    it.each<[string, RJSFSchema, string]>([
+      ['a typeless oneOf of labelled booleans', { oneOf: yesNo }, 'boolean'],
+      ['a boolean with labelled options', { type: 'boolean', oneOf: yesNo }, 'boolean'],
+      ['a select over object constants', { type: 'object', enum: [{ a: 1 }, { a: 2 }] }, 'object'],
+    ])('keys %s by the select SchemaField renders for it, not its type', (_name, property, type) => {
+      const classes = getColClasses({}, { select: 4, [type]: 5, string: 8 }, formSchemaOf(property));
       expect(classes[0]).toContain('ant-col-4');
       expect(document.querySelector('#root_property')).toHaveRole('combobox');
-    });
-
-    it('keys a boolean with labelled options by the select SchemaField infers for it', () => {
-      const classes = getColClasses(
-        {},
-        { select: 4, boolean: 5, string: 8 },
-        formSchemaOf({ type: 'boolean', oneOf: yesNo }),
-      );
-      expect(classes[0]).toContain('ant-col-4');
     });
 
     it('keys a property with no ui:widget by the widget it renders before its type', () => {
@@ -422,15 +417,6 @@ describe('ObjectFieldTemplate colSpan map', () => {
         expect.stringContaining('ant-col-3'),
         expect.stringContaining('ant-col-3'),
       ]);
-    });
-
-    it('keys a select over object constants by its select', () => {
-      const classes = getColClasses(
-        {},
-        { select: 4, object: 6, string: 8 },
-        formSchemaOf({ type: 'object', enum: [{ a: 1 }, { a: 2 }] }),
-      );
-      expect(classes[0]).toContain('ant-col-4');
     });
 
     it('keys a property by the field its $id names', () => {
@@ -469,45 +455,33 @@ describe('ObjectFieldTemplate colSpan map', () => {
     });
 
     it('keys the properties of a custom field that sets renderedAs with createSchemaFieldRenderedAs', () => {
-      const MyObjectField = ({
-        schema,
-        uiSchema,
-        formData,
-        fieldPath,
-        id,
-        registry,
-        onChange,
-        onBlur,
-        onFocus,
-      }: FieldProps) => {
+      const MyObjectField = (props: FieldProps) => {
+        const { schema, uiSchema, formData, fieldPath, id, registry } = props;
         const { SchemaField } = registry.fields;
         const { ObjectFieldTemplate } = registry.templates;
-        const data = formData as Record<string, unknown> | undefined;
-        const uiSchemaOf = (name: string) => uiSchema?.[name] as UiSchema | undefined;
         const properties: ObjectFieldTemplatePropertyType[] = Object.entries(schema.properties ?? {}).map(
           ([name, property]) => {
             const propertySchema = property as RJSFSchema;
+            const propertyUiSchema = uiSchema?.[name] as UiSchema | undefined;
+            const propertyData = getByPath(formData, name);
             const propertyPath = toFieldPath(name, fieldPath);
             return {
               content: (
                 <SchemaField
+                  {...props}
                   key={name}
                   name={name}
-                  id={`${id}_${name}`}
+                  id={fieldPathToId(propertyPath, registry.globalFormOptions)}
                   schema={propertySchema}
-                  uiSchema={uiSchemaOf(name)}
-                  formData={data?.[name]}
+                  uiSchema={propertyUiSchema}
+                  formData={propertyData}
                   fieldPath={propertyPath}
-                  registry={registry}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  onFocus={onFocus}
                 />
               ),
               name,
               hidden: false,
               renderedAs: () =>
-                createSchemaFieldRenderedAs()(propertySchema, uiSchemaOf(name), data?.[name], propertyPath, registry),
+                createSchemaFieldRenderedAs()(propertySchema, propertyUiSchema, propertyData, propertyPath, registry),
             };
           },
         );

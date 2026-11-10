@@ -134,12 +134,18 @@ describe('ObjectField', () => {
       ]);
     });
 
-    it('should hand the template what each property renders as', () => {
+    /** A template recording what each property renders as, by name, on every render */
+    const captureRenderedAs = () => {
       const capture = vi.fn();
       const ObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => {
         capture(Object.fromEntries(properties.map(({ name, renderedAs }) => [name, renderedAs?.()])));
         return <>{properties.map(({ content }) => content)}</>;
       };
+      return { capture, ObjectFieldTemplate };
+    };
+
+    it('should hand the template what each property renders as', () => {
+      const { capture, ObjectFieldTemplate } = captureRenderedAs();
       const NamedField = () => <div />;
       const { node } = createFormComponent({
         schema: {
@@ -173,11 +179,7 @@ describe('ObjectField', () => {
     });
 
     it('should keep what an unchanged property renders as while another property is edited', async () => {
-      const capture = vi.fn();
-      const ObjectFieldTemplate = ({ properties }: ObjectFieldTemplateProps) => {
-        capture(Object.fromEntries(properties.map(({ name, renderedAs }) => [name, renderedAs?.()])));
-        return <>{properties.map(({ content }) => content)}</>;
-      };
+      const { capture, ObjectFieldTemplate } = captureRenderedAs();
       const { node } = createFormComponent({
         schema: { type: 'object', properties: { edited: { type: 'string' }, kept: { type: 'string' } } },
         templates: { ObjectFieldTemplate },
