@@ -6,8 +6,7 @@ import type { DeclaredTemplatesType } from './types.ts';
  * `ButtonTemplates`, which `getTemplate()` reads from the registry alone), as an object checked against
  * `DeclaredTemplatesType` so that a template declared there without being listed here is a type error. The one list of these
  * names: `isTemplateName()` checks against it and `globalUiOptionsKeys.ts` spreads it into
- * `RESERVED_UI_OPTION_NAMES`, so a new template goes in here only. Exported for `globalUiOptionsKeys.ts` alone; this
- * module is internal (see below), so the map stays out of the public API.
+ * `RESERVED_UI_OPTION_NAMES`, so a new template goes in here only.
  */
 export const OVERRIDABLE_TEMPLATE_NAME_MAP = {
   ArrayFieldDescriptionTemplate: true,

@@ -202,7 +202,7 @@ function propertyScore<
  * @param schema - The schema for which the score is being calculated
  * @param formData - The form data associated with the schema, used to calculate the score
  * @returns - The score a schema against the formData
- * @internal
+ * @testSeam Exported for utils' own tests
  */
 export function calculateIndexScore<
   T = unknown,

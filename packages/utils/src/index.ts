@@ -81,7 +81,6 @@ import getTemplates from './getTemplates.ts';
 import getTestIds from './getTestIds.ts';
 import getUiOptions from './getUiOptions.ts';
 import getUnionTypes from './getUnionTypes.ts';
-import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import {
   DEFAULT_BOOLEAN_WIDGET,
@@ -96,9 +95,10 @@ import getXxxOfOptions from './getXxxOfOptions.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hasAdditionalKeyLabel from './hasAdditionalKeyLabel.ts';
-import hashForSchema, { hashObject, schemaKey } from './hashForSchema.ts';
+import { hashObject, schemaKey } from './hashForSchema.ts';
 import hasSchemaMarker from './hasSchemaMarker.ts';
 import type { SchemaFlagMarker } from './hasSchemaMarker.ts';
+import type { VisibleErrorsProps } from './hasVisibleErrors.ts';
 import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
 import hasWidgetErrors from './hasWidgetErrors.ts';
@@ -114,12 +114,9 @@ import {
   fieldLabelId,
   helpId,
   optionalControlsId,
-  optionDescriptionId,
-  optionHelpId,
   optionId,
   optionSelectorId,
   partId,
-  selectedOptionDescriptionId,
   titleId,
 } from './idGenerators.ts';
 import isAdditionalKeyDisabled from './isAdditionalKeyDisabled.ts';
@@ -344,7 +341,6 @@ export {
   hasVisibleErrors,
   hasWidget,
   hasWidgetErrors,
-  hashForSchema,
   hashObject,
   helpId,
   isAdditionalKeyDisabled,
@@ -379,8 +375,6 @@ export {
   offsetTimeToLocalTime,
   omitConsumedStyling,
   optionalControlsId,
-  optionDescriptionId,
-  optionHelpId,
   optionId,
   optionSelectorId,
   optionsList,
@@ -401,7 +395,6 @@ export {
   setByPath,
   setOwn,
   SelectedOptionDescription,
-  selectedOptionDescriptionId,
   selectOptionUiSchema,
   sharedCopyParts,
   shouldRenderOptionalField,
@@ -452,3 +445,8 @@ export {
   bracketNameGenerator,
   dotNotationNameGenerator,
 };
+
+/** @public Only other packages' tests import these, to find the ids and hashes RJSF generates */
+export { default as hashForSchema } from './hashForSchema.ts';
+/** @public */
+export { optionDescriptionId, optionHelpId, selectedOptionDescriptionId } from './idGenerators.ts';

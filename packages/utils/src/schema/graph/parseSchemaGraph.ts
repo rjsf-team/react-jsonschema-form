@@ -138,7 +138,7 @@ export interface AdoptedSchema<S extends StrictRJSFSchema = RJSFSchema> {
 
 /** Where the nodes `adoptSchema()` parses from outside the root are placed. It is not a JSON pointer, which starts
  * with a `/` or is empty, so it never names a location in the root.
- * @internal
+ * @testSeam Exported for utils' own tests
  */
 export const EXTERNAL_POINTER = '~external';
 

@@ -10,7 +10,7 @@
     "test": "nx run-many --parallel=2 --target=test",
     "test:update": "nx run-many --parallel=2 --target=test:update",
     "lint": "oxlint --type-check",
-    "knip": "knip",
+    "knip": "knip && knip --production --workspace packages/utils --include exports",
     "cs-check": "oxfmt --check",
     "cs-format": "oxfmt",
     "clean-build": "rimraf packages/*/lib && pnpm run build",

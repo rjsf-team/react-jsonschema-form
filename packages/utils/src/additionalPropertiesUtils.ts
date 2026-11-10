@@ -71,9 +71,6 @@ export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSc
  * The two are read off a schema typed to hold an `S` in them: the subschema either one holds is an `S` the way every
  * other subschema of an `S` is.
  *
- * It is exported for `omitExtraData()` rather than for consumers, so that the keys the form renders and seeds through
- * one of these keywords are the keys it keeps.
- *
  * @param schema - The object schema whose keyword is desired
  * @returns - What the keyword says, or undefined where the object names neither
  */

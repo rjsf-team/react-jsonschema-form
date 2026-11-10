@@ -28,7 +28,7 @@ export interface FieldPosition {
  * @param graph - The graph the node is in
  * @param node - The containment node
  * @returns - The targets, in the order they are entered
- * @internal
+ * @testSeam Exported for utils' own tests
  */
 export function ownRefTargets<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, node: NodeId): NodeId[] {
   const targets: NodeId[] = [];
@@ -53,7 +53,7 @@ export function ownRefTargets<S extends StrictRJSFSchema = RJSFSchema>(graph: Sc
  * @param graph - The graph the plan is of
  * @param plan - The field's plan
  * @returns - Whether the check fires
- * @internal
+ * @testSeam Exported for utils' own tests
  */
 export function firstEnteredRefHit<S extends StrictRJSFSchema = RJSFSchema>(
   graph: SchemaGraph<S>,
@@ -83,7 +83,7 @@ export function firstEnteredRefHit<S extends StrictRJSFSchema = RJSFSchema>(
  *
  * @param plan - The field's plan
  * @returns - Whether the check fires
- * @internal
+ * @testSeam Exported for utils' own tests
  */
 export function count2Hit<S extends StrictRJSFSchema = RJSFSchema>(plan: MergePlan<S>): boolean {
   return plan.entries.some(({ node, edge, refPath }) => edge === 'ref' && occurrencesBeforeLast(refPath, node) >= 2);

@@ -1,4 +1,3 @@
-import getVisibleErrors from './getVisibleErrors.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
 /** Gets the error messages a widget, or a container template, draws itself: the messages its field's plan shows, with
@@ -22,5 +21,5 @@ export default function getErrorsToDraw<
       : [];
   }
   // oxlint-disable-next-line typescript/no-deprecated -- the fallback for a component rendered without a plan
-  return getVisibleErrors(props);
+  return props.hideError ? [] : (props.rawErrors ?? []);
 }

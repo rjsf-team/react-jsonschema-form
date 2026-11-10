@@ -17,6 +17,7 @@ import {
   DISCRIMINATOR_PATH,
   ErrorSchemaBuilder,
   getUiOptions,
+  hashObject,
   LOOKUP_MAP_NAME,
   ONE_OF_KEY,
   PROPERTIES_KEY,
@@ -656,21 +657,17 @@ const EXTRA_ERROR = new ErrorSchemaBuilder().addErrors(ERRORS).ErrorSchema;
 const PASSES_EXTRA_ERROR_KEY = 'ui:passesExtraError';
 const DEFAULT_ID = 'test-id';
 
-// Stringify the FieldProps, minus the registry, hasFormData and optionalObjectNode in the uiSchema
+// Hash the FieldProps, minus the registry, hasFormData and optionalObjectNode in the uiSchema
 // The registry causes an infinite loop and hasFormData & optionalObjectNode are tested elsewhere
-function stringifyProps(props: Pick<Partial<FieldProps>, 'uiSchema' | 'registry'> & Record<string, unknown>) {
+function hashProps(props: Pick<Partial<FieldProps>, 'uiSchema' | 'registry'> & Record<string, unknown>) {
   const { uiSchema, registry, ...otherProps } = props;
   const { ...otherUIOptions } = getUiOptions(uiSchema);
-  return JSON.stringify({ ...otherProps, otherUIOptions }, (_key, value: unknown) =>
-    value && typeof value === 'object' && !Array.isArray(value)
-      ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => (a < b ? -1 : 1)))
-      : value,
-  );
+  return hashObject({ ...otherProps, otherUIOptions });
 }
 
 // Render a strong with the props stringified
 function TestRenderer({ 'data-testid': testId, ...props }: Readonly<FieldProps & { 'data-testid'?: string }>) {
-  return <strong data-testid={testId}>{stringifyProps(props)}</strong>;
+  return <strong data-testid={testId}>{hashProps(props)}</strong>;
 }
 
 // An element where a component was expected, given as a `render` or found under a `render`'s lookup name
@@ -689,7 +686,7 @@ function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProp
   const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
   return (
     <div data-testid={testId}>
-      <span id={id}>{stringifyProps(props)}</span>
+      <span id={id}>{hashProps(props)}</span>
       <input value={formData as string} onChange={onTextChange} onBlur={onTextBlur} onFocus={onTextFocus} />
     </div>
   );
@@ -1832,7 +1829,7 @@ describe('LayoutGridField', () => {
     };
     // Renders the uiComponent with the props and options forwarded
     const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
-    expect(uiComponent).toHaveTextContent(stringifyProps(expectedProps));
+    expect(uiComponent).toHaveTextContent(hashProps(expectedProps));
   });
   test('renderField with render=TestRenderer for an index past a tuple without additionalItems', () => {
     const options = { name: 'tuple.1' };
@@ -1872,7 +1869,7 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
-    expect(uiComponent).toHaveTextContent(stringifyProps(options));
+    expect(uiComponent).toHaveTextContent(hashProps(options));
   });
   describe('a render that resolves to nothing', () => {
     const consoleWarnSuppression = setupConsoleWarnSuppression();
@@ -1954,7 +1951,7 @@ describe('LayoutGridField', () => {
     render(<LayoutGridField {...props} />);
     // Renders the uiComponent with only the options forwarded
     const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
-    expect(uiComponent).toHaveTextContent(stringifyProps(options));
+    expect(uiComponent).toHaveTextContent(hashProps(options));
   });
   test('renderField via name explicit layoutGridSchema', async () => {
     const fieldName = 'simpleString';
@@ -1969,7 +1966,7 @@ describe('LayoutGridField', () => {
     render(<LayoutGridField {...props} />);
     // Renders a field
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
-    expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
+    expect(field).toHaveTextContent(hashProps(getExpectedPropsForField(props, fieldName)));
     // Test onChange, onFocus, onBlur
     const input = within(field).getByRole('textbox');
     // Click on the input to cause the focus
@@ -1995,7 +1992,7 @@ describe('LayoutGridField', () => {
     render(<LayoutGridField {...props} />);
     // Renders a field
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
-    expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
+    expect(field).toHaveTextContent(hashProps(getExpectedPropsForField(props, fieldName)));
     // Test onChange, onFocus, onBlur
     const input = within(field).getByRole('textbox');
     // Click on the input to cause the focus
@@ -2021,7 +2018,7 @@ describe('LayoutGridField', () => {
     render(<LayoutGridField {...props} />);
     // Renders a field
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
-    expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
+    expect(field).toHaveTextContent(hashProps(getExpectedPropsForField(props, fieldName)));
     // Test onChange, onFocus, onBlur
     const input = within(field).getByRole('textbox');
     // Click on the input to cause the focus
@@ -2064,7 +2061,7 @@ describe('LayoutGridField', () => {
     // A discriminated cell names the field rendering its selector in place of the options, over the `ui:field` its own
     // uiSchema names
     expect(field).toHaveTextContent(
-      stringifyProps({
+      hashProps({
         ...expected,
         uiSchema: {
           ...expected.uiSchema,
@@ -2090,7 +2087,7 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
-    expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
+    expect(field).toHaveTextContent(hashProps(getExpectedPropsForField(props, fieldName)));
   });
   test('renderRow', () => {
     const gridProps = { spacing: 2 };
@@ -2111,9 +2108,9 @@ describe('LayoutGridField', () => {
     const fields = within(row).getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
-    expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
+    expect(fields[0]).toHaveTextContent(hashProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
     // Second field as the second child
-    expect(fields[1]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
+    expect(fields[1]).toHaveTextContent(hashProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
   });
   test('renderRow with a className', () => {
     const props = getProps({
@@ -2133,9 +2130,9 @@ describe('LayoutGridField', () => {
     const fields = within(row).getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
-    expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
+    expect(fields[0]).toHaveTextContent(hashProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
     // Second field as the second child
-    expect(fields[1]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
+    expect(fields[1]).toHaveTextContent(hashProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
   });
   test('renderCol', () => {
     const props = getProps({
@@ -2155,9 +2152,9 @@ describe('LayoutGridField', () => {
     const fields = within(col).getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
-    expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
+    expect(fields[0]).toHaveTextContent(hashProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
     // Second field as the second child
-    expect(fields[1]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
+    expect(fields[1]).toHaveTextContent(hashProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
   });
   test('renderColumns', () => {
     const props = getProps({
@@ -2180,12 +2177,12 @@ describe('LayoutGridField', () => {
     expect(cols[0]).toHaveClass(ColumnWidth6);
     // Renders first field in the first column
     let field = within(cols[0]).getByTestId(LayoutGridField.TEST_IDS.field);
-    expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
+    expect(field).toHaveTextContent(hashProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
     // First column is a grid item with 6
     expect(cols[1]).toHaveClass(ColumnWidth6);
     // Renders second field in the second column
     field = within(cols[1]).getByTestId(LayoutGridField.TEST_IDS.field);
-    expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
+    expect(field).toHaveTextContent(hashProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
   });
   test('renderCondition, condition passes, field and empty value, NONE operator, has formData', async () => {
     const fieldName = 'simpleString';
@@ -2213,9 +2210,9 @@ describe('LayoutGridField', () => {
     const fields = screen.getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
-    expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
+    expect(fields[0]).toHaveTextContent(hashProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
     // Second field as the second child
-    expect(fields[1]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
+    expect(fields[1]).toHaveTextContent(hashProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
     // Test onChange and value in the input
     const input = within(fields[0]).getByRole('textbox');
     expect(input).toHaveValue((props.formData as Record<string, string>)[fieldName]);

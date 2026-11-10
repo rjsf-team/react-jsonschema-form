@@ -1,5 +1,14 @@
-import type { VisibleErrorsProps } from './getVisibleErrors.ts';
-import getVisibleErrors from './getVisibleErrors.ts';
+/** The subset of props a widget or template needs in order to decide which of its errors to surface
+ * @deprecated Kept through v7 with `hasVisibleErrors()`, which takes it: type the props as
+ *   `Pick<WidgetProps, 'rawErrors' | 'hideError' | 'presentation'>`, which `getErrorsToDraw()` and `hasWidgetErrors()`
+ *   take, while a `FieldTemplate` reads its error state from its `hasErrors` prop
+ */
+export interface VisibleErrorsProps {
+  /** The error messages, carried whatever `hideError` says */
+  rawErrors?: string[];
+  /** Whether `ui:hideError` hides them */
+  hideError?: boolean;
+}
 
 /** Determines whether a widget or template has any errors to surface in its own UI, which is never the case while
  * `ui:hideError` is in effect: `rawErrors` is deliberately still provided while errors are hidden, so that custom
@@ -13,6 +22,5 @@ import getVisibleErrors from './getVisibleErrors.ts';
  */
 // oxlint-disable-next-line typescript/no-deprecated -- its parameter type, deprecated with it and kept through v7
 export default function hasVisibleErrors(props: VisibleErrorsProps): boolean {
-  // oxlint-disable-next-line typescript/no-deprecated -- its boolean form, deprecated with it and kept through v7
-  return getVisibleErrors(props).length > 0;
+  return !props.hideError && (props.rawErrors?.length ?? 0) > 0;
 }

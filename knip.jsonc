@@ -1,12 +1,12 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
-  "tags": ["-internal"],
-  // The types @rjsf/utils exports cost no bundle size and name the parameters, results and parts of its public exports,
-  // so they stay public whether or not another package imports one. jsonSchemaAugmentation.ts extends `json-schema`'s
-  // `JSONSchema7`, which has to be exported to merge.
+  // Module exports tagged @testSeam exist for utils' own tests, which the utils workspace leaves out below.
+  "tags": ["-testSeam"],
+  "ignoreExportsUsedInFile": { "interface": true, "type": true },
   "ignoreIssues": {
+    // Public types cost no bundle size and name the parameters and results of the public exports.
     "packages/utils/src/index.ts": ["types"],
-    "packages/utils/src/types.ts": ["types"],
+    // A module augmentation has to export the interface it merges into.
     "packages/utils/src/jsonSchemaAugmentation.ts": ["types"],
   },
   "workspaces": {
@@ -36,13 +36,11 @@
       "ignore": ["src/index.ts"],
     },
     "packages/utils": {
-      // Its own tests aren't analyzed, so an export only they import counts as unused: the index exports only what other
-      // packages import. A module export kept for those tests is tagged @internal.
-      "entry": ["src/index.ts"],
+      // Leave out utils' own tests, so the index has to be imported by another package to count as used.
       "project": ["src/**/*.{ts,tsx}"],
       "vitest": false,
       "includeEntryExports": true,
-      // deep-freeze-es6: imported only by the tests left out above.
+      // Imported only by the tests left out above.
       "ignoreDependencies": ["deep-freeze-es6"],
     },
     "packages/docs": {
