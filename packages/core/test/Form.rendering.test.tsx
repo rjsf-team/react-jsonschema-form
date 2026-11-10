@@ -1,5 +1,6 @@
 import { createRef } from 'react';
 import type {
+  FieldProps,
   FieldTemplateProps,
   RJSFMarkedSchema,
   RJSFSchema,
@@ -13,6 +14,7 @@ import {
   GUESSED_TYPE_FLAG,
   JSON_SCHEMA_TYPES,
   templateDrawsLabel,
+  toFieldPath,
   toInputValue,
   TranslatableString,
 } from '@rjsf/utils';
@@ -32,6 +34,7 @@ import {
   expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   setupConsoleErrorSuppression,
+  submitForm,
   describeRepeated,
 } from './testUtils.tsx';
 
@@ -1303,7 +1306,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       );
 
       it('keeps the type picked for text that has no form in it', async () => {
-        const { node } = createFormComponent({
+        const { node, getFormData } = createFormComponent({
           schema: { type: 'array', items: { type: ['string', 'number'] } },
           useFallbackUiForUnsupportedType: true,
           initialFormData: ['abc'],
@@ -1314,6 +1317,197 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
         expect(getSelectedOptionValue(select)).toBe('number');
         expect(elementOf(node, '#root_0', HTMLInputElement)).toHaveValue('');
+        expect(getFormData()).toEqual([null]);
+      });
+
+      it('stores false for boolean picked on an item whose value has no boolean reading', async () => {
+        const { node, getFormData, onSubmit, onError } = createFormComponent({
+          schema: { type: 'array', items: { type: ['object', 'boolean'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: [{}],
+        });
+        const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+
+        await user.selectOptions(select, 'boolean');
+
+        // An item can't be left out, and a checkbox shows nothing but `false` as unchecked: storing the `null` a cleared
+        // item holds would show a valid-looking control over data the schema refuses
+        expect(getSelectedOptionValue(select)).toBe('boolean');
+        expect(elementOf(node, '#root_0', HTMLInputElement)).not.toBeChecked();
+        expect(getFormData()).toEqual([false]);
+        await submitForm(node, user);
+        expect(onError).not.toHaveBeenCalled();
+        expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ formData: [false] }), expect.anything());
+      });
+
+      it('stores false for boolean picked on an additionalProperties entry whose value has no boolean reading', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: { type: 'object', additionalProperties: { type: ['object', 'boolean'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: { aKey: {} },
+        });
+        const select = elementOf(node, '#root_aKey__internalTypeSelector', HTMLSelectElement);
+
+        await user.selectOptions(select, 'boolean');
+
+        expect(getSelectedOptionValue(select)).toBe('boolean');
+        expect(getFormData()).toEqual({ aKey: false });
+      });
+
+      it('leaves a boolean picked on an optional property out of the data', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: { type: 'object', properties: { val: { type: ['object', 'boolean'] } } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: { val: {} },
+        });
+        const select = elementOf(node, '#root_val__internalTypeSelector', HTMLSelectElement);
+
+        await user.selectOptions(select, 'boolean');
+
+        expect(getSelectedOptionValue(select)).toBe('boolean');
+        expect(getFormData()).toEqual({});
+      });
+
+      it('keeps string on an item whose text is cleared, storing null', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: ['null', 'string', 'number'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: ['abc'],
+        });
+        const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+        expect(getSelectedOptionValue(select)).toBe('string');
+
+        await user.clear(elementOf(node, '#root_0', HTMLInputElement));
+
+        expect(getSelectedOptionValue(select)).toBe('string');
+        expect(elementOf(node, '#root_0', HTMLInputElement)).toHaveValue('');
+        expect(getFormData()).toEqual([null]);
+      });
+
+      it('keeps boolean picked on a null item, storing false', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: ['null', 'string', 'boolean'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: [null],
+        });
+        const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+        expect(getSelectedOptionValue(select)).toBe('null');
+
+        await user.selectOptions(select, 'boolean');
+
+        expect(getSelectedOptionValue(select)).toBe('boolean');
+        expect(getFormData()).toEqual([false]);
+      });
+
+      it('keeps number picked on a null item, which stays null', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: ['null', 'string', 'number'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: [null],
+        });
+        const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+
+        await user.selectOptions(select, 'number');
+
+        expect(getSelectedOptionValue(select)).toBe('number');
+        expect(getFormData()).toEqual([null]);
+      });
+
+      it('moves to null when setFieldValue puts null in a number item', () => {
+        const ref = createFormRef();
+        const { node } = createFormComponent({
+          ref,
+          schema: { type: 'array', items: { type: ['null', 'string', 'number'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: [3],
+        });
+        const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+        expect(getSelectedOptionValue(select)).toBe('number');
+
+        act(() => handleOf(ref).setFieldValue([0], null));
+
+        expect(getSelectedOptionValue(select)).toBe('null');
+      });
+
+      it('moves to null when setFieldValue puts null in an item after its own clear and a new value', async () => {
+        const ref = createFormRef();
+        const { node } = createFormComponent({
+          ref,
+          schema: { type: 'array', items: { type: ['null', 'string', 'number'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: [3],
+        });
+        const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+        await user.clear(elementOf(node, '#root_0', HTMLInputElement));
+        expect(getSelectedOptionValue(select)).toBe('number');
+
+        act(() => handleOf(ref).setFieldValue([0], 4));
+        act(() => handleOf(ref).setFieldValue([0], null));
+
+        expect(getSelectedOptionValue(select)).toBe('null');
+      });
+
+      it('moves to null when reset() puts back the null an item started with', async () => {
+        const ref = createFormRef();
+        const { node } = createFormComponent({
+          ref,
+          schema: { type: 'array', items: { type: ['null', 'string', 'number'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: [null],
+        });
+        const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+        await user.selectOptions(select, 'number');
+        await user.type(elementOf(node, '#root_0', HTMLInputElement), '5');
+        expect(getSelectedOptionValue(select)).toBe('number');
+
+        act(() => handleOf(ref).reset());
+
+        expect(getSelectedOptionValue(elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement))).toBe(
+          'null',
+        );
+      });
+
+      it('moves to the default type when setFieldValue puts null in an item whose list does not name it', () => {
+        const ref = createFormRef();
+        const { node } = createFormComponent({
+          ref,
+          schema: { type: 'array', items: { type: ['string', 'number'] } },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: [3],
+        });
+        const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+        expect(getSelectedOptionValue(select)).toBe('number');
+
+        act(() => handleOf(ref).setFieldValue([0], null));
+
+        expect(getSelectedOptionValue(select)).toBe('string');
+      });
+
+      it('moves to null when a custom array field stores a real null in an item', async () => {
+        // A container that keeps `null` as data rather than as a cleared value, which the item's field did not send
+        function NullingArrayField(props: FieldProps) {
+          const { ArrayField: InnerArrayField } = props.registry.fields;
+          return (
+            <>
+              <button type='button' onClick={() => props.onChange(null, toFieldPath(0, props.fieldPath))}>
+                Set null
+              </button>
+              <InnerArrayField {...props} />
+            </>
+          );
+        }
+        const { node, getFormData } = createFormComponent({
+          schema: { type: 'array', items: { type: ['null', 'string', 'number'] } },
+          uiSchema: { 'ui:field': NullingArrayField },
+          useFallbackUiForUnsupportedType: true,
+          initialFormData: [3],
+        });
+        const select = elementOf(node, '#root_0__internalTypeSelector', HTMLSelectElement);
+
+        await user.click(screen.getByRole('button', { name: 'Set null' }));
+
+        expect(getFormData()).toEqual([null]);
+        expect(getSelectedOptionValue(select)).toBe('null');
       });
 
       it.each<[JSONSchema7TypeName[]]>([[['object', 'number']], [['null', 'object', 'number']]])(
