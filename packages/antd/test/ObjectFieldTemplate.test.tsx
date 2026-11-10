@@ -428,6 +428,17 @@ describe('ObjectFieldTemplate colSpan map', () => {
       expect(getColClasses(uiSchema, { number: 5 }, formSchemaOf(property))[0]).toContain('ant-col-24');
     });
 
+    it('keys an untyped anyOf of objects by the object its option renders, and spans it full width by default', () => {
+      const property: RJSFSchema = {
+        anyOf: [
+          { type: 'object', properties: { a: { type: 'string' } } },
+          { type: 'object', properties: { b: { type: 'number' } } },
+        ],
+      };
+      expect(getColClasses({}, { object: 6, string: 8 }, formSchemaOf(property))[0]).toContain('ant-col-6');
+      expect(getColClasses({}, { string: 8 }, formSchemaOf(property))[0]).toContain('ant-col-24');
+    });
+
     it('keys a property by the field its $id names', () => {
       const MyField = () => <div />;
       const classes = getColClasses({}, { MyField: 3, string: 8 }, formSchemaOf({ type: 'string', $id: 'MyField' }), {

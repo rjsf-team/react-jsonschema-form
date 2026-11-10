@@ -1648,7 +1648,10 @@ export type ArrayFieldTemplateProps<
   onAddClick: (event?: SyntheticEvent<HTMLElement>) => void;
 };
 
-/** What an object property's `SchemaField` renders the property as */
+/** What an object property's `SchemaField` renders the property as. A property whose `anyOf`/`oneOf` option renders its
+ * control is reported by the widget of the option shown, and by that option's field and type where it names none of
+ * its own, as an untyped `anyOf` does
+ */
 export interface ObjectFieldPropertyRendering {
   /** The registry key of the field a `ui:field` or the schema's `$id` names, if one does */
   field?: string;

@@ -189,7 +189,7 @@ describe('ObjectField', () => {
         choice: { widget: 'select', type: 'object' },
         // The option shown renders the control, by the field's own `ui:widget` or its own format
         story: { widget: 'textarea', type: 'string' },
-        union: { widget: 'textarea' },
+        union: { widget: 'textarea', type: 'string' },
         contact: { widget: 'email', type: 'string' },
       });
       expect(node.querySelector('textarea#root_story')).toBeInTheDocument();
@@ -197,6 +197,38 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_contact')).toHaveAttribute('type', 'email');
       expect(node.querySelector('#root_yesNo')).toHaveRole('combobox');
       expect(node.querySelector('.rjsf-field-boolean #root_yesNo')).toBeInTheDocument();
+    });
+
+    it("should hand the template the field and type of an untyped anyOf's option shown", () => {
+      const { capture, ObjectFieldTemplate } = captureRenderedAs();
+      const NamedField = () => <div />;
+      createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            shape: {
+              anyOf: [
+                { type: 'object', properties: { a: { type: 'string' } } },
+                { type: 'object', properties: { b: { type: 'number' } } },
+              ],
+            },
+            list: { anyOf: [{ type: 'array', items: { type: 'string' } }, { type: 'number' }] },
+            amount: { anyOf: [{ type: 'string' }, { type: 'number' }] },
+            named: { anyOf: [{ type: 'string' }, { type: 'number' }] },
+          },
+        },
+        uiSchema: { named: { anyOf: [{ 'ui:field': 'NamedField', 'ui:widget': 'textarea' }, {}] } },
+        initialFormData: { list: [], amount: 3 },
+        fields: { NamedField },
+        templates: { ObjectFieldTemplate },
+      });
+      // The object option's own template renders after the root's
+      expect(capture.mock.calls.findLast(([rendered]) => 'shape' in rendered)?.[0]).toEqual({
+        shape: { type: 'object' },
+        list: { type: 'array' },
+        amount: { widget: 'text', type: 'number' },
+        named: { field: 'NamedField', widget: 'textarea', type: 'string' },
+      });
     });
 
     it('should keep what an unchanged property renders as while another property is edited', async () => {
