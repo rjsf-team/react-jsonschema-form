@@ -147,11 +147,30 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const extra: RJSFSchema = { type: 'object', additionalProperties: { type: 'number' }, const: { b: 2 } };
           expect(utils(extra).getDefaultFormState(extra, {}, false, true)).toEqual({});
           expect(utils(extra).getDefaultFormState(extra, { c: 2 }, false, true)).toEqual({ c: 2 });
-          expect(utils(bare).getDefaultFormState(bare, {}, false, true)).toEqual({});
         });
-        it('seeds none of its keys beside extra keys the data holds, as for a default', () => {
+        it('fills the keys of a const that closes the object whatever the data holds, and once the defaults were generated', () => {
           const two: RJSFSchema = { type: 'object', const: { a: 1, b: 2 } };
-          expect(utils(two).getDefaultFormState(two, { a: 3 })).toEqual({ a: 3 });
+          expect(utils(two).getDefaultFormState(two, { a: 3 })).toEqual({ a: 3, b: 2 });
+          expect(utils(two, { constAsDefaults: 'always' }).getDefaultFormState(two, { a: 1 })).toEqual({ a: 1, b: 2 });
+          expect(utils(bare).getDefaultFormState(bare, {}, false, true)).toEqual({ a: 1 });
+          const regenerated = utils(withoutParentDefault).getDefaultFormState(
+            withoutParentDefault,
+            undefined,
+            false,
+            true,
+          );
+          expect(regenerated).toEqual({ x: { a: 2 } });
+        });
+        it('keeps an empty object the const holds', () => {
+          const emptyMeta: RJSFSchema = { type: 'object', const: { meta: {} } };
+          expect(utils(emptyMeta).getDefaultFormState(emptyMeta)).toStrictEqual({ meta: {} });
+          const open: RJSFSchema = { ...emptyMeta, additionalProperties: true };
+          expect(utils(open).getDefaultFormState(open)).toStrictEqual({ meta: {} });
+        });
+        it('seeds no key of a ui:initialValue that the const closing the object does not name', () => {
+          const closed: RJSFSchema = { type: 'object', const: { a: 1 }, additionalProperties: false };
+          const uiSchema = { 'ui:initialValue': { z: 1 } };
+          expect(utils(closed).getDefaultFormState(closed, undefined, false, false, uiSchema)).toEqual({});
         });
         it("fills a mixed oneOf option's const under skipOneOf, whether or not the option declares its keys", () => {
           const skipOneOf: DefaultFormStateBehavior = { constAsDefaults: 'skipOneOf' };

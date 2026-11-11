@@ -1748,29 +1748,21 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   }
   const additionalProperties = absentKeywordAllows<S, F>(context, schema) || schema.additionalProperties;
   // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
-  // extra keys are, under the same guards, even where the object takes no other extra key
-  if ((additionalProperties || objectConst) && !initialDefaultsGenerated) {
+  // extra keys are. Where the object takes no other extra key, the user can't add, remove or rename one, so the guards
+  // that keep a key they removed or renamed from coming back don't hold back the keys the `const` names
+  const closingConst = additionalProperties ? undefined : objectConst;
+  if ((additionalProperties && !initialDefaultsGenerated) || closingConst) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
       rootSchema,
       isObject(additionalProperties) ? additionalProperties : {},
     );
-    const keys = new Set<string>();
-    const formDataRequired: string[] = [];
-    Object.keys(formData)
-      .filter((key) => !isDeclared(key))
-      .forEach((key) => {
-        keys.add(key);
-        formDataRequired.push(key);
-      });
+    const formDataRequired = closingConst ? [] : Object.keys(formData).filter((key) => !isDeclared(key));
     // Only seed keys from schema defaults when formData has no additionalProperties of its own.
     // If the user already has data (e.g. after a key rename), injecting default keys would
     // re-add stale entries that no longer exist in formData.
-    if (isObject(defaults) && formDataRequired.length === 0) {
-      Object.keys(defaults)
-        .filter((key) => !isDeclared(key))
-        .forEach((key) => keys.add(key));
-    }
+    const seeded = closingConst ?? (isObject(defaults) && formDataRequired.length === 0 ? defaults : {});
+    const keys = new Set([...formDataRequired, ...Object.keys(seeded).filter((key) => !isDeclared(key))]);
     [...keys].filter(isPinned).forEach((key) => {
       const { value, holdsNull } = foldReporting(
         context,
@@ -1795,6 +1787,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         // A property added by `additionalProperties` is one the user added, so it is populated whatever the form's
         // `emptyObjectFields` says about the properties the schema names
         'populateAllDefaults',
+        Object.hasOwn(objectConst ?? {}, key),
       );
     });
   }
