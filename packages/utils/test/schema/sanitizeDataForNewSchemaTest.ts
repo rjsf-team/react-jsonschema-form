@@ -1797,6 +1797,70 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       expect(schemaUtils.sanitizeDataForNewSchema(objects({ y: 1 }), objects({ x: 1 }), [{ x: 1 }])).toStrictEqual([
         { x: 1 },
       ]);
+      // Untyped items render an object through their `properties` or their options alike
+      const untyped = (extra: RJSFSchema): RJSFSchema => ({ type: 'array', items: extra });
+      const xy = { x: {}, y: {} };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          untyped({ properties: xy, default: { y: 1 } }),
+          untyped({ properties: xy, default: { x: 1 } }),
+          [{ x: 1 }],
+        ),
+      ).toStrictEqual([{ x: 1 }]);
+      const options = [{ type: 'object', properties: xy }] as RJSFSchema[];
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          untyped({ anyOf: options, default: { y: 1 } }),
+          untyped({ anyOf: options, default: { x: 1 } }),
+          [{ x: 1 }],
+        ),
+      ).toStrictEqual([{ x: 1 }]);
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          untyped({ oneOf: [{ $ref: '#/definitions/xy' }], default: { y: 1 } }),
+          untyped({ oneOf: [{ $ref: '#/definitions/xy' }], default: { x: 1 } }),
+          [{ x: 1 }],
+        ),
+      ).toStrictEqual([{ x: 1 }]);
+      const required = [{ required: ['x'] }, { required: ['y'] }] as RJSFSchema[];
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          untyped({ properties: xy, anyOf: required, default: { y: 1 } }),
+          untyped({ properties: xy, anyOf: required, default: { x: 1 } }),
+          [{ x: 1 }],
+        ),
+      ).toStrictEqual([{ x: 1 }]);
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          untyped({ anyOf: [true, { anyOf: options }], default: { y: 1 } }),
+          untyped({ anyOf: [true, { anyOf: options }], default: { x: 1 } }),
+          [{ x: 1 }],
+        ),
+      ).toStrictEqual([{ x: 1 }]);
+      // Options rendering no object, only extra keys, or a scalar new `default` leave the item no keys to fill, so it
+      // swaps as a scalar does
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          untyped({ anyOf: [{ type: 'string' }], default: 'b' }),
+          untyped({ anyOf: options, default: { x: 1 } }),
+          [{ x: 1 }],
+        ),
+      ).toStrictEqual(['b']);
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          untyped({ anyOf: [{ type: 'string' }, ...options], default: 'b' }),
+          untyped({ anyOf: [{ type: 'string' }, ...options], default: { x: 1 } }),
+          [{ x: 1 }],
+        ),
+      ).toStrictEqual(['b']);
+      const extraKeys = { additionalProperties: { type: 'number' } } as RJSFSchema;
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          untyped({ ...extraKeys, default: { y: 1 } }),
+          untyped({ ...extraKeys, default: { x: 1 } }),
+          [{ x: 1 }],
+        ),
+      ).toStrictEqual([{ y: 1 }]);
       // A select over objects holds its option whole, so it swaps as a scalar does
       const picked = (defaultValue: RJSFSchema['default']): RJSFSchema => ({
         type: 'array',

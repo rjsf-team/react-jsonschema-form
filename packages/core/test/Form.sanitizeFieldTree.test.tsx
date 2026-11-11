@@ -2475,6 +2475,63 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       formExpected: [{ x: 1, y: 1 }],
     },
     {
+      name: 'keeps an untyped object item holding its old default, for the defaults to fill key by key',
+      from: { type: 'array', items: { properties: { x: {}, y: {} }, default: { x: 1 } } },
+      to: { type: 'array', items: { properties: { x: {}, y: {} }, default: { y: 1 } } },
+      data: [{ x: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
+    },
+    {
+      name: 'keeps an object item of object options holding its old default, for the defaults to fill key by key',
+      from: { type: 'array', items: { anyOf: [{ type: 'object', properties: { x: {}, y: {} } }], default: { x: 1 } } },
+      to: { type: 'array', items: { anyOf: [{ type: 'object', properties: { x: {}, y: {} } }], default: { y: 1 } } },
+      data: [{ x: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
+    },
+    {
+      name: 'swaps the old default of an object item for the new one where its options render no object',
+      from: { type: 'array', items: { anyOf: [{ type: 'object', properties: { x: {}, y: {} } }], default: { x: 1 } } },
+      to: { type: 'array', items: { anyOf: [{ type: 'string' }], default: 'b' } },
+      data: [{ x: 1 }],
+      expected: ['b'],
+    },
+    {
+      name: 'keeps an untyped object item of its own properties beside untyped options holding its old default',
+      from: {
+        type: 'array',
+        items: { properties: { x: {}, y: {} }, anyOf: [{ required: ['x'] }, { required: ['y'] }], default: { x: 1 } },
+      },
+      to: {
+        type: 'array',
+        items: { properties: { x: {}, y: {} }, anyOf: [{ required: ['x'] }, { required: ['y'] }], default: { y: 1 } },
+      },
+      data: [{ x: 1 }],
+      expected: [{ x: 1 }],
+      formExpected: [{ x: 1, y: 1 }],
+    },
+    {
+      name: 'swaps the old default of an object item of object options for a scalar new one',
+      from: {
+        type: 'array',
+        items: { anyOf: [{ type: 'string' }, { type: 'object', properties: { x: {}, y: {} } }], default: { x: 1 } },
+      },
+      to: {
+        type: 'array',
+        items: { anyOf: [{ type: 'string' }, { type: 'object', properties: { x: {}, y: {} } }], default: 'b' },
+      },
+      data: [{ x: 1 }],
+      expected: ['b'],
+    },
+    {
+      name: 'swaps the old default of an untyped object item declaring only extra keys for the new one',
+      from: { type: 'array', items: { additionalProperties: { type: 'number' }, default: { x: 1 } } },
+      to: { type: 'array', items: { additionalProperties: { type: 'number' }, default: { y: 1 } } },
+      data: [{ x: 1 }],
+      expected: [{ y: 1 }],
+    },
+    {
       name: 'swaps the old default of an item picked from object options for the new one',
       from: { type: 'array', items: { type: 'object', enum: [{ a: 1 }, { a: 2 }], default: { a: 1 } } },
       to: { type: 'array', items: { type: 'object', enum: [{ a: 1 }, { a: 2 }], default: { a: 2 } } },

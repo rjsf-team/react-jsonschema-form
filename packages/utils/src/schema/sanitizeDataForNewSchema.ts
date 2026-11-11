@@ -1,4 +1,11 @@
-import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, PROPERTIES_KEY } from '../constants.ts';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  CONST_KEY,
+  DEFAULT_KEY,
+  GUESSED_TYPE_FLAG,
+  PROPERTIES_KEY,
+  REF_KEY,
+} from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
@@ -266,6 +273,26 @@ function asArraySchema<S extends StrictRJSFSchema>(schema: S): S {
   return namesArray && (schema[PROPERTIES_KEY] || getSchemaType<S>(schema) !== 'array')
     ? { ...schema, type: 'array', [PROPERTIES_KEY]: undefined }
     : schema;
+}
+
+/** Whether `schema` renders an object the defaults fill key by key: an `object` one, or an untyped one declaring
+ * `properties` of its own or through an option, as `Form` fills one. An untyped one declaring only
+ * `additionalProperties` or `patternProperties` has no keys for a `default` to fill, the stubs `retrieveSchema()` adds
+ * for the data's extra keys aside */
+function rendersProperties<S extends StrictRJSFSchema>(schema: S): boolean {
+  if (schema.type !== undefined) {
+    return getSchemaType<S>(schema) === 'object';
+  }
+  return (
+    Object.values(schema[PROPERTIES_KEY] ?? {}).some(
+      (property) => !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG),
+    ) ||
+    (getXxxOfOptions<S>(schema)?.options.some(
+      // shortcut: an option's `$ref` counts as an object unresolved; resolve it if one naming a scalar matters
+      (option) => isObject(option) && (REF_KEY in option || rendersProperties<S>(option)),
+    ) ??
+      false)
+  );
 }
 
 function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: unknown) {
@@ -697,12 +724,14 @@ export default function sanitizeDataForNewSchema<
       // The old item schema, resolved only where something reads it
       let oldItemSchema: S | undefined;
       // An item holding its old `default` takes the new one, as a property does, unless it is an object rendered as
-      // `object`, which the defaults fill key by key, though a select over objects holds one whole. `Form` clears no item
-      // for a `readOnly` new `default`
-      if (
-        newItemSchema.default !== undefined &&
-        !(isPlainObject(aValue) && schemaType === 'object' && !isWholeSelect)
-      ) {
+      // `object`, which the defaults fill key by key, though a select over objects holds one whole. Untyped items are
+      // filled so only by an object `default`, through their `properties` or an option's, see `rendersProperties()`.
+      // `Form` clears no item for a `readOnly` new `default`
+      const isFilledByKey =
+        schemaType === undefined
+          ? isPlainObject(newItemSchema.default) && rendersProperties<S>(newItemSchema)
+          : schemaType === 'object';
+      if (newItemSchema.default !== undefined && !(isPlainObject(aValue) && !isWholeSelect && isFilledByKey)) {
         oldItemSchema = oldItemSchemaOf(oldRaw, newRaw, newItemSchema, aValue);
         const defaultValue = defaultReplacement<S>(newItemSchema, oldItemSchema, aValue, false, false);
         if (defaultValue !== NO_VALUE) {
