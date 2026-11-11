@@ -1594,11 +1594,18 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
       : view.schema;
   const parentConst = schema[CONST_KEY];
-  const objectConst = isObjectData(parentConst) && !constIsAjvDataReference(schema) ? parentConst : undefined;
+  // An object `const` the field defaults to, read under the checks `foldView()` reads it under
+  const objectConst =
+    isObjectData(parentConst) &&
+    defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    !constIsAjvDataReference(schema)
+      ? parentConst
+      : undefined;
   // Under `constAsDefaults: 'always'` an object `const` takes precedence over the data, so an extra key it doesn't name
   // is dropped, whether the object stubs it among its properties or computes it from its `additionalProperties`
   const pinnedKeys = defaultFormStateBehavior?.constAsDefaults === 'always' ? objectConst : undefined;
   const isPinned = (key: string) => !pinnedKeys || Object.hasOwn(pinnedKeys, key);
+  const isDeclared = (key: string) => Object.hasOwn(schema.properties ?? {}, key);
   const populatesAllOf = shouldPopulateAllOfDefaults<S>(view.schema, defaultFormStateBehavior);
   const computed: GenericObjectType = {};
   const childProps = (key: string, uiSchemaKey: string) => ({
@@ -1740,7 +1747,9 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     });
   }
   const additionalProperties = absentKeywordAllows<S, F>(context, schema) || schema.additionalProperties;
-  if (additionalProperties && !initialDefaultsGenerated) {
+  // An object `const` is the object's value as a whole, so the keys it names that no property declares are seeded as
+  // extra keys are, under the same guards, even where the object takes no other extra key
+  if ((additionalProperties || objectConst) && !initialDefaultsGenerated) {
     // as per spec additionalProperties may be either schema or boolean
     const additionalPropertiesSchema = schemaFrom(
       rootSchema,
@@ -1749,7 +1758,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const keys = new Set<string>();
     const formDataRequired: string[] = [];
     Object.keys(formData)
-      .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
+      .filter((key) => !isDeclared(key))
       .forEach((key) => {
         keys.add(key);
         formDataRequired.push(key);
@@ -1759,7 +1768,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     // re-add stale entries that no longer exist in formData.
     if (isObject(defaults) && formDataRequired.length === 0) {
       Object.keys(defaults)
-        .filter((key) => !schema.properties || !Object.hasOwn(schema.properties, key))
+        .filter((key) => !isDeclared(key))
         .forEach((key) => keys.add(key));
     }
     [...keys].filter(isPinned).forEach((key) => {
@@ -1800,7 +1809,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const nullsOnly = nullsOnlyContext(context);
     const child = defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalProperties);
     Object.keys(formData)
-      .filter((key) => (!schema.properties || !Object.hasOwn(schema.properties, key)) && isPinned(key))
+      .filter((key) => !isDeclared(key) && isPinned(key))
       .forEach((key) => {
         const { value, holdsNull } = foldReporting(nullsOnly, `additionalNull:${key}`, child, {
           rawFormData: getByPath(formData, key),
@@ -1817,18 +1826,6 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
         }
       });
   }
-  // An object `const` is the object's value as a whole, so a key it names that no property declares and nothing above
-  // computed takes the const's value, as a declared key takes it through its own field, unless the data holds a value
-  // for it, which is kept below
-  if (objectConst && defaultFormStateBehavior?.constAsDefaults !== 'never') {
-    for (const [key, value] of Object.entries(objectConst)) {
-      const declared = isObject(schema.properties) && Object.hasOwn(schema.properties, key);
-      const heldByData = shouldMergeDefaultsIntoFormData && Object.hasOwn(formData, key) && formData[key] !== undefined;
-      if (!declared && !heldByData && !Object.hasOwn(computed, key)) {
-        setOwn(computed, key, ownValue(value));
-      }
-    }
-  }
   // The data is the user's: a key it holds as `undefined` stays so unless `mergeDefaultsIntoFormData` says a default
   // replaces that and one does, and one no property names and no additional property was computed for is kept as it
   // is. A `null` it holds was kept or replaced by the field of the key, as in any other container
@@ -1836,9 +1833,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     for (const key of Object.keys(formData).filter(isPinned)) {
       const value = formData[key];
       const keptUndefined = value === undefined && !defaultReplacesUndefined(defaultFormStateBehavior);
-      const uncomputed =
-        !Object.hasOwn(computed, key) &&
-        (value === undefined || !schema.properties || !Object.hasOwn(schema.properties, key));
+      const uncomputed = !Object.hasOwn(computed, key) && (value === undefined || !isDeclared(key));
       if (keptUndefined || uncomputed) {
         setOwn(computed, key, value);
       }

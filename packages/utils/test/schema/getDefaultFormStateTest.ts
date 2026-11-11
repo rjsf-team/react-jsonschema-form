@@ -143,6 +143,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           };
           expect(utils(ownDefaults).getDefaultFormState(ownDefaults)).toEqual({ a: 5, b: 6 });
         });
+        it('leaves the extra keys the data holds once the defaults were generated, as for a default', () => {
+          const extra: RJSFSchema = { type: 'object', additionalProperties: { type: 'number' }, const: { b: 2 } };
+          expect(utils(extra).getDefaultFormState(extra, {}, false, true)).toEqual({});
+          expect(utils(extra).getDefaultFormState(extra, { c: 2 }, false, true)).toEqual({ c: 2 });
+          expect(utils(bare).getDefaultFormState(bare, {}, false, true)).toEqual({});
+        });
+        it('seeds none of its keys beside extra keys the data holds, as for a default', () => {
+          const two: RJSFSchema = { type: 'object', const: { a: 1, b: 2 } };
+          expect(utils(two).getDefaultFormState(two, { a: 3 })).toEqual({ a: 3 });
+        });
+        it("fills a mixed oneOf option's const under skipOneOf, whether or not the option declares its keys", () => {
+          const skipOneOf: DefaultFormStateBehavior = { constAsDefaults: 'skipOneOf' };
+          const other: RJSFSchema = { properties: { b: { type: 'string' } } };
+          const undeclared: RJSFSchema = { type: 'object', oneOf: [{ const: { a: 1 } }, other] };
+          const declared: RJSFSchema = {
+            type: 'object',
+            oneOf: [{ const: { a: 1 }, properties: { a: { type: 'number' } } }, other],
+          };
+          expect(utils(undeclared, skipOneOf).getDefaultFormState(undeclared)).toEqual({ a: 1 });
+          expect(utils(declared, skipOneOf).getDefaultFormState(declared)).toEqual({ a: 1 });
+        });
         it('defaults to none of it when constants are never defaults', () => {
           const never: DefaultFormStateBehavior = { constAsDefaults: 'never' };
           expect(utils(withoutParentDefault, never).getDefaultFormState(withoutParentDefault)).toEqual({});

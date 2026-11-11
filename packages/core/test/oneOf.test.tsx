@@ -6054,7 +6054,7 @@ describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes',
     // The sanitize clears data the new option's object `const` or `enum` rejects, which the switch leaves as v7 does
     it.each<{ declares: string; option: RJSFSchema; expected: unknown }>([
       { declares: 'a const beside properties', option: { properties: { b: {} }, const: { b: 1 } }, expected: { b: 1 } },
-      { declares: 'a const alone', option: { const: { b: 1 } }, expected: {} },
+      { declares: 'a const alone', option: { const: { b: 1 } }, expected: { b: 1 } },
       { declares: 'an enum alone', option: { enum: [{ b: 1 }] }, expected: undefined },
     ])('leaves the data $declares clears as it was, keeping no extra key', async ({ option, expected }) => {
       const schema: RJSFSchema = {
