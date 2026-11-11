@@ -825,6 +825,59 @@ describe('SchemaField', () => {
         expect(typeOf(node, 'root_extra')).toBe('integer');
       });
 
+      it.each([
+        ['anyOf', [{ properties: { o: { type: 'string' } }, additionalProperties: true }]],
+        ['oneOf', [{ additionalProperties: true }, { properties: { o: { type: 'string' } } }]],
+      ] as const)(
+        'should keep the type picked for an entry the shown %s option lets in, through an edit of another field',
+        async (keyword, options) => {
+          const props = {
+            schema: { type: 'object', properties: { name: { type: 'string' } }, [keyword]: options },
+            initialFormData: { extra: '5' },
+            useFallbackUiForUnsupportedType: true,
+          } satisfies NoValFormProps;
+          const { node, rerender } = createFormComponent(props);
+          await pickType(node, 'root_extra', 'integer');
+          await user.type(elementOf(node, '#root_name'), 'x');
+
+          rerender({ ...props, uiSchema: { name: { 'ui:title': 'Name' } } });
+
+          expect(typeOf(node, 'root_extra')).toBe('integer');
+        },
+      );
+
+      it.each<[string, RJSFSchema, RJSFSchema]>([
+        ['the object', { additionalProperties: true }, {}],
+        ['the option', {}, { additionalProperties: true }],
+      ])(
+        'should keep the type picked for an entry %s lets in, under a shown option offering options in turn',
+        async (_, object, option) => {
+          const props: NoValFormProps = {
+            schema: {
+              ...object,
+              type: 'object',
+              properties: { name: { type: 'string' } },
+              anyOf: [
+                {
+                  ...option,
+                  properties: { o: { type: 'string' } },
+                  anyOf: [{ properties: { p: { type: 'string' } } }, { properties: { q: { type: 'string' } } }],
+                },
+              ],
+            },
+            initialFormData: { extra: '5' },
+            useFallbackUiForUnsupportedType: true,
+          };
+          const { node, rerender } = createFormComponent(props);
+          await pickType(node, 'root_extra', 'integer');
+          await user.type(elementOf(node, '#root_name'), 'x');
+
+          rerender({ ...props, uiSchema: { name: { 'ui:title': 'Name' } } });
+
+          expect(typeOf(node, 'root_extra')).toBe('integer');
+        },
+      );
+
       it('should require nothing of the options of a field on number whose options list no types', async () => {
         const { node, onSubmit, onError } = createFormComponent({
           schema: {

@@ -12,6 +12,7 @@ import {
   fieldPathToList,
   getByPath,
   getDiscriminatorFieldFromSchema,
+  getRenderedOptionSchema,
   getValidationTarget,
   getXxxOfOptions,
   isConstantOptionList,
@@ -269,20 +270,33 @@ export function fieldsRendered<T, S extends StrictRJSFSchema, F extends FormCont
         ({ parent, data } = known);
       } else if (isSchemaObject<S>(parent)) {
         const fieldData = asFieldValue<T>(data);
-        let holder = schemaUtils.retrieveSchema(parent, fieldData);
-        const xxxOf = getXxxOfOptions<S>(holder);
-        const options = xxxOf && retrievedOptionsOf<T, S, F>(schemaUtils, holder, fieldData);
+        const view = schemaUtils.retrieveSchema(parent, fieldData);
+        let holder = view;
+        let shown = -1;
+        const xxxOf = getXxxOfOptions<S>(view);
+        const options = xxxOf && retrievedOptionsOf<T, S, F>(schemaUtils, view, fieldData);
         if (xxxOf && options) {
-          const shown = fieldState.selectedOption(at, options, data, getDiscriminatorFieldFromSchema<S>(holder));
+          shown = fieldState.selectedOption(at, options, data, getDiscriminatorFieldFromSchema<S>(view));
           // The shown option alone, which `findFieldInSchema()` then can't match the data against another for
-          holder = { ...holder, [xxxOf.key]: [options[shown]] };
+          holder = { ...view, [xxxOf.key]: [options[shown]] };
           Reflect.deleteProperty(holder, 'discriminator');
         }
+        const option = options?.[shown];
+        const stubIn = (taker: S) => {
+          const stub = taker.properties?.[key];
+          return isSchemaObject<S>(stub) ? stub : undefined;
+        };
         // A key `additionalProperties: true` lets in is no field to `findFieldInSchema()`, yet the form renders it, from
-        // the stub retrieving put in `properties`
-        const stub = holder.properties?.[key];
+        // the stub retrieving puts in `properties` of the field taking the extra keys: the object's, which only knows
+        // the shown option when told, or, where that option offers options in turn, the option's own (see
+        // `getRenderedOptionSchema()`). Retrieved only for a key no field is found for, since each is a walk of its own
+        // shortcut: options nested below it match the data, not the user's pick, as in `findFieldInSchema()`
         parent =
-          schemaUtils.findFieldInSchema(holder, [key], fieldData).field ?? (isSchemaObject<S>(stub) ? stub : undefined);
+          schemaUtils.findFieldInSchema(holder, [key], fieldData).field ??
+          (isSchemaObject<S>(option)
+            ? (stubIn(schemaUtils.retrieveSchema(parent, fieldData, false, shown)) ??
+              stubIn(schemaUtils.retrieveSchema(getRenderedOptionSchema<S>(view, option), fieldData)))
+            : stubIn(view));
         data = getByPath(data, [key]);
         reached.set(next, { parent, data });
       } else {
