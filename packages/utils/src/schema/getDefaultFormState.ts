@@ -1147,22 +1147,25 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
       } else if (foldedType === 'whole') {
         defaultsWithFormData = defaults;
       }
-    } else if (initialDefaultsGenerated && isObject(rawFormData) && foldedType === undefined && !mergedAllOf) {
-      // Once the form has generated its defaults, the object data of an untyped field is the user's as it stands, as the
-      // extra keys of an object field are (#3759), so a nested object they cleared isn't filled in again
-      defaultsWithFormData = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
     } else if (!isObject(rawFormData) || foldedType === undefined) {
       // A value that is no object, and object data of an untyped field, are merged with the field's defaults here. Object
       // data of an object field is not: each of its properties was computed with its data already, its `allOf` merged
       // or not, so the data is matched once, by the field of each property, rather than again by every object it is
       // nested in. The data of an untyped field wins over its defaults, except where its `allOf` was merged: what its
       // properties were computed as from that wins, as an `if`/`then` `const` does. Object data the untyped field can't
-      // take is no value of it, so its defaults stand, as a typed field's do above
+      // take is no value of it, so its defaults stand, as a typed field's do above, before and after the form has
+      // generated its defaults
       const matching = viewFormDataMatching<unknown, S, F>(context, view, rawFormData);
-      if (matching !== undefined || !isObject(rawFormData)) {
+      if (isObject(rawFormData) && matching !== undefined && initialDefaultsGenerated && !mergedAllOf) {
+        // Once the form has generated its defaults, the object data of an untyped field is the user's as it stands, as
+        // the extra keys of an object field are (#3759), so a nested object they cleared isn't filled in again
+        defaultsWithFormData = matching;
+      } else if (matching !== undefined || !isObject(rawFormData)) {
         defaultsWithFormData = mergeDefaultsWithFormData(
           defaultsWithFormData,
-          matching,
+          // A `null` is how a cleared field holds its value, so one the field's options leave out is still the user's
+          // `null`, as the object holding a field without an `allOf` keeps it
+          matching === undefined && rawFormData === null ? rawFormData : matching,
           mergeExtraDefaults,
           // A value missing or `NaN` takes the defaults, as does a `null` the whole form data is; a `null` the user left
           // in an object or array, and a key of object data the user left `undefined`, keep it unless
@@ -2457,14 +2460,17 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
     return declaredIn;
   };
   // Without data there is nothing to check, so only data asks for the merged schema. A schema with nothing left to
-  // merge is read as it stands, which is what retrieving it would give. An `allOf` or `$ref` holds the options, types
-  // and `const` the data is checked against in its subschemas, so all three are read from the merged schema, retrieved
-  // with the data so that a condition on it picks what it is checked against. A merge that reads no data is kept for
-  // any data, so only one whose result depends on the data is planned again for it
-  const readSchema =
-    formData !== undefined && MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword))
-      ? retrieveField<S, F>(context, field(), formData)
-      : schemaToMatch;
+  // merge is read as it stands, which is what retrieving it would give, as is one `populateDefaults` already retrieved
+  // with the data. An `allOf` or `$ref` holds the options, types, `const` and properties the data is checked against in
+  // its subschemas, so all four are read from the merged schema, retrieved with the data so that a condition on it
+  // picks what it is checked against. A merge that reads no data is kept for any data, so only one whose result
+  // depends on the data is planned again for it. A merge that leaves one value is a constant, whose data is kept as it
+  // is for a field that declares one, and as `populateDefaults` keeps it
+  const mergesForData =
+    !shouldRetrieveAllOf &&
+    formData !== undefined &&
+    MERGING_KEYWORDS.some((keyword) => Object.hasOwn(schemaToMatch, keyword));
+  const readSchema = mergesForData ? retrieveField<S, F>(context, field(), formData) : schemaToMatch;
   const selectSchema =
     formData === undefined || isConstant<S>(readSchema)
       ? undefined
@@ -2491,10 +2497,10 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
   }
 
   // Override the formData with the const if the constAsDefaults is set to always
-  const constTakesPrecedence = readSchema[CONST_KEY] && defaultFormStateBehavior?.constAsDefaults === 'always';
+  const constTakesPrecedence = CONST_KEY in readSchema && defaultFormStateBehavior?.constAsDefaults === 'always';
   if (constTakesPrecedence) {
     validFormData = readSchema.const;
-  } else if (isObject(validFormData) && isObject(schemaToMatch.properties)) {
+  } else if (isObject(validFormData) && isObject(readSchema.properties)) {
     const matched: GenericObjectType = { ...validFormData };
     const rootGraph = parseSchemaGraph<S>(rootSchema);
     // A property `retrieveSchema()` handed out is the field it was handed out for, and any other is declared where the
@@ -2506,8 +2512,8 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
       }
       return declared.length > 0 ? rootProvenance<S>(field().graph, declared) : fieldOf<S>(rootGraph, propertySchema);
     };
-    for (const key of Object.keys(schemaToMatch.properties).filter((dataKey) => Object.hasOwn(matched, dataKey))) {
-      const propertySchema = getPropertySchema<S>(schemaToMatch, key);
+    for (const key of Object.keys(readSchema.properties).filter((dataKey) => Object.hasOwn(matched, dataKey))) {
+      const propertySchema = getPropertySchema<S>(readSchema, key);
       let propertyProvenance: Provenance<S> | undefined;
       const propertyField = () => {
         propertyProvenance ??= fieldOfProperty(key, propertySchema);
@@ -2519,7 +2525,8 @@ function formDataMatching<T, S extends StrictRJSFSchema, F extends FormContextTy
         const { graph, seeds } = propertyField();
         readProperty = resolveMergedOwnRef<S>(graph, seeds, propertySchema, context.customMergeAllOf);
       }
-      const retrievesProperty = shouldRetrieveAllOf || (isObject(readProperty) && ALL_OF_KEY in readProperty);
+      const retrievesProperty =
+        shouldRetrieveAllOf || mergesForData || (isObject(readProperty) && ALL_OF_KEY in readProperty);
       // Object data is matched at every depth, so a value nested in it that its schema can't take is found too. A
       // boolean schema has nothing to match the data against
       const matchesNested = isSchemaObject<S>(readProperty) && isObjectData(matched[key]);

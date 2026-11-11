@@ -2324,10 +2324,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             'red',
           ],
           [
-            'leaves a null the enum leaves out cleared rather than filled with the default',
+            'keeps a null the enum leaves out rather than filling it with the default, as a plain enum does',
             { allOf: [{ $ref: '#/definitions/Color' }], default: 'red' },
             null,
-            undefined,
+            null,
+          ],
+          [
+            'keeps a value of an allOf that narrows the enum to one value, as a field declaring one value does',
+            { allOf: [{ enum: ['a'] }], default: 'a' },
+            'b',
+            'b',
+          ],
+          [
+            'replaces a value outside the enum of a property declared inside the allOf, its default skipped',
+            { allOf: [{ type: 'object', properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
+            { c: 'purple', d: 1 },
+            { c: undefined, d: 1 },
+          ],
+          [
+            'keeps a valid value of a property declared inside the allOf',
+            { allOf: [{ type: 'object', properties: { c: { enum: ['red', 'green'], default: 'red' } } }] },
+            { c: 'green', d: 1 },
+            { c: 'green', d: 1 },
+          ],
+          [
+            "drops object data of a field declared inside a parent's allOf that types it as a string",
+            { allOf: [{ properties: { c: { allOf: [{ type: 'string' }] } } }] },
+            { c: { z: 1 }, d: 1 },
+            { c: undefined, d: 1 },
           ],
           [
             'keeps a null the enum offers',
@@ -2397,9 +2421,38 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ],
         ])('%s', (_name, color, value, expected) => {
           const schema: RJSFSchema = { type: 'object', properties: { color }, definitions };
-          expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { color: value } })).toEqual({
-            color: expected,
-          });
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, formData: { color: value } }),
+          ).toStrictEqual({ color: expected });
+        });
+
+        it.each<[string, RJSFSchema, unknown, unknown]>([
+          [
+            'replaces an invalid value of an object-valued select with the default',
+            { allOf: [SHAPE], default: { k: 'a' } },
+            { k: 'z' },
+            { k: 'a' },
+          ],
+          [
+            'replaces object data an allOf types as a string with the default',
+            { allOf: [{ type: 'string' }], default: 'd' },
+            { x: 1 },
+            'd',
+          ],
+          [
+            'keeps a valid value of an object-valued select',
+            { allOf: [SHAPE], default: { k: 'a' } },
+            { k: 'b' },
+            { k: 'b' },
+          ],
+        ])('%s once the defaults are generated', (_name, color, value, expected) => {
+          const schema: RJSFSchema = { type: 'object', properties: { color }, definitions };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, formData: { color: value }, initialDefaultsGenerated: true },
+            ),
+          ).toStrictEqual({ color: expected });
         });
 
         it('replaces the data with the const an allOf holds under constAsDefaults always', () => {
@@ -2410,6 +2463,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { schema, formData: { color: 'blue' } },
             ),
           ).toEqual({ color: 'red' });
+        });
+
+        it.each([0, false, '', null])('replaces the data with a const of %j under constAsDefaults always', (value) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { plain: { const: value }, wrapped: { allOf: [{ const: value }] } },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { constAsDefaults: 'always' } },
+              { schema, formData: { plain: 5, wrapped: 5 } },
+            ),
+          ).toStrictEqual({ plain: value, wrapped: value });
         });
       });
 
