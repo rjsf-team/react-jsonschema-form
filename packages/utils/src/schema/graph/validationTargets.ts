@@ -896,19 +896,33 @@ function derive<S extends StrictRJSFSchema>(
   return schemaFrom(graph.rawRoot, copy);
 }
 
-/** Returns `target` with each of the `shared` copies it holds in more than one place written once, as a resource of its
- * own under the `container` of an `allOf` holding the target, and named by its `$id` wherever the target holds it.
- * Definitions that each name the next twice over reach the last along a number of paths that doubles with each level,
- * so a target writing the copy of it out at each would grow as fast, which no validator could compile. Each `$id` is
- * hashed from what the copy holds, so a target lists the same ids however the root holding it was reached, which a
- * precompiled validator finds it by; two copies hashing alike are told apart by a count.
+/** Returns `target` with each of the `shared` copies it holds in more than one place that holds another such copy
+ * however deep written once, as a resource of its own under the `container` of an `allOf` holding the target, and
+ * named by its `$id` wherever the target holds it. Definitions that each name the next twice over reach the last along
+ * a number of paths that doubles with each level, so a target writing the copy of each out at every path would grow as
+ * fast, which no validator could compile. Writing out twice a copy that holds no other such copy grows the target by
+ * that copy alone, so it is, and an option reaching a part twice is copied as it was. Each `$id` is hashed from what
+ * the copy holds, so a target lists the same ids however the root holding it was reached, which a precompiled
+ * validator finds it by; two copies hashing alike are told apart by a count.
  */
 function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: ReadonlySet<object>, container: string): S {
   const written = new Map<object, unknown>();
+  // Whether an object is or holds, however deep, one of the `shared` copies
+  const reaching = new Map<object, boolean>();
   const contents = new Map<string, string>();
   const definitions: GenericObjectType = {};
   // A copy is held only where a keyword holds subschemas, so the data a `const`, `enum` or `default` holds is kept
   // as it is, unwalked
+  const subschemasIn = (key: string, value: unknown): unknown[] => {
+    const shape = keywordShape(key, value);
+    if (shape === 'array' && Array.isArray(value)) {
+      return value;
+    }
+    if (shape === 'map' && isObject(value)) {
+      return Object.values(value);
+    }
+    return shape === 'single' ? [value] : [];
+  };
   const writeKeyword = (key: string, value: unknown): unknown => {
     const shape = keywordShape(key, value);
     if (shape === 'array' && Array.isArray(value)) {
@@ -921,8 +935,8 @@ function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: Readonl
     }
     return shape === 'single' ? write(value) : value;
   };
-  // An object holding no shared copy is kept as it is, so a subschema of the root the target holds is still the one
-  // the graph knows, see `withRootIdRefPrefix()`
+  // An object holding no copy written once is kept as it is, so a subschema of the root the target holds is still the
+  // one the graph knows, see `withRootIdRefPrefix()`
   const write = (value: unknown): unknown => {
     if (!isObject(value)) {
       return value;
@@ -932,7 +946,11 @@ function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: Readonl
       return known;
     }
     const entries = Object.entries(value).map(([key, sub]) => [key, writeKeyword(key, sub)] as const);
-    if (!shared.has(value)) {
+    const holdsShared = Object.entries(value)
+      .flatMap(([key, sub]) => subschemasIn(key, sub))
+      .some((sub) => isObject(sub) && reaching.get(sub) === true);
+    reaching.set(value, holdsShared || shared.has(value));
+    if (!shared.has(value) || !holdsShared) {
       const kept = entries.every(([key, sub]) => sub === value[key]) ? value : Object.fromEntries(entries);
       written.set(value, kept);
       return kept;
@@ -952,7 +970,10 @@ function withSharedCopies<S extends StrictRJSFSchema>(target: S, shared: Readonl
     written.set(value, ref);
     return ref;
   };
-  return schemaFrom(target, { [ALL_OF_KEY]: [write(target)], [container]: definitions });
+  const writtenTarget = write(target);
+  return Object.keys(definitions).length === 0
+    ? target
+    : schemaFrom(target, { [ALL_OF_KEY]: [writtenTarget], [container]: definitions });
 }
 
 /** Returns what the `anyOf`/`oneOf` option `id` reached at `place` is scored with: `{ $ref }` naming the place, or,
@@ -984,7 +1005,7 @@ function scoringTargetAt<S extends StrictRJSFSchema>(
 }
 
 /** Returns the copy `derive()` makes of the option `node` reached at `place`, each part it reaches along several paths
- * written once, see `withSharedCopies()`, under the container the root's dialect gives its identifiers a place in:
+ * that holds another such part written once, see `withSharedCopies()`, under the container the root's dialect gives its identifiers a place in:
  * 2019-09 and later make no keyword of `definitions`, so a validator need not find an `$id` below it
  */
 function scoringCopy<S extends StrictRJSFSchema>(

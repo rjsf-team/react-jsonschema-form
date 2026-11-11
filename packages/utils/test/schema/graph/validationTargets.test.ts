@@ -919,14 +919,12 @@ describe('scoringTarget()', () => {
         },
         properties: { v: { $ref: '#/$defs/X' } },
       });
-      // `c` and the properties neither `X` nor `Base` declares are different parts, so `X` walks each once. Its copy
-      // is held both under `v` and under the copied `$defs`, so it is written once
-      const target = scoringTarget(graph, node, false);
-      const copyOfX = { $ref: expect.stringMatching(/^\?rjsf-copy=/) };
-      expect(target).toMatchObject({ allOf: [{ properties: { v: { allOf: [copyOfX] } }, $defs: { X: copyOfX } }] });
-      expect(Object.values(target.definitions ?? {})).toEqual([
-        expect.objectContaining({ properties: { c: expect.anything() }, unevaluatedProperties: expect.anything() }),
-      ]);
+      // `c` and the properties neither `X` nor `Base` declares are different parts, so `X` walks each once
+      expect(scoringTarget(graph, node, false)).toMatchObject({
+        properties: {
+          v: { allOf: [{ properties: { c: expect.anything() }, unevaluatedProperties: expect.anything() }] },
+        },
+      });
     });
     it('cuts as a whole a node adopted twice over whose unevaluatedProperties sees a cut conjunct of the root', () => {
       const root: RJSFSchema = {
@@ -1257,8 +1255,25 @@ describe('scoringTarget()', () => {
       expect(names).toEqual([expect.any(String)]);
       return { name: names[0], id: `${SHARED_COPY_ID}${names[0]}` };
     };
-    it('writes the copy of a part the option reaches along two paths once, under its own $id', () => {
-      const target = option(1);
+    /** The copy of the last definition of `chainedDefinitions(levels)`, which holds no part reached twice */
+    const lastCopy = (levels: number) => ({
+      allOf: [
+        {
+          type: 'object',
+          properties: {
+            leaf: { $ref: `#/definitions/L${levels}/properties/leaf` },
+            c: { allOf: [{ type: 'object' }] },
+          },
+        },
+      ],
+    });
+    it('leaves an option as it is where the part it reaches along two paths holds no part reached twice', () => {
+      expect(option(1)).toEqual({
+        properties: { v: { allOf: [{ type: 'object', properties: { a: lastCopy(1), b: lastCopy(1) } }] } },
+      });
+    });
+    it('writes once, under its own $id, the copy of a part reached along two paths that holds another such part', () => {
+      const target = option(2);
       const { name, id } = onlyPart(target);
       expect(target).toEqual({
         allOf: [
@@ -1279,19 +1294,16 @@ describe('scoringTarget()', () => {
           },
         ],
         definitions: {
-          [name]: {
-            $id: id,
-            type: 'object',
-            properties: { leaf: { $ref: '#/definitions/L1/properties/leaf' }, c: { allOf: [{ type: 'object' }] } },
-          },
+          [name]: { $id: id, type: 'object', properties: { a: lastCopy(2), b: lastCopy(2) } },
         },
       });
     });
     it(`grows by the same size with each level of definitions naming the next twice, up to ${DEEP_CHAIN} levels`, () => {
-      const sizes = Array.from({ length: DEEP_CHAIN }, (_, level) => sizeOf(option(level + 1)));
+      // From two levels on, where a part holding another part reached twice is first written once
+      const sizes = Array.from({ length: DEEP_CHAIN - 1 }, (_, level) => sizeOf(option(level + 2)));
       const growth = sizes.slice(1).map((size, level) => size - sizes[level]);
       expect(new Set(growth)).toEqual(new Set([growth[0]]));
-      expect(sizes[DEEP_CHAIN - 1]).toBeLessThan(20 * DEEP_CHAIN);
+      expect(sizes[DEEP_CHAIN - 2]).toBeLessThan(20 * DEEP_CHAIN);
     });
     it('builds the target of 30 levels of 30 definitions that each name every one of the next level', () => {
       // A copy depends only on the places it reaches that are on a cycle, and none of these is, so each copy is made
@@ -1317,14 +1329,15 @@ describe('scoringTarget()', () => {
       }
       const target = scored({ definitions, oneOf: [{ properties: { v: refTo('D0_0') } }] }, '/oneOf/0');
       // Every definition from the third level on is reached from each of the level above it, and the copies of one
-      // level hold alike, so each level from the third is written once
-      expect(Object.keys(target.definitions ?? {})).toHaveLength(levels - 1);
+      // level hold alike, so each level from the third but the last, which holds none reached twice, is written once
+      expect(Object.keys(target.definitions ?? {})).toHaveLength(levels - 2);
     });
     it('tells apart the copies of two parts that hash alike', () => {
-      // `Aa` and `BB` hash alike, so the copies of the two definitions, which differ only in naming them, do too
+      // `Aa` and `BB` hash alike, so the copies of the two definitions, which differ only in naming them, do too. Each
+      // holds `Inner` twice, so each is written once
       const part: RJSFSchema = {
         type: 'object',
-        properties: { n: { type: 'string' }, c: { $ref: '#/definitions/Choice' } },
+        properties: { n: { type: 'string' }, c1: { $ref: '#/definitions/Inner' }, c2: { $ref: '#/definitions/Inner' } },
       };
       const refTo = (name: string) => ({ $ref: `#/definitions/${name}` });
       const choice: RJSFSchema = {
@@ -1334,14 +1347,20 @@ describe('scoringTarget()', () => {
         ],
       };
       const schema: RJSFSchema = {
-        definitions: { Choice: choice, Aa: part, BB: part },
+        definitions: {
+          Choice: choice,
+          Inner: { type: 'object', properties: { c: refTo('Choice') } },
+          Aa: part,
+          BB: part,
+        },
         oneOf: [{ properties: { a1: refTo('Aa'), a2: refTo('Aa'), b1: refTo('BB'), b2: refTo('BB') } }],
       };
       const target = scored(schema, '/oneOf/0');
+      const inner = { allOf: [{ type: 'object', properties: { c: { allOf: [{ type: 'object' }] } } }] };
       const copied = (name: string) => ({
         $id: expect.any(String),
         type: 'object',
-        properties: { n: { $ref: `#/definitions/${name}/properties/n` }, c: { allOf: [{ type: 'object' }] } },
+        properties: { n: { $ref: `#/definitions/${name}/properties/n` }, c1: inner, c2: inner },
       });
       const definitions = Object.entries(target.definitions ?? {});
       expect(definitions).toEqual([
@@ -1382,34 +1401,28 @@ describe('scoringTarget()', () => {
         const second = scored({ definitions, oneOf: [{ properties: { q: refTo('Y'), p: refTo('X') } }] }, '/oneOf/0');
         expect(first).toEqual(second);
         // Each copy of the two names the other where the path to it runs through that other
-        const { name, id } = onlyPart(first);
-        const cut = { $ref: id };
+        const cut = { allOf: [{ type: 'object' }] };
         const namedExternal = { $ref: '#/definitions/X/allOf/1' };
         const d = { $ref: '#/definitions/Y/properties/d' };
         expect(first).toEqual({
-          allOf: [
-            {
-              properties: {
-                p: {
-                  allOf: [
-                    {
-                      properties: { c: cut },
-                      allOf: [{ allOf: [{ properties: { d }, allOf: [{ allOf: [refTo('X')] }] }] }, namedExternal],
-                    },
-                  ],
+          properties: {
+            p: {
+              allOf: [
+                {
+                  properties: { c: cut },
+                  allOf: [{ allOf: [{ properties: { d }, allOf: [{ allOf: [refTo('X')] }] }] }, namedExternal],
                 },
-                q: {
-                  allOf: [
-                    {
-                      properties: { d },
-                      allOf: [{ allOf: [{ properties: { c: cut }, allOf: [{ allOf: [refTo('Y')] }, namedExternal] }] }],
-                    },
-                  ],
-                },
-              },
+              ],
             },
-          ],
-          definitions: { [name]: { $id: id, allOf: [{ type: 'object' }] } },
+            q: {
+              allOf: [
+                {
+                  properties: { d },
+                  allOf: [{ allOf: [{ properties: { c: cut }, allOf: [{ allOf: [refTo('Y')] }, namedExternal] }] }],
+                },
+              ],
+            },
+          },
         });
       });
       it('writes once a part reached again where what is on the way to it is as it was before another path', () => {
@@ -1425,13 +1438,22 @@ describe('scoringTarget()', () => {
         expect(properties.q).not.toEqual(properties.p);
       });
       it('holds a part it writes once that holds a $ref under an allOf of its resource', () => {
+        // The part beside `X`'s copies keeps its `$ref`, which names nothing in the root, and holds `P` twice
+        const holdingRef = { ...external, properties: { a: refTo('P'), b: refTo('P') } };
         const target = scored(
-          { definitions, oneOf: [{ required: ['z'], allOf: [refTo('X'), refTo('Y')], properties: { z: {} } }] },
+          {
+            definitions: {
+              ...definitions,
+              P: { properties: { c: refTo('R') } },
+              X: { allOf: [refTo('Y'), holdingRef], properties: { c: refTo('R') } },
+            },
+            oneOf: [{ required: ['z'], allOf: [refTo('X'), refTo('Y')], properties: { z: {} } }],
+          },
           '/oneOf/0',
         );
         expect(Object.values(target.definitions ?? {})).toContainEqual({
           $id: expect.stringMatching(/^\?rjsf-copy=/),
-          allOf: [external],
+          allOf: [expect.objectContaining(external)],
         });
       });
     });
@@ -1450,7 +1472,7 @@ describe('scoringTarget()', () => {
       expect(scored(schema, '/oneOf/0')).toEqual({ properties: { a: {}, b: {} } });
     });
     it('writes the parts it holds once under $defs for a 2020-12 root', () => {
-      const { root } = chainedDefinitions(1);
+      const { root } = chainedDefinitions(2);
       const target = scored({ $schema: 'https://json-schema.org/draft/2020-12/schema', ...root }, '/oneOf/0');
       expect(target).not.toHaveProperty('definitions');
       expect(Object.values(target.$defs ?? {})).toEqual([
@@ -1458,19 +1480,19 @@ describe('scoringTarget()', () => {
       ]);
     });
     it('keeps a boolean subschema of a part it writes once as it is', () => {
-      const { root } = chainedDefinitions(1);
-      const last = root.definitions?.L1;
-      const L1: RJSFSchema = { ...(isObject(last) ? last : {}), allOf: [true], items: [false, { type: 'string' }] };
+      const { root } = chainedDefinitions(2);
+      const held = root.definitions?.L1;
+      const L1: RJSFSchema = { ...(isObject(held) ? held : {}), allOf: [true], items: [false, { type: 'string' }] };
       const target = scored({ ...root, definitions: { ...root.definitions, L1 } }, '/oneOf/0');
       expect(Object.values(target.definitions ?? {})).toEqual([
         expect.objectContaining({ allOf: [true], items: [false, { $ref: '#/definitions/L1/items/1' }] }),
       ]);
     });
     it('keeps the values of the root a part it writes once holds as they are', () => {
-      const { root } = chainedDefinitions(1);
+      const { root } = chainedDefinitions(2);
       const fallback = { leaf: 'leaf' };
-      const last = root.definitions?.L1;
-      const L1: RJSFSchema = { ...(isObject(last) ? last : {}), default: fallback };
+      const held = root.definitions?.L1;
+      const L1: RJSFSchema = { ...(isObject(held) ? held : {}), default: fallback };
       const target = scored({ ...root, definitions: { ...root.definitions, L1 } }, '/oneOf/0');
       const [shared] = Object.values(target.definitions ?? {});
       expect(isObject(shared) ? shared.default : undefined).toBe(fallback);
