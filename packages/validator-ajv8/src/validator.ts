@@ -9,7 +9,7 @@ import type {
   ValidatorType,
   RawValidationResult,
 } from '@rjsf/utils';
-import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, SHARED_COPY_ID, withRootIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, isObject, logOnce, ID_KEY, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import ajvRootSchemaId from './ajvRootSchemaId.ts';
@@ -130,19 +130,23 @@ export default class AJV8Validator<
     }
   }
 
-  /** Removes the schemas `isValid()` added, which were compiled against the root registered when they were added, and
-   * the parts an option's scoring copy holds once, whose `$id`, a query starting with `SHARED_COPY_ID`, Ajv registers
-   * resolved against the id of the schema holding it, and which removing that schema leaves in place
-   */
+  /** Removes the schemas `isValid()` added, which were compiled against the root registered when they were added */
   private removeSubschemas() {
-    for (const ref of Object.keys(this.ajv.refs)) {
-      const query = ref.indexOf(SHARED_COPY_ID);
-      if (query > 0 && this.subschemaIds.has(ref.slice(0, query))) {
+    this.removeSchemas(this.subschemaIds);
+    this.subschemaIds.clear();
+  }
+
+  /** Removes the schemas `isValid()` added under `ids` and every `$id` they hold, such as those of the parts an option's
+   * scoring copy holds once, which Ajv registers as the JSON pointer to it in the schema's document, `<id>#/…`, and
+   * which removing the schema leaves in place
+   */
+  private removeSchemas(ids: ReadonlySet<string>) {
+    for (const [ref, target] of Object.entries(this.ajv.refs)) {
+      if (typeof target === 'string' && ids.has(target.slice(0, target.indexOf('#')))) {
         this.ajv.removeSchema(ref);
       }
     }
-    this.subschemaIds.forEach((id) => this.ajv.removeSchema(id));
-    this.subschemaIds.clear();
+    ids.forEach((id) => this.ajv.removeSchema(id));
   }
 
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
@@ -338,7 +342,7 @@ export default class AJV8Validator<
       // meta-schema validation. Guard with !compiled so that a runtime error thrown
       // by compiledValidator(formData) does not evict a correctly-compiled schema.
       if (!compiled && schemaId !== undefined) {
-        this.ajv.removeSchema(schemaId);
+        this.removeSchemas(new Set([schemaId.replace(/#$/, '')]));
       }
       return false;
     }

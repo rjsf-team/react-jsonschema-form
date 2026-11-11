@@ -3707,6 +3707,19 @@ describe('the parts an option scoring copy holds once', () => {
     expect(second).not.toEqual([]);
     expect(second.filter((ref) => first.includes(ref))).toEqual([]);
   });
+  it('are removed from Ajv with a copy holding them that does not compile', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const validator = customizeValidator();
+    const part = `${SHARED_COPY_ID}p`;
+    const schema: RJSFSchema = {
+      allOf: [{ properties: { a: { $ref: part }, b: { $ref: 'https://example.com/missing.json' } } }],
+      definitions: { p: { $id: part, type: 'string' } },
+    };
+    expect(validator.isValid(schema, { a: 'a' }, { type: 'object' })).toBe(false);
+    expect(warn).toHaveBeenCalled();
+    expect(Object.keys(validator.ajv.refs).filter((ref) => ref.includes(SHARED_COPY_ID))).toEqual([]);
+    warn.mockRestore();
+  });
 });
 
 describe('AJV8Validator', () => {

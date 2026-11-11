@@ -239,24 +239,23 @@ interface OwnResource {
 }
 
 /** Returns the parts a schema `getValidationSchemas()` lists holds once, see `OwnResource`, by `documentKey()` of their
- * URI. Every other `$id` is read as `standalone()` reads it, the top's own one where it is not the resource `start` is,
- * so a part below it resolves against the same base in both.
+ * URI. A scoring copy holds them only in the `definitions` or `$defs` of its top, which is read as `standalone()` reads
+ * it, so a part resolves against the same base in both: against the top's own `$id` where it is not the resource
+ * `start` is.
  */
 function ownResourcesOf(schema: unknown, start: Resource, laterDialect: boolean): Map<string, OwnResource> {
   const own = new Map<string, OwnResource>();
-  const visit = (node: unknown, around: Resource) => {
-    if (!isObject(node)) {
-      return;
+  const around = schema === start.schema ? start : (resourceAt(schema, start.base, laterDialect) ?? start);
+  for (const container of ['definitions', '$defs']) {
+    const held: unknown = getByPath(schema, [container]);
+    for (const part of isObject(held) ? Object.values(held) : []) {
+      const resource = resourceAt(part, around.base, laterDialect);
+      // A scoring copy gives each part an `$id` of its own, see `SHARED_COPY_ID`, so none is found twice
+      if (resource !== undefined && resourceIdOf(part, laterDialect)?.startsWith(SHARED_COPY_ID) === true) {
+        own.set(documentKey(resource.base), { schema: part, around });
+      }
     }
-    const resource = node === start.schema ? undefined : resourceAt(node, around.base, laterDialect);
-    const isOwn = resource !== undefined && resourceIdOf(node, laterDialect)?.startsWith(SHARED_COPY_ID) === true;
-    if (isOwn && !own.has(documentKey(resource.base))) {
-      own.set(documentKey(resource.base), { schema: node, around });
-    }
-    const inner = isOwn ? around : (resource ?? around);
-    subschemasOf(node).forEach((subschema) => visit(subschema, inner));
-  };
-  visit(schema, start);
+  }
   return own;
 }
 
