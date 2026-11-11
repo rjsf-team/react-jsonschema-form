@@ -47,7 +47,7 @@ import NamedFieldContext from './fields/NamedFieldContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
-import type { RevealedPaths, TouchedPaths } from './formState.ts';
+import type { ClearedPaths, RevealedPaths, TouchedPaths } from './formState.ts';
 import { deriveState, initialState } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState, UiStateReader } from './uiState.ts';
@@ -325,6 +325,11 @@ export interface FormState<
    * keys the form moved
    */
   touchedPaths: TouchedPaths;
+  /** The paths of the fields the user cleared, each a key holding `undefined` or a `null` array item, which the
+   * defaults merged in under `mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined'` leave cleared. Moved with
+   * the keys the form moved, and dropped once the data no longer holds the clear
+   */
+  clearedPaths: ClearedPaths;
   /** Where `liveValidate`'s trigger fired, which decides the errors `liveErrors: 'field'` shows */
   revealed: RevealedPaths;
   /** The option selections the baseline is derived under, whenever a prop change or an omission derives it again: none

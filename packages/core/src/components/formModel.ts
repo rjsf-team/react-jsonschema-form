@@ -39,6 +39,7 @@ import {
   isLiveValidated,
   omitExtraDataOf,
   seedOf,
+  settledPaths,
   shareState,
   toEventFormData,
   toFormStatus,
@@ -64,8 +65,9 @@ const deliverToCaller: Deliver = (operation) => operation();
 
 /** Whether a render of the `Form` reads a member that differs between `committed` and `shown`, directly or through
  * `deriveState()`: any but the touched marks, which only `getStatus()` and the events report. A commit that changes
- * none of them, such as a blur that only touches a field, re-renders nothing. Every other member is compared, so one
- * added to the state is never missed
+ * none of them, such as a blur that only touches a field, re-renders nothing. The recorded clears count, since the fill
+ * a prop change runs in `deriveState()` reads them. Every other member is compared, so one added to the state is never
+ * missed
  */
 function isRenderedChange(committed: object, shown: object): boolean {
   return Object.keys({ ...shown, ...committed }).some(
@@ -550,23 +552,26 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       keepsOwnErrors: true,
       editedPath: path,
       isFieldEdit: change.isFieldEdit,
-      // The edit's clears outlive the defaults the rewrite merges in, as they outlive those the edit does (#5125)
-      editedData: edited.formData,
     };
     // Unvalidated, the change still moves its errors with the keys it moved and settles the fields' own errors, which
     // the rewrite then carries through its one validation
-    const withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
-    let rewrittenData = applyChangeToData(withEditErrors, rewrite, props);
-    // The rewrite moves no key, so the marks the change moved are settled by what the rewrite kept under each key,
-    // before the validation that hides the errors of the fields they don't reveal
+    let withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
+    // The rewrite moves no key, so the marks the change moved are settled by what the rewrite kept under each key: the
+    // clears before its pass, whose fills keep them, and the touched and revealed fields before the validation that
+    // hides the errors of the fields they don't reveal
     const move = keyMoveOf(change);
+    const fateUnder = (kept: unknown, container: FieldPath) => {
+      const at = fieldPathToList(container);
+      return moveFateOf(getAt(kept, at), getAt(edited.formData, at), getAt(base.formData, at));
+    };
     if (move) {
-      const at = fieldPathToList(move.container);
-      const fateOf = moveFateOf(
-        getAt(rewrittenData.formData, at),
-        getAt(edited.formData, at),
-        getAt(base.formData, at),
-      );
+      const fateOf = fateUnder(transformed, move.container);
+      const clearedPaths = settledPaths(withEditErrors.clearedPaths, base.clearedPaths, move.container, fateOf);
+      withEditErrors = { ...withEditErrors, clearedPaths };
+    }
+    let rewrittenData = applyChangeToData(withEditErrors, rewrite, props);
+    if (move) {
+      const fateOf = fateUnder(rewrittenData.formData, move.container);
       rewrittenData = withMarksSettled(rewrittenData, base, move.container, fateOf);
     }
     const rewritten = applyChangeToErrorsOf(rewrittenData, edited.formData, rewrite, props, isValidated);
@@ -612,6 +617,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       newErrorSchema,
       newKeyOf: move?.newKeyOf,
       newOwnKeyOf: move?.newOwnKeyOf,
+      sourceKeyOf: move?.sourceKeyOf,
       dropsOwnErrors: move?.dropsOwnErrors,
       isAnnouncedMove: move !== undefined,
       isFieldEdit,

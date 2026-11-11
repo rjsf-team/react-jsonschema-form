@@ -3856,6 +3856,145 @@ describe('clearing a field with a schema default does not re-apply the default (
         expect(onChange.mock.lastCall?.[0].formData).toEqual({ mode: 'b', x: null });
       });
 
+      it.each(['readonly', 'disabled'] as const)('stays cleared through a prop change in a %s form', async (mode) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { x: { type: 'string', default: 'D' }, y: { type: 'string' } },
+        };
+        const { node, rerender, getFormData } = createFormComponent({
+          schema,
+          defaultFormStateBehavior,
+          initialFormData: { x: 'typed' },
+        });
+
+        await user.clear(elementOf(node, 'input#root_x'));
+        rerender({ schema: { ...schema, title: 'Saving' }, defaultFormStateBehavior, [mode]: true });
+        rerender({ schema: { ...schema, title: 'Saved' }, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ x: undefined });
+      });
+
+      it.each<[string, RJSFSchema]>([
+        ['default', { type: 'string', default: 'E' }],
+        ['enum', { type: 'string', default: 'D', enum: ['D', 'E'] }],
+      ])('gives way in a disabled form once its field gets another %s, as in an enabled one', async (_, x) => {
+        const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string', default: 'D' } } };
+        const changed: RJSFSchema = { type: 'object', properties: { x } };
+        const enabled = createFormComponent({ schema, defaultFormStateBehavior, initialFormData: { x: 'typed' } });
+        const disabled = createFormComponent({ schema, defaultFormStateBehavior, initialFormData: { x: 'typed' } });
+        await user.clear(elementOf(enabled.node, 'input#root_x'));
+        await user.clear(elementOf(disabled.node, 'input#root_x'));
+
+        enabled.rerender({ schema: changed, defaultFormStateBehavior });
+        disabled.rerender({ schema: changed, defaultFormStateBehavior, disabled: true });
+
+        expect(disabled.getFormData()).toEqual(enabled.getFormData());
+        expect(disabled.getFormData()).not.toEqual({ x: undefined });
+      });
+
+      it.each(['readonly', 'disabled'] as const)("keeps a %s form's values that a field change would drop", (mode) => {
+        const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+        const { rerender, getFormData } = createFormComponent({
+          schema,
+          defaultFormStateBehavior,
+          [mode]: true,
+          initialFormData: { x: 'typed' },
+        });
+
+        rerender({
+          schema: { type: 'object', properties: { x: { type: 'number' } } },
+          defaultFormStateBehavior,
+          [mode]: true,
+        });
+
+        expect(getFormData()).toEqual({ x: 'typed' });
+      });
+
+      it.each(['readonly', 'disabled'] as const)(
+        "keeps a %s form's null item that a field change would drop",
+        (mode) => {
+          const listOf = (enumValues: (string | null)[]): RJSFSchema => ({
+            type: 'object',
+            properties: { list: { type: 'array', items: { type: ['string', 'null'], enum: enumValues } } },
+          });
+          const { rerender, getFormData } = createFormComponent({
+            schema: listOf(['a', null]),
+            defaultFormStateBehavior,
+            [mode]: true,
+            initialFormData: { list: [null, 'a'] },
+          });
+
+          rerender({ schema: listOf(['a', 'b']), defaultFormStateBehavior, [mode]: true });
+
+          expect(getFormData()).toEqual({ list: [null, 'a'] });
+        },
+      );
+
+      it.each(['readonly', 'disabled'] as const)(
+        'moves no clear of a %s form onto the item after one a field change drops',
+        async (mode) => {
+          const listOf = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
+          const { node, rerender, getFormData } = createFormComponent({
+            schema: listOf({ type: 'array', items: { type: 'string' } }),
+            defaultFormStateBehavior,
+            initialFormData: { list: ['typed', null, 'v'] },
+          });
+          await user.clear(elementOf(node, 'input#root_list_0'));
+          rerender({
+            schema: listOf({ type: 'array', items: { type: 'number' } }),
+            defaultFormStateBehavior,
+            [mode]: true,
+          });
+          expect(getFormData()).toEqual({ list: [null, 'v'] });
+
+          rerender({
+            schema: listOf({ type: 'array', items: { type: 'number' }, default: [1, 2] }),
+            defaultFormStateBehavior,
+            [mode]: true,
+          });
+
+          expect(getFormData()).toEqual({ list: [1, 'v'] });
+        },
+      );
+
+      it('keeps a clear on its item when a field change drops an item before it', async () => {
+        const listOf = (values: (string | null)[], extra: RJSFSchema = {}): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', items: { type: ['string', 'null'], enum: values }, ...extra } },
+        });
+        const { node, rerender, getFormData } = createFormComponent({
+          schema: listOf(['a', 'b', 'typed', null]),
+          defaultFormStateBehavior,
+          initialFormData: { list: ['b', 'typed'] },
+        });
+        await user.selectOptions(elementOf(node, 'select#root_list_1'), '');
+        rerender({ schema: listOf(['a', 'typed', null]), defaultFormStateBehavior });
+        expect(getFormData()).toEqual({ list: [null] });
+
+        rerender({ schema: listOf(['a', 'typed', null], { default: ['a'] }), defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ list: [null] });
+      });
+
+      it.each(['readonly', 'disabled'] as const)(
+        "fills a %s form's undefined the user didn't clear once its field's default changes, as an enabled form does",
+        (mode) => {
+          const withDefault = (x: string): RJSFSchema => ({
+            type: 'object',
+            properties: { x: { type: 'string', default: x } },
+          });
+          const { rerender, getFormData } = createFormComponent({
+            schema: withDefault('D'),
+            [mode]: true,
+            initialFormData: { x: undefined },
+          });
+
+          rerender({ schema: withDefault('E'), [mode]: true });
+
+          expect(getFormData()).toEqual({ x: 'E' });
+        },
+      );
+
       it("gives way under the default merge mode too, once the field's default changes", async () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -3929,6 +4068,40 @@ describe('clearing a field with a schema default does not re-apply the default (
         await user.type(elementOf(node, 'input#root_b'), 'y');
 
         expect(onChange.mock.lastCall?.[0].formData.group).toBe(group);
+      });
+
+      it('keeps a clear a custom ui:field makes inside the object it writes (#5717)', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            o: { type: 'object', properties: { a: { type: 'string', default: 'A' }, b: { type: 'string' } } },
+            c: { type: 'string' },
+          },
+        };
+        function ClearingField({ formData, onChange, fieldPath }: FieldProps) {
+          return (
+            <button
+              type='button'
+              onClick={() => onChange(isPlainObject(formData) ? { ...formData, a: undefined } : formData, fieldPath)}
+            >
+              clear a
+            </button>
+          );
+        }
+        const { node, onChange } = createFormComponent({
+          schema,
+          defaultFormStateBehavior,
+          uiSchema: { o: { 'ui:field': ClearingField } },
+          initialFormData: { o: { a: 'old', b: 'x' } },
+        });
+
+        await user.click(elementOf(node, 'button[type=button]'));
+
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ o: { a: undefined, b: 'x' } });
+
+        await user.type(elementOf(node, 'input#root_c'), 'z');
+
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ o: { a: undefined, b: 'x' }, c: 'z' });
       });
     });
 
@@ -4176,6 +4349,161 @@ describe('clearing a field with a schema default does not re-apply the default (
       await user.selectOptions(elementOf(node, 'select#root_mode'), 'b');
 
       expect(onChange.mock.lastCall?.[0].formData).toEqual({ mode: 'b', x: 'X' });
+    });
+
+    describe('when a schema change gives an ancestor a default for the field (#5717)', () => {
+      const properties: RJSFSchema['properties'] = { o: { type: 'object', properties: { x: { type: 'string' } } } };
+      const schema: RJSFSchema = { type: 'object', properties };
+      const withAncestorDefault: RJSFSchema = { ...schema, default: { o: { x: 'X' } } };
+
+      it.each<[string, unknown, (ref: ReturnType<typeof createFormRef>) => void]>([
+        ['in the seed', { o: { x: undefined } }, () => undefined],
+        ['by setFieldValue()', { o: { x: 'q' } }, (ref) => handleOf(ref).setFieldValue('o.x', undefined)],
+      ])('fills an undefined the user did not clear, %s', (_, initialFormData, write) => {
+        const ref = createFormRef();
+        const { rerender, getFormData } = createFormComponent({
+          ref,
+          schema,
+          defaultFormStateBehavior,
+          initialFormData,
+        });
+        act(() => write(ref));
+
+        rerender({ ref, schema: withAncestorDefault, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ o: { x: 'X' } });
+      });
+
+      it('keeps a field the user cleared empty', async () => {
+        const ref = createFormRef();
+        const { node, rerender, getFormData } = createFormComponent({
+          ref,
+          schema,
+          defaultFormStateBehavior,
+          initialFormData: { o: { x: 'q' } },
+        });
+        await user.clear(elementOf(node, 'input#root_o_x'));
+
+        rerender({ ref, schema: withAncestorDefault, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ o: { x: undefined } });
+      });
+    });
+
+    describe('where the clears come from', () => {
+      const uiSchema: UiSchema = { list: { 'ui:options': { copyable: true } } };
+      const items: RJSFSchema = {
+        type: 'object',
+        properties: { o: { type: 'object', properties: { x: { type: 'string' } } } },
+      };
+      const schema: RJSFSchema = { type: 'object', properties: { list: { type: 'array', items } } };
+      const withItemDefault: RJSFSchema = {
+        type: 'object',
+        properties: { list: { type: 'array', items: { ...items, default: { o: { x: 'D' } } } } },
+      };
+
+      it('fills a copied row as it fills the row it copies, where the user cleared neither', async () => {
+        const { node, rerender, getFormData } = createFormComponent({
+          schema,
+          uiSchema,
+          defaultFormStateBehavior,
+          initialFormData: { list: [{ o: { x: undefined } }] },
+        });
+
+        await user.click(elementOf(node, '.rjsf-array-item-copy'));
+        rerender({ schema: withItemDefault, uiSchema, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ list: [{ o: { x: 'D' } }, { o: { x: 'D' } }] });
+      });
+
+      it('keeps a copied row empty where the user cleared the row it copies', async () => {
+        const { node, rerender, getFormData } = createFormComponent({
+          schema,
+          uiSchema,
+          defaultFormStateBehavior,
+          initialFormData: { list: [{ o: { x: 'typed' } }] },
+        });
+
+        await user.clear(elementOf(node, 'input#root_list_0_o_x'));
+        await user.click(elementOf(node, '.rjsf-array-item-copy'));
+        rerender({ schema: withItemDefault, uiSchema, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ list: [{ o: { x: undefined } }, { o: { x: undefined } }] });
+      });
+
+      it('renders the data the form holds once a write drops a clear, under a merge mode that keeps clears', async () => {
+        const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string', default: 'D' } } };
+        const ref = createFormRef();
+        const { node, rerender, getFormData } = createFormComponent({ ref, schema, initialFormData: { x: 'typed' } });
+        await user.clear(elementOf(node, 'input#root_x'));
+        act(() => handleOf(ref).setFieldValue('x', undefined));
+
+        rerender({ ref, schema, defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ x: 'D' });
+        expect(elementOf(node, 'input#root_x')).toHaveValue('D');
+      });
+
+      it('records no clear where a field writes a null item over an item without a value', async () => {
+        const listSchema = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
+        function NullingField({ onChange, fieldPath }: FieldProps) {
+          return (
+            <button type='button' onClick={() => onChange([null], fieldPath)}>
+              null the item
+            </button>
+          );
+        }
+        const nullingUiSchema: UiSchema = { list: { 'ui:field': NullingField } };
+        const { node, rerender, getFormData } = createFormComponent({
+          schema: listSchema({ type: 'array', items: { type: 'string' } }),
+          uiSchema: nullingUiSchema,
+          defaultFormStateBehavior,
+          initialFormData: { list: [undefined] },
+        });
+
+        await user.click(elementOf(node, 'button[type=button]'));
+        expect(getFormData()).toEqual({ list: [null] });
+        rerender({
+          schema: listSchema({ type: 'array', items: { type: 'string' }, default: ['D'] }),
+          uiSchema: nullingUiSchema,
+          defaultFormStateBehavior,
+        });
+
+        expect(getFormData()).toEqual({ list: ['D'] });
+      });
+
+      it('keeps a clear where it was when a transformChange undoes a reorder', async () => {
+        const reordered: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: { type: 'array', items: { type: 'string', default: 'D' } },
+            note: { type: 'string' },
+            b: { type: 'string' },
+          },
+        };
+        const isMoveUpOfItem1 = (next: unknown[], previous: unknown[]) =>
+          next.length === previous.length && next[0] === previous[1] && next[1] === previous[0];
+        const { node, onChange } = createFormComponent({
+          schema: reordered,
+          defaultFormStateBehavior,
+          initialFormData: { list: ['a', 'b', 'c'] },
+          transformChange: (next: unknown, previous: unknown) =>
+            isPlainObject(next) &&
+            isPlainObject(previous) &&
+            Array.isArray(next.list) &&
+            Array.isArray(previous.list) &&
+            isMoveUpOfItem1(next.list, previous.list)
+              ? { ...next, list: previous.list, note: 'order kept' }
+              : next,
+        });
+
+        await user.clear(elementOf(node, 'input#root_list_1'));
+        await user.click(node.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-up')[1]);
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ list: ['a', null, 'c'], note: 'order kept' });
+        await user.type(elementOf(node, 'input#root_b'), 'z');
+
+        expect(onChange.mock.lastCall?.[0].formData).toEqual({ list: ['a', null, 'c'], note: 'order kept', b: 'z' });
+      });
     });
 
     it('keeps a cleared scalar array item empty', async () => {

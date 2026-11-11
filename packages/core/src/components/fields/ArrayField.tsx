@@ -40,6 +40,7 @@ import useSendMove from '../../hooks/useSendMove.ts';
 import useWarnIfFormDataNotPassedThrough from '../../hooks/useWarnIfFormDataNotPassedThrough.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../keyMove.ts';
+import type { KeyMove } from '../keyMove.ts';
 import { rendersTypeSelector } from './FallbackField.tsx';
 import {
   ARRAY_MODE_DEFAULT_WIDGETS,
@@ -1306,12 +1307,11 @@ export default function ArrayField<
    * other item
    */
   const commitRows = useCallback(
-    (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[]) => {
+    (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[], sourceKeyOf?: KeyMove) => {
       const newIndexes = new Map(newKeyedFormData.map((row, index) => [row, index]));
       const value = updateKeyedFormData(newKeyedFormData);
-      const outcome = sendMove({ value, newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
-        onChange(value, fieldPath),
-      );
+      const newKeyOf = moveOfItems((index) => newIndexes.get(rows[index]));
+      const outcome = sendMove({ value, newKeyOf, sourceKeyOf }, () => onChange(value, fieldPath));
       if (outcome === undefined) {
         if (!deepEquals(readItems(), value)) {
           updateKeyedFormData(rows);
@@ -1403,7 +1403,8 @@ export default function ArrayField<
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      commitRows(rows, newKeyedFormData);
+      const copyKey = String(index + 1);
+      commitRows(rows, newKeyedFormData, (key) => (key === copyKey ? String(index) : undefined));
     },
     [schema, commitRows, readRows, newRowId],
   );

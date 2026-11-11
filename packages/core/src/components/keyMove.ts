@@ -58,6 +58,10 @@ export interface AnnouncedMove {
    * so the field learns what became of it
    */
   newKeyOf?: KeyMove;
+  /** For each key the move added as a copy, the key, before the move, whose value it copies, so the clears the user
+   * made there hold for the copy too. A key it added that copies nothing, as an added item, has none
+   */
+  sourceKeyOf?: KeyMove;
   /** Where the fields' own errors under each key went, when not where the validator's did: an option switch drops
    * what was raised under a key the new option declares too, since another widget renders for it, while the
    * validator's errors there describe a constraint the new option may well share
