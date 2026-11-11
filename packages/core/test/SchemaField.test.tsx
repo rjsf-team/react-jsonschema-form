@@ -563,6 +563,60 @@ describe('SchemaField', () => {
         expect(onSubmit).toHaveBeenCalled();
       });
 
+      it('should require nothing of the object a number picked for an array item left, over the null it clears to', async () => {
+        const { node, onError } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              list: { type: 'array', items: { type: ['object', 'number'], properties: { a: { type: 'string' } } } },
+            },
+          },
+          uiSchema: { list: { items: { a: { 'ui:required': true } } } },
+          initialFormData: { list: [{}] },
+          useFallbackUiForUnsupportedType: true,
+          noHtml5Validate: true,
+        });
+        await pickType(node, 'root_list_0', 'number');
+        await submitForm(node, user);
+
+        expect(typeOf(node, 'root_list_0')).toBe('number');
+        expect(onError.mock.calls.flatMap(([errors]: unknown[]) => errors)).not.toContainEqual(
+          expect.objectContaining({ property: '.list.0.a' }),
+        );
+      });
+
+      it("should require nothing of the object an entry's option left for boolean, over the '' its widget clears to", async () => {
+        const EmptyWidget = ({ id, onChange }: WidgetProps) => (
+          <button type='button' id={id} onClick={() => onChange('')}>
+            Send empty
+          </button>
+        );
+        // The option's schema carries no marker of the entry it renders at, which only the field knows
+        const { node, onError } = createFormComponent({
+          schema: {
+            type: 'object',
+            additionalProperties: {
+              anyOf: [
+                { title: 'One', type: ['object', 'boolean'], properties: { a: { type: 'string' } } },
+                { title: 'Two', type: 'number' },
+              ],
+            },
+          },
+          uiSchema: { additionalProperties: { 'ui:widget': 'EmptyWidget', a: { 'ui:required': true } } },
+          widgets: { EmptyWidget },
+          initialFormData: { x: true },
+          useFallbackUiForUnsupportedType: true,
+          noHtml5Validate: true,
+        });
+        await user.click(elementOf(node, '#root_x', HTMLButtonElement));
+        await submitForm(node, user);
+
+        expect(typeOf(node, 'root_x')).toBe('boolean');
+        expect(onError.mock.calls.flatMap(([errors]: unknown[]) => errors)).not.toContainEqual(
+          expect.objectContaining({ property: '.x.a' }),
+        );
+      });
+
       describe('with anyOf options that offer types of their own', () => {
         const optionsForm = (anyOf: RJSFSchema[]) =>
           createFormComponent({
