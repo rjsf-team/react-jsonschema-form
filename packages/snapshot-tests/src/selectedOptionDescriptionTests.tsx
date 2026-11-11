@@ -107,20 +107,15 @@ export function selectedOptionDescriptionTests(Form: ComponentType<FormProps>, w
             validator={validator}
           />,
         );
-        // In document order. Only where the option's description falls among the others is compared, since a theme
-        // may draw the field's description and help in another order than the plan announces them
+        // In document order
         const drawn = screen
           .getAllByText(/^(Warm|Pick a plan|Some help|Own description|Own help)$/)
           .map(({ textContent }) => textContent);
         const announced = container.querySelector('#root_color')!.getAttribute('aria-describedby')!.split(' ');
         const announcedTexts = announced.map((id) => document.getElementById(id)?.textContent ?? '');
-        const withoutOption = (texts: string[]) => texts.filter((text) => text !== 'Warm');
-        const before = (texts: string[]) => withoutOption(texts.slice(0, texts.indexOf('Warm')));
 
         expect(announcedTexts).toContain('Warm');
-        expect(before(announcedTexts)).toEqual(
-          before(drawn).filter((text) => withoutOption(announcedTexts).includes(text)),
-        );
+        expect(announcedTexts).toEqual(drawn);
       },
     );
 

@@ -450,6 +450,35 @@ describe('the plan SchemaField builds', () => {
       );
     });
 
+    // #5720
+    it("lists an option's own help before the field's, as the field's template draws its help after the option", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            color: {
+              title: 'Color',
+              anyOf: [
+                { title: 'Option', type: 'string' },
+                { title: 'Other', type: 'number' },
+              ],
+            },
+          },
+        },
+        uiSchema: { color: { 'ui:help': 'Field help', anyOf: [{ 'ui:help': 'Own help' }, {}] } },
+        initialFormData: { color: 'x' },
+      });
+      const ownHelp = node.querySelector(`#${optionHelpId('root_color')}`)!;
+      expect(ownHelp).toHaveTextContent('Own help');
+      expect(ownHelp.compareDocumentPosition(node.querySelector(`#${helpId('root_color')}`)!)).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+      expect(node.querySelector('#root_color')).toHaveAttribute(
+        'aria-describedby',
+        `${optionHelpId('root_color')} ${helpId('root_color')}`,
+      );
+    });
+
     it('draws none of the parts a custom field rendered beside the options draws itself', () => {
       const selectorProps: WidgetProps[] = [];
       function SelectWidget(props: WidgetProps) {

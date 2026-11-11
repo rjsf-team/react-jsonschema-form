@@ -14,6 +14,7 @@ import {
 import type {
   ControlAttributes,
   FieldPresentation,
+  FieldTemplateOrder,
   PartPlacement,
   PartPresentation,
   ResolvedPresentationDeclaration,
@@ -60,13 +61,24 @@ export interface FieldPresentationInputs {
    * this one, so it renders under an id of its own, and a part the template draws from `id`. Defaults to `id`
    */
   componentId?: string;
+  /** The order the `FieldTemplate` draws the description and help in around its `children`, the registry's
+   * `presentation.fieldTemplateOrder`. Defaults to `['description', 'children', 'help']`
+   */
+  templateOrder?: FieldTemplateOrder;
 }
 
 const NONE: readonly string[] = Object.freeze([]);
+const DEFAULT_TEMPLATE_ORDER: FieldTemplateOrder = ['description', 'children', 'help'];
+const DESCRIBING_PARTS = ['description', 'help'] as const;
 
 /** Whether a part with this placement renders an element here */
 export function rendersHere(by: PartPlacement) {
   return by === 'template' || by === 'self';
+}
+
+/** Whether a `FieldTemplate` drawing in `templateOrder` draws `part` after its `children` */
+export function drawnAfterChildren(part: 'description' | 'help', templateOrder = DEFAULT_TEMPLATE_ORDER) {
+  return templateOrder.indexOf(part) > templateOrder.indexOf('children');
 }
 
 /** The id a part of this level's own takes: `ownId`, or, when a field above already renders that part under it, the
@@ -141,7 +153,10 @@ function placeText<Text>(
  *   own is kept apart, as the field's own `hideError` decides it whoever draws the messages.
  * - A part the field's own component draws takes its ids from `componentId`, the id that component renders under beside
  *   the field's `anyOf`/`oneOf` options, and a part the template draws from `id`.
- * - The control is described by the parts that render, here or above, and is `aria-invalid` whenever errors show.
+ * - The control is described by the parts that render, here or above, and is `aria-invalid` whenever errors show. The
+ *   errors are listed first, then the description and help in the order they are drawn: `templateOrder` gives the order
+ *   a template draws them in around its `children`, where a part a component draws itself and the levels beneath sit,
+ *   so a part a field above draws after its `children` is listed after this level's.
  * - `showLabel` is recorded as resolved, for the levels and widgets beneath to read.
  *
  * @param inputs - The decisions the plan is built from
@@ -161,6 +176,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     required = false,
     inherited,
     componentId = id,
+    templateOrder = DEFAULT_TEMPLATE_ORDER,
   } = inputs;
   /** The id a part's ids derive from: the component's own for a part it draws itself, the field's otherwise */
   const ownerId = (owner: PartPlacement) => (owner === 'self' ? componentId : id);
@@ -233,11 +249,30 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     own: !hideError && errors.length > 0,
   };
 
+  // This level draws inside the `children` of the fields above, so their parts drawn after `children` follow its own
+  const ownParts = { description: descriptionPlacement, help: helpPlacement };
+  const drawnOrder = templateOrder.filter((part) => part !== 'children');
+  const templateIds = (after: boolean) =>
+    drawnOrder
+      .filter((part) => ownParts[part].by === 'template' && drawnAfterChildren(part, templateOrder) === after)
+      .map((part) => ownParts[part].id);
+  // Only a template draws around `children`: a part a field above draws itself, as an `anyOf`/`oneOf` field's selector
+  // does, is drawn inside them, and an `above` part repeats the id of the part a plan further up draws
+  const afterIdsAbove = new Set(
+    plansAbove.flatMap((plan) =>
+      DESCRIBING_PARTS.filter((part) => plan[part].by === 'template' && drawnAfterChildren(part, templateOrder)).map(
+        (part) => plan[part].id,
+      ),
+    ),
+  );
+  const inheritedIds = inherited?.describedBy ?? NONE;
   const describedBy = uniqueIds([
     rendersHere(errorsPlan.by) ? errorsId : '',
-    ...(inherited?.describedBy ?? NONE),
-    rendersHere(descriptionPlacement.by) ? descriptionPlacement.id : '',
-    rendersHere(helpPlacement.by) ? helpPlacement.id : '',
+    ...inheritedIds.filter((describer) => !afterIdsAbove.has(describer)),
+    ...templateIds(false),
+    ...DESCRIBING_PARTS.filter((part) => ownParts[part].by === 'self').map((part) => ownParts[part].id),
+    ...templateIds(true),
+    ...inheritedIds.filter((describer) => afterIdsAbove.has(describer)),
   ]);
 
   let control: FieldPresentation['control'];

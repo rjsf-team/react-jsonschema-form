@@ -1,6 +1,11 @@
 import { createElement } from 'react';
 
-import type { FieldPresentation, FieldPresentationInputs, ResolvedPresentationDeclaration } from '../src/index.ts';
+import type {
+  FieldPresentation,
+  FieldPresentationInputs,
+  FieldTemplateOrder,
+  ResolvedPresentationDeclaration,
+} from '../src/index.ts';
 import { resolveFieldPresentation } from '../src/index.ts';
 
 const ID = 'root_foo';
@@ -13,6 +18,8 @@ const TEMPLATE: ResolvedPresentationDeclaration = {
   labelledBy: 'for',
 };
 const WIDGET_LABEL: ResolvedPresentationDeclaration = { ...TEMPLATE, label: 'self' };
+const fieldText = { description: 'Describes the field', help: 'Helps with the field' };
+const optionText = { description: 'Describes the option', help: 'Helps with the option' };
 
 function resolve(inputs: Partial<FieldPresentationInputs> = {}): FieldPresentation {
   return resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo', ...inputs });
@@ -352,9 +359,9 @@ describe('resolveFieldPresentation()', () => {
       expect(plan.describedBy).toEqual([
         `${ID}__error`,
         `${ID}__description`,
-        `${ID}__help`,
         `${ID}__optionDescription`,
         `${ID}__optionHelp`,
+        `${ID}__help`,
       ]);
     });
 
@@ -390,11 +397,44 @@ describe('resolveFieldPresentation()', () => {
       expect(bottom.describedBy).toEqual([
         `${ID}__error`,
         `${ID}__description`,
+        `${ID}__optionDescription`,
+        `${ID}__optionDescription2`,
+        `${ID}__optionHelp2`,
+        `${ID}__optionHelp`,
+        `${ID}__help`,
+      ]);
+    });
+
+    it('lists the description and help in the order the template draws them around its children', () => {
+      const order = (templateOrder: FieldTemplateOrder) =>
+        resolve({ ...optionText, templateOrder, inherited: resolve({ ...fieldText, templateOrder }) }).describedBy;
+      expect(order(['children', 'help', 'description'])).toEqual([
+        `${ID}__optionHelp`,
+        `${ID}__optionDescription`,
+        `${ID}__help`,
+        `${ID}__description`,
+      ]);
+      expect(order(['description', 'help', 'children'])).toEqual([
+        `${ID}__description`,
         `${ID}__help`,
         `${ID}__optionDescription`,
         `${ID}__optionHelp`,
-        `${ID}__optionDescription2`,
-        `${ID}__optionHelp2`,
+      ]);
+    });
+
+    it('lists a part a field above draws itself before the parts of the levels beneath it', () => {
+      const selector = resolve({ ...fieldText, declaration: { ...TEMPLATE, description: 'self' } });
+      const plan = resolve({
+        ...optionText,
+        declaration: { ...TEMPLATE, help: 'self' },
+        inherited: selector,
+        templateOrder: ['children', 'description', 'help'],
+      });
+      expect(plan.describedBy).toEqual([
+        `${ID}__description`,
+        `${ID}__optionHelp`,
+        `${ID}__optionDescription`,
+        `${ID}__help`,
       ]);
     });
 

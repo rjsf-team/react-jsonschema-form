@@ -514,7 +514,7 @@ describe("daisyui's error and help elements carry the ids their field's plan des
 
     expect(container.querySelectorAll(`#${helpId('root_pet')}`)).toHaveLength(1);
     expect(container.querySelector(`div#${optionHelpId('root_pet')}`)).toHaveTextContent('Dogs bark');
-    expect(container.querySelector('#root_pet')).toHaveAccessibleDescription('Pick a pet Dogs bark');
+    expect(container.querySelector('#root_pet')).toHaveAccessibleDescription('Dogs bark Pick a pet');
   });
 
   test("renders an anyOf field's errors once, under the id its control is described by", () => {
