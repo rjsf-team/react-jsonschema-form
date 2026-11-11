@@ -510,5 +510,5 @@ export {
   dotNotationNameGenerator,
 };
 
-/** @testSeam Only other packages' tests import these, to find the ids RJSF generates */
+/** @public Ids RJSF renders that no other RJSF package's source needs, by which consumers' code and tests find those parts */
 export { optionDescriptionId, optionHelpId, selectedOptionDescriptionId } from './idGenerators.ts';

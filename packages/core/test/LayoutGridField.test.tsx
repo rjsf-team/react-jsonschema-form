@@ -662,7 +662,7 @@ function stringifyProps(props: Pick<Partial<FieldProps>, 'uiSchema' | 'registry'
   // Keys sorted, so props built in a different order compare equal and a failure still reads as the props
   return JSON.stringify({ ...otherProps, otherUIOptions }, (_key, value: unknown) =>
     value && typeof value === 'object' && !Array.isArray(value)
-      ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => (a < b ? -1 : 1)))
+      ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)))
       : value,
   );
 }
