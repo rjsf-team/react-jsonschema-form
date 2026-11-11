@@ -1707,18 +1707,65 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         ['a', undefined, 'a'],
       );
     });
-    it.each<{ type: RJSFSchema['type'] }>([{ type: ['object', 'array'] }, { type: ['array', 'object'] }])(
-      'keeps an array item under $type items an array, rather than an object of their properties',
-      ({ type }) => {
-        const items: RJSFSchema = { type, properties: { a: {} }, items: { type: 'number' } };
-        const schema: RJSFSchema = { type: 'array', items };
-        const objects: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: {} } } };
-        expect(schemaUtils.sanitizeDataForNewSchema(schema, { ...schema, title: 'Old' }, [[1, 2]])).toStrictEqual([
-          [1, 2],
-        ]);
-        expect(schemaUtils.sanitizeDataForNewSchema(schema, objects, [[1, 2]])).toStrictEqual([[1, 2]]);
-      },
-    );
+    it.each<{ type: RJSFSchema['type'] }>([
+      { type: ['object', 'array'] },
+      { type: ['string', 'array'] },
+      { type: ['array', 'object'] },
+    ])('sanitizes an array item or property under $type as an array, without the properties beside it', ({ type }) => {
+      const list = (items: RJSFSchema): RJSFSchema => ({ type, properties: { a: {} }, items });
+      const strings = list({ type: 'string' });
+      const numbers = list({ type: 'number' });
+      const rows = (items: RJSFSchema): RJSFSchema => ({ type: 'array', items });
+      expect(schemaUtils.sanitizeDataForNewSchema(rows(numbers), rows(strings), [['a']])).toStrictEqual([[]]);
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(rows(numbers), rows({ ...numbers, title: 'Old' }), [[1]]),
+      ).toStrictEqual([[1]]);
+      const holder = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
+      expect(schemaUtils.sanitizeDataForNewSchema(holder(numbers), holder(strings), { value: ['a'] })).toStrictEqual({
+        value: [],
+      });
+    });
+    it('keeps an array item as it is where the old items held no array', () => {
+      const items: RJSFSchema = { type: ['object', 'array'], properties: { a: {} }, items: { type: 'number' } };
+      const objects: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: {} } } };
+      expect(schemaUtils.sanitizeDataForNewSchema({ type: 'array', items }, objects, [['x']])).toStrictEqual([['x']]);
+    });
+    it('prunes an object property under a type list naming array first', () => {
+      const holder = (properties: RJSFSchema['properties']): RJSFSchema => ({
+        type: 'object',
+        properties: { value: { type: ['array', 'object'], properties } },
+      });
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(holder({ a: {} }), holder({ a: {}, b: {} }), { value: { a: 1, b: 2 } }),
+      ).toStrictEqual({ value: { a: 1 } });
+    });
+    it('swaps the old default of an array or type-list object property for the new one, and keeps a readOnly one', () => {
+      const holder = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
+      const list = (extra: RJSFSchema): RJSFSchema => holder({ type: ['string', 'array'], items: {}, ...extra });
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(list({ default: ['y'] }), list({ default: ['x'] }), { value: ['x'] }),
+      ).toStrictEqual({ value: ['y'] });
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(list({ default: ['y'], readOnly: true }), list({}), { value: ['z'] }),
+      ).toStrictEqual({ value: ['z'] });
+      const objects = (type: RJSFSchema['type'], defaultValue: RJSFSchema['default']): RJSFSchema =>
+        holder({ type, properties: { x: {}, y: {} }, default: defaultValue });
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(
+          objects(['string', 'object'], { y: 1 }),
+          objects(['string', 'object'], { x: 1 }),
+          {
+            value: { x: 1 },
+          },
+        ),
+      ).toStrictEqual({ value: { y: 1 } });
+      // An object's `default` the defaults fill in key by key, so the object keeps its own
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(objects('object', { y: 1 }), objects('object', { x: 1 }), {
+          value: { x: 1 },
+        }),
+      ).toStrictEqual({ value: { x: 1 } });
+    });
     it('keeps an object item its enum option lists as it is, rather than filling its absent object properties', () => {
       const schema: RJSFSchema = {
         type: 'array',

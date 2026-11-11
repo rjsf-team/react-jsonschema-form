@@ -2128,6 +2128,11 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
   const ABSENT = Symbol('absent');
   const typedItems = (type: 'string' | 'number' | 'integer'): RJSFSchema => ({ type: 'array', items: { type } });
   const prefix = (...prefixItems: (RJSFSchema | boolean)[]): RJSFSchema => ({ type: 'array', prefixItems });
+  const TYPE_LISTS_NAMING_ARRAY: RJSFSchema['type'][] = [
+    ['object', 'array'],
+    ['string', 'array'],
+    ['array', 'object'],
+  ];
   it.each<{
     name: string;
     from: RJSFSchema;
@@ -2409,6 +2414,20 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
       data: [[1, 2]],
       expected: [[1, 2]],
     },
+    ...TYPE_LISTS_NAMING_ARRAY.map((type) => ({
+      name: `sanitizes an array item under ${JSON.stringify(type)} items as an array`,
+      from: { type: 'array', items: { type, properties: { a: {} }, items: { type: 'string' } } } satisfies RJSFSchema,
+      to: { type: 'array', items: { type, properties: { a: {} }, items: { type: 'number' } } } satisfies RJSFSchema,
+      data: [['a', 'b']],
+      expected: [[]],
+    })),
+    {
+      name: 'sanitizes an array item as an array where its items become a type list naming object first',
+      from: { type: 'array', items: { type: 'array', items: { type: 'string' } } },
+      to: { type: 'array', items: { type: ['object', 'array'], properties: { a: {} }, items: { type: 'number' } } },
+      data: [['x']],
+      expected: [[]],
+    },
   ])('$name', ({ from, to, data, expected, formExpected = expected }) => {
     const wrap = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
     const ref = createRef<FormRef<{ list?: unknown }>>();
@@ -2421,5 +2440,73 @@ describe('sanitizing an array as sanitizeDataForNewSchema() does (#5786)', () =>
     expect(Object.hasOwn(formData, 'list') ? formData.list : ABSENT).toEqual(formExpected);
     const sanitized = createSchemaUtils({ validator }, to).sanitizeDataForNewSchema(to, from, data);
     expect(sanitized === undefined ? ABSENT : sanitized).toEqual(expected);
+  });
+  // A property under a type list is sanitized through the object holding it, as the array table's items are through the
+  // array, where the top-level call would read the list through `getSchemaType()` alone
+  it.each<{ name: string; from: RJSFSchema; to: RJSFSchema; data: unknown; expected: unknown }>([
+    ...TYPE_LISTS_NAMING_ARRAY.map((type) => ({
+      name: `sanitizes an array property under ${JSON.stringify(type)} as an array`,
+      from: { type, properties: { a: {} }, items: { type: 'string' } } satisfies RJSFSchema,
+      to: { type, properties: { a: {} }, items: { type: 'number' } } satisfies RJSFSchema,
+      data: ['a', 'b'],
+      expected: [],
+    })),
+    ...(['array', 'string'] as const).map((first) => ({
+      name: `prunes an object property under a type list naming ${first} first`,
+      from: { type: [first, 'object'], title: 'Old', properties: { a: {}, b: {} } } satisfies RJSFSchema,
+      to: { type: [first, 'object'], title: 'New', properties: { a: {} } } satisfies RJSFSchema,
+      data: { a: 1, b: 2 },
+      expected: { a: 1 },
+    })),
+    ...(['array', ['string', 'array']] satisfies RJSFSchema['type'][]).flatMap((type) => [
+      {
+        name: `swaps the old default of an array property under ${JSON.stringify(type)} for the new one`,
+        from: { type, items: { type: 'string' }, default: ['x'] } satisfies RJSFSchema,
+        to: { type, items: { type: 'string' }, default: ['y'] } satisfies RJSFSchema,
+        data: ['x'],
+        expected: ['y'],
+      },
+      {
+        name: `keeps an array property under ${JSON.stringify(type)} a readOnly new default differs from`,
+        from: { type, items: { type: 'string' } } satisfies RJSFSchema,
+        to: { type, items: { type: 'string' }, default: ['y'], readOnly: true } satisfies RJSFSchema,
+        data: ['z'],
+        expected: ['z'],
+      },
+    ]),
+    {
+      name: 'swaps the old default of an object property under a type list rendered as another type',
+      from: { type: ['string', 'object'], properties: { x: {}, y: {} }, default: { x: 1 } },
+      to: { type: ['string', 'object'], properties: { x: {}, y: {} }, default: { y: 1 } },
+      data: { x: 1 },
+      expected: { y: 1 },
+    },
+    {
+      name: 'replaces an object an enum under a type list rendered as a string no longer lists',
+      from: { type: ['string', 'object'], properties: { a: {} }, enum: [{ a: 1 }, 'x'] },
+      to: { type: ['string', 'object'], properties: { a: {} }, enum: [{ a: 2 }, 'x'], default: 'x' },
+      data: { a: 1 },
+      expected: 'x',
+    },
+    {
+      name: 'replaces an array an enum under a type list rendered as a string no longer lists',
+      from: { type: ['string', 'array'], items: {}, enum: [['a'], 'x'] },
+      to: { type: ['string', 'array'], items: {}, enum: [['b'], 'x'], default: 'x' },
+      data: ['a'],
+      expected: 'x',
+    },
+  ])('$name', ({ from, to, data, expected }) => {
+    const wrap = (value: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { value } });
+    const ref = createRef<FormRef<{ value?: unknown }>>();
+    const props = { validator, initialFormData: { value: data } };
+    const { rerender } = render(<Form ref={ref} schema={wrap(from)} {...props} />);
+
+    rerender(<Form ref={ref} schema={wrap(to)} {...props} />);
+
+    expect(handleOf(ref).getFormData()).toEqual({ value: expected });
+    const sanitized = createSchemaUtils({ validator }, wrap(to)).sanitizeDataForNewSchema(wrap(to), wrap(from), {
+      value: data,
+    });
+    expect(sanitized).toEqual({ value: expected });
   });
 });
