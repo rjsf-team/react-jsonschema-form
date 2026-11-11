@@ -8,6 +8,7 @@ import type {
   RJSFValidationError,
 } from '@rjsf/utils';
 import {
+  additionalKeyId,
   buttonId,
   callWithDeferredThrow,
   deepEqualsUndefinedAsMissing,
@@ -139,8 +140,12 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
  * whose id starts with `childPrefix` and isn't one of this field's parts, or holding its own add button, as a theme's
  * `div` group does, empty or not, and a widget's group, holding only other parts, doesn't; and where no element carries
  * the id, the first native input or button standing in for one whose id is a part of the field's, as radio buttons' and
- * checkboxes' are. A part's id, unlike any id that merely starts with the field's, can't be a sibling field's, such as
- * `root_when_year` beside `root_when`
+ * checkboxes' are, or, on the way into the field, the first control after the key input that renaming the field was
+ * typed into whose id is a part of the field's or a field's inside it, such as an option selector, as under a custom
+ * template that draws no group. A part's id, unlike any id that merely starts with the field's, can't be a sibling
+ * field's, such as `root_when_year` beside `root_when`, which on the way in only the key input's place keeps out: one
+ * rendered before it is passed over, and one after it is reached only when the field holds nothing that takes focus.
+ * A field renamed onto a declared property has no key input, so only its parts are searched
  *
  * @param formElement - The form searched
  * @param exact - The element carrying the field's id, if any
@@ -148,8 +153,8 @@ function findElement<E extends Element>(elements: NodeListOf<E>, matches: (eleme
  * @param childPrefix - What the id of a field inside this one starts with: its id and the `idSeparator`
  * @param tried - The elements already tried, which aren't tried again
  * @param view - The window of the form
- * @param entersContainer - Whether a container is searched too, for focus on its way into the field
- *   rather than an error about the container itself
+ * @param entersContainer - Whether a container is searched too, for focus on its way into the field after a rename of
+ *   its key rather than an error about the container itself
  */
 function focusForId(
   formElement: Element,
@@ -174,12 +179,27 @@ function focusForId(
     }
     return;
   }
+  const elements = entersContainer ? formElement.querySelectorAll('[id]') : undefined;
+  const keyId = additionalKeyId(elementId);
+  const keyInput = elements && findElement(elements, ({ id }) => id === keyId);
+  if (!elements || !keyInput) {
+    findElement(
+      formElement.querySelectorAll('input[id], button[id]'),
+      // A container's add button stands in for none of its controls, so its own error doesn't focus it either
+      (element) =>
+        element.id.startsWith(partPrefix) &&
+        (entersContainer || element.id !== addId) &&
+        !tried.has(element) &&
+        takesFocus(element, view),
+    );
+    return;
+  }
   findElement(
-    formElement.querySelectorAll('input[id], button[id]'),
-    // A container's add button stands in for none of its controls, so its own error doesn't focus it either
+    elements,
     (element) =>
-      element.id.startsWith(partPrefix) &&
-      (entersContainer || element.id !== addId) &&
+      (element.id.startsWith(partPrefix) || element.id.startsWith(childPrefix)) &&
+      // Comparing the key input with itself gives 0, so it is passed over too
+      keyInput.compareDocumentPosition(element) === view.Node.DOCUMENT_POSITION_FOLLOWING &&
       !tried.has(element) &&
       takesFocus(element, view),
   );

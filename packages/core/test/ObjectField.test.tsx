@@ -1505,6 +1505,69 @@ describe('ObjectField', () => {
       expect(elementOf(node, '#root_b')).toHaveFocus();
     });
 
+    // The template draws no element carrying the object's id, so only its key input and its fields' controls are found
+    it.each<[string, RJSFSchema, string]>([
+      ['an input', { type: 'object', properties: { inner: { type: 'string' } } }, '#root_b_inner'],
+      ['a select', { type: 'object', properties: { inner: { type: 'string', enum: ['x', 'y'] } } }, '#root_b_inner'],
+      [
+        'its option selector',
+        {
+          anyOf: [
+            { title: 'one', type: 'object', properties: { inner: { type: 'string' } } },
+            { title: 'two', type: 'object', properties: { other: { type: 'string' } } },
+          ],
+        },
+        '#root_b__anyof_select',
+      ],
+    ])(
+      'should move focus past the key input to %s in an object value a template remounts by keying its rows by name',
+      async (_, value, focused) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', additionalProperties: value },
+          templates: { ObjectFieldTemplate: RowsKeyedByName },
+          initialFormData: { a: { inner: 'x' } },
+        });
+
+        await renameKey(node, 'a', 'b');
+
+        expect(elementOf(node, focused)).toHaveFocus();
+      },
+    );
+
+    it('should move focus into a renamed object value a template remounts, not a field before it named after its key', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { b_x: { type: 'string' } },
+          additionalProperties: { type: 'object', properties: { inner: { type: 'string' } } },
+        },
+        templates: { ObjectFieldTemplate: RowsKeyedByName },
+        initialFormData: { b_x: 'y', a: { inner: 'x' } },
+      });
+
+      await renameKey(node, 'a', 'b');
+
+      expect(elementOf(node, '#root_b_inner')).toHaveFocus();
+    });
+
+    // A declared property has no key input to tell its fields from a sibling's named after it, so focus stays on the page
+    it('should not move focus to a field named after a declared object a template remounts a key renamed onto', async () => {
+      const objectValue: RJSFSchema = { type: 'object', properties: { inner: { type: 'string' } } };
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { b_x: { type: 'string' }, b: objectValue },
+          additionalProperties: objectValue,
+        },
+        templates: { ObjectFieldTemplate: RowsKeyedByName },
+        initialFormData: { b_x: 'y', a: { inner: 'x' } },
+      });
+
+      await renameKey(node, 'a', 'b');
+
+      expect(document.body).toHaveFocus();
+    });
+
     const dateSchema: RJSFSchema = {
       type: 'object',
       properties: { end: { type: 'string', format: 'date', title: 'End date' }, note: { type: 'string' } },
