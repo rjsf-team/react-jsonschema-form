@@ -563,6 +563,28 @@ describe('SchemaField', () => {
         expect(onSubmit).toHaveBeenCalled();
       });
 
+      it('should require nothing of the object a number picked for an array item left, over the null it clears to', async () => {
+        const { node, onError } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              list: { type: 'array', items: { type: ['object', 'number'], properties: { a: { type: 'string' } } } },
+            },
+          },
+          uiSchema: { list: { items: { a: { 'ui:required': true } } } },
+          initialFormData: { list: [{}] },
+          useFallbackUiForUnsupportedType: true,
+          noHtml5Validate: true,
+        });
+        await pickType(node, 'root_list_0', 'number');
+        await submitForm(node, user);
+
+        expect(typeOf(node, 'root_list_0')).toBe('number');
+        expect(onError).toHaveBeenLastCalledWith(
+          expect.not.arrayContaining([expect.objectContaining({ property: '.list.0.a' })]),
+        );
+      });
+
       describe('with anyOf options that offer types of their own', () => {
         const optionsForm = (anyOf: RJSFSchema[]) =>
           createFormComponent({

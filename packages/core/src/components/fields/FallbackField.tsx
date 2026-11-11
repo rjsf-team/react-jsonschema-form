@@ -1,4 +1,4 @@
-import { use, useCallback, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { use, useCallback, useLayoutEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import type {
   ErrorSchema,
   FallbackFieldProps,
@@ -206,6 +206,26 @@ function keptTypeIn(setup: FallbackTypeSetup, kept: KeptFallbackType | undefined
 }
 
 /**
+ * Whether `formData` is the echo of a clear `kept` says the field sent itself
+ * @param kept - What the form keeps for the selector
+ * @param formData - The field's form data
+ * @param clearedValue - What the field's container stores its value as once it is cleared, see `storedValue()`
+ */
+function isOwnClearEcho(kept: KeptFallbackType | undefined, formData: unknown, clearedValue: unknown) {
+  return kept?.clear === true && Object.is(formData, clearedValue);
+}
+
+/**
+ * Whether a value the field sends is a clear: one its container stores as it stores a clear
+ * @param value - The value the field sends
+ * @param clearedValue - What the field's container stores its value as once it is cleared, see `storedValue()`, which
+ *   stores any value but `undefined` as it is
+ */
+function isClearOf(value: unknown, clearedValue: unknown) {
+  return clearedValue !== undefined && (value === undefined || Object.is(value, clearedValue));
+}
+
+/**
  * Determines the type the selector is on: the one it was last on while the data is still what the field of that type
  * shows, and otherwise the type the data starts it on. The types on offer change with the schema — a `dependencies` or
  * `oneOf` branch switch can replace them wholesale — so a selection the schema no longer allows gives way to the type
@@ -273,11 +293,13 @@ export function fallbackUiType<T, S extends StrictRJSFSchema, F extends FormCont
 ): JSONSchema7TypeName {
   const { widget, emptyValue } = getUiOptions<T, S, F>(uiSchema);
   const setup = fallbackTypeSetup<T, S, F>(schema, widget, registry.widgets, depth);
+  const kept = uiState.fallbackType(fieldPath, setup.selector);
+  const clearedValue = storedValue<unknown>(undefined, fieldPath, hasSchemaMarker(schema, ADDITIONAL_PROPERTY_FLAG));
   return getShownType(
     setup,
     formData,
-    keptTypeIn(setup, uiState.fallbackType(fieldPath, setup.selector)),
-    false,
+    keptTypeIn(setup, kept),
+    isOwnClearEcho(kept, formData, clearedValue),
     emptyValue,
   );
 }
@@ -495,53 +517,54 @@ function FallbackUiField<
   // `ObjectField` store a change with, so a container that stores a clear its own way doesn't echo this value back,
   // and the selector then follows that data as it follows any other
   const clearedValue = storedValue<unknown>(undefined, fieldPath, isAdditionalEntry);
-  // A clear this field sent itself, from its input or by a switch to a type the value has no reading in, arrives back
-  // as `clearedValue`. The same value put there from outside the field, by `setFieldValue()`, `reset()` or a container
-  // keeping it as data, is data like any other, which the selector follows. So the clear is remembered, with the data
-  // it was sent over, only until data other than its echo arrives, using React's "store information from previous
-  // renders" pattern. Only a clear is remembered: any other value the field sends is data the selector reads as it
-  // reads data from outside. A value the container stores as it stores a clear, such as a widget's own `''` in an entry,
-  // is a clear too
-  const [ownClear, setOwnClear] = useState<{ over: unknown }>();
-  if (ownClear && !Object.is(formData, ownClear.over)) {
-    setOwnClear(Object.is(formData, clearedValue) ? { over: formData } : undefined);
-  }
-  // Read by `sendOwnValue` rather than closed over: a handler that changed with the data would hand the value field a
-  // new `onChange` on every edit, re-rendering every property of an `object` below it. Written from a layout Effect of
-  // every commit, so the handler reads the data the last commit showed, which is what render compares `over` with
-  const renderedFormData = useRef<unknown>(formData);
-  useLayoutEffect(() => {
-    renderedFormData.current = formData;
-  });
-  const sendOwnValue = useCallback(
-    (value: unknown, changedFieldPath: FieldPath, errorSchema?: ErrorSchema<T>, changedId?: string) => {
-      if (changedFieldPath === fieldPath) {
-        const isClear =
-          clearedValue !== undefined && Object.is(storedValue(value, fieldPath, isAdditionalEntry), clearedValue);
-        setOwnClear(isClear ? { over: renderedFormData.current } : undefined);
-      }
-      onChange(value, changedFieldPath, errorSchema, changedId);
-    },
-    [fieldPath, clearedValue, isAdditionalEntry, onChange, setOwnClear],
-  );
-  const isOwnClear = ownClear !== undefined && Object.is(formData, clearedValue);
   // Lives as long as this field does, an `<Activity>` hiding it included, so a field mounting at this path later starts
   // on the type its data starts it on rather than on one kept for the field before it. The form's ui:required check
   // reads the kept type whoever kept it, since a hidden field still holds its pick
   // oxlint-disable-next-line react/hook-use-state
   const [owner] = useState(() => ({}));
+  // A clear this field sent itself, from its input or by a switch to a type the value has no reading in, arrives back
+  // as `clearedValue`. The same value put there from outside the field, by `setFieldValue()`, `reset()` or a container
+  // keeping it as data, is data like any other, which the selector follows. So the clear is remembered, with the data
+  // it was sent over, only until data other than its echo arrives. Only a clear is remembered: any other value the
+  // field sends is data the selector reads as it reads data from outside. A value the container stores as it stores a
+  // clear, such as a widget's own `''` in an entry, is a clear too. The form keeps it beside the type, so the
+  // ui:required check reads the clear's echo as the field does. `sendOwnValue` reads the data the clear is sent over
+  // from there too rather than closing over it: a handler that changed with the data would hand the value field a new
+  // `onChange` on every edit, re-rendering every property of an `object` below it
+  const sendOwnValue = useCallback(
+    (value: unknown, changedFieldPath: FieldPath, errorSchema?: ErrorSchema<T>, changedId?: string) => {
+      const kept = uiState.fallbackType(fieldPath, selector);
+      if (changedFieldPath === fieldPath && kept?.owner === owner) {
+        uiState.keepFallbackType(fieldPath, selector, { ...kept, clear: isClearOf(value, clearedValue) });
+      }
+      onChange(value, changedFieldPath, errorSchema, changedId);
+    },
+    [fieldPath, selector, owner, clearedValue, onChange, uiState],
+  );
   // The shown type rather than the kept one, which is the same once the effect below keeps it, so keeping it is no
   // change of the store for React to render again for
   const readShownType = () => {
     const kept = uiState.fallbackType(fieldPath, selector);
-    const selectedType = kept?.owner === owner ? keptTypeIn(setup, kept) : undefined;
-    return getShownType(setup, formData, selectedType, isOwnClear, uiOptions.emptyValue);
+    const own = kept?.owner === owner ? kept : undefined;
+    return getShownType(
+      setup,
+      formData,
+      keptTypeIn(setup, own),
+      isOwnClearEcho(own, formData, clearedValue),
+      uiOptions.emptyValue,
+    );
   };
   const type = useSyncExternalStore(uiState.subscribe, readShownType, readShownType);
   // Keeping the type the selector is showing stops a selection the user can no longer see from coming back: with the old
-  // one still kept, clearing the value would swap the field out for the type the data used to have
+  // one still kept, clearing the value would swap the field out for the type the data used to have. A clear stays while
+  // the data is the data it was sent over or its echo, so the first data of any other value drops it
   useLayoutEffect(() => {
-    uiState.keepFallbackType(fieldPath, selector, { type, typeList, owner });
+    const kept = uiState.fallbackType(fieldPath, selector);
+    const clear =
+      kept?.owner === owner &&
+      kept.clear === true &&
+      (Object.is(formData, kept.rendered) || Object.is(formData, clearedValue));
+    uiState.keepFallbackType(fieldPath, selector, { type, typeList, owner, rendered: formData, clear });
   });
 
   const typesOptionSchema = useMemo(
@@ -620,10 +643,19 @@ function FallbackUiField<
   const onTypeChange = (newType: T | undefined) => {
     const selected = types.find((aType) => aType === newType);
     if (selected) {
-      uiState.selectFallbackType(fieldPath, selector, { type: selected, typeList, owner });
+      const value = castToNewType(formData, selected, clearedValue === undefined);
+      // Kept with the type, so the render the pick starts reads the clear a switch to a type the value has no reading
+      // in sends, even where the data stays as it was
+      uiState.selectFallbackType(fieldPath, selector, {
+        type: selected,
+        typeList,
+        owner,
+        rendered: formData,
+        clear: isClearOf(value, clearedValue),
+      });
       // The errors raised against the old value describe a type it no longer has, so an empty raise takes them off:
       // passing none would leave them standing
-      sendOwnValue(castToNewType(formData, selected, clearedValue === undefined), fieldPath, {}, id);
+      onChange(value, fieldPath, {}, id);
     }
   };
 

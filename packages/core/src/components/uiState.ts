@@ -359,6 +359,10 @@ export interface KeptFallbackType {
   /** The types the selector offered, so a schema that swaps them for others and back doesn't bring the type back */
   readonly typeList: string;
   readonly owner: object;
+  /** The data the field last rendered, which a clear it sends is sent over */
+  readonly rendered?: unknown;
+  /** Whether the field sent a clear itself over `rendered`, which keeps the type over the clear's echo */
+  readonly clear?: boolean;
 }
 
 /** The selections and expansions of a form at one moment, see `save()` */
