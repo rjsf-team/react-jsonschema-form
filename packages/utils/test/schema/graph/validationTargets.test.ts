@@ -1325,6 +1325,75 @@ describe('scoringTarget()', () => {
       });
       expect([first, second]).toMatchObject([{ $id: `?rjsf-copy=${aa}` }, { $id: `?rjsf-copy=${bb}` }]);
     });
+    describe('a part whose copy names a subschema on the way to it', () => {
+      // `X` and `Y` each apply the other, so the copy of either made on the way from the other names that other
+      const refTo = (name: string) => ({ $ref: `#/definitions/${name}` });
+      const choice: RJSFSchema = {
+        oneOf: [
+          { type: 'object', properties: { next: refTo('R'), x: { type: 'string' } } },
+          { type: 'object', properties: { next: refTo('R'), y: { type: 'number' } } },
+        ],
+      };
+      const external = { $ref: 'https://example.com/external.json' };
+      const definitions: Record<string, RJSFSchema> = {
+        R: choice,
+        X: { allOf: [refTo('Y'), external], properties: { c: refTo('R') } },
+        Y: { allOf: [refTo('X')], properties: { d: { type: 'string' } } },
+      };
+      it('copies a part the same whichever path reaches it first', () => {
+        const first = scored({ definitions, oneOf: [{ properties: { p: refTo('X'), q: refTo('Y') } }] }, '/oneOf/0');
+        const second = scored({ definitions, oneOf: [{ properties: { q: refTo('Y'), p: refTo('X') } }] }, '/oneOf/0');
+        expect(first).toEqual(second);
+        // Each copy of the two names the other where the path to it runs through that other
+        const cut = { $ref: '?rjsf-copy=71494091' };
+        const namedExternal = { $ref: '#/definitions/X/allOf/1' };
+        const d = { $ref: '#/definitions/Y/properties/d' };
+        expect(first).toEqual({
+          allOf: [
+            {
+              properties: {
+                p: {
+                  allOf: [
+                    {
+                      properties: { c: cut },
+                      allOf: [{ allOf: [{ properties: { d }, allOf: [{ allOf: [refTo('X')] }] }] }, namedExternal],
+                    },
+                  ],
+                },
+                q: {
+                  allOf: [
+                    {
+                      properties: { d },
+                      allOf: [{ allOf: [{ properties: { c: cut }, allOf: [{ allOf: [refTo('Y')] }, namedExternal] }] }],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          definitions: { 71494091: { $id: '?rjsf-copy=71494091', allOf: [{ type: 'object' }] } },
+        });
+      });
+      it('holds a part it writes once that holds a $ref under an allOf of its resource', () => {
+        const target = scored(
+          { definitions, oneOf: [{ required: ['z'], allOf: [refTo('X'), refTo('Y')], properties: { z: {} } }] },
+          '/oneOf/0',
+        );
+        expect(Object.values(target.definitions ?? {})).toContainEqual({
+          $id: expect.stringMatching(/^\?rjsf-copy=/),
+          allOf: [external],
+        });
+      });
+    });
+    it('keeps the values of the root a part it writes once holds as they are', () => {
+      const { root } = chainedDefinitions(1);
+      const fallback = { leaf: 'leaf' };
+      const last = root.definitions?.L1;
+      const L1: RJSFSchema = { ...(isObject(last) ? last : {}), default: fallback };
+      const target = scored({ ...root, definitions: { ...root.definitions, L1 } }, '/oneOf/0');
+      const [shared] = Object.values(target.definitions ?? {});
+      expect(isObject(shared) ? shared.default : undefined).toBe(fallback);
+    });
   });
 });
 

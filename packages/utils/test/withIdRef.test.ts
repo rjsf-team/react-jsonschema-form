@@ -115,7 +115,7 @@ describe('withRootIdRefPrefix()', () => {
     const notASchema: RJSFSchema = JSON.parse('"root"');
     expect(withRootIdRefPrefix({ $ref: '#/a' }, notASchema)).toEqual({ $ref: `${ROOT_SCHEMA_PREFIX}#/a` });
   });
-  it('leaves a $ref naming a resource the schema handed over holds below its top as written, and names the root by a local one inside it', () => {
+  it('leaves a $ref to a part a scoring target holds once as written, and names the root by a local one inside it', () => {
     const root: RJSFSchema = { $id: 'https://example.com/schemas/root.json' };
     const schema: RJSFSchema = {
       $id: 'top.json',
@@ -161,6 +161,13 @@ describe('withRootIdRefPrefix()', () => {
         },
       },
       const: { $ref: '?rjsf-copy=1' },
+    });
+  });
+  it('resolves a relative $ref to a resource the schema handed over holds against the root, as any other', () => {
+    const root: RJSFSchema = { $id: 'https://example.com/root.json', $defs: { item: { $id: 'item.json' } } };
+    const schema: RJSFSchema = { properties: { a: { $id: 'item.json', type: 'string' }, b: { $ref: 'item.json' } } };
+    expect(withRootIdRefPrefix(schema, root)).toEqual({
+      properties: { a: { $id: 'item.json', type: 'string' }, b: { $ref: 'https://example.com/item.json' } },
     });
   });
   describe('a $ref the root holds below an $id of its own', () => {

@@ -3,8 +3,9 @@ import isObject from './isObject.ts';
 import parseSchemaGraph from './schema/graph/parseSchemaGraph.ts';
 import type { AdoptedSchema, SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
 import { readProvenance } from './schema/graph/provenance.ts';
+import { SHARED_COPY_ID } from './schema/graph/validationTargets.ts';
 import { declaringSeed } from './schema/retrieveSchema.ts';
-import { isSubschemaKeyword, keywordShape, normalizeUri, resolveUri } from './schemaUri.ts';
+import { isSubschemaKeyword, keywordShape, resolveUri } from './schemaUri.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** How `prefixRefs()` rewrites the `$ref`s of a schema handed to a validator beside the root */
@@ -15,47 +16,6 @@ interface RefRewrite {
    * a `$ref` there against, or undefined where it is to hold its own, prefixed as written
    */
   readonly nestedRef?: (holder: object, scope: string) => string | undefined;
-  /** The documents named by the resources the handed schema holds below its top, see `nestedResources()` */
-  readonly nested?: ReadonlySet<string>;
-}
-
-/** Returns the URI `uri` names its document by, for comparing it with another: what precedes its fragment, normalized */
-function documentOf(uri: string): string {
-  return normalizeUri(uri.split('#', 1)[0]);
-}
-
-/** Returns the base the validator resolves a `$ref` in the schema `node` against: its own `$id`, a fragment aside,
- * resolved against the base `outerScope` around it, or that base
- */
-function scopeIn(node: GenericObjectType, outerScope: string): string {
-  const ownId: unknown = node[ID_KEY];
-  return typeof ownId === 'string' && !ownId.startsWith('#') ? resolveUri(outerScope, ownId) : outerScope;
-}
-
-/** Returns the documents named by the resources `schemaNode` holds below its top, the subschemas carrying an `$id` of
- * their own, as a scoring target holds the parts it names once, see `scoringTarget()`
- */
-function nestedResources(schemaNode: unknown): ReadonlySet<string> {
-  const documents = new Set<string>();
-  const visit = (node: unknown, outerScope: string, top = false) => {
-    if (Array.isArray(node)) {
-      node.forEach((item) => visit(item, outerScope));
-    } else if (isObject(node)) {
-      const scope = scopeIn(node, outerScope);
-      if (!top && scope !== outerScope) {
-        documents.add(documentOf(scope));
-      }
-      for (const [key, value] of Object.entries(node)) {
-        if (isSubschemaKeyword(key)) {
-          (isObject(value) && keywordShape(key, value) === 'map' ? Object.values(value) : [value]).forEach((sub) =>
-            visit(sub, scope),
-          );
-        }
-      }
-    }
-  };
-  visit(schemaNode, '', true);
-  return documents;
 }
 
 /** Returns the `$ref` naming the subschema at the JSON `pointer` in the root, encoded as `encodeURI()` encodes it,
@@ -170,7 +130,9 @@ function withIdRefPrefixObject(
   isData: boolean,
 ): GenericObjectType {
   const realObj: GenericObjectType = node;
-  const scope = isData ? outerScope : scopeIn(realObj, outerScope);
+  const ownId: unknown = realObj[ID_KEY];
+  const scope =
+    !isData && typeof ownId === 'string' && !ownId.startsWith('#') ? resolveUri(outerScope, ownId) : outerScope;
   const nestedRef = isData ? undefined : rewrite.nestedRef?.(holder, scope);
   for (const key in realObj) {
     /* v8 ignore next -- spread in caller guarantees only own properties reach this loop */
@@ -178,9 +140,9 @@ function withIdRefPrefixObject(
       const value = realObj[key];
       if (key === REF_KEY && typeof value === 'string') {
         if (!isData) {
-          // A `$ref` naming a resource the handed schema holds by its URI resolves into it whatever the root is
-          // registered under, so it is left as written
-          if (value.startsWith('#') || !rewrite.nested?.has(documentOf(resolveUri(scope, value)))) {
+          // A `$ref` to a part a scoring target holds once names it by the `$id` the target gives it, which
+          // resolves inside the target whatever the root is registered under, so it is left as written
+          if (!value.startsWith(SHARED_COPY_ID)) {
             realObj[key] = nestedRef ?? rootRef(value, rewrite.base, scope);
           }
         } else if (value.startsWith('#')) {
@@ -269,7 +231,6 @@ export function withRootIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
   return prefixRefs<S>(schemaNode, {
     base,
     nestedRef: isObject(rootSchema) ? nestedRefOf(parseSchemaGraph<S>(rootSchema), base) : undefined,
-    nested: nestedResources(schemaNode),
   });
 }
 
