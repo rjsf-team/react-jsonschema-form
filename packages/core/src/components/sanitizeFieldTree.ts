@@ -37,7 +37,9 @@ import {
 
 import { copyAlongPath, isPathPrefix } from './dataPaths.ts';
 import type { FieldEdit } from './formState.ts';
-import type { KeyMove } from './keyMove.ts';
+import { clearsIn, emptyValue } from './keepClears.ts';
+import type { ContainerKeyMove, KeyMove } from './keyMove.ts';
+import { moveOfItems } from './keyMove.ts';
 import type { UiStateReader } from './uiState.ts';
 import { asFieldValue, fieldStateOf, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 
@@ -68,10 +70,49 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   /** The previous tree, which a fill of the previous data is made as */
   oldTree: FieldTree<T, S, F>;
   fillAsFirstRender: FirstRenderFill<T, S, F>;
-  /** For a disabled or read-only form, the paths of the only values judged, see `sanitizeFieldTree()`: each key holding
-   * `undefined` and each `null` item the form recorded as a clear
-   */
-  judgedClears: readonly FieldPathList[] | undefined;
+  /** For a disabled or read-only form, the only values judged, see `JudgedClears` */
+  judgedClears: JudgedClears | undefined;
+  /** Where each array the walk dropped items of moved the items it kept, an inner array's before the array holding it */
+  itemMoves: ContainerKeyMove[];
+}
+
+/** The values a disabled or read-only form's sanitize judges, see `sanitizeFieldTree()`: each key holding `undefined`,
+ * whoever left it, and each `null` item the form recorded as a clear
+ */
+export interface JudgedClears {
+  /** The clears the form recorded */
+  recorded: ReadonlySet<FieldPath>;
+  /** The path of each judged value and of each array or object holding one, so the walk skips any other subtree */
+  along: ReadonlySet<FieldPath>;
+}
+
+/** The values a disabled or read-only form's sanitize of `data` judges, see `JudgedClears`
+ *
+ * @param data - The data to sanitize
+ * @param recorded - The clears the form recorded
+ * @returns - The judged values, whose `along` is empty when there is nothing to judge
+ */
+export function judgedClearsIn(data: unknown, recorded: ReadonlySet<FieldPath>): JudgedClears {
+  const along = new Set<FieldPath>();
+  const addAlong = (path: FieldPathList) => {
+    // Longest first: a path already added was added with every path holding it
+    for (let end = path.length; end >= 0; end -= 1) {
+      const at = fieldPathFromList(path.slice(0, end));
+      if (along.has(at)) {
+        return;
+      }
+      along.add(at);
+    }
+  };
+  for (const clear of clearsIn(data, [])) {
+    if (typeof clear[clear.length - 1] === 'string') {
+      addAlong(clear);
+    }
+  }
+  for (const clear of recorded) {
+    addAlong(fieldPathToList(clear));
+  }
+  return { recorded, along };
 }
 
 /** The options a field of the previous tree showed, by each list's `optionListKey()`, at its path in the previous data,
@@ -112,24 +153,8 @@ function judgesAt<T, S extends StrictRJSFSchema, F extends FormContextType>(
 ): boolean {
   return (
     judgedClears === undefined ||
-    (value === (isItem ? null : undefined) &&
-      judgedClears.some((clear) => clear.length === path.length && isPathPrefix(path, clear)))
+    (value === emptyValue(isItem) && (!isItem || judgedClears.recorded.has(fieldPathFromList(path))))
   );
-}
-
-/** The paths of the keys holding `undefined` in `value`, at `path`, those of its items and keys included: in a disabled
- * or read-only form, these are judged as an enabled form judges them, whoever left them without a value
- */
-export function undefinedKeysIn(value: unknown, path: FieldPathList = []): FieldPathList[] {
-  if (!Array.isArray(value) && !isPlainObject(value)) {
-    return [];
-  }
-  const isArray = Array.isArray(value);
-  return Object.keys(value).flatMap((key) => {
-    const at = [...path, isArray ? Number(key) : key];
-    const child: unknown = Reflect.get(value, key);
-    return !isArray && child === undefined ? [at] : undefinedKeysIn(child, at);
-  });
 }
 
 /** Where the value of each key of the array or object at `path` was before the change: under the key the change moved
@@ -556,7 +581,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   } = pair;
   const { judgedClears } = ctx;
   // Only the keys holding `undefined` and the recorded clears are judged, so a subtree holding neither keeps every value
-  if (judgedClears && !judgedClears.some((clear) => isPathPrefix(path, clear))) {
+  if (judgedClears && !judgedClears.along.has(fieldPathFromList(path))) {
     return newValue;
   }
   const keepsShape = judgedClears !== undefined;
@@ -662,6 +687,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // An item at a position the new schema allows none at, or a prefix item it rejects, clears the array, as
     // `sanitizeDataForNewSchema()` clears it, unless it is at or past `maxItems`, where sanitize stops
     let rejectsArray = false;
+    // An item kept as it was, or an array kept or removed whole, moves none of the items inside it
+    const movesBefore = ctx.itemMoves.length;
     const previousKeyOf = previousKeys(ctx, path, oldValue, { items: newValue, isTuple: prefixLength > 0 });
     // Read slot by slot, so a hole a write past the array's end left keeps its place rather than being skipped
     const items = Array.from(newValue, (item: unknown, index) => {
@@ -686,6 +713,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         Array.isArray(oldValue) && previousIndex !== undefined && Number(previousIndex) < oldValue.length;
       // An item no previous one moved to, such as a copy or a new row, is judged as holding what it holds now under
       // the old tree's item at its index, so a change that flips the constraints of the rows judges it as it judges them
+      const itemMovesBefore = ctx.itemMoves.length;
       const judged = walk(
         ctx,
         {
@@ -717,6 +745,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
         index >= limit ||
         (typeof oldItem === 'object' && constrainsItemAlike(ctx, oldItem, newItem, item))
       ) {
+        ctx.itemMoves.splice(itemMovesBefore);
         return item;
       }
       rejectsArray = true;
@@ -725,10 +754,23 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // A cleared array is removed, or kept as it is where it is an item of another array, as `sanitizeDataForNewSchema()`
     // keeps an inner array its sanitize clears
     if (rejectsArray) {
+      ctx.itemMoves.splice(movesBefore);
       return isItem ? newValue : DROP;
     }
     const kept = items.filter((item) => item !== DROP);
     const bounded = kept.length > bound ? kept.slice(0, bound) : kept;
+    if (kept.length < items.length) {
+      // The items after a dropped one move down, and what the form keeps by path of them moves with them
+      let next = 0;
+      const newIndexes = items.map((item) => {
+        if (item === DROP) {
+          return undefined;
+        }
+        next += 1;
+        return next - 1;
+      });
+      ctx.itemMoves.push({ container: fieldPathFromList(path), newKeyOf: moveOfItems((index) => newIndexes[index]) });
+    }
     return bounded.length === newValue.length && bounded.every((item, index) => item === newValue[index])
       ? newValue
       : bounded;
@@ -747,7 +789,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * changes no field's constraints: the data a switch sends is `formDataForNewOption()`'s. With `judgedClears`, as for a
  * disabled or read-only form, only the keys holding `undefined` and the `null` items the form recorded as clears are
  * judged, by the same rule, so each gives way where it would in an enabled form and every value the data holds, a `null`
- * item the user didn't clear included, stays as it is.
+ * item the user didn't clear included, stays as it is. Dropping an item moves the items after it down, which the result
+ * reports, so the recorded clears stay on their items.
  *
  * @param previous - The previous tree: the schema utilities it is built with, its data, and the root schema retrieved
  *        for that data
@@ -756,8 +799,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * @param fillAsFirstRender - How the form fills data on its first render, which a field's defaults are judged by
  * @param [edit] - The change being made, if any: its path, and where it moved the keys of the array or object there,
  *        so each item or property is paired with its own previous value
- * @param [judgedClears] - The clears the form recorded, to judge only those and the keys holding `undefined`
- * @returns - The sanitized data, sharing everything it left alone with `data`
+ * @param [judgedClears] - For a disabled or read-only form, the only values judged, see `judgedClearsIn()`
+ * @returns - The sanitized data, sharing everything it left alone with `data`, and where each array it dropped items of
+ *   moved the rest, an inner array's first, with the paths of the arrays holding it as they were before
  */
 export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F extends FormContextType>(
   previous: FieldTree<T, S, F>,
@@ -765,8 +809,9 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
   uiState: UiStateReader,
   fillAsFirstRender: FirstRenderFill<T, S, F>,
   edit?: FieldEdit,
-  judgedClears?: ReadonlySet<FieldPath>,
-): T | undefined {
+  judgedClears?: JudgedClears,
+): { formData: T | undefined; itemMoves: ContainerKeyMove[] } {
+  const itemMoves: ContainerKeyMove[] = [];
   const sanitized = walk(
     {
       oldSchemaUtils: previous.schemaUtils,
@@ -777,10 +822,8 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
       oldData: previous.formData,
       oldTree: previous,
       fillAsFirstRender,
-      judgedClears: judgedClears && [
-        ...Array.from(judgedClears, (clear) => fieldPathToList(clear)),
-        ...undefinedKeysIn(next.formData),
-      ],
+      judgedClears,
+      itemMoves,
     },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),
@@ -797,5 +840,5 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
     },
     [],
   );
-  return sanitized === DROP ? undefined : asFieldValue<T>(sanitized);
+  return { formData: sanitized === DROP ? undefined : asFieldValue<T>(sanitized), itemMoves };
 }

@@ -3931,6 +3931,52 @@ describe('clearing a field with a schema default does not re-apply the default (
       );
 
       it.each(['readonly', 'disabled'] as const)(
+        'moves no clear of a %s form onto the item after one a field change drops',
+        async (mode) => {
+          const listOf = (list: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { list } });
+          const { node, rerender, getFormData } = createFormComponent({
+            schema: listOf({ type: 'array', items: { type: 'string' } }),
+            defaultFormStateBehavior,
+            initialFormData: { list: ['typed', null, 'v'] },
+          });
+          await user.clear(elementOf(node, 'input#root_list_0'));
+          rerender({
+            schema: listOf({ type: 'array', items: { type: 'number' } }),
+            defaultFormStateBehavior,
+            [mode]: true,
+          });
+          expect(getFormData()).toEqual({ list: [null, 'v'] });
+
+          rerender({
+            schema: listOf({ type: 'array', items: { type: 'number' }, default: [1, 2] }),
+            defaultFormStateBehavior,
+            [mode]: true,
+          });
+
+          expect(getFormData()).toEqual({ list: [1, 'v'] });
+        },
+      );
+
+      it('keeps a clear on its item when a field change drops an item before it', async () => {
+        const listOf = (values: (string | null)[], extra: RJSFSchema = {}): RJSFSchema => ({
+          type: 'object',
+          properties: { list: { type: 'array', items: { type: ['string', 'null'], enum: values }, ...extra } },
+        });
+        const { node, rerender, getFormData } = createFormComponent({
+          schema: listOf(['a', 'b', 'typed', null]),
+          defaultFormStateBehavior,
+          initialFormData: { list: ['b', 'typed'] },
+        });
+        await user.selectOptions(elementOf(node, 'select#root_list_1'), '');
+        rerender({ schema: listOf(['a', 'typed', null]), defaultFormStateBehavior });
+        expect(getFormData()).toEqual({ list: [null] });
+
+        rerender({ schema: listOf(['a', 'typed', null], { default: ['a'] }), defaultFormStateBehavior });
+
+        expect(getFormData()).toEqual({ list: [null] });
+      });
+
+      it.each(['readonly', 'disabled'] as const)(
         "fills a %s form's undefined the user didn't clear once its field's default changes, as an enabled form does",
         (mode) => {
           const withDefault = (x: string): RJSFSchema => ({
