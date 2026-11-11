@@ -174,12 +174,6 @@ function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
   scope?: string,
   isData?: boolean,
 ): S;
-function prefixRefs<S extends StrictRJSFSchema = RJSFSchema>(
-  schemaNode: S | S[] | S[keyof S],
-  rewrite: RefRewrite,
-  scope?: string,
-  isData?: boolean,
-): S | S[] | S[keyof S];
 function prefixRefs(schemaNode: unknown, rewrite: RefRewrite, scope?: string, isData?: boolean): unknown;
 function prefixRefs(schemaNode: unknown, rewrite: RefRewrite, scope = '', isData = false): unknown {
   if (Array.isArray(schemaNode)) {

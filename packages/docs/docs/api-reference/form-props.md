@@ -1012,7 +1012,7 @@ function fixupSomeEnglishStrings(stringToTranslate: TranslatableString, params?:
     case TranslatableString.NewStringDefault:
       return ''; // Use an empty string for the new additionalProperties string default value
     case TranslatableString.KeyLabel:
-      return `${params?.[0] ?? ''} Key Name`; // Add "Name" onto the end of the WrapIfAdditionalTemplate key label
+      return `${englishStringTranslator(stringToTranslate, params)} Name`; // Add "Name" onto the end of the WrapIfAdditionalTemplate key label
     default:
       return englishStringTranslator(stringToTranslate, params); // Fallback to the default english
   }

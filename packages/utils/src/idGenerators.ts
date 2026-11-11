@@ -145,17 +145,6 @@ export function fieldLabelId(id: string) {
   return partId(id, 'label');
 }
 
-/** Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders, so a theme can point a
- * label at the year, month or day control rather than rebuilding this shape itself
- *
- * @param rootId - The id of the `AltDateWidget` field the date element belongs to
- * @param type - The type of the date element, as given by its `DateElementProp`
- * @returns - The consistent id for that date element's control
- */
-export function dateElementId(rootId: string, type: string) {
-  return partId(rootId, type);
-}
-
 /** Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` widget
  *
  * @param id - The id of the parent component for the option

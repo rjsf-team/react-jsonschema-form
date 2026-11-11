@@ -1,4 +1,4 @@
-import { ariaDescribedByIds, dateElementId, optionLabelId } from '../src/idGenerators.ts';
+import { ariaDescribedByIds, optionLabelId } from '../src/idGenerators.ts';
 import {
   additionalKeyId,
   besideOptionsId,
@@ -59,9 +59,6 @@ describe('idGenerators', () => {
   });
   it('field label id is generated for simple id', () => {
     expect(fieldLabelId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__label`);
-  });
-  it('date element id is generated for simple id', () => {
-    expect(dateElementId(SIMPLE_ID, 'year')).toEqual(`${SIMPLE_ID}__year`);
   });
   it('ariaDescribedBy ids are generated for simple id', () => {
     expect(ariaDescribedByIds(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help`);

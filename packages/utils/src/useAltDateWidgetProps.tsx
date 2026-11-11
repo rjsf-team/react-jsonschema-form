@@ -8,7 +8,7 @@ import dateRangeOptions from './dateRangeOptions.ts';
 import type { DateElementProp } from './getDateElementProps.ts';
 import getDateElementProps, { elementValue, isDateElementFormat, normalizeYearsRange } from './getDateElementProps.ts';
 import getNestedControlPresentation from './getNestedControlPresentation.ts';
-import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
+import { ariaDescribedByIds, partId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
 import toNumericValue from './toNumericValue.ts';
@@ -118,7 +118,7 @@ export function DateElement<
     attributes,
     elementOptions,
   } = props;
-  const id = dateElementId(rootId, type);
+  const id = partId(rootId, type);
   const { widgets, translateString } = registry;
   const { SelectWidget } = widgets;
   const onChange = useCallback((newValue: unknown) => select(type as keyof DateObject, newValue), [select, type]);
